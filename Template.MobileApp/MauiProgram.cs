@@ -1,4 +1,6 @@
-﻿namespace Template.MobileApp;
+﻿using Smart.Resolver;
+
+namespace Template.MobileApp;
 
 public static class MauiProgram
 {
@@ -11,8 +13,12 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+			})
+            .ConfigureContainer(new SmartServiceProviderFactory(), config =>
+            {
+                config.BindTransient<MainPage>();
+            });
 
-		return builder.Build();
+        return builder.Build();
 	}
 }
