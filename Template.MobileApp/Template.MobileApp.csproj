@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net6.0-android</TargetFrameworks>
@@ -28,13 +28,28 @@
     <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='net6.0-android'">
+    <MandroidI18n>CJK</MandroidI18n>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
+    <EnableLLVM>True</EnableLLVM>
     <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
     <AndroidKeyStore>True</AndroidKeyStore>
     <AndroidSigningStorePass>example</AndroidSigningStorePass>
     <AndroidSigningKeyAlias>example</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>example</AndroidSigningKeyPass>
   </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
+    <Compile Remove="**\**\*.Android.cs" />
+    <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true ">
+    <Compile Remove="**\*.Windows.cs" />
+    <None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- App Icon -->
