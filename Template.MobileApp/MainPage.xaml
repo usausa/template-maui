@@ -1,34 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Template.MobileApp.MainPage">
-			 
-    <ScrollView>
-        <VerticalStackLayout 
-            Spacing="25" 
-            Padding="30,0" 
-            VerticalOptions="Center">
+             xmlns:sn="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:local="clr-namespace:Template.MobileApp"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             x:Class="Template.MobileApp.MainPage"
+             x:DataType="{x:Type local:MainPageViewModel}"
+             sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+             IsEnabled="{Binding ApplicationState.IsBusy, Converter={StaticResource ReverseConverter}}"
+             IsBusy="{Binding ApplicationState.IsBusy}">
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-                
-            <Label 
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-            
-            <Label 
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App UI"
-                FontSize="18"
-                HorizontalOptions="Center" />
+    <ContentPage.Behaviors>
+        <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
+    </ContentPage.Behaviors>
 
-        </VerticalStackLayout>
-    </ScrollView>
- 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- header -->
+        <BoxView Grid.Row="0" />
+        <Label Grid.Row="0"
+               Text="{Binding Title.Value}" />
+
+        <!-- view container -->
+        <AbsoluteLayout Grid.Row="1">
+            <AbsoluteLayout.Behaviors>
+                <sn:NavigationContainerBehavior Navigator="{Binding Navigator}" />
+            </AbsoluteLayout.Behaviors>
+        </AbsoluteLayout>
+
+        <!-- function -->
+        <Grid Grid.Row="2"
+              IsVisible="{Binding FunctionVisible.Value}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Command="{Binding Function1Command}"
+                    Text="{Binding Function1Text.Value}" />
+            <Button Grid.Column="1"
+                    Command="{Binding Function2Command}"
+                    Text="{Binding Function2Text.Value}" />
+            <Button Grid.Column="2"
+                    Command="{Binding Function3Command}"
+                    Text="{Binding Function3Text.Value}" />
+            <Button Grid.Column="3"
+                    Command="{Binding Function4Command}"
+                    Text="{Binding Function4Text.Value}" />
+        </Grid>
+    </Grid>
+
 </ContentPage>
