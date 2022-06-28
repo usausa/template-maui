@@ -1,1 +1,1 @@
-# template-maui
+# Template project for MAUI
