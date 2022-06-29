@@ -15,7 +15,7 @@
     <ApplicationTitle>Template.MobileApp</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.template.mobileapp</ApplicationId>
+    <ApplicationId>template.mobileapp</ApplicationId>
     <ApplicationIdGuid>1D5879AB-2C05-4327-8AD3-E246746E9EA9</ApplicationIdGuid>
 
     <!-- Versions -->
@@ -25,8 +25,6 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-
-    <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net6.0-android'">
@@ -37,9 +35,10 @@
     <EnableLLVM>True</EnableLLVM>
     <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
     <AndroidKeyStore>True</AndroidKeyStore>
-    <AndroidSigningStorePass>example</AndroidSigningStorePass>
+    <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
     <AndroidSigningKeyAlias>example</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>example</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>example</AndroidSigningStorePass>
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
