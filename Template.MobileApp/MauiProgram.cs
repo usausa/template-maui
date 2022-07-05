@@ -7,6 +7,7 @@ using CommunityToolkit.Maui;
 using Smart.Resolver;
 
 using Template.MobileApp.Modules;
+using Template.MobileApp.Services;
 
 public static class MauiProgram
 {
@@ -49,6 +50,13 @@ public static class MauiProgram
 
         config.BindSingleton<ApplicationState>();
 
+        // Service
+        config.BindSingleton(new DataServiceOptions
+        {
+            Path = Path.Combine(FileSystem.AppDataDirectory, "Data.db")
+        });
+
+        config.BindSingleton<DataService>();
         config.AddNavigator(c =>
         {
             c.UseMauiNavigationProvider();
