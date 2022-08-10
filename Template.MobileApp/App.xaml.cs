@@ -14,7 +14,7 @@ public partial class App
         MainPage = serviceProvider.GetRequiredService<MainPage>();
     }
 
-    protected async override void OnStart()
+    protected override async void OnStart()
     {
         await navigator.ForwardAsync(ViewId.Menu);
     }
