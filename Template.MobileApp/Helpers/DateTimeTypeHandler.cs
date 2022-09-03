@@ -1,8 +1,5 @@
 namespace Template.MobileApp.Helpers;
 
-using System;
-using System.Data;
-
 using Smart.Data.Mapper.Handlers;
 
 public sealed class DateTimeTypeHandler : TypeHandler<DateTime>

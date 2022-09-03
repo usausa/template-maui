@@ -1,9 +1,5 @@
 namespace Template.MobileApp.Services;
 
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Models;
 

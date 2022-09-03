@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Models;
 
-using System;
-
 using Smart.Data.Mapper.Attributes;
 
 public class DataEntity

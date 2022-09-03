@@ -1,9 +1,6 @@
 namespace Template.MobileApp.Helpers;
 
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 using Smart;
 using Smart.Data.Mapper.Attributes;

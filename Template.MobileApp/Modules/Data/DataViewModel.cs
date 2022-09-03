@@ -1,8 +1,5 @@
 namespace Template.MobileApp.Modules.Data;
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Diagnostics;
 
 using MauiComponents;
