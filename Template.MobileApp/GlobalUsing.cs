@@ -25,6 +25,8 @@ global using System.Windows.Input;
 
 global using MauiComponents;
 
+global using Microsoft.Extensions.Logging;
+
 global using Smart;
 global using Smart.Collections.Generic;
 global using Smart.ComponentModel;

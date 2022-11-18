@@ -33,6 +33,10 @@ public static class MauiProgram
             })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
+
         return builder.Build();
     }
 
