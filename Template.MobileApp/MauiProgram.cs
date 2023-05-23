@@ -4,6 +4,10 @@ using System.Reflection;
 
 using CommunityToolkit.Maui;
 
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+
 using Smart.Resolver;
 
 using Template.MobileApp.Modules;
@@ -36,6 +40,11 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+
+        if (!String.IsNullOrEmpty(Secrets.AppCenter))
+        {
+            AppCenter.Start(Secrets.AppCenter, typeof(Analytics), typeof(Crashes));
+        }
 
         return builder.Build();
     }
