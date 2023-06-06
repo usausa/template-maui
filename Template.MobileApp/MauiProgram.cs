@@ -41,9 +41,9 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        if (!String.IsNullOrEmpty(Secrets.AppCenter))
+        if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
         {
-            AppCenter.Start(Secrets.AppCenter, typeof(Analytics), typeof(Crashes));
+            AppCenter.Start(Variants.AppCenterSecret(), typeof(Analytics), typeof(Crashes));
         }
 
         return builder.Build();
