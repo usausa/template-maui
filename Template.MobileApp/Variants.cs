@@ -1,8 +1,12 @@
 namespace Template.MobileApp;
 
-internal static class Variants
-{
-    public static string Flavor() => default!;
+using EmbeddedBuildProperty;
 
-    public static string AppCenterSecret() => default!;
+internal static partial class Variants
+{
+    [BuildProperty]
+    public static partial string Flavor();
+
+    [BuildProperty]
+    public static partial string AppCenterSecret();
 }
