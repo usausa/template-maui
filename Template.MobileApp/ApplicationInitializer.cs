@@ -9,7 +9,7 @@ using Template.MobileApp.Services;
 public sealed class ApplicationInitializer : IMauiInitializeService
 {
     public async void Initialize(IServiceProvider services)
-{
+    {
         // Setup provider
         ResolveProvider.Default.Provider = services;
 

@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 using MauiComponents;
 
-using Template.MobileApp.Models;
+using Template.MobileApp.Models.Entity;
 using Template.MobileApp.Services;
 
 using Smart.ComponentModel;

@@ -1,0 +1,17 @@
+<Project>
+
+  <!-- Device profile -->
+  <PropertyGroup>
+    <DeviceProfile>DT-999</DeviceProfile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DeviceProfile)'=='DT-999'">
+    <DefineConstants>$(DefineConstants);DEVICE_HAS_KEYPAD</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Embedded build property -->
+  <PropertyGroup>
+    <EmbeddedBuildProperty>Flavor=Default,AppCenterSecret=</EmbeddedBuildProperty>
+  </PropertyGroup>
+
+</Project>

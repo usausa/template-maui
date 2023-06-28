@@ -10,8 +10,12 @@ using Microsoft.AppCenter.Crashes;
 
 using Smart.Resolver;
 
+using Template.MobileApp.Behaviors;
+using Template.MobileApp.Components.Device;
+using Template.MobileApp.Controls;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
+using Template.MobileApp.State;
 
 public static class MauiProgram
 {
@@ -26,11 +30,14 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             })
             .UseMauiCommunityToolkit()
+            .ConfigureCustomControls()
+            .ConfigureCustomBehaviors()
             .ConfigureService(services =>
             {
 #if ANDROID
                 services.AddComponentsDialog();
 #endif
+                // TODO SourceGenerator?
                 services.AddComponentsPopup(c =>
                     c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
                 services.AddComponentsSerializer();
@@ -58,10 +65,19 @@ public static class MauiProgram
             .UsePropertyInjector()
             .UsePageContextScope();
 
+        // MAUI
+        config.BindSingleton(Preferences.Default);
+
         // Components
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
 
+        config.BindSingleton<IDeviceManager, DeviceManager>();
+
+        // State
         config.BindSingleton<ApplicationState>();
+
+        config.BindSingleton<Settings>();
+        config.BindSingleton<Session>();
 
         // Service
         config.BindSingleton(new DataServiceOptions
@@ -75,6 +91,7 @@ public static class MauiProgram
             c.UseMauiNavigationProvider();
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
+            // TODO SourceGenerator?
             c.UseIdViewMapper(m =>
                 m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
         });
