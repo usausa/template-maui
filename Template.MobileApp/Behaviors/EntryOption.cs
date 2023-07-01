@@ -15,6 +15,18 @@ using Microsoft.Maui.Handlers;
 public static class EntryOption
 {
     // ReSharper disable InconsistentNaming
+    public static readonly BindableProperty DisableShowSoftInputOnFocusProperty = BindableProperty.CreateAttached(
+        "DisableShowSoftInputOnFocus",
+        typeof(bool),
+        typeof(EntryOption),
+        false);
+    // ReSharper restore InconsistentNaming
+
+    public static bool GetDisableShowSoftInputOnFocus(BindableObject bindable) => (bool)bindable.GetValue(DisableShowSoftInputOnFocusProperty);
+
+    public static void SetDisableShowSoftInputOnFocus(BindableObject bindable, bool value) => bindable.SetValue(DisableShowSoftInputOnFocusProperty, value);
+
+    // ReSharper disable InconsistentNaming
     public static readonly BindableProperty SelectAllOnFocusProperty = BindableProperty.CreateAttached(
         "SelectAllOnFocus",
         typeof(bool),
@@ -50,24 +62,46 @@ public static class EntryOption
 
     public static void SetInputFilter(BindableObject bindable, Func<string, bool>? value) => bindable.SetValue(InputFilterProperty, value);
 
-    public static void UseCustomMapper()
+    public static void UseCustomMapper(BehaviorOptions options)
     {
 #if ANDROID
+        // DisableShowSoftInputOnFocus
+        if (options.DisableShowSoftInputOnFocus)
+        {
+            EntryHandler.Mapper.Add("DisableShowSoftInputOnFocus", static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add("DisableShowSoftInputOnFocus", static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+        }
+
         // SelectAllOnFocus
-        EntryHandler.Mapper.Add("SelectAllOnFocus", static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
-        EditorHandler.Mapper.Add("SelectAllOnFocus", static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+        if (options.SelectAllOnFocus)
+        {
+            EntryHandler.Mapper.Add("SelectAllOnFocus", static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add("SelectAllOnFocus", static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+        }
 
         // NoBorder
-        EntryHandler.Mapper.Add("NoBorder", static (handler, _) => UpdateNoBorder((Entry)handler.VirtualView));
-        EditorHandler.Mapper.Add("NoBorder", static (handler, _) => UpdateNoBorder((Editor)handler.VirtualView));
+        if (options.NoBorder)
+        {
+            EntryHandler.Mapper.Add("NoBorder", static (handler, _) => UpdateNoBorder((Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add("NoBorder", static (handler, _) => UpdateNoBorder((Editor)handler.VirtualView));
+        }
 
         // InputFilter
-        EntryHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
-        EditorHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
+        if (options.InputFilter)
+        {
+            EntryHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
+        }
 #endif
     }
 
 #if ANDROID
+    private static void UpdateDisableShowSoftInputOnFocus(TextView editText, BindableObject element)
+    {
+        var value = GetDisableShowSoftInputOnFocus(element);
+        editText.ShowSoftInputOnFocus = !value;
+    }
+
     private static void UpdateSelectAllOnFocus(TextView editText, BindableObject element)
     {
         var value = GetSelectAllOnFocus(element);

@@ -2,11 +2,11 @@ namespace Template.MobileApp;
 
 using System.Reflection;
 
-using CommunityToolkit.Maui;
+#if ANDROID && DEVICE_HAS_KEYPAD
+using Android.Views;
+#endif
 
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+using CommunityToolkit.Maui;
 
 using Smart.Resolver;
 
@@ -21,6 +21,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Builder
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -28,6 +29,8 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
+                fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
             })
             .UseMauiCommunityToolkit()
             .ConfigureCustomControls()
@@ -35,7 +38,24 @@ public static class MauiProgram
             .ConfigureService(services =>
             {
 #if ANDROID
-                services.AddComponentsDialog();
+                services.AddComponentsDialog(c =>
+                {
+                    var resources = Application.Current!.Resources;
+                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent1");
+                    c.LoadingMessageBackgroundColor = Colors.White;
+                    c.LoadingMessageColor = Colors.Black;
+                    c.ProgressValueColor = Colors.Black;
+                    c.ProgressAreaBackgroundColor = Colors.White;
+                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent1");
+                    c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+#if DEVICE_HAS_KEYPAD
+                    c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
+                    c.IgnorePromptDismissKeys = new[] { Keycode.Del };
+                    c.EnableDialogButtonFocus = true;
+#endif
+                    c.EnablePromptEnterAction = true;
+                    c.EnablePromptSelectAll = true;
+                });
 #endif
                 // TODO SourceGenerator?
                 services.AddComponentsPopup(c =>
@@ -44,13 +64,32 @@ public static class MauiProgram
             })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
+        // Logging
+        builder.Logging
 #if DEBUG
-        builder.Logging.AddDebug();
+            .AddDebug()
 #endif
+#if ANDROID
+            .AddAndroidLogger(options =>
+            {
+                options.ShortCategory = true;
+            })
+#endif
+            .AddFileLogger(options =>
+            {
+#if ANDROID
+                options.Directory = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "log");
+#endif
+                options.RetainDays = 7;
+            })
+            .AddFilter(typeof(MauiProgram).Namespace, LogLevel.Debug);
 
         if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
         {
-            AppCenter.Start(Variants.AppCenterSecret(), typeof(Analytics), typeof(Crashes));
+            Microsoft.AppCenter.AppCenter.Start(
+                Variants.AppCenterSecret(),
+                typeof(Microsoft.AppCenter.Analytics.Analytics),
+                typeof(Microsoft.AppCenter.Crashes.Crashes));
         }
 
         return builder.Build();

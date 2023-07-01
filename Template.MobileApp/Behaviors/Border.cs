@@ -34,17 +34,20 @@ public static class Border
 
     public static Color GetBorderColor(BindableObject bindable) => (Color)bindable.GetValue(BorderColorProperty);
 
-    public static void UseCustomMapper()
+    public static void UseCustomMapper(BehaviorOptions options)
     {
 #if ANDROID
-        EntryHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-        EntryHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+        if (options.Border)
+        {
+            EntryHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
 
-        EditorHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-        EditorHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
 
-        LabelHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-        LabelHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+        }
 #endif
     }
 
