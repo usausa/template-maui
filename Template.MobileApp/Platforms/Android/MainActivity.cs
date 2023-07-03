@@ -8,6 +8,7 @@ using Android.OS;
 using MauiComponents;
 
 [Activity(
+    Name = "template.mobileapp.MainActivity",
     Theme = "@style/Maui.SplashTheme",
     MainLauncher = true,
     AlwaysRetainTaskState = true,

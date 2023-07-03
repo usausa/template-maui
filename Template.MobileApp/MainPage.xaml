@@ -5,6 +5,7 @@
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:local="clr-namespace:Template.MobileApp"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:sb="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
@@ -12,6 +13,7 @@
              IsBusy="{Binding ApplicationState.IsBusy}">
 
     <ContentPage.Behaviors>
+        <sb:AppLifecycleBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
 

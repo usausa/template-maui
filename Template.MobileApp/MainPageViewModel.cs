@@ -2,7 +2,7 @@ namespace Template.MobileApp;
 
 using Template.MobileApp.Shell;
 
-public class MainPageViewModel : ViewModelBase, IShellControl
+public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
 {
     public ApplicationState ApplicationState { get; }
 
@@ -55,5 +55,31 @@ public class MainPageViewModel : ViewModelBase, IShellControl
                 () => Navigator.NotifyAsync(ShellEvent.Function4),
                 () => Function4Enabled.Value)
             .Observe(Function4Enabled);
+    }
+
+    public void OnCreated()
+    {
+    }
+
+    public void OnActivated()
+    {
+        // TODO Device activate
+    }
+
+    public void OnDeactivated()
+    {
+        // TODO Device deactivate
+    }
+
+    public void OnStopped()
+    {
+    }
+
+    public void OnResumed()
+    {
+    }
+
+    public void OnDestroying()
+    {
     }
 }

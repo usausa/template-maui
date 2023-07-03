@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation"
+             x:Class="Template.MobileApp.Modules.Navigation.DialogMenuView"
+             x:DataType="{x:Type module:DialogMenuViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:DialogMenuViewModel}"
+             shell:ShellProperty.Title="DialogMenu">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                Command="{Binding InformationCommand}"
+                Text="Information" />
+        <Button Grid.Row="1"
+                Command="{Binding ConfirmCommand}"
+                Text="Confirm" />
+        <Button Grid.Row="2"
+                Command="{Binding SelectCommand}"
+                Text="Select" />
+        <Button Grid.Row="3"
+                Command="{Binding LockCommand}"
+                Text="Lock" />
+        <Button Grid.Row="4"
+                Command="{Binding LoadingCommand}"
+                Text="Loading" />
+        <Button Grid.Row="5"
+                Command="{Binding ProgressCommand}"
+                Text="Progress" />
+        <Button Grid.Row="6"
+                Command="{Binding PopupCommand}"
+                Text="Popup" />
+        <Button Grid.Row="7"
+                Command="{Binding BackCommand}"
+                Text="Back" />
+    </Grid>
+
+</ContentView>

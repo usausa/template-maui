@@ -2,11 +2,15 @@ namespace Template.MobileApp;
 
 using System.Reflection;
 
-#if ANDROID && DEVICE_HAS_KEYPAD
+#if ANDROID
+// ReSharper disable RedundantUsingDirective
 using Android.Views;
+// ReSharper restore RedundantUsingDirective
 #endif
 
 using CommunityToolkit.Maui;
+
+using Microsoft.Maui.LifecycleEvents;
 
 using Smart.Resolver;
 
@@ -25,6 +29,21 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+#if ANDROID
+            // ReSharper disable UnusedParameter.Local
+            .ConfigureLifecycleEvents(events =>
+            {
+                // Lifecycle
+#if DEVICE_FULL_SCREEN
+                events.AddAndroid(android => android.OnCreate((activity, _) =>
+                {
+                    var window = activity.Window!;
+                    window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
+                }));
+#endif
+            })
+            // ReSharper restore UnusedParameter.Local
+#endif
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -32,11 +51,14 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
                 fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
             })
+            //.ConfigureEssentials(c => { })
             .UseMauiCommunityToolkit()
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors()
             .ConfigureService(services =>
             {
+                // TODO inside ConfigureContainer？
+                // MauiComponents
 #if ANDROID
                 services.AddComponentsDialog(c =>
                 {
@@ -105,7 +127,9 @@ public static class MauiProgram
             .UsePageContextScope();
 
         // MAUI
+        config.BindSingleton(FileSystem.Current);
         config.BindSingleton(Preferences.Default);
+        config.BindSingleton(Vibration.Default);
 
         // Components
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
@@ -119,10 +143,11 @@ public static class MauiProgram
         config.BindSingleton<Session>();
 
         // Service
-        config.BindSingleton(new DataServiceOptions
-        {
-            Path = Path.Combine(FileSystem.AppDataDirectory, "Data.db")
-        });
+#if DEBUG && ANDROID
+        config.BindSingleton(_ => new DataServiceOptions { Path = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "Data.db") });
+#else
+        config.BindSingleton(p => new DataServiceOptions { Path = Path.Combine(p.GetRequiredService<IFileSystem>().AppDataDirectory, "Data.db") });
+#endif
 
         config.BindSingleton<DataService>();
         config.AddNavigator(c =>

@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:main="clr-namespace:Template.MobileApp.Modules.Main"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
              x:Class="Template.MobileApp.Modules.Main.MenuView"
-             x:DataType="{x:Type main:MenuViewModel}"
-             sr:BindingContextResolver.Type="{x:Type main:MenuViewModel}"
+             x:DataType="{x:Type module:MenuViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:MenuViewModel}"
              shell:ShellProperty.Title="Menu"
              shell:ShellProperty.FunctionVisible="False">
 
@@ -23,26 +24,17 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0"
-                Command="{Binding InformationCommand}"
-                Text="Information" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationMenu}"
+                Text="Navigation" />
         <Button Grid.Row="1"
-                Command="{Binding ConfirmCommand}"
-                Text="Confirm" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DialogMenu}"
+                Text="Dialog" />
         <Button Grid.Row="2"
-                Command="{Binding SelectCommand}"
-                Text="Select" />
-        <Button Grid.Row="3"
-                Command="{Binding LockCommand}"
-                Text="Lock" />
-        <Button Grid.Row="4"
-                Command="{Binding LoadingCommand}"
-                Text="Loading" />
-        <Button Grid.Row="5"
-                Command="{Binding ProgressCommand}"
-                Text="Progress" />
-        <Button Grid.Row="6"
-                Command="{Binding PopupCommand}"
-                Text="Popup" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DeviceMenu}"
+                Text="Device" />
     </Grid>
 
 </ContentView>

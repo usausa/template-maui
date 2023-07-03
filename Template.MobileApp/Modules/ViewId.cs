@@ -3,5 +3,14 @@ namespace Template.MobileApp.Modules;
 public enum ViewId
 {
     Menu,
-    Data
+
+    Data,
+
+    NavigationMenu,
+    DialogMenu,
+
+    DeviceMenu,
+    DeviceInfo,
+    DeviceStatus,
+    DeviceMisc
 }

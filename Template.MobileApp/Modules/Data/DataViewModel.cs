@@ -140,7 +140,7 @@ public class DataViewModel : AppViewModelBase
         {
             watch.Start();
 
-            await Task.Run(() => dataService.QueryAllBulkDataList());
+            await Task.Run(dataService.QueryAllBulkDataList);
 
             watch.Stop();
         }
