@@ -41,10 +41,21 @@ public class DataService
             await con.ExecuteAsync("PRAGMA AUTO_VACUUM=1");
             await con.ExecuteAsync(SqlHelper.MakeCreate<DataEntity>());
             await con.ExecuteAsync(SqlHelper.MakeCreate<BulkDataEntity>());
+            await con.ExecuteAsync(SqlHelper.MakeCreate<WorkEntity>());
+        });
+
+        await InsertWorkEnumerableAsync(new[]
+        {
+            new WorkEntity { Id = 1, Name = "Sample-1" },
+            new WorkEntity { Id = 2, Name = "Sample-2" },
+            new WorkEntity { Id = 3, Name = "Sample-3" },
+            new WorkEntity { Id = 4, Name = "Sample-4" }
         });
     }
 
+    //--------------------------------------------------------------------------------
     // CRUD
+    //--------------------------------------------------------------------------------
 
     public async ValueTask<bool> InsertDataAsync(DataEntity entity)
     {
@@ -129,4 +140,41 @@ public class DataService
             con.QueryList<BulkDataEntity>(
                 SqlSelect<BulkDataEntity>.All())); // "SELECT * FROM BulkData ORDER BY Key1, Key2, Key3"));
     }
+
+    //--------------------------------------------------------------------------------
+    // Work
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<List<WorkEntity>> QueryWorkListAsync() =>
+        provider.Using(con => con.QueryListAsync<WorkEntity>(SqlSelect<WorkEntity>.All()));
+
+    public ValueTask<WorkEntity?> QueryWorkAsync(int id) =>
+        provider.Using(con =>
+            con.QueryFirstOrDefaultAsync<WorkEntity>(SqlSelect<WorkEntity>.ByKey(), new { Id = id }));
+
+    public ValueTask InsertWorkEnumerableAsync(IEnumerable<WorkEntity> source)
+    {
+        return provider.UsingTxAsync(async (con, tx) =>
+        {
+            foreach (var entity in source)
+            {
+                await con.ExecuteAsync(SqlInsert<WorkEntity>.Values(), entity, tx);
+            }
+
+            await tx.CommitAsync();
+        });
+    }
+
+    public ValueTask InsertWorkAsync(string name) =>
+        provider.UsingAsync(async con =>
+        {
+            var maxId = await con.ExecuteScalarAsync<int>("SELECT MAX(Id) FROM Work");
+            await con.ExecuteAsync(SqlInsert<WorkEntity>.Values(), new WorkEntity { Id = maxId + 1, Name = name });
+        });
+
+    public ValueTask<int> UpdateWorkAsync(WorkEntity entity) =>
+        provider.UsingAsync(con => con.ExecuteAsync(SqlUpdate<WorkEntity>.Set("Name = @Name", "Id = @Id"), entity));
+
+    public ValueTask<int> DeleteWorkAsync(long id) =>
+        provider.UsingAsync(con => con.ExecuteAsync(SqlDelete<WorkEntity>.ByKey(), new { Id = id }));
 }

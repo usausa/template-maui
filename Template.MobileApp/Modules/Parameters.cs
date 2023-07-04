@@ -11,4 +11,10 @@ public static class Parameters
 
     public static ViewId GetNextViewId(this INavigationParameter parameter) =>
         parameter.GetValue<ViewId>(NextViewId);
+
+    public static NavigationParameter WithNo(this NavigationParameter parameter, string no) =>
+        parameter.SetValue(No, no);
+
+    public static string GetNo(this INavigationParameter parameter) =>
+        parameter.GetValue<string>(No);
 }

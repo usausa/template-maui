@@ -7,9 +7,6 @@ using MauiComponents;
 using Template.MobileApp.Models.Entity;
 using Template.MobileApp.Services;
 
-using Smart.ComponentModel;
-using Smart.Maui.Input;
-
 public class DataViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
@@ -18,14 +15,16 @@ public class DataViewModel : AppViewModelBase
 
     public NotificationValue<int> BulkDataCount { get; } = new();
 
-    public AsyncCommand InsertCommand { get; }
-    public AsyncCommand UpdateCommand { get; }
-    public AsyncCommand DeleteCommand { get; }
-    public AsyncCommand QueryCommand { get; }
+    public ICommand InsertCommand { get; }
+    public ICommand UpdateCommand { get; }
+    public ICommand DeleteCommand { get; }
+    public ICommand QueryCommand { get; }
 
-    public AsyncCommand BulkInsertCommand { get; }
-    public AsyncCommand DeleteAllCommand { get; }
-    public AsyncCommand QueryAllCommand { get; }
+    public ICommand BulkInsertCommand { get; }
+    public ICommand DeleteAllCommand { get; }
+    public ICommand QueryAllCommand { get; }
+
+    public ICommand BackCommand { get; }
 
     public DataViewModel(
         ApplicationState applicationState,
@@ -44,6 +43,8 @@ public class DataViewModel : AppViewModelBase
         BulkInsertCommand = MakeAsyncCommand(BulkInsert, () => BulkDataCount.Value == 0).Observe(BulkDataCount);
         DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => BulkDataCount.Value > 0).Observe(BulkDataCount);
         QueryAllCommand = MakeAsyncCommand(QueryAll);
+
+        BackCommand = MakeAsyncCommand(async () => await Navigator.ForwardAsync(ViewId.Menu));
     }
 
     public override async void OnNavigatingTo(INavigationContext context)

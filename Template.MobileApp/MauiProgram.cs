@@ -1,6 +1,9 @@
 namespace Template.MobileApp;
 
 using System.Reflection;
+using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
+using System.Text.Unicode;
 
 #if ANDROID
 // ReSharper disable RedundantUsingDirective
@@ -12,11 +15,15 @@ using CommunityToolkit.Maui;
 
 using Microsoft.Maui.LifecycleEvents;
 
+using Rester;
+
+using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Device;
 using Template.MobileApp.Controls;
+using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
 using Template.MobileApp.State;
@@ -63,12 +70,12 @@ public static class MauiProgram
                 services.AddComponentsDialog(c =>
                 {
                     var resources = Application.Current!.Resources;
-                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent1");
+                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
                     c.LoadingMessageBackgroundColor = Colors.White;
                     c.LoadingMessageColor = Colors.Black;
                     c.ProgressValueColor = Colors.Black;
                     c.ProgressAreaBackgroundColor = Colors.White;
-                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent1");
+                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
                     c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
 #if DEVICE_HAS_KEYPAD
                     c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
@@ -106,6 +113,22 @@ public static class MauiProgram
             })
             .AddFilter(typeof(MauiProgram).Namespace, LogLevel.Debug);
 
+        // Config DataMapper
+        SqlMapperConfig.Default.ConfigureTypeHandlers(config =>
+        {
+            config[typeof(DateTime)] = new DateTimeTypeHandler();
+            config[typeof(Guid)] = new GuidTypeHandler();
+        });
+
+        // Config Rest
+        RestConfig.Default.UseJsonSerializer(config =>
+        {
+            config.Converters.Add(new Template.MobileApp.Helpers.Json.DateTimeConverter());
+            config.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        });
+
+        // App Center
         if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
         {
             Microsoft.AppCenter.AppCenter.Start(
@@ -131,9 +154,18 @@ public static class MauiProgram
         config.BindSingleton(Preferences.Default);
         config.BindSingleton(Vibration.Default);
 
-        // Components
-        config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
+        // Navigator
+        config.AddNavigator(c =>
+        {
+            c.UseMauiNavigationProvider();
+            // TODO
+            //c.AddPlugin<NavigationFocusPlugin>();
+            // TODO SourceGenerator?
+            c.UseIdViewMapper(m =>
+                m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
+        });
 
+        // Components
         config.BindSingleton<IDeviceManager, DeviceManager>();
 
         // State
@@ -150,14 +182,8 @@ public static class MauiProgram
 #endif
 
         config.BindSingleton<DataService>();
-        config.AddNavigator(c =>
-        {
-            c.UseMauiNavigationProvider();
-            // TODO
-            //c.AddPlugin<NavigationFocusPlugin>();
-            // TODO SourceGenerator?
-            c.UseIdViewMapper(m =>
-                m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
-        });
+
+        // Startup
+        config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
     }
 }

@@ -4,13 +4,52 @@ public enum ViewId
 {
     Menu,
 
-    Data,
-
+    // Navigation
     NavigationMenu,
+
+    NavigationEditList,
+    NavigationEditDetailNew,
+    NavigationEditDetailUpdate,
+
+    NavigationStack1,
+    NavigationStack2,
+    NavigationStack3,
+
+    NavigationWizardInput1,
+    NavigationWizardInput2,
+    NavigationWizardResult,
+
+    NavigationSharedInput,
+    NavigationSharedMain1,
+    NavigationSharedMain2,
+
+    NavigationNavigateCancel,
+    NavigationNavigateInitialize,
+
+    // Dialog
     DialogMenu,
 
+    // Device
     DeviceMenu,
     DeviceInfo,
     DeviceStatus,
-    DeviceMisc
+    DeviceMisc,
+
+    // Database
+    Data,
+
+    // Network
+    Network,
+
+    // Key
+    KeyMenu,
+    KeyEntry,
+    KeyList,
+    KeyMisc,
+
+    // Smart
+    SmartMenu,
+
+    // UI
+    UIMenu
 }

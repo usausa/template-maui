@@ -3,17 +3,75 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation"
              x:Class="Template.MobileApp.Modules.Navigation.NavigationMenuView"
              x:DataType="{x:Type module:NavigationMenuViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:NavigationMenuViewModel}"
              shell:ShellProperty.Title="NavigationMenu">
 
-    <VerticalStackLayout>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
+        <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationEditList}"
+                Text="🍇 Edit" />
 
-    </VerticalStackLayout>
+        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationStack1}"
+                Text="🍍 Stack" />
+
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationWizardInput1}"
+                Text="🍑 Wizard" />
+
+        <Button Grid.Row="3" Grid.Column="0"
+                Command="{Binding SharedCommand}"
+                CommandParameter="{markup:ViewId NavigationSharedMain1}"
+                IsEnabled="False"
+                Text="🍎 Shared1" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Command="{Binding SharedCommand}"
+                CommandParameter="{markup:ViewId NavigationSharedMain2}"
+                IsEnabled="False"
+                Text="🍏 Shared2" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationNavigateInitialize}"
+                Text="🍈 Initialize" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationNavigateCancel}"
+                Text="🍉 Cancel" />
+
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                IsEnabled="False"
+                Text="" />
+    </Grid>
 
 </ContentView>
