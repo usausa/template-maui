@@ -115,7 +115,7 @@ public static class MauiProgram
 
         // MauiComponents
 #if ANDROID
-        config.UseComponentsDialog(c =>
+        config.AddComponentsDialog(c =>
         {
             var resources = Application.Current!.Resources;
             c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
@@ -135,9 +135,9 @@ public static class MauiProgram
         });
 #endif
         // TODO SourceGenerator?
-        config.UseComponentsPopup(c =>
+        config.AddComponentsPopup(c =>
             c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
-        config.UseComponentsSerializer();
+        config.AddComponentsSerializer();
 
         // Navigator
         config.AddNavigator(c =>
