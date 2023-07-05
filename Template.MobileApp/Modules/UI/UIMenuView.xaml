@@ -7,7 +7,9 @@
              x:Class="Template.MobileApp.Modules.UI.UIMenuView"
              x:DataType="{x:Type module:UIMenuViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:UIMenuViewModel}"
-             shell:ShellProperty.Title="UI">
+             shell:ShellProperty.Title="UI"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -21,9 +23,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="7"
-                Command="{Binding BackCommand}"
-                Text="Back" />
     </Grid>
 
 </ContentView>

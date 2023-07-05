@@ -8,12 +8,12 @@
              x:DataType="{x:Type data:DataViewModel}"
              sr:BindingContextResolver.Type="{x:Type data:DataViewModel}"
              shell:ShellProperty.Title="Menu"
-             shell:ShellProperty.FunctionVisible="False">
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout>
 
-        <Label Text="CRUD"
-               FontSize="Large" />
+        <Label Text="CRUD" />
         <Button Command="{Binding InsertCommand}"
                 Text="Insert" />
         <Button Command="{Binding UpdateCommand}"
@@ -23,8 +23,7 @@
         <Button Command="{Binding QueryCommand}"
                 Text="Query" />
 
-        <Label Text="Bulk"
-               FontSize="Large" />
+        <Label Text="Bulk" />
         <Label Text="{Binding BulkDataCount.Value, StringFormat='Count: {0}'}" />
         <Button Command="{Binding BulkInsertCommand}"
                 Text="BulkInsert" />
@@ -32,9 +31,6 @@
                 Text="DeleteAll" />
         <Button Command="{Binding QueryAllCommand}"
                 Text="QueryAll" />
-
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
 
     </VerticalStackLayout>
 

@@ -7,7 +7,9 @@
              x:Class="Template.MobileApp.Modules.Network.NetworkView"
              x:DataType="{x:Type module:NetworkViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:NetworkViewModel}"
-             shell:ShellProperty.Title="Network">
+             shell:ShellProperty.Title="Network"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -21,9 +23,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="7"
-                Command="{Binding BackCommand}"
-                Text="Back" />
     </Grid>
 
 </ContentView>

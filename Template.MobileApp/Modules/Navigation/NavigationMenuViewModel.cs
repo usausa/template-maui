@@ -12,4 +12,8 @@ public class NavigationMenuViewModel : AppViewModelBase
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
         SharedCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(ViewId.NavigationSharedInput, Parameters.MakeNextViewId(x)));
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

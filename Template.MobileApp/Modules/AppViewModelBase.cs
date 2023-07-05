@@ -35,11 +35,6 @@ public abstract class AppViewModelBase : ViewModelBase, INavigatorAware, INaviga
 
     public Task NavigatorNotifyAsync(ShellEvent parameter)
     {
-        if (ApplicationState.IsBusy)
-        {
-            return Task.CompletedTask;
-        }
-
         return parameter switch
         {
             ShellEvent.Back => OnNotifyBackAsync(),

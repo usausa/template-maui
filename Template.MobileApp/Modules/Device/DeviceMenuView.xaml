@@ -8,7 +8,9 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceMenuView"
              x:DataType="{x:Type module:DeviceMenuViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceMenuViewModel}"
-             shell:ShellProperty.Title="Device">
+             shell:ShellProperty.Title="Device"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -34,9 +36,6 @@
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceMisc}"
                 Text="Misc" />
-        <Button Grid.Row="7"
-                Command="{Binding BackCommand}"
-                Text="Back" />
     </Grid>
 
 </ContentView>

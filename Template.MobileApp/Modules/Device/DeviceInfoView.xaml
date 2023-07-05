@@ -7,14 +7,23 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceInfoView"
              x:DataType="{x:Type module:DeviceInfoViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceInfoViewModel}"
-             shell:ShellProperty.Title="DeviceInfo">
+             shell:ShellProperty.Title="DeviceInfo"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout>
 
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
+        <Label Text="[Device]" />
+        <Label Text="{Binding DeviceVersion.Value, StringFormat='Version: {0}'}" />
+        <Label Text="{Binding DeviceName.Value, StringFormat='Name: {0}'}" />
+        <Label Text="{Binding IsDeviceEmulator.Value, StringFormat='Emulator: {0}'}" />
+
+        <Label Text="[Application]" />
+        <Label Text="{Binding ApplicationName.Value, StringFormat='Name: {0}'}" />
+        <Label Text="{Binding ApplicationPackageName.Value, StringFormat='PackageName: {0}'}" />
+        <Label Text="{Binding ApplicationVersion.Value, StringFormat='Version: {0}'}" />
+        <Label Text="{Binding ApplicationBuild.Value, StringFormat='Build: {0}'}" />
 
     </VerticalStackLayout>
-
 
 </ContentView>

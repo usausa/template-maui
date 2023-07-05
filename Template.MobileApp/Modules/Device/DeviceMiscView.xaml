@@ -7,14 +7,44 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceMiscView"
              x:DataType="{x:Type module:DeviceMiscViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceMiscViewModel}"
-             shell:ShellProperty.Title="DeviceMisc">
+             shell:ShellProperty.Title="DeviceMisc"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout>
 
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
+        <Button Command="{Binding KeepScreenOnCommand}"
+                Text="Keep screen on" />
+        <Button Command="{Binding KeepScreenOffCommand}"
+                Text="Keep screen off" />
+
+        <Button Command="{Binding OrientationPortraitCommand}"
+                Text="Portrait" />
+        <Button Command="{Binding OrientationLandscapeCommand}"
+                Text="Landscape" />
+
+        <Button Command="{Binding VibrateCommand}"
+                Text="Vibrate" />
+        <Button Command="{Binding VibrateCancelCommand}"
+                Text="Vibrate cancel" />
+
+        <Button Command="{Binding LightOnCommand}"
+                Text="Light on" />
+        <Button Command="{Binding LightOffCommand}"
+                Text="Light off" />
+
+        <Button Command="{Binding ScreenshotCommand}"
+                Text="Screenshot" />
+
+        <Button Command="{Binding SpeakCommand}"
+                Text="Speak" />
+        <Button Command="{Binding SpeakCancelCommand}"
+                Text="Speak cancel" />
+
+        <Button Command="{Binding RecognizeCommand}"
+                Text="Recognize" />
+        <Label Text="{Binding RecognizeText.Value}" />
 
     </VerticalStackLayout>
-
 
 </ContentView>

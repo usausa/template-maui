@@ -5,13 +5,9 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-#if ANDROID
-// ReSharper disable RedundantUsingDirective
-using Android.Views;
-// ReSharper restore RedundantUsingDirective
-#endif
-
 using CommunityToolkit.Maui;
+
+using MauiComponents.Resolver;
 
 using Microsoft.Maui.LifecycleEvents;
 
@@ -22,6 +18,8 @@ using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Device;
+using Template.MobileApp.Components.Speech;
+using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
@@ -42,11 +40,7 @@ public static class MauiProgram
             {
                 // Lifecycle
 #if DEVICE_FULL_SCREEN
-                events.AddAndroid(android => android.OnCreate((activity, _) =>
-                {
-                    var window = activity.Window!;
-                    window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
-                }));
+                events.AddAndroid(android => android.OnCreate((activity, _) => AndroidHelper.FullScreen(activity)));
 #endif
             })
             // ReSharper restore UnusedParameter.Local
@@ -60,37 +54,10 @@ public static class MauiProgram
             })
             //.ConfigureEssentials(c => { })
             .UseMauiCommunityToolkit()
+            .UseMauiInterfaces()
+            .UseCommunityToolkitInterfaces()
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors()
-            .ConfigureService(services =>
-            {
-                // TODO inside ConfigureContainer？
-                // MauiComponents
-#if ANDROID
-                services.AddComponentsDialog(c =>
-                {
-                    var resources = Application.Current!.Resources;
-                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
-                    c.LoadingMessageBackgroundColor = Colors.White;
-                    c.LoadingMessageColor = Colors.Black;
-                    c.ProgressValueColor = Colors.Black;
-                    c.ProgressAreaBackgroundColor = Colors.White;
-                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
-                    c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
-#if DEVICE_HAS_KEYPAD
-                    c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
-                    c.IgnorePromptDismissKeys = new[] { Keycode.Del };
-                    c.EnableDialogButtonFocus = true;
-#endif
-                    c.EnablePromptEnterAction = true;
-                    c.EnablePromptSelectAll = true;
-                });
-#endif
-                // TODO SourceGenerator?
-                services.AddComponentsPopup(c =>
-                    c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
-                services.AddComponentsSerializer();
-            })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
         // Logging
@@ -99,15 +66,12 @@ public static class MauiProgram
             .AddDebug()
 #endif
 #if ANDROID
-            .AddAndroidLogger(options =>
-            {
-                options.ShortCategory = true;
-            })
+            .AddAndroidLogger(options => options.ShortCategory = true)
 #endif
             .AddFileLogger(options =>
             {
 #if ANDROID
-                options.Directory = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "log");
+                options.Directory = Path.Combine(AndroidHelper.GetExternalFilesDir(), "log");
 #endif
                 options.RetainDays = 7;
             })
@@ -128,7 +92,7 @@ public static class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // App Center
+        // Config App Center
         if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
         {
             Microsoft.AppCenter.AppCenter.Start(
@@ -149,10 +113,31 @@ public static class MauiProgram
             .UsePropertyInjector()
             .UsePageContextScope();
 
-        // MAUI
-        config.BindSingleton(FileSystem.Current);
-        config.BindSingleton(Preferences.Default);
-        config.BindSingleton(Vibration.Default);
+        // MauiComponents
+#if ANDROID
+        config.UseComponentsDialog(c =>
+        {
+            var resources = Application.Current!.Resources;
+            c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
+            c.LoadingMessageBackgroundColor = Colors.White;
+            c.LoadingMessageColor = Colors.Black;
+            c.ProgressValueColor = Colors.Black;
+            c.ProgressAreaBackgroundColor = Colors.White;
+            c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
+            c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+#if DEVICE_HAS_KEYPAD
+            c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
+            c.IgnorePromptDismissKeys = new[] { Keycode.Del };
+            c.EnableDialogButtonFocus = true;
+#endif
+            c.EnablePromptEnterAction = true;
+            c.EnablePromptSelectAll = true;
+        });
+#endif
+        // TODO SourceGenerator?
+        config.UseComponentsPopup(c =>
+            c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
+        config.UseComponentsSerializer();
 
         // Navigator
         config.AddNavigator(c =>
@@ -167,20 +152,27 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IDeviceManager, DeviceManager>();
+        config.BindSingleton<IStorageManager, StorageManager>();
+        config.BindSingleton<ISpeechManager, SpeechManager>();
 
         // State
         config.BindSingleton<ApplicationState>();
-
-        config.BindSingleton<Settings>();
         config.BindSingleton<Session>();
+        config.BindSingleton<Settings>();
 
         // Service
-#if DEBUG && ANDROID
-        config.BindSingleton(_ => new DataServiceOptions { Path = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "Data.db") });
+        config.BindSingleton(p =>
+        {
+            var storage = p.GetRequiredService<IStorageManager>();
+            return new DataServiceOptions
+            {
+#if DEBUG
+                Path = Path.Combine(storage.PublicFolder, "Data.db")
 #else
-        config.BindSingleton(p => new DataServiceOptions { Path = Path.Combine(p.GetRequiredService<IFileSystem>().AppDataDirectory, "Data.db") });
+                Path = Path.Combine(storage.PrivateFolder, "Data.db")
 #endif
-
+            };
+        });
         config.BindSingleton<DataService>();
 
         // Startup

@@ -24,8 +24,6 @@ public class DataViewModel : AppViewModelBase
     public ICommand DeleteAllCommand { get; }
     public ICommand QueryAllCommand { get; }
 
-    public ICommand BackCommand { get; }
-
     public DataViewModel(
         ApplicationState applicationState,
         IDialog dialog,
@@ -43,9 +41,11 @@ public class DataViewModel : AppViewModelBase
         BulkInsertCommand = MakeAsyncCommand(BulkInsert, () => BulkDataCount.Value == 0).Observe(BulkDataCount);
         DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => BulkDataCount.Value > 0).Observe(BulkDataCount);
         QueryAllCommand = MakeAsyncCommand(QueryAll);
-
-        BackCommand = MakeAsyncCommand(async () => await Navigator.ForwardAsync(ViewId.Menu));
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     public override async void OnNavigatingTo(INavigationContext context)
     {
