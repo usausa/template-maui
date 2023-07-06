@@ -5,6 +5,10 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+#if ANDROID
+using Android.Views;
+#endif
+
 using CommunityToolkit.Maui;
 
 using MauiComponents.Resolver;
@@ -17,7 +21,7 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Device;
+using Template.MobileApp.Components.Screen;
 using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
@@ -65,7 +69,7 @@ public static class MauiProgram
 #if DEBUG
             .AddDebug()
 #endif
-#if ANDROID
+#if ANDROID && !DEBUG
             .AddAndroidLogger(options => options.ShortCategory = true)
 #endif
             .AddFileLogger(options =>
@@ -134,6 +138,7 @@ public static class MauiProgram
             c.EnablePromptSelectAll = true;
         });
 #endif
+        // TODO PopupPageFactory
         // TODO SourceGenerator?
         config.AddComponentsPopup(c =>
             c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
@@ -143,6 +148,7 @@ public static class MauiProgram
         config.AddNavigator(c =>
         {
             c.UseMauiNavigationProvider();
+            c.AddResolverPlugin();
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
             // TODO SourceGenerator?
@@ -151,11 +157,12 @@ public static class MauiProgram
         });
 
         // Components
-        config.BindSingleton<IDeviceManager, DeviceManager>();
+        config.BindSingleton<IScreenManager, ScreenManager>();
         config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<ISpeechManager, SpeechManager>();
+        config.BindSingleton<ISpeechService, SpeechService>();
 
         // State
+        config.BindSingleton<DeviceState>();
         config.BindSingleton<ApplicationState>();
         config.BindSingleton<Session>();
         config.BindSingleton<Settings>();

@@ -1,8 +1,6 @@
 #pragma warning disable SA1135
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Device;
-
 public class DeviceInfoViewModel : AppViewModelBase
 {
     public NotificationValue<Version> DeviceVersion { get; } = new();
@@ -16,17 +14,18 @@ public class DeviceInfoViewModel : AppViewModelBase
 
     public DeviceInfoViewModel(
         ApplicationState applicationState,
-        IDeviceManager device)
+        IDeviceInfo deviceInfo,
+        IAppInfo appInfo)
         : base(applicationState)
     {
-        DeviceVersion.Value = device.DeviceVersion;
-        DeviceName.Value = device.DeviceName;
-        IsDeviceEmulator.Value = device.IsDeviceEmulator;
+        DeviceVersion.Value = deviceInfo.Version;
+        DeviceName.Value = deviceInfo.Name;
+        IsDeviceEmulator.Value = deviceInfo.DeviceType == DeviceType.Virtual;
 
-        ApplicationName.Value = device.ApplicationName;
-        ApplicationPackageName.Value = device.ApplicationPackageName;
-        ApplicationVersion.Value = device.ApplicationVersion;
-        ApplicationBuild.Value = device.ApplicationBuild;
+        ApplicationName.Value = appInfo.Name;
+        ApplicationPackageName.Value = appInfo.PackageName;
+        ApplicationVersion.Value = appInfo.Version;
+        ApplicationBuild.Value = appInfo.BuildString;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

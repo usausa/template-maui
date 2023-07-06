@@ -14,4 +14,7 @@ public static class AndroidHelper
 
     public static string GetExternalFilesDir() =>
         Application.Context.GetExternalFilesDir(string.Empty)!.Path;
+
+    public static void MoveTaskToBack() =>
+        ActivityResolver.CurrentActivity.MoveTaskToBack(true);
 }

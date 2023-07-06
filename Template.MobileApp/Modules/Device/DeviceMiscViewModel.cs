@@ -1,13 +1,12 @@
-#pragma warning disable SA1135
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Device;
+using Template.MobileApp.Components.Screen;
 using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 
 public class DeviceMiscViewModel : AppViewModelBase
 {
-    private readonly IDeviceManager device;
+    private readonly IScreenManager screen;
 
     public ICommand KeepScreenOnCommand { get; }
     public ICommand KeepScreenOffCommand { get; }
@@ -17,6 +16,9 @@ public class DeviceMiscViewModel : AppViewModelBase
 
     public ICommand VibrateCommand { get; }
     public ICommand VibrateCancelCommand { get; }
+
+    public ICommand FeedbackClickCommand { get; }
+    public ICommand FeedbackLongPressCommand { get; }
 
     public ICommand LightOnCommand { get; }
     public ICommand LightOffCommand { get; }
@@ -32,28 +34,34 @@ public class DeviceMiscViewModel : AppViewModelBase
 
     public DeviceMiscViewModel(
         ApplicationState applicationState,
-        IDeviceManager device,
+        IScreenManager screen,
         IStorageManager storage,
-        ISpeechManager speech)
+        ISpeechService speech,
+        IVibration vibration,
+        IHapticFeedback feedback,
+        IFlashlight flashlight)
         : base(applicationState)
     {
-        this.device = device;
+        this.screen = screen;
 
-        KeepScreenOnCommand = MakeDelegateCommand(() => device.KeepScreenOn(true));
-        KeepScreenOffCommand = MakeDelegateCommand(() => device.KeepScreenOn(false));
+        KeepScreenOnCommand = MakeDelegateCommand(() => screen.KeepScreenOn(true));
+        KeepScreenOffCommand = MakeDelegateCommand(() => screen.KeepScreenOn(false));
 
-        OrientationPortraitCommand = MakeDelegateCommand(() => device.SetOrientation(Orientation.Portrait));
-        OrientationLandscapeCommand = MakeDelegateCommand(() => device.SetOrientation(Orientation.Landscape));
+        OrientationPortraitCommand = MakeDelegateCommand(() => screen.SetOrientation(DisplayOrientation.Portrait));
+        OrientationLandscapeCommand = MakeDelegateCommand(() => screen.SetOrientation(DisplayOrientation.Landscape));
 
-        VibrateCommand = MakeDelegateCommand(() => device.Vibrate(5000));
-        VibrateCancelCommand = MakeDelegateCommand(device.VibrateCancel);
+        VibrateCommand = MakeDelegateCommand(() => vibration.Vibrate(5000));
+        VibrateCancelCommand = MakeDelegateCommand(vibration.Cancel);
 
-        LightOnCommand = MakeDelegateCommand(device.LightOn);
-        LightOffCommand = MakeDelegateCommand(device.LightOff);
+        FeedbackClickCommand = MakeDelegateCommand(() => feedback.Perform(HapticFeedbackType.Click));
+        FeedbackLongPressCommand = MakeDelegateCommand(() => feedback.Perform(HapticFeedbackType.LongPress));
+
+        LightOnCommand = MakeAsyncCommand(flashlight.TurnOnAsync);
+        LightOffCommand = MakeAsyncCommand(flashlight.TurnOffAsync);
 
         ScreenshotCommand = MakeAsyncCommand(async () =>
         {
-            await using var stream = await device.TakeScreenshotAsync();
+            await using var stream = await screen.TakeScreenshotAsync();
             await using var file = File.Create(Path.Combine(storage.PublicFolder, "screenshot.jpg"));
             await stream.CopyToAsync(file);
         });
@@ -79,6 +87,6 @@ public class DeviceMiscViewModel : AppViewModelBase
 
     public override void OnNavigatingFrom(INavigationContext context)
     {
-        device.SetOrientation(Orientation.Portrait);
+        screen.SetOrientation(DisplayOrientation.Portrait);
     }
 }

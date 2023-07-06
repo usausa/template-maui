@@ -57,6 +57,10 @@ public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
             .Observe(Function4Enabled);
     }
 
+    //--------------------------------------------------------------------------------
+    // Lifecycle
+    //--------------------------------------------------------------------------------
+
     public void OnCreated()
     {
     }

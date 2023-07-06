@@ -38,3 +38,6 @@ global using Smart.Navigation.Attributes;
 global using Smart.Navigation.Plugins.Parameter;
 global using Smart.Navigation.Plugins.Scope;
 global using Smart.Text;
+
+global using Template.MobileApp.Domain;
+global using Template.MobileApp.State;

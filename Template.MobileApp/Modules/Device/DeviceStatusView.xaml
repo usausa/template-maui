@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Template.MobileApp.Resources.Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceStatusView"
              x:DataType="{x:Type module:DeviceStatusViewModel}"
@@ -11,6 +12,52 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout>
+
+        <Label Text="[Battery]" />
+        <Label Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='ChargeLevel: {0}'}" />
+        <Label Text="{Binding DeviceState.BatteryState, StringFormat='State: {0}'}" />
+        <Label Text="{Binding DeviceState.BatteryPowerSource, StringFormat='PowerSource: {0}'}" />
+
+        <Label FontFamily="MaterialIcons" FontSize="28">
+            <Label.Text>
+                <MultiBinding Converter="{StaticResource BatteryIconConverter}">
+                    <Binding Path="DeviceState.BatteryState" />
+                    <Binding Path="DeviceState.BatteryChargeLevel" />
+                </MultiBinding>
+            </Label.Text>
+        </Label>
+
+        <HorizontalStackLayout>
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_alert}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_unknown}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_0_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_1_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_2_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_3_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_4_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_5_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_6_bar}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_full}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Battery_charging_full}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+        </HorizontalStackLayout>
+
+        <Label Text="[Network]" />
+        <Label Text="{Binding DeviceState.NetworkProfile, StringFormat='Profile: {0}'}" />
+        <Label Text="{Binding DeviceState.NetworkAccess, StringFormat='Access: {0}'}" />
+        <Label Text="{Binding DeviceState.NetworkState, StringFormat='State: {0}'}" />
+
+    </VerticalStackLayout>
 
 </ContentView>
