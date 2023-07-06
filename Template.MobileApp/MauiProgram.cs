@@ -5,7 +5,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-#if ANDROID
+#if ANDROID && DEVICE_HAS_KEYPAD
 using Android.Views;
 #endif
 
