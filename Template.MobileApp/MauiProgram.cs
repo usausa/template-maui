@@ -1,6 +1,5 @@
 namespace Template.MobileApp;
 
-using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
@@ -23,6 +22,7 @@ using Smart.Resolver;
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
+using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
@@ -82,7 +82,7 @@ public static class MauiProgram
         // Config DataMapper
         SqlMapperConfig.Default.ConfigureTypeHandlers(config =>
         {
-            config[typeof(DateTime)] = new DateTimeTypeHandler();
+            config[typeof(DateTime)] = new Template.MobileApp.Helpers.Data.DateTimeTypeHandler();
             config[typeof(Guid)] = new GuidTypeHandler();
         });
 
@@ -102,6 +102,9 @@ public static class MauiProgram
                 typeof(Microsoft.AppCenter.Analytics.Analytics),
                 typeof(Microsoft.AppCenter.Crashes.Crashes));
         }
+
+        // Crash dump
+        CrashReport.Start();
 
         return builder.Build();
     }
@@ -137,8 +140,7 @@ public static class MauiProgram
         });
 #endif
         // TODO PopupPageFactory
-        // TODO SourceGenerator?
-        config.AddComponentsPopup(c => c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
+        config.AddComponentsPopup(c => c.AutoRegister(ViewRegistry.DialogSource()));
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
         config.AddComponentsSpeech();
@@ -151,8 +153,7 @@ public static class MauiProgram
             c.AddResolverPlugin();
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
-            // TODO SourceGenerator?
-            c.UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
+            c.UseIdViewMapper(m => m.AutoRegister(ViewRegistry.ViewSource()));
         });
 
         // Components
