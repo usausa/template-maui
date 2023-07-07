@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.Navigation;
 
+using Template.MobileApp;
+
 public class NavigationMenuViewModel : AppViewModelBase
 {
     public ICommand ForwardCommand { get; }

@@ -1,10 +1,12 @@
-namespace Template.MobileApp.Modules.Smart;
+namespace Template.MobileApp.Modules.Sample;
 
-public class SmartMenuViewModel : AppViewModelBase
+using Template.MobileApp;
+
+public class SampleMenuViewModel : AppViewModelBase
 {
     public ICommand ForwardCommand { get; }
 
-    public SmartMenuViewModel(
+    public SampleMenuViewModel(
         ApplicationState applicationState)
         : base(applicationState)
     {

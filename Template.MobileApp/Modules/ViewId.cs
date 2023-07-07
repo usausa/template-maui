@@ -47,8 +47,11 @@ public enum ViewId
     KeyList,
     KeyMisc,
 
-    // Smart
-    SmartMenu,
+    // Pattern
+    PatternMenu,
+
+    // Sample
+    SampleMenu,
 
     // UI
     UIMenu

@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.Key;
 
+using Template.MobileApp;
+
 public class KeyListViewModel : AppViewModelBase
 {
     public KeyListViewModel(

@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.Navigation.Shared;
 
+using Template.MobileApp;
+
 public class SharedMain2ViewModel : AppViewModelBase
 {
     public NotificationValue<string> No { get; } = new();

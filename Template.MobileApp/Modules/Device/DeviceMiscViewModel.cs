@@ -1,12 +1,11 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Screen;
-using Template.MobileApp.Components.Speech;
+using Template.MobileApp;
 using Template.MobileApp.Components.Storage;
 
 public class DeviceMiscViewModel : AppViewModelBase
 {
-    private readonly IScreenManager screen;
+    private readonly IScreen screen;
 
     public ICommand KeepScreenOnCommand { get; }
     public ICommand KeepScreenOffCommand { get; }
@@ -34,7 +33,7 @@ public class DeviceMiscViewModel : AppViewModelBase
 
     public DeviceMiscViewModel(
         ApplicationState applicationState,
-        IScreenManager screen,
+        IScreen screen,
         IStorageManager storage,
         ISpeechService speech,
         IVibration vibration,

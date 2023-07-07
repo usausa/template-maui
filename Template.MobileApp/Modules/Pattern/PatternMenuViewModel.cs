@@ -1,13 +1,16 @@
-namespace Template.MobileApp.Modules.Network;
+namespace Template.MobileApp.Modules.Pattern;
 
 using Template.MobileApp;
 
-public class NetworkViewModel : AppViewModelBase
+public class PatternMenuViewModel : AppViewModelBase
 {
-    public NetworkViewModel(
+    public ICommand ForwardCommand { get; }
+
+    public PatternMenuViewModel(
         ApplicationState applicationState)
         : base(applicationState)
     {
+        ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);

@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.Key;
 
+using Template.MobileApp;
+
 public class KeyEntryViewModel : AppViewModelBase
 {
     public KeyEntryViewModel(

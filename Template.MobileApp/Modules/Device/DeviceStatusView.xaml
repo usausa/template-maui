@@ -15,15 +15,15 @@
     <VerticalStackLayout>
 
         <Label Text="[Battery]" />
-        <Label Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='ChargeLevel: {0}'}" />
-        <Label Text="{Binding DeviceState.BatteryState, StringFormat='State: {0}'}" />
-        <Label Text="{Binding DeviceState.BatteryPowerSource, StringFormat='PowerSource: {0}'}" />
+        <Label Text="{Binding ApplicationState.BatteryChargeLevel, StringFormat='ChargeLevel: {0}'}" />
+        <Label Text="{Binding ApplicationState.BatteryState, StringFormat='State: {0}'}" />
+        <Label Text="{Binding ApplicationState.BatteryPowerSource, StringFormat='PowerSource: {0}'}" />
 
         <Label FontFamily="MaterialIcons" FontSize="28">
             <Label.Text>
                 <MultiBinding Converter="{StaticResource BatteryIconConverter}">
-                    <Binding Path="DeviceState.BatteryState" />
-                    <Binding Path="DeviceState.BatteryChargeLevel" />
+                    <Binding Path="ApplicationState.BatteryState" />
+                    <Binding Path="ApplicationState.BatteryChargeLevel" />
                 </MultiBinding>
             </Label.Text>
         </Label>
@@ -54,9 +54,9 @@
         </HorizontalStackLayout>
 
         <Label Text="[Network]" />
-        <Label Text="{Binding DeviceState.NetworkProfile, StringFormat='Profile: {0}'}" />
-        <Label Text="{Binding DeviceState.NetworkAccess, StringFormat='Access: {0}'}" />
-        <Label Text="{Binding DeviceState.NetworkState, StringFormat='State: {0}'}" />
+        <Label Text="{Binding ApplicationState.NetworkProfile, StringFormat='Profile: {0}'}" />
+        <Label Text="{Binding ApplicationState.NetworkAccess, StringFormat='Access: {0}'}" />
+        <Label Text="{Binding ApplicationState.NetworkState, StringFormat='State: {0}'}" />
 
     </VerticalStackLayout>
 

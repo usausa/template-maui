@@ -21,8 +21,6 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Screen;
-using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Helpers.Data;
@@ -140,9 +138,11 @@ public static class MauiProgram
 #endif
         // TODO PopupPageFactory
         // TODO SourceGenerator?
-        config.AddComponentsPopup(c =>
-            c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
+        config.AddComponentsPopup(c => c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
         config.AddComponentsSerializer();
+        config.AddComponentsScreen();
+        config.AddComponentsSpeech();
+        config.AddComponentsLocation();
 
         // Navigator
         config.AddNavigator(c =>
@@ -152,17 +152,14 @@ public static class MauiProgram
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
             // TODO SourceGenerator?
-            c.UseIdViewMapper(m =>
-                m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
+            c.UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
         });
 
         // Components
-        config.BindSingleton<IScreenManager, ScreenManager>();
         config.BindSingleton<IStorageManager, StorageManager>();
         config.BindSingleton<ISpeechService, SpeechService>();
 
         // State
-        config.BindSingleton<DeviceState>();
         config.BindSingleton<ApplicationState>();
         config.BindSingleton<Session>();
         config.BindSingleton<Settings>();
