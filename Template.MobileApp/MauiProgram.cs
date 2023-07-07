@@ -82,7 +82,7 @@ public static class MauiProgram
         // Config DataMapper
         SqlMapperConfig.Default.ConfigureTypeHandlers(config =>
         {
-            config[typeof(DateTime)] = new Template.MobileApp.Helpers.Data.DateTimeTypeHandler();
+            config[typeof(DateTime)] = new DateTimeTypeHandler();
             config[typeof(Guid)] = new GuidTypeHandler();
         });
 
