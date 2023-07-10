@@ -2,6 +2,9 @@ namespace Template.MobileApp;
 
 using System.Reflection;
 
+using Template.MobileApp.Behaviors;
+using Template.MobileApp.Helpers;
+
 public static class Extensions
 {
     //--------------------------------------------------------------------------------
@@ -21,7 +24,22 @@ public static class Extensions
     // Element
     //--------------------------------------------------------------------------------
 
-    // TODO Focus
+    public static void SetDefaultFocus(this IVisualTreeElement parent)
+    {
+        var first = default(VisualElement);
+        foreach (var visualElement in ElementHelper.EnumerateActive(parent))
+        {
+            if (Focus.GetDefault(visualElement))
+            {
+                visualElement.Focus();
+                return;
+            }
+
+            first ??= visualElement;
+        }
+
+        first?.Focus();
+    }
 
     //--------------------------------------------------------------------------------
     // Navigation

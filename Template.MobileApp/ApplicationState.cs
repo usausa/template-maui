@@ -1,7 +1,5 @@
 namespace Template.MobileApp;
 
-using Template.MobileApp.State;
-
 #pragma warning disable CA1008
 [Flags]
 public enum NetworkProfile

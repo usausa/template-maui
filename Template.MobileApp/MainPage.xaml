@@ -15,7 +15,7 @@
 
     <ContentPage.Behaviors>
         <sb:AppLifecycleBehavior />
-        <input:InputControlBehavior />
+        <input:InputRootBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
 
@@ -50,15 +50,19 @@
 
             <Button Grid.Column="0"
                     Command="{Binding Function1Command}"
+                    input:Shortcut.Key="Function1"
                     Text="{Binding Function1Text.Value}" />
             <Button Grid.Column="1"
                     Command="{Binding Function2Command}"
+                    input:Shortcut.Key="Function2"
                     Text="{Binding Function2Text.Value}" />
             <Button Grid.Column="2"
                     Command="{Binding Function3Command}"
+                    input:Shortcut.Key="Function3"
                     Text="{Binding Function3Text.Value}" />
             <Button Grid.Column="3"
                     Command="{Binding Function4Command}"
+                    input:Shortcut.Key="Function4"
                     Text="{Binding Function4Text.Value}" />
         </Grid>
     </Grid>

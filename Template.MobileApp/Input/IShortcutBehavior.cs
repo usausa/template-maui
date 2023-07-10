@@ -2,5 +2,5 @@ namespace Template.MobileApp.Input;
 
 public interface IShortcutBehavior
 {
-    bool Handle(KeyCode key);
+    bool Handle(ShortcutKey key);
 }

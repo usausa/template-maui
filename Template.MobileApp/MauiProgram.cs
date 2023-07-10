@@ -22,6 +22,7 @@ using Smart.Resolver;
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
+using Template.MobileApp.Extender;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
@@ -139,8 +140,8 @@ public static class MauiProgram
             c.EnablePromptSelectAll = true;
         });
 #endif
-        // TODO PopupPageFactory
         config.AddComponentsPopup(c => c.AutoRegister(ViewRegistry.DialogSource()));
+        config.AddComponentsPopupPlugin<PopupFocusPlugin>();
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
         config.AddComponentsSpeech();
@@ -151,8 +152,7 @@ public static class MauiProgram
         {
             c.UseMauiNavigationProvider();
             c.AddResolverPlugin();
-            // TODO
-            //c.AddPlugin<NavigationFocusPlugin>();
+            c.AddPlugin<NavigationFocusPlugin>();
             c.UseIdViewMapper(m => m.AutoRegister(ViewRegistry.ViewSource()));
         });
 

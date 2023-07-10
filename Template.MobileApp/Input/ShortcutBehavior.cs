@@ -10,7 +10,7 @@ public sealed class ShortcutBehavior : BehaviorBase<Element>, IShortcutBehavior
 {
     public static readonly BindableProperty KeyCodeProperty = BindableProperty.Create(
         nameof(KeyCode),
-        typeof(KeyCode),
+        typeof(ShortcutKey),
         typeof(ShortcutBehavior));
 
     public static readonly BindableProperty CommandProperty = BindableProperty.Create(
@@ -38,9 +38,9 @@ public sealed class ShortcutBehavior : BehaviorBase<Element>, IShortcutBehavior
         typeof(object),
         typeof(ShortcutBehavior));
 
-    public KeyCode KeyCode
+    public ShortcutKey KeyCode
     {
-        get => (KeyCode)GetValue(KeyCodeProperty);
+        get => (ShortcutKey)GetValue(KeyCodeProperty);
         set => SetValue(KeyCodeProperty, value);
     }
 
@@ -74,7 +74,7 @@ public sealed class ShortcutBehavior : BehaviorBase<Element>, IShortcutBehavior
         set => SetValue(ConverterParameterProperty, value);
     }
 
-    public bool Handle(KeyCode key)
+    public bool Handle(ShortcutKey key)
     {
         if ((KeyCode != key) || (AssociatedObject is null))
         {

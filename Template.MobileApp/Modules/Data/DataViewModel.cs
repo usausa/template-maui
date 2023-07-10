@@ -3,6 +3,7 @@ namespace Template.MobileApp.Modules.Data;
 using System.Diagnostics;
 
 using MauiComponents;
+
 using Template.MobileApp;
 using Template.MobileApp.Models.Entity;
 using Template.MobileApp.Services;
@@ -84,7 +85,7 @@ public class DataViewModel : AppViewModelBase
     {
         var entity = await dataService.QueryDataAsync(1L);
 
-        if (entity != null)
+        if (entity is not null)
         {
             await dialog.InformationAsync($"Name={entity.Name}\r\nDate={entity.CreateAt:yyyy/MM/dd HH:mm:ss}");
         }

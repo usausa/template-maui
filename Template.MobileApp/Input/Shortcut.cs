@@ -4,11 +4,11 @@ public static class Shortcut
 {
     public static readonly BindableProperty KeyProperty = BindableProperty.CreateAttached(
         "Key",
-        typeof(KeyCode),
+        typeof(ShortcutKey),
         typeof(Shortcut),
         null);
 
-    public static KeyCode GetKey(BindableObject bindable) => (KeyCode)bindable.GetValue(KeyProperty);
+    public static ShortcutKey GetKey(BindableObject bindable) => (ShortcutKey)bindable.GetValue(KeyProperty);
 
-    public static void SetKey(BindableObject bindable, KeyCode value) => bindable.SetValue(KeyProperty, value);
+    public static void SetKey(BindableObject bindable, ShortcutKey value) => bindable.SetValue(KeyProperty, value);
 }
