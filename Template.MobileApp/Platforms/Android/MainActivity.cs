@@ -4,10 +4,8 @@ namespace Template.MobileApp;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using Android.Views;
-using MauiComponents;
 
-using Template.MobileApp.Platforms.Android;
+using MauiComponents;
 
 [Activity(
     Name = "template.mobileapp.MainActivity",
@@ -19,17 +17,22 @@ using Template.MobileApp.Platforms.Android;
     ScreenOrientation = ScreenOrientation.Portrait)]
 public class MainActivity : MauiAppCompatActivity
 {
+#if DEVICE_HAS_KEYPAD
     private KeyInputDriver keyInputDriver = default!;
+#endif
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
 
         ActivityResolver.Init(this);
+#if DEVICE_HAS_KEYPAD
         keyInputDriver = new KeyInputDriver(this);
+#endif
     }
 
-    public override bool DispatchKeyEvent(KeyEvent? e)
+#if DEVICE_HAS_KEYPAD
+    public override bool DispatchKeyEvent(Android.Views.KeyEvent? e)
     {
         if (keyInputDriver.Process(e!))
         {
@@ -38,4 +41,5 @@ public class MainActivity : MauiAppCompatActivity
 
         return base.DispatchKeyEvent(e);
     }
+#endif
 }

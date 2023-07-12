@@ -22,6 +22,17 @@ public static class ShellProperty
         }
     }
 
+    public static readonly BindableProperty HeaderVisibleProperty = BindableProperty.CreateAttached(
+        "HeaderVisible",
+        typeof(bool),
+        typeof(ShellProperty),
+        true,
+        propertyChanged: PropertyChanged);
+
+    public static bool GetHeaderVisible(BindableObject bindable) => (bool)bindable.GetValue(HeaderVisibleProperty);
+
+    public static void SetHeaderVisible(BindableObject bindable, bool value) => bindable.SetValue(HeaderVisibleProperty, value);
+
     public static readonly BindableProperty FunctionVisibleProperty = BindableProperty.CreateAttached(
         "FunctionVisible",
         typeof(bool),
@@ -126,6 +137,7 @@ public static class ShellProperty
         if (bindable is null)
         {
             shell.Title.Value = string.Empty;
+            shell.HeaderVisible.Value = true;
             shell.FunctionVisible.Value = false;
             shell.Function1Text.Value = string.Empty;
             shell.Function2Text.Value = string.Empty;
@@ -139,6 +151,7 @@ public static class ShellProperty
         else
         {
             shell.Title.Value = GetTitle(bindable);
+            shell.HeaderVisible.Value = GetHeaderVisible(bindable);
             shell.FunctionVisible.Value = GetFunctionVisible(bindable);
             shell.Function1Text.Value = GetFunction1Text(bindable);
             shell.Function2Text.Value = GetFunction2Text(bindable);

@@ -1,4 +1,5 @@
-namespace Template.MobileApp.Platforms.Android;
+// ReSharper disable once CheckNamespace
+namespace Template.MobileApp;
 
 using Template.MobileApp.Input;
 

@@ -15,11 +15,11 @@
 
     <ContentPage.Behaviors>
         <sb:AppLifecycleBehavior />
-        <input:InputRootBehavior />
+        <input:InputPageBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
 
-    <Grid>
+    <Grid Style="{StaticResource MainGrid}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -27,12 +27,21 @@
         </Grid.RowDefinitions>
 
         <!-- header -->
-        <BoxView Grid.Row="0" />
-        <Label Grid.Row="0"
-               Text="{Binding Title.Value}" />
+        <Grid Grid.Row="0"
+              Style="{StaticResource HeaderGrid}"
+              IsVisible="{Binding HeaderVisible.Value}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0"
+                   Style="{StaticResource TitleLabel}"
+                   Text="{Binding Title.Value}" />
+        </Grid>
 
         <!-- view container -->
-        <AbsoluteLayout Grid.Row="1">
+        <AbsoluteLayout Grid.Row="1"
+                        Style="{StaticResource ContainerLayout}">
             <AbsoluteLayout.Behaviors>
                 <sn:NavigationContainerBehavior Navigator="{Binding Navigator}" />
             </AbsoluteLayout.Behaviors>
@@ -40,6 +49,7 @@
 
         <!-- function -->
         <Grid Grid.Row="2"
+              Style="{StaticResource FunctionGrid}"
               IsVisible="{Binding FunctionVisible.Value}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -49,18 +59,22 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0"
+                    Style="{StaticResource FunctionButton1}"
                     Command="{Binding Function1Command}"
                     input:Shortcut.Key="Function1"
                     Text="{Binding Function1Text.Value}" />
             <Button Grid.Column="1"
+                    Style="{StaticResource FunctionButton2}"
                     Command="{Binding Function2Command}"
                     input:Shortcut.Key="Function2"
                     Text="{Binding Function2Text.Value}" />
             <Button Grid.Column="2"
+                    Style="{StaticResource FunctionButton3}"
                     Command="{Binding Function3Command}"
                     input:Shortcut.Key="Function3"
                     Text="{Binding Function3Text.Value}" />
             <Button Grid.Column="3"
+                    Style="{StaticResource FunctionButton4}"
                     Command="{Binding Function4Command}"
                     input:Shortcut.Key="Function4"
                     Text="{Binding Function4Text.Value}" />

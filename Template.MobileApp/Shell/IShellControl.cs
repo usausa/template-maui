@@ -4,6 +4,8 @@ public interface IShellControl
 {
     NotificationValue<string> Title { get; }
 
+    NotificationValue<bool> HeaderVisible { get; }
+
     NotificationValue<bool> FunctionVisible { get; }
 
     NotificationValue<string> Function1Text { get; }

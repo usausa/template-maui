@@ -4,30 +4,18 @@ using Smart.Maui.Interactivity;
 
 using Template.MobileApp.Helpers;
 
-public sealed class InputRootBehavior : BehaviorBase<Page>, IInputHandler
+public sealed class InputPopupBehavior : BehaviorBase<View>, IInputHandler
 {
-    protected override void OnAttachedTo(Page bindable)
+    protected override void OnAttachedTo(View bindable)
     {
         base.OnAttachedTo(bindable);
-        bindable.Appearing += BindableOnAppearing;
-        bindable.Disappearing += BindableOnDisappearing;
-    }
-
-    protected override void OnDetachingFrom(Page bindable)
-    {
-        bindable.Appearing -= BindableOnAppearing;
-        bindable.Disappearing -= BindableOnDisappearing;
-        base.OnDetachingFrom(bindable);
-    }
-
-    private void BindableOnAppearing(object? sender, EventArgs e)
-    {
         InputManager.Default.PushHandler(this);
     }
 
-    private void BindableOnDisappearing(object? sender, EventArgs e)
+    protected override void OnDetachingFrom(View bindable)
     {
         InputManager.Default.PopHandler(this);
+        base.OnDetachingFrom(bindable);
     }
 
     public bool Handle(ShortcutKey key)

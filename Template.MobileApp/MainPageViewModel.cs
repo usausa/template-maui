@@ -10,6 +10,8 @@ public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
 
     public NotificationValue<string> Title { get; } = new();
 
+    public NotificationValue<bool> HeaderVisible { get; } = new();
+
     public NotificationValue<bool> FunctionVisible { get; } = new();
 
     public NotificationValue<string> Function1Text { get; } = new();

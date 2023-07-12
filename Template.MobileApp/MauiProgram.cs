@@ -127,6 +127,7 @@ public static class MauiProgram
             c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
             c.LoadingMessageBackgroundColor = Colors.White;
             c.LoadingMessageColor = Colors.Black;
+            c.LoadingMessageFontSize = 28;
             c.ProgressValueColor = Colors.Black;
             c.ProgressAreaBackgroundColor = Colors.White;
             c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
