@@ -8,9 +8,16 @@
              x:DataType="{x:Type module:WizardResultViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:WizardResultViewModel}"
              shell:ShellProperty.Title="Result"
-             shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function1Text="◀️"
+             shell:ShellProperty.Function4Text="▶️"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Context.Value.Data1}" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Context.Value.Data2}" />
+    </VerticalStackLayout>
 
 </ContentView>

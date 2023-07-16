@@ -7,22 +7,128 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceInfoView"
              x:DataType="{x:Type module:DeviceInfoViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceInfoViewModel}"
-             shell:ShellProperty.Title="DeviceInfo"
+             shell:ShellProperty.Title="Info"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout>
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <Label Text="[Device]" />
-        <Label Text="{Binding DeviceVersion.Value, StringFormat='Version: {0}'}" />
-        <Label Text="{Binding DeviceName.Value, StringFormat='Name: {0}'}" />
-        <Label Text="{Binding IsDeviceEmulator.Value, StringFormat='Emulator: {0}'}" />
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Device" />
 
-        <Label Text="[Application]" />
-        <Label Text="{Binding ApplicationName.Value, StringFormat='Name: {0}'}" />
-        <Label Text="{Binding ApplicationPackageName.Value, StringFormat='PackageName: {0}'}" />
-        <Label Text="{Binding ApplicationVersion.Value, StringFormat='Version: {0}'}" />
-        <Label Text="{Binding ApplicationBuild.Value, StringFormat='Build: {0}'}" />
+        <Grid Style="{StaticResource FillGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Version" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DeviceVersion.Value}" />
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Name" />
+            <Label Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DeviceName.Value}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Emulator" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding IsDeviceEmulator.Value}" />
+        </Grid>
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Application" />
+
+        <Grid Style="{StaticResource FillGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Name" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationName.Value}" />
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="PackageName" />
+            <Label Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationPackageName.Value}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Version" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationVersion.Value}" />
+
+            <Label Grid.Row="3" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Build" />
+            <Label Grid.Row="3" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationBuild.Value}" />
+        </Grid>
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Display" />
+
+        <Grid Style="{StaticResource FillGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Width" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DisplayWidth.Value}" />
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Height" />
+
+            <Label Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DisplayHeight.Value}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Density" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DisplayDensity.Value}" />
+        </Grid>
 
     </VerticalStackLayout>
 

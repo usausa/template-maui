@@ -7,49 +7,97 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceMiscView"
              x:DataType="{x:Type module:DeviceMiscViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceMiscViewModel}"
-             shell:ShellProperty.Title="DeviceMisc"
+             shell:ShellProperty.Title="Misc"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout>
+    <Grid Style="{StaticResource MenuGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Button Command="{Binding KeepScreenOnCommand}"
-                Text="Keep screen on" />
-        <Button Command="{Binding KeepScreenOffCommand}"
-                Text="Keep screen off" />
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding KeepScreenOnCommand}"
+                Text="Keep on" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding KeepScreenOffCommand}"
+                Text="Keep off" />
 
-        <Button Command="{Binding OrientationPortraitCommand}"
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding OrientationPortraitCommand}"
                 Text="Portrait" />
-        <Button Command="{Binding OrientationLandscapeCommand}"
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding OrientationLandscapeCommand}"
                 Text="Landscape" />
 
-        <Button Command="{Binding VibrateCommand}"
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding VibrateCommand}"
                 Text="Vibrate" />
-        <Button Command="{Binding VibrateCancelCommand}"
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding VibrateCancelCommand}"
                 Text="Vibrate cancel" />
 
-        <Button Command="{Binding FeedbackClickCommand}"
-                Text="Feedback click" />
-        <Button Command="{Binding FeedbackLongPressCommand}"
-                Text="Feedback long press" />
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding FeedbackClickCommand}"
+                Text="Feed click" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding FeedbackLongPressCommand}"
+                Text="Feed press" />
 
-        <Button Command="{Binding LightOnCommand}"
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding LightOnCommand}"
                 Text="Light on" />
-        <Button Command="{Binding LightOffCommand}"
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding LightOffCommand}"
                 Text="Light off" />
 
-        <Button Command="{Binding ScreenshotCommand}"
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ScreenshotCommand}"
                 Text="Screenshot" />
 
-        <Button Command="{Binding SpeakCommand}"
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding SpeakCommand}"
                 Text="Speak" />
-        <Button Command="{Binding SpeakCancelCommand}"
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding SpeakCancelCommand}"
                 Text="Speak cancel" />
 
-        <Button Command="{Binding RecognizeCommand}"
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding RecognizeCommand}"
                 Text="Recognize" />
-        <Label Text="{Binding RecognizeText.Value}" />
 
-    </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource FillVerticalStack}">
+            <Label Style="{StaticResource TextValueLabel}"
+                   Text="{Binding RecognizeText.Value}" />
+        </VerticalStackLayout>
+
+    </Grid>
 
 </ContentView>

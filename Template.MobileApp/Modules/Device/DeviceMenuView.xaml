@@ -24,18 +24,88 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="0"
+        <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceInfo}"
                 Text="Info" />
-        <Button Grid.Row="1"
+        <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceStatus}"
                 Text="Status" />
-        <Button Grid.Row="2"
+
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DeviceSensor}"
+                Text="Sensor" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Location" />
+
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DeviceQrDisplay}"
+                Text="QR Display" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="QR Scan" />
+
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Camera" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="WiFi" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Bluetooth" />
+
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="NFC" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Audio" />
+
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Biometric" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceMisc}"

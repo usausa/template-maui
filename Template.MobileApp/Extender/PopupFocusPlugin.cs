@@ -11,7 +11,7 @@ public sealed class PopupFocusPlugin : IPopupPlugin
         popup.Content?.Behaviors.Add(new InputPopupBehavior());
         popup.Opened += (_, _) =>
         {
-            MainThread.BeginInvokeOnMainThread(() => popup.Content?.SetDefaultFocus());
+            Application.Current?.Dispatcher.Dispatch(() => popup.Content?.SetDefaultFocus());
         };
     }
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             x:Class="Template.MobileApp.Modules.Basic.BasicStyleView"
+             x:DataType="{x:Type module:BasicStyleViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:BasicStyleViewModel}"
+             shell:ShellProperty.Title="Style"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Action button" />
+
+        <Grid Style="{StaticResource MenuGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource PrimaryButton}"
+                    Text="Primary" />
+            <Button Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource SecondaryButton}"
+                    Text="Secondary" />
+            <Button Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource TertiaryButton}"
+                    Text="Tertiary" />
+        </Grid>
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Information button" />
+
+        <Grid Style="{StaticResource MenuGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource InformationButton}"
+                    Text="Information" />
+            <Button Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource SuccessButton}"
+                    Text="Success" />
+            <Button Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource WarningButton}"
+                    Text="Warning" />
+            <Button Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource ErrorButton}"
+                    Text="Error" />
+        </Grid>
+
+    </VerticalStackLayout>
+
+</ContentView>

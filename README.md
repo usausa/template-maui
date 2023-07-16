@@ -4,10 +4,7 @@
 
 ## Basic
 
-- [ ] Style fix
 - [ ] Key behavior test
-- [ ] Navigation sample fix
-- [ ] Database sample fix
 - [ ] Network sample fix
 - [ ] Check old style splash
 
@@ -23,7 +20,6 @@
 ## Device
 
 - [ ] Geo location test
-- [ ] Battery icon test
 - [ ] Screen off detect
 - [ ] NFC(FeliCa) sample
 - [ ] WiFi manager
@@ -33,7 +29,6 @@
 ## Other(Ex)
 
 - [ ] Multi language
-- [ ] Sensors
 - [ ] Bluetooth (Printer)
 - [ ] BLE (Seonsor)
 - [ ] Map
@@ -55,6 +50,5 @@
   - [ ] Calendar
   - [ ] Grid
   - [ ] Chat
-  - [ ] Graphics
   - [ ] Animations
   - [ ] Figma

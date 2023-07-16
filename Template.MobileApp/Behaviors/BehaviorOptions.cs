@@ -11,4 +11,6 @@ public sealed class BehaviorOptions
     public bool NoBorder { get; set; } = true;
 
     public bool InputFilter { get; set; } = true;
+
+    public bool DisableOverScroll { get; set; } = true;
 }

@@ -18,12 +18,9 @@ public class DialogMenuViewModel : AppViewModelBase
     public ICommand SnackbarCommand { get; }
     public ICommand ToastCommand { get; }
 
-    public ICommand PopupCommand { get; }
-
     public DialogMenuViewModel(
         ApplicationState applicationState,
-        IDialog dialog,
-        IPopupNavigator popupNavigator)
+        IDialog dialog)
         : base(applicationState)
     {
         InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("Information"));
@@ -84,11 +81,6 @@ public class DialogMenuViewModel : AppViewModelBase
             }
         });
         SnackbarCommand = MakeDelegateCommand(() => dialog.Snackbar("Warning", 3000, Colors.Orange));
-        PopupCommand = MakeAsyncCommand(async () =>
-        {
-            var result = await popupNavigator.PopupAsync<string, bool>(DialogId.Sample, DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
-            await dialog.InformationAsync($"Result={result}");
-        });
         ToastCommand = MakeAsyncCommand(async () =>
         {
             count++;

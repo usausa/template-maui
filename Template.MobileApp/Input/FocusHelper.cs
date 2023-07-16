@@ -12,7 +12,9 @@ public static class FocusHelper
 
         if (focused is not null)
         {
-            MainThread.BeginInvokeOnMainThread(() => focused.Focus());
+#pragma warning disable CA1849
+            Application.Current?.Dispatcher.Dispatch(() => focused.Focus());
+#pragma warning restore CA1849
         }
 
         return result;
@@ -26,7 +28,9 @@ public static class FocusHelper
 
         if (focused is not null)
         {
-            MainThread.BeginInvokeOnMainThread(() => focused.Focus());
+#pragma warning disable CA1849
+            Application.Current?.Dispatcher.Dispatch(() => focused.Focus());
+#pragma warning restore CA1849
         }
     }
 }

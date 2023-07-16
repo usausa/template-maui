@@ -33,6 +33,16 @@ public enum ViewId
     DeviceMenu,
     DeviceInfo,
     DeviceStatus,
+    DeviceSensor,
+    DeviceLocation,
+    DeviceQrDisplay,
+    DeviceQrScan,
+    DeviceCamera,
+    DeviceWiFi,
+    DeviceBluetooth,
+    DeviceNfc,
+    DeviceAudio,
+    DeviceBiometric,
     DeviceMisc,
 
     // Database
@@ -47,12 +57,24 @@ public enum ViewId
     KeyList,
     KeyMisc,
 
-    // Pattern
-    PatternMenu,
+    // Basic
+    BasicMenu,
+    BasicTypography,
+    BasicStyle,
+    BasicConverter,
+    BasicBehavior,
+    BasicValidation,
 
     // Sample
     SampleMenu,
+    SampleList,
+    SampleObjectDetection,
+    SampleMap,
+    SampleChart,
+    SampleChat,
 
     // UI
-    UIMenu
+    UIMenu,
+    UICalendar,
+    UIGrid
 }

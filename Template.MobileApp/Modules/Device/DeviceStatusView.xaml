@@ -8,27 +8,59 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceStatusView"
              x:DataType="{x:Type module:DeviceStatusViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceStatusViewModel}"
-             shell:ShellProperty.Title="DeviceStatus"
+             shell:ShellProperty.Title="Status"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout>
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <Label Text="[Battery]" />
-        <Label Text="{Binding ApplicationState.BatteryChargeLevel, StringFormat='ChargeLevel: {0}'}" />
-        <Label Text="{Binding ApplicationState.BatteryState, StringFormat='State: {0}'}" />
-        <Label Text="{Binding ApplicationState.BatteryPowerSource, StringFormat='PowerSource: {0}'}" />
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Battery" />
+
+        <Grid Style="{StaticResource FillGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="ChargeLevel" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationState.BatteryChargeLevel}" />
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="State" />
+            <Label Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationState.BatteryState}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="PowerSource" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationState.BatteryPowerSource}" />
+        </Grid>
 
         <Label FontFamily="MaterialIcons" FontSize="28">
             <Label.Text>
                 <MultiBinding Converter="{StaticResource BatteryIconConverter}">
-                    <Binding Path="ApplicationState.BatteryState" />
                     <Binding Path="ApplicationState.BatteryChargeLevel" />
+                    <Binding Path="ApplicationState.BatteryState" />
+                    <Binding Path="ApplicationState.BatteryPowerSource" />
                 </MultiBinding>
             </Label.Text>
         </Label>
 
-        <HorizontalStackLayout>
+        <HorizontalStackLayout Style="{StaticResource FillHorizontalStack}">
             <Label Text="{x:Static fonts:MaterialIcons.Battery_alert}"
                    FontFamily="MaterialIcons" FontSize="28" />
             <Label Text="{x:Static fonts:MaterialIcons.Battery_unknown}"
@@ -53,10 +85,41 @@
                    FontFamily="MaterialIcons" FontSize="28" />
         </HorizontalStackLayout>
 
-        <Label Text="[Network]" />
-        <Label Text="{Binding ApplicationState.NetworkProfile, StringFormat='Profile: {0}'}" />
-        <Label Text="{Binding ApplicationState.NetworkAccess, StringFormat='Access: {0}'}" />
-        <Label Text="{Binding ApplicationState.NetworkState, StringFormat='State: {0}'}" />
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Network" />
+
+        <Grid Style="{StaticResource FillGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Profile" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationState.NetworkProfile}" />
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Access" />
+            <Label Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationState.NetworkAccess}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="State" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApplicationState.NetworkState}" />
+        </Grid>
 
     </VerticalStackLayout>
 

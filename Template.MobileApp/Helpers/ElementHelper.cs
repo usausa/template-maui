@@ -25,7 +25,7 @@ public static partial class ElementHelper
         return null;
     }
 
-    public static IEnumerable<VisualElement> EnumerateActive(IVisualTreeElement parent)
+    public static IEnumerable<VisualElement> EnumerateFocusable(IVisualTreeElement parent)
     {
         foreach (var child in parent.GetVisualChildren())
         {
@@ -34,14 +34,19 @@ public static partial class ElementHelper
                 continue;
             }
 
-            yield return visual;
+            if (IsPlatformFocusable(visual))
+            {
+                yield return visual;
+            }
 
-            foreach (var descendant in EnumerateActive(child))
+            foreach (var descendant in EnumerateFocusable(child))
             {
                 yield return descendant;
             }
         }
     }
+
+    private static partial bool IsPlatformFocusable(VisualElement visual);
 
     public static IEnumerable<T> EnumerateActive<T>(IVisualTreeElement parent)
     {

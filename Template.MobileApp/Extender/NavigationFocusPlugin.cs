@@ -36,7 +36,7 @@ public sealed class NavigationFocusPlugin : PluginBase
         {
             if (focusBackup.TryGetValue(view, out var focused))
             {
-                MainThread.BeginInvokeOnMainThread(() => focused.Focus());
+                Application.Current?.Dispatcher.Dispatch(() => focused.Focus());
             }
         }
         else
@@ -45,7 +45,7 @@ public sealed class NavigationFocusPlugin : PluginBase
             var page = element.FindParent<Page>();
             if (page is not null)
             {
-                MainThread.BeginInvokeOnMainThread(page.SetDefaultFocus);
+                Application.Current?.Dispatcher.Dispatch(page.SetDefaultFocus);
             }
         }
     }

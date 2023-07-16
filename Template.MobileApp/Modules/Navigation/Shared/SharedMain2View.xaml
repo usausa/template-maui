@@ -7,10 +7,15 @@
              x:Class="Template.MobileApp.Modules.Navigation.Shared.SharedMain2View"
              x:DataType="{x:Type module:SharedMain2ViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:SharedMain2ViewModel}"
-             shell:ShellProperty.Title="Main2"
-             shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Title="Shared2"
+             shell:ShellProperty.Function1Text="◀️"
+             shell:ShellProperty.Function4Text="✔"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding No.Value}" />
+    </VerticalStackLayout>
 
 </ContentView>

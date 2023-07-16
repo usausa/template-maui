@@ -8,9 +8,14 @@
              x:DataType="{x:Type module:SharedInputViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:SharedInputViewModel}"
              shell:ShellProperty.Title="Input"
-             shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function1Text="◀️"
+             shell:ShellProperty.Function4Text="▶️"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+        <Entry Text="{Binding No.Value}"
+               Placeholder="Data1" />
+    </VerticalStackLayout>
 
 </ContentView>

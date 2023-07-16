@@ -14,10 +14,15 @@ public class DeviceInfoViewModel : AppViewModelBase
     public NotificationValue<Version> ApplicationVersion { get; } = new();
     public NotificationValue<string> ApplicationBuild { get; } = new();
 
+    public NotificationValue<double> DisplayWidth { get; } = new();
+    public NotificationValue<double> DisplayHeight { get; } = new();
+    public NotificationValue<double> DisplayDensity { get; } = new();
+
     public DeviceInfoViewModel(
         ApplicationState applicationState,
         IDeviceInfo deviceInfo,
-        IAppInfo appInfo)
+        IAppInfo appInfo,
+        IDeviceDisplay display)
         : base(applicationState)
     {
         DeviceVersion.Value = deviceInfo.Version;
@@ -28,6 +33,10 @@ public class DeviceInfoViewModel : AppViewModelBase
         ApplicationPackageName.Value = appInfo.PackageName;
         ApplicationVersion.Value = appInfo.Version;
         ApplicationBuild.Value = appInfo.BuildString;
+
+        DisplayWidth.Value = display.MainDisplayInfo.Width;
+        DisplayHeight.Value = display.MainDisplayInfo.Height;
+        DisplayDensity.Value = display.MainDisplayInfo.Density;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

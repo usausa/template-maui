@@ -8,9 +8,14 @@
              x:DataType="{x:Type module:WizardInput2ViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:WizardInput2ViewModel}"
              shell:ShellProperty.Title="Input2"
-             shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function1Text="◀️"
+             shell:ShellProperty.Function4Text="▶️"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+        <Entry Text="{Binding Context.Value.Data2}"
+               Placeholder="Data1" />
+    </VerticalStackLayout>
 
 </ContentView>

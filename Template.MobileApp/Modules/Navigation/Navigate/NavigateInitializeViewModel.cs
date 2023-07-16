@@ -28,9 +28,9 @@ public class NavigateInitializeViewModel : AppViewModelBase
 
     protected async Task InitializeAsync()
     {
-        using (dialog.Loading("Initialize"))
+        using (dialog.Loading("Initializing..."))
         {
-            await Task.Delay(5000);
+            await Task.Delay(3000);
         }
     }
 }

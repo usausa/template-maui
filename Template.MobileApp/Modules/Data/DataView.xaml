@@ -11,27 +11,86 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout>
+    <Grid Style="{StaticResource FillGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
 
-        <Label Text="CRUD" />
-        <Button Command="{Binding InsertCommand}"
-                Text="Insert" />
-        <Button Command="{Binding UpdateCommand}"
-                Text="Update" />
-        <Button Command="{Binding DeleteCommand}"
-                Text="Delete" />
-        <Button Command="{Binding QueryCommand}"
-                Text="Query" />
+        <Label Grid.Row="0"
+               Style="{StaticResource GroupLabel}"
+               Text="CRUD" />
 
-        <Label Text="Bulk" />
-        <Label Text="{Binding BulkDataCount.Value, StringFormat='Count: {0}'}" />
-        <Button Command="{Binding BulkInsertCommand}"
-                Text="BulkInsert" />
-        <Button Command="{Binding DeleteAllCommand}"
-                Text="DeleteAll" />
-        <Button Command="{Binding QueryAllCommand}"
-                Text="QueryAll" />
+        <Grid Grid.Row="1"
+              Style="{StaticResource MenuGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-    </VerticalStackLayout>
+            <Button Grid.Row="0"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding InsertCommand}"
+                    Text="Insert" />
+            <Button Grid.Row="1"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding UpdateCommand}"
+                    Text="Update" />
+            <Button Grid.Row="2"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding DeleteCommand}"
+                    Text="Delete" />
+            <Button Grid.Row="3"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding QueryCommand}"
+                    Text="Query" />
+        </Grid>
+
+        <Label Grid.Row="2"
+               Style="{StaticResource GroupLabel}"
+               Text="Bulk" />
+
+        <Grid Grid.Row="3"
+              Style="{StaticResource FillGrid}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Count" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding BulkDataCount.Value}" />
+        </Grid>
+
+        <Grid Grid.Row="4"
+              Style="{StaticResource MenuGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding BulkInsertCommand}"
+                    Text="BulkInsert" />
+            <Button Grid.Row="1"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding DeleteAllCommand}"
+                    Text="DeleteAll" />
+            <Button Grid.Row="2"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding QueryAllCommand}"
+                    Text="QueryAll" />
+        </Grid>
+    </Grid>
 
 </ContentView>

@@ -3,14 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
+             xmlns:fonts="clr-namespace:Template.MobileApp.Resources.Fonts"
+             xmlns:entity="clr-namespace:Template.MobileApp.Models.Entity" xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
              x:Class="Template.MobileApp.Modules.Navigation.Edit.EditListView"
              x:DataType="{x:Type module:EditListViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:EditListViewModel}"
              shell:ShellProperty.Title="List"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function4Text="New"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+        <ListView Style="{StaticResource ItemListView}"
+                  ItemsSource="{Binding Items}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="entity:WorkEntity">
+                    <ViewCell>
+                        <Grid Style="{StaticResource ItemListCellGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="6*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource ListItemLeftLabel}"
+                                   Text="{Binding Id}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource ListItemLeftLabel}"
+                                   Text="{Binding Name}" />
+                            <Button Grid.Column="2"
+                                    Style="{StaticResource ListItemButtonPrimary}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="{x:Static fonts:MaterialIcons.Edit}" />
+                            <Button Grid.Column="3"
+                                    Style="{StaticResource ListItemButtonDanger}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="{x:Static fonts:MaterialIcons.Delete}" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </VerticalStackLayout>
 
 </ContentView>

@@ -14,6 +14,7 @@ internal static class AppHostBuilderExtensions
 
         EntryOption.UseCustomMapper(options);
         Border.UseCustomMapper(options);
+        ListViewOption.UseCustomMapper(options);
 
         return builder;
     }

@@ -28,12 +28,22 @@ public sealed class BatteryIconConverter : IMultiValueConverter
 
     public object? Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
     {
-        if ((values is null) || (values.Length != 2))
+        if ((values is null) || (values.Length != 3))
         {
             return Unknown;
         }
 
-        if (values[0] is not BatteryState state)
+        if (values[2] is not BatteryPowerSource source)
+        {
+            return Unknown;
+        }
+
+        if ((source == BatteryPowerSource.AC) || (source == BatteryPowerSource.Usb) || (source == BatteryPowerSource.Wireless))
+        {
+            return Charging;
+        }
+
+        if (values[1] is not BatteryState state)
         {
             return Unknown;
         }
@@ -47,7 +57,7 @@ public sealed class BatteryIconConverter : IMultiValueConverter
             return Alert;
         }
 
-        if (values[1] is not double chargeLevel)
+        if (values[0] is not double chargeLevel)
         {
             return Unknown;
         }
