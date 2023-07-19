@@ -97,17 +97,12 @@ public sealed class ApplicationState : BusyState, IDisposable
 
         // Battery
         UpdateBattery(battery.ChargeLevel, battery.State, battery.PowerSource);
-        disposables.Add(Observable
-            .FromEvent<EventHandler<BatteryInfoChangedEventArgs>, BatteryInfoChangedEventArgs>(h => (_, e) => h(e), h => battery.BatteryInfoChanged += h, h => battery.BatteryInfoChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => UpdateBattery(x.ChargeLevel, x.State, x.PowerSource)));
-
+        disposables.Add(battery.ObserveBatteryInfoChangedOnCurrentContext().Subscribe(
+            x => UpdateBattery(x.ChargeLevel, x.State, x.PowerSource)));
         // Connectivity
         UpdateConnectivity(connectivity.ConnectionProfiles, connectivity.NetworkAccess);
-        disposables.Add(Observable
-            .FromEvent<EventHandler<ConnectivityChangedEventArgs>, ConnectivityChangedEventArgs>(h => (_, e) => h(e), h => connectivity.ConnectivityChanged += h, h => connectivity.ConnectivityChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => UpdateConnectivity(x.ConnectionProfiles, x.NetworkAccess)));
+        disposables.Add(connectivity.ObserveConnectivityChangedOnCurrentContext().Subscribe(
+            x => UpdateConnectivity(x.ConnectionProfiles, x.NetworkAccess)));
     }
 
     public void Dispose()

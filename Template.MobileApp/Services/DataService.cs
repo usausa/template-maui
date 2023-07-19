@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Services;
 
 using Template.MobileApp.Helpers.Data;
-using Template.MobileApp.Models.Entity;
 
 using Microsoft.Data.Sqlite;
 

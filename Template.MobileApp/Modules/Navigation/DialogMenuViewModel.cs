@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Navigation;
 
-using Template.MobileApp;
-
 public class DialogMenuViewModel : AppViewModelBase
 {
     private int count;

@@ -2,7 +2,11 @@
 
   <!-- Device profile -->
   <PropertyGroup>
-    <DeviceProfile>DT-999</DeviceProfile>
+    <DeviceProfile>Default</DeviceProfile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(DeviceProfile)'=='Default'">
+    <DefineConstants>$(DefineConstants);DEVICE_HAS_KEYPAD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DeviceProfile)'=='DT-999'">
@@ -11,7 +15,7 @@
 
   <!-- Embedded build property -->
   <PropertyGroup>
-    <EmbeddedBuildProperty>Flavor=Default,AppCenterSecret=</EmbeddedBuildProperty>
+    <EmbeddedBuildProperty>DeviceProfile=$(DeviceProfile),Flavor=Development,AppCenterSecret=,ApiEndPoint=https://server/</EmbeddedBuildProperty>
   </PropertyGroup>
 
 </Project>

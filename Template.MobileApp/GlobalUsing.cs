@@ -39,4 +39,11 @@ global using Smart.Navigation.Plugins.Parameter;
 global using Smart.Navigation.Plugins.Scope;
 global using Smart.Text;
 
+global using Template.MobileApp;
 global using Template.MobileApp.Domain;
+global using Template.MobileApp.Models;
+global using Template.MobileApp.Models.Api;
+global using Template.MobileApp.Models.Entity;
+global using Template.MobileApp.Models.Entry;
+global using Template.MobileApp.Models.Input;
+global using Template.MobileApp.State;

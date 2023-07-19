@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Template.MobileApp.Resources.Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             x:Class="Template.MobileApp.Modules.Basic.BasicFontView"
+             x:DataType="{x:Type module:BasicFontViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:BasicFontViewModel}"
+             shell:ShellProperty.Title="Font"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <Label Text="Default"
+               FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontSize="24" />
+        <Label Text="OpenSansRegular"
+               FontFamily="OpenSansRegular" FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontFamily="OpenSansRegular" FontSize="24" />
+        <Label Text="OpenSansSemibold"
+               FontFamily="OpenSansSemibold" FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontFamily="OpenSansSemibold" FontSize="24" />
+        <Label Text="RobotoRegular"
+               FontFamily="RobotoRegular" FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontFamily="RobotoRegular" FontSize="24" />
+
+        <Label Text="MaterialIcons"
+               FontSize="36" />
+        <HorizontalStackLayout Style="{StaticResource FillHorizontalStack}">
+            <Label Text="{x:Static fonts:MaterialIcons.Stay_current_portrait}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Create}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Save_alt}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Bluetooth}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Cloud_download}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Cloud_upload}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Phone_android}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Camera_alt}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Favorite}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+            <Label Text="{x:Static fonts:MaterialIcons.Favorite_outline}"
+                   FontFamily="MaterialIcons" FontSize="28" />
+
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+
+</ContentView>

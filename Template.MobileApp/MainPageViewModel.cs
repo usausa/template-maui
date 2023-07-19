@@ -4,6 +4,8 @@ using Template.MobileApp.Shell;
 
 public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
 {
+    private readonly IScreen screen;
+
     public ApplicationState ApplicationState { get; }
 
     public INavigator Navigator { get; }
@@ -35,9 +37,13 @@ public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
 
     public MainPageViewModel(
         ApplicationState applicationState,
-        INavigator navigator)
+        ILogger<MainPageViewModel> log,
+        INavigator navigator,
+        IScreen screen,
+        IDialog dialog)
         : base(applicationState)
     {
+        this.screen = screen;
         ApplicationState = applicationState;
         Navigator = navigator;
 
@@ -57,6 +63,21 @@ public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
                 () => Navigator.NotifyAsync(ShellEvent.Function4),
                 () => Function4Enabled.Value)
             .Observe(Function4Enabled);
+
+        // Screen lock detection
+        // ReSharper disable AsyncVoidLambda
+        Disposables.Add(Observable
+            .FromEvent<EventHandler<ScreenStateEventArgs>, ScreenStateEventArgs>(h => (_, e) => h(e), h => screen.ScreenStateChanged += h, h => screen.ScreenStateChanged -= h)
+            .ObserveOn(SynchronizationContext.Current!)
+            .Subscribe(async x =>
+            {
+                log.DebugScreenStateChanged(x.ScreenOn);
+                if (x.ScreenOn)
+                {
+                    await dialog.Toast("Screen on", true);
+                }
+            }));
+        // ReSharper restore AsyncVoidLambda
     }
 
     //--------------------------------------------------------------------------------
@@ -65,6 +86,7 @@ public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
 
     public void OnCreated()
     {
+        screen.EnableDetectScreenState(true);
     }
 
     public void OnActivated()

@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp;
-
 public class SampleMapViewModel : AppViewModelBase
 {
     public SampleMapViewModel(

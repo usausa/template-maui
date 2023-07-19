@@ -12,79 +12,96 @@
              shell:ShellProperty.Title="Menu"
              shell:ShellProperty.FunctionVisible="False">
 
-    <Grid Style="{StaticResource MenuGrid}">
+    <Grid Style="{StaticResource FillGrid}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId NavigationMenu}"
-                input:Shortcut.Key="Num1"
-                Text="1.Navigation" />
-        <Button Grid.Row="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId DialogMenu}"
-                input:Shortcut.Key="Num2"
-                Text="2.Dialog" />
-        <Button Grid.Row="2"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId DeviceMenu}"
-                input:Shortcut.Key="Num3"
-                Text="3.Device" />
-        <Button Grid.Row="3"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId Data}"
-                input:Shortcut.Key="Num4"
-                Text="4.Data" />
-        <Button Grid.Row="4"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId Network}"
-                input:Shortcut.Key="Num5"
-                Text="5.Network" />
-        <Button Grid.Row="5"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId KeyMenu}"
-                input:Shortcut.Key="Num6"
-                Text="6.Key" />
-        <Button Grid.Row="6"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId BasicMenu}"
-                input:Shortcut.Key="Num7"
-                Text="7.Basic" />
-        <Button Grid.Row="7"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleMenu}"
-                input:Shortcut.Key="Num8"
-                Text="8.Sample" />
-        <Button Grid.Row="8"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIMenu}"
-                input:Shortcut.Key="Num9"
-                Text="9.UI" />
-        <Button Grid.Row="9"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                input:Shortcut.Key="Num0"
-                Text="" />
+        <Grid Grid.Row="0"
+              Style="{StaticResource MenuGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId NavigationMenu}"
+                    input:Shortcut.Key="Num1"
+                    Text="1.Navigation" />
+            <Button Grid.Row="1"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId DialogMenu}"
+                    input:Shortcut.Key="Num2"
+                    Text="2.Dialog" />
+            <Button Grid.Row="2"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId DeviceMenu}"
+                    input:Shortcut.Key="Num3"
+                    Text="3.Device" />
+            <Button Grid.Row="3"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId Data}"
+                    input:Shortcut.Key="Num4"
+                    Text="4.Data" />
+            <Button Grid.Row="4"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId Network}"
+                    input:Shortcut.Key="Num5"
+                    Text="5.Network" />
+            <Button Grid.Row="5"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId KeyMenu}"
+                    input:Shortcut.Key="Num6"
+                    Text="6.Key" />
+            <Button Grid.Row="6"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId BasicMenu}"
+                    input:Shortcut.Key="Num7"
+                    Text="7.Basic" />
+            <Button Grid.Row="7"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId SampleMenu}"
+                    input:Shortcut.Key="Num8"
+                    Text="8.Sample" />
+            <Button Grid.Row="8"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId UIMenu}"
+                    input:Shortcut.Key="Num9"
+                    Text="9.UI" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Style="{StaticResource FooterGrid}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0"
+                   Style="{StaticResource FooterInfoLeftLabel}"
+                   Text="{Binding Flavor.Value, StringFormat='{0} flavor'}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource FooterInfoRightLabel}"
+                   Text="{Binding Version.Value, StringFormat='Version {0}'}" />
+        </Grid>
     </Grid>
 
 </ContentView>

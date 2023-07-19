@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Navigation.Stack;
 
-using Template.MobileApp;
-
 public class Stack3ViewModel : AppViewModelBase
 {
     public Stack3ViewModel(ApplicationState applicationState)

@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Key;
 
-using Template.MobileApp;
-
 public class KeyMiscViewModel : AppViewModelBase
 {
     public KeyMiscViewModel(

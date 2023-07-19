@@ -1,8 +1,6 @@
 #pragma warning disable SA1135
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp;
-
 public class DeviceInfoViewModel : AppViewModelBase
 {
     public NotificationValue<Version> DeviceVersion { get; } = new();

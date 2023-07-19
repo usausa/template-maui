@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp;
-
 public class DeviceQrDisplayViewModel : AppViewModelBase
 {
     public NotificationValue<string> Text { get; } = new();

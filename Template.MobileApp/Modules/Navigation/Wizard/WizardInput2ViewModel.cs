@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Navigation.Wizard;
 
-using Template.MobileApp;
-
 public class WizardInput2ViewModel : AppViewModelBase
 {
     [Scope]

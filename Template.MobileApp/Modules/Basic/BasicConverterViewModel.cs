@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Basic;
 
-using Template.MobileApp;
-
 public class BasicConverterViewModel : AppViewModelBase
 {
     public BasicConverterViewModel(

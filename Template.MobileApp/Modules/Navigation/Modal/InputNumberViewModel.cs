@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Modules.Navigation.Modal;
 
-using Template.MobileApp.Models.Input;
 using Template.MobileApp.Modules;
 
 public class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>

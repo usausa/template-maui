@@ -9,9 +9,9 @@ public class Settings
         this.preferences = preferences;
     }
 
-    public string ServerAddress
+    public string ApiEndPoint
     {
-        get => preferences.Get<string>(nameof(ServerAddress), default!);
-        set => preferences.Set(nameof(ServerAddress), value);
+        get => preferences.Get<string>(nameof(ApiEndPoint), default!);
+        set => preferences.Set(nameof(ApiEndPoint), value);
     }
 }

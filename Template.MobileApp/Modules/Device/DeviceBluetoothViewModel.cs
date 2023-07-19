@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp;
-
 public class DeviceBluetoothViewModel : AppViewModelBase
 {
     public DeviceBluetoothViewModel(ApplicationState applicationState)

@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Navigation.Navigate;
 
-using Template.MobileApp;
-
 public class NavigateInitializeViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;

@@ -27,7 +27,7 @@ using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
-using Template.MobileApp.State;
+using Template.MobileApp.Usecase;
 
 public static class MauiProgram
 {
@@ -52,6 +52,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular");
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
                 fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
             })
@@ -180,6 +181,14 @@ public static class MauiProgram
             };
         });
         config.BindSingleton<DataService>();
+
+        config.BindSingleton<NetworkService>();
+
+        // Usecase
+        config.BindSingleton<NetworkOperator>();
+
+        config.BindSingleton<SampleUsecase>();
+        config.BindSingleton<CognitiveUsecase>();
 
         // Startup
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();

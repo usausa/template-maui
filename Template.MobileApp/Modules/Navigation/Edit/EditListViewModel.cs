@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Navigation.Edit;
 
-using Template.MobileApp;
-using Template.MobileApp.Models.Entity;
 using Template.MobileApp.Services;
 
 public class EditListViewModel : AppViewModelBase

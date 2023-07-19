@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules;
 
 using Template.MobileApp.Input;
-using Template.MobileApp.Models.Input;
 
 public static class PopupNavigatorExtensions
 {

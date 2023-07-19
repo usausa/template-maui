@@ -4,8 +4,6 @@ using System.Numerics;
 
 using Microsoft.Maui.Devices.Sensors;
 
-using Template.MobileApp;
-
 public class DeviceSensorViewModel : AppViewModelBase
 {
     private readonly IAccelerometer accelerometer;
@@ -44,30 +42,18 @@ public class DeviceSensorViewModel : AppViewModelBase
         this.magnetometer = magnetometer;
         this.orientation = orientation;
 
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<AccelerometerChangedEventArgs>, AccelerometerChangedEventArgs>(h => (_, e) => h(e), h => accelerometer.ReadingChanged += h, h => accelerometer.ReadingChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => AccelerationValue.Value = x.Reading.Acceleration));
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<BarometerChangedEventArgs>, BarometerChangedEventArgs>(h => (_, e) => h(e), h => barometer.ReadingChanged += h, h => barometer.ReadingChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => BarometerValue.Value = x.Reading.PressureInHectopascals));
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<CompassChangedEventArgs>, CompassChangedEventArgs>(h => (_, e) => h(e), h => compass.ReadingChanged += h, h => compass.ReadingChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => MagneticValue.Value = x.Reading.HeadingMagneticNorth));
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<GyroscopeChangedEventArgs>, GyroscopeChangedEventArgs>(h => (_, e) => h(e), h => gyroscope.ReadingChanged += h, h => gyroscope.ReadingChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => GyroscopeValue.Value = x.Reading.AngularVelocity));
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<MagnetometerChangedEventArgs>, MagnetometerChangedEventArgs>(h => (_, e) => h(e), h => magnetometer.ReadingChanged += h, h => magnetometer.ReadingChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => MagnetometerValue.Value = x.Reading.MagneticField));
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<OrientationSensorChangedEventArgs>, OrientationSensorChangedEventArgs>(h => (_, e) => h(e), h => orientation.ReadingChanged += h, h => orientation.ReadingChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => OrientationValue.Value = x.Reading.Orientation));
+        Disposables.Add(accelerometer.ObserveReadingChangedOnCurrentContext().Subscribe(
+            x => AccelerationValue.Value = x.Reading.Acceleration));
+        Disposables.Add(barometer.ObserveReadingChangedOnCurrentContext().Subscribe(
+            x => BarometerValue.Value = x.Reading.PressureInHectopascals));
+        Disposables.Add(compass.ObserveReadingChangedOnCurrentContext().Subscribe(
+            x => MagneticValue.Value = x.Reading.HeadingMagneticNorth));
+        Disposables.Add(gyroscope.ObserveReadingChangedOnCurrentContext().Subscribe(
+            x => GyroscopeValue.Value = x.Reading.AngularVelocity));
+        Disposables.Add(magnetometer.ObserveReadingChangedOnCurrentContext().Subscribe(
+            x => MagnetometerValue.Value = x.Reading.MagneticField));
+        Disposables.Add(orientation.ObserveReadingChangedOnCurrentContext().Subscribe(
+            x => OrientationValue.Value = x.Reading.Orientation));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

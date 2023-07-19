@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.UI;
 
-using Template.MobileApp;
-
 public class UICalendarViewModel : AppViewModelBase
 {
     public UICalendarViewModel(

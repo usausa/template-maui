@@ -20,7 +20,6 @@ public class MainActivity : MauiAppCompatActivity
 #if DEVICE_HAS_KEYPAD
     private KeyInputDriver keyInputDriver = default!;
 #endif
-
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);

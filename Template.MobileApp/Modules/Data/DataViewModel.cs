@@ -4,8 +4,6 @@ using System.Diagnostics;
 
 using MauiComponents;
 
-using Template.MobileApp;
-using Template.MobileApp.Models.Entity;
 using Template.MobileApp.Services;
 
 public class DataViewModel : AppViewModelBase
