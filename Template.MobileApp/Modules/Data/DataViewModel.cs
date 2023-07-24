@@ -96,7 +96,7 @@ public class DataViewModel : AppViewModelBase
     private async Task BulkInsert()
     {
         var list = Enumerable.Range(1, 10000)
-            .Select(x => new BulkDataEntity
+            .Select(static x => new BulkDataEntity
             {
                 Key1 = $"{x / 1000:D2}",
                 Key2 = $"{x % 1000:D2}",

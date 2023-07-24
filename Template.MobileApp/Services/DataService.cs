@@ -130,7 +130,7 @@ public class DataService
 
     public async ValueTask DeleteAllBulkDataAsync()
     {
-        await provider.UsingAsync(con => con.ExecuteAsync("DELETE FROM BulkData"));
+        await provider.UsingAsync(static con => con.ExecuteAsync("DELETE FROM BulkData"));
     }
 
     public List<BulkDataEntity> QueryAllBulkDataList()
@@ -145,7 +145,7 @@ public class DataService
     //--------------------------------------------------------------------------------
 
     public ValueTask<List<WorkEntity>> QueryWorkListAsync() =>
-        provider.Using(con => con.QueryListAsync<WorkEntity>(SqlSelect<WorkEntity>.All()));
+        provider.Using(static con => con.QueryListAsync<WorkEntity>(SqlSelect<WorkEntity>.All()));
 
     public ValueTask<WorkEntity?> QueryWorkAsync(int id) =>
         provider.Using(con =>

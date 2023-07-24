@@ -43,7 +43,7 @@ public static class MauiProgram
             {
                 // Lifecycle
 #if DEVICE_FULL_SCREEN
-                events.AddAndroid(android => android.OnCreate((activity, _) => AndroidHelper.FullScreen(activity)));
+                events.AddAndroid(android => android.OnCreate(static (activity, _) => AndroidHelper.FullScreen(activity)));
 #endif
             })
             // ReSharper restore UnusedParameter.Local
@@ -56,7 +56,7 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
                 fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
             })
-            //.ConfigureEssentials(c => { })
+            //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
@@ -70,9 +70,9 @@ public static class MauiProgram
             .AddDebug()
 #endif
 #if ANDROID && !DEBUG
-            .AddAndroidLogger(options => options.ShortCategory = true)
+            .AddAndroidLogger(static options => options.ShortCategory = true)
 #endif
-            .AddFileLogger(options =>
+            .AddFileLogger(static options =>
             {
 #if ANDROID
                 options.Directory = Path.Combine(AndroidHelper.GetExternalFilesDir(), "log");
@@ -142,7 +142,7 @@ public static class MauiProgram
             c.EnablePromptSelectAll = true;
         });
 #endif
-        config.AddComponentsPopup(c => c.AutoRegister(ViewRegistry.DialogSource()));
+        config.AddComponentsPopup(static c => c.AutoRegister(ViewRegistry.DialogSource()));
         config.AddComponentsPopupPlugin<PopupFocusPlugin>();
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
@@ -155,7 +155,7 @@ public static class MauiProgram
             c.UseMauiNavigationProvider();
             c.AddResolverPlugin();
             c.AddPlugin<NavigationFocusPlugin>();
-            c.UseIdViewMapper(m => m.AutoRegister(ViewRegistry.ViewSource()));
+            c.UseIdViewMapper(static m => m.AutoRegister(ViewRegistry.ViewSource()));
         });
 
         // Components
@@ -174,9 +174,9 @@ public static class MauiProgram
             return new DataServiceOptions
             {
 #if DEBUG
-                Path = Path.Combine(storage.PublicFolder, "Data.db")
+                Path = Path.Combine(storage.PublicFolder, "data.db")
 #else
-                Path = Path.Combine(storage.PrivateFolder, "Data.db")
+                Path = Path.Combine(storage.PrivateFolder, "data.db")
 #endif
             };
         });

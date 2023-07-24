@@ -563,16 +563,14 @@
 
             <!-- Select -->
 
-            <Style x:Key="SelectButton"
+            <Style x:Key="SelectButtonBase"
                    TargetType="Button">
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="3,0" />
+                <Setter Property="Padding" Value="3" />
                 <Setter Property="BorderWidth" Value="0" />
                 <Setter Property="CornerRadius" Value="0" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -583,17 +581,47 @@
                             </VisualState>
                             <VisualState x:Name="Focused">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource YellowLighten5}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource YellowLighten4}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                                    <Setter Property="BackgroundColor" Value="White" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
+            </Style>
+
+            <Style x:Key="LeftSelectButton"
+                   BasedOn="{StaticResource SelectButtonBase}"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="CenterSelectButton"
+                   BasedOn="{StaticResource SelectButtonBase}"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RightSelectButton"
+                   BasedOn="{StaticResource SelectButtonBase}"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+            <!-- ================================================================================ -->
+            <!-- Frame -->
+            <!-- ================================================================================ -->
+
+            <Style x:Key="BorderFrame"
+                   TargetType="Frame">
+                <Setter Property="BorderColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="Padding" Value="1.5" />
             </Style>
 
             <!-- ================================================================================ -->

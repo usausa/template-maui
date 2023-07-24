@@ -117,7 +117,7 @@ public static class EntryOption
         }
         else
         {
-            var behavior = element.Behaviors.FirstOrDefault(x => x is NoBorderBehavior);
+            var behavior = element.Behaviors.FirstOrDefault(static x => x is NoBorderBehavior);
             if (behavior is not null)
             {
                 element.Behaviors.Remove(behavior);
@@ -134,7 +134,9 @@ public static class EntryOption
             base.OnAttachedTo(bindable, platformView);
 
             originalDrawable = platformView.Background;
+            // TODO
             platformView.Background = null;
+            platformView.SetPadding(0, 0, 0, 0);
         }
 
         protected override void OnDetachedFrom(InputView bindable, EditText platformView)

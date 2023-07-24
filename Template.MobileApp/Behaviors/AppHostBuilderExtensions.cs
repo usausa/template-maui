@@ -4,7 +4,7 @@ internal static class AppHostBuilderExtensions
 {
     public static MauiAppBuilder ConfigureCustomBehaviors(this MauiAppBuilder builder)
     {
-        return builder.ConfigureCustomBehaviors(_ => { });
+        return builder.ConfigureCustomBehaviors(static _ => { });
     }
 
     public static MauiAppBuilder ConfigureCustomBehaviors(this MauiAppBuilder builder, Action<BehaviorOptions> configure)

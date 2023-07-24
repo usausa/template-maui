@@ -6,8 +6,8 @@ public static partial class CrashReport
 {
     private static partial void PlatformStart()
     {
-        TaskScheduler.UnobservedTaskException += (_, args) => LogException(args.Exception);
-        AndroidEnvironment.UnhandledExceptionRaiser += (_, args) => LogException(args.Exception);
+        TaskScheduler.UnobservedTaskException += static (_, args) => LogException(args.Exception);
+        AndroidEnvironment.UnhandledExceptionRaiser += static (_, args) => LogException(args.Exception);
     }
 
     private static partial string ResolveCrashLogPath() =>

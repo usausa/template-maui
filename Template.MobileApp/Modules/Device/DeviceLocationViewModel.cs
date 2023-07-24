@@ -14,7 +14,7 @@ public class DeviceLocationViewModel : AppViewModelBase
         this.locationService = locationService;
 
         Disposables.Add(Observable
-            .FromEvent<EventHandler<LocationEventArgs>, LocationEventArgs>(h => (_, e) => h(e), h => locationService.LocationChanged += h, h => locationService.LocationChanged -= h)
+            .FromEvent<EventHandler<LocationEventArgs>, LocationEventArgs>(static h => (_, e) => h(e), h => locationService.LocationChanged += h, h => locationService.LocationChanged -= h)
             .ObserveOn(SynchronizationContext.Current!)
             .Subscribe(x => Location.Value = x.Location));
     }

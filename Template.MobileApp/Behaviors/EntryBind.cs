@@ -29,7 +29,7 @@ public static class EntryBind
 
         if (oldValue is not null)
         {
-            var behavior = entry.Behaviors.FirstOrDefault(x => x is EntryBindBehavior);
+            var behavior = entry.Behaviors.FirstOrDefault(static x => x is EntryBindBehavior);
             if (behavior is not null)
             {
                 entry.Behaviors.Remove(behavior);

@@ -67,7 +67,7 @@ public class MainPageViewModel : ViewModelBase, IShellControl, IAppLifecycle
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda
         Disposables.Add(Observable
-            .FromEvent<EventHandler<ScreenStateEventArgs>, ScreenStateEventArgs>(h => (_, e) => h(e), h => screen.ScreenStateChanged += h, h => screen.ScreenStateChanged -= h)
+            .FromEvent<EventHandler<ScreenStateEventArgs>, ScreenStateEventArgs>(static h => (_, e) => h(e), h => screen.ScreenStateChanged += h, h => screen.ScreenStateChanged -= h)
             .ObserveOn(SynchronizationContext.Current!)
             .Subscribe(async x =>
             {

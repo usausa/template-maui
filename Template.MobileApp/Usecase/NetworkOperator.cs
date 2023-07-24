@@ -4,6 +4,13 @@ using Rester;
 
 using Template.MobileApp.Services;
 
+public enum NetworkOperationResult
+{
+    Success,
+    Error,
+    NotFound
+}
+
 public class NetworkOperator
 {
     private readonly IDialog dialog;
@@ -25,10 +32,6 @@ public class NetworkOperator
     public ValueTask<IResult<T>> ExecuteVerbose<T>(Func<NetworkService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
 
     public ValueTask<IResult<T>> Execute<T>(Func<NetworkService, ValueTask<IRestResponse<T>>> func) => Execute(func, false);
-
-    public ValueTask<bool> ExecuteVerbose(Func<NetworkService, ValueTask<IRestResponse>> func) => Execute(func, true);
-
-    public ValueTask<bool> Execute(Func<NetworkService, ValueTask<IRestResponse>> func) => Execute(func, false);
 
     private async ValueTask<IResult<T>> Execute<T>(Func<NetworkService, ValueTask<IRestResponse<T>>> func, bool verbose)
     {
@@ -90,7 +93,11 @@ public class NetworkOperator
         }
     }
 
-    private async ValueTask<bool> Execute(Func<NetworkService, ValueTask<IRestResponse>> func, bool verbose)
+    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<NetworkService, ValueTask<IRestResponse>> func) => Execute(func, true);
+
+    public ValueTask<NetworkOperationResult> Execute(Func<NetworkService, ValueTask<IRestResponse>> func) => Execute(func, false);
+
+    private async ValueTask<NetworkOperationResult> Execute(Func<NetworkService, ValueTask<IRestResponse>> func, bool verbose)
     {
         while (true)
         {
@@ -100,7 +107,7 @@ public class NetworkOperator
                 {
                     await dialog.InformationAsync("Network is not connected.");
                 }
-                return false;
+                return NetworkOperationResult.Error;
             }
 
             IRestResponse response;
@@ -112,15 +119,20 @@ public class NetworkOperator
             switch (response.RestResult)
             {
                 case RestResult.Success:
-                    return true;
+                    return NetworkOperationResult.Success;
                 case RestResult.Cancel:
                     if (!verbose || !await dialog.ConfirmAsync("Canceled.\r\nRetry ?"))
                     {
-                        return false;
+                        return NetworkOperationResult.Error;
                     }
                     break;
                 case RestResult.RequestError:
                 case RestResult.HttpError:
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return NetworkOperationResult.NotFound;
+                    }
+
                     if (verbose)
                     {
                         var message = new StringBuilder();
@@ -132,12 +144,12 @@ public class NetworkOperator
                         message.AppendLine("Retry ?");
                         if (!await dialog.ConfirmAsync(message.ToString()))
                         {
-                            return false;
+                            return NetworkOperationResult.Error;
                         }
                     }
                     else
                     {
-                        return false;
+                        return NetworkOperationResult.Error;
                     }
                     break;
                 default:
@@ -145,8 +157,55 @@ public class NetworkOperator
                     {
                         await dialog.InformationAsync("Unknown error.");
                     }
-                    return false;
+                    return NetworkOperationResult.Error;
             }
+        }
+    }
+
+    public ValueTask<NetworkOperationResult> ExecuteProgressVerbose(Func<NetworkService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, true);
+
+    public ValueTask<NetworkOperationResult> ExecuteProgress(Func<NetworkService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, false);
+
+    private async ValueTask<NetworkOperationResult> ExecuteProgress(Func<NetworkService, MauiComponents.IProgress, ValueTask<IRestResponse>> func, bool verbose)
+    {
+        using var progress = dialog.Progress();
+
+        var response = await func(networkService, progress);
+
+        switch (response.RestResult)
+        {
+            case RestResult.Success:
+                return NetworkOperationResult.Success;
+            case RestResult.Cancel:
+                if (verbose)
+                {
+                    await dialog.InformationAsync("Canceled.");
+                }
+                return NetworkOperationResult.Error;
+            case RestResult.RequestError:
+            case RestResult.HttpError:
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return NetworkOperationResult.NotFound;
+                }
+
+                if (verbose)
+                {
+                    var message = new StringBuilder();
+                    message.AppendLine("Network error.");
+                    if (response.StatusCode > 0)
+                    {
+                        message.AppendLine($"statusCode={(int)response.StatusCode}");
+                    }
+                    await dialog.InformationAsync(message.ToString());
+                }
+                return NetworkOperationResult.Error;
+            default:
+                if (verbose)
+                {
+                    await dialog.InformationAsync("Unknown error.");
+                }
+                return NetworkOperationResult.Error;
         }
     }
 }

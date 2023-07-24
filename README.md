@@ -1,39 +1,45 @@
 # Template project for MAUI
 
+[日本語ドキュメント](Document/README.md)
+
 # TODO
 
-## Basic
+## Check & Fix for 1.0
 
+- [ ] Dialog size
+- [ ] Select action button
 - [ ] Key behavior test
-- [ ] Network sample fix
 - [ ] Check old style splash
+
+## Device for 1.0+
+
+- [ ] QR/Camera
+- [ ] NFC(FeliCa) sample
+- [ ] WiFi manager
+- [ ] Bluetooth (Printer)
+- [ ] BLE (Seonsor)
+- [ ] Audio
+- [ ] Fingerprint
 
 ## API server
 
-- [ ] WASM base
-- [ ] Time api
-- [ ] File api
 - [ ] File UI
-- [ ] Data api
-- [ ] Data UI
+- [ ] Data UI & api+
+- [ ] API compression
+- [ ] Error layout
+- [ ] Progress
+- [ ] Cloud log
+- [ ] Device status
 
-## Device
+## Feature
 
-- [ ] Geo location test
-- [ ] Screen off detect
-- [ ] NFC(FeliCa) sample
-- [ ] WiFi manager
-- [ ] Audio
-- [ ] QR/Camera
-
-## Other(Ex)
-
-- [ ] Multi language
-- [ ] Bluetooth (Printer)
-- [ ] BLE (Seonsor)
 - [ ] Map
 - [ ] Push
+- [ ] Cognitive service
+- [ ] Chart
+- [ ] SSH/FTP
 - [ ] Data accessor lite?
+- [ ] Figma integration
 
 ## Samples
 

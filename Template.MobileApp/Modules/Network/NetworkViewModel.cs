@@ -9,6 +9,11 @@ public class NetworkViewModel : AppViewModelBase
     private readonly IDialog dialog;
 
     public ICommand ServerTimeCommand { get; }
+    public ICommand TestErrorCommand { get; }
+    public ICommand TestDelayCommand { get; }
+    public ICommand DataListCommand { get; }
+    public ICommand DownloadCommand { get; }
+    public ICommand UploadCommand { get; }
 
     public NetworkViewModel(
         ApplicationState applicationState,
@@ -20,14 +25,12 @@ public class NetworkViewModel : AppViewModelBase
         this.settings = settings;
         this.dialog = dialog;
 
-        ServerTimeCommand = MakeAsyncCommand(async () =>
-        {
-            var result = await sampleUsecase.GetServerTimeAsync();
-            if (result.IsSuccess)
-            {
-                await dialog.InformationAsync($"Access success.\r\ntime=[{result.Value.DateTime:yyyy/MM/dd HH:mm:ss}]");
-            }
-        });
+        ServerTimeCommand = MakeAsyncCommand(async () => await sampleUsecase.GetServerTimeAsync());
+        TestErrorCommand = MakeAsyncCommand<int>(async x => await sampleUsecase.GetTestErrorAsync(x));
+        TestDelayCommand = MakeAsyncCommand<int>(async x => await sampleUsecase.GetTestDelayAsync(x));
+        DataListCommand = MakeAsyncCommand(async () => await sampleUsecase.GetDataListAsync());
+        DownloadCommand = MakeAsyncCommand(async () => await sampleUsecase.DownloadAsync());
+        UploadCommand = MakeAsyncCommand(async () => await sampleUsecase.UploadAsync());
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
