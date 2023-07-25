@@ -20,7 +20,7 @@ public class NavigateCancelViewModel : AppViewModelBase
             {
                 if (await dialog.ConfirmAsync("Cancel ?", ok: "Yes", cancel: "No"))
                 {
-                    await Navigator.ForwardAsync(ViewId.Menu);
+                    await Navigator.ForwardAsync(ViewId.NavigationMenu);
                 }
             }));
         }

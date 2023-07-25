@@ -160,7 +160,6 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<ISpeechService, SpeechService>();
 
         // State
         config.BindSingleton<ApplicationState>();
