@@ -61,7 +61,7 @@ EmbeddedBuildPropertyの値の参照は、partialメソッドでBuildProperty属
 
 ## サーバー処理
 
-通信処理の対となるサーバー側テンプレートについては [template-maui-server](../../template-maui-server) 参照。
+通信処理の対となるサーバー側テンプレートについてはtemplate-maui-serverを参照。
 
 ### サーバ実装機能
 
