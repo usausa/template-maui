@@ -6,9 +6,9 @@ using System.Text.Unicode;
 
 #if ANDROID && DEVICE_HAS_KEYPAD
 using Android.Views;
+#endif
 
 using Camera.MAUI;
-#endif
 
 using CommunityToolkit.Maui;
 
