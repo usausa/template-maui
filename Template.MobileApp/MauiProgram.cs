@@ -6,6 +6,8 @@ using System.Text.Unicode;
 
 #if ANDROID && DEVICE_HAS_KEYPAD
 using Android.Views;
+
+using Camera.MAUI;
 #endif
 
 using CommunityToolkit.Maui;
@@ -58,6 +60,7 @@ public static class MauiProgram
             })
             //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
+            .UseMauiCameraView()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
             .ConfigureCustomControls()
@@ -160,7 +163,6 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<ISpeechService, SpeechService>();
 
         // State
         config.BindSingleton<ApplicationState>();
