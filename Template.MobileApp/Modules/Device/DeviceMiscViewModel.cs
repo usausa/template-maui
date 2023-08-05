@@ -69,11 +69,18 @@ public class DeviceMiscViewModel : AppViewModelBase
 #pragma warning restore CA2012
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
 
+        var progress = new Progress<string>(text =>
+        {
+            if (!String.IsNullOrEmpty(text))
+            {
+                RecognizeText.Value = text;
+            }
+        });
         RecognizeCommand = MakeAsyncCommand(async () =>
         {
             RecognizeText.Value = string.Empty;
 
-            var result = await speech.RecognizeAsync(text => RecognizeText.Value += text);
+            var result = await speech.RecognizeAsync(progress);
 
             RecognizeText.Value = !String.IsNullOrEmpty(result) ? result : string.Empty;
         });
