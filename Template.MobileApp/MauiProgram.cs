@@ -63,6 +63,9 @@ public static class MauiProgram
             .UseMauiCameraView()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
+#if NET7_0
+            .FixIssue11662()
+#endif
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors()
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
