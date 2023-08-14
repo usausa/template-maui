@@ -13,8 +13,9 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         // Setup provider
         ResolveProvider.Default.Provider = services;
 
-        // Initial setting
         var settings = services.GetRequiredService<Settings>();
+
+        // Initial setting
         if (String.IsNullOrEmpty(settings.ApiEndPoint) && !String.IsNullOrEmpty(Variants.ApiEndPoint()))
         {
             settings.ApiEndPoint = Variants.ApiEndPoint();
@@ -28,6 +29,13 @@ public sealed class ApplicationInitializer : IMauiInitializeService
             System.Diagnostics.Debug.WriteLine(
                 $"Navigated: [{args.Context.FromId}]->[{args.Context.ToId}] : stacked=[{navigator.StackedCount}]");
         };
+
+        // Setting
+        if (String.IsNullOrEmpty(settings.UserId))
+        {
+            var userId = Guid.NewGuid();
+            settings.UserId = userId.ToString();
+        }
 
         // Service
         var dataService = services.GetRequiredService<DataService>();

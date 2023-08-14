@@ -28,6 +28,7 @@ using Template.MobileApp.Extender;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
+using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
 using Template.MobileApp.Usecase;
 
@@ -60,6 +61,7 @@ public static class MauiProgram
             })
             //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
+            .UseShiny()
             .UseMauiCameraView()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
@@ -86,6 +88,11 @@ public static class MauiProgram
                 options.RetainDays = 7;
             })
             .AddFilter(typeof(MauiProgram).Namespace, LogLevel.Debug);
+
+        // Components
+        builder.Services.AddBluetoothLE();
+        builder.Services.AddBleHostedCharacteristic<UserCharacteristic>();
+        builder.Services.AddBluetoothLeHosting();
 
         // Config DataMapper
         SqlMapperConfig.Default.ConfigureTypeHandlers(config =>

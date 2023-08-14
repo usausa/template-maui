@@ -9,6 +9,12 @@ public class Settings
         this.preferences = preferences;
     }
 
+    public string UserId
+    {
+        get => preferences.Get<string>(nameof(UserId), default!);
+        set => preferences.Set(nameof(UserId), value);
+    }
+
     public string ApiEndPoint
     {
         get => preferences.Get<string>(nameof(ApiEndPoint), default!);
