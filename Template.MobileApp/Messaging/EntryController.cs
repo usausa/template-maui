@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Models.Entry;
+namespace Template.MobileApp.Messaging;
 
 public class EntryCompleteEvent
 {
@@ -7,16 +7,16 @@ public class EntryCompleteEvent
 
 public interface IEntryController : INotifyPropertyChanged
 {
-    public event EventHandler<EventArgs> FocusRequested;
+    event EventHandler<EventArgs> FocusRequested;
 
-    public string? Text { get; set; }
+    string? Text { get; set; }
 
-    public bool Enable { get; set; }
+    bool Enable { get; set; }
 
-    public void HandleCompleted(EntryCompleteEvent e);
+    void HandleCompleted(EntryCompleteEvent e);
 }
 
-public sealed class EntryModel : NotificationObject, IEntryController
+public sealed class EntryController : NotificationObject, IEntryController
 {
     private event EventHandler<EventArgs>? Requested;
 
@@ -25,6 +25,8 @@ public sealed class EntryModel : NotificationObject, IEntryController
     private string? text;
 
     private bool enable;
+
+    // Property
 
     public string? Text
     {
@@ -38,26 +40,36 @@ public sealed class EntryModel : NotificationObject, IEntryController
         set => SetProperty(ref enable, value);
     }
 
-    public EntryModel()
+    // Constructor
+
+    public EntryController()
     {
         enable = true;
     }
 
-    public EntryModel(bool enable)
+    public EntryController(bool enable)
     {
         this.enable = enable;
     }
 
-    public EntryModel(ICommand command)
+    public EntryController(ICommand command)
     {
         enable = true;
         this.command = command;
     }
 
-    public EntryModel(bool enable, ICommand command)
+    public EntryController(bool enable, ICommand command)
     {
         this.enable = enable;
         this.command = command;
+    }
+
+    // Request
+
+    event EventHandler<EventArgs> IEntryController.FocusRequested
+    {
+        add => Requested += value;
+        remove => Requested -= value;
     }
 
     public void FocusRequest()
@@ -65,11 +77,7 @@ public sealed class EntryModel : NotificationObject, IEntryController
         Requested?.Invoke(this, EventArgs.Empty);
     }
 
-    event EventHandler<EventArgs> IEntryController.FocusRequested
-    {
-        add => Requested += value;
-        remove => Requested -= value;
-    }
+    // Event
 
     void IEntryController.HandleCompleted(EntryCompleteEvent e)
     {

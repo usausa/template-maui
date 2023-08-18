@@ -25,10 +25,27 @@ public static partial class ElementHelper
         }
 
         var viewGroup = (ViewGroup)parent.ToPlatform(parent.Handler.MauiContext);
-        var focused = current is not null ? ResolveCurrentView(current) : viewGroup.FindFocus();
-        var next = ff.FindNextFocus(viewGroup, focused, forward ? FocusSearchDirection.Down : FocusSearchDirection.Up);
+        var start = current is not null ? ResolveCurrentView(current) : viewGroup.FindFocus();
+        var focused = start;
+        while (true)
+        {
+            var next = ff.FindNextFocus(viewGroup, focused, forward ? FocusSearchDirection.Forward : FocusSearchDirection.Backward);
 
-        return next?.RequestFocus() ?? false;
+            // No more control
+            if ((next is null) || (next == start))
+            {
+                return false;
+            }
+
+            // Focus if enabled
+            if (next.Enabled)
+            {
+                return next.RequestFocus();
+            }
+
+            // Find next
+            focused = next;
+        }
     }
 
     private static View? ResolveCurrentView(VisualElement element)

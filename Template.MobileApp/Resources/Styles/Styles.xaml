@@ -13,7 +13,9 @@
 
     <!-- Color -->
 
+    <Color x:Key="BorderColor">#616161</Color>
     <Color x:Key="DisabledColor">#BDBDBD</Color>
+    <Color x:Key="SelectFocusColor">#FFF9C4</Color>
 
     <Color x:Key="NoErrorColor">Transparent</Color>
 
@@ -235,17 +237,17 @@
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource OrangeAccent3}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Focused">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource OrangeAccent4}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent4}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource OrangeAccent3}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -261,17 +263,17 @@
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource OrangeAccent3}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Focused">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent4}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource OrangeAccent4}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource OrangeAccent3}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -568,7 +570,7 @@
                     </VisualState>
                     <VisualState x:Name="Focused">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource YellowLighten4}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource SelectFocusColor}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Disabled">
@@ -605,7 +607,7 @@
 
     <Style x:Key="BorderFrame"
            TargetType="Frame">
-        <Setter Property="BorderColor" Value="{StaticResource GrayDarken2}" />
+        <Setter Property="BorderColor" Value="{StaticResource BorderColor}" />
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Padding" Value="1.5" />
@@ -763,6 +765,41 @@
            TargetType="Label">
         <Setter Property="FontSize" Value="18" />
         <Setter Property="HorizontalTextAlignment" Value="End" />
+    </Style>
+
+    <!-- ================================================================================ -->
+    <!-- Entry -->
+    <!-- ================================================================================ -->
+
+    <Style x:Key="InputEntry"
+           TargetType="Entry">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="behaviors:Border.Color" Value="{StaticResource BorderColor}" />
+        <Setter Property="behaviors:Border.Width" Value="1" />
+        <Setter Property="behaviors:EntryOption.HandleEnterKey" Value="True" />
+        <Setter Property="behaviors:EntryOption.DisableShowSoftInputOnFocus" Value="True" />
+        <Setter Property="behaviors:EntryOption.SelectAllOnFocus" Value="True" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SelectFocusColor}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
     <!-- ================================================================================ -->

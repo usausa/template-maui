@@ -24,7 +24,7 @@ public static class ListViewOption
         // DisableShowSoftInputOnFocus
         if (options.DisableOverScroll)
         {
-            ListViewRenderer.Mapper.Add("DisableOverScroll", static (handler, element) => Action(handler.Control!, element));
+            ListViewRenderer.Mapper.Add(DisableOverScrollProperty.PropertyName, static (handler, element) => Action(handler.Control!, element));
         }
 #endif
     }

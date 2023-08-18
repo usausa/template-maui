@@ -69,7 +69,16 @@ public static class MauiProgram
             .FixIssue11662()
 #endif
             .ConfigureCustomControls()
-            .ConfigureCustomBehaviors()
+            .ConfigureCustomBehaviors(c =>
+            {
+#if DEVICE_HAS_KEYPAD
+                c.HandleEnterKey = true;
+                c.DisableShowSoftInputOnFocus = true;
+#else
+                c.HandleEnterKey = false;
+                c.DisableShowSoftInputOnFocus = false;
+#endif
+            })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
         // Logging

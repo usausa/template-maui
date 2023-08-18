@@ -7,18 +7,18 @@ using Template.MobileApp.Messaging;
 
 public static class EntryBind
 {
-    public static readonly BindableProperty MessengerProperty = BindableProperty.CreateAttached(
-        "Messenger",
-        typeof(IEntryMessenger),
+    public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
+        "Controller",
+        typeof(IEntryController),
         typeof(EntryBind),
         null,
         propertyChanged: BindChanged);
 
-    public static IEntryMessenger GetMessenger(BindableObject bindable) =>
-        (IEntryMessenger)bindable.GetValue(MessengerProperty);
+    public static IEntryController GetController(BindableObject bindable) =>
+        (IEntryController)bindable.GetValue(ControllerProperty);
 
-    public static void SetMessenger(BindableObject bindable, IEntryMessenger value) =>
-        bindable.SetValue(MessengerProperty, value);
+    public static void SetController(BindableObject bindable, IEntryController value) =>
+        bindable.SetValue(ControllerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
@@ -44,73 +44,56 @@ public static class EntryBind
 
     private sealed class EntryBindBehavior : BehaviorBase<Entry>
     {
-        private bool updating;
+        private IEntryController? controller;
 
         protected override void OnAttachedTo(Entry bindable)
         {
             base.OnAttachedTo(bindable);
 
-            var controller = GetMessenger(bindable);
+            controller = GetController(bindable);
+            if (controller is not null)
+            {
+                controller.FocusRequested += ControllerOnFocusRequested;
+            }
+
             bindable.Completed += BindableOnCompleted;
-            bindable.TextChanged += BindableOnTextChanged;
-            controller.FocusRequested += MessengerOnFocusRequested;
-            controller.PropertyChanged += MessengerOnPropertyChanged;
+
+            bindable.SetBinding(
+                Entry.TextProperty,
+                new Binding(nameof(IEntryController.Text), source: controller));
+            bindable.SetBinding(
+                VisualElement.IsEnabledProperty,
+                new Binding(nameof(IEntryController.Enable), source: controller));
         }
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            var controller = GetMessenger(bindable);
+            if (controller is not null)
+            {
+                controller.FocusRequested -= ControllerOnFocusRequested;
+            }
+
             bindable.Completed -= BindableOnCompleted;
-            bindable.TextChanged -= BindableOnTextChanged;
-            controller.FocusRequested -= MessengerOnFocusRequested;
-            controller.PropertyChanged -= MessengerOnPropertyChanged;
+
+            bindable.RemoveBinding(Entry.TextProperty);
+            bindable.RemoveBinding(VisualElement.IsEnabledProperty);
 
             base.OnDetachingFrom(bindable);
         }
 
-        private void MessengerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            var entry = AssociatedObject;
-            if (entry is null)
-            {
-                return;
-            }
-
-            if (e.PropertyName == nameof(EntryMessenger.Text))
-            {
-                var controller = GetMessenger(entry);
-                updating = true;
-                entry.Text = controller.Text;
-                updating = false;
-            }
-            else if (e.PropertyName == nameof(EntryMessenger.Enable))
-            {
-                var controller = GetMessenger(entry);
-                entry.IsEnabled = controller.Enable;
-            }
-        }
-
-        private void MessengerOnFocusRequested(object? sender, EventArgs e)
+        private void ControllerOnFocusRequested(object? sender, EventArgs e)
         {
             AssociatedObject?.Focus();
         }
 
-        private void BindableOnTextChanged(object? sender, TextChangedEventArgs e)
+        private void BindableOnCompleted(object? sender, EventArgs e)
         {
-            if (updating)
+            if (controller is null)
             {
                 return;
             }
 
             var entry = (Entry)sender!;
-            var controller = GetMessenger(entry);
-            controller.Text = e.NewTextValue;
-        }
-
-        private static void BindableOnCompleted(object? sender, EventArgs e)
-        {
-            var entry = (Entry)sender!;
-            var controller = GetMessenger(entry);
             var ice = new EntryCompleteEvent();
             controller.HandleCompleted(ice);
             if (!ice.HasError)

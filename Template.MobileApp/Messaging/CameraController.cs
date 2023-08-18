@@ -17,7 +17,7 @@ namespace Template.MobileApp.Messaging;
 //    public TaskCompletionSource<byte[]?> CompletionSource { get; } = new();
 //}
 
-public class CameraMessenger
+public class CameraController
 {
     // TODO
 }
