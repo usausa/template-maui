@@ -96,7 +96,7 @@ public static class EntryBind
             var entry = (Entry)sender!;
             var ice = new EntryCompleteEvent();
             controller.HandleCompleted(ice);
-            if (!ice.HasError)
+            if (!ice.Handled)
             {
                 ElementHelper.MoveFocusInRoot(entry, true);
             }

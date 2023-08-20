@@ -16,6 +16,8 @@ using MauiComponents.Resolver;
 
 using Microsoft.Maui.LifecycleEvents;
 
+using Plugin.Maui.Audio;
+
 using Rester;
 
 using Smart.Data.Mapper;
@@ -182,6 +184,8 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
+
+        config.BindSingleton(AudioManager.Current);
 
         // State
         config.BindSingleton<ApplicationState>();

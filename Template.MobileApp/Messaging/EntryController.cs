@@ -2,7 +2,7 @@ namespace Template.MobileApp.Messaging;
 
 public class EntryCompleteEvent
 {
-    public bool HasError { get; set; }
+    public bool Handled { get; set; }
 }
 
 public interface IEntryController : INotifyPropertyChanged

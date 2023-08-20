@@ -11,6 +11,36 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource MenuGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding PlayCommand}"
+                Text="Play" />
+        <Button Grid.Row="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding PauseCommand}"
+                Text="Pause" />
+        <Button Grid.Row="2"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding StopCommand}"
+                Text="Stop" />
+
+        <Slider Grid.Row="3"
+                Value="{Binding AudioPlayer.Volume, FallbackValue=0.5}"
+                Maximum="1" Minimum="0" />
+
+    </Grid>
 
 </ContentView>

@@ -35,22 +35,22 @@ public class KeyEntryViewModel : AppViewModelBase
 
     private void Input1Complete(EntryCompleteEvent ice)
     {
-        ice.HasError = String.IsNullOrEmpty(Input1.Text);
+        ice.Handled = String.IsNullOrEmpty(Input1.Text);
         Debug.WriteLine($"**** Input1 completed {Input1.Text}");
     }
 
     private void Input2Complete(EntryCompleteEvent ice)
     {
-        ice.HasError = String.IsNullOrEmpty(Input2.Text);
+        ice.Handled = String.IsNullOrEmpty(Input2.Text);
         Debug.WriteLine($"**** Input2 completed {Input2.Text}");
     }
 
     private void Input3Complete(EntryCompleteEvent ice)
     {
-        ice.HasError = String.IsNullOrEmpty(Input3.Text);
+        ice.Handled = String.IsNullOrEmpty(Input3.Text);
         Debug.WriteLine($"**** Input3 completed {Input3.Text}");
 
-        if (!ice.HasError)
+        if (!ice.Handled)
         {
             Input1.Text = string.Empty;
             Input2.Text = string.Empty;
