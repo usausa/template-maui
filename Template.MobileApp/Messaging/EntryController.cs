@@ -7,7 +7,7 @@ public class EntryCompleteEvent
 
 public interface IEntryController : INotifyPropertyChanged
 {
-    event EventHandler<EventArgs> FocusRequested;
+    event EventHandler<EventArgs> FocusRequest;
 
     string? Text { get; set; }
 
@@ -18,7 +18,7 @@ public interface IEntryController : INotifyPropertyChanged
 
 public sealed class EntryController : NotificationObject, IEntryController
 {
-    private event EventHandler<EventArgs>? Requested;
+    private event EventHandler<EventArgs>? FocusRequestHandler;
 
     private readonly ICommand? command;
 
@@ -66,15 +66,15 @@ public sealed class EntryController : NotificationObject, IEntryController
 
     // Request
 
-    event EventHandler<EventArgs> IEntryController.FocusRequested
+    event EventHandler<EventArgs> IEntryController.FocusRequest
     {
-        add => Requested += value;
-        remove => Requested -= value;
+        add => FocusRequestHandler += value;
+        remove => FocusRequestHandler -= value;
     }
 
     public void FocusRequest()
     {
-        Requested?.Invoke(this, EventArgs.Empty);
+        FocusRequestHandler?.Invoke(this, EventArgs.Empty);
     }
 
     // Event

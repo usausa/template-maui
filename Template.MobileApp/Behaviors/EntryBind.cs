@@ -53,7 +53,7 @@ public static class EntryBind
             controller = GetController(bindable);
             if (controller is not null)
             {
-                controller.FocusRequested += ControllerOnFocusRequested;
+                controller.FocusRequest += ControllerOnFocusRequest;
             }
 
             bindable.Completed += BindableOnCompleted;
@@ -70,7 +70,7 @@ public static class EntryBind
         {
             if (controller is not null)
             {
-                controller.FocusRequested -= ControllerOnFocusRequested;
+                controller.FocusRequest -= ControllerOnFocusRequest;
             }
 
             bindable.Completed -= BindableOnCompleted;
@@ -78,10 +78,12 @@ public static class EntryBind
             bindable.RemoveBinding(Entry.TextProperty);
             bindable.RemoveBinding(VisualElement.IsEnabledProperty);
 
+            controller = null;
+
             base.OnDetachingFrom(bindable);
         }
 
-        private void ControllerOnFocusRequested(object? sender, EventArgs e)
+        private void ControllerOnFocusRequest(object? sender, EventArgs e)
         {
             AssociatedObject?.Focus();
         }

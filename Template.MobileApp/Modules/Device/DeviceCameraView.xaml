@@ -11,7 +11,9 @@
              sr:BindingContextResolver.Type="{x:Type module:DeviceCameraViewModel}"
              shell:ShellProperty.Title="Camera"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function4Text="Switch"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
     <Grid Style="{StaticResource FillGrid}">
         <Grid.RowDefinitions>
@@ -19,11 +21,8 @@
         </Grid.RowDefinitions>
 
         <cv:CameraView x:Name="CameraView"
-                       Grid.Row="0">
-            <cv:CameraView.Behaviors>
-                <behaviors:CameraViewBehavior />
-            </cv:CameraView.Behaviors>
-        </cv:CameraView>
+                       Grid.Row="0"
+                       behaviors:CameraBind.Controller="{Binding Camera}" />
     </Grid>
 
 </ContentView>
