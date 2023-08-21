@@ -1,6 +1,7 @@
 namespace Template.MobileApp.Behaviors;
 
 using Camera.MAUI;
+using Camera.MAUI.ZXingHelper;
 
 using Smart.Maui.Interactivity;
 
@@ -59,6 +60,7 @@ public static class CameraBind
             }
 
             bindable.CamerasLoaded += BindableOnCamerasLoaded;
+            bindable.BarcodeDetected += BindableOnBarcodeDetected;
         }
 
         protected override void OnDetachingFrom(CameraView bindable)
@@ -72,6 +74,7 @@ public static class CameraBind
             }
 
             bindable.CamerasLoaded -= BindableOnCamerasLoaded;
+            bindable.BarcodeDetected -= BindableOnBarcodeDetected;
 
             bindable.RemoveBinding(CameraView.CameraProperty);
             bindable.RemoveBinding(CameraView.AutoStartPreviewProperty);
@@ -79,7 +82,6 @@ public static class CameraBind
             bindable.RemoveBinding(CameraView.MirroredImageProperty);
             bindable.RemoveBinding(CameraView.FlashModeProperty);
             bindable.RemoveBinding(CameraView.ZoomFactorProperty);
-            // TODO barcode
             bindable.RemoveBinding(CameraView.BarCodeDetectionEnabledProperty);
 
             controller = null;
@@ -120,12 +122,21 @@ public static class CameraBind
             AssociatedObject.SetBinding(
                 CameraView.ZoomFactorProperty,
                 new Binding(nameof(ICameraController.Zoom), source: controller));
-            // TODO barcode
             AssociatedObject.SetBinding(
                 CameraView.BarCodeDetectionEnabledProperty,
                 new Binding(nameof(ICameraController.BarcodeDetection), source: controller));
 
             controller.UpdateCamera(camera);
+        }
+
+        private void BindableOnBarcodeDetected(object sender, BarcodeEventArgs args)
+        {
+            if ((controller is null) || (args.Result.Length == 0))
+            {
+                return;
+            }
+
+            controller.HandleBarcodeDetected(args.Result[0]);
         }
 
         private void ControllerOnPositionRequest(object? sender, CameraPositionEventArgs e)

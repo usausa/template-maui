@@ -9,12 +9,10 @@
 
 ## Device+
 
-- [ ] QR/Camera (WIP)
 - [ ] NFC(FeliCa) sample
 - [ ] WiFi manager
 - [ ] Bluetooth (Printer)
 - [ ] BLE (Seonsor)
-- [ ] Audio
 - [ ] Fingerprint
 
 ## API server

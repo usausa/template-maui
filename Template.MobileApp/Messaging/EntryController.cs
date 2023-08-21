@@ -9,9 +9,13 @@ public interface IEntryController : INotifyPropertyChanged
 {
     event EventHandler<EventArgs> FocusRequest;
 
+    // Property
+
     string? Text { get; set; }
 
     bool Enable { get; set; }
+
+    // Event
 
     void HandleCompleted(EntryCompleteEvent e);
 }
@@ -20,19 +24,27 @@ public sealed class EntryController : NotificationObject, IEntryController
 {
     private event EventHandler<EventArgs>? FocusRequestHandler;
 
+    event EventHandler<EventArgs> IEntryController.FocusRequest
+    {
+        add => FocusRequestHandler += value;
+        remove => FocusRequestHandler -= value;
+    }
+
+    // Field
+
     private readonly ICommand? command;
 
-    private string? text;
-
-    private bool enable;
-
     // Property
+
+    private string? text;
 
     public string? Text
     {
         get => text;
         set => SetProperty(ref text, value);
     }
+
+    private bool enable;
 
     public bool Enable
     {
@@ -65,12 +77,6 @@ public sealed class EntryController : NotificationObject, IEntryController
     }
 
     // Request
-
-    event EventHandler<EventArgs> IEntryController.FocusRequest
-    {
-        add => FocusRequestHandler += value;
-        remove => FocusRequestHandler -= value;
-    }
 
     public void FocusRequest()
     {

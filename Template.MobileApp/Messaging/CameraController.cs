@@ -31,11 +31,11 @@ public interface ICameraController
 
     event EventHandler<EventArgs> FocusRequest;
 
+    // Property
+
     CameraPosition? DefaultPosition { get; }
 
     CameraInfo? Camera { get; }
-
-    void UpdateCamera(CameraInfo? value);
 
     bool Preview { get; set; }
 
@@ -49,9 +49,11 @@ public interface ICameraController
 
     bool BarcodeDetection { get; set; }
 
-    Task<Stream?> TakePhotoAsync(ImageFormat imageFormat = ImageFormat.JPEG);
+    // Event
 
-    Task<bool> SaveSnapshotAsync(string path, ImageFormat imageFormat = ImageFormat.JPEG);
+    void UpdateCamera(CameraInfo? value);
+
+    void HandleBarcodeDetected(ZXing.Result result);
 }
 
 public sealed class CameraController : NotificationObject, ICameraController
@@ -88,7 +90,13 @@ public sealed class CameraController : NotificationObject, ICameraController
         remove => FocusRequestHandler -= value;
     }
 
+    // Field
+
+    private readonly ICommand? command;
+
     private readonly CameraPosition? defaultPosition;
+
+    // Property
 
     CameraPosition? ICameraController.DefaultPosition => defaultPosition;
 
@@ -126,12 +134,31 @@ public sealed class CameraController : NotificationObject, ICameraController
         set => SetProperty(ref flashMode, value);
     }
 
-    private float zoom;
+    private float zoom = 1f;
 
     public float Zoom
     {
         get => zoom;
-        set => SetProperty(ref zoom, value);
+        set
+        {
+            if (Camera is null)
+            {
+                value = 1f;
+            }
+            else
+            {
+                if (value < Camera.MinZoomFactor)
+                {
+                    value = Camera.MinZoomFactor;
+                }
+                else if (value > Camera.MaxZoomFactor)
+                {
+                    value = Camera.MaxZoomFactor;
+                }
+            }
+
+            SetProperty(ref zoom, value);
+        }
     }
 
     private bool barcodeDetection;
@@ -142,10 +169,29 @@ public sealed class CameraController : NotificationObject, ICameraController
         set => SetProperty(ref barcodeDetection, value);
     }
 
-    public CameraController(CameraPosition? position = null)
+    // Constructor
+
+    public CameraController()
+    {
+    }
+
+    public CameraController(CameraPosition position)
     {
         defaultPosition = position;
     }
+
+    public CameraController(ICommand command)
+    {
+        this.command = command;
+    }
+
+    public CameraController(CameraPosition position, ICommand command)
+    {
+        defaultPosition = position;
+        this.command = command;
+    }
+
+    // Message
 
     public async Task ResetPositionAsync()
     {
@@ -159,12 +205,6 @@ public sealed class CameraController : NotificationObject, ICameraController
         var args = new CameraPositionEventArgs { Position = position };
         PositionRequestHandler?.Invoke(this, args);
         return args.Task;
-    }
-
-    void ICameraController.UpdateCamera(CameraInfo? value)
-    {
-        Camera = value;
-        RaisePropertyChanged(nameof(Camera));
     }
 
     public Task<Stream?> TakePhotoAsync(ImageFormat imageFormat = ImageFormat.JPEG)
@@ -184,5 +224,21 @@ public sealed class CameraController : NotificationObject, ICameraController
     public void FocusRequest()
     {
         FocusRequestHandler?.Invoke(this, EventArgs.Empty);
+    }
+
+    // Event
+
+    void ICameraController.UpdateCamera(CameraInfo? value)
+    {
+        Camera = value;
+        RaisePropertyChanged(nameof(Camera));
+    }
+
+    void ICameraController.HandleBarcodeDetected(ZXing.Result result)
+    {
+        if ((command is not null) && command.CanExecute(result))
+        {
+            command.Execute(result);
+        }
     }
 }

@@ -2,8 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
+             xmlns:modules="clr-namespace:Template.MobileApp.Modules"
              x:Class="Template.MobileApp.Modules.Device.DeviceQrScanView"
              x:DataType="{x:Type module:DeviceQrScanViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceQrScanViewModel}"
@@ -11,6 +14,15 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <cv:CameraView WidthRequest="{x:Static modules:ScreenSize.Width}"
+                       HeightRequest="{x:Static modules:ScreenSize.Width}"
+                       behaviors:CameraBind.Controller="{Binding Camera}" />
+
+        <Label Style="{StaticResource ExtraLargeLeftLabel}"
+               Text="{Binding Barcode.Value}" />
+
+    </VerticalStackLayout>
 
 </ContentView>
