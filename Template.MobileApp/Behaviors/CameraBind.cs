@@ -53,6 +53,7 @@ public static class CameraBind
             controller = GetController(bindable);
             if (controller is not null)
             {
+                controller.PreviewRequest += ControllerOnPreviewRequest;
                 controller.PositionRequest += ControllerOnPositionRequest;
                 controller.TakePhotoRequest += ControllerOnTakePhotoRequest;
                 controller.SaveSnapshotRequest += ControllerOnSaveSnapshotRequest;
@@ -67,6 +68,7 @@ public static class CameraBind
         {
             if (controller is not null)
             {
+                controller.PreviewRequest -= ControllerOnPreviewRequest;
                 controller.PositionRequest -= ControllerOnPositionRequest;
                 controller.TakePhotoRequest -= ControllerOnTakePhotoRequest;
                 controller.SaveSnapshotRequest -= ControllerOnSaveSnapshotRequest;
@@ -77,7 +79,6 @@ public static class CameraBind
             bindable.BarcodeDetected -= BindableOnBarcodeDetected;
 
             bindable.RemoveBinding(CameraView.CameraProperty);
-            bindable.RemoveBinding(CameraView.AutoStartPreviewProperty);
             bindable.RemoveBinding(CameraView.TorchEnabledProperty);
             bindable.RemoveBinding(CameraView.MirroredImageProperty);
             bindable.RemoveBinding(CameraView.FlashModeProperty);
@@ -107,10 +108,6 @@ public static class CameraBind
             AssociatedObject.Camera = camera;
 
             AssociatedObject.SetBinding(
-                CameraView.AutoStartPreviewProperty,
-                new Binding(nameof(ICameraController.Preview), source: controller));
-
-            AssociatedObject.SetBinding(
                 CameraView.TorchEnabledProperty,
                 new Binding(nameof(ICameraController.Torch), source: controller));
             AssociatedObject.SetBinding(
@@ -137,6 +134,28 @@ public static class CameraBind
             }
 
             controller.HandleBarcodeDetected(args.Result[0]);
+        }
+
+        private void ControllerOnPreviewRequest(object? sender, CameraPreviewEventArgs e)
+        {
+            if (AssociatedObject is null)
+            {
+                return;
+            }
+
+            e.Task = e.Enable ? StartCameraPreview(AssociatedObject) : StopCameraPreview(AssociatedObject);
+        }
+
+        private static async Task<bool> StartCameraPreview(CameraView cameraView)
+        {
+            var result = await cameraView.StartCameraAsync();
+            return result == CameraResult.Success;
+        }
+
+        private static async Task<bool> StopCameraPreview(CameraView cameraView)
+        {
+            var result = await cameraView.StopCameraAsync();
+            return result == CameraResult.Success;
         }
 
         private void ControllerOnPositionRequest(object? sender, CameraPositionEventArgs e)

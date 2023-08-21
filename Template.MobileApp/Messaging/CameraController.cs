@@ -4,6 +4,11 @@ using Camera.MAUI;
 
 using Template.MobileApp.Helpers;
 
+public sealed class CameraPreviewEventArgs : TaskEventArgs<bool>
+{
+    public bool Enable { get; set; }
+}
+
 public sealed class CameraPositionEventArgs : TaskEventArgs
 {
     public CameraPosition? Position { get; set; }
@@ -23,6 +28,8 @@ public sealed class CameraSaveSnapshotEventArgs : TaskEventArgs<bool>
 
 public interface ICameraController
 {
+    event EventHandler<CameraPreviewEventArgs> PreviewRequest;
+
     event EventHandler<CameraPositionEventArgs> PositionRequest;
 
     event EventHandler<CameraTakePhotoEventArgs> TakePhotoRequest;
@@ -36,8 +43,6 @@ public interface ICameraController
     CameraPosition? DefaultPosition { get; }
 
     CameraInfo? Camera { get; }
-
-    bool Preview { get; set; }
 
     bool Torch { get; set; }
 
@@ -58,6 +63,8 @@ public interface ICameraController
 
 public sealed class CameraController : NotificationObject, ICameraController
 {
+    private event EventHandler<CameraPreviewEventArgs>? PreviewRequestHandler;
+
     private event EventHandler<CameraPositionEventArgs>? PositionRequestHandler;
 
     private event EventHandler<CameraTakePhotoEventArgs>? TakePhotoRequestHandler;
@@ -65,6 +72,12 @@ public sealed class CameraController : NotificationObject, ICameraController
     private event EventHandler<CameraSaveSnapshotEventArgs>? SaveSnapshotRequestHandler;
 
     private event EventHandler<EventArgs>? FocusRequestHandler;
+
+    event EventHandler<CameraPreviewEventArgs> ICameraController.PreviewRequest
+    {
+        add => PreviewRequestHandler += value;
+        remove => PreviewRequestHandler -= value;
+    }
 
     event EventHandler<CameraPositionEventArgs> ICameraController.PositionRequest
     {
@@ -101,14 +114,6 @@ public sealed class CameraController : NotificationObject, ICameraController
     CameraPosition? ICameraController.DefaultPosition => defaultPosition;
 
     public CameraInfo? Camera { get; private set; }
-
-    private bool preview;
-
-    public bool Preview
-    {
-        get => preview;
-        set => SetProperty(ref preview, value);
-    }
 
     private bool torch;
 
@@ -193,11 +198,25 @@ public sealed class CameraController : NotificationObject, ICameraController
 
     // Message
 
-    public async Task ResetPositionAsync()
+    public Task<bool> StartPreviewAsync()
+    {
+        var args = new CameraPreviewEventArgs { Enable = true };
+        PreviewRequestHandler?.Invoke(this, args);
+        return args.Task;
+    }
+
+    public Task<bool> StopPreviewAsync()
+    {
+        var args = new CameraPreviewEventArgs();
+        PreviewRequestHandler?.Invoke(this, args);
+        return args.Task;
+    }
+
+    public Task ResetPositionAsync()
     {
         var args = new CameraPositionEventArgs { Position = defaultPosition };
         PositionRequestHandler?.Invoke(this, args);
-        await args.Task;
+        return args.Task;
     }
 
     public Task SwitchPositionAsync(CameraPosition? position = null)

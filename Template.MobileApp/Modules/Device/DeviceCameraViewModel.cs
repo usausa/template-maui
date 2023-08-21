@@ -26,22 +26,20 @@ public class DeviceCameraViewModel : AppViewModelBase
         this.dialog = dialog;
         this.storageManager = storageManager;
 
-        Camera.Preview = true;
-
         TorchCommand = MakeDelegateCommand(() => Camera.Torch = !Camera.Torch);
         MirrorCommand = MakeDelegateCommand(() => Camera.Mirror = !Camera.Mirror);
         FlashModeCommand = MakeDelegateCommand(SwitchFlashMode);
         ZoomCommand = MakeDelegateCommand(SwitchZoom, () => Camera.Camera is not null).Observe(Camera);
     }
 
-    public override void OnNavigatedTo(INavigationContext context)
+    public override async void OnNavigatedTo(INavigationContext context)
     {
-        Camera.Preview = true;
+        await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override async void OnNavigatingFrom(INavigationContext context)
     {
-        Camera.Preview = false;
+        await Camera.StopPreviewAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

@@ -31,7 +31,10 @@ public class DeviceQrScanViewModel : AppViewModelBase
         {
             Barcode.Value = x.Text;
             audioPlayer?.Play();
-        }));
+        }))
+        {
+            BarcodeDetection = true
+        };
     }
 
     public override async void OnNavigatedTo(INavigationContext context)
@@ -42,14 +45,12 @@ public class DeviceQrScanViewModel : AppViewModelBase
             Disposables.Add(audioPlayer);
         }
 
-        Camera.Preview = true;
-        Camera.BarcodeDetection = true;
+        await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override async void OnNavigatingFrom(INavigationContext context)
     {
-        Camera.Preview = false;
-        Camera.BarcodeDetection = false;
+        await Camera.StopPreviewAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
