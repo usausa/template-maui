@@ -1,5 +1,4 @@
 // ReSharper disable once CheckNamespace
-// ReSharper disable BuiltInTypeReferenceStyle
 namespace Template.MobileApp;
 
 using Android.App;

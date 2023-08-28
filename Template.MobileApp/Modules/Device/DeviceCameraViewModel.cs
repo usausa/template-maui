@@ -69,7 +69,9 @@ public class DeviceCameraViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
+        await Camera.StopPreviewAsync();
         await Camera.SwitchPositionAsync();
+        await Camera.StartPreviewAsync();
         Camera.Zoom = 1;
     }
 

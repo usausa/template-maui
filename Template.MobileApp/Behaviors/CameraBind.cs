@@ -168,7 +168,7 @@ public static class CameraBind
             e.Task = PositionRequest(AssociatedObject, controller, e.Position);
         }
 
-        private static async Task PositionRequest(CameraView cameraView, ICameraController controller, CameraPosition? position)
+        private static Task PositionRequest(CameraView cameraView, ICameraController controller, CameraPosition? position)
         {
             CameraInfo? newCamera;
             if (position is not null)
@@ -183,25 +183,14 @@ public static class CameraBind
                     : cameraView.Cameras.FirstOrDefault();
             }
 
-            if (cameraView.Camera == newCamera)
+            if (cameraView.Camera != newCamera)
             {
-                return;
+                cameraView.Camera = newCamera;
+
+                controller.UpdateCamera(newCamera);
             }
 
-            var start = cameraView.AutoStartPreview;
-            if (start)
-            {
-                await cameraView.StopCameraAsync();
-            }
-
-            cameraView.Camera = newCamera;
-
-            if (start)
-            {
-                await cameraView.StartCameraAsync();
-            }
-
-            controller.UpdateCamera(newCamera);
+            return Task.CompletedTask;
         }
 
         private void ControllerOnTakePhotoRequest(object? sender, CameraTakePhotoEventArgs e)
