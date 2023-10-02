@@ -18,7 +18,7 @@ public class NumberInputModel : NotificationObject
         set => SetProperty(ref text, String.IsNullOrEmpty(value) ? AllowEmpty ? string.Empty : "0" : value);
     }
 
-    public string NormalizeText => text.EndsWith(".", StringComparison.InvariantCulture) ? text[..^1] : text;
+    public string NormalizeText => text.EndsWith('.') ? text[..^1] : text;
 
     public void Clear()
     {
@@ -43,14 +43,14 @@ public class NumberInputModel : NotificationObject
             {
                 Text = "0.";
             }
-            else if (text.IndexOf('.', StringComparison.OrdinalIgnoreCase) < 0)
+            else if (text.IndexOf('.', StringComparison.Ordinal) < 0)
             {
                 Text = text + ".";
             }
         }
         else
         {
-            var index = text.IndexOf(".", StringComparison.Ordinal);
+            var index = text.IndexOf('.', StringComparison.Ordinal);
             if (index >= 0)
             {
                 if (text.Length - index <= Scale)
