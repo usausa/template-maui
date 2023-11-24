@@ -18,7 +18,7 @@ public sealed class NetworkService : IDisposable
         client.Dispose();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     private static HttpClient CreateHttpClient()
     {
         return new(new HttpClientHandler
@@ -83,10 +83,10 @@ public sealed class NetworkService : IDisposable
     // Storage
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action)
+    public ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action)
     {
         var progress = -1d;
-        return await client.DownloadAsync(
+        return client.DownloadAsync(
             $"api/storage/{path}",
             filename,
             progress: (processed, total) =>
@@ -100,10 +100,10 @@ public sealed class NetworkService : IDisposable
             });
     }
 
-    public async ValueTask<IRestResponse> DownloadAsync(string path, Stream stream, Action<double> action)
+    public ValueTask<IRestResponse> DownloadAsync(string path, Stream stream, Action<double> action)
     {
         var progress = -1d;
-        return await client.DownloadAsync(
+        return client.DownloadAsync(
             $"api/storage/{path}",
             stream,
             progress: (processed, total) =>
@@ -117,10 +117,10 @@ public sealed class NetworkService : IDisposable
             });
     }
 
-    public async ValueTask<IRestResponse> UploadAsync(string path, string filename, Action<double> action)
+    public ValueTask<IRestResponse> UploadAsync(string path, string filename, Action<double> action)
     {
         var progress = -1d;
-        return await client.UploadAsync(
+        return client.UploadAsync(
             $"api/storage/{path}",
             filename,
             compress: CompressOption.Gzip,
@@ -135,10 +135,10 @@ public sealed class NetworkService : IDisposable
             });
     }
 
-    public async ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action)
+    public ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action)
     {
         var progress = -1d;
-        return await client.UploadAsync(
+        return client.UploadAsync(
             $"api/storage/{path}",
             stream,
             compress: CompressOption.Gzip,

@@ -111,7 +111,7 @@ public sealed class ShortcutBehavior : BehaviorBase<Element>, IShortcutBehavior
                     value = pi.GetValue(value);
                 }
 
-                parameter = Converter?.Convert(value, typeof(object), ConverterParameter, null) ?? value;
+                parameter = Converter?.Convert(value, typeof(object), ConverterParameter, CultureInfo.CurrentCulture) ?? value;
             }
         }
 

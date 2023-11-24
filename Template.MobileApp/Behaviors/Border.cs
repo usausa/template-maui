@@ -107,7 +107,7 @@ public static class Border
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Ignore")]
     private sealed class BorderBehavior : PlatformBehavior<VisualElement, Android.Views.View>
     {
         private Drawable? originalDrawable;

@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0-android</TargetFrameworks>
+    <TargetFrameworks>net8.0-android</TargetFrameworks>
+
     <OutputType>Exe</OutputType>
     <RootNamespace>Template.MobileApp</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -13,7 +14,6 @@
 
     <!-- App Identifier -->
     <ApplicationId>template.mobileapp</ApplicationId>
-    <ApplicationIdGuid>1D5879AB-2C05-4327-8AD3-E246746E9EA9</ApplicationIdGuid>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -24,11 +24,11 @@
 
   <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-android'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-android'">
     <MandroidI18n>CJK</MandroidI18n>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
     <EnableLLVM>True</EnableLLVM>
     <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
     <AndroidKeyStore>True</AndroidKeyStore>
@@ -38,21 +38,21 @@
     <AndroidSigningStorePass>example</AndroidSigningStorePass>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-android')) != true">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
     <Compile Remove="**\**\*.android.cs" />
     <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.6" />
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
 
     <!-- Splash Screen -->
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FFFFFF" BaseSize="128,128" />
 
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
-    <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
     <!-- Custom Fonts -->
     <MauiFont Include="Resources\Fonts\*" />
@@ -63,50 +63,51 @@
 
   <ItemGroup>
     <PackageReference Include="Camera.MAUI" Version="1.4.4" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
-    <PackageReference Include="Components.Maui" Version="1.8.7" />
-    <PackageReference Include="Components.Maui.Resolver" Version="1.8.7" />
-    <PackageReference Include="Components.Maui.SourceGenerator" Version="1.8.7">
+    <PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+    <PackageReference Include="Components.Maui" Version="1.9.0" />
+    <PackageReference Include="Components.Maui.Resolver" Version="1.9.0" />
+    <PackageReference Include="Components.Maui.SourceGenerator" Version="1.9.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="EmbeddedBuildProperty" Version="0.2.0">
+    <PackageReference Include="EmbeddedBuildProperty" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="Plugin.Maui.Audio" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Plugin.Maui.Audio" Version="2.0.0" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
-    <PackageReference Include="Rester" Version="2.4.0" />
-    <PackageReference Include="Rester.Serializers.System.Text.Json" Version="2.4.0" />
-    <PackageReference Include="Shiny.BluetoothLE" version="3.0.0-beta-0245" />
-    <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="3.0.0-beta-0245" />
-    <PackageReference Include="Shiny.Hosting.Maui" Version="3.0.0-beta-0245" />
+    <PackageReference Include="Rester" Version="2.5.0" />
+    <PackageReference Include="Shiny.BluetoothLE" version="3.1.2" />
+    <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="3.1.2" />
+    <PackageReference Include="Shiny.Hosting.Maui" Version="3.1.2" />
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
-    <PackageReference Include="Usa.Smart.Converter" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
-    <PackageReference Include="Usa.Smart.Data" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.3.3" />
-    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.3.3" />
-    <PackageReference Include="Usa.Smart.Mapper" Version="0.5.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="1.0.7" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.7" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="2.5.1" />
-    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.5.1" />
-    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.5.1" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.5.1" />
-    <PackageReference Include="Usa.Smart.Navigation.SourceGenerator" Version="2.5.1">
+    <PackageReference Include="Usa.Smart.Converter" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Data" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Mapper" Version="0.6.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.SourceGenerator" Version="2.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Usa.Smart.Reactive" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Reactive" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
   </ItemGroup>
 
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">

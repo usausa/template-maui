@@ -4,7 +4,7 @@ using QRCoder;
 
 public class QrImageSourceConverter : IValueConverter
 {
-    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not string text)
         {
@@ -18,6 +18,6 @@ public class QrImageSourceConverter : IValueConverter
         return ImageSource.FromStream(() => new MemoryStream(bytes));
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }

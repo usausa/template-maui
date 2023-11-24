@@ -10,7 +10,7 @@ public static partial class CrashReport
 
     private static partial string ResolveOldCrashLogPath();
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Ignore")]
     private static void LogException(Exception e)
     {
         try

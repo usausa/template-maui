@@ -20,6 +20,8 @@ using Plugin.Maui.Audio;
 
 using Rester;
 
+using Shiny;
+
 using Smart.Data.Mapper;
 using Smart.Resolver;
 

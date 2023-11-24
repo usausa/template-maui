@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
+using Shiny;
 using Shiny.BluetoothLE.Hosting;
 
 using Template.MobileApp.Providers;

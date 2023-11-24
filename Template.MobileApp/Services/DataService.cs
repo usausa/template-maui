@@ -13,7 +13,7 @@ public class DataServiceOptions
     public string Path { get; set; } = default!;
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:DoNotExposeGenericLists", Justification = "Ignore")]
 public class DataService
 {
     private readonly DataServiceOptions options;
@@ -56,9 +56,8 @@ public class DataService
     // CRUD
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<bool> InsertDataAsync(DataEntity entity)
-    {
-        return await provider.UsingAsync(async con =>
+    public ValueTask<bool> InsertDataAsync(DataEntity entity) =>
+        provider.UsingAsync(async con =>
         {
             try
             {
@@ -77,43 +76,33 @@ public class DataService
                 throw;
             }
         });
-    }
 
-    public async ValueTask<int> UpdateDataAsync(long id, string name)
-    {
-        return await provider.UsingAsync(con =>
+    public ValueTask<int> UpdateDataAsync(long id, string name) =>
+        provider.UsingAsync(con =>
             con.ExecuteAsync(
                 SqlUpdate<DataEntity>.Set("Name = @Name", "Id = @Id"), // "UPDATE Data SET Name = @Name WHERE Id = @Id",
                 new { Id = id, Name = name }));
-    }
 
-    public async ValueTask<int> DeleteDataAsync(long id)
-    {
-        return await provider.UsingAsync(con =>
+    public ValueTask<int> DeleteDataAsync(long id) =>
+        provider.UsingAsync(con =>
             con.ExecuteAsync(
                 SqlDelete<DataEntity>.ByKey(), // "DELETE FROM Data WHERE Id = @Id",
                 new { Id = id }));
-    }
 
-    public async ValueTask<DataEntity?> QueryDataAsync(long id)
-    {
-        return await provider.UsingAsync(con =>
+    public ValueTask<DataEntity?> QueryDataAsync(long id) =>
+        provider.UsingAsync(con =>
             con.QueryFirstOrDefaultAsync<DataEntity>(
                 SqlSelect<DataEntity>.ByKey(), // "SELECT * FROM Data WHERE Id = @Id",
                 new { Id = id }));
-    }
 
     // Bulk
 
-    public async ValueTask<int> CountBulkDataAsync()
-    {
-        return await provider.UsingAsync(con =>
+    public ValueTask<int> CountBulkDataAsync() =>
+        provider.UsingAsync(con =>
             con.ExecuteScalarAsync<int>(
                 SqlCount<BulkDataEntity>.All())); // "SELECT COUNT(*) FROM BulkData"));
-    }
 
-    public void InsertBulkDataEnumerable(IEnumerable<BulkDataEntity> source)
-    {
+    public void InsertBulkDataEnumerable(IEnumerable<BulkDataEntity> source) =>
         provider.UsingTx((con, tx) =>
         {
             foreach (var entity in source)
@@ -126,19 +115,14 @@ public class DataService
 
             tx.Commit();
         });
-    }
 
-    public async ValueTask DeleteAllBulkDataAsync()
-    {
-        await provider.UsingAsync(static con => con.ExecuteAsync("DELETE FROM BulkData"));
-    }
+    public ValueTask<int> DeleteAllBulkDataAsync() =>
+        provider.UsingAsync(static con => con.ExecuteAsync("DELETE FROM BulkData"));
 
-    public List<BulkDataEntity> QueryAllBulkDataList()
-    {
-        return provider.Using(con =>
+    public List<BulkDataEntity> QueryAllBulkDataList() =>
+        provider.Using(con =>
             con.QueryList<BulkDataEntity>(
                 SqlSelect<BulkDataEntity>.All())); // "SELECT * FROM BulkData ORDER BY Key1, Key2, Key3"));
-    }
 
     //--------------------------------------------------------------------------------
     // Work
@@ -151,9 +135,8 @@ public class DataService
         provider.Using(con =>
             con.QueryFirstOrDefaultAsync<WorkEntity>(SqlSelect<WorkEntity>.ByKey(), new { Id = id }));
 
-    public ValueTask InsertWorkEnumerableAsync(IEnumerable<WorkEntity> source)
-    {
-        return provider.UsingTxAsync(async (con, tx) =>
+    public ValueTask InsertWorkEnumerableAsync(IEnumerable<WorkEntity> source) =>
+        provider.UsingTxAsync(async (con, tx) =>
         {
             foreach (var entity in source)
             {
@@ -162,7 +145,6 @@ public class DataService
 
             await tx.CommitAsync();
         });
-    }
 
     public ValueTask InsertWorkAsync(string name) =>
         provider.UsingAsync(async con =>

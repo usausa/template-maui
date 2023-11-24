@@ -17,10 +17,10 @@ internal static class AppHostBuilderExtensions
             {
                 LabelHandler.Mapper.AppendToMapping(
                     nameof(View.BackgroundColor),
-                    (handler, _) => handler.UpdateValue(nameof(IView.Background)));
+                    static (handler, _) => handler.UpdateValue(nameof(IView.Background)));
                 ButtonHandler.Mapper.AppendToMapping(
                     nameof(View.BackgroundColor),
-                    (handler, _) => handler.UpdateValue(nameof(IView.Background)));
+                    static (handler, _) => handler.UpdateValue(nameof(IView.Background)));
             });
     }
 }
