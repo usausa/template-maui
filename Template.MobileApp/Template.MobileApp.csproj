@@ -102,14 +102,6 @@
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\MauiComponents\MauiComponents.Resolver\MauiComponents.Resolver.csproj" />
-    <ProjectReference Include="..\..\MauiComponents\MauiComponents.SourceGenerator\MauiComponents.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
-    <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Reactive\Smart.Maui.Reactive.csproj" />
-    <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
-  </ItemGroup>
-
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
