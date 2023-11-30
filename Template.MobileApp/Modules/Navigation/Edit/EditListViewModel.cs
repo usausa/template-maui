@@ -8,7 +8,7 @@ public class EditListViewModel : AppViewModelBase
 
     private readonly DataService dataService;
 
-    public ObservableCollection<WorkEntity> Items { get; } = new();
+    public ObservableCollection<WorkEntity> Items { get; } = [];
 
     public ICommand SelectCommand { get; }
     public ICommand DeleteCommand { get; }

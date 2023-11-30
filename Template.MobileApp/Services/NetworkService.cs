@@ -6,7 +6,7 @@ public sealed class NetworkService : IDisposable
 {
     private HttpClient client;
 
-    private readonly Dictionary<string, object> headers = new();
+    private readonly Dictionary<string, object> headers = [];
 
     public NetworkService()
     {
@@ -18,7 +18,7 @@ public sealed class NetworkService : IDisposable
         client.Dispose();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+    [SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     private static HttpClient CreateHttpClient()
     {
         return new(new HttpClientHandler

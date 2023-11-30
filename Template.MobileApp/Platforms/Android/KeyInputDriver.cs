@@ -1,20 +1,21 @@
 // ReSharper disable once CheckNamespace
+#pragma warning disable IDE0130
 namespace Template.MobileApp;
 
 using Template.MobileApp.Input;
 
-using global::Android.App;
-using global::Android.Views;
-using global::Android.Widget;
+using Android.App;
+using Android.Views;
+using Android.Widget;
 
 public sealed class KeyInputDriver
 {
     private static readonly ConvertEntry[] OtherEntries =
-    {
+    [
         new(Keycode.Del, ShortcutKey.Del),
         new(Keycode.Minus, ShortcutKey.Minus),
         new(Keycode.Period, ShortcutKey.Period)
-    };
+    ];
 
     private readonly Activity activity;
 

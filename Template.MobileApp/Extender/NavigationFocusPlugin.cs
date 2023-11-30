@@ -7,7 +7,7 @@ using Smart.Navigation.Plugins;
 
 public sealed class NavigationFocusPlugin : PluginBase
 {
-    private readonly Dictionary<object, VisualElement> focusBackup = new();
+    private readonly Dictionary<object, VisualElement> focusBackup = [];
 
     public override void OnClose(IPluginContext pluginContext, object view, object target)
     {

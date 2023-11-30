@@ -124,10 +124,12 @@ public static class EntryOption
     private static void UpdateInputFilter(TextView editText, BindableObject element)
     {
         var rule = GetInputFilter(element);
-        editText.SetFilters(rule is null ? Array.Empty<IInputFilter>() : new IInputFilter[] { new InputFilterInputFilter(rule) });
+#pragma warning disable CA2000
+        editText.SetFilters(rule is null ? [] : [new InputFilterInputFilter(rule)]);
+#pragma warning restore CA2000
     }
 
-    private sealed class InputFilterInputFilter : Java.Lang.Object, IInputFilter
+    private sealed class InputFilterInputFilter : Object, IInputFilter
     {
         private readonly Func<string, bool> rule;
 
@@ -139,7 +141,7 @@ public static class EntryOption
         public ICharSequence? FilterFormatted(ICharSequence? source, int start, int end, ISpanned? dest, int dstart, int dend)
         {
             var value = dest!.SubSequence(0, dstart) + source!.SubSequence(start, end) + dest!.SubSequence(dend, dest!.Length());
-            return rule(value) ? source : new Java.Lang.String(dest.SubSequence(dstart, dend));
+            return rule(value) ? source : new String(dest.SubSequence(dstart, dend));
         }
     }
 
@@ -152,7 +154,7 @@ public static class EntryOption
         }
     }
 
-    private static void OnEditorAction(object? sender, Android.Widget.TextView.EditorActionEventArgs e)
+    private static void OnEditorAction(object? sender, TextView.EditorActionEventArgs e)
     {
         if ((e.ActionId == ImeAction.ImeNull) && (e.Event?.KeyCode == Keycode.Enter))
         {

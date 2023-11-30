@@ -35,7 +35,7 @@ public sealed class ApplicationState : BusyState, IDisposable
 {
     private readonly ILogger<ApplicationState> log;
 
-    private readonly List<IDisposable> disposables = new();
+    private readonly List<IDisposable> disposables = [];
 
     // Battery
 
