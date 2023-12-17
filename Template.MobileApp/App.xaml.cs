@@ -3,7 +3,7 @@ namespace Template.MobileApp;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 
-public partial class App
+public sealed partial class App
 {
     private readonly INavigator navigator;
 

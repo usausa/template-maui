@@ -13,7 +13,6 @@ public class DataServiceOptions
     public string Path { get; set; } = default!;
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:DoNotExposeGenericLists", Justification = "Ignore")]
 public class DataService
 {
     private readonly DataServiceOptions options;

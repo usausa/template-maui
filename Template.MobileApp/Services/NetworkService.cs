@@ -18,9 +18,9 @@ public sealed class NetworkService : IDisposable
         client.Dispose();
     }
 
-    [SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     private static HttpClient CreateHttpClient()
     {
+#pragma warning disable CA2000
         return new(new HttpClientHandler
         {
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
@@ -29,6 +29,7 @@ public sealed class NetworkService : IDisposable
         {
             Timeout = new TimeSpan(0, 0, 0, 30)
         };
+#pragma warning restore CA2000
     }
 
     public void SetEndPoint(string address)

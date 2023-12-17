@@ -10,9 +10,9 @@ public static partial class CrashReport
 
     private static partial string ResolveOldCrashLogPath();
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Ignore")]
     private static void LogException(Exception e)
     {
+#pragma warning disable CA1031
         try
         {
             var path = ResolveCrashLogPath();
@@ -28,6 +28,7 @@ public static partial class CrashReport
         {
             // Ignore
         }
+#pragma warning restore CA1031
     }
 
     public static async ValueTask ShowReport()

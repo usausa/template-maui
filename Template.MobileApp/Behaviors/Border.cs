@@ -107,7 +107,7 @@ public static class Border
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Ignore")]
+#pragma warning disable CA1001
     private sealed class BorderBehavior : PlatformBehavior<VisualElement, Android.Views.View>
     {
         private Drawable? originalDrawable;
@@ -183,5 +183,6 @@ public static class Border
             view.ClipToOutline = true;
         }
     }
+#pragma warning restore CA1001
 #endif
 }
