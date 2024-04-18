@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 namespace Template.MobileApp.Platforms.Android.Helpers;
 
 public static class JavaObjectExtensions
