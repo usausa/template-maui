@@ -15,7 +15,7 @@ public sealed partial class App
         MainPage = serviceProvider.GetRequiredService<MainPage>();
 
         // Start
-        log.InfoApplicationStart();
+        log.InfoApplicationStart(typeof(App).Assembly.GetName().Version, Environment.Version);
     }
 
     protected override async void OnStart()

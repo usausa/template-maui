@@ -58,7 +58,7 @@ public interface ICameraController
 
     void UpdateCamera(CameraInfo? value);
 
-    void HandleBarcodeDetected(ZXing.Result result);
+    void HandleBarcodeDetected(BarcodeResult result);
 }
 
 public sealed class CameraController : NotificationObject, ICameraController
@@ -253,7 +253,7 @@ public sealed class CameraController : NotificationObject, ICameraController
         RaisePropertyChanged(nameof(Camera));
     }
 
-    void ICameraController.HandleBarcodeDetected(ZXing.Result result)
+    void ICameraController.HandleBarcodeDetected(BarcodeResult result)
     {
         if ((command is not null) && command.CanExecute(result))
         {

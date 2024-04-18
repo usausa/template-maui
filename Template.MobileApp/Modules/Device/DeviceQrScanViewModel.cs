@@ -27,7 +27,7 @@ public class DeviceQrScanViewModel : AppViewModelBase
         this.fileSystem = fileSystem;
         this.audioManager = audioManager;
 
-        Camera = new CameraController(CameraPosition.Back, MakeDelegateCommand<ZXing.Result>(x =>
+        Camera = new CameraController(CameraPosition.Back, MakeDelegateCommand<BarcodeResult>(x =>
         {
             Barcode.Value = x.Text;
             audioPlayer?.Play();

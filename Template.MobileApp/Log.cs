@@ -2,8 +2,8 @@ namespace Template.MobileApp;
 
 internal static partial class Log
 {
-    [LoggerMessage(Level = LogLevel.Information, Message = "Application start.")]
-    public static partial void InfoApplicationStart(this ILogger logger);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Application start. version=[{version}], runtime=[{runtime}]")]
+    public static partial void InfoApplicationStart(this ILogger logger, Version? version, Version runtime);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Screen state changed. state=[{on}]")]
     public static partial void DebugScreenStateChanged(this ILogger logger, bool on);

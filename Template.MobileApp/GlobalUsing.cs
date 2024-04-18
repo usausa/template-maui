@@ -16,6 +16,7 @@ global using System.Net.Http;
 global using System.Reactive.Disposables;
 global using System.Reactive.Linq;
 global using System.Reactive.Subjects;
+global using System.Runtime;
 global using System.Runtime.CompilerServices;
 global using System.Text;
 global using System.Threading;
