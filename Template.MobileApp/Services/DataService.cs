@@ -42,13 +42,13 @@ public class DataService
             await con.ExecuteAsync(SqlHelper.MakeCreate<WorkEntity>());
         });
 
-        await InsertWorkEnumerableAsync(new[]
-        {
+        await InsertWorkEnumerableAsync(
+        [
             new WorkEntity { Id = 1, Name = "Sample-1" },
             new WorkEntity { Id = 2, Name = "Sample-2" },
             new WorkEntity { Id = 3, Name = "Sample-3" },
             new WorkEntity { Id = 4, Name = "Sample-4" }
-        });
+        ]);
     }
 
     //--------------------------------------------------------------------------------
