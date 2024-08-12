@@ -4,7 +4,8 @@
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:fonts="clr-namespace:Template.MobileApp.Resources.Fonts"
-             xmlns:entity="clr-namespace:Template.MobileApp.Models.Entity" xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
+             xmlns:entity="clr-namespace:Template.MobileApp.Models.Entity"
              x:Class="Template.MobileApp.Modules.Navigation.Edit.EditListView"
              x:DataType="{x:Type module:EditListViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:EditListViewModel}"
@@ -20,13 +21,8 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="entity:WorkEntity">
                     <ViewCell>
-                        <Grid Style="{StaticResource ItemListCellGrid}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="6*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <Grid Style="{StaticResource ItemListCellGrid}"
+                              ColumnDefinitions="*,6*,*,*">
                             <Label Grid.Column="0"
                                    Style="{StaticResource ListItemLeftLabel}"
                                    Text="{Binding Id}" />

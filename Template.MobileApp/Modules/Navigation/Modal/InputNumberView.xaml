@@ -6,8 +6,7 @@
            xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
            xmlns:input="clr-namespace:Template.MobileApp.Input"
            xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-           xmlns:modules="clr-namespace:Template.MobileApp.Modules.Navigation.Modal"
-           xmlns:m="clr-namespace:Template.MobileApp.Modules"
+           xmlns:m="clr-namespace:Template.MobileApp.Modules" xmlns:modules="clr-namespace:Template.MobileApp.Modules.Navigation.Modal"
            x:Class="Template.MobileApp.Modules.Navigation.Modal.InputNumberView"
            x:DataType="{x:Type modules:InputNumberViewModel}"
            sr:BindingContextResolver.Type="{x:Type modules:InputNumberViewModel}"
@@ -25,19 +24,9 @@
                Text="{Binding Input.Text}" />
 
         <!-- pad -->
-        <Grid Style="{StaticResource InputGrid}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
+        <Grid Style="{StaticResource InputGrid}"
+              RowDefinitions="*,*,*,*"
+              ColumnDefinitions="*,*,*">
             <Button Grid.Row="0" Grid.Column="0"
                     Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
@@ -113,11 +102,8 @@
         </Grid>
 
         <!-- function -->
-        <Grid Style="{StaticResource FunctionGrid}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Grid Style="{StaticResource FunctionGrid}"
+              ColumnDefinitions="*,*">
             <Button Grid.Column="0"
                     Style="{StaticResource InputFunctionButton}"
                     Command="{Binding CloseCommand}"

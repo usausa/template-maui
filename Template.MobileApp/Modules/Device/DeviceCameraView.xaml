@@ -19,13 +19,8 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto,Auto">
         <cv:CameraView x:Name="CameraView"
                        Grid.Row="0"
                        behaviors:CameraBind.Controller="{Binding Camera}" />
@@ -47,14 +42,8 @@
         </VerticalStackLayout>
 
         <Grid Grid.Row="1"
-              Style="{StaticResource SubMenuGrid}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
+              Style="{StaticResource SubMenuGrid}"
+              ColumnDefinitions="*,*,*,*">
             <Button Grid.Column="0"
                     Style="{StaticResource SubMenuButton}"
                     Command="{Binding TorchCommand}"

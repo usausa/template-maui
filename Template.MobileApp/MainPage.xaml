@@ -19,21 +19,13 @@
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
 
-    <Grid Style="{StaticResource MainGrid}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
+    <Grid Style="{StaticResource MainGrid}"
+          RowDefinitions="Auto,*,Auto">
         <!-- header -->
         <Grid Grid.Row="0"
               Style="{StaticResource HeaderGrid}"
+              ColumnDefinitions="*"
               IsVisible="{Binding HeaderVisible.Value}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
             <Label Grid.Column="0"
                    Style="{StaticResource HeaderTitleLabel}"
                    Text="{Binding Title.Value}" />
@@ -50,14 +42,8 @@
         <!-- function -->
         <Grid Grid.Row="2"
               Style="{StaticResource FunctionGrid}"
+              ColumnDefinitions="*,*,*,*"
               IsVisible="{Binding FunctionVisible.Value}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
             <Button Grid.Column="0"
                     Style="{StaticResource FunctionButton1}"
                     Command="{Binding Function1Command}"

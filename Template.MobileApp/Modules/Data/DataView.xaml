@@ -11,28 +11,15 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="4*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
-
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,4*,Auto,Auto,3*">
         <Label Grid.Row="0"
                Style="{StaticResource GroupLabel}"
                Text="CRUD" />
 
         <Grid Grid.Row="1"
-              Style="{StaticResource MenuGrid}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
+              Style="{StaticResource MenuGrid}"
+              RowDefinitions="*,*,*,*">
             <Button Grid.Row="0"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding InsertCommand}"
@@ -56,12 +43,8 @@
                Text="Bulk" />
 
         <Grid Grid.Row="3"
-              Style="{StaticResource FillGrid}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-
+              Style="{StaticResource FillGrid}"
+              ColumnDefinitions="2*,3*">
             <Label Grid.Row="0" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Count" />
@@ -71,13 +54,8 @@
         </Grid>
 
         <Grid Grid.Row="4"
-              Style="{StaticResource MenuGrid}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
+              Style="{StaticResource MenuGrid}"
+              RowDefinitions="*,*,*">
             <Button Grid.Row="0"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding BulkInsertCommand}"
