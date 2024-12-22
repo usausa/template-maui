@@ -45,6 +45,7 @@ public static class Extensions
     // Navigation
     //--------------------------------------------------------------------------------
 
+    // ReSharper disable once AsyncVoidMethod
     public static async ValueTask PostForwardAsync(this INavigator navigator, object viewId, NavigationParameter? parameter = null)
     {
         if (navigator.Executing)
@@ -66,6 +67,7 @@ public static class Extensions
         }
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public static async ValueTask PostActionAsync(this INavigator navigator, Func<Task> task)
     {
         if (navigator.Executing)

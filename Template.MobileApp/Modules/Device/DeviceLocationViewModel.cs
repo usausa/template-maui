@@ -23,11 +23,12 @@ public class DeviceLocationViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
         Location.Value = await locationService.GetLastLocationAsync();
 
-        locationService.Start(GeolocationAccuracy.Best);
+        locationService.Start();
     }
 
     public override void OnNavigatingFrom(INavigationContext context)

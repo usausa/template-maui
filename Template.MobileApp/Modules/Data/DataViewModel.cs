@@ -46,6 +46,7 @@ public class DataViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatingTo(INavigationContext context)
     {
         BulkDataCount.Value = await dataService.CountBulkDataAsync();

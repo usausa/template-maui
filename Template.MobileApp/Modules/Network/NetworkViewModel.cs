@@ -37,6 +37,7 @@ public class NetworkViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
         if (String.IsNullOrEmpty(settings.ApiEndPoint))

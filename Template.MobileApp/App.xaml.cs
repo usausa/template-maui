@@ -18,6 +18,7 @@ public sealed partial class App
         log.InfoApplicationStart(typeof(App).Assembly.GetName().Version, Environment.Version);
     }
 
+    // ReSharper disable once AsyncVoidMethod
     protected override async void OnStart()
     {
         // Report previous exception

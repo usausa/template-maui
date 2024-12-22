@@ -8,6 +8,7 @@ using Template.MobileApp.Services;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
 {
+    // ReSharper disable once AsyncVoidMethod
     public async void Initialize(IServiceProvider services)
     {
         // Setup provider

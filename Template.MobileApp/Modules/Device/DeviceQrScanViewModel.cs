@@ -37,6 +37,7 @@ public class DeviceQrScanViewModel : AppViewModelBase
         };
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
@@ -48,6 +49,7 @@ public class DeviceQrScanViewModel : AppViewModelBase
         await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatingFrom(INavigationContext context)
     {
         await Camera.StopPreviewAsync();

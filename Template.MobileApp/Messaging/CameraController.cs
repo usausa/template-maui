@@ -115,35 +115,27 @@ public sealed class CameraController : NotificationObject, ICameraController
 
     public CameraInfo? Camera { get; private set; }
 
-    private bool torch;
-
     public bool Torch
     {
-        get => torch;
-        set => SetProperty(ref torch, value);
+        get;
+        set => SetProperty(ref field, value);
     }
-
-    private bool mirror;
 
     public bool Mirror
     {
-        get => mirror;
-        set => SetProperty(ref mirror, value);
+        get;
+        set => SetProperty(ref field, value);
     }
-
-    private FlashMode flashMode;
 
     public FlashMode FlashMode
     {
-        get => flashMode;
-        set => SetProperty(ref flashMode, value);
+        get;
+        set => SetProperty(ref field, value);
     }
-
-    private float zoom = 1f;
 
     public float Zoom
     {
-        get => zoom;
+        get;
         set
         {
             if (Camera is null)
@@ -162,35 +154,37 @@ public sealed class CameraController : NotificationObject, ICameraController
                 }
             }
 
-            SetProperty(ref zoom, value);
+            SetProperty(ref field, value);
         }
     }
 
-    private bool barcodeDetection;
-
     public bool BarcodeDetection
     {
-        get => barcodeDetection;
-        set => SetProperty(ref barcodeDetection, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     // Constructor
 
     public CameraController()
     {
+        Zoom = 1f;
     }
 
     public CameraController(CameraPosition position)
+        : this()
     {
         defaultPosition = position;
     }
 
     public CameraController(ICommand command)
+        : this()
     {
         this.command = command;
     }
 
     public CameraController(CameraPosition position, ICommand command)
+        : this()
     {
         defaultPosition = position;
         this.command = command;

@@ -32,11 +32,13 @@ public class DeviceCameraViewModel : AppViewModelBase
         ZoomCommand = MakeDelegateCommand(SwitchZoom, () => Camera.Camera is not null).Observe(Camera);
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
         await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatingFrom(INavigationContext context)
     {
         await Camera.StopPreviewAsync();

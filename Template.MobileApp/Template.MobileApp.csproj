@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0-android</TargetFrameworks>
+    <TargetFrameworks>net9.0-android</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>Template.MobileApp</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -23,11 +23,11 @@
 
   <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-android'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
     <MandroidI18n>CJK</MandroidI18n>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
     <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
     <AndroidKeyStore>True</AndroidKeyStore>
     <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
@@ -36,7 +36,7 @@
     <AndroidSigningStorePass>example</AndroidSigningStorePass>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) != true">
     <Compile Remove="**\**\*.android.cs" />
     <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
@@ -62,38 +62,38 @@
   <ItemGroup>
     <PackageReference Include="Camera.MAUI" Version="1.5.1" />
     <PackageReference Include="Camera.MAUI.ZXing" Version="1.0.0" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="9.0.3" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
     <PackageReference Include="Components.Maui" Version="1.10.1" />
     <PackageReference Include="Components.Maui.Resolver" Version="1.10.1" />
     <PackageReference Include="Components.Maui.SourceGenerator" Version="1.10.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="EmbeddedBuildProperty" Version="1.0.0">
+    <PackageReference Include="EmbeddedBuildProperty" Version="1.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.5" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.5" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.90" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.90" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.6" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.6" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.21" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.21" />
     <PackageReference Include="Plugin.Maui.Audio" Version="3.0.1" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
-    <PackageReference Include="Rester" Version="2.5.0" />
+    <PackageReference Include="Rester" Version="2.6.0" />
     <PackageReference Include="Shiny.BluetoothLE" version="3.3.3" />
     <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="3.3.3" />
     <PackageReference Include="Shiny.Hosting.Maui" Version="3.3.3" />
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
-    <PackageReference Include="Usa.Smart.Converter" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.3.8" />
-    <PackageReference Include="Usa.Smart.Data" Version="2.4.3" />
-    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.4.0" />
-    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.4.0" />
-    <PackageReference Include="Usa.Smart.Mapper" Version="0.6.0" />
+    <PackageReference Include="Usa.Smart.Converter" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Data" Version="2.5.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.5.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.5.0" />
+    <PackageReference Include="Usa.Smart.Mapper" Version="0.8.0" />
     <PackageReference Include="Usa.Smart.Maui" Version="2.0.0" />
     <PackageReference Include="Usa.Smart.Maui.Reactive" Version="2.0.0" />
     <PackageReference Include="Usa.Smart.Navigation" Version="2.7.0" />
@@ -104,15 +104,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Usa.Smart.Reactive" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.5.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.5.0" />
+    <PackageReference Include="Usa.Smart.Reactive" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.6.0" />
   </ItemGroup>
 
-  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
-    <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
-    </ItemGroup>
-  </Target>
+
+  <ItemGroup>
+    <PackageReference Update="Usa.Smart.Analyzers.JapaneseComment" Version="1.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

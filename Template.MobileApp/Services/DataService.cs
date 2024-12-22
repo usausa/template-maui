@@ -34,7 +34,7 @@ public class DataService
             File.Delete(options.Path);
         }
 
-        await provider.UsingAsync(async con =>
+        await provider.UsingAsync(static async con =>
         {
             await con.ExecuteAsync("PRAGMA AUTO_VACUUM=1");
             await con.ExecuteAsync(SqlHelper.MakeCreate<DataEntity>());
@@ -97,7 +97,7 @@ public class DataService
     // Bulk
 
     public ValueTask<int> CountBulkDataAsync() =>
-        provider.UsingAsync(con =>
+        provider.UsingAsync(static con =>
             con.ExecuteScalarAsync<int>(
                 SqlCount<BulkDataEntity>.All())); // "SELECT COUNT(*) FROM BulkData"));
 
@@ -119,7 +119,7 @@ public class DataService
         provider.UsingAsync(static con => con.ExecuteAsync("DELETE FROM BulkData"));
 
     public List<BulkDataEntity> QueryAllBulkDataList() =>
-        provider.Using(con =>
+        provider.Using(static con =>
             con.QueryList<BulkDataEntity>(
                 SqlSelect<BulkDataEntity>.All())); // "SELECT * FROM BulkData ORDER BY Key1, Key2, Key3"));
 

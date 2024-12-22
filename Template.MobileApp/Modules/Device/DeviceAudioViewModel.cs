@@ -30,6 +30,7 @@ public class DeviceAudioViewModel : AppViewModelBase
         StopCommand = new DelegateCommand(Stop);
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())

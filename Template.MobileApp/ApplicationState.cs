@@ -39,53 +39,42 @@ public sealed class ApplicationState : BusyState, IDisposable
 
     // Battery
 
-    private double batteryChargeLevel;
-
     public double BatteryChargeLevel
     {
-        get => batteryChargeLevel;
-        private set => SetProperty(ref batteryChargeLevel, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
-
-    private BatteryState batteryState;
 
     public BatteryState BatteryState
     {
-        get => batteryState;
-        private set => SetProperty(ref batteryState, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
-
-    private BatteryPowerSource batteryPowerSource;
 
     public BatteryPowerSource BatteryPowerSource
     {
-        get => batteryPowerSource;
-        private set => SetProperty(ref batteryPowerSource, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     // Connectivity
 
-    private NetworkProfile networkProfile;
-
     public NetworkProfile NetworkProfile
     {
-        get => networkProfile;
-        private set => SetProperty(ref networkProfile, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
-    private NetworkAccess networkAccess;
 
     public NetworkAccess NetworkAccess
     {
-        get => networkAccess;
-        private set => SetProperty(ref networkAccess, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
-
-    private NetworkState networkState;
 
     public NetworkState NetworkState
     {
-        get => networkState;
-        private set => SetProperty(ref networkState, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     public ApplicationState(

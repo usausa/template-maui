@@ -36,43 +36,39 @@ public sealed class EntryController : NotificationObject, IEntryController
 
     // Property
 
-    private string? text;
-
     public string? Text
     {
-        get => text;
-        set => SetProperty(ref text, value);
+        get;
+        set => SetProperty(ref field, value);
     }
-
-    private bool enable;
 
     public bool Enable
     {
-        get => enable;
-        set => SetProperty(ref enable, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     // Constructor
 
     public EntryController()
     {
-        enable = true;
+        Enable = true;
     }
 
     public EntryController(bool enable)
     {
-        this.enable = enable;
+        Enable = enable;
     }
 
     public EntryController(ICommand command)
     {
-        enable = true;
+        Enable = true;
         this.command = command;
     }
 
     public EntryController(bool enable, ICommand command)
     {
-        this.enable = enable;
+        Enable = enable;
         this.command = command;
     }
 
