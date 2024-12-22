@@ -4,6 +4,7 @@ using System;
 
 using Template.MobileApp.Modules;
 
+[AcceptEmptyServiceProvider]
 [ContentProperty("Value")]
 public sealed class ViewIdExtension : IMarkupExtension<ViewId>
 {
