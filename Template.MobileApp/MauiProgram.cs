@@ -46,16 +46,16 @@ public static class MauiProgram
             .UseMauiApp<App>()
 #if ANDROID
             // ReSharper disable UnusedParameter.Local
-            .ConfigureLifecycleEvents(events =>
+            .ConfigureLifecycleEvents(static events =>
             {
                 // Lifecycle
 #if DEVICE_FULL_SCREEN
-                events.AddAndroid(android => android.OnCreate(static (activity, _) => AndroidHelper.FullScreen(activity)));
+                events.AddAndroid(static android => android.OnCreate(static (activity, _) => AndroidHelper.FullScreen(activity)));
 #endif
             })
             // ReSharper restore UnusedParameter.Local
 #endif
-            .ConfigureFonts(fonts =>
+            .ConfigureFonts(static fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
@@ -70,7 +70,7 @@ public static class MauiProgram
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
             .ConfigureCustomControls()
-            .ConfigureCustomBehaviors(c =>
+            .ConfigureCustomBehaviors(static c =>
             {
 #if DEVICE_HAS_KEYPAD
                 c.HandleEnterKey = true;
@@ -105,14 +105,14 @@ public static class MauiProgram
         builder.Services.AddBluetoothLeHosting();
 
         // Config DataMapper
-        SqlMapperConfig.Default.ConfigureTypeHandlers(config =>
+        SqlMapperConfig.Default.ConfigureTypeHandlers(static config =>
         {
             config[typeof(DateTime)] = new DateTimeTypeHandler();
             config[typeof(Guid)] = new GuidTypeHandler();
         });
 
         // Config Rest
-        RestConfig.Default.UseJsonSerializer(config =>
+        RestConfig.Default.UseJsonSerializer(static config =>
         {
             config.Converters.Add(new Template.MobileApp.Helpers.Json.DateTimeConverter());
             config.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
@@ -145,7 +145,7 @@ public static class MauiProgram
 
         // MauiComponents
 #if ANDROID
-        config.AddComponentsDialog(c =>
+        config.AddComponentsDialog(static c =>
         {
             var resources = Application.Current!.Resources;
             c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
@@ -173,7 +173,7 @@ public static class MauiProgram
         config.AddComponentsLocation();
 
         // Navigator
-        config.AddNavigator(c =>
+        config.AddNavigator(static c =>
         {
             c.UseMauiNavigationProvider();
             c.AddResolverPlugin();
@@ -192,7 +192,7 @@ public static class MauiProgram
         config.BindSingleton<Settings>();
 
         // Service
-        config.BindSingleton(p =>
+        config.BindSingleton(static p =>
         {
             var storage = p.GetRequiredService<IStorageManager>();
             return new DataServiceOptions

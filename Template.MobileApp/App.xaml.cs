@@ -1,21 +1,27 @@
 namespace Template.MobileApp;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 
 public sealed partial class App
 {
-    private readonly INavigator navigator;
+    private readonly IServiceProvider serviceProvider;
 
     public App(IServiceProvider serviceProvider, ILogger<App> log)
     {
-        InitializeComponent();
+        this.serviceProvider = serviceProvider;
 
-        navigator = serviceProvider.GetRequiredService<INavigator>();
-        MainPage = serviceProvider.GetRequiredService<MainPage>();
+        InitializeComponent();
 
         // Start
         log.InfoApplicationStart(typeof(App).Assembly.GetName().Version, Environment.Version);
+    }
+
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        return new Window(serviceProvider.GetRequiredService<MainPage>());
     }
 
     // ReSharper disable once AsyncVoidMethod
@@ -28,6 +34,7 @@ public sealed partial class App
         await Permissions.RequestCameraAsync();
         await Permissions.RequestLocationAsync();
 
+        var navigator = serviceProvider.GetRequiredService<INavigator>();
         await navigator.ForwardAsync(ViewId.Menu);
     }
 }
