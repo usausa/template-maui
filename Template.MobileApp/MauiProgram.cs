@@ -12,6 +12,8 @@ using Camera.MAUI;
 
 using CommunityToolkit.Maui;
 
+using Fonts;
+
 using MauiComponents.Resolver;
 
 using Microsoft.Maui.LifecycleEvents;
@@ -59,9 +61,11 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("SegoeUI-Semibold.ttf", "SegoeSemibold");
+                fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
                 fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular");
-                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
-                fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
+                fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
+                fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", FontAwesomeIcons.FontAwesome);
             })
             //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
