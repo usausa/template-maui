@@ -2,7 +2,9 @@ namespace Template.MobileApp.Models.Input;
 
 public class NumberInputModel : NotificationObject
 {
+#pragma warning disable IDE0032
     private string text = "0";
+#pragma warning restore IDE0032
 
     public int MaxLength { get; set; }
 

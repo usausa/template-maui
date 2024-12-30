@@ -10,7 +10,7 @@ public static partial class CrashReport
 
     private static partial string ResolveOldCrashLogPath();
 
-    private static void LogException(Exception e)
+    public static void LogException(Exception e)
     {
 #pragma warning disable CA1031
         try
@@ -40,9 +40,10 @@ public static partial class CrashReport
         }
 
         var log = await File.ReadAllTextAsync(path);
-        if (Application.Current?.MainPage is not null)
+        var page = Application.Current?.Windows[0].Page;
+        if (page is not null)
         {
-            await Application.Current.MainPage.DisplayAlert("Crash report", log, "Close");
+            await page.DisplayAlert("Crash report", log, "Close");
         }
 
         var oldPath = ResolveOldCrashLogPath();
