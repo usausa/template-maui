@@ -12,9 +12,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Image WidthRequest="{Binding Source={RelativeSource FindAncestor, AncestorType={x:Type VerticalStackLayout}}, Path=Width}"
-               HeightRequest="{Binding Source={RelativeSource FindAncestor, AncestorType={x:Type VerticalStackLayout}}, Path=Width}"
-               Source="{Binding Text.Value, Converter={StaticResource QrImageSourceConverter}}" />
+        <Image Source="{Binding Text.Value, Converter={StaticResource QrImageSourceConverter}}" />
     </VerticalStackLayout>
 
 </ContentView>

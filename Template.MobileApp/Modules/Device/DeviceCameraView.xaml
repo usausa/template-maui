@@ -21,11 +21,12 @@
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto,Auto">
-        <cv:CameraView x:Name="CameraView"
-                       Grid.Row="0"
+        <cv:CameraView Grid.Row="0"
+                       x:Name="CameraView"
                        behaviors:CameraBind.Controller="{Binding Camera}" />
 
         <VerticalStackLayout Grid.Row="0"
+                             x:DataType="cv:CameraView"
                              Style="{StaticResource FillVerticalStack}">
             <Label TextColor="White"
                    Text="{Binding Source={x:Reference CameraView}, Path=Camera.Name, StringFormat='Camera: {0}'}"
