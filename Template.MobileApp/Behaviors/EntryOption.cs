@@ -81,29 +81,29 @@ public static class EntryOption
         // HandleEnterKey
         if (options.HandleEnterKey)
         {
-            EntryHandler.Mapper.Add(HandleEnterKeyProperty.PropertyName, static (handler, _) => UpdateHandleEnterKey(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add(HandleEnterKeyProperty.PropertyName, static (handler, _) => UpdateHandleEnterKey(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(HandleEnterKeyProperty.PropertyName, static (handler, _) => UpdateHandleEnterKey(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(HandleEnterKeyProperty.PropertyName, static (handler, _) => UpdateHandleEnterKey(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
         // DisableShowSoftInputOnFocus
         if (options.DisableShowSoftInputOnFocus)
         {
-            EntryHandler.Mapper.Add(DisableShowSoftInputOnFocusProperty.PropertyName, static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add(DisableShowSoftInputOnFocusProperty.PropertyName, static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(DisableShowSoftInputOnFocusProperty.PropertyName, static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(DisableShowSoftInputOnFocusProperty.PropertyName, static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
         // SelectAllOnFocus
         if (options.SelectAllOnFocus)
         {
-            EntryHandler.Mapper.Add(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
         // InputFilter
         if (options.InputFilter)
         {
-            EntryHandler.Mapper.Add(InputFilterProperty.PropertyName, static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add(InputFilterProperty.PropertyName, static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(InputFilterProperty.PropertyName, static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(InputFilterProperty.PropertyName, static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
         }
 #endif
     }

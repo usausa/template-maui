@@ -61,23 +61,23 @@ public static class Border
 #if ANDROID
         if (options.Border)
         {
-            EntryHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-            EntryHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-            EntryHandler.Mapper.Add(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-            EntryHandler.Mapper.Add(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-            EntryHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.AppendToMapping(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
 
-            EditorHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-            EditorHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-            EditorHandler.Mapper.Add(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-            EditorHandler.Mapper.Add(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-            EditorHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
 
-            LabelHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-            LabelHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-            LabelHandler.Mapper.Add(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-            LabelHandler.Mapper.Add(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-            LabelHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.AppendToMapping(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.AppendToMapping(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.AppendToMapping(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.AppendToMapping(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.AppendToMapping(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
         }
 #endif
     }
