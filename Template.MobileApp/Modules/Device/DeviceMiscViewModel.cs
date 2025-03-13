@@ -34,7 +34,7 @@ public class DeviceMiscViewModel : AppViewModelBase
         ApplicationState applicationState,
         IScreen screen,
         IStorageManager storage,
-        ISpeechService speech,
+        //ISpeechService speech,
         IVibration vibration,
         IHapticFeedback feedback,
         IFlashlight flashlight)
@@ -64,26 +64,29 @@ public class DeviceMiscViewModel : AppViewModelBase
             await stream.CopyToAsync(file);
         });
 
+        // TODO
+        RecognizeCommand = MakeDelegateCommand(() => { });
+        SpeakCommand = MakeDelegateCommand(() => { });
+        SpeakCancelCommand = MakeDelegateCommand(() => { });
 #pragma warning disable CA2012
-        SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
+        //SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
 #pragma warning restore CA2012
-        SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
+        //SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
+//        var progress = new Progress<string>(text =>
+//        {
+//            if (!String.IsNullOrEmpty(text))
+//            {
+//                RecognizeText.Value = text;
+//            }
+//        });
+//        RecognizeCommand = MakeAsyncCommand(async () =>
+//        {
+//            RecognizeText.Value = string.Empty;
 
-        var progress = new Progress<string>(text =>
-        {
-            if (!String.IsNullOrEmpty(text))
-            {
-                RecognizeText.Value = text;
-            }
-        });
-        RecognizeCommand = MakeAsyncCommand(async () =>
-        {
-            RecognizeText.Value = string.Empty;
+//            var result = await speech.RecognizeAsync(progress);
 
-            var result = await speech.RecognizeAsync(progress);
-
-            RecognizeText.Value = !String.IsNullOrEmpty(result) ? result : string.Empty;
-        });
+//            RecognizeText.Value = !String.IsNullOrEmpty(result) ? result : string.Empty;
+//        });
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

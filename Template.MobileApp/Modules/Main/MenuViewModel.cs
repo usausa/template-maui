@@ -13,7 +13,7 @@ public class MenuViewModel : AppViewModelBase
         IAppInfo appInfo)
         : base(applicationState)
     {
-        Flavor.Value = !String.IsNullOrEmpty(Variants.Flavor()) ? Variants.Flavor() : "Unknown";
+        Flavor.Value = !String.IsNullOrEmpty(Variants.Flavor) ? Variants.Flavor : "Unknown";
         Version.Value = appInfo.Version;
 
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));

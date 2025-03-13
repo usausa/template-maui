@@ -17,9 +17,9 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         var settings = services.GetRequiredService<Settings>();
 
         // Initial setting
-        if (String.IsNullOrEmpty(settings.ApiEndPoint) && !String.IsNullOrEmpty(Variants.ApiEndPoint()))
+        if (String.IsNullOrEmpty(settings.ApiEndPoint) && !String.IsNullOrEmpty(Variants.ApiEndPoint))
         {
-            settings.ApiEndPoint = Variants.ApiEndPoint();
+            settings.ApiEndPoint = Variants.ApiEndPoint;
         }
 
         // Setup navigator

@@ -1,18 +1,18 @@
 namespace Template.MobileApp;
 
-using EmbeddedBuildProperty;
+using BunnyTail.EmbeddedBuildProperty;
 
 internal static partial class Variants
 {
     [BuildProperty]
-    public static partial string DeviceProfile();
+    public static partial string DeviceProfile { get; }
 
     [BuildProperty]
-    public static partial string Flavor();
+    public static partial string Flavor { get; }
 
     [BuildProperty]
-    public static partial string AppCenterSecret();
+    public static partial string AppCenterSecret { get; }
 
     [BuildProperty]
-    public static partial string ApiEndPoint();
+    public static partial string ApiEndPoint { get; }
 }

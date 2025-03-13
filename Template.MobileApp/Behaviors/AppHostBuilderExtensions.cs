@@ -12,6 +12,7 @@ internal static class AppHostBuilderExtensions
         var options = new BehaviorOptions();
         configure(options);
 
+        ButtonOption.UseCustomMapper();
         EntryOption.UseCustomMapper(options);
         Border.UseCustomMapper(options);
         ListViewOption.UseCustomMapper(options);
