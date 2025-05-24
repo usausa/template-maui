@@ -1,7 +1,5 @@
 namespace Template.MobileApp;
 
-using Smart.Maui;
-
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
