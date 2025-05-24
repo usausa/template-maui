@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
@@ -25,29 +25,29 @@
                    Text="ChargeLevel" />
             <Label Grid.Row="0" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding ApplicationState.BatteryChargeLevel}" />
+                   Text="{Binding DeviceState.BatteryChargeLevel}" />
 
             <Label Grid.Row="1" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="State" />
             <Label Grid.Row="1" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding ApplicationState.BatteryState}" />
+                   Text="{Binding DeviceState.BatteryState}" />
 
             <Label Grid.Row="2" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="PowerSource" />
             <Label Grid.Row="2" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding ApplicationState.BatteryPowerSource}" />
+                   Text="{Binding DeviceState.BatteryPowerSource}" />
         </Grid>
 
         <Label FontFamily="MaterialIcons" FontSize="28">
             <Label.Text>
                 <MultiBinding Converter="{StaticResource BatteryIconConverter}">
-                    <Binding Path="ApplicationState.BatteryChargeLevel" />
-                    <Binding Path="ApplicationState.BatteryState" />
-                    <Binding Path="ApplicationState.BatteryPowerSource" />
+                    <Binding Path="DeviceState.BatteryChargeLevel" />
+                    <Binding Path="DeviceState.BatteryState" />
+                    <Binding Path="DeviceState.BatteryPowerSource" />
                 </MultiBinding>
             </Label.Text>
         </Label>
@@ -88,21 +88,21 @@
                    Text="Profile" />
             <Label Grid.Row="0" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding ApplicationState.NetworkProfile}" />
+                   Text="{Binding DeviceState.NetworkProfile}" />
 
             <Label Grid.Row="1" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Access" />
             <Label Grid.Row="1" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding ApplicationState.NetworkAccess}" />
+                   Text="{Binding DeviceState.NetworkAccess}" />
 
             <Label Grid.Row="2" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="State" />
             <Label Grid.Row="2" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding ApplicationState.NetworkState}" />
+                   Text="{Binding DeviceState.NetworkState}" />
         </Grid>
 
     </VerticalStackLayout>

@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceQrScan)]
-public partial class DeviceQrScanView
+public sealed partial class DeviceQrScanView
 {
     public DeviceQrScanView()
     {

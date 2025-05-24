@@ -1,13 +1,13 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceQrDisplayViewModel : AppViewModelBase
+public sealed partial class DeviceQrDisplayViewModel : AppViewModelBase
 {
-    public NotificationValue<string> Text { get; } = new();
+    [ObservableProperty]
+    public partial string Text { get; set; }
 
-    public DeviceQrDisplayViewModel(ApplicationState applicationState)
-        : base(applicationState)
+    public DeviceQrDisplayViewModel()
     {
-        Text.Value = "1234567890";
+        Text = "1234567890";
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

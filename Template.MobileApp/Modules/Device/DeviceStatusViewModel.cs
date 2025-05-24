@@ -1,10 +1,12 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceStatusViewModel : AppViewModelBase
+public sealed class DeviceStatusViewModel : AppViewModelBase
 {
-    public DeviceStatusViewModel(ApplicationState applicationState)
-        : base(applicationState)
+    public DeviceState DeviceState { get; }
+
+    public DeviceStatusViewModel(DeviceState deviceState)
     {
+        DeviceState = deviceState;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

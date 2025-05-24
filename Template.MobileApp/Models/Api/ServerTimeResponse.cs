@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Models.Api;
 
-public class ServerTimeResponse
+public sealed class ServerTimeResponse
 {
     public DateTime DateTime { get; set; }
 }

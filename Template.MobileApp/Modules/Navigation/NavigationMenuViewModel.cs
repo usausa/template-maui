@@ -1,16 +1,14 @@
 namespace Template.MobileApp.Modules.Navigation;
 
-public class NavigationMenuViewModel : AppViewModelBase
+public sealed class NavigationMenuViewModel : AppViewModelBase
 {
-    public ICommand ForwardCommand { get; }
-    public ICommand SharedCommand { get; }
-    public ICommand DialogCommand { get; }
+    public IObserveCommand ForwardCommand { get; }
+    public IObserveCommand SharedCommand { get; }
+    public IObserveCommand DialogCommand { get; }
 
     public NavigationMenuViewModel(
-        ApplicationState applicationState,
         IDialog dialog,
         IPopupNavigator popupNavigator)
-        : base(applicationState)
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
         SharedCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(ViewId.NavigationSharedInput, Parameters.MakeNextViewId(x)));

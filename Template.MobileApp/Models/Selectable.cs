@@ -2,7 +2,7 @@ namespace Template.MobileApp.Models;
 
 using Smart.ComponentModel;
 
-public class Selectable<T> : NotificationObject
+public sealed class Selectable<T> : NotificationObject
 {
     public bool IsSelected
     {

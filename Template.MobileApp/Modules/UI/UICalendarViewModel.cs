@@ -1,10 +1,8 @@
 namespace Template.MobileApp.Modules.UI;
 
-public class UICalendarViewModel : AppViewModelBase
+public sealed class UICalendarViewModel : AppViewModelBase
 {
-    public UICalendarViewModel(
-        ApplicationState applicationState)
-        : base(applicationState)
+    public UICalendarViewModel()
     {
     }
 

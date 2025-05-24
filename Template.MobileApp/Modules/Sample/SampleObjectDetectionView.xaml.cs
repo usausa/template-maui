@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Sample;
 
 [View(ViewId.SampleObjectDetection)]
-public partial class SampleObjectDetectionView
+public sealed partial class SampleObjectDetectionView
 {
     public SampleObjectDetectionView()
     {

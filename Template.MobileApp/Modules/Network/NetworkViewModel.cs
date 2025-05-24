@@ -2,25 +2,23 @@ namespace Template.MobileApp.Modules.Network;
 
 using Template.MobileApp.Usecase;
 
-public class NetworkViewModel : AppViewModelBase
+public sealed class NetworkViewModel : AppViewModelBase
 {
     private readonly Settings settings;
 
     private readonly IDialog dialog;
 
-    public ICommand ServerTimeCommand { get; }
-    public ICommand TestErrorCommand { get; }
-    public ICommand TestDelayCommand { get; }
-    public ICommand DataListCommand { get; }
-    public ICommand DownloadCommand { get; }
-    public ICommand UploadCommand { get; }
+    public IObserveCommand ServerTimeCommand { get; }
+    public IObserveCommand TestErrorCommand { get; }
+    public IObserveCommand TestDelayCommand { get; }
+    public IObserveCommand DataListCommand { get; }
+    public IObserveCommand DownloadCommand { get; }
+    public IObserveCommand UploadCommand { get; }
 
     public NetworkViewModel(
-        ApplicationState applicationState,
         Settings settings,
         IDialog dialog,
         SampleUsecase sampleUsecase)
-        : base(applicationState)
     {
         this.settings = settings;
         this.dialog = dialog;

@@ -4,6 +4,16 @@ public enum ViewId
 {
     Menu,
 
+    // Basic
+    BasicMenu,
+    BasicTypography,
+    BasicStyle,
+    BasicFont,
+    BasicConverter,
+    BasicBehavior,
+    BasicDialog,
+    BasicValidation,
+
     // Navigation
     NavigationMenu,
 
@@ -25,9 +35,6 @@ public enum ViewId
 
     NavigationNavigateCancel,
     NavigationNavigateInitialize,
-
-    // Dialog
-    DialogMenu,
 
     // Device
     DeviceMenu,
@@ -58,15 +65,6 @@ public enum ViewId
     KeyEntry,
     KeyList,
     KeyMisc,
-
-    // Basic
-    BasicMenu,
-    BasicTypography,
-    BasicStyle,
-    BasicFont,
-    BasicConverter,
-    BasicBehavior,
-    BasicValidation,
 
     // Sample
     SampleMenu,

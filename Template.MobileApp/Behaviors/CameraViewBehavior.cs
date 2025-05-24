@@ -4,7 +4,7 @@ using Camera.MAUI;
 
 using Smart.Maui.Interactivity;
 
-public class CameraViewBehavior : BehaviorBase<CameraView>
+public sealed class CameraViewBehavior : BehaviorBase<CameraView>
 {
     protected override void OnAttachedTo(CameraView bindable)
     {

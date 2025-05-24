@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Sample;
 
 [View(ViewId.SampleChart)]
-public partial class SampleChartView
+public sealed partial class SampleChartView
 {
     public SampleChartView()
     {

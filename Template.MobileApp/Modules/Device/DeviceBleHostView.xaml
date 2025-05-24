@@ -2,7 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sm="clr-namespace:Smart.Maui.Markup;assembly=Smart.Maui"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBleHostView"
@@ -10,7 +10,7 @@
              sr:BindingContextResolver.Type="{x:Type module:DeviceBleHostViewModel}"
              shell:ShellProperty.Title="Host"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function4Text="{Binding Running.Value, Converter={sm:BoolToText True='OFF', False='ON'}}"
+             shell:ShellProperty.Function4Text="{Binding Running, Converter={sm:BoolToText True='OFF', False='ON'}}"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
@@ -21,11 +21,11 @@
                Text="UserId" />
         <Label Grid.Row="1"
                Style="{StaticResource TextValueLabel}"
-               Text="{Binding UserId.Value}" />
+               Text="{Binding UserId}" />
 
         <ActivityIndicator Grid.Row="2"
                            Color="{StaticResource PinkDefault}"
-                           IsRunning="{Binding Running.Value}" />
+                           IsRunning="{Binding Running}" />
     </Grid>
 
 </ContentView>

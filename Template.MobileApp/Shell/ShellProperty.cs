@@ -2,6 +2,10 @@ namespace Template.MobileApp.Shell;
 
 public static class ShellProperty
 {
+    // ------------------------------------------------------------
+    // Shell
+    // ------------------------------------------------------------
+
     public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached(
         "Title",
         typeof(string),
@@ -12,15 +16,6 @@ public static class ShellProperty
     public static string GetTitle(BindableObject bindable) => (string)bindable.GetValue(TitleProperty);
 
     public static void SetTitle(BindableObject bindable, string value) => bindable.SetValue(TitleProperty, value);
-
-    private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var parent = ((ContentView)bindable).Parent;
-        if (parent?.BindingContext is IShellControl shell)
-        {
-            UpdateShellControl(shell, bindable);
-        }
-    }
 
     public static readonly BindableProperty HeaderVisibleProperty = BindableProperty.CreateAttached(
         "HeaderVisible",
@@ -132,35 +127,122 @@ public static class ShellProperty
 
     public static void SetFunction4Enabled(BindableObject bindable, bool value) => bindable.SetValue(Function4EnabledProperty, value);
 
+    private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var parent = ((ContentView)bindable).Parent;
+        if (parent?.BindingContext is IShellControl shell)
+        {
+            UpdateShellControl(shell, bindable);
+        }
+    }
+
     public static void UpdateShellControl(IShellControl shell, BindableObject? bindable)
     {
         if (bindable is null)
         {
-            shell.Title.Value = string.Empty;
-            shell.HeaderVisible.Value = true;
-            shell.FunctionVisible.Value = false;
-            shell.Function1Text.Value = string.Empty;
-            shell.Function2Text.Value = string.Empty;
-            shell.Function3Text.Value = string.Empty;
-            shell.Function4Text.Value = string.Empty;
-            shell.Function1Enabled.Value = false;
-            shell.Function2Enabled.Value = false;
-            shell.Function3Enabled.Value = false;
-            shell.Function4Enabled.Value = false;
+            shell.Title = string.Empty;
+            shell.HeaderVisible = true;
+            shell.FunctionVisible = false;
+            shell.Function1Text = string.Empty;
+            shell.Function2Text = string.Empty;
+            shell.Function3Text = string.Empty;
+            shell.Function4Text = string.Empty;
+            shell.Function1Enabled = false;
+            shell.Function2Enabled = false;
+            shell.Function3Enabled = false;
+            shell.Function4Enabled = false;
         }
         else
         {
-            shell.Title.Value = GetTitle(bindable);
-            shell.HeaderVisible.Value = GetHeaderVisible(bindable);
-            shell.FunctionVisible.Value = GetFunctionVisible(bindable);
-            shell.Function1Text.Value = GetFunction1Text(bindable);
-            shell.Function2Text.Value = GetFunction2Text(bindable);
-            shell.Function3Text.Value = GetFunction3Text(bindable);
-            shell.Function4Text.Value = GetFunction4Text(bindable);
-            shell.Function1Enabled.Value = GetFunction1Enabled(bindable);
-            shell.Function2Enabled.Value = GetFunction2Enabled(bindable);
-            shell.Function3Enabled.Value = GetFunction3Enabled(bindable);
-            shell.Function4Enabled.Value = GetFunction4Enabled(bindable);
+            shell.Title = GetTitle(bindable);
+            shell.HeaderVisible = GetHeaderVisible(bindable);
+            shell.FunctionVisible = GetFunctionVisible(bindable);
+            shell.Function1Text = GetFunction1Text(bindable);
+            shell.Function2Text = GetFunction2Text(bindable);
+            shell.Function3Text = GetFunction3Text(bindable);
+            shell.Function4Text = GetFunction4Text(bindable);
+            shell.Function1Enabled = GetFunction1Enabled(bindable);
+            shell.Function2Enabled = GetFunction2Enabled(bindable);
+            shell.Function3Enabled = GetFunction3Enabled(bindable);
+            shell.Function4Enabled = GetFunction4Enabled(bindable);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Busy
+    // ------------------------------------------------------------
+
+    public static readonly BindableProperty BusyVisibleProperty = BindableProperty.CreateAttached(
+        "BusyVisible",
+        typeof(bool),
+        typeof(ShellProperty),
+        false,
+        propertyChanged: HandleBusyVisibleChanged);
+
+    public static readonly BindableProperty BusyViewProperty = BindableProperty.CreateAttached(
+        "BusyView",
+        typeof(IBusyView),
+        typeof(ShellProperty),
+        null,
+        propertyChanged: HandleBusyViewChanged);
+
+    public static bool GetBusyVisible(BindableObject obj) =>
+        (bool)obj.GetValue(BusyVisibleProperty);
+
+    public static void SetBusyVisible(BindableObject obj, bool value) =>
+        obj.SetValue(BusyVisibleProperty, value);
+
+    public static IBusyView? GetBusyView(BindableObject obj) =>
+        (IBusyView?)obj.GetValue(BusyViewProperty);
+
+    public static void SetBusyView(BindableObject obj, IBusyView? value) =>
+        obj.SetValue(BusyViewProperty, value);
+
+    private static void HandleBusyVisibleChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (oldValue == newValue)
+        {
+            return;
+        }
+
+        var view = GetBusyView(bindable);
+        if (view is null)
+        {
+            return;
+        }
+
+        if (newValue is true)
+        {
+            view.Show();
+        }
+        else
+        {
+            view.Hide();
+        }
+    }
+
+    private static void HandleBusyViewChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (oldValue == newValue)
+        {
+            return;
+        }
+
+        if (oldValue is IBusyView oldBusyView)
+        {
+            oldBusyView.Hide();
+        }
+        if (newValue is IBusyView newBusyView)
+        {
+            var visible = GetBusyVisible(bindable);
+            if (visible)
+            {
+                newBusyView.Show();
+            }
+            else
+            {
+                newBusyView.Hide();
+            }
         }
     }
 }

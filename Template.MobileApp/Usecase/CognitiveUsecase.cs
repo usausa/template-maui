@@ -1,5 +1,5 @@
 namespace Template.MobileApp.Usecase;
 
-public class CognitiveUsecase
+public sealed class CognitiveUsecase
 {
 }

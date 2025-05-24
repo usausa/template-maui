@@ -1,13 +1,11 @@
 namespace Template.MobileApp.Modules.Navigation.Navigate;
 
-public class NavigateInitializeViewModel : AppViewModelBase
+public abstract class NavigateInitializeViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
-    public NavigateInitializeViewModel(
-        ApplicationState applicationState,
+    protected NavigateInitializeViewModel(
         IDialog dialog)
-        : base(applicationState)
     {
         this.dialog = dialog;
     }

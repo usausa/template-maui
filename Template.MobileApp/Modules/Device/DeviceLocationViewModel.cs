@@ -1,22 +1,21 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceLocationViewModel : AppViewModelBase
+public sealed partial class DeviceLocationViewModel : AppViewModelBase
 {
     private readonly ILocationService locationService;
 
-    public NotificationValue<Location?> Location { get; } = new();
+    [ObservableProperty]
+    public partial Location? Location { get; set; }
 
     public DeviceLocationViewModel(
-        ApplicationState applicationState,
         ILocationService locationService)
-        : base(applicationState)
     {
         this.locationService = locationService;
 
         Disposables.Add(Observable
             .FromEvent<EventHandler<LocationEventArgs>, LocationEventArgs>(static h => (_, e) => h(e), h => locationService.LocationChanged += h, h => locationService.LocationChanged -= h)
             .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => Location.Value = x.Location));
+            .Subscribe(x => Location = x.Location));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -26,7 +25,7 @@ public class DeviceLocationViewModel : AppViewModelBase
     // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
-        Location.Value = await locationService.GetLastLocationAsync();
+        Location = await locationService.GetLastLocationAsync();
 
         locationService.Start();
     }

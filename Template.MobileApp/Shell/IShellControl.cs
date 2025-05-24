@@ -2,25 +2,25 @@ namespace Template.MobileApp.Shell;
 
 public interface IShellControl
 {
-    NotificationValue<string> Title { get; }
+    string Title { get; set; }
 
-    NotificationValue<bool> HeaderVisible { get; }
+    bool HeaderVisible { get; set; }
 
-    NotificationValue<bool> FunctionVisible { get; }
+    bool FunctionVisible { get; set; }
 
-    NotificationValue<string> Function1Text { get; }
+    string Function1Text { get; set; }
 
-    NotificationValue<string> Function2Text { get; }
+    string Function2Text { get; set; }
 
-    NotificationValue<string> Function3Text { get; }
+    string Function3Text { get; set; }
 
-    NotificationValue<string> Function4Text { get; }
+    string Function4Text { get; set; }
 
-    NotificationValue<bool> Function1Enabled { get; }
+    bool Function1Enabled { get; set; }
 
-    NotificationValue<bool> Function2Enabled { get; }
+    bool Function2Enabled { get; set; }
 
-    NotificationValue<bool> Function3Enabled { get; }
+    bool Function3Enabled { get; set; }
 
-    NotificationValue<bool> Function4Enabled { get; }
+    bool Function4Enabled { get; set; }
 }

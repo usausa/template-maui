@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Models.Input;
 
 #pragma warning disable IDE0032
-public class NumberInputModel : NotificationObject
+public sealed class NumberInputModel : NotificationObject
 {
     private string text = "0";
 

@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Navigation;
 
 [View(ViewId.NavigationMenu)]
-public partial class NavigationMenuView
+public sealed partial class NavigationMenuView
 {
     public NavigationMenuView()
     {

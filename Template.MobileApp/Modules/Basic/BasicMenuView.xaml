@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
@@ -39,16 +39,18 @@
                 Text="Behavior" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="Validation" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId BasicDialog}"
+                Text="Dialog" />
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId BasicValidation}"
+                Text="Validation" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Validation" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Models;
 
-public class SelectItem
+public sealed class SelectItem
 {
     public object Key { get; }
 

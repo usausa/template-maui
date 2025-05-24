@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
@@ -62,22 +62,22 @@
                     Style="{StaticResource LeftSelectButton}"
                     Command="{Binding Select1Command}"
                     behaviors:Select.EmptyString="-"
-                    behaviors:Select.List="{Binding Items.Value}"
-                    behaviors:Select.Value="{Binding Value1.Value}"
+                    behaviors:Select.List="{Binding Items}"
+                    behaviors:Select.Value="{Binding Value1}"
                     Text="Value" />
             <Button Grid.Row="0" Grid.Column="1"
                     Style="{StaticResource RightSelectButton}"
                     Command="{Binding Select2Command}"
                     behaviors:Select.EmptyString="-"
-                    behaviors:Select.List="{Binding Items.Value}"
-                    behaviors:Select.Value="{Binding Value2.Value}"
+                    behaviors:Select.List="{Binding Items}"
+                    behaviors:Select.Value="{Binding Value2}"
                     Text="Value" />
             <Button Grid.Row="1" Grid.Column="0"
                     Style="{StaticResource CenterSelectButton}"
                     Command="{Binding Select3Command}"
                     behaviors:Select.EmptyString="-"
-                    behaviors:Select.List="{Binding Items.Value}"
-                    behaviors:Select.Value="{Binding Value3.Value}"
+                    behaviors:Select.List="{Binding Items}"
+                    behaviors:Select.Value="{Binding Value3}"
                     Text="Value" />
 
         </Grid>

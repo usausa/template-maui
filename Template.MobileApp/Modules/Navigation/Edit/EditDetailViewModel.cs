@@ -2,20 +2,20 @@ namespace Template.MobileApp.Modules.Navigation.Edit;
 
 using Template.MobileApp.Services;
 
-public class EditDetailViewModel : AppViewModelBase
+public sealed partial class EditDetailViewModel : AppViewModelBase
 {
     private readonly DataService dataService;
 
     private WorkEntity entity = default!;
 
-    public NotificationValue<bool> IsUpdate { get; } = new();
+    [ObservableProperty]
+    public partial bool IsUpdate { get; set; }
 
-    public NotificationValue<string> Name { get; } = new();
+    [ObservableProperty]
+    public partial string Name { get; set; } = default!;
 
     public EditDetailViewModel(
-        ApplicationState applicationState,
         DataService dataService)
-        : base(applicationState)
     {
         this.dataService = dataService;
     }
@@ -24,11 +24,11 @@ public class EditDetailViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            IsUpdate.Value = Equals(context.ToId, ViewId.NavigationEditDetailUpdate);
-            if (IsUpdate.Value)
+            IsUpdate = Equals(context.ToId, ViewId.NavigationEditDetailUpdate);
+            if (IsUpdate)
             {
                 entity = context.Parameter.GetValue<WorkEntity>();
-                Name.Value = entity.Name;
+                Name = entity.Name;
             }
         }
     }
@@ -39,14 +39,14 @@ public class EditDetailViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        if (IsUpdate.Value)
+        if (IsUpdate)
         {
-            entity.Name = Name.Value;
+            entity.Name = Name;
             await dataService.UpdateWorkAsync(entity);
         }
         else
         {
-            await dataService.InsertWorkAsync(Name.Value);
+            await dataService.InsertWorkAsync(Name);
         }
 
         await Navigator.ForwardAsync(ViewId.NavigationEditList);

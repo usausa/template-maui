@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceMisc)]
-public partial class DeviceMiscView
+public sealed partial class DeviceMiscView
 {
     public DeviceMiscView()
     {

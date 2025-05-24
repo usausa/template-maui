@@ -1,15 +1,11 @@
 namespace Template.MobileApp.Modules.Navigation.Shared;
 
-public class SharedInputViewModel : AppViewModelBase
+public sealed partial class SharedInputViewModel : AppViewModelBase
 {
     private ViewId nextViewId;
 
-    public NotificationValue<string> No { get; } = new();
-
-    public SharedInputViewModel(ApplicationState applicationState)
-        : base(applicationState)
-    {
-    }
+    [ObservableProperty]
+    public partial string No { get; set; } = default!;
 
     public override void OnNavigatedTo(INavigationContext context)
     {
@@ -23,5 +19,5 @@ public class SharedInputViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(nextViewId, Parameters.MakeNextViewId(nextViewId).WithNo(No.Value));
+    protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(nextViewId, Parameters.MakeNextViewId(nextViewId).WithNo(No));
 }

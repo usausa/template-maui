@@ -2,7 +2,7 @@ namespace Template.MobileApp.Models.Entity;
 
 using Smart.Data.Mapper.Attributes;
 
-public class WorkEntity
+public sealed class WorkEntity
 {
     [PrimaryKey]
     public long Id { get; set; }

@@ -16,7 +16,7 @@ using MauiComponents;
     LaunchMode = LaunchMode.SingleInstance,
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density,
     ScreenOrientation = ScreenOrientation.Portrait)]
-public class MainActivity : MauiAppCompatActivity
+public sealed class MainActivity : MauiAppCompatActivity
 {
 #if DEVICE_HAS_KEYPAD
     private KeyInputDriver keyInputDriver = default!;

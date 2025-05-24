@@ -2,7 +2,7 @@ namespace Template.MobileApp;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Smart.Maui.Resolver;
+using Smart.Mvvm.Resolver;
 
 using Template.MobileApp.Services;
 

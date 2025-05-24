@@ -2,7 +2,7 @@ namespace Template.MobileApp.Usecase;
 
 using Template.MobileApp.Components.Storage;
 
-public class SampleUsecase
+public sealed class SampleUsecase
 {
     private readonly IDialog dialog;
 

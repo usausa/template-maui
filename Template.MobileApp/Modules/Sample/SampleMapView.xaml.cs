@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Sample;
 
 [View(ViewId.SampleMap)]
-public partial class SampleMapView
+public sealed partial class SampleMapView
 {
     public SampleMapView()
     {

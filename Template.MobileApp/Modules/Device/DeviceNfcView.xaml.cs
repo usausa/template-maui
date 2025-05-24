@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceNfc)]
-public partial class DeviceNfcView
+public sealed partial class DeviceNfcView
 {
     public DeviceNfcView()
     {

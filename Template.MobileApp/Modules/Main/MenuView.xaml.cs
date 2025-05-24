@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Main;
 
 [View(ViewId.Menu)]
-public partial class MenuView
+public sealed partial class MenuView
 {
     public MenuView()
     {

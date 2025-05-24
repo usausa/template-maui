@@ -4,7 +4,7 @@ using Camera.MAUI;
 
 using Template.MobileApp.Components.Storage;
 
-public class DeviceCameraViewModel : AppViewModelBase
+public sealed class DeviceCameraViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
@@ -12,16 +12,14 @@ public class DeviceCameraViewModel : AppViewModelBase
 
     public CameraController Camera { get; } = new();
 
-    public ICommand TorchCommand { get; }
-    public ICommand MirrorCommand { get; }
-    public ICommand FlashModeCommand { get; }
-    public ICommand ZoomCommand { get; }
+    public IObserveCommand TorchCommand { get; }
+    public IObserveCommand MirrorCommand { get; }
+    public IObserveCommand FlashModeCommand { get; }
+    public IObserveCommand ZoomCommand { get; }
 
     public DeviceCameraViewModel(
-        ApplicationState applicationState,
         IDialog dialog,
         IStorageManager storageManager)
-        : base(applicationState)
     {
         this.dialog = dialog;
         this.storageManager = storageManager;
@@ -29,7 +27,8 @@ public class DeviceCameraViewModel : AppViewModelBase
         TorchCommand = MakeDelegateCommand(() => Camera.Torch = !Camera.Torch);
         MirrorCommand = MakeDelegateCommand(() => Camera.Mirror = !Camera.Mirror);
         FlashModeCommand = MakeDelegateCommand(SwitchFlashMode);
-        ZoomCommand = MakeDelegateCommand(SwitchZoom, () => Camera.Camera is not null).Observe(Camera);
+        ZoomCommand = MakeDelegateCommand(SwitchZoom, () => Camera.Camera is not null);
+        Observe(Camera.AsObservable(), ZoomCommand);
     }
 
     // ReSharper disable once AsyncVoidMethod

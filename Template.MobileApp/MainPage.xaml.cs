@@ -2,7 +2,7 @@ namespace Template.MobileApp;
 
 using Template.MobileApp.Shell;
 
-public partial class MainPage
+public sealed partial class MainPage
 {
     public MainPage()
     {
@@ -11,7 +11,7 @@ public partial class MainPage
 
     protected override bool OnBackButtonPressed()
     {
-        if ((BindingContext is MainPageViewModel context) && !context.ApplicationState.IsBusy)
+        if (BindingContext is MainPageViewModel { BusyState.IsBusy: false } context)
         {
             context.Navigator.NotifyAsync(ShellEvent.Back);
         }

@@ -152,6 +152,10 @@ public static class EntryOption
         {
             editText.EditorAction += OnEditorAction;
         }
+        else
+        {
+            editText.EditorAction -= OnEditorAction;
+        }
     }
 
     private static void OnEditorAction(object? sender, TextView.EditorActionEventArgs e)

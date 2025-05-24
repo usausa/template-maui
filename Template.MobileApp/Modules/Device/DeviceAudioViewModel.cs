@@ -4,7 +4,7 @@ using Plugin.Maui.Audio;
 
 using Smart.Maui.Input;
 
-public class DeviceAudioViewModel : AppViewModelBase
+public sealed class DeviceAudioViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
 
@@ -12,15 +12,13 @@ public class DeviceAudioViewModel : AppViewModelBase
 
     public IAudioPlayer? AudioPlayer { get; set; }
 
-    public ICommand PlayCommand { get; }
-    public ICommand PauseCommand { get; }
-    public ICommand StopCommand { get; }
+    public IObserveCommand PlayCommand { get; }
+    public IObserveCommand PauseCommand { get; }
+    public IObserveCommand StopCommand { get; }
 
     public DeviceAudioViewModel(
-        ApplicationState applicationState,
         IFileSystem fileSystem,
         IAudioManager audioManager)
-        : base(applicationState)
     {
         this.fileSystem = fileSystem;
         this.audioManager = audioManager;

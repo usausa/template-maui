@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Messaging;
 
-public class EntryCompleteEvent
+public sealed class EntryCompleteEvent
 {
     public bool Handled { get; set; }
 }

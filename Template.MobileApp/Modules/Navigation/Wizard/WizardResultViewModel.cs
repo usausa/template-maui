@@ -1,14 +1,10 @@
 namespace Template.MobileApp.Modules.Navigation.Wizard;
 
-public class WizardResultViewModel : AppViewModelBase
+public sealed partial class WizardResultViewModel : AppViewModelBase
 {
     [Scope]
-    public NotificationValue<WizardContext> Context { get; } = new();
-
-    public WizardResultViewModel(ApplicationState applicationState)
-        : base(applicationState)
-    {
-    }
+    [ObservableProperty]
+    public partial WizardContext Context { get; set; } = default!;
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NavigationWizardInput2);
 

@@ -4,7 +4,7 @@ using System.Numerics;
 
 using Microsoft.Maui.Devices.Sensors;
 
-public class DeviceSensorViewModel : AppViewModelBase
+public sealed partial class DeviceSensorViewModel : AppViewModelBase
 {
     private readonly IAccelerometer accelerometer;
     private readonly IBarometer barometer;
@@ -13,27 +13,31 @@ public class DeviceSensorViewModel : AppViewModelBase
     private readonly IMagnetometer magnetometer;
     private readonly IOrientationSensor orientation;
 
-    public NotificationValue<Vector3> AccelerationValue { get; } = new();
+    [ObservableProperty]
+    public partial Vector3 AccelerationValue { get; set; }
 
-    public NotificationValue<double> BarometerValue { get; } = new();
+    [ObservableProperty]
+    public partial double BarometerValue { get; set; }
 
-    public NotificationValue<double> MagneticValue { get; } = new();
+    [ObservableProperty]
+    public partial double MagneticValue { get; set; }
 
-    public NotificationValue<Vector3> GyroscopeValue { get; } = new();
+    [ObservableProperty]
+    public partial Vector3 GyroscopeValue { get; set; }
 
-    public NotificationValue<Vector3> MagnetometerValue { get; } = new();
+    [ObservableProperty]
+    public partial Vector3 MagnetometerValue { get; set; }
 
-    public NotificationValue<Quaternion> OrientationValue { get; } = new();
+    [ObservableProperty]
+    public partial Quaternion OrientationValue { get; set; }
 
     public DeviceSensorViewModel(
-        ApplicationState applicationState,
         IAccelerometer accelerometer,
         IBarometer barometer,
         ICompass compass,
         IGyroscope gyroscope,
         IMagnetometer magnetometer,
         IOrientationSensor orientation)
-        : base(applicationState)
     {
         this.accelerometer = accelerometer;
         this.barometer = barometer;
@@ -42,18 +46,18 @@ public class DeviceSensorViewModel : AppViewModelBase
         this.magnetometer = magnetometer;
         this.orientation = orientation;
 
-        Disposables.Add(accelerometer.ObserveReadingChangedOnCurrentContext().Subscribe(
-            x => AccelerationValue.Value = x.Reading.Acceleration));
-        Disposables.Add(barometer.ObserveReadingChangedOnCurrentContext().Subscribe(
-            x => BarometerValue.Value = x.Reading.PressureInHectopascals));
-        Disposables.Add(compass.ObserveReadingChangedOnCurrentContext().Subscribe(
-            x => MagneticValue.Value = x.Reading.HeadingMagneticNorth));
-        Disposables.Add(gyroscope.ObserveReadingChangedOnCurrentContext().Subscribe(
-            x => GyroscopeValue.Value = x.Reading.AngularVelocity));
-        Disposables.Add(magnetometer.ObserveReadingChangedOnCurrentContext().Subscribe(
-            x => MagnetometerValue.Value = x.Reading.MagneticField));
-        Disposables.Add(orientation.ObserveReadingChangedOnCurrentContext().Subscribe(
-            x => OrientationValue.Value = x.Reading.Orientation));
+        Disposables.Add(accelerometer.ObserveReadingChangedOnCurrentContext()
+            .Subscribe(x => AccelerationValue = x.Reading.Acceleration));
+        Disposables.Add(barometer.ObserveReadingChangedOnCurrentContext()
+            .Subscribe(x => BarometerValue = x.Reading.PressureInHectopascals));
+        Disposables.Add(compass.ObserveReadingChangedOnCurrentContext()
+            .Subscribe(x => MagneticValue = x.Reading.HeadingMagneticNorth));
+        Disposables.Add(gyroscope.ObserveReadingChangedOnCurrentContext()
+            .Subscribe(x => GyroscopeValue = x.Reading.AngularVelocity));
+        Disposables.Add(magnetometer.ObserveReadingChangedOnCurrentContext()
+            .Subscribe(x => MagnetometerValue = x.Reading.MagneticField));
+        Disposables.Add(orientation.ObserveReadingChangedOnCurrentContext()
+            .Subscribe(x => OrientationValue = x.Reading.Orientation));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

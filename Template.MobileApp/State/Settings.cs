@@ -1,6 +1,6 @@
 namespace Template.MobileApp.State;
 
-public class Settings
+public sealed class Settings
 {
     private readonly IPreferences preferences;
 

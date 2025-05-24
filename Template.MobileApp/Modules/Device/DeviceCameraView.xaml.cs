@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceCamera)]
-public partial class DeviceCameraView
+public sealed partial class DeviceCameraView
 {
     public DeviceCameraView()
     {

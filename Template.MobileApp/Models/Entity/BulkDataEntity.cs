@@ -2,7 +2,7 @@ namespace Template.MobileApp.Models.Entity;
 
 using Smart.Data.Mapper.Attributes;
 
-public class BulkDataEntity
+public sealed class BulkDataEntity
 {
     [PrimaryKey(1)]
     public string Key1 { get; set; } = default!;

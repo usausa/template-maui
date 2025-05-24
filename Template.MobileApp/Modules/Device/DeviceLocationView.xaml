@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceLocationView"
@@ -20,42 +20,42 @@
                    Text="Timestamp" />
             <Label Grid.Row="0" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding Location.Value.Timestamp}" />
+                   Text="{Binding Location.Timestamp, FallbackValue=''}" />
 
             <Label Grid.Row="1" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Latitude" />
             <Label Grid.Row="1" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding Location.Value.Latitude}" />
+                   Text="{Binding Location.Latitude, FallbackValue=''}" />
 
             <Label Grid.Row="2" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Longitude" />
             <Label Grid.Row="2" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding Location.Value.Longitude}" />
+                   Text="{Binding Location.Longitude, FallbackValue=''}" />
 
             <Label Grid.Row="3" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Altitude" />
             <Label Grid.Row="3" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding Location.Value.Altitude}" />
+                   Text="{Binding Location.Altitude, FallbackValue=''}" />
 
             <Label Grid.Row="4" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Course" />
             <Label Grid.Row="4" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding Location.Value.Course}" />
+                   Text="{Binding Location.Course, FallbackValue=''}" />
 
             <Label Grid.Row="5" Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="Speed" />
             <Label Grid.Row="5" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding Location.Value.Speed}" />
+                   Text="{Binding Location.Speed, FallbackValue=''}" />
         </Grid>
     </VerticalStackLayout>
 

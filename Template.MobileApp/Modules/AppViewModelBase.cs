@@ -1,24 +1,47 @@
 namespace Template.MobileApp.Modules;
 
+using System.ComponentModel.DataAnnotations;
+
+using Smart.Mvvm.Resolver;
+
 using Template.MobileApp.Shell;
 
-public abstract class AppViewModelBase : ViewModelBase, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
+[ObservableGeneratorOption(Reactive = true, ViewModel = true)]
+public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
 {
+    private List<ValidationResult>? validationResults;
+
     public INavigator Navigator { get; set; } = default!;
-
-    public ApplicationState ApplicationState { get; }
-
-    protected AppViewModelBase(ApplicationState applicationState)
-        : base(applicationState)
-    {
-        ApplicationState = applicationState;
-    }
 
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
 
         System.Diagnostics.Debug.WriteLine($"{GetType()} is Disposed");
+    }
+
+    // TODO BunnyTail version
+    public void Validate(string name)
+    {
+        var pi = GetType().GetProperty(name);
+        if (pi is null)
+        {
+            return;
+        }
+
+        validationResults ??= new List<ValidationResult>();
+
+        var value = pi.GetValue(this, null);
+        var context = new ValidationContext(this, DefaultResolveProvider.Default, null)
+        {
+            MemberName = name
+        };
+        if (!Validator.TryValidateProperty(value, context, validationResults))
+        {
+            Errors.AddError(name, validationResults[0].ErrorMessage!);
+        }
+
+        validationResults.Clear();
     }
 
     public virtual void OnNavigatingFrom(INavigationContext context)

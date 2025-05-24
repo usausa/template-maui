@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Key;
 
 [View(ViewId.KeyEntry)]
-public partial class KeyEntryView
+public sealed partial class KeyEntryView
 {
     public KeyEntryView()
     {

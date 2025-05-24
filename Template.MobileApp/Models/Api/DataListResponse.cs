@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Models.Api;
 
-public class DataListResponseEntry
+public sealed class DataListResponseEntry
 {
     public int Id { get; set; }
 
@@ -8,7 +8,7 @@ public class DataListResponseEntry
 }
 
 #pragma warning disable CA1819
-public class DataListResponse
+public sealed class DataListResponse
 {
     public DataListResponseEntry[] Entries { get; set; } = default!;
 }

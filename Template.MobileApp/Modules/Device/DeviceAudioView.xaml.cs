@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceAudio)]
-public partial class DeviceAudioView
+public sealed partial class DeviceAudioView
 {
     public DeviceAudioView()
     {

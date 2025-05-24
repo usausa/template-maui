@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Basic;
 
 [View(ViewId.BasicConverter)]
-public partial class BasicConverterView
+public sealed partial class BasicConverterView
 {
     public BasicConverterView()
     {

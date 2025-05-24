@@ -29,7 +29,7 @@ public static partial class ElementHelper
     {
         foreach (var child in parent.GetVisualChildren())
         {
-            if ((child is not VisualElement visual) || !visual.IsEnabled || !visual.IsVisible)
+            if (child is not VisualElement { IsEnabled: true, IsVisible: true } visual)
             {
                 continue;
             }
@@ -52,7 +52,7 @@ public static partial class ElementHelper
     {
         foreach (var child in parent.GetVisualChildren())
         {
-            if ((child is not VisualElement visual) || !visual.IsEnabled || !visual.IsVisible)
+            if (child is not VisualElement { IsEnabled: true, IsVisible: true })
             {
                 continue;
             }

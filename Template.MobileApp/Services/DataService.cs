@@ -8,12 +8,12 @@ using Smart.Data;
 using Smart.Data.Mapper;
 using Smart.Data.Mapper.Builders;
 
-public class DataServiceOptions
+public sealed class DataServiceOptions
 {
     public string Path { get; set; } = default!;
 }
 
-public class DataService
+public sealed class DataService
 {
     private readonly DataServiceOptions options;
 

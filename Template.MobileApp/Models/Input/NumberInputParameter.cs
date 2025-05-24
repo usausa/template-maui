@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Models.Input;
 
-public class NumberInputParameter
+public sealed class NumberInputParameter
 {
     public string Title { get; }
 

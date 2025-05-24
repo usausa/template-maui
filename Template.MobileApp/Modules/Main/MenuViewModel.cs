@@ -1,20 +1,19 @@
 namespace Template.MobileApp.Modules.Main;
 
-public class MenuViewModel : AppViewModelBase
+public sealed partial class MenuViewModel : AppViewModelBase
 {
-    public NotificationValue<string> Flavor { get; } = new();
+    [ObservableProperty]
+    public partial string Flavor { get; set; }
 
-    public NotificationValue<Version> Version { get; } = new();
+    [ObservableProperty]
+    public partial Version Version { get; set; }
 
-    public ICommand ForwardCommand { get; }
+    public IObserveCommand ForwardCommand { get; }
 
-    public MenuViewModel(
-        ApplicationState applicationState,
-        IAppInfo appInfo)
-        : base(applicationState)
+    public MenuViewModel(IAppInfo appInfo)
     {
-        Flavor.Value = !String.IsNullOrEmpty(Variants.Flavor) ? Variants.Flavor : "Unknown";
-        Version.Value = appInfo.Version;
+        Flavor = !String.IsNullOrEmpty(Variants.Flavor) ? Variants.Flavor : "Unknown";
+        Version = appInfo.Version;
 
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }

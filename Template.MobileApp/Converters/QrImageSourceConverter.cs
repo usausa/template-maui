@@ -2,7 +2,7 @@ namespace Template.MobileApp.Converters;
 
 using QRCoder;
 
-public class QrImageSourceConverter : IValueConverter
+public sealed class QrImageSourceConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

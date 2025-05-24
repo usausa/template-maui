@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:si="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:sn="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Maui"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:local="clr-namespace:Template.MobileApp"
              xmlns:input="clr-namespace:Template.MobileApp.Input"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:sb="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
-             IsEnabled="{Binding ApplicationState.IsBusy, Converter={StaticResource ReverseConverter}}"
-             IsBusy="{Binding ApplicationState.IsBusy}">
+             IsEnabled="True"
+             IsBusy="False"
+             shell:ShellProperty.BusyView="{Binding BusyView}"
+             shell:ShellProperty.BusyVisible="{Binding BusyState.IsBusy}">
 
     <ContentPage.Behaviors>
-        <sb:AppLifecycleBehavior />
+        <si:AppLifecycleBehavior />
         <input:InputPageBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
@@ -25,10 +27,10 @@
         <Grid Grid.Row="0"
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="*"
-              IsVisible="{Binding HeaderVisible.Value}">
+              IsVisible="{Binding HeaderVisible}">
             <Label Grid.Column="0"
                    Style="{StaticResource HeaderTitleLabel}"
-                   Text="{Binding Title.Value}" />
+                   Text="{Binding Title}" />
         </Grid>
 
         <!-- view container -->
@@ -43,27 +45,27 @@
         <Grid Grid.Row="2"
               Style="{StaticResource FunctionGrid}"
               ColumnDefinitions="*,*,*,*"
-              IsVisible="{Binding FunctionVisible.Value}">
+              IsVisible="{Binding FunctionVisible}">
             <Button Grid.Column="0"
                     Style="{StaticResource FunctionButton1}"
                     Command="{Binding Function1Command}"
                     input:Shortcut.Key="Function1"
-                    Text="{Binding Function1Text.Value}" />
+                    Text="{Binding Function1Text}" />
             <Button Grid.Column="1"
                     Style="{StaticResource FunctionButton2}"
                     Command="{Binding Function2Command}"
                     input:Shortcut.Key="Function2"
-                    Text="{Binding Function2Text.Value}" />
+                    Text="{Binding Function2Text}" />
             <Button Grid.Column="2"
                     Style="{StaticResource FunctionButton3}"
                     Command="{Binding Function3Command}"
                     input:Shortcut.Key="Function3"
-                    Text="{Binding Function3Text.Value}" />
+                    Text="{Binding Function3Text}" />
             <Button Grid.Column="3"
                     Style="{StaticResource FunctionButton4}"
                     Command="{Binding Function4Command}"
                     input:Shortcut.Key="Function4"
-                    Text="{Binding Function4Text.Value}" />
+                    Text="{Binding Function4Text}" />
         </Grid>
     </Grid>
 

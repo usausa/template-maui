@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:s="clr-namespace:Smart.Maui;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
+             xmlns:sv="clr-namespace:Smart.Maui.Validation;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicValidationView"
@@ -11,6 +13,54 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <ContentPage.Behaviors>
+        <sv:ValidationFocusBehavior Request="{Binding ValidationFocusRequest}" />
+    </ContentPage.Behaviors>
+
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Validate on Unfocused" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Text1" />
+        <Entry s:Behavior.Key="Text1"
+               sv:ValidationProperty.ClearErrorOnFocus="True" sv:ValidationProperty.ValidateOnUnfocused="True"
+               Text="{Binding Text1}" />
+        <Label Style="{StaticResource SmallLeftLabel}"
+               IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
+               Text="{Binding Errors[Text1]}" />
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Manual Validation" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Text2" />
+        <Entry s:Behavior.Key="Text2"
+               Text="{Binding Text2}" />
+        <Label Style="{StaticResource SmallLeftLabel}"
+               IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
+               Text="{Binding Errors[Text2]}" />
+
+        <Grid Style="{StaticResource MenuGrid}"
+              RowDefinitions="*,*">
+            <Button Grid.Row="0"
+                    Command="{Binding ErrorCommand}"
+                    Text="Error" />
+            <Button Grid.Row="1"
+                    Command="{Binding ClearCommand}"
+                    Text="Clear" />
+        </Grid>
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Focus" />
+
+        <Grid Style="{StaticResource MenuGrid}"
+              RowDefinitions="*">
+            <Button Command="{Binding FocusCommand}"
+                    Text="Focus" />
+        </Grid>
+
+    </VerticalStackLayout>
 
 </ContentView>

@@ -4,7 +4,7 @@ using Camera.MAUI;
 
 using Plugin.Maui.Audio;
 
-public class DeviceQrScanViewModel : AppViewModelBase
+public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
 
@@ -16,20 +16,19 @@ public class DeviceQrScanViewModel : AppViewModelBase
 
     public CameraController Camera { get; }
 
-    public NotificationValue<string> Barcode { get; } = new();
+    [ObservableProperty]
+    public partial string Barcode { get; set; } = string.Empty;
 
     public DeviceQrScanViewModel(
-        ApplicationState applicationState,
         IFileSystem fileSystem,
         IAudioManager audioManager)
-        : base(applicationState)
     {
         this.fileSystem = fileSystem;
         this.audioManager = audioManager;
 
         Camera = new CameraController(CameraPosition.Back, MakeDelegateCommand<BarcodeResult>(x =>
         {
-            Barcode.Value = x.Text;
+            Barcode = x.Text;
             audioPlayer?.Play();
         }))
         {

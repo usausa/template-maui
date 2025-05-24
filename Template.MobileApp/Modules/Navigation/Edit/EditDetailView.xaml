@@ -2,20 +2,20 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sm="clr-namespace:Smart.Maui.Markup;assembly=Smart.Maui"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
              x:Class="Template.MobileApp.Modules.Navigation.Edit.EditDetailView"
              x:DataType="{x:Type module:EditDetailViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:EditDetailViewModel}"
-             shell:ShellProperty.Title="{Binding IsUpdate.Value, StringFormat='EditDetail{0}', Converter={sm:BoolToText True='Update', False='New'}}"
+             shell:ShellProperty.Title="{Binding IsUpdate, StringFormat='EditDetail{0}', Converter={sm:BoolToText True='Update', False='New'}}"
              shell:ShellProperty.Function1Text="Cancel"
              shell:ShellProperty.Function4Text="Update"
              shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function4Enabled="{Binding Name.Value, Converter={StaticResource NotEmptyConverter}}">
+             shell:ShellProperty.Function4Enabled="{Binding Name, Converter={StaticResource NotEmptyConverter}}">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Entry Text="{Binding Name.Value}" />
+        <Entry Text="{Binding Name}" />
     </VerticalStackLayout>
 
 </ContentView>

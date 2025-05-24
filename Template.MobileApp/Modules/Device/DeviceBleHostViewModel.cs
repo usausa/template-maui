@@ -5,27 +5,27 @@ using Shiny.BluetoothLE.Hosting;
 
 using Template.MobileApp.Providers;
 
-public class DeviceBleHostViewModel : AppViewModelBase
+public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
     private readonly IBleHostingManager hostingManager;
 
-    public NotificationValue<string> UserId { get; } = new();
+    [ObservableProperty]
+    public partial string UserId { get; set; }
 
-    public NotificationValue<bool> Running { get; } = new();
+    [ObservableProperty]
+    public partial bool Running { get; set; }
 
     public DeviceBleHostViewModel(
-        ApplicationState applicationState,
         IDialog dialog,
         IBleHostingManager hostingManager,
         Settings settings)
-        : base(applicationState)
     {
         this.dialog = dialog;
         this.hostingManager = hostingManager;
 
-        UserId.Value = settings.UserId;
+        UserId = settings.UserId;
     }
 
     // ReSharper disable once AsyncVoidMethod
@@ -36,7 +36,7 @@ public class DeviceBleHostViewModel : AppViewModelBase
             var access = await hostingManager.RequestAccess();
             if (access == AccessState.Available)
             {
-                await SwitchAdvertising(!Running.Value);
+                await SwitchAdvertising(!Running);
             }
             else
             {
@@ -49,7 +49,7 @@ public class DeviceBleHostViewModel : AppViewModelBase
     // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatingFrom(INavigationContext context)
     {
-        if (Running.Value)
+        if (Running)
         {
             await SwitchAdvertising(false);
         }
@@ -61,7 +61,7 @@ public class DeviceBleHostViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        await SwitchAdvertising(!Running.Value);
+        await SwitchAdvertising(!Running);
     }
 
     private async ValueTask SwitchAdvertising(bool enable)
@@ -86,6 +86,6 @@ public class DeviceBleHostViewModel : AppViewModelBase
             hostingManager.DetachRegisteredServices();
         }
 
-        Running.Value = enable;
+        Running = enable;
     }
 }

@@ -6,28 +6,27 @@ using MauiComponents;
 
 using Template.MobileApp.Services;
 
-public class DataViewModel : AppViewModelBase
+public sealed partial class DataViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
     private readonly DataService dataService;
 
-    public NotificationValue<int> BulkDataCount { get; } = new();
+    [ObservableProperty]
+    public partial int BulkDataCount { get; set; }
 
-    public ICommand InsertCommand { get; }
-    public ICommand UpdateCommand { get; }
-    public ICommand DeleteCommand { get; }
-    public ICommand QueryCommand { get; }
+    public IObserveCommand InsertCommand { get; }
+    public IObserveCommand UpdateCommand { get; }
+    public IObserveCommand DeleteCommand { get; }
+    public IObserveCommand QueryCommand { get; }
 
-    public ICommand BulkInsertCommand { get; }
-    public ICommand DeleteAllCommand { get; }
-    public ICommand QueryAllCommand { get; }
+    public IObserveCommand BulkInsertCommand { get; }
+    public IObserveCommand DeleteAllCommand { get; }
+    public IObserveCommand QueryAllCommand { get; }
 
     public DataViewModel(
-        ApplicationState applicationState,
         IDialog dialog,
         DataService dataService)
-        : base(applicationState)
     {
         this.dialog = dialog;
         this.dataService = dataService;
@@ -37,8 +36,8 @@ public class DataViewModel : AppViewModelBase
         DeleteCommand = MakeAsyncCommand(Delete);
         QueryCommand = MakeAsyncCommand(Query);
 
-        BulkInsertCommand = MakeAsyncCommand(BulkInsert, () => BulkDataCount.Value == 0).Observe(BulkDataCount);
-        DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => BulkDataCount.Value > 0).Observe(BulkDataCount);
+        BulkInsertCommand = MakeAsyncCommand(BulkInsert, () => BulkDataCount == 0);
+        DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => BulkDataCount > 0);
         QueryAllCommand = MakeAsyncCommand(QueryAll);
     }
 
@@ -49,7 +48,7 @@ public class DataViewModel : AppViewModelBase
     // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatingTo(INavigationContext context)
     {
-        BulkDataCount.Value = await dataService.CountBulkDataAsync();
+        BulkDataCount = await dataService.CountBulkDataAsync();
     }
 
     private async Task Insert()
@@ -121,7 +120,7 @@ public class DataViewModel : AppViewModelBase
             watch.Stop();
         }
 
-        BulkDataCount.Value = await dataService.CountBulkDataAsync();
+        BulkDataCount = await dataService.CountBulkDataAsync();
 
         await dialog.InformationAsync($"Inserted\r\nElapsed={watch.ElapsedMilliseconds}");
     }
@@ -130,7 +129,7 @@ public class DataViewModel : AppViewModelBase
     {
         await dataService.DeleteAllBulkDataAsync();
 
-        BulkDataCount.Value = await dataService.CountBulkDataAsync();
+        BulkDataCount = await dataService.CountBulkDataAsync();
     }
 
     private async Task QueryAll()

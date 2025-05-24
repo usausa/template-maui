@@ -1,12 +1,10 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceMenuViewModel : AppViewModelBase
+public sealed class DeviceMenuViewModel : AppViewModelBase
 {
-    public ICommand ForwardCommand { get; }
+    public IObserveCommand ForwardCommand { get; }
 
-    public DeviceMenuViewModel(
-        ApplicationState applicationState)
-        : base(applicationState)
+    public DeviceMenuViewModel()
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }

@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceStatus)]
-public partial class DeviceStatusView
+public sealed partial class DeviceStatusView
 {
     public DeviceStatusView()
     {

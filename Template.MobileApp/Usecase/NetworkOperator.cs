@@ -11,21 +11,21 @@ public enum NetworkOperationResult
     NotFound
 }
 
-public class NetworkOperator
+public sealed class NetworkOperator
 {
     private readonly IDialog dialog;
 
-    private readonly ApplicationState applicationState;
+    private readonly DeviceState deviceState;
 
     private readonly NetworkService networkService;
 
     public NetworkOperator(
         IDialog dialog,
-        ApplicationState applicationState,
+        DeviceState deviceState,
         NetworkService networkService)
     {
         this.dialog = dialog;
-        this.applicationState = applicationState;
+        this.deviceState = deviceState;
         this.networkService = networkService;
     }
 
@@ -37,7 +37,7 @@ public class NetworkOperator
     {
         while (true)
         {
-            if (!applicationState.NetworkState.IsConnected())
+            if (!deviceState.NetworkState.IsConnected())
             {
                 if (verbose)
                 {
@@ -101,7 +101,7 @@ public class NetworkOperator
     {
         while (true)
         {
-            if (!applicationState.NetworkState.IsConnected())
+            if (!deviceState.NetworkState.IsConnected())
             {
                 if (verbose)
                 {

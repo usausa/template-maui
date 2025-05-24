@@ -1,4 +1,4 @@
-namespace Template.MobileApp;
+namespace Template.MobileApp.State;
 
 #pragma warning disable CA1008
 [Flags]
@@ -19,7 +19,7 @@ public enum NetworkState
     Disconnected
 }
 
-public static class ApplicationStateExtensions
+public static class DeviceStateExtensions
 {
     public static bool IsConnected(this NetworkAccess access) =>
         access != NetworkAccess.None && access != NetworkAccess.Unknown;
@@ -28,57 +28,39 @@ public static class ApplicationStateExtensions
         profile.HasFlag(NetworkProfile.Ethernet) || profile.HasFlag(NetworkProfile.WiFi);
 
     public static bool IsConnected(this NetworkState state) =>
-        state == NetworkState.ConnectedHighSpeed || state == NetworkState.Connected;
+        state is NetworkState.ConnectedHighSpeed or NetworkState.Connected;
 }
 
-public sealed class ApplicationState : BusyState, IDisposable
+public sealed partial class DeviceState : ObservableObject, IDisposable
 {
-    private readonly ILogger<ApplicationState> log;
+    private readonly ILogger<DeviceState> log;
 
     private readonly List<IDisposable> disposables = [];
 
     // Battery
 
-    public double BatteryChargeLevel
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial double BatteryChargeLevel { get; private set; }
 
-    public BatteryState BatteryState
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial BatteryState BatteryState { get; private set; }
 
-    public BatteryPowerSource BatteryPowerSource
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial BatteryPowerSource BatteryPowerSource { get; private set; }
 
     // Connectivity
 
-    public NetworkProfile NetworkProfile
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial NetworkProfile NetworkProfile { get; private set; }
 
-    public NetworkAccess NetworkAccess
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial NetworkAccess NetworkAccess { get; private set; }
 
-    public NetworkState NetworkState
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial NetworkState NetworkState { get; private set; }
 
-    public ApplicationState(
-        ILogger<ApplicationState> log,
+    public DeviceState(
+        ILogger<DeviceState> log,
         IBattery battery,
         IConnectivity connectivity)
     {

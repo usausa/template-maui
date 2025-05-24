@@ -1,6 +1,6 @@
 namespace Template.MobileApp.State;
 
-public class Session
+public sealed class Session
 {
     // TODO
 }

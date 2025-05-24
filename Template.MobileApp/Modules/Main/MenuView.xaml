@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
              xmlns:input="clr-namespace:Template.MobileApp.Input"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
@@ -20,15 +20,15 @@
             <Button Grid.Row="0"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId NavigationMenu}"
+                    CommandParameter="{markup:ViewId BasicMenu}"
                     input:Shortcut.Key="Num1"
-                    Text="1.Navigation" />
+                    Text="1.Basic" />
             <Button Grid.Row="1"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId DialogMenu}"
+                    CommandParameter="{markup:ViewId NavigationMenu}"
                     input:Shortcut.Key="Num2"
-                    Text="2.Dialog" />
+                    Text="2.Navigation" />
             <Button Grid.Row="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
@@ -56,21 +56,20 @@
             <Button Grid.Row="6"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId BasicMenu}"
+                    CommandParameter="{markup:ViewId SampleMenu}"
                     input:Shortcut.Key="Num7"
-                    Text="7.Basic" />
+                    Text="7.Sample" />
             <Button Grid.Row="7"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId SampleMenu}"
+                    CommandParameter="{markup:ViewId UIMenu}"
                     input:Shortcut.Key="Num8"
-                    Text="8.Sample" />
+                    Text="8.UI" />
             <Button Grid.Row="8"
                     Style="{StaticResource MenuButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId UIMenu}"
+                    IsEnabled="False"
                     input:Shortcut.Key="Num9"
-                    Text="9.UI" />
+                    Text="" />
         </Grid>
 
         <Grid Grid.Row="1"
@@ -78,10 +77,10 @@
               ColumnDefinitions="3*,2*">
             <Label Grid.Column="0"
                    Style="{StaticResource FooterInfoLeftLabel}"
-                   Text="{Binding Flavor.Value, StringFormat='{0} flavor'}" />
+                   Text="{Binding Flavor, StringFormat='{0} flavor'}" />
             <Label Grid.Column="1"
                    Style="{StaticResource FooterInfoRightLabel}"
-                   Text="{Binding Version.Value, StringFormat='Version {0}'}" />
+                   Text="{Binding Version, StringFormat='Version {0}'}" />
         </Grid>
     </Grid>
 

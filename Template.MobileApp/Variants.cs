@@ -11,8 +11,5 @@ internal static partial class Variants
     public static partial string Flavor { get; }
 
     [BuildProperty]
-    public static partial string AppCenterSecret { get; }
-
-    [BuildProperty]
     public static partial string ApiEndPoint { get; }
 }

@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.Device;
 
 [View(ViewId.DeviceBiometric)]
-public partial class DeviceBiometricView
+public sealed partial class DeviceBiometricView
 {
     public DeviceBiometricView()
     {

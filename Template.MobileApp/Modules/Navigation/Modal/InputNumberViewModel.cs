@@ -2,20 +2,21 @@ namespace Template.MobileApp.Modules.Navigation.Modal;
 
 using Template.MobileApp.Modules;
 
-public class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
+public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
 {
     public PopupController<string?> Popup { get; } = new();
 
-    public NotificationValue<string> Title { get; } = new();
+    [ObservableProperty]
+    public partial string Title { get; set; } = default!;
 
     public NumberInputModel Input { get; } = new();
 
-    public ICommand ClearCommand { get; }
-    public ICommand PopCommand { get; }
-    public ICommand PushCommand { get; }
+    public IObserveCommand ClearCommand { get; }
+    public IObserveCommand PopCommand { get; }
+    public IObserveCommand PushCommand { get; }
 
-    public ICommand CloseCommand { get; }
-    public ICommand CommitCommand { get; }
+    public IObserveCommand CloseCommand { get; }
+    public IObserveCommand CommitCommand { get; }
 
     public InputNumberViewModel()
     {
@@ -29,7 +30,7 @@ public class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<Num
 
     public void Initialize(NumberInputParameter parameter)
     {
-        Title.Value = parameter.Title;
+        Title = parameter.Title;
         Input.Text = parameter.Value;
         Input.MaxLength = parameter.MaxLength;
     }

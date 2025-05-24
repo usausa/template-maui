@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-           xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+           xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
            xmlns:mcs="clr-namespace:MauiComponents;assembly=MauiComponents"
            xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
            xmlns:input="clr-namespace:Template.MobileApp.Input"
@@ -12,12 +12,12 @@
            sr:BindingContextResolver.Type="{x:Type modules:InputNumberViewModel}"
            mcs:PopupBind.Controller="{Binding Popup}"
            CanBeDismissedByTappingOutsideOfPopup="False"
-           Size="{x:Static m:DialogSize.Large}">
+           Size="{x:Static m:ScreenSize.LargeDialog}">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
         <!-- title -->
         <Label Style="{StaticResource DialogTitleLabel}"
-               Text="{Binding Title.Value}" />
+               Text="{Binding Title}" />
 
         <!-- display -->
         <Label Style="{StaticResource LeftInputLabel}"

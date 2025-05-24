@@ -13,6 +13,9 @@ public sealed partial class App
     {
         this.serviceProvider = serviceProvider;
 
+        // Default theme light
+        Current!.UserAppTheme = AppTheme.Light;
+
         InitializeComponent();
 
         // Start
@@ -34,6 +37,7 @@ public sealed partial class App
         await Permissions.RequestCameraAsync();
         await Permissions.RequestLocationAsync();
 
+        // Navigate
         var navigator = serviceProvider.GetRequiredService<INavigator>();
         await navigator.ForwardAsync(ViewId.Menu);
     }
