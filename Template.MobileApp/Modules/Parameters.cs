@@ -6,6 +6,8 @@ public static class Parameters
 
     private const string No = nameof(No);
 
+    public static NavigationParameter Make() => new();
+
     public static NavigationParameter MakeNextViewId(ViewId viewId) =>
         new NavigationParameter().SetValue(NextViewId, viewId);
 

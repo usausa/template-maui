@@ -4,7 +4,7 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
-    public ObservableCollection<SelectItem?> Items { get; } = new();
+    public List<SelectItem?> Items { get; }
 
     [ObservableProperty]
     public partial int? Value1 { get; set; }
@@ -13,9 +13,9 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int? Value3 { get; set; }
 
-    public IObserveCommand Select1Command { get; }
-    public IObserveCommand Select2Command { get; }
-    public IObserveCommand Select3Command { get; }
+    public ICommand Select1Command { get; }
+    public ICommand Select2Command { get; }
+    public ICommand Select3Command { get; }
 
     public BasicStyleViewModel(
         IDialog dialog)
@@ -26,7 +26,7 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
         Select2Command = MakeAsyncCommand(async () => Value2 = await SelectItem(Value2));
         Select3Command = MakeAsyncCommand(async () => Value3 = await SelectItem(Value3));
 
-        Items.AddRange(Enumerable.Range(1, 3).Select(x => new SelectItem(x, $"Data-{x}")).Prepend(null));
+        Items = Enumerable.Range(1, 3).Select(x => new SelectItem(x, $"Data-{x}")).Prepend(null).ToList();
 
         Value1 = 1;
         Value2 = 2;
@@ -39,9 +39,7 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
 
     private async ValueTask<int?> SelectItem(int? current)
     {
-        await dialog.InformationAsync("Not implement.");
-        return current;
-        //var selected = await dialog.SelectAsync(Items.Value, static x => x?.Name ?? string.Empty, Items.Value.FindIndex(x => Equals(x?.Key, current)));
-        //return (int?)selected?.Key;
+        var selected = await dialog.SelectAsync(Items, static x => x?.Name ?? string.Empty, Items.FindIndex(x => Equals(x?.Key, current)));
+        return (int?)selected?.Key;
     }
 }

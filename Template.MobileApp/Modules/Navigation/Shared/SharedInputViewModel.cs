@@ -19,5 +19,5 @@ public sealed partial class SharedInputViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(nextViewId, Parameters.MakeNextViewId(nextViewId).WithNo(No));
+    protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(nextViewId, Parameters.Make().WithNo(No));
 }

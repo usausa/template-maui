@@ -1,10 +1,10 @@
 namespace Template.MobileApp.Modules.Navigation.Navigate;
 
-public abstract class NavigateInitializeViewModel : AppViewModelBase
+public sealed class NavigateInitializeViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
-    protected NavigateInitializeViewModel(
+    public NavigateInitializeViewModel(
         IDialog dialog)
     {
         this.dialog = dialog;
@@ -15,7 +15,7 @@ public abstract class NavigateInitializeViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            await Navigator.PostActionAsync(() => BusyState.Using(InitializeAsync));
+            await Navigator.PostActionAsync(InitializeAsync);
         }
     }
 
@@ -23,11 +23,14 @@ public abstract class NavigateInitializeViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    protected async Task InitializeAsync()
+    private Task InitializeAsync()
     {
-        using (dialog.Loading("Initializing..."))
+        return BusyState.UsingAsync(async () =>
         {
-            await Task.Delay(3000);
-        }
+            using (dialog.Loading("Initializing..."))
+            {
+                await Task.Delay(3000);
+            }
+        });
     }
 }
