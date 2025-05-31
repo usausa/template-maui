@@ -8,7 +8,7 @@ using System.Text.Unicode;
 using Android.Views;
 #endif
 
-using Camera.MAUI;
+using BarcodeScanning;
 
 using CommunityToolkit.Maui;
 
@@ -41,27 +41,25 @@ using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
 {
-    public static MauiApp CreateMauiApp()
-    {
-        // Builder
-        var builder = MauiApp.CreateBuilder();
-        builder
+    public static MauiApp CreateMauiApp() =>
+        MauiApp.CreateBuilder()
             .UseMauiApp<App>()
             .ConfigureFonts(ConfigureFonts)
             .ConfigureLifecycleEvents(ConfigureLifecycle)
             .ConfigureEssentials(ConfigureEssentials)
             .ConfigureLogging()
+            .ConfigureGlobalSettings()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitCamera()
             .UseShiny()
-            .UseMauiCameraView()
+            .UseBarcodeScanning()
             .UseMauiServices()
             .UseCommunityToolkitServices()
-            .ConfigureGlobalSettings()
-            .ConfigureViewSettings()
-            .ConfigureServices()
-            .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
-        return builder.Build();
-    }
+            .UseCustomView()
+            .ConfigureComponents()
+            .ConfigureHttpClient()
+            .ConfigureContainer()
+            .Build();
 
     // ------------------------------------------------------------
     // Logging
@@ -135,7 +133,7 @@ public static partial class MauiProgram
         return builder;
     }
 
-    private static MauiAppBuilder ConfigureViewSettings(this MauiAppBuilder builder)
+    private static MauiAppBuilder UseCustomView(this MauiAppBuilder builder)
     {
         // Controls
         builder.ConfigureCustomControls();
@@ -190,12 +188,19 @@ public static partial class MauiProgram
     // Components
     // ------------------------------------------------------------
 
-    private static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
+    private static MauiAppBuilder ConfigureComponents(this MauiAppBuilder builder)
     {
         // Components
         builder.Services.AddBluetoothLE();
         builder.Services.AddBleHostedCharacteristic<UserCharacteristic>();
         builder.Services.AddBluetoothLeHosting();
+
+        return builder;
+    }
+
+    private static MauiAppBuilder ConfigureContainer(this MauiAppBuilder builder)
+    {
+        builder.ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
         return builder;
     }

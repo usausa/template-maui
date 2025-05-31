@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
+             xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceMenuView"
              x:DataType="{x:Type module:DeviceMenuViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:DeviceMenuViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:DeviceMenuViewModel}"
              shell:ShellProperty.Title="Device"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
@@ -55,8 +55,9 @@
                 Text="Camera" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DeviceOcr}"
+                Text="OCR" />
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuButton}"

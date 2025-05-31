@@ -1,13 +1,13 @@
 namespace Template.MobileApp.Helpers;
 
-public abstract class TaskEventArgs : EventArgs
+public abstract class ValueTaskEventArgs : EventArgs
 {
-    public Task Task { get; set; } = Task.CompletedTask;
+    public ValueTask Task { get; set; } = ValueTask.CompletedTask;
 }
 
-public abstract class TaskEventArgs<T> : EventArgs
+public abstract class ValueTaskEventArgs<T> : EventArgs
 {
-    private static readonly Task<T> CompletedTask = System.Threading.Tasks.Task.FromResult(default(T)!);
-
-    public Task<T> Task { get; set; } = CompletedTask;
+#pragma warning disable CA2012
+    public ValueTask<T> Task { get; set; } = ValueTask.FromResult(default(T)!);
+#pragma warning restore CA2012
 }

@@ -1,257 +1,162 @@
 namespace Template.MobileApp.Messaging;
 
-using Camera.MAUI;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core.Primitives;
+
+using Smart.Linq;
 
 using Template.MobileApp.Helpers;
 
-public sealed class CameraPreviewEventArgs : TaskEventArgs<bool>
+public sealed class CameraPreviewEventArgs : ValueTaskEventArgs
 {
     public bool Enable { get; set; }
 }
 
-public sealed class CameraPositionEventArgs : TaskEventArgs
+public sealed class CameraCaptureEventArgs : ValueTaskEventArgs<Stream?>
 {
-    public CameraPosition? Position { get; set; }
+    public CancellationToken Token { get; set; } = CancellationToken.None;
 }
 
-public sealed class CameraTakePhotoEventArgs : TaskEventArgs<Stream?>
+public sealed class CameraGetAvailableListEventArgs : ValueTaskEventArgs<IReadOnlyList<CameraInfo>>
 {
-    public ImageFormat Format { get; set; } = ImageFormat.JPEG;
+    public CancellationToken Token { get; set; } = CancellationToken.None;
+
+    public IReadOnlyList<CameraInfo> CameraList { get; set; } = [];
 }
 
-public sealed class CameraSaveSnapshotEventArgs : TaskEventArgs<bool>
+public sealed partial class CameraController : ObservableObject
 {
-    public string Path { get; set; } = default!;
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public event EventHandler<CameraGetAvailableListEventArgs>? GetAvailableListRequest;
 
-    public ImageFormat Format { get; set; } = ImageFormat.JPEG;
-}
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public event EventHandler<CameraPreviewEventArgs>? PreviewRequest;
 
-public interface ICameraController
-{
-    event EventHandler<CameraPreviewEventArgs> PreviewRequest;
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public event EventHandler<CameraCaptureEventArgs>? CaptureRequest;
 
-    event EventHandler<CameraPositionEventArgs> PositionRequest;
+    [ObservableProperty]
+    public partial bool IsAvailable { get; set; }
 
-    event EventHandler<CameraTakePhotoEventArgs> TakePhotoRequest;
+    [ObservableProperty]
+    public partial bool IsCameraBusy { get; set; }
 
-    event EventHandler<CameraSaveSnapshotEventArgs> SaveSnapshotRequest;
+    [ObservableProperty]
+    public partial CameraInfo? Selected { get; set; }
 
-    event EventHandler<EventArgs> FocusRequest;
+    [ObservableProperty]
+    public partial CameraFlashMode CameraFlashMode { get; set; } = CameraViewDefaults.CameraFlashMode;
 
-    // Property
+    [ObservableProperty]
+    public partial Size CaptureResolution { get; set; } = CameraViewDefaults.ImageCaptureResolution;
 
-    CameraPosition? DefaultPosition { get; }
+    [ObservableProperty]
+    public partial float ZoomFactor { get; set; } = CameraViewDefaults.ZoomFactor;
 
-    CameraInfo? Camera { get; }
-
-    bool Torch { get; set; }
-
-    bool Mirror { get; set; }
-
-    FlashMode FlashMode { get; set; }
-
-    float Zoom { get; set; }
-
-    bool BarcodeDetection { get; set; }
-
-    // Event
-
-    void UpdateCamera(CameraInfo? value);
-
-    void HandleBarcodeDetected(BarcodeResult result);
-}
-
-public sealed class CameraController : NotificationObject, ICameraController
-{
-    private event EventHandler<CameraPreviewEventArgs>? PreviewRequestHandler;
-
-    private event EventHandler<CameraPositionEventArgs>? PositionRequestHandler;
-
-    private event EventHandler<CameraTakePhotoEventArgs>? TakePhotoRequestHandler;
-
-    private event EventHandler<CameraSaveSnapshotEventArgs>? SaveSnapshotRequestHandler;
-
-    private event EventHandler<EventArgs>? FocusRequestHandler;
-
-    event EventHandler<CameraPreviewEventArgs> ICameraController.PreviewRequest
-    {
-        add => PreviewRequestHandler += value;
-        remove => PreviewRequestHandler -= value;
-    }
-
-    event EventHandler<CameraPositionEventArgs> ICameraController.PositionRequest
-    {
-        add => PositionRequestHandler += value;
-        remove => PositionRequestHandler -= value;
-    }
-
-    event EventHandler<CameraTakePhotoEventArgs> ICameraController.TakePhotoRequest
-    {
-        add => TakePhotoRequestHandler += value;
-        remove => TakePhotoRequestHandler -= value;
-    }
-
-    event EventHandler<CameraSaveSnapshotEventArgs> ICameraController.SaveSnapshotRequest
-    {
-        add => SaveSnapshotRequestHandler += value;
-        remove => SaveSnapshotRequestHandler -= value;
-    }
-
-    event EventHandler<EventArgs> ICameraController.FocusRequest
-    {
-        add => FocusRequestHandler += value;
-        remove => FocusRequestHandler -= value;
-    }
-
-    // Field
-
-    private readonly ICommand? command;
-
-    private readonly CameraPosition? defaultPosition;
-
-    // Property
-
-    CameraPosition? ICameraController.DefaultPosition => defaultPosition;
-
-    public CameraInfo? Camera { get; private set; }
-
-    public bool Torch
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
-
-    public bool Mirror
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
-
-    public FlashMode FlashMode
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
-
-    public float Zoom
-    {
-        get;
-        set
-        {
-            if (Camera is null)
-            {
-                value = 1f;
-            }
-            else
-            {
-                if (value < Camera.MinZoomFactor)
-                {
-                    value = Camera.MinZoomFactor;
-                }
-                else if (value > Camera.MaxZoomFactor)
-                {
-                    value = Camera.MaxZoomFactor;
-                }
-            }
-
-            SetProperty(ref field, value);
-        }
-    }
-
-    public bool BarcodeDetection
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
-
-    // Constructor
-
-    public CameraController()
-    {
-        Zoom = 1f;
-    }
-
-    public CameraController(CameraPosition position)
-        : this()
-    {
-        defaultPosition = position;
-    }
-
-    public CameraController(ICommand command)
-        : this()
-    {
-        this.command = command;
-    }
-
-    public CameraController(CameraPosition position, ICommand command)
-        : this()
-    {
-        defaultPosition = position;
-        this.command = command;
-    }
+    [ObservableProperty]
+    public partial bool IsTorchOn { get; set; }
 
     // Message
 
-    public Task<bool> StartPreviewAsync()
+    public ValueTask<IReadOnlyList<CameraInfo>> GetAvailableListAsync(CancellationToken token = default)
+    {
+        var args = new CameraGetAvailableListEventArgs
+        {
+            Token = token,
+            CameraList = []
+        };
+        GetAvailableListRequest?.Invoke(this, args);
+        return args.Task;
+    }
+
+    public ValueTask StartPreviewAsync()
     {
         var args = new CameraPreviewEventArgs { Enable = true };
-        PreviewRequestHandler?.Invoke(this, args);
+        PreviewRequest?.Invoke(this, args);
         return args.Task;
     }
 
-    public Task<bool> StopPreviewAsync()
+    public ValueTask StopPreviewAsync()
     {
         var args = new CameraPreviewEventArgs();
-        PreviewRequestHandler?.Invoke(this, args);
+        PreviewRequest?.Invoke(this, args);
         return args.Task;
     }
 
-    public Task ResetPositionAsync()
+    public ValueTask<Stream?> CaptureAsync(CancellationToken token = default)
     {
-        var args = new CameraPositionEventArgs { Position = defaultPosition };
-        PositionRequestHandler?.Invoke(this, args);
-        return args.Task;
-    }
-
-    public Task SwitchPositionAsync(CameraPosition? position = null)
-    {
-        var args = new CameraPositionEventArgs { Position = position };
-        PositionRequestHandler?.Invoke(this, args);
-        return args.Task;
-    }
-
-    public Task<Stream?> TakePhotoAsync(ImageFormat imageFormat = ImageFormat.JPEG)
-    {
-        var args = new CameraTakePhotoEventArgs { Format = imageFormat };
-        TakePhotoRequestHandler?.Invoke(this, args);
-        return args.Task;
-    }
-
-    public Task<bool> SaveSnapshotAsync(string path, ImageFormat imageFormat = ImageFormat.JPEG)
-    {
-        var args = new CameraSaveSnapshotEventArgs { Path = path, Format = imageFormat };
-        SaveSnapshotRequestHandler?.Invoke(this, args);
-        return args.Task;
-    }
-
-    public void FocusRequest()
-    {
-        FocusRequestHandler?.Invoke(this, EventArgs.Empty);
-    }
-
-    // Event
-
-    void ICameraController.UpdateCamera(CameraInfo? value)
-    {
-        Camera = value;
-        RaisePropertyChanged(nameof(Camera));
-    }
-
-    void ICameraController.HandleBarcodeDetected(BarcodeResult result)
-    {
-        if ((command is not null) && command.CanExecute(result))
+        var args = new CameraCaptureEventArgs
         {
-            command.Execute(result);
+            Token = token
+        };
+        CaptureRequest?.Invoke(this, args);
+        return args.Task;
+    }
+}
+
+public static class CameraControllerExtensions
+{
+    public static async ValueTask SwitchCameraAsync(this CameraController controller)
+    {
+        var list = await controller.GetAvailableListAsync();
+        if (controller.Selected is null)
+        {
+            controller.Selected = list.ElementAtOrDefault(0);
         }
+        else
+        {
+            var index = list.FindIndex(x => x.DeviceId == controller.Selected.DeviceId);
+            if ((index < 0) || (index == list.Count - 1))
+            {
+                controller.Selected = list.ElementAtOrDefault(0);
+            }
+            else
+            {
+                controller.Selected = list[index + 1];
+            }
+        }
+    }
+
+    public static void ToggleTorch(this CameraController controller)
+    {
+        controller.IsTorchOn = !controller.IsTorchOn;
+    }
+
+    public static void SwitchFlashMode(this CameraController controller)
+    {
+        if (controller.Selected?.IsFlashSupported ?? false)
+        {
+            controller.CameraFlashMode = controller.CameraFlashMode switch
+            {
+                CameraFlashMode.Off => CameraFlashMode.On,
+                CameraFlashMode.On => CameraFlashMode.Auto,
+                CameraFlashMode.Auto => CameraFlashMode.Off,
+                _ => controller.CameraFlashMode
+            };
+        }
+    }
+
+    public static void ZoomIn(this CameraController controller)
+    {
+        var camera = controller.Selected;
+        if (camera is null)
+        {
+            controller.ZoomFactor = 1;
+            return;
+        }
+
+        controller.ZoomFactor = Math.Min((float)Math.Floor(camera.MaximumZoomFactor), controller.ZoomFactor + 1);
+    }
+
+    public static void ZoomOut(this CameraController controller)
+    {
+        var camera = controller.Selected;
+        if (camera is null)
+        {
+            controller.ZoomFactor = 1;
+            return;
+        }
+
+        controller.ZoomFactor = Math.Max(1, controller.ZoomFactor - 1);
     }
 }

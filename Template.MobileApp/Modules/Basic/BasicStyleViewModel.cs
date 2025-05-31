@@ -13,9 +13,9 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int? Value3 { get; set; }
 
-    public ICommand Select1Command { get; }
-    public ICommand Select2Command { get; }
-    public ICommand Select3Command { get; }
+    public IObserveCommand Select1Command { get; }
+    public IObserveCommand Select2Command { get; }
+    public IObserveCommand Select3Command { get; }
 
     public BasicStyleViewModel(
         IDialog dialog)

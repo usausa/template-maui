@@ -13,6 +13,8 @@ public enum ViewId
     BasicBehavior,
     BasicDialog,
     BasicValidation,
+    BasicGraphics,
+    BasicAnimation,
 
     // Navigation
     NavigationMenu,
@@ -38,27 +40,35 @@ public enum ViewId
 
     // Device
     DeviceMenu,
+
     DeviceInfo,
     DeviceStatus,
     DeviceSensor,
     DeviceLocation,
+
     DeviceQrDisplay,
     DeviceQrScan,
     DeviceCamera,
+    DeviceOcr,
+
     DeviceWiFi,
     DeviceBluetooth,
     DeviceBleHost,
     DeviceBleClient,
+
     DeviceNfc,
     DeviceAudio,
     DeviceBiometric,
+
     DeviceMisc,
 
     // Database
     Data,
 
     // Network
-    Network,
+    NetworkMenu,
+    NetworkRealtime,
+    NetworkSetting,
 
     // Key
     KeyMenu,
@@ -69,13 +79,19 @@ public enum ViewId
     // Sample
     SampleMenu,
     SampleList,
-    SampleObjectDetection,
-    SampleMap,
     SampleChart,
+    SampleMap,
+    SampleObjectDetection,
     SampleChat,
 
     // UI
     UIMenu,
+    UILogin,
+    UIProfile,
+    UIPortal,
     UICalendar,
-    UIGrid
+    UIGrid,
+    UITimeline,
+    UIGauge,
+    UIRadar,
 }

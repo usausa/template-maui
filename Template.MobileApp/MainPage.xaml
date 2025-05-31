@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:si="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
-             xmlns:sn="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Maui"
+             xmlns:s="http://smart/maui"
+             xmlns:navigation="http://smart/navigation"
              xmlns:local="clr-namespace:Template.MobileApp"
              xmlns:input="clr-namespace:Template.MobileApp.Input"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
-             sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
              IsEnabled="True"
              IsBusy="False"
              shell:ShellProperty.BusyView="{Binding BusyView}"
              shell:ShellProperty.BusyVisible="{Binding BusyState.IsBusy}">
 
     <ContentPage.Behaviors>
-        <si:AppLifecycleBehavior />
+        <s:AppLifecycleBehavior />
         <input:InputPageBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
@@ -37,7 +36,7 @@
         <AbsoluteLayout Grid.Row="1"
                         Style="{StaticResource ContainerLayout}">
             <AbsoluteLayout.Behaviors>
-                <sn:NavigationContainerBehavior Navigator="{Binding Navigator}" />
+                <navigation:NavigationContainerBehavior Navigator="{Binding Navigator}" />
             </AbsoluteLayout.Behaviors>
         </AbsoluteLayout>
 

@@ -1,12 +1,13 @@
 namespace Template.MobileApp.Modules.Network;
 
+using Template.MobileApp.Services;
 using Template.MobileApp.Usecase;
 
-public sealed class NetworkViewModel : AppViewModelBase
+public sealed class NetworkMenuViewModel : AppViewModelBase
 {
-    private readonly Settings settings;
-
     private readonly IDialog dialog;
+
+    private readonly ApiContext apiContext;
 
     public IObserveCommand ServerTimeCommand { get; }
     public IObserveCommand TestErrorCommand { get; }
@@ -15,12 +16,12 @@ public sealed class NetworkViewModel : AppViewModelBase
     public IObserveCommand DownloadCommand { get; }
     public IObserveCommand UploadCommand { get; }
 
-    public NetworkViewModel(
-        Settings settings,
+    public NetworkMenuViewModel(
         IDialog dialog,
+        ApiContext apiContext,
         SampleUsecase sampleUsecase)
     {
-        this.settings = settings;
+        this.apiContext = apiContext;
         this.dialog = dialog;
 
         ServerTimeCommand = MakeAsyncCommand(async () => await sampleUsecase.GetServerTimeAsync());
@@ -38,7 +39,7 @@ public sealed class NetworkViewModel : AppViewModelBase
     // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
-        if (String.IsNullOrEmpty(settings.ApiEndPoint))
+        if (apiContext.BaseAddress is null)
         {
             await Navigator.PostActionAsync(() => BusyState.Using(async () =>
             {

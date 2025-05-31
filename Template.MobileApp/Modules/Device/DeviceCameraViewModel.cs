@@ -1,46 +1,45 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Camera.MAUI;
-
-using Template.MobileApp.Components.Storage;
-
-public sealed class DeviceCameraViewModel : AppViewModelBase
+public sealed partial class DeviceCameraViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
-    private readonly IStorageManager storageManager;
+    public CameraController Controller { get; } = new();
 
-    public CameraController Camera { get; } = new();
+    [ObservableProperty]
+    public partial bool IsPreview { get; set; }
 
     public IObserveCommand TorchCommand { get; }
-    public IObserveCommand MirrorCommand { get; }
     public IObserveCommand FlashModeCommand { get; }
-    public IObserveCommand ZoomCommand { get; }
+    public IObserveCommand ZoomOutCommand { get; }
+    public IObserveCommand ZoomInCommand { get; }
 
     public DeviceCameraViewModel(
-        IDialog dialog,
-        IStorageManager storageManager)
+        IDialog dialog)
     {
         this.dialog = dialog;
-        this.storageManager = storageManager;
 
-        TorchCommand = MakeDelegateCommand(() => Camera.Torch = !Camera.Torch);
-        MirrorCommand = MakeDelegateCommand(() => Camera.Mirror = !Camera.Mirror);
-        FlashModeCommand = MakeDelegateCommand(SwitchFlashMode);
-        ZoomCommand = MakeDelegateCommand(SwitchZoom, () => Camera.Camera is not null);
-        Observe(Camera.AsObservable(), ZoomCommand);
+        TorchCommand = MakeDelegateCommand(Controller.ToggleTorch);
+        FlashModeCommand = MakeDelegateCommand(Controller.SwitchFlashMode);
+        ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
+        ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
     }
 
     // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatedTo(INavigationContext context)
     {
-        await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
+        await Navigator.PostActionAsync(() => BusyState.UsingAsync(async () =>
+        {
+            await Controller.StartPreviewAsync();
+            IsPreview = true;
+        }));
     }
 
     // ReSharper disable once AsyncVoidMethod
     public override async void OnNavigatingFrom(INavigationContext context)
     {
-        await Camera.StopPreviewAsync();
+        await Controller.StopPreviewAsync();
+        IsPreview = false;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -49,46 +48,29 @@ public sealed class DeviceCameraViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction2()
     {
-        var file = Path.Combine(storageManager.PublicFolder, "shot.jpg");
-        var result = await Camera.SaveSnapshotAsync(file);
-        if (result)
+        await Controller.SwitchCameraAsync();
+    }
+
+    protected override async Task OnNotifyFunction3()
+    {
+        if (IsPreview)
         {
-            var fi = new FileInfo(file);
-            await dialog.InformationAsync($"Save image success. size={fi.Length}");
+            await Controller.StopPreviewAsync();
+            IsPreview = false;
         }
         else
         {
-            await dialog.InformationAsync("Save image failed.");
+            await Controller.StartPreviewAsync();
+            IsPreview = true;
         }
-    }
-
-    protected override Task OnNotifyFunction3()
-    {
-        Camera.FocusRequest();
-        return Task.CompletedTask;
     }
 
     protected override async Task OnNotifyFunction4()
     {
-        await Camera.StopPreviewAsync();
-        await Camera.SwitchPositionAsync();
-        await Camera.StartPreviewAsync();
-        Camera.Zoom = 1;
-    }
-
-    private void SwitchFlashMode()
-    {
-        Camera.FlashMode = Camera.FlashMode switch
+        await using var input = await Controller.CaptureAsync();
+        if (input is not null)
         {
-            FlashMode.Auto => FlashMode.Enabled,
-            FlashMode.Enabled => FlashMode.Disabled,
-            FlashMode.Disabled => FlashMode.Auto,
-            _ => Camera.FlashMode
-        };
-    }
-
-    private void SwitchZoom()
-    {
-        Camera.Zoom = Camera.Zoom < Math.Min(Camera.Camera?.MaxZoomFactor ?? 1, 5) ? Camera.Zoom + 1 : 1;
+            await dialog.InformationAsync($"Save image success. size={input.Length}");
+        }
     }
 }

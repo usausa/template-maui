@@ -9,6 +9,8 @@ public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
 {
     private List<ValidationResult>? validationResults;
 
+    private IAccessor? propertyAccessor;
+
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
@@ -16,22 +18,22 @@ public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
         System.Diagnostics.Debug.WriteLine($"{GetType()} is Disposed");
     }
 
-    // TODO BunnyTail version
     public void Validate(string name)
     {
-        var pi = GetType().GetProperty(name);
-        if (pi is null)
+        propertyAccessor ??= AccessorRegistry.FindAccessor(GetType());
+        if (propertyAccessor is null)
         {
-            return;
+            throw new InvalidOperationException($"Accessor is not supported. type=[{GetType()}]");
         }
-
         validationResults ??= new List<ValidationResult>();
 
-        var value = pi.GetValue(this, null);
+        var value = propertyAccessor.GetValue(this, name);
         var context = new ValidationContext(this, DefaultResolveProvider.Default, null)
         {
             MemberName = name
         };
+        validationResults ??= new List<ValidationResult>();
+
         if (!Validator.TryValidateProperty(value, context, validationResults))
         {
             Errors.AddError(name, validationResults[0].ErrorMessage!);

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Camera.MAUI;
+using BarcodeScanning;
 
 using Plugin.Maui.Audio;
 
@@ -14,10 +14,12 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
     private IAudioPlayer? audioPlayer;
 #pragma warning restore CA2213
 
-    public CameraController Camera { get; }
+    public BarcodeController Controller { get; } = new();
 
     [ObservableProperty]
     public partial string Barcode { get; set; } = string.Empty;
+
+    public IObserveCommand DetectCommand { get; }
 
     public DeviceQrScanViewModel(
         IFileSystem fileSystem,
@@ -26,14 +28,20 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
         this.fileSystem = fileSystem;
         this.audioManager = audioManager;
 
-        Camera = new CameraController(CameraPosition.Back, MakeDelegateCommand<BarcodeResult>(x =>
+        Controller.AimMode = true;
+
+        DetectCommand = MakeDelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
         {
-            Barcode = x.Text;
-            audioPlayer?.Play();
-        }))
-        {
-            BarcodeDetection = true
-        };
+            if (x.Count > 0)
+            {
+                var barcode = x.First().DisplayValue;
+                if (Barcode != barcode)
+                {
+                    Barcode = barcode;
+                    audioPlayer?.Play();
+                }
+            }
+        });
     }
 
     // ReSharper disable once AsyncVoidMethod
@@ -45,13 +53,12 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
             Disposables.Add(audioPlayer);
         }
 
-        await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
+        Controller.Enable = true;
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatingFrom(INavigationContext context)
+    public override void OnNavigatingFrom(INavigationContext context)
     {
-        await Camera.StopPreviewAsync();
+        Controller.Enable = false;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

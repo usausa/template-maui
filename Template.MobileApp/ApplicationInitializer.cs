@@ -42,10 +42,10 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         var dataService = services.GetRequiredService<DataService>();
         await dataService.RebuildAsync();
 
-        var networkService = services.GetRequiredService<NetworkService>();
+        var apiContext = services.GetRequiredService<ApiContext>();
         if (!String.IsNullOrEmpty(settings.ApiEndPoint))
         {
-            networkService.SetEndPoint(settings.ApiEndPoint);
+            apiContext.BaseAddress = new Uri(settings.ApiEndPoint);
         }
     }
 }

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
-             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceCameraView"
              x:DataType="{x:Type module:DeviceCameraViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:DeviceCameraViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:DeviceCameraViewModel}"
              shell:ShellProperty.Title="Camera"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function2Text="Shot"
-             shell:ShellProperty.Function3Text="Focus"
-             shell:ShellProperty.Function4Text="Switch"
+             shell:ShellProperty.Function2Text="Switch"
+             shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='Stop', False='Start'}}"
+             shell:ShellProperty.Function4Text="Shot"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True"
              shell:ShellProperty.Function3Enabled="True"
@@ -21,28 +21,29 @@
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto,Auto">
-        <cv:CameraView Grid.Row="0"
-                       x:Name="CameraView"
-                       behaviors:CameraBind.Controller="{Binding Camera}" />
 
-        <VerticalStackLayout Grid.Row="0"
-                             x:DataType="cv:CameraView"
-                             Style="{StaticResource FillVerticalStack}">
-            <Label TextColor="White"
-                   Text="{Binding Source={x:Reference CameraView}, Path=Camera.Name, StringFormat='Camera: {0}'}"
-                   FontSize="14" />
-            <Label TextColor="White"
-                   Text="{Binding Source={x:Reference CameraView}, Path=ZoomFactor, StringFormat='Zoom: x{0}'}"
-                   FontSize="14" />
-            <Label TextColor="White"
-                   Text="{Binding Source={x:Reference CameraView}, Path=Camera.HasFlashUnit, StringFormat='Flash unit: {0}'}"
-                   FontSize="14" />
-            <Label TextColor="White"
-                   Text="{Binding Source={x:Reference CameraView}, Path=FlashMode, StringFormat='Flash mode: {0}'}"
-                   FontSize="14" />
-        </VerticalStackLayout>
+        <mct:CameraView Grid.Row="0"
+                        behaviors:CameraBind.Controller="{Binding Controller}" />
 
         <Grid Grid.Row="1"
+              Style="{StaticResource FillGrid}"
+              RowDefinitions="*,*"
+              ColumnDefinitions="*,*">
+            <Label Grid.Row="0" Grid.Column="0"
+                   Text="{Binding Controller.Selected.Name, StringFormat='Camera: {0}', FallbackValue='-'}"
+                   FontSize="14" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Text="{Binding Controller.ZoomFactor, StringFormat='Zoom: x{0}', FallbackValue='-'}"
+                   FontSize="14" />
+            <Label Grid.Row="1" Grid.Column="0"
+                   Text="{Binding Controller.CameraFlashMode, StringFormat='Flash mode: {0}', FallbackValue='-'}"
+                   FontSize="14" />
+            <Label Grid.Row="1" Grid.Column="1"
+                   Text="{Binding Controller.IsTorchOn, StringFormat='Torch: {0}', FallbackValue='-'}"
+                   FontSize="14" />
+        </Grid>
+
+        <Grid Grid.Row="2"
               Style="{StaticResource SubMenuGrid}"
               ColumnDefinitions="*,*,*,*">
             <Button Grid.Column="0"
@@ -51,16 +52,16 @@
                     Text="Torch" />
             <Button Grid.Column="1"
                     Style="{StaticResource SubMenuButton}"
-                    Command="{Binding MirrorCommand}"
-                    Text="Mirror" />
-            <Button Grid.Column="2"
-                    Style="{StaticResource SubMenuButton}"
                     Command="{Binding FlashModeCommand}"
                     Text="Flash" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding ZoomOutCommand}"
+                    Text="ZoomOut" />
             <Button Grid.Column="3"
                     Style="{StaticResource SubMenuButton}"
-                    Command="{Binding ZoomCommand}"
-                    Text="Zoom" />
+                    Command="{Binding ZoomInCommand}"
+                    Text="ZoomIn" />
         </Grid>
     </Grid>
 

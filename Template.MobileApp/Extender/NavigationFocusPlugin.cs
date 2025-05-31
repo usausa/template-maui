@@ -9,7 +9,7 @@ public sealed class NavigationFocusPlugin : PluginBase
 {
     private readonly Dictionary<object, VisualElement> focusBackup = [];
 
-    public override void OnClose(IPluginContext pluginContext, object view, object target)
+    public override void OnClose(IPluginContext pluginContext, object view, object? target)
     {
         focusBackup.Remove(view);
     }
@@ -30,7 +30,7 @@ public sealed class NavigationFocusPlugin : PluginBase
         }
     }
 
-    public override void OnNavigatedTo(IPluginContext pluginContext, INavigationContext navigationContext, object view, object target)
+    public override void OnNavigatedTo(IPluginContext pluginContext, INavigationContext navigationContext, object view, object? target)
     {
         if (navigationContext.Attribute.IsRestore())
         {

@@ -24,6 +24,8 @@ global using System.Threading;
 global using System.Threading.Tasks;
 global using System.Windows.Input;
 
+global using BunnyTail.MemberAccessor;
+
 global using MauiComponents;
 
 global using Microsoft.Extensions.Logging;
