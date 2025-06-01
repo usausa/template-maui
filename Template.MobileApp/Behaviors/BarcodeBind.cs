@@ -66,10 +66,10 @@ public static class BarcodeBind
                     CameraView.AimModeProperty,
                     new Binding(nameof(BarcodeController.AimMode), source: controller));
                 AssociatedObject.SetBinding(
-                    CameraView.TapToFocusEnabledProperty,
-                    new Binding(nameof(BarcodeController.TapToFocus), source: controller));
-                AssociatedObject.SetBinding(
                     CameraView.TorchOnProperty,
+                    new Binding(nameof(BarcodeController.TorchOn), source: controller));
+                AssociatedObject.SetBinding(
+                    CameraView.TapToFocusEnabledProperty,
                     new Binding(nameof(BarcodeController.TapToFocus), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.PauseScanningProperty,
@@ -118,8 +118,8 @@ public static class BarcodeBind
             bindable.RemoveBinding(CameraView.CaptureQualityProperty);
             bindable.RemoveBinding(CameraView.BarcodeSymbologiesProperty);
             bindable.RemoveBinding(CameraView.AimModeProperty);
-            bindable.RemoveBinding(CameraView.TapToFocusEnabledProperty);
             bindable.RemoveBinding(CameraView.TorchOnProperty);
+            bindable.RemoveBinding(CameraView.TapToFocusEnabledProperty);
             bindable.RemoveBinding(CameraView.PauseScanningProperty);
             bindable.RemoveBinding(CameraView.ForceInvertedProperty);
             bindable.RemoveBinding(CameraView.VibrationOnDetectedProperty);

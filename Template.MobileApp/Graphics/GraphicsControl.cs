@@ -4,13 +4,13 @@ public sealed class GraphicsControl : GraphicsView
 {
     public static readonly BindableProperty GraphicsProperty = BindableProperty.Create(
         nameof(Graphics),
-        typeof(IGraphics),
+        typeof(IGraphicsObject),
         typeof(GraphicsControl),
         propertyChanged: HandlePropertyChanged);
 
-    public IGraphics Graphics
+    public IGraphicsObject Graphics
     {
-        get => (IGraphics)GetValue(GraphicsProperty);
+        get => (IGraphicsObject)GetValue(GraphicsProperty);
         set => SetValue(GraphicsProperty, value);
     }
 
@@ -21,24 +21,24 @@ public sealed class GraphicsControl : GraphicsView
             return;
         }
 
-        ((GraphicsControl)bindable).HandlePropertyChanged(oldValue as IGraphics, newValue as IGraphics);
+        ((GraphicsControl)bindable).HandlePropertyChanged(oldValue as IGraphicsObject, newValue as IGraphicsObject);
     }
 
-    private void HandlePropertyChanged(IGraphics? oldValue, IGraphics? newValue)
+    private void HandlePropertyChanged(IGraphicsObject? oldValue, IGraphicsObject? newValue)
     {
         if (oldValue is not null)
         {
-            oldValue.PropertyChanged -= HandlePropertyChanged;
+            oldValue.InvalidateRequest -= HandlePropertyChanged;
             Drawable = null!;
         }
         if (newValue is not null)
         {
-            newValue.PropertyChanged += HandlePropertyChanged;
+            newValue.InvalidateRequest += HandlePropertyChanged;
             Drawable = newValue;
         }
     }
 
-    private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void HandlePropertyChanged(object? sender, EventArgs e)
     {
         Invalidate();
     }

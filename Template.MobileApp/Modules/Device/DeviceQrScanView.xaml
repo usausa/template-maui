@@ -6,23 +6,72 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
-             xmlns:modules="clr-namespace:Template.MobileApp.Modules"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              x:Class="Template.MobileApp.Modules.Device.DeviceQrScanView"
              x:DataType="{x:Type module:DeviceQrScanViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceQrScanViewModel}"
              shell:ShellProperty.Title="QR Scan"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Switch"
+             shell:ShellProperty.Function3Text="Invert"
+             shell:ShellProperty.Function4Text="Vibe"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto,Auto,Auto">
 
-        <scanner:CameraView WidthRequest="{x:Static modules:ScreenSize.Width}"
-                            HeightRequest="{x:Static modules:ScreenSize.Width}"
-                            behaviors:BarcodeBind.Controller="{Binding Controller}" />
+        <scanner:CameraView Grid.Row="0"
+                            behaviors:BarcodeBind.Controller="{Binding Controller}"
+                            OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
-        <Label Style="{StaticResource ExtraLargeLeftLabel}"
+        <graphics:GraphicsControl Grid.Row="0"
+                                  Graphics="{Binding Graphics}" />
+
+        <Label Grid.Row="1"
+               Style="{StaticResource ExtraLargeLeftLabel}"
                Text="{Binding Barcode}" />
 
-    </VerticalStackLayout>
+        <Grid Grid.Row="2"
+              Style="{StaticResource FillGrid}"
+              RowDefinitions="*,*"
+              ColumnDefinitions="*,*">
+            <Label Grid.Row="0" Grid.Column="0"
+                   Text="{Binding Controller.CameraFace, StringFormat='Camera: {0}'}"
+                   FontSize="14" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Text="{Binding Controller.CurrentZoomFactor, StringFormat='Zoom: x{0}'}"
+                   FontSize="14" />
+            <Label Grid.Row="1" Grid.Column="0"
+                   Text="{Binding Controller.ForceInvert, StringFormat='Invert: {0}'}"
+                   FontSize="14" />
+            <Label Grid.Row="1" Grid.Column="1"
+                   Text="{Binding Controller.VibrationOnDetect, StringFormat='Vibe: {0}'}"
+                   FontSize="14" />
+        </Grid>
+
+        <Grid Grid.Row="3"
+              Style="{StaticResource SubMenuGrid}"
+              ColumnDefinitions="*,*,*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding TorchCommand}"
+                    Text="Torch" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding AimCommand}"
+                    Text="Aim" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding ZoomOutCommand}"
+                    Text="ZoomOut" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding ZoomInCommand}"
+                    Text="ZoomIn" />
+        </Grid>
+    </Grid>
 
 </ContentView>

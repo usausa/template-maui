@@ -93,5 +93,5 @@ public enum ViewId
     UIGrid,
     UITimeline,
     UIGauge,
-    UIRadar,
+    UIRadar
 }

@@ -28,6 +28,7 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
+using Template.MobileApp.Components.Ocr;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Extender;
@@ -244,6 +245,7 @@ public static partial class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
+        config.BindSingleton<IOcrManager, OcrManager>();
 
         config.BindSingleton(AudioManager.Current);
 

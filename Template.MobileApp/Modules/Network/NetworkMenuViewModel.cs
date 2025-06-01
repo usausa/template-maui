@@ -5,10 +5,7 @@ using Template.MobileApp.Usecase;
 
 public sealed class NetworkMenuViewModel : AppViewModelBase
 {
-    private readonly IDialog dialog;
-
-    private readonly ApiContext apiContext;
-
+    public IObserveCommand ForwardCommand { get; }
     public IObserveCommand ServerTimeCommand { get; }
     public IObserveCommand TestErrorCommand { get; }
     public IObserveCommand TestDelayCommand { get; }
@@ -17,36 +14,21 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
     public IObserveCommand UploadCommand { get; }
 
     public NetworkMenuViewModel(
-        IDialog dialog,
         ApiContext apiContext,
         SampleUsecase sampleUsecase)
     {
-        this.apiContext = apiContext;
-        this.dialog = dialog;
+        var configured = apiContext.BaseAddress is not null;
 
-        ServerTimeCommand = MakeAsyncCommand(async () => await sampleUsecase.GetServerTimeAsync());
-        TestErrorCommand = MakeAsyncCommand<int>(async x => await sampleUsecase.GetTestErrorAsync(x));
-        TestDelayCommand = MakeAsyncCommand<int>(async x => await sampleUsecase.GetTestDelayAsync(x));
-        DataListCommand = MakeAsyncCommand(async () => await sampleUsecase.GetDataListAsync());
-        DownloadCommand = MakeAsyncCommand(async () => await sampleUsecase.DownloadAsync());
-        UploadCommand = MakeAsyncCommand(async () => await sampleUsecase.UploadAsync());
+        ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
+        ServerTimeCommand = MakeAsyncCommand(async () => await sampleUsecase.GetServerTimeAsync(), () => configured);
+        TestErrorCommand = MakeAsyncCommand<int>(async x => await sampleUsecase.GetTestErrorAsync(x), _ => configured);
+        TestDelayCommand = MakeAsyncCommand<int>(async x => await sampleUsecase.GetTestDelayAsync(x), _ => configured);
+        DataListCommand = MakeAsyncCommand(async () => await sampleUsecase.GetDataListAsync(), () => configured);
+        DownloadCommand = MakeAsyncCommand(async () => await sampleUsecase.DownloadAsync(), () => configured);
+        UploadCommand = MakeAsyncCommand(async () => await sampleUsecase.UploadAsync(), () => configured);
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
-    {
-        if (apiContext.BaseAddress is null)
-        {
-            await Navigator.PostActionAsync(() => BusyState.Using(async () =>
-            {
-                await dialog.InformationAsync("API EndPoint not configured.");
-
-                await Navigator.ForwardAsync(ViewId.Menu);
-            }));
-        }
-    }
 }
