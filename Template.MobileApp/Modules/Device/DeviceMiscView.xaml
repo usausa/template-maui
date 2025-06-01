@@ -12,7 +12,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*"
+          RowDefinitions="*,*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*">
         <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
@@ -59,26 +59,37 @@
                 Command="{Binding LightOffCommand}"
                 Text="Light off" />
 
-        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding BrightnessCommand}"
+                CommandParameter="{s:Float Value=0.0}"
+                Text="Bright 0" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding BrightnessCommand}"
+                CommandParameter="{s:Float Value=1.0}"
+                Text="Bright 1" />
+
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ScreenshotCommand}"
                 Text="Screenshot" />
 
-        <Button Grid.Row="6" Grid.Column="0"
+        <Button Grid.Row="7" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding SpeakCommand}"
                 Text="Speak" />
-        <Button Grid.Row="6" Grid.Column="1"
+        <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding SpeakCancelCommand}"
                 Text="Speak cancel" />
 
-        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding RecognizeCommand}"
                 Text="Recognize" />
 
-        <VerticalStackLayout Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+        <VerticalStackLayout Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
                              Style="{StaticResource FillVerticalStack}">
             <Label Style="{StaticResource TextValueLabel}"
                    Text="{Binding RecognizeText}" />

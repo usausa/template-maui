@@ -89,6 +89,7 @@ public enum ViewId
     UILogin,
     UIProfile,
     UIPortal,
+    UIDock,
     UICalendar,
     UIGrid,
     UITimeline,

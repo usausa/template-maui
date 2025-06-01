@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
+using Template.MobileApp.Components.Device;
 using Template.MobileApp.Components.Storage;
 
 public sealed partial class DeviceMiscViewModel : AppViewModelBase
@@ -21,6 +22,8 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     public IObserveCommand LightOnCommand { get; }
     public IObserveCommand LightOffCommand { get; }
 
+    public IObserveCommand BrightnessCommand { get; }
+
     public IObserveCommand ScreenshotCommand { get; }
 
     public IObserveCommand SpeakCommand { get; }
@@ -37,7 +40,8 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         ISpeechService speech,
         IVibration vibration,
         IHapticFeedback feedback,
-        IFlashlight flashlight)
+        IFlashlight flashlight,
+        IDeviceManager deviceManager)
     {
         this.screen = screen;
 
@@ -55,6 +59,8 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
         LightOnCommand = MakeAsyncCommand(flashlight.TurnOnAsync);
         LightOffCommand = MakeAsyncCommand(flashlight.TurnOffAsync);
+
+        BrightnessCommand = MakeDelegateCommand<float>(deviceManager.SetScreenBrightness);
 
         ScreenshotCommand = MakeAsyncCommand(async () =>
         {

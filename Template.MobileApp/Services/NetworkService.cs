@@ -22,22 +22,6 @@ public sealed class NetworkService
     }
 
     //--------------------------------------------------------------------------------
-    // Test
-    //--------------------------------------------------------------------------------
-
-    public async ValueTask<IRestResponse<object>> GetTestErrorAsync(int code)
-    {
-        using var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<object>($"api/test/error/{code}");
-    }
-
-    public async ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout)
-    {
-        using var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<object>($"api/test/delay/{timeout}");
-    }
-
-    //--------------------------------------------------------------------------------
     // Data
     //--------------------------------------------------------------------------------
 
@@ -45,6 +29,22 @@ public sealed class NetworkService
     {
         using var client = httpClientFactory.CreateClient(ApiNames.Default);
         return await client.GetAsync<DataListResponse>("api/data/list");
+    }
+
+    //--------------------------------------------------------------------------------
+    // Secret
+    //--------------------------------------------------------------------------------
+
+    public async ValueTask<IRestResponse<SecretMessageResponse>> GetSecretMessageAsync()
+    {
+        using var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return await client.GetAsync<SecretMessageResponse>("api/secret/message");
+    }
+
+    public async ValueTask<IRestResponse<AccountLoginResponse>> PostAccountLoginAsync(AccountLoginRequest request)
+    {
+        using var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return await client.PostAsync<AccountLoginResponse>("api/account/login", request);
     }
 
     //--------------------------------------------------------------------------------
@@ -123,5 +123,21 @@ public sealed class NetworkService
                     action(percent);
                 }
             });
+    }
+
+    //--------------------------------------------------------------------------------
+    // Test
+    //--------------------------------------------------------------------------------
+
+    public async ValueTask<IRestResponse<object>> GetTestErrorAsync(int code)
+    {
+        using var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return await client.GetAsync<object>($"api/test/error/{code}");
+    }
+
+    public async ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout)
+    {
+        using var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return await client.GetAsync<object>($"api/test/delay/{timeout}");
     }
 }

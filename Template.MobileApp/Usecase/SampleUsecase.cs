@@ -1,6 +1,7 @@
 namespace Template.MobileApp.Usecase;
 
 using Template.MobileApp.Components.Storage;
+using Template.MobileApp.Services;
 
 public sealed class SampleUsecase
 {
@@ -10,14 +11,18 @@ public sealed class SampleUsecase
 
     private readonly NetworkOperator networkOperator;
 
+    private readonly ApiContext apiContext;
+
     public SampleUsecase(
         IDialog dialog,
         IStorageManager storageManager,
-        NetworkOperator networkOperator)
+        NetworkOperator networkOperator,
+        ApiContext apiContext)
     {
         this.dialog = dialog;
         this.storageManager = storageManager;
         this.networkOperator = networkOperator;
+        this.apiContext = apiContext;
     }
 
     //--------------------------------------------------------------------------------
@@ -29,19 +34,9 @@ public sealed class SampleUsecase
         var result = await networkOperator.ExecuteVerbose(static n => n.GetServerTimeAsync());
         if (result.IsSuccess)
         {
-            await dialog.InformationAsync($"Access success.\r\ntime=[{result.Value.DateTime:yyyy/MM/dd HH:mm:ss}]");
+            await dialog.InformationAsync($"Get success.\r\ntime=[{result.Value.DateTime:yyyy/MM/dd HH:mm:ss}]");
         }
     }
-
-    //--------------------------------------------------------------------------------
-    // Test
-    //--------------------------------------------------------------------------------
-
-    public ValueTask<IResult<object>> GetTestErrorAsync(int code) =>
-        networkOperator.ExecuteVerbose(n => n.GetTestErrorAsync(code));
-
-    public ValueTask<IResult<object>> GetTestDelayAsync(int timeout) =>
-        networkOperator.ExecuteVerbose(n => n.GetTestDelayAsync(timeout));
 
     //--------------------------------------------------------------------------------
     // Data
@@ -52,8 +47,37 @@ public sealed class SampleUsecase
         var result = await networkOperator.ExecuteVerbose(static n => n.GetDataListAsync());
         if (result.IsSuccess)
         {
-            await dialog.InformationAsync($"Access success.\r\ncount=[{result.Value.Entries.Length}]");
+            await dialog.InformationAsync($"Get success.\r\ncount=[{result.Value.Entries.Length}]");
         }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Secret
+    //--------------------------------------------------------------------------------
+
+    public async ValueTask GetSecretMessageAsync()
+    {
+        var result = await networkOperator.ExecuteVerbose(static n => n.GetSecretMessageAsync());
+        if (result.IsSuccess)
+        {
+            await dialog.InformationAsync($"Get success.\r\nmessage=[{result.Value.Message}]");
+        }
+    }
+
+    public async ValueTask PostAccountLoginAsync(string id)
+    {
+        var request = new AccountLoginRequest { Id = id };
+        var result = await networkOperator.ExecuteVerbose(n => n.PostAccountLoginAsync(request));
+        if (result.IsSuccess)
+        {
+            await dialog.InformationAsync("Login success.");
+            apiContext.Token = result.Value.Token;
+        }
+    }
+
+    public void AccountLogout()
+    {
+        apiContext.Token = string.Empty;
     }
 
     //--------------------------------------------------------------------------------
@@ -98,4 +122,14 @@ public sealed class SampleUsecase
             await dialog.InformationAsync("Upload success.");
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Test
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<IResult<object>> GetTestErrorAsync(int code) =>
+        networkOperator.ExecuteVerbose(n => n.GetTestErrorAsync(code));
+
+    public ValueTask<IResult<object>> GetTestDelayAsync(int timeout) =>
+        networkOperator.ExecuteVerbose(n => n.GetTestDelayAsync(timeout));
 }
