@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.UI"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITimelineView"
              x:DataType="{x:Type module:UITimelineViewModel}"
@@ -11,6 +14,30 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <ListView ItemsSource="{Binding Rows}"
+                  behaviors:ListViewOption.DisableOverScroll="True"
+                  HasUnevenRows="True" SeparatorVisibility="None">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:TimelineRow">
+                    <ViewCell>
+                        <Grid ColumnDefinitions="Auto,Auto,*">
+                            <controls:TimelineCell Grid.Column="0"
+                                                   Row="{Binding}" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding Id}"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="2"
+                                   Padding="8,0,0,0"
+                                   Text="{Binding Text}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </VerticalStackLayout>
 
 </ContentView>
