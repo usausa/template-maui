@@ -93,6 +93,8 @@ public enum ViewId
     UICalendar,
     UIGrid,
     UITimeline,
+    UIRadar,
     UIGauge,
-    UIRadar
+    UIMeter,
+    UILoad
 }

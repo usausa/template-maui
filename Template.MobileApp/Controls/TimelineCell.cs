@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Controls;
 
-using Template.MobileApp.Models.UI;
-
 public sealed class TimelineCell : GraphicsView, IDrawable
 {
     private const float BaseWidth = 24;
