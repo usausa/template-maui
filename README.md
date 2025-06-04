@@ -6,16 +6,8 @@ Template project for MAUI.
 
 ## Fix
 
-- [ ] Navigation initialize
-- [ ] Navigation shared
 - [ ] Dialog size
 - [ ] Speach recognization
-
-## Improvement
-
-- [ ] Validation
-- [ ] Network authentication
-- [ ] Camera/QR new version
 
 ## ReCheck
 
@@ -34,13 +26,15 @@ Template project for MAUI.
 
 ### UI
 
+- [ ] Meter
+- [ ] Gauge
+- [ ] Load
 - [ ] Chart
-- [ ] Chat
 - [ ] Calendar
 - [ ] Grid
-- [ ] Timeline
 
 ### Other
 
 - [ ] Cognitive service
+- [ ] Chat
 
