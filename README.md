@@ -17,6 +17,10 @@ Template project for MAUI.
 
 ## Feature
 
+### Basic
+
+- [ ] Style sheat
+
 ### Device
 
 - [ ] NFC
@@ -37,4 +41,4 @@ Template project for MAUI.
 
 - [ ] Cognitive service
 - [ ] Chat
-
+- [ ] HybridWebView

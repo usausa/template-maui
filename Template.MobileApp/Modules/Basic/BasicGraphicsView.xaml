@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              x:Class="Template.MobileApp.Modules.Basic.BasicGraphicsView"
              x:DataType="{x:Type module:BasicGraphicsViewModel}"
              s:BindingContextResolver.Type="{x:Type module:BasicGraphicsViewModel}"
@@ -11,6 +12,10 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*">
+        <graphics:GraphicsControl Grid.Row="0"
+                                  Graphics="{Binding Graphics}" />
+    </Grid>
 
 </ContentView>
