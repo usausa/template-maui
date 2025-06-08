@@ -8,7 +8,5 @@ public static class ScreenSize
 
     // Dialog
 
-    public static Size LargeDialog => new(
-        DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density * 0.8,
-        DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.8);
+    public static double LargeDialogWidth => Width * 0.8;
 }

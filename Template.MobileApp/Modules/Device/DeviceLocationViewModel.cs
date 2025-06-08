@@ -12,10 +12,7 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
     {
         this.locationService = locationService;
 
-        Disposables.Add(Observable
-            .FromEvent<EventHandler<LocationEventArgs>, LocationEventArgs>(static h => (_, e) => h(e), h => locationService.LocationChanged += h, h => locationService.LocationChanged -= h)
-            .ObserveOn(SynchronizationContext.Current!)
-            .Subscribe(x => Location = x.Location));
+        Disposables.Add(locationService.ObserveLocationChangedOnCurrentContext().Subscribe(x => Location = x.Location));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Controls;
 
 #pragma warning disable CA1001
-public sealed class RadarControl : GraphicsView, IDrawable
+public sealed class RadarScreen : GraphicsView, IDrawable
 {
     private const float StepSpeed = 2f;
 
@@ -14,7 +14,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty BorderMarginProperty = BindableProperty.Create(
         nameof(BorderMargin),
         typeof(float),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         10f);
 
     public float BorderMargin
@@ -22,10 +22,11 @@ public sealed class RadarControl : GraphicsView, IDrawable
         get => (float)GetValue(BorderMarginProperty);
         set => SetValue(BorderMarginProperty, value);
     }
+
     public static readonly BindableProperty MemoryColorProperty = BindableProperty.Create(
         nameof(MemoryColor),
         typeof(Color),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         Colors.Green);
 
     public Color MemoryColor
@@ -37,7 +38,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty MemoryLineWidthProperty = BindableProperty.Create(
         nameof(MemoryLineWidth),
         typeof(float),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         3f);
 
     public float MemoryLineWidth
@@ -49,7 +50,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty MemoryLengthShortProperty = BindableProperty.Create(
         nameof(MemoryLengthShort),
         typeof(float),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         8f);
 
     public float MemoryLengthShort
@@ -61,7 +62,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty MemoryLengthLongProperty = BindableProperty.Create(
         nameof(MemoryLengthLong),
         typeof(float),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         16f);
 
     public float MemoryLengthLong
@@ -73,7 +74,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty SweepAngleProperty = BindableProperty.Create(
         nameof(SweepAngle),
         typeof(float),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         60f);
 
     public float SweepAngle
@@ -85,7 +86,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty SweepArcAlphaProperty = BindableProperty.Create(
         nameof(SweepArcAlpha),
         typeof(byte),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         (byte)12);
 
     public byte SweepArcAlpha
@@ -97,7 +98,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty SweepColorProperty = BindableProperty.Create(
         nameof(SweepColor),
         typeof(Color),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         Colors.Lime);
 
     public Color SweepColor
@@ -109,7 +110,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
     public static readonly BindableProperty SweepLineWidthProperty = BindableProperty.Create(
         nameof(SweepLineWidth),
         typeof(float),
-        typeof(RadarControl),
+        typeof(RadarScreen),
         3f);
 
     public float SweepLineWidth
@@ -118,7 +119,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
         set => SetValue(SweepLineWidthProperty, value);
     }
 
-    public RadarControl()
+    public RadarScreen()
     {
         Drawable = this;
         BackgroundColor = Colors.Black;
@@ -205,7 +206,7 @@ public sealed class RadarControl : GraphicsView, IDrawable
         var height = dirtyRect.Height;
         var cx = width / 2f;
         var cy = height / 2f;
-        var radius = Math.Min(cx, cy) - BorderMargin;
+        var radius = (Math.Min(dirtyRect.Width, dirtyRect.Height) / 2) - BorderMargin;
 
         canvas.Antialias = true;
 

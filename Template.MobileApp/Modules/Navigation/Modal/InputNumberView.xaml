@@ -11,10 +11,10 @@
            x:DataType="{x:Type modules:InputNumberViewModel}"
            s:BindingContextResolver.Type="{x:Type modules:InputNumberViewModel}"
            mcs:PopupBind.Controller="{Binding Popup}"
-           CanBeDismissedByTappingOutsideOfPopup="False"
-           Size="{x:Static m:ScreenSize.LargeDialog}">
+           CanBeDismissedByTappingOutsideOfPopup="False">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}"
+                         WidthRequest="{x:Static m:ScreenSize.LargeDialogWidth}">
         <!-- title -->
         <Label Style="{StaticResource DialogTitleLabel}"
                Text="{Binding Title}" />

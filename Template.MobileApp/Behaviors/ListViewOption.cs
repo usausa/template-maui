@@ -1,10 +1,6 @@
 namespace Template.MobileApp.Behaviors;
 
-using Android.Views;
-
-using Microsoft.Maui.Controls.Handlers.Compatibility;
-
-public static class ListViewOption
+public static partial class ListViewOption
 {
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty DisableOverScrollProperty = BindableProperty.CreateAttached(
@@ -18,20 +14,5 @@ public static class ListViewOption
 
     public static void SetDisableOverScroll(BindableObject bindable, bool value) => bindable.SetValue(DisableOverScrollProperty, value);
 
-    public static void UseCustomMapper(BehaviorOptions options)
-    {
-#if ANDROID
-        // DisableShowSoftInputOnFocus
-        if (options.DisableOverScroll)
-        {
-            ListViewRenderer.Mapper.AppendToMapping(DisableOverScrollProperty.PropertyName, static (handler, element) => Action(handler.Control!, element));
-        }
-#endif
-    }
-
-    private static void Action(Android.Widget.ListView listView, BindableObject element)
-    {
-        var value = GetDisableOverScroll(element);
-        listView.OverScrollMode = value ? OverScrollMode.Never : OverScrollMode.IfContentScrolls;
-    }
+    public static partial void UseCustomMapper(BehaviorOptions options);
 }

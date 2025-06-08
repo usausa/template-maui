@@ -88,4 +88,26 @@ public static class Extensions
             await task();
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Reactive
+    //--------------------------------------------------------------------------------
+
+    public static IObservable<ScreenStateEventArgs> ObserveStateChanged(this IScreen screen) =>
+        Observable.FromEvent<EventHandler<ScreenStateEventArgs>, ScreenStateEventArgs>(static h => (_, e) => h(e), h => screen.ScreenStateChanged += h, h => screen.ScreenStateChanged -= h);
+
+    public static IObservable<ScreenStateEventArgs> ObserveStateChangedOnCurrentContext(this IScreen screen) =>
+        screen.ObserveStateChanged().ObserveOn(SynchronizationContext.Current!);
+
+    public static IObservable<LocationEventArgs> ObserveLocationChanged(this ILocationService locationService) =>
+        Observable.FromEvent<EventHandler<LocationEventArgs>, LocationEventArgs>(static h => (_, e) => h(e), h => locationService.LocationChanged += h, h => locationService.LocationChanged -= h);
+
+    public static IObservable<LocationEventArgs> ObserveLocationChangedOnCurrentContext(this ILocationService locationService) =>
+        locationService.ObserveLocationChanged().ObserveOn(SynchronizationContext.Current!);
+
+    public static IObservable<SpeechRecognizeEventArgs> ObserveRecognized(this ISpeechService speechService) =>
+        Observable.FromEvent<EventHandler<SpeechRecognizeEventArgs>, SpeechRecognizeEventArgs>(static h => (_, e) => h(e), h => speechService.Recognized += h, h => speechService.Recognized -= h);
+
+    public static IObservable<SpeechRecognizeEventArgs> ObserveRecognizedOnCurrentContext(this ISpeechService speechService) =>
+        speechService.ObserveRecognized().ObserveOn(SynchronizationContext.Current!);
 }

@@ -7,6 +7,8 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 {
     private readonly IScreen screen;
 
+    private readonly ISpeechService speech;
+
     public IObserveCommand KeepScreenOnCommand { get; }
     public IObserveCommand KeepScreenOffCommand { get; }
 
@@ -44,6 +46,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         IDeviceManager deviceManager)
     {
         this.screen = screen;
+        this.speech = speech;
 
         KeepScreenOnCommand = MakeDelegateCommand(() => screen.KeepScreenOn(true));
         KeepScreenOffCommand = MakeDelegateCommand(() => screen.KeepScreenOn(false));
@@ -69,27 +72,19 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
             await stream.CopyToAsync(file);
         });
 
-        // TODO
-        RecognizeCommand = MakeDelegateCommand(() => { });
+        SpeakCommand = MakeDelegateCommand(() =>
+        {
 #pragma warning disable CA2012
-        SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
+            _ = speech.SpeakAsync("テストです");
 #pragma warning restore CA2012
+        });
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
-//        var progress = new Progress<string>(text =>
-//        {
-//            if (!String.IsNullOrEmpty(text))
-//            {
-//                RecognizeText.Value = text;
-//            }
-//        });
-//        RecognizeCommand = MakeAsyncCommand(async () =>
-//        {
-//            RecognizeText.Value = string.Empty;
-
-//            var result = await speech.RecognizeAsync(progress);
-
-//            RecognizeText.Value = !String.IsNullOrEmpty(result) ? result : string.Empty;
-//        });
+        Disposables.Add(speech.ObserveRecognizedOnCurrentContext().Subscribe(x => RecognizeText = x.Text));
+        RecognizeCommand = MakeAsyncCommand(async () =>
+        {
+            RecognizeText = string.Empty;
+            await speech.RecognizeAsync(CultureInfo.CurrentCulture);
+        });
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -99,5 +94,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     public override void OnNavigatingFrom(INavigationContext context)
     {
         screen.SetOrientation(DisplayOrientation.Portrait);
+
+        speech.RecognizeCancel();
     }
 }
