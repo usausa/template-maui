@@ -29,6 +29,7 @@ using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Device;
+using Template.MobileApp.Components.Nfc;
 using Template.MobileApp.Components.Ocr;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
@@ -56,6 +57,7 @@ public static partial class MauiProgram
             .UseShiny()
             .UseBarcodeScanning()
             .UseMauiServices()
+            .UseMauiComponents()
             .UseCommunityToolkitServices()
             .UseCustomView()
             .ConfigureComponents()
@@ -247,7 +249,8 @@ public static partial class MauiProgram
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
         config.BindSingleton<IDeviceManager, DeviceManager>();
-        config.BindSingleton<IOcrManager, OcrManager>();
+        config.BindSingleton<INfcReader, NfcReader>();
+        config.BindSingleton<IOcrReader, OcrReader>();
 
         config.BindSingleton(AudioManager.Current);
 

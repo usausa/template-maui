@@ -16,36 +16,37 @@
              shell:ShellProperty.Function4Enabled="True">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <ListView Style="{StaticResource ItemListView}"
-                  ItemsSource="{Binding Items}">
-            <ListView.ItemTemplate>
+
+        <CollectionView Style="{StaticResource ItemCollectionView}"
+                        ItemsSource="{Binding Items}"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entity:WorkEntity">
-                    <ViewCell>
-                        <Grid Style="{StaticResource ItemListCellGrid}"
-                              ColumnDefinitions="*,6*,*,*">
-                            <Label Grid.Column="0"
-                                   Style="{StaticResource ListItemLeftLabel}"
-                                   Text="{Binding Id}" />
-                            <Label Grid.Column="1"
-                                   Style="{StaticResource ListItemLeftLabel}"
-                                   Text="{Binding Name}" />
-                            <Button Grid.Column="2"
-                                    x:DataType="{x:Type module:EditListViewModel}"
-                                    Style="{StaticResource ListItemButtonPrimary}"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="{x:Static fonts:MaterialIcons.Edit}" />
-                            <Button Grid.Column="3"
-                                    x:DataType="{x:Type module:EditListViewModel}"
-                                    Style="{StaticResource ListItemButtonDanger}"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="{x:Static fonts:MaterialIcons.Delete}" />
-                        </Grid>
-                    </ViewCell>
+                    <Grid Style="{StaticResource ItemCollectionGrid}"
+                          ColumnDefinitions="*,6*,*,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ItemCollectionLeftLabel}"
+                               Text="{Binding Id}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource ItemCollectionLeftLabel}"
+                               Text="{Binding Name}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource ItemCollectionButtonPrimary}"
+                                x:DataType="{x:Type module:EditListViewModel}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
+                                CommandParameter="{Binding}"
+                                Text="{x:Static fonts:MaterialIcons.Edit}" />
+                        <Button Grid.Column="3"
+                                Style="{StaticResource ItemCollectionButtonDanger}"
+                                x:DataType="{x:Type module:EditListViewModel}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
+                                CommandParameter="{Binding}"
+                                Text="{x:Static fonts:MaterialIcons.Delete}" />
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
     </VerticalStackLayout>
 
 </ContentView>

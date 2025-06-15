@@ -6,15 +6,16 @@
            xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
            xmlns:input="clr-namespace:Template.MobileApp.Input"
            xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-           xmlns:m="clr-namespace:Template.MobileApp.Modules" xmlns:modules="clr-namespace:Template.MobileApp.Modules.Navigation.Modal"
+           xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Modal"
+           xmlns:modules="clr-namespace:Template.MobileApp.Modules"
            x:Class="Template.MobileApp.Modules.Navigation.Modal.InputNumberView"
-           x:DataType="{x:Type modules:InputNumberViewModel}"
-           s:BindingContextResolver.Type="{x:Type modules:InputNumberViewModel}"
+           x:DataType="{x:Type module:InputNumberViewModel}"
+           s:BindingContextResolver.Type="{x:Type module:InputNumberViewModel}"
            mcs:PopupBind.Controller="{Binding Popup}"
            CanBeDismissedByTappingOutsideOfPopup="False">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}"
-                         WidthRequest="{x:Static m:ScreenSize.LargeDialogWidth}">
+                         WidthRequest="{x:Static modules:ScreenSize.LargeDialogWidth}">
         <!-- title -->
         <Label Style="{StaticResource DialogTitleLabel}"
                Text="{Binding Title}" />

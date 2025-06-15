@@ -838,27 +838,15 @@
     </Style>
 
     <!-- ================================================================================ -->
-    <!-- ListView -->
+    <!-- CollectionView -->
     <!-- ================================================================================ -->
 
-    <Style x:Key="ItemListView"
-           TargetType="ListView">
-        <Setter Property="HasUnevenRows" Value="True" />
-        <Setter Property="behaviors:ListViewOption.DisableOverScroll" Value="True" />
+    <Style x:Key="ItemCollectionView"
+           TargetType="CollectionView">
+        <Setter Property="behaviors:ItemsViewOption.DisableOverScroll" Value="True" />
     </Style>
 
-    <Style x:Key="ItemListHeaderGrid"
-           TargetType="Grid">
-        <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten4}" />
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="HorizontalOptions" Value="Fill" />
-        <Setter Property="VerticalOptions" Value="Fill" />
-    </Style>
-
-    <Style x:Key="ItemListCellGrid"
+    <Style x:Key="ItemCollectionGrid"
            TargetType="Grid">
         <Setter Property="HeightRequest" Value="48" />
         <Setter Property="RowSpacing" Value="0" />
@@ -869,26 +857,26 @@
         <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
-    <Style x:Key="ListItemLabelBase"
+    <Style x:Key="ItemCollectionLabelBase"
            TargetType="Label">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="LineBreakMode" Value="TailTruncation" />
     </Style>
 
-    <Style x:Key="ListItemLeftLabel"
-           BasedOn="{StaticResource ListItemLabelBase}"
+    <Style x:Key="ItemCollectionLeftLabel"
+           BasedOn="{StaticResource ItemCollectionLabelBase}"
            TargetType="Label">
         <Setter Property="HorizontalOptions" Value="Start" />
     </Style>
 
-    <Style x:Key="ListItemRightLabel"
-           BasedOn="{StaticResource ListItemLabelBase}"
+    <Style x:Key="ItemCollectionRightLabel"
+           BasedOn="{StaticResource ItemCollectionLabelBase}"
            TargetType="Label">
         <Setter Property="HorizontalOptions" Value="End" />
     </Style>
 
-    <Style x:Key="ListItemButtonBase"
+    <Style x:Key="ItemCollectionButtonBase"
            TargetType="Button">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontFamily" Value="MaterialIcons" />
@@ -898,15 +886,15 @@
         <Setter Property="CornerRadius" Value="3" />
     </Style>
 
-    <Style x:Key="ListItemButtonPrimary"
-           BasedOn="{StaticResource ListItemButtonBase}"
+    <Style x:Key="ItemCollectionButtonPrimary"
+           BasedOn="{StaticResource ItemCollectionButtonBase}"
            TargetType="Button">
         <Setter Property="TextColor" Value="White" />
         <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
     </Style>
 
-    <Style x:Key="ListItemButtonDanger"
-           BasedOn="{StaticResource ListItemButtonBase}"
+    <Style x:Key="ItemCollectionButtonDanger"
+           BasedOn="{StaticResource ItemCollectionButtonBase}"
            TargetType="Button">
         <Setter Property="TextColor" Value="White" />
         <Setter Property="BackgroundColor" Value="{StaticResource RedAccent3}" />

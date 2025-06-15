@@ -16,7 +16,7 @@ internal static class AppHostBuilderExtensions
         ButtonOption.UseCustomMapper();
         LabelOption.UseCustomMapper();
         EntryOption.UseCustomMapper(options);
-        ListViewOption.UseCustomMapper(options);
+        ItemsViewOption.UseCustomMapper(options);
 
         return builder;
     }

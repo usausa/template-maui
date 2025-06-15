@@ -3,6 +3,7 @@ namespace Template.MobileApp;
 using System.Reflection;
 
 using Template.MobileApp.Behaviors;
+using Template.MobileApp.Components.Nfc;
 using Template.MobileApp.Helpers;
 
 public static class Extensions
@@ -110,4 +111,10 @@ public static class Extensions
 
     public static IObservable<SpeechRecognizeEventArgs> ObserveRecognizedOnCurrentContext(this ISpeechService speechService) =>
         speechService.ObserveRecognized().ObserveOn(SynchronizationContext.Current!);
+
+    public static IObservable<NfcEventArgs> ObserveDetected(this INfcReader nfcReader) =>
+        Observable.FromEvent<EventHandler<NfcEventArgs>, NfcEventArgs>(static h => (_, e) => h(e), h => nfcReader.Detected += h, h => nfcReader.Detected -= h);
+
+    public static IObservable<NfcEventArgs> ObserveDetectedOnCurrentContext(this INfcReader nfcReader) =>
+        nfcReader.ObserveDetected().ObserveOn(SynchronizationContext.Current!);
 }

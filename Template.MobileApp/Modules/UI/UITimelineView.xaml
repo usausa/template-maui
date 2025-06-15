@@ -14,29 +14,44 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+
+        <Style x:Key="TimelineCollectionView"
+               TargetType="CollectionView">
+            <Setter Property="behaviors:ItemsViewOption.DisableOverScroll" Value="True" />
+        </Style>
+
+        <Style x:Key="TimelineIdLabel"
+               TargetType="Label">
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="TimelineTextLabel"
+               TargetType="Label">
+            <Setter Property="Padding" Value="8,0,0,0" />
+        </Style>
+
+    </ContentView.Resources>
+
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <ListView ItemsSource="{Binding Rows}"
-                  behaviors:ListViewOption.DisableOverScroll="True"
-                  HasUnevenRows="True" SeparatorVisibility="None">
-            <ListView.ItemTemplate>
+        <CollectionView Style="{StaticResource TimelineCollectionView}"
+                        ItemsSource="{Binding Rows}">
+            <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:TimelineRow">
-                    <ViewCell>
-                        <Grid ColumnDefinitions="Auto,Auto,*">
-                            <controls:TimelineCell Grid.Column="0"
-                                                   Row="{Binding}" />
-                            <Label Grid.Column="1"
-                                   Text="{Binding Id}"
-                                   VerticalOptions="Center" />
-                            <Label Grid.Column="2"
-                                   Padding="8,0,0,0"
-                                   Text="{Binding Text}"
-                                   VerticalOptions="Center" />
-                        </Grid>
-                    </ViewCell>
+                    <Grid ColumnDefinitions="Auto,Auto,*">
+                        <controls:TimelineCell Grid.Column="0"
+                                               Row="{Binding}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TimelineIdLabel}"
+                               Text="{Binding Id}" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource TimelineTextLabel}"
+                               Text="{Binding Text}" />
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
     </VerticalStackLayout>
 

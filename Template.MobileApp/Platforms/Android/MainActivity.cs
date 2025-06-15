@@ -6,8 +6,6 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 
-using MauiComponents;
-
 [Activity(
     Name = "template.mobileapp.MainActivity",
     Theme = "@style/Maui.SplashTheme",
@@ -25,7 +23,6 @@ public sealed class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
 
-        ActivityResolver.Init(this);
 #if DEVICE_HAS_KEYPAD
         keyInputDriver = new KeyInputDriver(this);
 #endif

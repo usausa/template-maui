@@ -14,7 +14,7 @@ public sealed class BehaviorOptions
 
     public bool InputFilter { get; set; } = true;
 
-    // ListView
+    // View
 
     public bool DisableOverScroll { get; set; } = true;
 }

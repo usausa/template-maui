@@ -78,7 +78,6 @@ public enum ViewId
 
     // Sample
     SampleMenu,
-    SampleList,
     SampleChart,
     SampleMap,
     SampleObjectDetection,

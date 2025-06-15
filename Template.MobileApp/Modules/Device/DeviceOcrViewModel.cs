@@ -6,16 +6,16 @@ public sealed class DeviceOcrViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
-    private readonly IOcrManager ocrManager;
+    private readonly IOcrReader ocrReader;
 
     public CameraController Controller { get; } = new();
 
     public DeviceOcrViewModel(
         IDialog dialog,
-        IOcrManager ocrManager)
+        IOcrReader ocrReader)
     {
         this.dialog = dialog;
-        this.ocrManager = ocrManager;
+        this.ocrReader = ocrReader;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -30,7 +30,7 @@ public sealed class DeviceOcrViewModel : AppViewModelBase
             return;
         }
 
-        var text = await ocrManager.ReadTextAsync(input);
+        var text = await ocrReader.ReadTextAsync(input);
         if (!String.IsNullOrEmpty(text))
         {
             await dialog.InformationAsync(text);
