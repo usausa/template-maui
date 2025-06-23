@@ -25,8 +25,7 @@ public sealed class EditListViewModel : AppViewModelBase
         DeleteCommand = MakeAsyncCommand<WorkEntity>(DeleteAsync);
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {

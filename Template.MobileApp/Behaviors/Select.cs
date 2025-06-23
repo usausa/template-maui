@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Behaviors;
 
 using System.Collections.Generic;
-using System.Linq;
 
 public static class Select
 {
@@ -56,7 +55,7 @@ public static class Select
         }
 
         var key = GetValue(bindable);
-        var entity = list.FirstOrDefault(x => Equals(x?.Key, key));
+        var entity = list.FirstOrDefault(key, static (x, s) => Equals(x?.Key, s));
         if (entity is null)
         {
             var text = GetEmptyString(bindable) ?? string.Empty;

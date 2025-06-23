@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Device;
-using Template.MobileApp.Components.Storage;
+using Template.MobileApp.Components;
 
 public sealed partial class DeviceMiscViewModel : AppViewModelBase
 {
@@ -79,7 +78,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 #pragma warning restore CA2012
         });
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
-        Disposables.Add(speech.ObserveRecognizedOnCurrentContext().Subscribe(x => RecognizeText = x.Text));
+        Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x => RecognizeText = x.Text));
         RecognizeCommand = MakeAsyncCommand(async () =>
         {
             RecognizeText = string.Empty;
@@ -87,14 +86,16 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         });
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         screen.SetOrientation(DisplayOrientation.Portrait);
 
         speech.RecognizeCancel();
+
+        return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

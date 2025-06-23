@@ -7,12 +7,13 @@ public sealed partial class SharedInputViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string No { get; set; } = default!;
 
-    public override void OnNavigatedTo(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {
             nextViewId = context.Parameter.GetNextViewId();
         }
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NavigationMenu);

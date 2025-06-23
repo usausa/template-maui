@@ -18,8 +18,7 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     public ObservableCollection<DeckButtonInfo> Buttons { get; } = new();
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {

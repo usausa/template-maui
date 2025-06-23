@@ -10,8 +10,7 @@ public sealed class NavigateInitializeViewModel : AppViewModelBase
         this.dialog = dialog;
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {

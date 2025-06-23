@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Usecase;
 
-using Template.MobileApp.Components.Storage;
+using Template.MobileApp.Components;
 using Template.MobileApp.Services;
 
 public sealed class SampleUsecase

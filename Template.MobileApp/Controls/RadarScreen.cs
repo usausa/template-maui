@@ -162,21 +162,21 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         cts = null;
     }
 
-    private async Task Loop(CancellationToken ct)
+    private async Task Loop(CancellationToken token)
     {
         try
         {
             using var timer = new PeriodicTimer(Interval);
-            while (await timer.WaitForNextTickAsync(ct))
+            while (await timer.WaitForNextTickAsync(token))
             {
-                if (ct.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
                     break;
                 }
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (ct.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                     {
                         return;
                     }

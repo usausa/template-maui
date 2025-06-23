@@ -12,23 +12,23 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
     {
         this.locationService = locationService;
 
-        Disposables.Add(locationService.ObserveLocationChangedOnCurrentContext().Subscribe(x => Location = x.Location));
+        Disposables.Add(locationService.LocationChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => Location = x.Location));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         Location = await locationService.GetLastLocationAsync();
 
         locationService.Start();
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         locationService.Stop();
+        return Task.CompletedTask;
     }
 }

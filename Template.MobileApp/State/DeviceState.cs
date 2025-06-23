@@ -68,11 +68,11 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
 
         // Battery
         UpdateBattery(battery.ChargeLevel, battery.State, battery.PowerSource);
-        disposables.Add(battery.ObserveBatteryInfoChangedOnCurrentContext().Subscribe(
+        disposables.Add(battery.BatteryInfoChangedAsObservable().ObserveOnCurrentContext().Subscribe(
             x => UpdateBattery(x.ChargeLevel, x.State, x.PowerSource)));
         // Connectivity
         UpdateConnectivity(connectivity.ConnectionProfiles, connectivity.NetworkAccess);
-        disposables.Add(connectivity.ObserveConnectivityChangedOnCurrentContext().Subscribe(
+        disposables.Add(connectivity.ConnectivityChangedAsObservable().ObserveOnCurrentContext().Subscribe(
             x => UpdateConnectivity(x.ConnectionProfiles, x.NetworkAccess)));
     }
 

@@ -53,8 +53,8 @@ public enum ViewId
 
     DeviceWiFi,
     DeviceBluetooth,
+    DeviceBleScan,
     DeviceBleHost,
-    DeviceBleClient,
 
     DeviceNfc,
     DeviceAudio,
@@ -82,6 +82,10 @@ public enum ViewId
     SampleMap,
     SampleObjectDetection,
     SampleChat,
+    SampleMedia,
+    SampleMarkdown,
+    SampleWeb,
+    SampleBlazor,
 
     // UI
     UIMenu,

@@ -12,15 +12,13 @@ Template project for MAUI.
 
 ## Device
 
-- [ ] **NFC**
-- [ ] **BLE/Bluetooth client**
+- [ ] **Bluetooth client**
 - [ ] **WiFi manager**
 - [ ] Biometric
 
 ## UI
 
 - [ ] **Gauge**
-- [ ] Load
 - [ ] Chart
 - [ ] Calendar
 - [ ] Grid

@@ -7,7 +7,7 @@ using Smart.Mvvm.Resolver;
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
-public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
+public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INavigatorAware, INavigationEventSupportAsync, INotifySupportAsync<ShellEvent>
 {
     private List<ValidationResult>? validationResults;
 
@@ -45,17 +45,11 @@ public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INav
         validationResults.Clear();
     }
 
-    public virtual void OnNavigatingFrom(INavigationContext context)
-    {
-    }
+    public virtual Task OnNavigatingFromAsync(INavigationContext context) => Task.CompletedTask;
 
-    public virtual void OnNavigatingTo(INavigationContext context)
-    {
-    }
+    public virtual Task OnNavigatingToAsync(INavigationContext context) => Task.CompletedTask;
 
-    public virtual void OnNavigatedTo(INavigationContext context)
-    {
-    }
+    public virtual Task OnNavigatedToAsync(INavigationContext context) => Task.CompletedTask;
 
     public async Task NavigatorNotifyAsync(ShellEvent parameter)
     {

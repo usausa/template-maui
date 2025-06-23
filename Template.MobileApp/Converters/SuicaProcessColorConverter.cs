@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-using Template.MobileApp.Domain.FeliCa;
-
 public class ProcessColor
 {
     public int ProcessType { get; set; }
@@ -12,7 +10,7 @@ public class ProcessColor
 public sealed class SuicaProcessColorConverter : IValueConverter
 {
 #pragma warning disable CA1819
-    public ProcessColor[] Values { get; set; } = default!;
+    public ProcessColor[] Values { get; set; } = [];
 #pragma warning restore CA1819
 
     public Color DefaultColor { get; set; } = Colors.Gray;
@@ -21,7 +19,7 @@ public sealed class SuicaProcessColorConverter : IValueConverter
     {
         if (value is byte byteValue)
         {
-            var processType = (int)Suica.ConvertProcessType(byteValue);
+            var processType = (int)SuicaLogic.ConvertProcessType(byteValue);
             foreach (var color in Values)
             {
                 if (color.ProcessType == processType)

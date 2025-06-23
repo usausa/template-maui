@@ -20,7 +20,7 @@ public sealed partial class EditDetailViewModel : AppViewModelBase
         this.dataService = dataService;
     }
 
-    public override void OnNavigatedTo(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {
@@ -31,6 +31,8 @@ public sealed partial class EditDetailViewModel : AppViewModelBase
                 Name = entity.Name;
             }
         }
+
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NavigationEditList);

@@ -4,8 +4,6 @@ using Template.MobileApp.Modules;
 
 public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
 {
-    public PopupController<string?> Popup { get; } = new();
-
     [ObservableProperty]
     public partial string Title { get; set; } = default!;
 
@@ -18,14 +16,14 @@ public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopu
     public IObserveCommand CloseCommand { get; }
     public IObserveCommand CommitCommand { get; }
 
-    public InputNumberViewModel()
+    public InputNumberViewModel(IPopupNavigator popupNavigator)
     {
         ClearCommand = MakeDelegateCommand(Input.Clear);
         PopCommand = MakeDelegateCommand(Input.Pop);
         PushCommand = MakeDelegateCommand<string>(Input.Push);
 
-        CloseCommand = MakeDelegateCommand(() => Popup.Close());
-        CommitCommand = MakeDelegateCommand(() => Popup.Close(Input.Text));
+        CloseCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync());
+        CommitCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync(Input.Text));
     }
 
     public void Initialize(NumberInputParameter parameter)

@@ -65,7 +65,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda
-        Disposables.Add(screen.ObserveStateChangedOnCurrentContext().Subscribe(async x =>
+        Disposables.Add(screen.StateChangedAsObservable().ObserveOnCurrentContext().Subscribe(async x =>
         {
             log.DebugScreenStateChanged(x.ScreenOn);
             if (x.ScreenOn)
@@ -87,12 +87,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public void OnActivated()
     {
-        // TODO Device activate
     }
 
     public void OnDeactivated()
     {
-        // TODO Device deactivate
     }
 
     public void OnStopped()

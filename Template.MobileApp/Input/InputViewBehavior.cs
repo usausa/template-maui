@@ -47,7 +47,7 @@ public sealed class InputPopupBehavior : BehaviorBase<View>, IInputHandler
         }
 
         var button = ElementHelper.EnumerateActive<Button>(AssociatedObject)
-            .FirstOrDefault(x => Shortcut.GetKey(x) == key);
+            .FirstOrDefault(key, static (x, s) => Shortcut.GetKey(x) == s);
         if (button is not null)
         {
             button.SendClicked();

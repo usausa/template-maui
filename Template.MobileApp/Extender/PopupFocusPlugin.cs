@@ -6,12 +6,17 @@ using Template.MobileApp.Input;
 
 public sealed class PopupFocusPlugin : IPopupPlugin
 {
-    public void Extend(Popup popup)
+    public void Extend(ContentView view)
     {
-        popup.Content?.Behaviors.Add(new InputPopupBehavior());
-        popup.Opened += (_, _) =>
+        view.Content?.Behaviors.Add(new InputPopupBehavior());
+        if (view is Popup popup)
         {
-            Application.Current?.Dispatcher.Dispatch(() => popup.Content?.SetDefaultFocus());
-        };
+            popup.Margin = new Thickness(0);
+            popup.Padding = new Thickness(0);
+            popup.Opened += (_, _) =>
+            {
+                Application.Current?.Dispatcher.Dispatch(() => view.Content?.SetDefaultFocus());
+            };
+        }
     }
 }

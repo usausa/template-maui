@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Nfc;
-using Template.MobileApp.Domain.FeliCa;
+using Template.MobileApp.Components;
 
 public sealed partial class DeviceNfcViewModel : AppViewModelBase
 {
@@ -19,17 +18,25 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
     {
         this.nfcReader = nfcReader;
 
-        Disposables.Add(nfcReader.ObserveDetectedOnCurrentContext().Subscribe(OnReaderDetected));
+        Disposables.Add(nfcReader.DetectedAsObservable().Select(ConvertResult).WhereNotNull().ObserveOnCurrentContext().Subscribe(x =>
+        {
+            Idm = x.Idm;
+            Access = x.Access;
+            Logs.Clear();
+            Logs.AddRange(x.Logs);
+        }));
     }
 
-    public override void OnNavigatedTo(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         nfcReader.Enabled = true;
+        return Task.CompletedTask;
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         nfcReader.Enabled = false;
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -44,23 +51,21 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    private void OnReaderDetected(NfcEventArgs args)
+    private static (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ConvertResult(NfcEventArgs args)
     {
-        Logs.Clear();
-
         var nfcF = args.Tag;
 
         //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
         var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
         if (idm.Length == 0)
         {
-            return;
+            return null;
         }
 
         var block = new ReadBlock { BlockNo = 0 };
         if (!nfcF.ExecuteReadWoe(idm, 0x008B, block))
         {
-            return;
+            return null;
         }
 
         var blocks1 = Enumerable.Range(0, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
@@ -70,11 +75,26 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
             !nfcF.ExecuteReadWoe(idm, 0x090F, blocks2) ||
             !nfcF.ExecuteReadWoe(idm, 0x090F, blocks3))
         {
-            return;
+            return null;
         }
 
-        Idm = Convert.ToHexString(idm);
-        Access = Suica.ConvertToAccessData(block.BlockData);
-        Logs.AddRange(blocks1.Concat(blocks2).Concat(blocks3).Select(x => Suica.ConvertToLogData(x.BlockData)).OfType<SuicaLogData>().ToArray());
+        return (
+            Convert.ToHexString(idm),
+            new SuicaAccessData
+            {
+                Balance = SuicaLogic.ExtractAccessBalance(block.BlockData),
+                TransactionId = SuicaLogic.ExtractAccessTransactionId(block.BlockData)
+            },
+            blocks1.Concat(blocks2).Concat(blocks3)
+                .Where(static x => SuicaLogic.IsValidLog(x.BlockData))
+                .Select(static x => new SuicaLogData
+                {
+                    Terminal = SuicaLogic.ExtractLogTerminal(x.BlockData),
+                    Process = SuicaLogic.ExtractLogProcess(x.BlockData),
+                    DateTime = SuicaLogic.ExtractLogDateTime(x.BlockData),
+                    Balance = SuicaLogic.ExtractLogBalance(x.BlockData),
+                    TransactionId = SuicaLogic.ExtractLogTransactionId(x.BlockData)
+                })
+                .ToList());
     }
 }

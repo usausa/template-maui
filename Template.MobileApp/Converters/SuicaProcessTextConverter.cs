@@ -1,14 +1,12 @@
 namespace Template.MobileApp.Converters;
 
-using Template.MobileApp.Domain.FeliCa;
-
 public class SuicaProcessTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is byte byteValue)
         {
-            return Suica.ConvertProcessString(byteValue);
+            return SuicaLogic.ConvertProcessString(byteValue);
         }
 
         return string.Empty;

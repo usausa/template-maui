@@ -28,8 +28,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
         UserId = settings.UserId;
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         await Navigator.PostActionAsync(() => BusyState.Using(async () =>
         {
@@ -46,8 +45,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
         }));
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatingFrom(INavigationContext context)
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
         if (Running)
         {

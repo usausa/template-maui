@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-using Template.MobileApp.Domain.FeliCa;
-
 public class SuicaLogDateTimeConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -11,7 +9,7 @@ public class SuicaLogDateTimeConverter : IValueConverter
             return null;
         }
 
-        return Suica.IsProcessOfSales(log.Process) ? log.DateTime : null;
+        return SuicaLogic.IsProcessOfSales(log.Process) ? log.DateTime : null;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>

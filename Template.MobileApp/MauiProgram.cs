@@ -28,10 +28,7 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Device;
-using Template.MobileApp.Components.Nfc;
-using Template.MobileApp.Components.Ocr;
-using Template.MobileApp.Components.Storage;
+using Template.MobileApp.Components;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Extender;
 using Template.MobileApp.Helpers;
@@ -168,10 +165,10 @@ public static partial class MauiProgram
     {
         fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
         fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-        fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular");
-        fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
         fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
         fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
+        fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
+        fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
     }
 
     private static void ConfigureDialogDesign(DialogConfig config)
@@ -250,6 +247,7 @@ public static partial class MauiProgram
         config.BindSingleton<IStorageManager, StorageManager>();
         config.BindSingleton<IDeviceManager, DeviceManager>();
         config.BindSingleton<INfcReader, NfcReader>();
+        config.BindSingleton<INoiseMonitor, NoiseMonitor>();
         config.BindSingleton<IOcrReader, OcrReader>();
 
         config.BindSingleton(AudioManager.Current);

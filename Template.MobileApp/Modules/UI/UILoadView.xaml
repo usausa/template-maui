@@ -4,13 +4,67 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
              x:DataType="{x:Type module:UILoadViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UILoadViewModel}"
              shell:ShellProperty.Title="Load"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function4Text="Clear"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,*,Auto,*"
+          BackgroundColor="#2E2F45">
+
+        <Label Grid.Row="0"
+               HorizontalTextAlignment="Center"
+               FontSize="48"
+               TextColor="White"
+               Text="{Binding Current, StringFormat='{0:F1} dB'}" />
+
+
+
+        <Grid Grid.Row="2"
+              Style="{StaticResource FillGrid}"
+              RowDefinitions="Auto,Auto"
+              ColumnDefinitions="*,*,*">
+            <Label Grid.Row="0" Grid.Column="0"
+                   HorizontalTextAlignment="Center"
+                   FontSize="12"
+                   TextColor="White"
+                   Text="MIN" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   HorizontalTextAlignment="Center"
+                   FontSize="12"
+                   TextColor="White"
+                   Text="AVG" />
+            <Label Grid.Row="0" Grid.Column="2"
+                   HorizontalTextAlignment="Center"
+                   FontSize="12"
+                   TextColor="White"
+                   Text="MAX" />
+            <Label Grid.Row="1" Grid.Column="0"
+                   HorizontalTextAlignment="Center"
+                   FontSize="24"
+                   TextColor="White"
+                   Text="{Binding Min, StringFormat='{0:F1} dB'}" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   HorizontalTextAlignment="Center"
+                   FontSize="24"
+                   TextColor="White"
+                   Text="{Binding Average, StringFormat='{0:F1} dB'}" />
+            <Label Grid.Row="3" Grid.Column="2"
+                   HorizontalTextAlignment="Center"
+                   FontSize="24"
+                   TextColor="White"
+                   Text="{Binding Max, StringFormat='{0:F1} dB'}" />
+        </Grid>
+
+        <graphics:GraphicsControl Grid.Row="3"
+                                  Graphics="{Binding Graphics}" />
+
+    </Grid>
 
 </ContentView>

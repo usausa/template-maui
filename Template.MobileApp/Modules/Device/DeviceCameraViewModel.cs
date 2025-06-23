@@ -25,18 +25,13 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Navigator.PostActionAsync(() => BusyState.UsingAsync(async () =>
-        {
-            await Controller.StartPreviewAsync();
-            IsPreview = true;
-        }));
+        await Controller.StartPreviewAsync();
+        IsPreview = true;
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatingFrom(INavigationContext context)
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
         await Controller.StopPreviewAsync();
         IsPreview = false;

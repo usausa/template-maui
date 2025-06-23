@@ -35,6 +35,7 @@ public sealed partial class App
 
         // Permissions
         await Permissions.RequestCameraAsync();
+        await Permissions.RequestMicrophoneAsync();
         await Permissions.RequestLocationAsync();
 
         // Navigate
