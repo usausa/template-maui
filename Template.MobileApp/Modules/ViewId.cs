@@ -78,14 +78,16 @@ public enum ViewId
 
     // Sample
     SampleMenu,
-    SampleChart,
-    SampleMap,
-    SampleObjectDetection,
-    SampleChat,
-    SampleMedia,
-    SampleMarkdown,
     SampleWeb,
     SampleBlazor,
+    SampleMap1,
+    SampleMap2,
+    SampleMedia,
+    SampleMarkdown,
+    SampleChart,
+    SampleCvNet,
+    SampleCvLocal,
+    SampleChat,
 
     // UI
     UIMenu,

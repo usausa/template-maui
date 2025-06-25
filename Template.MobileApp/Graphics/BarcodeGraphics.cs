@@ -16,10 +16,11 @@ public sealed class BarcodeGraphics : GraphicsObject
     {
         if (results is not null && results.Count > 0)
         {
-            canvas.StrokeSize = 15;
-            canvas.StrokeColor = Colors.Red;
             var scale = 1 / canvas.DisplayScale;
             canvas.Scale(scale, scale);
+
+            canvas.StrokeSize = 15;
+            canvas.StrokeColor = Colors.Red;
 
             foreach (var barcode in results)
             {

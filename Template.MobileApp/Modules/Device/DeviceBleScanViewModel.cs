@@ -6,13 +6,26 @@ public sealed class DeviceBleScanViewModel : AppViewModelBase
 {
     public ObservableCollection<SwitchBotTemperature> Devices { get; } = new();
 
+    private IDisposable? scanning;
+
     public DeviceBleScanViewModel(IBleManager bleManager)
     {
-        Disposables.Add(bleManager.Scan()
-            .Select(ConvertData)
-            .WhereNotNull()
+        Disposables.Add(Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(1))
             .ObserveOnCurrentContext()
-            .Subscribe(UpdateList));
+            .Subscribe(_ =>
+            {
+                scanning?.Dispose();
+                scanning = bleManager.Scan()
+                    .Select(ConvertData)
+                    .WhereNotNull()
+                    .ObserveOnCurrentContext()
+                    .Subscribe(UpdateList);
+            }));
+        Disposables.Add(new DelegateDisposable(() =>
+        {
+            scanning?.Dispose();
+            scanning = null;
+        }));
     }
 
     private static SwitchBotTemperature? ConvertData(ScanResult result)

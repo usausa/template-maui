@@ -27,13 +27,13 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Controller.StartPreviewAsync();
+        await Controller.StartPreviewAsync().ConfigureAwait(true);
         IsPreview = true;
     }
 
     public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
-        await Controller.StopPreviewAsync();
+        await Controller.StopPreviewAsync().ConfigureAwait(true);
         IsPreview = false;
     }
 
@@ -43,26 +43,26 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction2()
     {
-        await Controller.SwitchCameraAsync();
+        await Controller.SwitchCameraAsync().ConfigureAwait(true);
     }
 
     protected override async Task OnNotifyFunction3()
     {
         if (IsPreview)
         {
-            await Controller.StopPreviewAsync();
+            await Controller.StopPreviewAsync().ConfigureAwait(true);
             IsPreview = false;
         }
         else
         {
-            await Controller.StartPreviewAsync();
+            await Controller.StartPreviewAsync().ConfigureAwait(true);
             IsPreview = true;
         }
     }
 
     protected override async Task OnNotifyFunction4()
     {
-        await using var input = await Controller.CaptureAsync();
+        await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
         if (input is not null)
         {
             await dialog.InformationAsync($"Save image success. size={input.Length}");

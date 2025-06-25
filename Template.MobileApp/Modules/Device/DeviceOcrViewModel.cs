@@ -24,7 +24,7 @@ public sealed class DeviceOcrViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        await using var input = await Controller.CaptureAsync();
+        await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
         if (input is null)
         {
             return;
