@@ -4,13 +4,57 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             xmlns:markdown="clr-namespace:Indiko.Maui.Controls.Markdown;assembly=Indiko.Maui.Controls.Markdown"
              x:Class="Template.MobileApp.Modules.Sample.SampleMarkdownView"
              x:DataType="{x:Type module:SampleMarkdownViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMarkdownViewModel}"
-             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Title="Markdown"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="DefaultMarkdownView"
+                   TargetType="markdown:MarkdownView">
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="TextFontFace" Value="OpenSansRegular" />
+                <Setter Property="TextFontSize" Value="14" />
+                <Setter Property="ImageAspect" Value="Fill" />
+                <Setter Property="ParagraphSpacing" Value="1.25" />
+                <Setter Property="H1Color" Value="{StaticResource BlueAccent4}" />
+                <Setter Property="H1FontSize" Value="24" />
+                <Setter Property="H2Color" Value="{StaticResource BlueAccent3}" />
+                <Setter Property="H2FontSize" Value="20" />
+                <Setter Property="H3Color" Value="{StaticResource BlueAccent2}" />
+                <Setter Property="H3FontSize" Value="18" />
+                <Setter Property="HyperlinkColor" Value="{StaticResource PurpleDefault}" />
+                <Setter Property="LineColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="BlockQuoteBackgroundColor" Value="{StaticResource OrangeLighten4}" />
+                <Setter Property="BlockQuoteBorderColor" Value="{StaticResource OrangeDarken4}" />
+                <Setter Property="BlockQuoteFontFace" Value="OpenSansRegular" />
+                <Setter Property="BlockQuoteTextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="CodeBlockBackgroundColor" Value="{StaticResource LightGreenLighten4}" />
+                <Setter Property="CodeBlockBorderColor" Value="{StaticResource LightGreenDarken4}" />
+                <Setter Property="CodeBlockFontFace" Value="OpenSansRegular" />
+                <Setter Property="CodeBlockFontSize" Value="12" />
+                <Setter Property="CodeBlockTextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="TableHeaderBackgroundColor" Value="{StaticResource LightBlueLighten4}" />
+                <Setter Property="TableHeaderFontFace" Value="OpenSansRegular" />
+                <Setter Property="TableHeaderFontSize" Value="14" />
+                <Setter Property="TableHeaderTextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="TableRowBackgroundColor" Value="White" />
+                <Setter Property="TableRowFontFace" Value="OpenSansRegular" />
+                <Setter Property="TableRowFontSize" Value="12" />
+                <Setter Property="TableRowTextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView>
+        <markdown:MarkdownView Style="{StaticResource DefaultMarkdownView}"
+                               EMailCommand="{Binding EmailCommand}"
+                               LinkCommand="{Binding LinkCommand}"
+                               MarkdownText="{Binding Text}" />
+    </ScrollView>
 
 </ContentView>

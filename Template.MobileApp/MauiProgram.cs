@@ -14,6 +14,8 @@ using CommunityToolkit.Maui;
 
 using Fonts;
 
+using Indiko.Maui.Controls.Markdown;
+
 using MauiComponents.Resolver;
 
 using Microsoft.Maui.LifecycleEvents;
@@ -51,8 +53,9 @@ public static partial class MauiProgram
             .ConfigureGlobalSettings()
             .UseMauiCommunityToolkit()
             .UseMauiCommunityToolkitCamera()
-            .UseShiny()
             .UseBarcodeScanning()
+            .UseShiny()
+            .UseMarkdownView()
             .UseMauiServices()
             .UseMauiComponents()
             .UseCommunityToolkitServices()

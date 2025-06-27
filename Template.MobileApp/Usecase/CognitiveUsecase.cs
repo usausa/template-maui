@@ -66,7 +66,7 @@ public sealed class CognitiveUsecase : IDisposable
         var height = dimensions[2];
         var width = dimensions[3];
 
-        var size = 3 * width * height;
+        var size = 3 * height * width;
         var buffer = ArrayPool<float>.Shared.Rent(size);
         var inputTensor = new DenseTensor<float>(buffer.AsMemory(0, size), [1, 3, height, width]);
         PrepareTensor(bitmap, inputTensor, width, height);

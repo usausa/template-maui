@@ -21,15 +21,18 @@ Template project for MAUI.
 - [ ] **Gauge**
 - [ ] Chart
 - [ ] Calendar
-- [ ] Grid
 
 ## Other
 
 - [ ] **Cognitive service**
 - [ ] Chat
-- [ ] HybridWebView
+- [ ] HybridWebView/Blazor
 - [ ] Push
 
 ## ReCheck
 
 - [ ] HW key input
+
+## Ex
+
+- [ ] **.NET 10/XAML**

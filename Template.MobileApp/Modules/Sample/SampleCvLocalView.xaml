@@ -5,6 +5,7 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleCvLocalView"
              x:DataType="{x:Type module:SampleCvLocalViewModel}"
@@ -29,6 +30,9 @@
                IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
                BackgroundColor="Black"
                Source="{Binding Image}" />
+        <graphics:GraphicsControl Grid.Row="0"
+                                  IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
+                                  Graphics="{Binding Graphics}" />
 
     </Grid>
 
