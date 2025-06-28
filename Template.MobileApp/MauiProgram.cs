@@ -248,7 +248,6 @@ public static partial class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<IDeviceManager, DeviceManager>();
         config.BindSingleton<INfcReader, NfcReader>();
         config.BindSingleton<INoiseMonitor, NoiseMonitor>();
         config.BindSingleton<IOcrReader, OcrReader>();

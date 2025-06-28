@@ -41,8 +41,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         ISpeechService speech,
         IVibration vibration,
         IHapticFeedback feedback,
-        IFlashlight flashlight,
-        IDeviceManager deviceManager)
+        IFlashlight flashlight)
     {
         this.screen = screen;
         this.speech = speech;
@@ -62,7 +61,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         LightOnCommand = MakeAsyncCommand(flashlight.TurnOnAsync);
         LightOffCommand = MakeAsyncCommand(flashlight.TurnOffAsync);
 
-        BrightnessCommand = MakeDelegateCommand<float>(deviceManager.SetScreenBrightness);
+        BrightnessCommand = MakeDelegateCommand<float>(screen.SetScreenBrightness);
 
         ScreenshotCommand = MakeAsyncCommand(async () =>
         {

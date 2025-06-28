@@ -53,20 +53,17 @@ public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INav
 
     public async Task NavigatorNotifyAsync(ShellEvent parameter)
     {
-        using (BusyState.Begin())
+        var task = parameter switch
         {
-            var task = parameter switch
-            {
-                ShellEvent.Back => OnNotifyBackAsync(),
-                ShellEvent.Function1 => OnNotifyFunction1(),
-                ShellEvent.Function2 => OnNotifyFunction2(),
-                ShellEvent.Function3 => OnNotifyFunction3(),
-                ShellEvent.Function4 => OnNotifyFunction4(),
-                _ => Task.CompletedTask
-            };
+            ShellEvent.Back => OnNotifyBackAsync(),
+            ShellEvent.Function1 => OnNotifyFunction1(),
+            ShellEvent.Function2 => OnNotifyFunction2(),
+            ShellEvent.Function3 => OnNotifyFunction3(),
+            ShellEvent.Function4 => OnNotifyFunction4(),
+            _ => Task.CompletedTask
+        };
 
-            await task.ConfigureAwait(true);
-        }
+        await task.ConfigureAwait(true);
     }
 
     protected virtual Task OnNotifyBackAsync() => Task.CompletedTask;

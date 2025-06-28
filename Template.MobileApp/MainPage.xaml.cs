@@ -13,7 +13,10 @@ public sealed partial class MainPage
     {
         if (BindingContext is MainPageViewModel { BusyState.IsBusy: false } context)
         {
-            context.Navigator.NotifyAsync(ShellEvent.Back);
+            using (context.BusyState.Begin())
+            {
+                context.Navigator.NotifyAsync(ShellEvent.Back);
+            }
         }
 
         return true;
