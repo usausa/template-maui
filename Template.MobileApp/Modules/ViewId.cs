@@ -101,5 +101,6 @@ public enum ViewId
     UIRadar,
     UIGauge,
     UIMeter,
-    UILoad
+    UILoad,
+    UITreeMap
 }

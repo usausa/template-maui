@@ -21,6 +21,9 @@ using MauiComponents.Resolver;
 using Microsoft.Maui.LifecycleEvents;
 
 using Plugin.Maui.Audio;
+#if DEBUG
+using Plugin.Maui.DebugRainbows;
+#endif
 
 using Rester;
 
@@ -46,6 +49,7 @@ public static partial class MauiProgram
     public static MauiApp CreateMauiApp() =>
         MauiApp.CreateBuilder()
             .UseMauiApp<App>()
+            //.ConfigureDebug()
             .ConfigureFonts(ConfigureFonts)
             .ConfigureLifecycleEvents(ConfigureLifecycle)
             .ConfigureEssentials(ConfigureEssentials)
@@ -64,6 +68,30 @@ public static partial class MauiProgram
             .ConfigureHttpClient()
             .ConfigureContainer()
             .Build();
+
+    // ------------------------------------------------------------
+    // Debug
+    // ------------------------------------------------------------
+
+    private static MauiAppBuilder ConfigureDebug(this MauiAppBuilder builder)
+    {
+#if DEBUG
+        builder
+            .UseDebugRainbows(new DebugRainbowsOptions
+            {
+                ShowRainbows = true,
+                ShowGrid = true,
+                HorizontalItemSize = 20,
+                VerticalItemSize = 20,
+                MajorGridLineInterval = 4,
+                MajorGridLines = new GridLineOptions { Color = Color.FromRgb(255, 0, 0), Opacity = 0.5, Width = 3 },
+                MinorGridLines = new GridLineOptions { Color = Color.FromRgb(255, 0, 0), Opacity = 0.25, Width = 1 },
+                GridOrigin = DebugGridOrigin.TopLeft
+            });
+#endif
+
+        return builder;
+    }
 
     // ------------------------------------------------------------
     // Logging
@@ -279,8 +307,9 @@ public static partial class MauiProgram
         // Usecase
         config.BindSingleton<NetworkOperator>();
 
-        config.BindSingleton<SampleUsecase>();
+        config.BindSingleton<NetworkUsecase>();
         config.BindSingleton<CognitiveUsecase>();
+        config.BindSingleton<SampleUsecase>();
 
         // Startup
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();

@@ -25,7 +25,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
         this.dialog = dialog;
         this.hostingManager = hostingManager;
 
-        UserId = settings.UserId;
+        UserId = settings.UniqId;
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)

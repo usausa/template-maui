@@ -44,4 +44,9 @@ public static class ImageHelper
                 return bitmap;
         }
     }
+
+    public static SKBitmap Resize(SKBitmap bitmap, double factor)
+    {
+        return bitmap.Resize(new SKImageInfo((int)(bitmap.Width * factor), (int)(bitmap.Height * factor)), new SKSamplingOptions(SKCubicResampler.Mitchell));
+    }
 }

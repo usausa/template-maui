@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UITreeMapView"
+             x:DataType="{x:Type module:UITreeMapViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UITreeMapViewModel}"
+             shell:ShellProperty.Title="TreeMap"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="{Binding IsPreview, Converter={s:BoolToText True='Out', False=''}}"
+             shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='In', False=''}}"
+             shell:ShellProperty.Function4Text="{Binding IsPreview, Converter={s:BoolToText True='Count', False='Retry'}}"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="{Binding IsPreview}"
+             shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,*">
+
+        <mct:CameraView Grid.Row="0" Grid.RowSpan="2"
+                        IsVisible="{Binding IsPreview}"
+                        behaviors:CameraBind.Controller="{Binding Controller}" />
+
+        <Image Grid.Row="0"
+               IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
+               BackgroundColor="Black"
+               Source="{Binding Image}" />
+        <graphics:GraphicsControl Grid.Row="1"
+                                  IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
+                                  Graphics="{Binding Graphics}" />
+
+    </Grid>
+
+</ContentView>
