@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.UI;
 
-using System.Diagnostics;
-
 using SkiaSharp;
 
 using Template.MobileApp.Graphics;
@@ -103,9 +101,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
                     using var bitmap = ImageHelper.ToNormalizeBitmap(input);
                     using var resized = ImageHelper.Resize(bitmap, 0.25);
 
-                    var watch = Stopwatch.StartNew();
                     var colors = sampleUsecase.ClusterColors(resized, 20, 5, 1e-3f);
-                    Debug.WriteLine($"Color clustering completed. elapsed=[{watch.ElapsedMilliseconds}]");
 
                     var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
 
