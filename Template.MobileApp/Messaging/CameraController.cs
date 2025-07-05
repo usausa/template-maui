@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Messaging;
 
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Core.Primitives;
 
 using Smart.Linq;
 

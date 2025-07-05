@@ -268,6 +268,9 @@ public static partial class MauiProgram
         config.AddComponentsLocation();
         config.AddComponentsSpeech();
 
+        // Messenger
+        config.BindSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
+
         // Navigator
         config.AddNavigator(static c =>
         {
@@ -276,9 +279,6 @@ public static partial class MauiProgram
             c.AddPlugin<NavigationFocusPlugin>();
             c.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
-
-        // Messenger
-        config.BindSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
