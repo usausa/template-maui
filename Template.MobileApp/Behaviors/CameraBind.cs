@@ -146,9 +146,9 @@ public static class CameraBind
             return cameraView.GetAvailableCameras(CancellationToken.None);
         }
 
-        private static ValueTask StartCameraPreview(CameraView cameraView)
+        private static async ValueTask StartCameraPreview(CameraView cameraView)
         {
-            return cameraView.StartCameraPreview(CancellationToken.None);
+            await cameraView.StartCameraPreview(CancellationToken.None);
         }
 
         private static ValueTask StopCameraPreview(CameraView cameraView)

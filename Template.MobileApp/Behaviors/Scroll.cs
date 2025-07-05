@@ -1,12 +1,12 @@
 namespace Template.MobileApp.Behaviors;
 
-public static partial class ItemsViewOption
+public static partial class Scroll
 {
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty DisableOverScrollProperty = BindableProperty.CreateAttached(
         "DisableOverScroll",
         typeof(bool),
-        typeof(ItemsViewOption),
+        typeof(Scroll),
         false);
     // ReSharper restore InconsistentNaming
 

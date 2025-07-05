@@ -6,13 +6,17 @@ public sealed class UIDockViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
+    private readonly IScreen screen;
+
     private readonly IFileSystem fileSystem;
 
     public UIDockViewModel(
         IDialog dialog,
+        IScreen screen,
         IFileSystem fileSystem)
     {
         this.dialog = dialog;
+        this.screen = screen;
         this.fileSystem = fileSystem;
     }
 
@@ -24,6 +28,14 @@ public sealed class UIDockViewModel : AppViewModelBase
         {
             await Navigator.PostActionAsync(InitializeAsync);
         }
+
+        screen.SetFullscreen(true);
+    }
+
+    public override Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        screen.SetFullscreen(false);
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);

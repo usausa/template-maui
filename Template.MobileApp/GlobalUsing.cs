@@ -49,6 +49,9 @@ global using Smart.Navigation.Plugins.Scope;
 global using Smart.Reactive;
 global using Smart.Text;
 
+global using SkiaSharp;
+global using SkiaSharp.Views.Maui.Controls;
+
 global using Template.MobileApp;
 global using Template.MobileApp.Domain;
 global using Template.MobileApp.Domain.Logic;

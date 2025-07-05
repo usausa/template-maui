@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Helpers;
 
-using SkiaSharp;
-
 public static class ImageHelper
 {
     public static SKBitmap ToNormalizeBitmap(Stream stream)

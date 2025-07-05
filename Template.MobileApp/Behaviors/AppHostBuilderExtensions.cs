@@ -13,10 +13,11 @@ internal static class AppHostBuilderExtensions
         configure(options);
 
         Border.UseCustomMapper(options);
-        ButtonOption.UseCustomMapper();
-        LabelOption.UseCustomMapper();
+        Scroll.UseCustomMapper(options);
+
+        LabelOption.UseCustomMapper(options);
+        ButtonOption.UseCustomMapper(options);
         EntryOption.UseCustomMapper(options);
-        ItemsViewOption.UseCustomMapper(options);
 
         return builder;
     }

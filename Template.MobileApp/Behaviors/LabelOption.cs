@@ -26,5 +26,5 @@ public static partial class LabelOption
 
     public static void SetMaxSize(BindableObject bindable, double value) => bindable.SetValue(MaxSizeProperty, value);
 
-    public static partial void UseCustomMapper();
+    public static partial void UseCustomMapper(BehaviorOptions options);
 }

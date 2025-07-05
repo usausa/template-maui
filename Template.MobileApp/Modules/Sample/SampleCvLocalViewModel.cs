@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using SkiaSharp;
-
 using Template.MobileApp.Graphics;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Usecase;
@@ -13,8 +11,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
-    [ObservableProperty]
-    public partial ImageSource? Image { get; set; }
+    public SKBitmapImageSource Image { get; } = new();
 
     public CameraController Controller { get; } = new();
 
@@ -90,8 +87,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
                 // Bitmap
                 using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-                var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
-                Image = ImageSource.FromStream(() => data.AsStream());
+                Image.Bitmap = bitmap;
 
                 // Detect
                 var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);

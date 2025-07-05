@@ -6,29 +6,32 @@ using Microsoft.Maui.Handlers;
 
 public static partial class LabelOption
 {
-    public static partial void UseCustomMapper()
+    public static partial void UseCustomMapper(BehaviorOptions options)
     {
-        LabelHandler.Mapper.AppendToMapping("AutoSize", (handler, view) =>
+        if (options.AutoSize)
         {
-            var label = (Label)view;
-            if (GetAutoSize(label))
+            LabelHandler.Mapper.AppendToMapping(AutoSizeProperty.PropertyName, (handler, view) =>
             {
-                label.LineBreakMode = LineBreakMode.NoWrap;
+                var label = (Label)view;
+                if (GetAutoSize(label))
+                {
+                    label.LineBreakMode = LineBreakMode.NoWrap;
 #pragma warning disable CA1416
-                handler.PlatformView.SetAutoSizeTextTypeWithDefaults(AutoSizeTextType.Uniform);
+                    handler.PlatformView.SetAutoSizeTextTypeWithDefaults(AutoSizeTextType.Uniform);
 #pragma warning restore CA1416
 
-                UpdateLabelSize(handler, label);
-            }
-        });
-        LabelHandler.Mapper.AppendToMapping("MaxSize", (handler, view) =>
-        {
-            var label = (Label)view;
-            if (GetAutoSize(label))
+                    UpdateLabelSize(handler, label);
+                }
+            });
+            LabelHandler.Mapper.AppendToMapping(MaxSizeProperty.PropertyName, (handler, view) =>
             {
-                UpdateLabelSize(handler, label);
-            }
-        });
+                var label = (Label)view;
+                if (GetAutoSize(label))
+                {
+                    UpdateLabelSize(handler, label);
+                }
+            });
+        }
     }
 
     public static void UpdateLabelSize(ILabelHandler handler, Label label)

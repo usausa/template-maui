@@ -3,8 +3,6 @@ namespace Template.MobileApp.Usecase;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 
-using SkiaSharp;
-
 public record DetectResult(
     float Left,
     float Top,

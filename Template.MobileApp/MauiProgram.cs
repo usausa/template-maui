@@ -29,6 +29,8 @@ using Rester;
 
 using Shiny;
 
+using SkiaSharp.Views.Maui.Controls.Hosting;
+
 using Smart.Data.Mapper;
 using Smart.Resolver;
 
@@ -55,6 +57,7 @@ public static partial class MauiProgram
             .ConfigureEssentials(ConfigureEssentials)
             .ConfigureLogging()
             .ConfigureGlobalSettings()
+            .UseSkiaSharp()
             .UseMauiCommunityToolkit()
             .UseMauiCommunityToolkitCamera()
             .UseBarcodeScanning()
@@ -273,6 +276,9 @@ public static partial class MauiProgram
             c.AddPlugin<NavigationFocusPlugin>();
             c.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
+
+        // Messenger
+        config.BindSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();

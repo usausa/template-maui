@@ -4,8 +4,6 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 
-using SkiaSharp;
-
 public record ColorCount(
     byte R,
     byte G,

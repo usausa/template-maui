@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.UI;
 
-using SkiaSharp;
-
 using Template.MobileApp.Graphics;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Usecase;
@@ -15,8 +13,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
-    [ObservableProperty]
-    public partial ImageSource? Image { get; set; }
+    public SKBitmapImageSource Image { get; } = new();
 
     public CameraController Controller { get; } = new();
 
@@ -96,20 +93,18 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
                 using var loading = dialog.Indicator();
 
                 // ReSharper disable once AccessToDisposedClosure
-                var (data, colors) = await Task.Run(() =>
+                var (bitmap, colors) = await Task.Run(() =>
                 {
-                    using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-                    using var resized = ImageHelper.Resize(bitmap, 0.25);
+                    var bitmap = ImageHelper.ToNormalizeBitmap(input);
 
+                    using var resized = ImageHelper.Resize(bitmap, 0.25);
                     var colors = sampleUsecase.ClusterColors(resized, 20, 5, 1e-3f);
 
-                    var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
-
-                    return (data, colors);
+                    return (bitmap, colors);
                 }).ConfigureAwait(true);
 
                 // Update
-                Image = ImageSource.FromStream(() => data.AsStream());
+                Image.Bitmap = bitmap;
                 Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
 
                 IsPreview = false;

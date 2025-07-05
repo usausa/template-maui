@@ -2,7 +2,19 @@ namespace Template.MobileApp.Behaviors;
 
 public sealed class BehaviorOptions
 {
+    // View
+
     public bool Border { get; set; } = true;
+
+    public bool DisableOverScroll { get; set; } = true;
+
+    // Label
+
+    public bool AutoSize { get; set; } = true;
+
+    // Button
+
+    public bool RippleEffect { get; set; } = true;
 
     // Entry
 
@@ -13,8 +25,4 @@ public sealed class BehaviorOptions
     public bool SelectAllOnFocus { get; set; } = true;
 
     public bool InputFilter { get; set; } = true;
-
-    // View
-
-    public bool DisableOverScroll { get; set; } = true;
 }
