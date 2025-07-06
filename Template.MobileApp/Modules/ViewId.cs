@@ -3,6 +3,7 @@ namespace Template.MobileApp.Modules;
 public enum ViewId
 {
     Menu,
+    Setting,
 
     // Basic
     BasicMenu,
@@ -68,7 +69,6 @@ public enum ViewId
     // Network
     NetworkMenu,
     NetworkRealtime,
-    NetworkSetting,
 
     // Key
     KeyMenu,
@@ -93,7 +93,7 @@ public enum ViewId
     UIMenu,
     UILogin,
     UIProfile,
-    UIPortal,
+    UIMoney,
     UIDock,
     UICalendar,
     UIGrid,

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
+             x:Class="Template.MobileApp.Modules.Main.SettingView"
+             x:DataType="{x:Type module:SettingViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SettingViewModel}"
+             shell:ShellProperty.Title="Setting"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto">
+
+        <scanner:CameraView Grid.Row="0"
+                            behaviors:BarcodeBind.Controller="{Binding Controller}"
+                            OnDetectionFinishedCommand="{Binding DetectCommand}" />
+
+        <VerticalStackLayout Grid.Row="1"
+                             Style="{StaticResource FillVerticalStack}">
+
+            <Label Style="{StaticResource GroupLabel}"
+                   Text="Network" />
+
+            <Label Style="{StaticResource NameLabel}"
+                   Text="EndPoint" />
+            <Label Style="{StaticResource TextValueLabel}"
+                   Text="{Binding ApiEndPoint}" />
+
+            <Label Style="{StaticResource GroupLabel}"
+                   Text="AI Service" />
+
+            <Label Style="{StaticResource NameLabel}"
+                   Text="EndPoint" />
+            <Label Style="{StaticResource TextValueLabel}"
+                   Text="{Binding AIServiceEndPoint}" />
+
+            <Label Style="{StaticResource NameLabel}"
+                   Text="ServiceKey" />
+            <Label Style="{StaticResource TextValueLabel}"
+                   Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}" />
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentView>

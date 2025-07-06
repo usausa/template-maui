@@ -17,11 +17,19 @@ public sealed class SettingParser
         }
     }
 
-    public bool TryGetString(string key, out string? value) => values.TryGetValue(key, out value);
+    public bool TryGetString(string key, out string value)
+    {
+        if (values.TryGetValue(key, out var str))
+        {
+            value = str;
+            return true;
+        }
 
-    public string? GetString(string key) => values.GetValueOrDefault(key);
+        value = string.Empty;
+        return false;
+    }
 
-    public string? GetString(string key, string? defaultValue) => values.TryGetValue(key, out var value) ? value : defaultValue;
+    public string GetString(string key, string defaultValue = "") => values.GetValueOrDefault(key, defaultValue);
 
     public bool TryGetInt(string key, out int value)
     {

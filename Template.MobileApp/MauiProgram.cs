@@ -36,7 +36,6 @@ using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components;
-using Template.MobileApp.Controls;
 using Template.MobileApp.Extender;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
@@ -170,9 +169,6 @@ public static partial class MauiProgram
 
     private static MauiAppBuilder UseCustomView(this MauiAppBuilder builder)
     {
-        // Controls
-        builder.ConfigureCustomControls();
-
         // Behaviors
         builder.ConfigureCustomBehaviors(static options =>
         {

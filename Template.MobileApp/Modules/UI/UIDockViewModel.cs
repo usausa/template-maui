@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.UI;
 
-using Smart.IO;
-
 public sealed class UIDockViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
@@ -193,6 +191,18 @@ public sealed class UIDockViewModel : AppViewModelBase
             Buttons.Add(new DeckButtonInfo
             {
                 Row = 7,
+                Column = 0,
+                ButtonType = DeckButtonType.Image,
+                Label = "Exit",
+                BackColor1 = Color.FromArgb("#00d2ff"),
+                BackColor2 = Color.FromArgb("#00d2ff"),
+                ImageBytes = await LoadImageAsync("exit_to_app.png"),
+                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                Parameter = "Exit"
+            });
+            Buttons.Add(new DeckButtonInfo
+            {
+                Row = 7,
                 Column = 2,
                 ButtonType = DeckButtonType.Text,
                 Label = "CPU",
@@ -230,7 +240,14 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private async Task ExecuteAsync(string parameter)
     {
-        await dialog.InformationAsync(parameter);
+        if (parameter == "Exit")
+        {
+            await Navigator.ForwardAsync(ViewId.UIMenu);
+        }
+        else
+        {
+            await dialog.InformationAsync(parameter);
+        }
     }
 
     private static readonly (string Color1, string Color2)[] Colors =

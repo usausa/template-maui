@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkMenuView"
              x:DataType="{x:Type module:NetworkMenuViewModel}"
@@ -71,9 +70,8 @@
 
         <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId NetworkSetting}"
-                Text="Setting" />
+                IsEnabled="False"
+                Text="" />
     </Grid>
 
 </ContentView>
