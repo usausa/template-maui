@@ -2,7 +2,6 @@ namespace Template.MobileApp.Behaviors;
 
 using Android.Graphics.Drawables;
 
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 
@@ -103,7 +102,7 @@ public static partial class Border
             if (width.HasValue)
             {
                 var strokeWidth = (int)view.Context.ToPixels(width.Value);
-                var color = GetColor(element).ToAndroid();
+                var color = GetColor(element).ToPlatform();
                 drawable.SetStroke(strokeWidth, color);
             }
 
@@ -116,7 +115,7 @@ public static partial class Border
 
             if (element.BackgroundColor is not null)
             {
-                drawable.SetColor(element.BackgroundColor.ToAndroid());
+                drawable.SetColor(element.BackgroundColor.ToPlatform());
             }
 
             var padding = GetPadding(element);

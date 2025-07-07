@@ -2,7 +2,10 @@
 
 Template project for MAUI.
 
-- [日本語](README-ja.md)
+# Memo
+
+- 物理キーボードの処理については template-maui-keyboard に分離
+- Blazorベースのサンプルとして template-maui-blazor を分離
 
 # TODO
 
@@ -31,6 +34,14 @@ Template project for MAUI.
 - [ ] HybridWebView/Blazor
 - [ ] Push
 
+## ReCheck
+
+- [ ] HW key input
+
 ## Ex
 
 - [ ] **.NET 10/XAML**
+
+# 実装
+
+(TODO)

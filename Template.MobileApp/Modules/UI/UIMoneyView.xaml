@@ -4,6 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
              x:DataType="{x:Type module:UIMoneyViewModel}"
@@ -12,67 +14,95 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+
+        <Style x:Key="ContentScrollView"
+               TargetType="ScrollView">
+            <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+        </Style>
+
+        <Style x:Key="SeparatorBoxView"
+               TargetType="BoxView">
+            <Setter Property="HeightRequest" Value="0.5" />
+            <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+        </Style>
+
+        <Style x:Key="BottomSelectGrid"
+               TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="White" />
+        </Style>
+
+        <Style x:Key="BottomSelectButton"
+               TargetType="Button">
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="ContentLayout" Value="Top, 0" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
+        </Style>
+
+        <Style x:Key="CenterFloatingButton"
+               TargetType="Button">
+            <Setter Property="WidthRequest" Value="72" />
+            <Setter Property="HeightRequest" Value="72" />
+            <Setter Property="CornerRadius" Value="36" />
+            <Setter Property="TranslationY" Value="-12" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="End" />
+            <Setter Property="ContentLayout" Value="Top, 0" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="ZIndex" Value="100" />
+        </Style>
+
+    </ContentView.Resources>
+
     <Grid RowDefinitions="*,Auto,Auto">
 
         <Button Grid.RowSpan="3"
-                WidthRequest="72" HeightRequest="72"
-                FontSize="10"
-                TextColor="White" BackgroundColor="#f44336"
+                Style="{StaticResource CenterFloatingButton}"
                 Text="支払い"
-                ContentLayout="Top, 0" CornerRadius="36" HorizontalOptions="Center" ImageSource="qr_code.png"
-                TranslationY="-12" VerticalOptions="End" ZIndex="100" />
+                TextColor="White"
+                BackgroundColor="{StaticResource RedDefault}"
+                ImageSource="qr_code.png" />
 
         <ScrollView Grid.Row="0"
-                    behaviors:Scroll.DisableOverScroll="True"
-                    BackgroundColor="#f5f5f5 " />
+                    Style="{StaticResource ContentScrollView}" />
 
         <BoxView Grid.Row="1"
-                 HeightRequest="0.5"
-                 Color="#bdbdbd" />
+                 Style="{StaticResource SeparatorBoxView}" />
 
         <Grid Grid.Row="2"
-              ColumnDefinitions="*,*,72,*,*"
-              BackgroundColor="White">
+              Style="{StaticResource BottomSelectGrid}"
+              ColumnDefinitions="*,*,72,*,*">
             <Button Grid.Column="0"
-                    Command="{Binding ChangeCommand}"
-                    CommandParameter="{x:Static module:SelectedPage.Home}"
-                    behaviors:ButtonOption.DisableRippleEffect="True"
-                    FontSize="10"
-                    TextColor="{Binding Selected, Converter={module:SelectedToColor Page=Home, Selected=#f44336, Default=#9e9e9e}}"
-                    BackgroundColor="White"
+                    Style="{StaticResource BottomSelectButton}"
+                    Command="{Binding PageCommand}"
+                    CommandParameter="{x:Static models:MoneyPage.Home}"
                     Text="ホーム"
-                    ContentLayout="Top, 0" CornerRadius="0"
-                    ImageSource="{Binding Selected, Converter={module:SelectedToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
+                    TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Home, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
+                    ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
             <Button Grid.Column="1"
-                    Command="{Binding ChangeCommand}"
-                    CommandParameter="{x:Static module:SelectedPage.Search}"
-                    behaviors:ButtonOption.DisableRippleEffect="True"
-                    FontSize="10"
-                    TextColor="{Binding Selected, Converter={module:SelectedToColor Page=Search, Selected=#f44336, Default=#9e9e9e}}"
-                    BackgroundColor="White"
+                    Style="{StaticResource BottomSelectButton}"
+                    Command="{Binding PageCommand}"
+                    CommandParameter="{x:Static models:MoneyPage.Search}"
                     Text="検索"
-                    ContentLayout="Top, 0" CornerRadius="0"
-                    ImageSource="{Binding Selected, Converter={module:SelectedToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
+                    TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Search, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
+                    ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
             <Button Grid.Column="3"
-                    Command="{Binding ChangeCommand}"
-                    CommandParameter="{x:Static module:SelectedPage.Notifications}"
-                    behaviors:ButtonOption.DisableRippleEffect="True"
-                    FontSize="10"
-                    TextColor="{Binding Selected, Converter={module:SelectedToColor Page=Notifications, Selected=#f44336, Default=#9e9e9e}}"
-                    BackgroundColor="White"
+                    Style="{StaticResource BottomSelectButton}"
+                    Command="{Binding PageCommand}"
+                    CommandParameter="{x:Static models:MoneyPage.Notifications}"
                     Text="お知らせ"
-                    ContentLayout="Top, 0" CornerRadius="0"
-                    ImageSource="{Binding Selected, Converter={module:SelectedToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
+                    TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Notifications, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
+                    ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
             <Button Grid.Column="4"
-                    Command="{Binding ChangeCommand}"
-                    CommandParameter="{x:Static module:SelectedPage.Account}"
-                    behaviors:ButtonOption.DisableRippleEffect="True"
-                    FontSize="10"
-                    TextColor="{Binding Selected, Converter={module:SelectedToColor Page=Account, Selected=#f44336, Default=#9e9e9e}}"
-                    BackgroundColor="White"
+                    Style="{StaticResource BottomSelectButton}"
+                    Command="{Binding PageCommand}"
+                    CommandParameter="{x:Static models:MoneyPage.Account}"
                     Text="アカウント"
-                    ContentLayout="Top, 0" CornerRadius="0"
-                    ImageSource="{Binding Selected, Converter={module:SelectedToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
+                    TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Account, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
+                    ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
         </Grid>
 
     </Grid>
