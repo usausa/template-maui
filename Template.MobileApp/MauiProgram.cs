@@ -4,10 +4,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-#if ANDROID && DEVICE_HAS_KEYPAD
-using Android.Views;
-#endif
-
 using BarcodeScanning;
 
 using CommunityToolkit.Maui;
@@ -130,9 +126,6 @@ public static partial class MauiProgram
     // ReSharper disable UnusedParameter.Local
     private static void ConfigureLifecycle(ILifecycleBuilder effects)
     {
-#if ANDROID && DEVICE_FULL_SCREEN
-        events.AddAndroid(static android => android.OnCreate(static (activity, _) => AndroidHelper.FullScreen(activity)));
-#endif
     }
     // ReSharper restore UnusedParameter.Local
 
@@ -172,13 +165,7 @@ public static partial class MauiProgram
         // Behaviors
         builder.ConfigureCustomBehaviors(static options =>
         {
-#if DEVICE_HAS_KEYPAD
-            options.HandleEnterKey = true;
-            options.DisableShowSoftInputOnFocus = true;
-#else
-            options.HandleEnterKey = false;
             options.DisableShowSoftInputOnFocus = false;
-#endif
         });
 
         // Busy
@@ -249,11 +236,6 @@ public static partial class MauiProgram
         config.AddComponentsDialog(static c =>
         {
             ConfigureDialogDesign(c);
-#if DEVICE_HAS_KEYPAD
-            c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
-            c.IgnorePromptDismissKeys = new[] { Keycode.Del };
-            c.EnableDialogButtonFocus = true;
-#endif
             c.EnablePromptEnterAction = true;
             c.EnablePromptSelectAll = true;
         });

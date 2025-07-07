@@ -1,5 +1,7 @@
 # Template project for MAUI
 
+(TODO Update)
+
 MAUI用テンプレートプロジェクトの使用方法について記述する。
 
 ----

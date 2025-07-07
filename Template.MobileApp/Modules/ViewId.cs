@@ -70,12 +70,6 @@ public enum ViewId
     NetworkMenu,
     NetworkRealtime,
 
-    // Key
-    KeyMenu,
-    KeyEntry,
-    KeyList,
-    KeyMisc,
-
     // Sample
     SampleMenu,
     SampleWeb,
