@@ -66,12 +66,12 @@ Template project for MAUI.
 ## UI
 
 <img width="25%" src="Document/UI_Deck.png" />
+<img width="25%" src="Document/UI_Load.png" />
 <img width="25%" src="Document/UI_Meter.png" />
 <img width="25%" src="Document/UI_Money.png" />
 <img width="25%" src="Document/UI_Radar.png" />
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
-<img width="25%" src="Document/UI_Load.png" />
 
 # 実装
 
