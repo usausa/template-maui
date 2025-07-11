@@ -38,7 +38,6 @@ using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
-using Template.MobileApp.Shell;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
@@ -48,12 +47,12 @@ public static partial class MauiProgram
             .UseMauiApp<App>()
             //.ConfigureDebug()
             .ConfigureFonts(ConfigureFonts)
-            .ConfigureLifecycleEvents(ConfigureLifecycle)
+            .ConfigureLifecycleEvents(ConfigureLifecycleEvents)
             .ConfigureEssentials(ConfigureEssentials)
             .ConfigureLogging()
             .ConfigureGlobalSettings()
             .UseSkiaSharp()
-            .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
             .UseBarcodeScanning()
             .UseShiny()
@@ -124,7 +123,7 @@ public static partial class MauiProgram
     // ------------------------------------------------------------
 
     // ReSharper disable UnusedParameter.Local
-    private static void ConfigureLifecycle(ILifecycleBuilder effects)
+    private static void ConfigureLifecycleEvents(ILifecycleBuilder effects)
     {
     }
     // ReSharper restore UnusedParameter.Local
@@ -134,6 +133,21 @@ public static partial class MauiProgram
     {
     }
     // ReSharper restore UnusedParameter.Local
+
+    private static void ConfigureMauiCommunityToolkit(Options options)
+    {
+        options.SetPopupDefaults(new DefaultPopupSettings
+        {
+            CanBeDismissedByTappingOutsideOfPopup = false,
+            Padding = 0
+        });
+        options.SetPopupOptionsDefaults(new DefaultPopupOptionsSettings
+        {
+            CanBeDismissedByTappingOutsideOfPopup = false,
+            Shadow = null,
+            Shape = null
+        });
+    }
 
     private static MauiAppBuilder ConfigureGlobalSettings(this MauiAppBuilder builder)
     {
@@ -167,9 +181,6 @@ public static partial class MauiProgram
         {
             options.DisableShowSoftInputOnFocus = false;
         });
-
-        // Busy
-        builder.UseCustomBusyOverlay();
 
         return builder;
     }
@@ -260,6 +271,7 @@ public static partial class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
+        config.BindSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
         config.BindSingleton<INfcReader, NfcReader>();
         config.BindSingleton<INoiseMonitor, NoiseMonitor>();
         config.BindSingleton<IOcrReader, OcrReader>();

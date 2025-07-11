@@ -8,5 +8,5 @@ public static class ScreenSize
 
     // Dialog
 
-    public static double LargeDialogWidth => Width * 0.8;
+    public static double LargeDialogWidth { get; } = Width * 0.8;
 }

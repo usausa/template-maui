@@ -21,21 +21,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         CognitiveUsecase cognitiveUsecase)
     {
         this.cognitiveUsecase = cognitiveUsecase;
-        Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ =>
-        {
-            // Select minimum resolution
-            var resolutions = Controller.Selected?.SupportedResolutions ?? [];
-            var size = Size.Zero;
-            foreach (var resolution in resolutions)
-            {
-                if ((resolution.Width < size.Width) || (resolution.Height < size.Height) || size.IsZero)
-                {
-                    size = resolution;
-                }
-            }
-
-            Controller.CaptureResolution = size;
-        }));
+        Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
@@ -70,38 +56,35 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyFunction4()
+    protected override async Task OnNotifyFunction4()
     {
-        return BusyState.Using(async () =>
+        if (IsPreview)
         {
-            if (IsPreview)
+            // Capture
+            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
+            if (input is null)
             {
-                // Capture
-                await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-                if (input is null)
-                {
-                    return;
-                }
-
-                await Controller.StopPreviewAsync().ConfigureAwait(true);
-
-                // Bitmap
-                using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-                Image.Bitmap = bitmap;
-
-                // Detect
-                var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
-
-                // Update
-                Graphics.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
-
-                IsPreview = false;
+                return;
             }
-            else
-            {
-                await Controller.StartPreviewAsync().ConfigureAwait(true);
-                IsPreview = true;
-            }
-        });
+
+            await Controller.StopPreviewAsync().ConfigureAwait(true);
+
+            // Bitmap
+            using var bitmap = ImageHelper.ToNormalizeBitmap(input);
+            Image.Bitmap = bitmap;
+
+            // Detect
+            var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
+
+            // Update
+            Graphics.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+
+            IsPreview = false;
+        }
+        else
+        {
+            await Controller.StartPreviewAsync().ConfigureAwait(true);
+            IsPreview = true;
+        }
     }
 }

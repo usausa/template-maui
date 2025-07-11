@@ -29,7 +29,7 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
         ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
 
-        DetectCommand = MakeDelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
+        DetectCommand = new DelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
         {
             Graphics.Update(x);
 

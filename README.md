@@ -14,7 +14,6 @@ Template project for MAUI.
 
 ## Device
 
-- [ ] **Bluetooth client**
 - [ ] **WiFi manager**
 - [ ] Biometric
 

@@ -158,4 +158,19 @@ public static class CameraControllerExtensions
 
         controller.ZoomFactor = Math.Max(1, controller.ZoomFactor - 1);
     }
+
+    public static void SelectMinimumResolution(this CameraController controller)
+    {
+        var resolutions = controller.Selected?.SupportedResolutions ?? [];
+        var size = Size.Zero;
+        foreach (var resolution in resolutions)
+        {
+            if ((resolution.Width < size.Width) || (resolution.Height < size.Height) || size.IsZero)
+            {
+                size = resolution;
+            }
+        }
+
+        controller.CaptureResolution = size;
+    }
 }

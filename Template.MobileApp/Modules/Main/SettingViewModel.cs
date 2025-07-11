@@ -32,7 +32,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
         AIServiceEndPoint = settings.AIServiceEndPoint;
         AIServiceKey = settings.AIServiceKey;
 
-        DetectCommand = MakeDelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
+        DetectCommand = new DelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
         {
             if (x.Count > 0)
             {

@@ -12,7 +12,7 @@ public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
     private IAccessor? propertyAccessor;
 
     protected AppDialogViewModelBase()
-        : base(new BusyState())
+        : base(new ExtendViewModelOptions { BusyState = new BusyState() })
     {
     }
 

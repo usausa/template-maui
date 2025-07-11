@@ -17,7 +17,6 @@ Template project for MAUI.
 
 ## Device
 
-- [ ] **Bluetooth client(Printer)**
 - [ ] **WiFi manager**
 - [ ] Biometric
 
@@ -30,8 +29,8 @@ Template project for MAUI.
 ## Other
 
 - [ ] **Cognitive service(API)**
-- [ ] Chat
-- [ ] Map
+- [ ] **Chat**
+- [ ] **Map**
 - [ ] HybridWebView
 - [ ] Push
 

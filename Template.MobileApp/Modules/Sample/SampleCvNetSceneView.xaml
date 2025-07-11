@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             x:Class="Template.MobileApp.Modules.Sample.SampleCvNetSceneView"
+             x:DataType="{x:Type module:SampleCvNetSceneViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SampleCvNetSceneViewModel}"
+             shell:ShellProperty.Title="Scene"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="{Binding IsPreview, Converter={s:BoolToText True='Out', False=''}}"
+             shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='In', False=''}}"
+             shell:ShellProperty.Function4Text="{Binding IsPreview, Converter={s:BoolToText True='Detect', False='Retry'}}"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="{Binding IsPreview}"
+             shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*">
+
+        <mct:CameraView Grid.Row="0"
+                        IsVisible="{Binding IsPreview}"
+                        behaviors:CameraBind.Controller="{Binding Controller}" />
+        <Image Grid.Row="0"
+               IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
+               BackgroundColor="Black"
+               Source="{Binding Image}" />
+
+    </Grid>
+
+</ContentView>

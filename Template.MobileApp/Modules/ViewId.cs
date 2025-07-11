@@ -73,13 +73,16 @@ public enum ViewId
     // Sample
     SampleMenu,
     SampleWeb,
-    SampleBlazor,
     SampleMap1,
     SampleMap2,
     SampleMedia,
     SampleMarkdown,
     SampleChart,
-    SampleCvNet,
+    SampleCvNetMenu,
+    SampleCvNetObject,
+    SampleCvNetScene,
+    SampleCvNetOcr,
+    SampleCvNetFace,
     SampleCvLocal,
     SampleChat,
 

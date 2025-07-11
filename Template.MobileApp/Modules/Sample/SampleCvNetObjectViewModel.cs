@@ -1,14 +1,11 @@
-namespace Template.MobileApp.Modules.UI;
+namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Graphics;
 using Template.MobileApp.Helpers;
-using Template.MobileApp.Usecase;
 
-public sealed partial class UITreeMapViewModel : AppViewModelBase
+public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
 {
-    private readonly IDialog dialog;
-
-    private readonly SampleUsecase sampleUsecase;
+    // TODO
+    //private readonly CognitiveUsecase cognitiveUsecase;
 
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
@@ -17,15 +14,11 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
     public CameraController Controller { get; } = new();
 
-    public ColorTreeMapGraphics Graphics { get; } = new();
+    // TODO
+    //public DetectGraphics Graphics { get; } = new();
 
-    public UITreeMapViewModel(
-        IDialog dialog,
-        SampleUsecase sampleUsecase)
+    public SampleCvNetObjectViewModel()
     {
-        this.dialog = dialog;
-        this.sampleUsecase = sampleUsecase;
-
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
@@ -45,7 +38,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
         }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleCvNetMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -74,22 +67,11 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
             await Controller.StopPreviewAsync().ConfigureAwait(true);
 
-            using var loading = dialog.Indicator();
-
-            // ReSharper disable once AccessToDisposedClosure
-            var (bitmap, colors) = await Task.Run(() =>
-            {
-                var bitmap = ImageHelper.ToNormalizeBitmap(input);
-
-                using var resized = ImageHelper.Resize(bitmap, 0.25);
-                var colors = sampleUsecase.ClusterColors(resized, 20, 5, 1e-3f);
-
-                return (bitmap, colors);
-            }).ConfigureAwait(true);
-
-            // Update
+            // Bitmap
+            using var bitmap = ImageHelper.ToNormalizeBitmap(input);
             Image.Bitmap = bitmap;
-            Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
+
+            // TODO
 
             IsPreview = false;
         }

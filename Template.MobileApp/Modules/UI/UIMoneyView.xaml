@@ -59,13 +59,6 @@
 
     <Grid RowDefinitions="*,Auto,Auto">
 
-        <Button Grid.RowSpan="3"
-                Style="{StaticResource CenterFloatingButton}"
-                Text="支払い"
-                TextColor="White"
-                BackgroundColor="{StaticResource RedDefault}"
-                ImageSource="qr_code.png" />
-
         <ScrollView Grid.Row="0"
                     Style="{StaticResource ContentScrollView}" />
 
@@ -104,6 +97,13 @@
                     TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Account, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
                     ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
         </Grid>
+
+        <Button Grid.RowSpan="3"
+                Style="{StaticResource CenterFloatingButton}"
+                Text="支払い"
+                TextColor="White"
+                BackgroundColor="{StaticResource RedDefault}"
+                ImageSource="qr_code.png" />
 
     </Grid>
 

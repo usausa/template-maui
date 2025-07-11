@@ -11,6 +11,12 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource MenuGrid}"
+          RowDefinitions="*,*,*,*,*,*,*,*,*">
+        <Button Grid.Row="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding PrintCommand}"
+                Text="Print" />
+    </Grid>
 
 </ContentView>
