@@ -11,6 +11,47 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <!-- Entry -->
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Entry" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Focus" />
+        <Entry>
+            <Entry.Behaviors>
+                <s:DefaultFocusBehavior />
+                <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
+                                          CommandParameter="Entry1"
+                                          EventName="Focused" />
+                <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
+                                          CommandParameter="Entry1"
+                                          EventName="Unfocused" />
+            </Entry.Behaviors>
+        </Entry>
+
+        <Entry>
+            <Entry.Behaviors>
+                <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
+                                          CommandParameter="Entry2"
+                                          EventName="Focused" />
+                <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
+                                          CommandParameter="Entry2"
+                                          EventName="Unfocused" />
+            </Entry.Behaviors>
+        </Entry>
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Focused" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Focused}" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Unfocused" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Unfocused}" />
+
+    </VerticalStackLayout>
 
 </ContentView>

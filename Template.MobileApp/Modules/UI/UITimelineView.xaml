@@ -14,28 +14,32 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Style x:Key="TimelineCollectionView"
-               TargetType="CollectionView">
-            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-        </Style>
+            <Style TargetType="CollectionView"
+                   Class="TimelineCollectionView">
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            </Style>
 
-        <Style x:Key="TimelineIdLabel"
-               TargetType="Label">
-            <Setter Property="VerticalOptions" Value="Center" />
-        </Style>
+            <Style TargetType="Label"
+                   Class="TimelineIdLabel">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
 
-        <Style x:Key="TimelineTextLabel"
-               TargetType="Label">
-            <Setter Property="Padding" Value="8,0,0,0" />
-        </Style>
+            <Style TargetType="Label"
+                   Class="TimelineTextLabel">
+                <Setter Property="Padding" Value="8,0,0,0" />
+            </Style>
 
+        </ResourceDictionary>
     </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <CollectionView Style="{StaticResource TimelineCollectionView}"
+        <CollectionView StyleClass="TimelineCollectionView"
                         ItemsSource="{Binding Rows}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:TimelineRow">
@@ -43,10 +47,10 @@
                         <controls:TimelineCell Grid.Column="0"
                                                Row="{Binding}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource TimelineIdLabel}"
+                               StyleClass="TimelineIdLabel"
                                Text="{Binding Id}" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource TimelineTextLabel}"
+                               StyleClass="TimelineTextLabel"
                                Text="{Binding Text}" />
                     </Grid>
                 </DataTemplate>

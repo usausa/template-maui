@@ -11,6 +11,86 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:ToUpperConverter x:Key="ToUpperConverter" />
+
+            <s:ToLowerConverter x:Key="ToLowerConverter" />
+
+            <s:AllConverter x:Key="AllConverter" />
+
+            <s:AnyConverter x:Key="AnyConverter" />
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <!-- Boolean -->
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Boolean" />
+
+        <CheckBox IsChecked="{Binding ReverseChecked}" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Reverse" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="BoolTo" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding ReverseChecked, Converter={s:BoolToText True='ON', False='OFF'}}"
+               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True=Red, False=Black}}" />
+
+        <!-- Multi -->
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Multi" />
+
+        <CheckBox IsChecked="{Binding MultiChecked1}" />
+        <CheckBox IsChecked="{Binding MultiChecked2}" />
+
+        <Label Style="{StaticResource NameLabel}">
+            <Label.Text>
+                <MultiBinding Converter="{StaticResource AnyConverter}">
+                    <Binding Path="MultiChecked1" />
+                    <Binding Path="MultiChecked2" />
+                </MultiBinding>
+            </Label.Text>
+        </Label>
+
+        <Label Style="{StaticResource NameLabel}">
+            <Label.Text>
+                <MultiBinding Converter="{StaticResource AllConverter}">
+                    <Binding Path="MultiChecked1" />
+                    <Binding Path="MultiChecked2" />
+                </MultiBinding>
+            </Label.Text>
+        </Label>
+
+        <!-- Text -->
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Text" />
+
+        <Button Command="{Binding SwitchTextCommand}"
+                Text="Switch Text" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="Upper/Lowwer" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Text, Converter={StaticResource ToUpperConverter}}" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Text, Converter={StaticResource ToLowerConverter}}" />
+
+        <Label Style="{StaticResource NameLabel}"
+               Text="EmptyTo" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding Text, Converter={s:NullToText HandleEmptyString=True, Null='No value', NonNull='Has value'}}"
+               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null=Red, NonNull=Black}}" />
+
+    </VerticalStackLayout>
 
 </ContentView>

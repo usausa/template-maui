@@ -14,83 +14,87 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Style x:Key="ContentScrollView"
-               TargetType="ScrollView">
-            <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-        </Style>
+            <Style TargetType="ScrollView"
+                   Class="ContentScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            </Style>
 
-        <Style x:Key="SeparatorBoxView"
-               TargetType="BoxView">
-            <Setter Property="HeightRequest" Value="0.5" />
-            <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-        </Style>
+            <Style TargetType="BoxView"
+                   Class="SeparatorBoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
 
-        <Style x:Key="BottomSelectGrid"
-               TargetType="Grid">
-            <Setter Property="BackgroundColor" Value="White" />
-        </Style>
+            <Style TargetType="Grid"
+                   Class="BottomSelectGrid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
 
-        <Style x:Key="BottomSelectButton"
-               TargetType="Button">
-            <Setter Property="BackgroundColor" Value="White" />
-            <Setter Property="CornerRadius" Value="0" />
-            <Setter Property="ContentLayout" Value="Top, 0" />
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
-        </Style>
+            <Style TargetType="Button"
+                   Class="BottomSelectButton">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
+            </Style>
 
-        <Style x:Key="CenterFloatingButton"
-               TargetType="Button">
-            <Setter Property="WidthRequest" Value="72" />
-            <Setter Property="HeightRequest" Value="72" />
-            <Setter Property="CornerRadius" Value="36" />
-            <Setter Property="TranslationY" Value="-12" />
-            <Setter Property="HorizontalOptions" Value="Center" />
-            <Setter Property="VerticalOptions" Value="End" />
-            <Setter Property="ContentLayout" Value="Top, 0" />
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="ZIndex" Value="100" />
-        </Style>
+            <Style TargetType="Button"
+                   Class="CenterFloatingButton">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="TranslationY" Value="-12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="ZIndex" Value="100" />
+            </Style>
 
+        </ResourceDictionary>
     </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid RowDefinitions="*,Auto,Auto">
 
         <ScrollView Grid.Row="0"
-                    Style="{StaticResource ContentScrollView}" />
+                    StyleClass="ContentScrollView" />
 
         <BoxView Grid.Row="1"
-                 Style="{StaticResource SeparatorBoxView}" />
+                 StyleClass="SeparatorBoxView" />
 
         <Grid Grid.Row="2"
-              Style="{StaticResource BottomSelectGrid}"
+              StyleClass="BottomSelectGrid"
               ColumnDefinitions="*,*,72,*,*">
             <Button Grid.Column="0"
-                    Style="{StaticResource BottomSelectButton}"
+                    StyleClass="BottomSelectButton"
                     Command="{Binding PageCommand}"
                     CommandParameter="{x:Static models:MoneyPage.Home}"
                     Text="ホーム"
                     TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Home, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
                     ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
             <Button Grid.Column="1"
-                    Style="{StaticResource BottomSelectButton}"
+                    StyleClass="BottomSelectButton"
                     Command="{Binding PageCommand}"
                     CommandParameter="{x:Static models:MoneyPage.Search}"
                     Text="検索"
                     TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Search, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
                     ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
             <Button Grid.Column="3"
-                    Style="{StaticResource BottomSelectButton}"
+                    StyleClass="BottomSelectButton"
                     Command="{Binding PageCommand}"
                     CommandParameter="{x:Static models:MoneyPage.Notifications}"
                     Text="お知らせ"
                     TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Notifications, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
                     ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
             <Button Grid.Column="4"
-                    Style="{StaticResource BottomSelectButton}"
+                    StyleClass="BottomSelectButton"
                     Command="{Binding PageCommand}"
                     CommandParameter="{x:Static models:MoneyPage.Account}"
                     Text="アカウント"
@@ -99,7 +103,7 @@
         </Grid>
 
         <Button Grid.RowSpan="3"
-                Style="{StaticResource CenterFloatingButton}"
+                StyleClass="CenterFloatingButton"
                 Text="支払い"
                 TextColor="White"
                 BackgroundColor="{StaticResource RedDefault}"

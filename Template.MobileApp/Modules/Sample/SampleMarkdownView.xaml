@@ -12,10 +12,12 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-            <Style x:Key="DefaultMarkdownView"
-                   TargetType="markdown:MarkdownView">
+
+            <Style TargetType="markdown:MarkdownView"
+                   Class="DefaultMarkdownView">
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="TextFontFace" Value="OpenSansRegular" />
                 <Setter Property="TextFontSize" Value="14" />
@@ -47,11 +49,13 @@
                 <Setter Property="TableRowFontSize" Value="12" />
                 <Setter Property="TableRowTextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <ScrollView>
-        <markdown:MarkdownView Style="{StaticResource DefaultMarkdownView}"
+        <markdown:MarkdownView StyleClass="DefaultMarkdownView"
                                EMailCommand="{Binding EmailCommand}"
                                LinkCommand="{Binding LinkCommand}"
                                MarkdownText="{Binding Text}" />
