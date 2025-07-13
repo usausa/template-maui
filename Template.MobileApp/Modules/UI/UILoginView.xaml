@@ -11,6 +11,20 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="192,*">
+
+        <Path Aspect="Fill" Data="M0 0 L112 0 L112 48 A12 12 90 0 1 100 60 L12 60 A12 12 90 0 1 0 48 L0 0 Z" Fill="#03a9f4" StrokeThickness="0" />
+
+        <VerticalStackLayout>
+            <Border WidthRequest="96" HeightRequest="96"
+                    StrokeShape="RoundRectangle 48"
+                    Margin="0,48,0,0" Padding="0"
+                    HorizontalOptions="Center">
+                <Image Aspect="AspectFill" Source="profile.jpg" />
+            </Border>
+        </VerticalStackLayout>
+
+    </Grid>
 
 </ContentView>

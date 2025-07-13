@@ -9,8 +9,6 @@ Template project for MAUI.
 ## Cleanup
 
 - [ ] Style sheat
-- [ ] Behavior samples
-- [ ] Converter samples
 
 ## Device
 
@@ -49,6 +47,7 @@ Template project for MAUI.
 
 <img width="25%" src="Document/UI_Deck.png" />
 <img width="25%" src="Document/UI_Load.png" />
+<img width="25%" src="Document/UI_Login.png" />
 <img width="25%" src="Document/UI_Meter.png" />
 <img width="25%" src="Document/UI_Money.png" />
 <img width="25%" src="Document/UI_Radar.png" />
