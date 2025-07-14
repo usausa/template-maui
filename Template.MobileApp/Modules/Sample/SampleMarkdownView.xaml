@@ -16,8 +16,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style TargetType="markdown:MarkdownView"
-                   Class="DefaultMarkdownView">
+            <Style x:Key="DefaultMarkdownView"
+                   TargetType="markdown:MarkdownView">
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="TextFontFace" Value="OpenSansRegular" />
                 <Setter Property="TextFontSize" Value="14" />
@@ -55,7 +55,7 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <ScrollView>
-        <markdown:MarkdownView StyleClass="DefaultMarkdownView"
+        <markdown:MarkdownView Style="{StaticResource DefaultMarkdownView}"
                                EMailCommand="{Binding EmailCommand}"
                                LinkCommand="{Binding LinkCommand}"
                                MarkdownText="{Binding Text}" />

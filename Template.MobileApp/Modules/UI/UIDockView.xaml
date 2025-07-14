@@ -19,13 +19,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style TargetType="VerticalStackLayout"
-                   Class="DeckButtonLayout">
+            <Style x:Key="DeckButtonLayout"
+                   TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style TargetType="Button"
-                   Class="DeckButton">
+            <Style x:Key="DeckButton"
+                   TargetType="Button">
                 <Setter Property="WidthRequest" Value="72" />
                 <Setter Property="HeightRequest" Value="72" />
                 <Setter Property="CornerRadius" Value="8" />
@@ -34,15 +34,15 @@
                 <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
-            <Style TargetType="ImageButton"
-                   Class="DeckButton">
+            <Style x:Key="DeckImageButton"
+                   TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="80" />
                 <Setter Property="HeightRequest" Value="80" />
                 <Setter Property="CornerRadius" Value="8" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="DeckButtonLabel">
+            <Style x:Key="DeckButtonLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="VerticalTextAlignment" Value="Start" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -53,12 +53,12 @@
                           x:DataType="models:DeckButtonInfo">
                 <VerticalStackLayout Grid.Row="{Binding Row}"
                                      Grid.Column="{Binding Column}"
-                                     StyleClass="DeckButtonLayout">
-                    <Button StyleClass="DeckButton"
+                                     Style="{StaticResource DeckButtonLayout}">
+                    <Button Style="{StaticResource DeckButton}"
                             Command="{Binding Command}"
                             CommandParameter="{Binding Parameter}"
-                            TextColor="{Binding TextColor}"
-                            Text="{Binding Text}">
+                            Text="{Binding Text}"
+                            TextColor="{Binding TextColor}">
                         <Button.Background>
                             <LinearGradientBrush>
                                 <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
@@ -66,7 +66,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Label StyleClass="DeckButtonLabel"
+                    <Label Style="{StaticResource DeckButtonLabel}"
                            Text="{Binding Label}" />
                 </VerticalStackLayout>
             </DataTemplate>
@@ -75,8 +75,8 @@
                           x:DataType="models:DeckButtonInfo">
                 <VerticalStackLayout Grid.Row="{Binding Row}"
                                      Grid.Column="{Binding Column}"
-                                     StyleClass="DeckButtonLayout">
-                    <ImageButton StyleClass="DeckButton"
+                                     Style="{StaticResource DeckButtonLayout}">
+                    <ImageButton Style="{StaticResource DeckImageButton}"
                                  Command="{Binding Command}"
                                  CommandParameter="{Binding Parameter}"
                                  Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
@@ -87,7 +87,7 @@
                             </LinearGradientBrush>
                         </ImageButton.Background>
                     </ImageButton>
-                    <Label StyleClass="DeckButtonLabel"
+                    <Label Style="{StaticResource DeckButtonLabel}"
                            Text="{Binding Label}" />
                 </VerticalStackLayout>
             </DataTemplate>

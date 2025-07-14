@@ -17,71 +17,71 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style TargetType="CollectionView"
-                   Class="SensorCollectionView">
+            <Style x:Key="SensorCollectionView"
+                   TargetType="CollectionView">
                 <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
             </Style>
 
-            <Style TargetType="Border"
-                   Class="SensorBorder">
+            <Style x:Key="SensorBorder"
+                   TargetType="Border">
                 <Setter Property="Margin" Value="6,3" />
                 <Setter Property="Padding" Value="12,6,12,12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten4}" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style TargetType="BoxView"
-                   Class="SeparatorWideBoxView">
+            <Style x:Key="SeparatorWideBoxView"
+                   TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="2" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style TargetType="BoxView"
-                   Class="SeparatorNarrowBoxView">
+            <Style x:Key="SeparatorNarrowBoxView"
+                   TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style TargetType="BoxView"
-                   Class="MarginBoxView">
+            <Style x:Key="MarginBoxView"
+                   TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="9" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="DeviceIdLabel">
+            <Style x:Key="DeviceIdLabel"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="OpenSansSemibold" />
                 <Setter Property="FontSize" Value="24" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="TimestampLabel">
+            <Style x:Key="TimestampLabel"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style TargetType="HorizontalStackLayout"
-                   Class="ValueHorizontalStack">
+            <Style x:Key="ValueHorizontalStack"
+                   TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Spacing" Value="3" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="IconLabel">
+            <Style x:Key="IconLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="36" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="ValueLabel">
+            <Style x:Key="ValueLabel"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="48" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="UnitLabel">
+            <Style x:Key="UnitLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="VerticalTextAlignment" Value="End" />
             </Style>
@@ -90,62 +90,62 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <CollectionView StyleClass="SensorCollectionView"
+    <CollectionView Style="{StaticResource SensorCollectionView}"
                     ItemsSource="{Binding Devices}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:SwitchBotTemperature">
 
-                <Border StyleClass="SensorBorder">
-                    <VerticalStackLayout Style="{StaticResource FillGrid}">
+                <Border Style="{StaticResource SensorBorder}">
+                    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
                         <Grid ColumnDefinitions="*,*">
                             <Label Grid.Column="0"
-                                   StyleClass="DeviceIdLabel"
+                                   Style="{StaticResource DeviceIdLabel}"
                                    Text="{Binding DeviceId}" />
                             <Label Grid.Column="1"
-                                   StyleClass="TimestampLabel"
+                                   Style="{StaticResource TimestampLabel}"
                                    Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}" />
                         </Grid>
 
-                        <BoxView StyleClass="SeparatorWideBoxView" />
-                        <BoxView StyleClass="MarginBoxView" />
+                        <BoxView Style="{StaticResource SeparatorWideBoxView}" />
+                        <BoxView Style="{StaticResource MarginBoxView}" />
 
                         <Grid ColumnDefinitions="*,*">
                             <HorizontalStackLayout Grid.Column="0"
-                                                   StyleClass="ValueHorizontalStack">
-                                <Label StyleClass="IconLabel"
+                                                   Style="{StaticResource ValueHorizontalStack}">
+                                <Label Style="{StaticResource IconLabel}"
                                        Text="🌡" />
-                                <Label StyleClass="ValueLabel"
+                                <Label Style="{StaticResource ValueLabel}"
                                        Text="{Binding Temperature, StringFormat='{0:F1}'}" />
-                                <Label StyleClass="UnitLabel"
+                                <Label Style="{StaticResource UnitLabel}"
                                        Text="°C" />
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Grid.Column="1"
-                                                   StyleClass="ValueHorizontalStack">
-                                <Label StyleClass="IconLabel"
+                                                   Style="{StaticResource ValueHorizontalStack}">
+                                <Label Style="{StaticResource IconLabel}"
                                        Text="💧" />
-                                <Label StyleClass="ValueLabel"
+                                <Label Style="{StaticResource ValueLabel}"
                                        Text="{Binding Humidity}" />
-                                <Label StyleClass="UnitLabel"
+                                <Label Style="{StaticResource UnitLabel}"
                                        Text="%" />
                             </HorizontalStackLayout>
                         </Grid>
 
-                        <BoxView StyleClass="MarginBoxView"
+                        <BoxView Style="{StaticResource MarginBoxView}"
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
-                        <BoxView StyleClass="SeparatorNarrowBoxView"
+                        <BoxView Style="{StaticResource SeparatorNarrowBoxView}"
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
-                        <BoxView StyleClass="MarginBoxView"
+                        <BoxView Style="{StaticResource MarginBoxView}"
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
 
-                        <HorizontalStackLayout StyleClass="ValueHorizontalStack"
+                        <HorizontalStackLayout Style="{StaticResource ValueHorizontalStack}"
                                                IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}"
                                                HorizontalOptions="Center">
-                            <Label StyleClass="IconLabel"
+                            <Label Style="{StaticResource IconLabel}"
                                    Text="💨" />
-                            <Label StyleClass="ValueLabel"
+                            <Label Style="{StaticResource ValueLabel}"
                                    Text="{Binding Co2}" />
-                            <Label StyleClass="UnitLabel"
+                            <Label Style="{StaticResource UnitLabel}"
                                    Text="ppm" />
                         </HorizontalStackLayout>
 

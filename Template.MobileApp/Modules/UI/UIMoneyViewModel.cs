@@ -8,6 +8,9 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int NotificationCount { get; set; }
 
+    [ObservableProperty]
+    public partial bool HasAccountAlert { get; set; }
+
     public ICommand PageCommand { get; }
 
     public UIMoneyViewModel()
@@ -17,6 +20,7 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         PageCommand = MakeDelegateCommand<MoneyPage>(page => Selected = page);
 
         NotificationCount = 99;
+        HasAccountAlert = true;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);

@@ -18,19 +18,19 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style TargetType="BoxView"
-                   Class="SeparatorBoxView">
+            <Style x:Key="SeparatorBoxView"
+                   TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="0.5" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style TargetType="Grid"
-                   Class="BottomSelectGrid">
+            <Style x:Key="BottomSelectGrid"
+                   TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style TargetType="Button"
-                   Class="BottomSelectButton">
+            <Style x:Key="BottomSelectButton"
+                   TargetType="Button">
                 <Setter Property="AbsoluteLayout.LayoutBounds" Value="0,0,1,-1" />
                 <Setter Property="AbsoluteLayout.LayoutFlags" Value="WidthProportional" />
                 <Setter Property="BackgroundColor" Value="White" />
@@ -40,8 +40,8 @@
                 <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
             </Style>
 
-            <Style TargetType="Button"
-                   Class="CenterFloatingButton">
+            <Style x:Key="CenterFloatingButton"
+                   TargetType="Button">
                 <Setter Property="WidthRequest" Value="72" />
                 <Setter Property="HeightRequest" Value="72" />
                 <Setter Property="CornerRadius" Value="36" />
@@ -53,23 +53,23 @@
                 <Setter Property="ZIndex" Value="100" />
             </Style>
 
-            <Style TargetType="Border"
-                   Class="BottomSelectBadgeBorder">
-                <Setter Property="AbsoluteLayout.LayoutBounds" Value="0.8,0,24,24" />
+            <Style x:Key="BottomSelectBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="AbsoluteLayout.LayoutBounds" Value="0.8,0.1,20,20" />
                 <Setter Property="AbsoluteLayout.LayoutFlags" Value="PositionProportional" />
-                <Setter Property="WidthRequest" Value="24" />
-                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="WidthRequest" Value="20" />
+                <Setter Property="HeightRequest" Value="20" />
                 <Setter Property="StrokeShape" Value="Ellipse" />
                 <Setter Property="StrokeThickness" Value="0" />
             </Style>
 
-            <Style TargetType="Label"
-                   Class="BottomSelectBadgeLabel">
+            <Style x:Key="BottomSelectBadgeLabel"
+                   TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="10" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
@@ -80,17 +80,16 @@
 
     <Grid RowDefinitions="*,Auto,Auto">
 
-        <ScrollView Grid.Row="0"
-                    StyleClass="ContentScrollView" />
+        <ScrollView Grid.Row="0" />
 
         <BoxView Grid.Row="1"
-                 StyleClass="SeparatorBoxView" />
+                 Style="{StaticResource SeparatorBoxView}" />
 
         <Grid Grid.Row="2"
-              StyleClass="BottomSelectGrid"
+              Style="{StaticResource BottomSelectGrid}"
               ColumnDefinitions="*,*,72,*,*">
             <AbsoluteLayout Grid.Column="0">
-                <Button StyleClass="BottomSelectButton"
+                <Button Style="{StaticResource BottomSelectButton}"
                         Command="{Binding PageCommand}"
                         CommandParameter="{x:Static models:MoneyPage.Home}"
                         Text="ホーム"
@@ -98,7 +97,7 @@
                         ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
             </AbsoluteLayout>
             <AbsoluteLayout Grid.Column="1">
-                <Button StyleClass="BottomSelectButton"
+                <Button Style="{StaticResource BottomSelectButton}"
                         Command="{Binding PageCommand}"
                         CommandParameter="{x:Static models:MoneyPage.Search}"
                         Text="検索"
@@ -106,31 +105,37 @@
                         ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
             </AbsoluteLayout>
             <AbsoluteLayout Grid.Column="3">
-                <Button StyleClass="BottomSelectButton"
+                <Button Style="{StaticResource BottomSelectButton}"
                         Command="{Binding PageCommand}"
                         CommandParameter="{x:Static models:MoneyPage.Notifications}"
                         Text="お知らせ"
                         TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Notifications, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
                         ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
-                <Border StyleClass="BottomSelectBadgeBorder"
+                <Border Style="{StaticResource BottomSelectBadgeBorder}"
                         IsVisible="{Binding NotificationCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 Value=0}}"
                         BackgroundColor="{StaticResource OrangeDefault}">
-                    <Label StyleClass="BottomSelectBadgeLabel"
+                    <Label Style="{StaticResource BottomSelectBadgeLabel}"
                            Text="{Binding NotificationCount}" />
                 </Border>
             </AbsoluteLayout>
             <AbsoluteLayout Grid.Column="4">
-                <Button StyleClass="BottomSelectButton"
+                <Button Style="{StaticResource BottomSelectButton}"
                         Command="{Binding PageCommand}"
                         CommandParameter="{x:Static models:MoneyPage.Account}"
                         Text="アカウント"
                         TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Account, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
                         ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
+                <Border Style="{StaticResource BottomSelectBadgeBorder}"
+                        IsVisible="{Binding HasAccountAlert}"
+                        BackgroundColor="{StaticResource OrangeDefault}">
+                    <Label Style="{StaticResource BottomSelectBadgeLabel}"
+                           Text="!" />
+                </Border>
             </AbsoluteLayout>
         </Grid>
 
         <Button Grid.RowSpan="3"
-                StyleClass="CenterFloatingButton"
+                Style="{StaticResource CenterFloatingButton}"
                 Text="支払い"
                 TextColor="White"
                 BackgroundColor="{StaticResource RedDefault}"
