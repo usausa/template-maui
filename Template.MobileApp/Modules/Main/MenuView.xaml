@@ -62,16 +62,13 @@
                     Text="9.Setting" />
         </Grid>
 
-        <Grid Grid.Row="1"
-              Style="{StaticResource FooterGrid}"
-              ColumnDefinitions="3*,2*">
-            <Label Grid.Column="0"
-                   Style="{StaticResource FooterInfoLeftLabel}"
+        <FlexLayout Grid.Row="1"
+                    Style="{StaticResource FooterFlexLayout}">
+            <Label Style="{StaticResource FooterInfoLabel}"
                    Text="{Binding Flavor, StringFormat='{0} flavor'}" />
-            <Label Grid.Column="1"
-                   Style="{StaticResource FooterInfoRightLabel}"
+            <Label Style="{StaticResource FooterInfoLabel}"
                    Text="{Binding Version, StringFormat='Version {0}'}" />
-        </Grid>
+        </FlexLayout>
     </Grid>
 
 </ContentView>

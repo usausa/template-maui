@@ -93,7 +93,6 @@
 
     <Style x:Key="ContainerLayout"
            TargetType="AbsoluteLayout">
-        <Setter Property="CompressedLayout.IsHeadless" Value="True" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
@@ -106,7 +105,6 @@
 
     <Style x:Key="HeaderGrid"
            TargetType="Grid">
-        <Setter Property="CompressedLayout.IsHeadless" Value="True" />
         <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken4}" />
         <Setter Property="RowSpacing" Value="0" />
         <Setter Property="ColumnSpacing" Value="0" />
@@ -132,32 +130,20 @@
     <!-- Footer -->
     <!-- ================================================================================ -->
 
-    <Style x:Key="FooterGrid"
-           TargetType="Grid">
-        <Setter Property="CompressedLayout.IsHeadless" Value="True" />
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
+    <Style x:Key="FooterFlexLayout"
+           TargetType="FlexLayout">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="JustifyContent" Value="SpaceBetween" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="HeightRequest" Value="48" />
     </Style>
 
-    <Style x:Key="FooterInfoLabelBase"
+    <Style x:Key="FooterInfoLabel"
            TargetType="Label">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="Padding" Value="6,0,6,0" />
-    </Style>
-
-    <Style x:Key="FooterInfoLeftLabel"
-           TargetType="Label"
-           BasedOn="{StaticResource FooterInfoLabelBase}">
-        <Setter Property="HorizontalTextAlignment" Value="Start" />
-    </Style>
-
-    <Style x:Key="FooterInfoRightLabel"
-           TargetType="Label"
-           BasedOn="{StaticResource FooterInfoLabelBase}">
-        <Setter Property="HorizontalTextAlignment" Value="End" />
     </Style>
 
     <!-- ================================================================================ -->
@@ -166,7 +152,6 @@
 
     <Style x:Key="FunctionGrid"
            TargetType="Grid">
-        <Setter Property="CompressedLayout.IsHeadless" Value="True" />
         <Setter Property="RowSpacing" Value="0" />
         <Setter Property="ColumnSpacing" Value="1" />
         <Setter Property="Margin" Value="0" />
@@ -657,122 +642,105 @@
     <!-- Label -->
     <!-- ================================================================================ -->
 
+    <!-- Alignment -->
+
+    <Style TargetType="Label"
+           Class="LabelLeft">
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="LabelCenter">
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="Label"
+           Class="LabelRight">
+        <Setter Property="HorizontalTextAlignment" Value="End" />
+    </Style>
+
     <!-- Size -->
 
-    <Style x:Key="MicroLeftLabel"
-           TargetType="Label">
+    <Style TargetType="Label"
+           Class="LabelMicro">
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <Style x:Key="SmallLeftLabel"
-           TargetType="Label">
+    <Style TargetType="Label"
+           Class="LabelSmall">
         <Setter Property="FontSize" Value="14" />
     </Style>
 
-    <Style x:Key="MediumLeftLabel"
-           TargetType="Label">
+    <Style TargetType="Label"
+           Class="LabelMedium">
         <Setter Property="FontSize" Value="18" />
     </Style>
 
-    <Style x:Key="LargeLeftLabel"
-           TargetType="Label">
+    <Style TargetType="Label"
+           Class="LabelLarge">
         <Setter Property="FontSize" Value="24" />
     </Style>
 
-    <Style x:Key="ExtraLargeLeftLabel"
-           TargetType="Label">
+    <Style TargetType="Label"
+           Class="LabelExtraLarge">
         <Setter Property="FontSize" Value="28" />
     </Style>
 
-    <Style x:Key="HugeLeftLabel"
-           TargetType="Label">
+    <Style TargetType="Label"
+           Class="LabelHuge">
         <Setter Property="FontSize" Value="36" />
     </Style>
 
-    <Style x:Key="MicroCenterLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    <!-- Color -->
+
+    <Style TargetType="Label"
+           Class="LabelPrimary">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
     </Style>
 
-    <Style x:Key="SmallCenterLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    <Style TargetType="Label"
+           Class="LabelSecondary">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource CyanDefault}" />
     </Style>
 
-    <Style x:Key="MediumCenterLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    <Style TargetType="Label"
+           Class="LabelTertiary">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource TealDefault}" />
     </Style>
 
-    <Style x:Key="LargeCenterLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    <Style TargetType="Label"
+           Class="LabelInformation">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource LightBlueDefault}" />
     </Style>
 
-    <Style x:Key="ExtraLargeCenterLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="28" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    <Style TargetType="Label"
+           Class="LabelSuccess">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
     </Style>
 
-    <Style x:Key="HugeCenterLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="36" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    <Style TargetType="Label"
+           Class="LabelWarning">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
     </Style>
 
-    <Style x:Key="MicroRightLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
-    </Style>
-
-    <Style x:Key="SmallRightLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
-    </Style>
-
-    <Style x:Key="MediumRightLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
-    </Style>
-
-    <Style x:Key="LargeRightLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
-    </Style>
-
-    <Style x:Key="ExtraLargeRightLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="28" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
-    </Style>
-
-    <Style x:Key="HugeRightLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="36" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
+    <Style TargetType="Label"
+           Class="LabelError">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
     </Style>
 
     <!-- Semantic -->
 
-    <Style x:Key="NameLabel"
+    <Style x:Key="TitleLabel"
            TargetType="Label">
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="FontAttributes" Value="Bold" />
-    </Style>
-
-    <Style x:Key="GroupLabel"
-           TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-        <Setter Property="FontSize" Value="24" />
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+        <Setter Property="FontSize" Value="36" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
@@ -783,28 +751,28 @@
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
-    <Style x:Key="TitleLabel"
+    <Style x:Key="GroupLabel"
            TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
-        <Setter Property="FontSize" Value="36" />
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
-    <Style x:Key="TextValueLabel"
+    <Style x:Key="NameLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="ValueLabel"
            TargetType="Label">
         <Setter Property="FontSize" Value="18" />
     </Style>
 
-    <Style x:Key="StatusValueLabel"
+    <Style x:Key="ResultLabel"
            TargetType="Label">
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
-    </Style>
-
-    <Style x:Key="NumericValueLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="HorizontalTextAlignment" Value="End" />
+        <Setter Property="FontSize" Value="24" />
     </Style>
 
     <!-- ================================================================================ -->
@@ -862,23 +830,11 @@
         <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
-    <Style x:Key="ItemCollectionLabelBase"
+    <Style x:Key="ItemCollectionLabel"
            TargetType="Label">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="LineBreakMode" Value="TailTruncation" />
-    </Style>
-
-    <Style x:Key="ItemCollectionLeftLabel"
-           TargetType="Label"
-           BasedOn="{StaticResource ItemCollectionLabelBase}">
-        <Setter Property="HorizontalOptions" Value="Start" />
-    </Style>
-
-    <Style x:Key="ItemCollectionRightLabel"
-           TargetType="Label"
-           BasedOn="{StaticResource ItemCollectionLabelBase}">
-        <Setter Property="HorizontalOptions" Value="End" />
     </Style>
 
     <Style x:Key="ItemCollectionButtonBase"

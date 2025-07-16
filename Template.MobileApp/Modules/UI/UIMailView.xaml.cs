@@ -1,9 +1,9 @@
 namespace Template.MobileApp.Modules.UI;
 
-[View(ViewId.UIGrid)]
-public sealed partial class UIGridView
+[View(ViewId.UIMail)]
+public sealed partial class UIMailView
 {
-    public UIGridView()
+    public UIMailView()
     {
         InitializeComponent();
     }

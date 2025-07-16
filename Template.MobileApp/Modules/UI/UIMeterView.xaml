@@ -28,25 +28,25 @@
                              VerticalOptions="Center">
             <Label HorizontalTextAlignment="Center"
                    FontFamily="Gkktt" FontSize="96"
-                   TextColor="White"
-                   Text="{Binding Speed}" />
+                   Text="{Binding Speed}"
+                   TextColor="White" />
             <Label HorizontalTextAlignment="Center"
                    FontFamily="Gkktt" FontSize="24"
-                   TextColor="White"
-                   Text="km/h" />
+                   Text="km/h"
+                   TextColor="White" />
         </VerticalStackLayout>
 
         <Label Grid.Row="0" Grid.Column="1"
                HorizontalTextAlignment="End" VerticalTextAlignment="Start"
                FontSize="12"
-               TextColor="White"
-               Text="{Binding Fps, StringFormat='{0} fps'}" />
+               Text="{Binding Fps, StringFormat='{0} fps'}"
+               TextColor="White" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 HeightRequest="160"
                 FontSize="72" FontAttributes="Bold"
-                BackgroundColor="{StaticResource GreenLighten2}"
-                Text="+">
+                Text="+"
+                BackgroundColor="{StaticResource GreenLighten2}">
             <Button.Behaviors>
                 <behaviors:PressStateBehavior IsPressed="{Binding Accelerator}" />
             </Button.Behaviors>
@@ -54,8 +54,8 @@
         <Button Grid.Row="1" Grid.Column="1"
                 HeightRequest="160"
                 FontSize="72" FontAttributes="Bold"
-                BackgroundColor="{StaticResource RedLighten2}"
-                Text="-">
+                Text="-"
+                BackgroundColor="{StaticResource RedLighten2}">
             <Button.Behaviors>
                 <behaviors:PressStateBehavior IsPressed="{Binding Brake}" />
             </Button.Behaviors>

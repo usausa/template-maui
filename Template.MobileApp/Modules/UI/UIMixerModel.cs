@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-public sealed class UICalendarViewModel : AppViewModelBase
+public sealed class UIMixerViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
 

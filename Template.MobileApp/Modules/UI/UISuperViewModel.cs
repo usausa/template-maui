@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-public sealed class UIGridViewModel : AppViewModelBase
+public sealed class UISuperViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
 

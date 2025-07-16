@@ -37,12 +37,12 @@
 
         <Label Style="{StaticResource NameLabel}"
                Text="Reverse" />
-        <Label Style="{StaticResource TextValueLabel}"
+        <Label Style="{StaticResource ValueLabel}"
                Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="BoolTo" />
-        <Label Style="{StaticResource TextValueLabel}"
+        <Label Style="{StaticResource ValueLabel}"
                Text="{Binding ReverseChecked, Converter={s:BoolToText True='ON', False='OFF'}}"
                TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True=Red, False=Black}}" />
 
@@ -80,14 +80,14 @@
 
         <Label Style="{StaticResource NameLabel}"
                Text="Upper/Lowwer" />
-        <Label Style="{StaticResource TextValueLabel}"
+        <Label Style="{StaticResource ValueLabel}"
                Text="{Binding Text, Converter={StaticResource ToUpperConverter}}" />
-        <Label Style="{StaticResource TextValueLabel}"
+        <Label Style="{StaticResource ValueLabel}"
                Text="{Binding Text, Converter={StaticResource ToLowerConverter}}" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="EmptyTo" />
-        <Label Style="{StaticResource TextValueLabel}"
+        <Label Style="{StaticResource ValueLabel}"
                Text="{Binding Text, Converter={s:NullToText HandleEmptyString=True, Null='No value', NonNull='Has value'}}"
                TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null=Red, NonNull=Black}}" />
 

@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Sample;
 
 using Template.MobileApp.Helpers;
 
-public sealed partial class SampleCvNetSceneViewModel : AppViewModelBase
+public sealed partial class SampleCvNetPeopleViewModel : AppViewModelBase
 {
     // TODO
     //private readonly CognitiveUsecase cognitiveUsecase;
@@ -17,7 +17,7 @@ public sealed partial class SampleCvNetSceneViewModel : AppViewModelBase
     // TODO
     //public DetectGraphics Graphics { get; } = new();
 
-    public SampleCvNetSceneViewModel()
+    public SampleCvNetPeopleViewModel()
     {
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
