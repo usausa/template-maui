@@ -25,7 +25,7 @@
         <Entry s:Behavior.Key="Text1"
                s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
                Text="{Binding Text1}" />
-        <Label Style="{StaticResource SmallLeftLabel}"
+        <Label Style="{StaticResource ErrorMessageLabel}"
                IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
                Text="{Binding Errors[Text1]}" />
 
@@ -36,7 +36,7 @@
                Text="Text2" />
         <Entry s:Behavior.Key="Text2"
                Text="{Binding Text2}" />
-        <Label Style="{StaticResource SmallLeftLabel}"
+        <Label Style="{StaticResource ErrorMessageLabel}"
                IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
                Text="{Binding Errors[Text2]}" />
 
