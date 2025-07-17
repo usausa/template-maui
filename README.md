@@ -4,34 +4,6 @@ Template project for MAUI.
 
 - [日本語](README-ja.md)
 
-# TODO
-
-## Cleanup
-
-- [ ] Style sheat
-
-## Device
-
-- [ ] **WiFi manager**
-- [ ] Biometric
-
-## UI
-
-- [ ] **Gauge**
-- [ ] Chart
-- [ ] Calendar
-
-## Other
-
-- [ ] **Cognitive service**
-- [ ] Chat
-- [ ] HybridWebView/Blazor
-- [ ] Push
-
-## Ex
-
-- [ ] **.NET 10/XAML**
-
 # Image
 
 ## Device
@@ -53,3 +25,59 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Radar.png" />
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
+
+# TODO
+
+## Device
+
+- [ ] **WiFi manager**
+- [ ] Biometric
+
+## UI
+
+- [ ] **Gauge**
+- [ ] Chart
+- [ ] Calendar
+
+## Other
+
+- [ ] **Cognitive service**
+- [ ] **Map2**
+- [ ] **HybridWebView**
+- [ ] Chat
+- [ ] Push -> Hybrid?
+- [ ] Local notification -> Hybrid?
+
+## Ex
+
+- [ ] **.NET 10/XAML**
+
+# Implement
+
+- Basic
+  - Typography/Style/Font
+  - Converter/Behavior
+  - Dialog
+  - Validation
+  - Grahics
+- Navigation
+  - Basic/Stack/Wizard
+- Device
+  - Device status
+  - Sensor/Location
+  - QR Scan(Android AI)/Display
+  - Camera/OCR(Android AI)
+  - BLE/Bluetooth Serial
+  - NFC
+  - Audio
+  - Screen/Vibrate/Feed/LED/Sppek/Recognize
+- Data
+  - SQLite
+- Network
+  - Web API
+- Sample
+  - Object detection(Local)
+  - Markdown
+- UI
+  - Dock
+  - Timeline/TreeMap
