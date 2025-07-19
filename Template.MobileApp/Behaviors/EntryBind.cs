@@ -2,7 +2,6 @@ namespace Template.MobileApp.Behaviors;
 
 using Smart.Maui.Interactivity;
 
-using Template.MobileApp.Helpers;
 using Template.MobileApp.Messaging;
 
 public static class EntryBind
@@ -51,12 +50,7 @@ public static class EntryBind
             base.OnAttachedTo(bindable);
 
             controller = GetController(bindable);
-            if (controller is not null)
-            {
-                controller.FocusRequest += ControllerOnFocusRequest;
-            }
-
-            bindable.Completed += BindableOnCompleted;
+            controller?.Attach(bindable);
 
             bindable.SetBinding(
                 Entry.TextProperty,
@@ -68,12 +62,8 @@ public static class EntryBind
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            if (controller is not null)
-            {
-                controller.FocusRequest -= ControllerOnFocusRequest;
-            }
-
-            bindable.Completed -= BindableOnCompleted;
+            controller?.Detach();
+            controller = null;
 
             bindable.RemoveBinding(Entry.TextProperty);
             bindable.RemoveBinding(VisualElement.IsEnabledProperty);
@@ -81,27 +71,6 @@ public static class EntryBind
             controller = null;
 
             base.OnDetachingFrom(bindable);
-        }
-
-        private void ControllerOnFocusRequest(object? sender, EventArgs e)
-        {
-            AssociatedObject?.Focus();
-        }
-
-        private void BindableOnCompleted(object? sender, EventArgs e)
-        {
-            if (controller is null)
-            {
-                return;
-            }
-
-            var entry = (Entry)sender!;
-            var ice = new EntryCompleteEvent();
-            controller.HandleCompleted(ice);
-            if (!ice.Handled)
-            {
-                ElementHelper.MoveFocusInRoot(entry, true);
-            }
         }
     }
 }

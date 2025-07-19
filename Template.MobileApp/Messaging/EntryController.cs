@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Messaging;
 
+using Template.MobileApp.Helpers;
+
 public sealed class EntryCompleteEvent
 {
     public bool Handled { get; set; }
@@ -7,46 +9,34 @@ public sealed class EntryCompleteEvent
 
 public interface IEntryController : INotifyPropertyChanged
 {
-    event EventHandler<EventArgs> FocusRequest;
-
     // Property
 
     string? Text { get; set; }
 
     bool Enable { get; set; }
 
-    // Event
+    // Attach
 
-    void HandleCompleted(EntryCompleteEvent e);
+    void Attach(Entry view);
+
+    void Detach();
 }
 
-public sealed class EntryController : NotificationObject, IEntryController
+public sealed partial class EntryController : ObservableObject, IEntryController
 {
-    private event EventHandler<EventArgs>? FocusRequestHandler;
-
-    event EventHandler<EventArgs> IEntryController.FocusRequest
-    {
-        add => FocusRequestHandler += value;
-        remove => FocusRequestHandler -= value;
-    }
-
     // Field
 
     private readonly ICommand? command;
 
+    private Entry? entry;
+
     // Property
 
-    public string? Text
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial string? Text { get; set; }
 
-    public bool Enable
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial bool Enable { get; set; }
 
     // Constructor
 
@@ -72,20 +62,42 @@ public sealed class EntryController : NotificationObject, IEntryController
         this.command = command;
     }
 
+    // Attach
+
+    void IEntryController.Attach(Entry view)
+    {
+        entry = view;
+        view.Completed += HandleCompleted;
+    }
+
+    void IEntryController.Detach()
+    {
+        if (entry is not null)
+        {
+            entry.Completed -= HandleCompleted;
+        }
+        entry = null;
+    }
+
     // Request
 
     public void FocusRequest()
     {
-        FocusRequestHandler?.Invoke(this, EventArgs.Empty);
+        entry?.Focus();
     }
 
     // Event
 
-    void IEntryController.HandleCompleted(EntryCompleteEvent e)
+    private void HandleCompleted(object? sender, EventArgs e)
     {
-        if ((command is not null) && command.CanExecute(e))
+        var ice = new EntryCompleteEvent();
+        if ((command is not null) && command.CanExecute(ice))
         {
-            command.Execute(e);
+            command.Execute(ice);
+            if (!ice.Handled)
+            {
+                ElementHelper.MoveFocusInRoot((Entry)sender!, true);
+            }
         }
     }
 }

@@ -4,13 +4,19 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             x:Class="Template.MobileApp.Modules.Sample.SampleWebView"
-             x:DataType="{x:Type module:SampleWebViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:SampleWebViewModel}"
-             shell:ShellProperty.Title="List"
+             x:Class="Template.MobileApp.Modules.Sample.SampleWebAppView"
+             x:DataType="{x:Type module:SampleWebAppViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SampleWebAppViewModel}"
+             shell:ShellProperty.Title="WebApp"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*">
+
+        <HybridWebView Grid.Row="0"
+                       DefaultFile="index.html" HybridRoot="web-app" />
+
+    </Grid>
 
 </ContentView>

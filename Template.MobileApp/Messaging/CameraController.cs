@@ -1,38 +1,38 @@
 namespace Template.MobileApp.Messaging;
 
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 
-using Smart.Linq;
-
-using Template.MobileApp.Helpers;
-
-public sealed class CameraPreviewEventArgs : ValueTaskEventArgs
+public interface ICameraController : INotifyPropertyChanged
 {
-    public bool Enable { get; set; }
+    // Property
+
+    public bool IsAvailable { get; set; }
+
+    public bool IsCameraBusy { get; set; }
+
+    public CameraInfo? Selected { get; set; }
+
+    public CameraFlashMode CameraFlashMode { get; set; }
+
+    public Size CaptureResolution { get; set; }
+
+    public float ZoomFactor { get; set; }
+
+    public bool IsTorchOn { get; set; }
+
+    // Attach
+
+    void Attach(CameraView view);
+
+    void Detach();
 }
 
-public sealed class CameraCaptureEventArgs : ValueTaskEventArgs<Stream?>
+public sealed partial class CameraController : ObservableObject, ICameraController
 {
-    public CancellationToken Token { get; set; } = CancellationToken.None;
-}
+    private CameraView? camera;
 
-public sealed class CameraGetAvailableListEventArgs : ValueTaskEventArgs<IReadOnlyList<CameraInfo>>
-{
-    public CancellationToken Token { get; set; } = CancellationToken.None;
-
-    public IReadOnlyList<CameraInfo> CameraList { get; set; } = [];
-}
-
-public sealed partial class CameraController : ObservableObject
-{
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<CameraGetAvailableListEventArgs>? GetAvailableListRequest;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<CameraPreviewEventArgs>? PreviewRequest;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<CameraCaptureEventArgs>? CaptureRequest;
+    // Property
 
     [ObservableProperty]
     public partial bool IsAvailable { get; set; }
@@ -55,41 +55,80 @@ public sealed partial class CameraController : ObservableObject
     [ObservableProperty]
     public partial bool IsTorchOn { get; set; }
 
+    // Attach
+
+    void ICameraController.Attach(CameraView view)
+    {
+        camera = view;
+    }
+
+    void ICameraController.Detach()
+    {
+        camera = null;
+    }
+
     // Message
 
-    public ValueTask<IReadOnlyList<CameraInfo>> GetAvailableListAsync(CancellationToken token = default)
+    public async ValueTask<IReadOnlyList<CameraInfo>> GetAvailableListAsync(CancellationToken token = default)
     {
-        var args = new CameraGetAvailableListEventArgs
+        if (camera is null)
         {
-            Token = token,
-            CameraList = []
-        };
-        GetAvailableListRequest?.Invoke(this, args);
-        return args.Task;
+            return [];
+        }
+
+        return await camera.GetAvailableCameras(token);
     }
 
-    public ValueTask StartPreviewAsync()
+    public void StartPreview()
     {
-        var args = new CameraPreviewEventArgs { Enable = true };
-        PreviewRequest?.Invoke(this, args);
-        return args.Task;
+        camera?.StartCameraPreview(CancellationToken.None);
     }
 
-    public ValueTask StopPreviewAsync()
+    public void StopPreview()
     {
-        var args = new CameraPreviewEventArgs();
-        PreviewRequest?.Invoke(this, args);
-        return args.Task;
+        camera?.StopCameraPreview();
     }
 
-    public ValueTask<Stream?> CaptureAsync(CancellationToken token = default)
+    public async ValueTask<Stream?> CaptureAsync(CancellationToken token = default)
     {
-        var args = new CameraCaptureEventArgs
+        if (camera is null)
         {
-            Token = token
-        };
-        CaptureRequest?.Invoke(this, args);
-        return args.Task;
+            return null;
+        }
+
+        var capture = new CaptureObject(camera);
+        return await capture.CaptureAsync(token);
+    }
+
+    private sealed class CaptureObject
+    {
+        private readonly TaskCompletionSource<Stream?> result = new();
+
+        private readonly CameraView view;
+
+        public CaptureObject(CameraView view)
+        {
+            this.view = view;
+        }
+
+        public async ValueTask<Stream?> CaptureAsync(CancellationToken token)
+        {
+            view.MediaCaptured += OnMediaCaptured;
+            view.MediaCaptureFailed += OnMediaCaptureFailed;
+            await view.CaptureImage(token);
+            return await result.Task;
+        }
+
+        private void OnMediaCaptured(object? sender, MediaCapturedEventArgs e) => OnMediaCaptured(e.Media);
+
+        private void OnMediaCaptureFailed(object? sender, MediaCaptureFailedEventArgs e) => OnMediaCaptured(null);
+
+        private void OnMediaCaptured(Stream? stream)
+        {
+            view.MediaCaptured -= OnMediaCaptured;
+            view.MediaCaptureFailed -= OnMediaCaptureFailed;
+            result.TrySetResult(stream);
+        }
     }
 }
 

@@ -25,16 +25,18 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Controller.StartPreviewAsync().ConfigureAwait(true);
+        Controller.StartPreview();
         IsPreview = true;
+        return Task.CompletedTask;
     }
 
-    public override async Task OnNavigatingFromAsync(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
-        await Controller.StopPreviewAsync().ConfigureAwait(true);
+        Controller.StopPreview();
         IsPreview = false;
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -46,18 +48,19 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         await Controller.SwitchCameraAsync().ConfigureAwait(true);
     }
 
-    protected override async Task OnNotifyFunction3()
+    protected override Task OnNotifyFunction3()
     {
         if (IsPreview)
         {
-            await Controller.StopPreviewAsync().ConfigureAwait(true);
+            Controller.StopPreview();
             IsPreview = false;
         }
         else
         {
-            await Controller.StartPreviewAsync().ConfigureAwait(true);
+            Controller.StartPreview();
             IsPreview = true;
         }
+        return Task.CompletedTask;
     }
 
     protected override async Task OnNotifyFunction4()

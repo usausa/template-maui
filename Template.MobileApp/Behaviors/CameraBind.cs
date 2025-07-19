@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Behaviors;
 
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 
 using Smart.Maui.Interactivity;
@@ -9,15 +8,15 @@ public static class CameraBind
 {
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
-        typeof(CameraController),
+        typeof(ICameraController),
         typeof(CameraBind),
         null,
         propertyChanged: BindChanged);
 
-    public static CameraController? GetController(BindableObject bindable) =>
-        (CameraController)bindable.GetValue(ControllerProperty);
+    public static ICameraController? GetController(BindableObject bindable) =>
+        (ICameraController)bindable.GetValue(ControllerProperty);
 
-    public static void SetController(BindableObject bindable, CameraController? value) =>
+    public static void SetController(BindableObject bindable, ICameraController? value) =>
         bindable.SetValue(ControllerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
@@ -44,7 +43,7 @@ public static class CameraBind
 
     private sealed class CameraBindBehavior : BehaviorBase<CameraView>
     {
-        private CameraController? controller;
+        private ICameraController? controller;
 
         protected override void OnAttachedTo(CameraView bindable)
         {
@@ -53,42 +52,36 @@ public static class CameraBind
             controller = GetController(bindable);
             if ((controller is not null) && (AssociatedObject is not null))
             {
-                controller.GetAvailableListRequest += OnGetAvailableListRequest;
-                controller.PreviewRequest += OnPreviewRequest;
-                controller.CaptureRequest += OnCaptureRequest;
+                controller.Attach(bindable);
 
                 AssociatedObject.SetBinding(
                     CameraView.IsAvailableProperty,
-                    new Binding(nameof(CameraController.IsAvailable), source: controller));
+                    new Binding(nameof(ICameraController.IsAvailable), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.IsCameraBusyProperty,
-                    new Binding(nameof(CameraController.IsCameraBusy), source: controller));
+                    new Binding(nameof(ICameraController.IsCameraBusy), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.SelectedCameraProperty,
-                    new Binding(nameof(CameraController.Selected), source: controller));
+                    new Binding(nameof(ICameraController.Selected), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.CameraFlashModeProperty,
-                    new Binding(nameof(CameraController.CameraFlashMode), source: controller));
+                    new Binding(nameof(ICameraController.CameraFlashMode), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.ImageCaptureResolutionProperty,
-                    new Binding(nameof(CameraController.CaptureResolution), source: controller));
+                    new Binding(nameof(ICameraController.CaptureResolution), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.ZoomFactorProperty,
-                    new Binding(nameof(CameraController.ZoomFactor), source: controller));
+                    new Binding(nameof(ICameraController.ZoomFactor), source: controller));
                 AssociatedObject.SetBinding(
                     CameraView.IsTorchOnProperty,
-                    new Binding(nameof(CameraController.IsTorchOn), source: controller));
+                    new Binding(nameof(ICameraController.IsTorchOn), source: controller));
             }
         }
 
         protected override void OnDetachingFrom(CameraView bindable)
         {
-            if (controller is not null)
-            {
-                controller.GetAvailableListRequest -= OnGetAvailableListRequest;
-                controller.PreviewRequest -= OnPreviewRequest;
-                controller.CaptureRequest -= OnCaptureRequest;
-            }
+            controller?.Detach();
+            controller = null;
 
             bindable.RemoveBinding(CameraView.IsAvailableProperty);
             bindable.RemoveBinding(CameraView.IsCameraBusyProperty);
@@ -101,91 +94,6 @@ public static class CameraBind
             controller = null;
 
             base.OnDetachingFrom(bindable);
-        }
-
-        private void OnGetAvailableListRequest(object? sender, CameraGetAvailableListEventArgs e)
-        {
-            if (AssociatedObject is null)
-            {
-                return;
-            }
-
-#pragma warning disable CA2012
-            e.Task = GetAvailableCameras(AssociatedObject);
-#pragma warning restore CA2012
-        }
-
-        private void OnPreviewRequest(object? sender, CameraPreviewEventArgs e)
-        {
-            if (AssociatedObject is null)
-            {
-                return;
-            }
-
-#pragma warning disable CA2012
-            e.Task = e.Enable ? StartCameraPreview(AssociatedObject) : StopCameraPreview(AssociatedObject);
-#pragma warning restore CA2012
-        }
-
-        private void OnCaptureRequest(object? sender, CameraCaptureEventArgs e)
-        {
-            var cameraView = AssociatedObject;
-            if (cameraView is null)
-            {
-                return;
-            }
-
-            var capture = new CaptureObject(cameraView);
-#pragma warning disable CA2012
-            e.Task = capture.CaptureAsync(e.Token);
-#pragma warning restore CA2012
-        }
-
-        private static ValueTask<IReadOnlyList<CameraInfo>> GetAvailableCameras(CameraView cameraView)
-        {
-            return cameraView.GetAvailableCameras(CancellationToken.None);
-        }
-
-        private static async ValueTask StartCameraPreview(CameraView cameraView)
-        {
-            await cameraView.StartCameraPreview(CancellationToken.None);
-        }
-
-        private static ValueTask StopCameraPreview(CameraView cameraView)
-        {
-            cameraView.StopCameraPreview();
-            return ValueTask.CompletedTask;
-        }
-
-        private sealed class CaptureObject
-        {
-            private readonly TaskCompletionSource<Stream?> result = new();
-
-            private readonly CameraView view;
-
-            public CaptureObject(CameraView view)
-            {
-                this.view = view;
-            }
-
-            public async ValueTask<Stream?> CaptureAsync(CancellationToken token)
-            {
-                view.MediaCaptured += OnMediaCaptured;
-                view.MediaCaptureFailed += OnMediaCaptureFailed;
-                await view.CaptureImage(token);
-                return await result.Task;
-            }
-
-            private void OnMediaCaptured(object? sender, MediaCapturedEventArgs e) => OnMediaCaptured(e.Media);
-
-            private void OnMediaCaptureFailed(object? sender, MediaCaptureFailedEventArgs e) => OnMediaCaptured(null);
-
-            private void OnMediaCaptured(Stream? stream)
-            {
-                view.MediaCaptured -= OnMediaCaptured;
-                view.MediaCaptureFailed -= OnMediaCaptureFailed;
-                result.TrySetResult(stream);
-            }
         }
     }
 }

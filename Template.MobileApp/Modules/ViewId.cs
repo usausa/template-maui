@@ -72,7 +72,8 @@ public enum ViewId
 
     // Sample
     SampleMenu,
-    SampleWeb,
+    SampleWebBasic,
+    SampleWebApp,
     SampleMap1,
     SampleMap2,
     SampleMedia,

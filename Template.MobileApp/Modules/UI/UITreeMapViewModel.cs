@@ -29,20 +29,22 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         if (IsPreview)
         {
-            await Controller.StartPreviewAsync().ConfigureAwait(true);
+            Controller.StartPreview();
         }
+        return Task.CompletedTask;
     }
 
-    public override async Task OnNavigatingFromAsync(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         if (IsPreview)
         {
-            await Controller.StopPreviewAsync().ConfigureAwait(true);
+            Controller.StopPreview();
         }
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
@@ -72,7 +74,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
                 return;
             }
 
-            await Controller.StopPreviewAsync().ConfigureAwait(true);
+            Controller.StopPreview();
 
             using var loading = dialog.Indicator();
 
@@ -95,7 +97,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
         }
         else
         {
-            await Controller.StartPreviewAsync().ConfigureAwait(true);
+            Controller.StartPreview();
             IsPreview = true;
         }
     }

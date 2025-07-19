@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Index</title>
+    <script src="scripts/HybridWebView.js"></script>
+    <script>
+        function UpdateStatus(msg) {
+            var status = document.getElementById("status");
+            status.value = msg;
+        }
+
+        window.addEventListener(
+            "HybridWebViewMessageReceived",
+            e => UpdateStatus("Raw message: " + e.detail.message));
+
+        // Call from C#
+
+        function Add(a, b) {
+            return a + b;
+        }
+
+        // Call to C#
+
+        async function InvokeMethod() {
+            UpdateStatus("Invoking InvokeAsyncMethod");
+            const result = await window.HybridWebView.InvokeDotNet('Calc', [123, 234]);
+            UpdateStatus("Invoked InvokeMethod, return value: " + result);
+        }
+
+        async function InvokeAsyncMethod() {
+            UpdateStatus("Invoking InvokeAsyncMethod");
+            const result = await window.HybridWebView.InvokeDotNet('ExecuteAsync', [123, 'Mofusand']);
+            UpdateStatus("Invoked InvokeAsyncMethod, return value: id=" + result.Id + ", name=" + result.Name);
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <a href="other.html">other page</a>
+    </div>
+    <div>
+        <button onclick="window.HybridWebView.SendRawMessage('From JS')">Send message to C#</button>
+    </div>
+    <div>
+        <button onclick="InvokeMethod()">Call C# method</button>
+        <button onclick="InvokeAsyncMethod()">Call C# async method</button>
+    </div>
+    <div>
+        <div>Log:</div>
+        <textarea readonly id="status" style="width: 100%; height: 5em;"></textarea>
+    </div>
+</body>
+</html>
