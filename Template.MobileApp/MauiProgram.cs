@@ -90,9 +90,8 @@ public static partial class MauiProgram
                 GridOrigin = DebugGridOrigin.TopLeft
             });
 #endif
-
-        return builder;
 #endif
+        return builder;
     }
 
     // ------------------------------------------------------------
