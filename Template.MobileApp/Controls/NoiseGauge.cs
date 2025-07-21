@@ -4,7 +4,7 @@ using System;
 
 using Font = Microsoft.Maui.Graphics.Font;
 
-internal class NoiseGauge : GraphicsView, IDrawable
+public sealed class NoiseGauge : GraphicsView, IDrawable
 {
     private const float StartAngle = 210f;
     private const float EndAngle = -30f;
