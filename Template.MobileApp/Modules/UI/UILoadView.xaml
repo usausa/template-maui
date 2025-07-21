@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
              x:DataType="{x:Type module:UILoadViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UILoadViewModel}"
@@ -14,55 +15,80 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="NoiseGauge"
+                   TargetType="controls:NoiseGauge">
+                <Setter Property="WarningGaugeColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="NeedleColor" Value="{StaticResource DeepOrangeDarken1}" />
+                <Setter Property="NeedleCenterColor" Value="{StaticResource DeepOrangeDefault}" />
+            </Style>
+
+            <Style x:Key="ValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="72" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="End" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SummaryNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,*,Auto,*"
+          RowDefinitions="*,Auto,*"
           BackgroundColor="#2E2F45">
 
+        <controls:NoiseGauge Grid.Row="0"
+                             Style="{StaticResource NoiseGauge}"
+                             Value="{Binding Current}" />
+
         <Label Grid.Row="0"
-               HorizontalTextAlignment="Center"
-               FontSize="48"
-               TextColor="White"
+               Style="{StaticResource ValueLabel}"
                Text="{Binding Current, StringFormat='{0:F1} dB'}" />
 
-
-
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="1"
               Style="{StaticResource FillGrid}"
               RowDefinitions="Auto,Auto"
               ColumnDefinitions="*,*,*">
             <Label Grid.Row="0" Grid.Column="0"
-                   HorizontalTextAlignment="Center"
-                   FontSize="12"
-                   TextColor="White"
+                   Style="{StaticResource SummaryNameLabel}"
                    Text="MIN" />
             <Label Grid.Row="0" Grid.Column="1"
-                   HorizontalTextAlignment="Center"
-                   FontSize="12"
-                   TextColor="White"
+                   Style="{StaticResource SummaryNameLabel}"
                    Text="AVG" />
             <Label Grid.Row="0" Grid.Column="2"
-                   HorizontalTextAlignment="Center"
-                   FontSize="12"
-                   TextColor="White"
+                   Style="{StaticResource SummaryNameLabel}"
                    Text="MAX" />
             <Label Grid.Row="1" Grid.Column="0"
-                   HorizontalTextAlignment="Center"
-                   FontSize="24"
-                   TextColor="White"
+                   Style="{StaticResource SummaryValueLabel}"
                    Text="{Binding Min, StringFormat='{0:F1} dB'}" />
             <Label Grid.Row="2" Grid.Column="1"
-                   HorizontalTextAlignment="Center"
-                   FontSize="24"
-                   TextColor="White"
+                   Style="{StaticResource SummaryValueLabel}"
                    Text="{Binding Average, StringFormat='{0:F1} dB'}" />
             <Label Grid.Row="3" Grid.Column="2"
-                   HorizontalTextAlignment="Center"
-                   FontSize="24"
-                   TextColor="White"
+                   Style="{StaticResource SummaryValueLabel}"
                    Text="{Binding Max, StringFormat='{0:F1} dB'}" />
         </Grid>
 
-        <graphics:GraphicsControl Grid.Row="3"
+        <graphics:GraphicsControl Grid.Row="2"
                                   Graphics="{Binding Graphics}" />
 
     </Grid>
