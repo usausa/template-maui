@@ -28,18 +28,13 @@ public sealed class GraphicsControl : GraphicsView
     {
         if (oldValue is not null)
         {
-            oldValue.InvalidateRequest -= HandlePropertyChanged;
+            oldValue.Detach();
             Drawable = null!;
         }
         if (newValue is not null)
         {
-            newValue.InvalidateRequest += HandlePropertyChanged;
+            newValue.Attach(this);
             Drawable = newValue;
         }
-    }
-
-    private void HandlePropertyChanged(object? sender, EventArgs e)
-    {
-        Invalidate();
     }
 }

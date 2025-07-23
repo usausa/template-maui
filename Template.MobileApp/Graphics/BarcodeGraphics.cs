@@ -12,7 +12,7 @@ public sealed class BarcodeGraphics : GraphicsObject
         Invalidate();
     }
 
-    public override void Draw(ICanvas canvas, RectF dirtyRect)
+    protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
         if (results is not null && results.Count > 0)
         {

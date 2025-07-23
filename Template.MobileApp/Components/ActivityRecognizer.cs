@@ -1,36 +1,28 @@
 namespace Template.MobileApp.Components;
 
-#pragma warning disable CA1819
-public interface INfc
+public sealed class ActivityEventArgs : EventArgs
 {
-    byte[] Id { get; }
+    public DateTime Timestamp { get; }
 
-    void SetTimeout(int timeout);
+    public int Counter { get; }
 
-    byte[] Access(byte[] command);
-}
-#pragma warning restore CA1819
-
-public sealed class NfcEventArgs : EventArgs
-{
-    public INfc Tag { get; }
-
-    public NfcEventArgs(INfc tag)
+    public ActivityEventArgs(DateTime timestamp, int counter)
     {
-        Tag = tag;
+        Timestamp = timestamp;
+        Counter = counter;
     }
 }
 
-public interface INfcReader
+public interface IActivityRecognizer
 {
-    event EventHandler<NfcEventArgs>? Detected;
+    event EventHandler<ActivityEventArgs>? Changed;
 
-    bool Enabled { get; set; }
+    public bool Enabled { get; set; }
 }
 
-public sealed partial class NfcReader : INfcReader
+public sealed partial class ActivityRecognizer : IActivityRecognizer
 {
-    public event EventHandler<NfcEventArgs>? Detected;
+    public event EventHandler<ActivityEventArgs>? Changed;
 
     public bool Enabled
     {

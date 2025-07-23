@@ -108,4 +108,7 @@ public static class Extensions
 
     public static IObservable<NoiseEventArgs> MeasuredAsObservable(this INoiseMonitor noiseMonitor) =>
         Observable.FromEvent<EventHandler<NoiseEventArgs>, NoiseEventArgs>(static h => (_, e) => h(e), h => noiseMonitor.Measured += h, h => noiseMonitor.Measured -= h);
+
+    public static IObservable<ActivityEventArgs> ChangedAsObservable(this IActivityRecognizer activityRecognizer) =>
+        Observable.FromEvent<EventHandler<ActivityEventArgs>, ActivityEventArgs>(static h => (_, e) => h(e), h => activityRecognizer.Changed += h, h => activityRecognizer.Changed -= h);
 }

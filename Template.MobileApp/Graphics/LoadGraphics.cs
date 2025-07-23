@@ -95,7 +95,7 @@ public sealed class LoadGraphics : GraphicsObject
         Invalidate();
     }
 
-    public override void Draw(ICanvas canvas, RectF dirtyRect)
+    protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
         canvas.FillColor = BackgroundColor;
         canvas.FillRectangle(dirtyRect);

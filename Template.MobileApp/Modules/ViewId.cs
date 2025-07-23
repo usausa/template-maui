@@ -59,6 +59,7 @@ public enum ViewId
 
     DeviceNfc,
     DeviceAudio,
+    DeviceActivity,
     DeviceBiometric,
 
     DeviceMisc,
@@ -94,6 +95,8 @@ public enum ViewId
     UIProfile,
     UIMoney,
     UIDock,
+    UIPos,
+    UISuper,
     UISchedule,
     UIMail,
     UIMeter,
@@ -104,6 +107,5 @@ public enum ViewId
     UITreeMap,
     UIRadar,
     UICockpit,
-    UISuper,
     UISocial
 }

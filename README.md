@@ -10,6 +10,7 @@ Template project for MAUI.
 
 <img width="25%" src="Document/Device_BLE.png" />
 <img width="25%" src="Document/Device_NFC.png" />
+<img width="25%" src="Document/Device_Activity.png" />
 
 ## Sample
 

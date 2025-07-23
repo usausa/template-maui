@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
+             x:Class="Template.MobileApp.Modules.Device.DeviceActivityView"
+             x:DataType="{x:Type module:DeviceActivityViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:DeviceActivityViewModel}"
+             shell:ShellProperty.Title="Activity"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ActivityVerticalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ActivityValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ActivityUnitLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ActivityIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="DetailVerticalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12,24" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="DetailBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="StrokeThickness" Value="1" />
+            </Style>
+
+            <Style x:Key="DetailGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DetailIconLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DetailNameLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DetailValueLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DetailUnitLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="18,*,*"
+          BackgroundColor="White">
+
+        <graphics:GraphicsControl Grid.Row="1"
+                                  Graphics="{Binding Graphics}" />
+
+        <VerticalStackLayout Grid.Row="1"
+                             Style="{StaticResource ActivityVerticalStack}">
+            <Label Style="{StaticResource ActivityValueLabel}"
+                   Text="{Binding Calculator.Step, StringFormat='{0:N0}'}" />
+            <Label Style="{StaticResource ActivityUnitLabel}"
+                   Text="歩" />
+        </VerticalStackLayout>
+
+        <Label Grid.Row="1"
+               Style="{StaticResource ActivityIconLabel}"
+               Text="👟" />
+
+        <VerticalStackLayout Grid.Row="2"
+                             Style="{StaticResource DetailVerticalStack}">
+            <Border Style="{StaticResource DetailBorder}">
+                <Grid Style="{StaticResource DetailGrid}"
+                      RowDefinitions="Auto,1,Auto,1,Auto"
+                      ColumnDefinitions="Auto,Auto,*,Auto">
+
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource DetailIconLabel}"
+                           Text="🔥" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource DetailNameLabel}"
+                           Text="消費カロリー" />
+                    <Label Grid.Row="0" Grid.Column="2"
+                           Style="{StaticResource DetailValueLabel}"
+                           Text="{Binding Calculator.Calories, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
+                    <Label Grid.Row="0" Grid.Column="3"
+                           Style="{StaticResource DetailUnitLabel}"
+                           Text="kcal" />
+
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                             Style="{StaticResource SeparatorBoxView}" />
+
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource DetailIconLabel}"
+                           Text="🏃" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource DetailNameLabel}"
+                           Text="距離" />
+                    <Label Grid.Row="2" Grid.Column="2"
+                           Style="{StaticResource DetailValueLabel}"
+                           Text="{Binding Calculator.Distance, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
+                    <Label Grid.Row="2" Grid.Column="3"
+                           Style="{StaticResource DetailUnitLabel}"
+                           Text="km" />
+
+                    <BoxView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"
+                             Style="{StaticResource SeparatorBoxView}" />
+
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource DetailIconLabel}"
+                           Text="⏱" />
+                    <Label Grid.Row="4" Grid.Column="1"
+                           Style="{StaticResource DetailNameLabel}"
+                           Text="活動時間" />
+                    <Label Grid.Row="4" Grid.Column="2"
+                           Style="{StaticResource DetailValueLabel}"
+                           Text="{Binding Calculator.ActivityTime.TotalHours, StringFormat='{0:F2}'}" />
+                    <Label Grid.Row="4" Grid.Column="3"
+                           Style="{StaticResource DetailUnitLabel}"
+                           Text="時間" />
+
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentView>

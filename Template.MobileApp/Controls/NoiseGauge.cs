@@ -1,10 +1,11 @@
 namespace Template.MobileApp.Controls;
 
 using System;
+using System.Timers;
 
 using Font = Microsoft.Maui.Graphics.Font;
 
-public sealed class NoiseGauge : GraphicsView, IDrawable
+public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
 {
     private const float StartAngle = 210f;
     private const float EndAngle = -30f;
@@ -12,13 +13,17 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
 
     private static readonly Font DefaultFont = new("Arial");
 
+    private double animatedValue;
+
+    private readonly System.Timers.Timer animationTimer = new(1000d / 60);
+
     // Value
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(double),
         typeof(NoiseGauge),
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: HandleValueChanged);
 
     public double Value
     {
@@ -31,7 +36,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(double),
         typeof(NoiseGauge),
         20d,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public double Min
     {
@@ -44,7 +49,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(double),
         typeof(NoiseGauge),
         120d,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public double Max
     {
@@ -57,7 +62,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(double),
         typeof(NoiseGauge),
         70d,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public double Threshold
     {
@@ -72,7 +77,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         12f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float BorderMargin
     {
@@ -85,7 +90,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         4f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float GaugeWidth
     {
@@ -98,7 +103,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         12f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float TickLength
     {
@@ -111,7 +116,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         18f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float MinorTickLength
     {
@@ -124,7 +129,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         24f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float MajorTickLength
     {
@@ -137,7 +142,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         1f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float TickWidth
     {
@@ -150,7 +155,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         2f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float MinorTickWidth
     {
@@ -163,7 +168,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         4f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float MajorTickWidth
     {
@@ -176,7 +181,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         44f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float TextOffset
     {
@@ -189,7 +194,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         11f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float NeedleWidth
     {
@@ -202,7 +207,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         10f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float CenterCircleRadius
     {
@@ -215,7 +220,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         1f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float NeedleLengthPercentage
     {
@@ -228,7 +233,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         0.15f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float NeedleBackLengthPercentage
     {
@@ -243,7 +248,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(Font),
         typeof(NoiseGauge),
         DefaultFont,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Font Font
     {
@@ -256,7 +261,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(NoiseGauge),
         18f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float FontSize
     {
@@ -271,7 +276,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(Color),
         typeof(NoiseGauge),
         Colors.White,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Color TextColor
     {
@@ -286,7 +291,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(Color),
         typeof(NoiseGauge),
         Colors.Red,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Color WarningGaugeColor
     {
@@ -299,7 +304,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(Color),
         typeof(NoiseGauge),
         Colors.Red,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Color NeedleColor
     {
@@ -312,7 +317,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
         typeof(Color),
         typeof(NoiseGauge),
         Colors.Red,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Color NeedleCenterColor
     {
@@ -324,9 +329,43 @@ public sealed class NoiseGauge : GraphicsView, IDrawable
     {
         Drawable = this;
         BackgroundColor = Colors.Transparent;
+
+        animationTimer.Elapsed += TimerElapsed;
     }
 
-    private static void PropertyValueChanged(BindableObject bindable, object oldValue, object newValue)
+    public void Dispose()
+    {
+        animationTimer.Dispose();
+    }
+
+    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (Math.Abs(animatedValue - Value) < 0.1)
+        {
+            animationTimer.Stop();
+            animatedValue = Value;
+        }
+        else
+        {
+            var diff = Value - animatedValue;
+            animatedValue += diff * 0.1;
+        }
+
+        Dispatcher.Dispatch(Invalidate);
+    }
+
+    private void HandleValueChanged(double oldValue)
+    {
+        animatedValue = oldValue;
+        animationTimer.Start();
+    }
+
+    private static void HandleValueChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((NoiseGauge)bindable).HandleValueChanged((double)oldValue);
+    }
+
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
     {
         ((NoiseGauge)bindable).Invalidate();
     }

@@ -12,7 +12,7 @@ public sealed class ColorTreeMapGraphics : GraphicsObject
         Invalidate();
     }
 
-    public override void Draw(ICanvas canvas, RectF dirtyRect)
+    protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
         canvas.SaveState();
         canvas.FillColor = Colors.White;

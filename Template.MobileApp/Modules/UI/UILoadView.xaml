@@ -28,10 +28,19 @@
 
             <Style x:Key="ValueLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="72" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="End" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="72" />
+            </Style>
+
+            <Style x:Key="UnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
             </Style>
 
             <Style x:Key="SummaryNameLabel"
@@ -48,6 +57,16 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <Style x:Key="SummaryValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <Style x:Key="SummaryUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -61,8 +80,16 @@
                              Value="{Binding Current}" />
 
         <Label Grid.Row="0"
-               Style="{StaticResource ValueLabel}"
-               Text="{Binding Current, StringFormat='{0:F1} dB'}" />
+               Style="{StaticResource ValueLabel}">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Style="{StaticResource ValueSpan}"
+                          Text="{Binding Current, StringFormat='{0:F1}'}" />
+                    <Span Style="{StaticResource UnitSpan}"
+                          Text=" dB" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
 
         <Grid Grid.Row="1"
               Style="{StaticResource FillGrid}"
@@ -78,14 +105,38 @@
                    Style="{StaticResource SummaryNameLabel}"
                    Text="MAX" />
             <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource SummaryValueLabel}"
-                   Text="{Binding Min, StringFormat='{0:F1} dB'}" />
+                   Style="{StaticResource SummaryValueLabel}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Style="{StaticResource SummaryValueSpan}"
+                              Text="{Binding Min, StringFormat='{0:F1}'}" />
+                        <Span Style="{StaticResource SummaryUnitSpan}"
+                              Text=" dB" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
             <Label Grid.Row="2" Grid.Column="1"
-                   Style="{StaticResource SummaryValueLabel}"
-                   Text="{Binding Average, StringFormat='{0:F1} dB'}" />
+                   Style="{StaticResource SummaryValueLabel}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Style="{StaticResource SummaryValueSpan}"
+                              Text="{Binding Average, StringFormat='{0:F1}'}" />
+                        <Span Style="{StaticResource SummaryUnitSpan}"
+                              Text=" dB" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
             <Label Grid.Row="3" Grid.Column="2"
-                   Style="{StaticResource SummaryValueLabel}"
-                   Text="{Binding Max, StringFormat='{0:F1} dB'}" />
+                   Style="{StaticResource SummaryValueLabel}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Style="{StaticResource SummaryValueSpan}"
+                              Text="{Binding Max, StringFormat='{0:F1}'}" />
+                        <Span Style="{StaticResource SummaryUnitSpan}"
+                              Text=" dB" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
         </Grid>
 
         <graphics:GraphicsControl Grid.Row="2"

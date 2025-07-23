@@ -8,7 +8,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         typeof(Color),
         typeof(SpeedGauge),
         Colors.LightGray,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Color GaugeColor
     {
@@ -21,7 +21,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         typeof(Color),
         typeof(SpeedGauge),
         Colors.Turquoise,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public Color ValueColor
     {
@@ -34,7 +34,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(SpeedGauge),
         10f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float BorderMargin
     {
@@ -47,7 +47,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         typeof(float),
         typeof(SpeedGauge),
         32f,
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public float GaugeWidth
     {
@@ -59,7 +59,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         nameof(MaxSpeed),
         typeof(int),
         typeof(SpeedGauge),
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public int MaxSpeed
     {
@@ -71,7 +71,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         nameof(Speed),
         typeof(int),
         typeof(SpeedGauge),
-        propertyChanged: PropertyValueChanged);
+        propertyChanged: Invalidate);
 
     public int Speed
     {
@@ -85,7 +85,7 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         BackgroundColor = Colors.Transparent;
     }
 
-    private static void PropertyValueChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
     {
         ((SpeedGauge)bindable).Invalidate();
     }

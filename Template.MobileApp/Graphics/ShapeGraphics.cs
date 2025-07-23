@@ -42,7 +42,7 @@ public sealed class ShapeGraphics : GraphicsObject
 
     public List<IShape> Shapes { get; } = new();
 
-    public override void Draw(ICanvas canvas, RectF dirtyRect)
+    protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
         if ((Size.Width != 0) && (Size.Height != 0))
         {

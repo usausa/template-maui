@@ -2,7 +2,7 @@ namespace Template.MobileApp.Components;
 
 public interface IOcrReader
 {
-    public Task<string?> ReadTextAsync(Stream stream);
+    Task<string?> ReadTextAsync(Stream stream);
 }
 
 public sealed partial class OcrReader : IOcrReader

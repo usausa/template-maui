@@ -18,7 +18,7 @@ public sealed class DetectGraphics : GraphicsObject
         Invalidate();
     }
 
-    public override void Draw(ICanvas canvas, RectF dirtyRect)
+    protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
         if ((width == 0) || (height == 0) || (results.Length == 0))
         {
