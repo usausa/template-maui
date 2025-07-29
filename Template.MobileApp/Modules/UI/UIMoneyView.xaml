@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
              x:DataType="{x:Type module:UIMoneyViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIMoneyViewModel}"
@@ -18,7 +18,278 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="SeparatorBoxView"
+            <!-- Background -->
+            <Style x:Key="BackgroundGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+            </Style>
+
+            <!-- Header -->
+            <Style x:Key="HeaderBackgroundBorder"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0.0" Color="{StaticResource RedLighten5}" />
+                            <GradientStop Offset="1.0" Color="{StaticResource RedLighten4}" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="0,0,36,36" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="HeaderBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,16,16,40" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+
+            <Style x:Key="HeaderLogoLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderLogoIconSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+
+            <Style x:Key="HeaderLogoNameSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <Style x:Key="HeaderInformationButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="108" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource LightBlueDefault}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HeaderAmountLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderAmountValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+
+            <Style x:Key="HeaderAmountUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HeaderPointLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderPointNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+
+            <Style x:Key="HeaderPointValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderPointValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HeaderPointUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <!-- Rank -->
+            <Style x:Key="RankBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="320" />
+                <Setter Property="TranslationY" Value="-20" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stroke" Value="{StaticResource RedLighten3}" />
+                <!-- TranslationY is not applied to Shadow on Android
+                <Setter Property="Shadow">
+                    <Shadow Brush="{StaticResource RedLighten1}"
+                            Opacity="0.5" Radius="12" />
+                </Setter>
+                -->
+            </Style>
+            <Style x:Key="RankView"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="RankBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="BackgroundColor" Value="Silver" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="RankBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="RankValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="RankLinkLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <!-- Menu -->
+            <Style x:Key="MenuBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="MenuGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,16" />
+                <Setter Property="RowSpacing" Value="16" />
+            </Style>
+
+            <Style x:Key="MenuImageButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                            <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="MenuLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <!-- Detail -->
+            <Style x:Key="DetailLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="16,0,16,16" />
+            </Style>
+
+            <Style x:Key="DetailBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="DetailSeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="DetailViewWithLink"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DetailViewWithoutLink"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="None" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DetailGridWithLink"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,8,0,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DetailGridWithoutLink"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DetailNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="DetailValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="DetailNextLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="DetailButton"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <!-- Bottom select -->
+            <Style x:Key="BottomSelectSeparatorBoxView"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="0.5" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
@@ -29,36 +300,33 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="BottomSelectButton"
-                   TargetType="Button">
-                <Setter Property="AbsoluteLayout.LayoutBounds" Value="0,0,1,-1" />
-                <Setter Property="AbsoluteLayout.LayoutFlags" Value="WidthProportional" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="CornerRadius" Value="0" />
-                <Setter Property="ContentLayout" Value="Top, 0" />
-                <Setter Property="FontSize" Value="10" />
-                <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
+            <Style x:Key="BottomSelectView"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="None" />
             </Style>
 
-            <Style x:Key="CenterFloatingButton"
-                   TargetType="Button">
-                <Setter Property="WidthRequest" Value="72" />
-                <Setter Property="HeightRequest" Value="72" />
-                <Setter Property="CornerRadius" Value="36" />
-                <Setter Property="TranslationY" Value="-12" />
+            <Style x:Key="BottomSelectImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
+
+            <Style x:Key="BottomSelectLabel"
+                   TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="End" />
-                <Setter Property="ContentLayout" Value="Top, 0" />
-                <Setter Property="FontSize" Value="10" />
-                <Setter Property="ZIndex" Value="100" />
+                <Setter Property="FontSize" Value="12" />
             </Style>
 
+            <!-- Bottom select badge -->
             <Style x:Key="BottomSelectBadgeBorder"
                    TargetType="Border">
-                <Setter Property="AbsoluteLayout.LayoutBounds" Value="0.8,0.1,20,20" />
-                <Setter Property="AbsoluteLayout.LayoutFlags" Value="PositionProportional" />
                 <Setter Property="WidthRequest" Value="20" />
                 <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="TranslationX" Value="20" />
+                <Setter Property="TranslationY" Value="4" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
                 <Setter Property="StrokeShape" Value="Ellipse" />
                 <Setter Property="StrokeThickness" Value="0" />
             </Style>
@@ -69,8 +337,46 @@
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Center button -->
+            <Style x:Key="CenterButtonBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="TranslationY" Value="-12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="CenterButtonView"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+            </Style>
+
+            <Style x:Key="CenterButtonLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterButtonImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+            </Style>
+
+
+            <Style x:Key="CenterButtonLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
@@ -80,87 +386,301 @@
 
     <Grid RowDefinitions="*,Auto,Auto">
 
+        <!-- Content -->
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout>
 
-                <Grid RowDefinitions="192">
-                    <Path Grid.Row="0"
-                          Aspect="Fill" Data="M0 0 L112 0 L112 48 A12 16 90 0 1 100 60 L12 60 A12 16 90 0 1 0 48 L0 0 Z" StrokeThickness="0">
-                        <Path.Fill>
-                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Offset="0.0" Color="{StaticResource RedLighten4}" />
-                                <GradientStop Offset="1.0" Color="{StaticResource RedLighten3}" />
-                            </LinearGradientBrush>
-                        </Path.Fill>
-                    </Path>
+            <Grid Style="{StaticResource BackgroundGrid}"
+                  RowDefinitions="196,40,Auto,*">
 
-                    <Border Margin="16,16,16,48"
-                            BackgroundColor="White"
-                            StrokeShape="RoundRectangle 12" StrokeThickness="0" />
-                </Grid>
+                <!-- Header -->
+                <Border Grid.Row="0"
+                        Style="{StaticResource HeaderBackgroundBorder}" />
 
+                <Border Grid.Row="0"
+                        Style="{StaticResource HeaderBorder}">
+                    <Grid Style="{StaticResource HeaderGrid}"
+                          RowDefinitions="*,*"
+                          ColumnDefinitions="3*,2*">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource HeaderLogoLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Style="{StaticResource HeaderLogoIconSpan}"
+                                          Text="🐰" />
+                                    <Span Style="{StaticResource HeaderLogoNameSpan}"
+                                          Text="うさペイ残高" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Button Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource HeaderInformationButton}"
+                                Text="詳細" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource HeaderAmountLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Style="{StaticResource HeaderAmountValueSpan}"
+                                          Text="20,000" />
+                                    <Span Style="{StaticResource HeaderAmountUnitSpan}"
+                                          Text=" 円" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1"
+                                             Style="{StaticResource HeaderPointLayout}">
+                            <Label Style="{StaticResource HeaderPointNameLabel}"
+                                   Text="ポイント残高" />
+                            <Label Style="{StaticResource HeaderPointValueLabel}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Style="{StaticResource HeaderPointValueSpan}"
+                                              Text="1,234" />
+                                        <Span Style="{StaticResource HeaderPointUnitSpan}"
+                                              Text=" pt" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
 
-            </VerticalStackLayout>
+                <!-- Rank -->
+                <Border Grid.Row="1"
+                        Style="{StaticResource RankBorder}">
+                    <toolkit:SfEffectsView Style="{StaticResource RankView}">
+                        <Grid ColumnDefinitions="36,*,36">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource RankBadgeBorder}">
+                                <Label Style="{StaticResource RankBadgeLabel}"
+                                       Text="S" />
+                            </Border>
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource RankValueLabel}"
+                                   Text="シルバーランク会員" />
+                            <Label Grid.Column="2"
+                                   Style="{StaticResource RankLinkLabel}"
+                                   Text="➡️" />
+                        </Grid>
+                    </toolkit:SfEffectsView>
+                </Border>
+
+                <!-- Menu -->
+                <Border Grid.Row="2"
+                        Style="{StaticResource MenuBorder}">
+                    <Grid Style="{StaticResource MenuGrid}"
+                          RowDefinitions="*,*"
+                          ColumnDefinitions="*,*,*,*">
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="stars.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="クーポン" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="view_compact.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="スタンプ" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="2">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="paid.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="ポイント" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="3">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="add_circle.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="チャージ" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="scan.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="スキャン" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="send_money.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="送る" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="2">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="receipt.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="履歴" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="3">
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="shopping_cart.png" />
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="カート" />
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Border>
+
+                <!-- Detail -->
+                <VerticalStackLayout Grid.Row="3"
+                                     Style="{StaticResource DetailLayout}">
+                    <Border Style="{StaticResource DetailBorder}">
+                        <VerticalStackLayout>
+                            <toolkit:SfEffectsView Style="{StaticResource DetailViewWithLink}">
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="💰 利用可能額" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource DetailValueLabel}"
+                                           Text="21,234 円" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
+                            </toolkit:SfEffectsView>
+
+                            <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
+
+                            <toolkit:SfEffectsView Style="{StaticResource DetailViewWithLink}">
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="🪙 うさうさポイント" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource DetailValueLabel}"
+                                           Text="1,234 pt" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
+                            </toolkit:SfEffectsView>
+
+                            <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
+
+                            <toolkit:SfEffectsView Style="{StaticResource DetailViewWithoutLink}">
+                                <Grid Style="{StaticResource DetailGridWithoutLink}"
+                                      ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="💳 うさうさカード" />
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource DetailButton}"
+                                            Margin="0" Padding="8,2"
+                                            FontSize="14"
+                                            Text="クレジット設定"
+                                            TextColor="White"
+                                            BackgroundColor="{StaticResource BlueDefault}"
+                                            CornerRadius="4" />
+                                </Grid>
+                            </toolkit:SfEffectsView>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+            </Grid>
+
         </ScrollView>
 
+        <!-- Bottom select -->
         <BoxView Grid.Row="1"
-                 Style="{StaticResource SeparatorBoxView}" />
+                 Style="{StaticResource BottomSelectSeparatorBoxView}" />
 
         <Grid Grid.Row="2"
               Style="{StaticResource BottomSelectGrid}"
               ColumnDefinitions="*,*,72,*,*">
-            <AbsoluteLayout Grid.Column="0">
-                <Button Style="{StaticResource BottomSelectButton}"
-                        Command="{Binding PageCommand}"
-                        CommandParameter="{x:Static models:MoneyPage.Home}"
-                        Text="ホーム"
-                        TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Home, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
-                        ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
-            </AbsoluteLayout>
-            <AbsoluteLayout Grid.Column="1">
-                <Button Style="{StaticResource BottomSelectButton}"
-                        Command="{Binding PageCommand}"
-                        CommandParameter="{x:Static models:MoneyPage.Search}"
-                        Text="検索"
-                        TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Search, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
-                        ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
-            </AbsoluteLayout>
-            <AbsoluteLayout Grid.Column="3">
-                <Button Style="{StaticResource BottomSelectButton}"
-                        Command="{Binding PageCommand}"
-                        CommandParameter="{x:Static models:MoneyPage.Notifications}"
-                        Text="お知らせ"
-                        TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Notifications, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
-                        ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
-                <Border Style="{StaticResource BottomSelectBadgeBorder}"
-                        IsVisible="{Binding NotificationCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 Value=0}}"
-                        BackgroundColor="{StaticResource OrangeDefault}">
-                    <Label Style="{StaticResource BottomSelectBadgeLabel}"
-                           Text="{Binding NotificationCount}" />
-                </Border>
-            </AbsoluteLayout>
-            <AbsoluteLayout Grid.Column="4">
-                <Button Style="{StaticResource BottomSelectButton}"
-                        Command="{Binding PageCommand}"
-                        CommandParameter="{x:Static models:MoneyPage.Account}"
-                        Text="アカウント"
-                        TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Account, Selected={StaticResource RedDefault}, Default={StaticResource GrayDefault}}}"
-                        ImageSource="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
-                <Border Style="{StaticResource BottomSelectBadgeBorder}"
-                        IsVisible="{Binding HasAccountAlert}"
-                        BackgroundColor="{StaticResource OrangeDefault}">
-                    <Label Style="{StaticResource BottomSelectBadgeLabel}"
-                           Text="!" />
-                </Border>
-            </AbsoluteLayout>
+
+            <toolkit:SfEffectsView Grid.Column="0"
+                                   TouchDownCommand="{Binding PageCommand}"
+                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Home}"
+                                   TouchDownEffects="None">
+                <Grid RowDefinitions="*,Auto">
+                    <Image Grid.Row="0"
+                           Style="{StaticResource BottomSelectImage}"
+                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
+                    <Label Grid.Row="1"
+                           Style="{StaticResource BottomSelectLabel}"
+                           Text="ホーム"
+                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Home, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Column="1"
+                                   TouchDownCommand="{Binding PageCommand}"
+                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Search}"
+                                   TouchDownEffects="None">
+                <Grid RowDefinitions="*,Auto">
+                    <Image Grid.Row="0"
+                           Style="{StaticResource BottomSelectImage}"
+                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
+                    <Label Grid.Row="1"
+                           Style="{StaticResource BottomSelectLabel}"
+                           Text="検索"
+                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Search, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Column="3"
+                                   TouchDownCommand="{Binding PageCommand}"
+                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Notifications}"
+                                   TouchDownEffects="None">
+                <Grid RowDefinitions="*,Auto">
+                    <Image Grid.Row="0"
+                           Style="{StaticResource BottomSelectImage}"
+                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
+                    <Label Grid.Row="1"
+                           Style="{StaticResource BottomSelectLabel}"
+                           Text="お知らせ"
+                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Notifications, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                    <Border Grid.Row="0" Grid.RowSpan="2"
+                            Style="{StaticResource BottomSelectBadgeBorder}"
+                            IsVisible="{Binding HasAccountAlert}">
+                        <Label Style="{StaticResource BottomSelectBadgeLabel}"
+                               Text="{Binding NotificationCount}" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Column="4"
+                                   TouchDownCommand="{Binding PageCommand}"
+                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Account}"
+                                   TouchDownEffects="None">
+                <Grid RowDefinitions="*,Auto">
+                    <Image Grid.Row="0"
+                           Style="{StaticResource BottomSelectImage}"
+                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
+                    <Label Grid.Row="1"
+                           Style="{StaticResource BottomSelectLabel}"
+                           Text="アカウント"
+                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Account, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                    <Border Grid.Row="0" Grid.RowSpan="2"
+                            Style="{StaticResource BottomSelectBadgeBorder}"
+                            IsVisible="{Binding HasAccountAlert}">
+                        <Label Style="{StaticResource BottomSelectBadgeLabel}"
+                               Text="!" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+
         </Grid>
 
-        <Button Grid.RowSpan="3"
-                Style="{StaticResource CenterFloatingButton}"
-                Text="支払い"
-                TextColor="White"
-                BackgroundColor="{StaticResource RedDefault}"
-                ImageSource="qr_code.png" />
+        <!-- Center button -->
+        <Border Grid.RowSpan="3"
+                Style="{StaticResource CenterButtonBorder}">
+            <toolkit:SfEffectsView Style="{StaticResource CenterButtonView}">
+                <VerticalStackLayout Style="{StaticResource CenterButtonLayout}">
+                    <Image Style="{StaticResource CenterButtonImage}"
+                           Source="qr_code.png" />
+                    <Label Style="{StaticResource CenterButtonLabel}"
+                           Text="支払い" />
+                </VerticalStackLayout>
+            </toolkit:SfEffectsView>
+        </Border>
 
     </Grid>
 

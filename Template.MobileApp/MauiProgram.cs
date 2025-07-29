@@ -30,6 +30,8 @@ using SkiaSharp.Views.Maui.Controls.Hosting;
 using Smart.Data.Mapper;
 using Smart.Resolver;
 
+using Syncfusion.Maui.Toolkit.Hosting;
+
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components;
 using Template.MobileApp.Extender;
@@ -51,6 +53,7 @@ public static partial class MauiProgram
             .ConfigureEssentials(ConfigureEssentials)
             .ConfigureLogging()
             .ConfigureGlobalSettings()
+            .ConfigureSyncfusionToolkit()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
