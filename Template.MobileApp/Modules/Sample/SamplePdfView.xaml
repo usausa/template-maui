@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             xmlns:pdf="clr-namespace:Maui.PDFView;assembly=Maui.PDFView"
+             x:Class="Template.MobileApp.Modules.Sample.SamplePdfView"
+             x:DataType="{x:Type module:SamplePdfViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SamplePdfViewModel}"
+             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function3Text="◀️"
+             shell:ShellProperty.Function4Text="▶️"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="{Binding CanMovePrev}"
+             shell:ShellProperty.Function4Enabled="{Binding CanMoveNext}">
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto">
+
+        <pdf:PdfView Grid.Row="0"
+                     PageIndex="{Binding PageIndex, Mode=TwoWay}"
+                     MaxZoom="4"
+                     PageChangedCommand="{Binding PageChangedCommand}"
+                     Uri="{Binding PdfSource}" />
+
+        <Label Grid.Row="1"
+               Style="{StaticResource ValueLabel}"
+               StyleClass="LabelCenter"
+               Text="{Binding PageInformation}" />
+
+    </Grid>
+
+</ContentView>

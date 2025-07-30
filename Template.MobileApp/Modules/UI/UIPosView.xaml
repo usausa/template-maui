@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UIPosView"
              x:DataType="{x:Type module:UIPosViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIPosViewModel}"
@@ -11,6 +13,387 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="BackgroundGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="LinkRowView"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+            </Style>
+
+            <Style x:Key="ValueRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,8,0,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="SubSeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Margin" Value="16,0,0,0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="IconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
+
+            <Style x:Key="NameLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SubNameLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="NameWithSubLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="NameWithSubNameSpan"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="NameWithSubOptionSpan"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="ValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="SubValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="LargeValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="FontSize" Value="28" />
+            </Style>
+
+            <Style x:Key="HugeValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+
+            <Style x:Key="LinkLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="OptionButtonBase"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="RedOptionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource OptionButtonBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="OrangeOptionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource OptionButtonBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+            <Style x:Key="CyanOptionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource OptionButtonBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource CyanDefault}" />
+            </Style>
+
+            <Style x:Key="GreenOptionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource OptionButtonBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <FontImageSource x:Key="CheckIcon"
+                             Color="White"
+                             FontFamily="MaterialIcons"
+                             Glyph="{x:Static fonts:MaterialIcons.Check_circle_outline}"
+                             Size="24" />
+
+            <Style x:Key="ExecuteButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource LightBlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="ContentLayout" Value="Left" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource BackgroundGrid}"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,16,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,16,Auto,Auto,Auto,*,Auto,Auto,Auto">
+
+        <Grid Grid.Row="0"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24">
+            <Label Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="数量" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource ValueLabel}"
+                   Text="3点" />
+        </Grid>
+
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource SubSeparatorBoxView}" />
+
+        <Grid Grid.Row="2"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24">
+            <Label Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="小計" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource ValueLabel}"
+                   Text="￥ 888" />
+        </Grid>
+
+        <BoxView Grid.Row="3"
+                 Style="{StaticResource SubSeparatorBoxView}" />
+
+        <toolkit:SfEffectsView Grid.Row="4"
+                               Style="{StaticResource LinkRowView}">
+            <Grid Style="{StaticResource ValueRowGrid}"
+                  ColumnDefinitions="*,Auto,24">
+                <Label Grid.Column="0"
+                       Style="{StaticResource NameLabel}"
+                       Text="値引・割引" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource ValueLabel}"
+                       Text="￥ 0" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource LinkLabel}"
+                       Text="›" />
+            </Grid>
+        </toolkit:SfEffectsView>
+
+        <BoxView Grid.Row="5"
+                 Style="{StaticResource SubSeparatorBoxView}" />
+
+        <Grid Grid.Row="6"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24">
+            <Label Grid.Column="0"
+                   Style="{StaticResource NameWithSubLabel}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Style="{StaticResource NameWithSubNameSpan}"
+                              Text="外税" />
+                        <Span Style="{StaticResource NameWithSubOptionSpan}"
+                              Text=" 8%" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label Grid.Column="1"
+                   Style="{StaticResource ValueLabel}"
+                   Text="￥ 0" />
+        </Grid>
+
+        <BoxView Grid.Row="7"
+                 Style="{StaticResource SeparatorBoxView}" />
+
+        <Grid Grid.Row="8"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24">
+            <Label Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="合計" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource HugeValueLabel}"
+                   Text="￥ 888" />
+        </Grid>
+
+        <BoxView Grid.Row="9"
+                 Style="{StaticResource SubSeparatorBoxView}" />
+
+        <toolkit:SfEffectsView Grid.Row="10"
+                               Style="{StaticResource LinkRowView}">
+            <Grid Style="{StaticResource ValueRowGrid}"
+                  ColumnDefinitions="*,Auto,24">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SubNameLabel}"
+                       Text="内消費税" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource SubValueLabel}"
+                       Text="(￥ 65)" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource LinkLabel}"
+                       Text="›" />
+            </Grid>
+        </toolkit:SfEffectsView>
+
+        <BoxView Grid.Row="11"
+                 Style="{StaticResource SeparatorBoxView}" />
+
+        <Grid Grid.Row="13"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*"
+              BackgroundColor="{StaticResource GrayLighten3}">
+            <Label Grid.Column="1"
+                   Style="{StaticResource NameLabel}"
+                   Text="預金り" />
+        </Grid>
+
+        <BoxView Grid.Row="14"
+                 Style="{StaticResource SeparatorBoxView}" />
+
+        <toolkit:SfEffectsView Grid.Row="15"
+                               Style="{StaticResource LinkRowView}">
+            <Grid Style="{StaticResource ValueRowGrid}"
+                  ColumnDefinitions="24,*,Auto,24">
+                <Label Grid.Column="0"
+                       Style="{StaticResource IconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Money}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource NameLabel}"
+                       Text="現金預り" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource ValueLabel}"
+                       Text="￥ 888" />
+                <Label Grid.Column="3"
+                       Style="{StaticResource LinkLabel}"
+                       Text="›" />
+            </Grid>
+        </toolkit:SfEffectsView>
+
+        <BoxView Grid.Row="16"
+                 Style="{StaticResource SubSeparatorBoxView}" />
+
+        <toolkit:SfEffectsView Grid.Row="17"
+                               Style="{StaticResource LinkRowView}">
+            <Grid Style="{StaticResource ValueRowGrid}"
+                  ColumnDefinitions="24,*,Auto,24">
+                <Label Grid.Column="0"
+                       Style="{StaticResource IconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Credit_card}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource NameLabel}"
+                       Text="クレジット" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource ValueLabel}"
+                       Text="￥ 0" />
+                <Label Grid.Column="3"
+                       Style="{StaticResource LinkLabel}"
+                       Text="›" />
+            </Grid>
+        </toolkit:SfEffectsView>
+
+        <BoxView Grid.Row="18"
+                 Style="{StaticResource SubSeparatorBoxView}" />
+
+        <Grid Grid.Row="19"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24">
+            <Label Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="お釣り" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource LargeValueLabel}"
+                   Text="￥ 0" />
+        </Grid>
+
+        <BoxView Grid.Row="20"
+                 Style="{StaticResource SeparatorBoxView}" />
+
+        <BoxView Grid.Row="22"
+                 Style="{StaticResource SeparatorBoxView}" />
+
+        <toolkit:SfEffectsView Grid.Row="23"
+                               Style="{StaticResource LinkRowView}">
+            <Grid Style="{StaticResource ValueRowGrid}"
+                  ColumnDefinitions="*,Auto,24">
+                <Label Grid.Column="0"
+                       Style="{StaticResource NameLabel}"
+                       Text="担当者" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource ValueLabel}"
+                       Text="うさうさ" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource LinkLabel}"
+                       Text="›" />
+            </Grid>
+        </toolkit:SfEffectsView>
+
+        <BoxView Grid.Row="24"
+                 Style="{StaticResource SeparatorBoxView}" />
+
+        <Grid Grid.Row="26"
+              ColumnDefinitions="*,*,*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource RedOptionButton}"
+                    Text="価格リセット" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource OrangeOptionButton}"
+                    Text="閉店セール" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource CyanOptionButton}"
+                    Text="会員得点" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource GreenOptionButton}"
+                    Text="メルマガ割引" />
+        </Grid>
+
+        <Button Grid.Row="28"
+                Style="{StaticResource ExecuteButton}"
+                Text="チェックアウト"
+                ImageSource="{StaticResource CheckIcon}" />
+
+    </Grid>
 
 </ContentView>

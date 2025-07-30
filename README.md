@@ -23,35 +23,43 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Login.png" />
 <img width="25%" src="Document/UI_Meter.png" />
 <img width="25%" src="Document/UI_Money.png" />
+<img width="25%" src="Document/UI_Pos.png" />
 <img width="25%" src="Document/UI_Radar.png" />
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
 
 # TODO
 
-## Device
+# TODO
 
-- [ ] **WiFi manager**
-- [ ] Biometric
-
-## UI
-
-- [ ] **Gauge**
-- [ ] Chart
-- [ ] Calendar
-
-## Other
-
-- [ ] **Cognitive service**
-- [ ] **Map2**
-- [ ] **HybridWebView**
-- [ ] Chat
-- [ ] Push -> Hybrid?
-- [ ] Local notification -> Hybrid?
-
-## Ex
-
-- [ ] **.NET 10/XAML**
+- Device
+  - [ ] **WiFi manager**
+  - [ ] Biometric
+- UI
+  - [ ] **Bottom sheet**
+  - [ ] **Gauge**
+  - [ ] Chart
+  - [ ] Calendar
+- Other
+  - [ ] **Cognitive service**
+  - [ ] **Map2**
+  - [ ] **HybridWebView**
+  - [ ] Chat
+  - [ ] Animation
+  - [ ] Media play
+  - [ ] Push -> Hybrid?
+  - [ ] Local notification -> Hybrid?
+- API server
+  - [ ] File UI
+  - [ ] Data UI & api+
+  - [ ] Error layout
+  - [ ] Progress
+  - [ ] Cloud log
+  - [ ] Device status
+- ReCheck
+  - [ ] Check old style splash
+- Ex
+  - [ ] **.NET 10/XAML**
 
 # Implement
 
@@ -79,6 +87,7 @@ Template project for MAUI.
 - Sample
   - Object detection(Local)
   - Markdown
+  - PDF reader
 - UI
   - Dock
   - Timeline/TreeMap

@@ -39,21 +39,22 @@
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Media" />
+                Text="Chart" />
         <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Media" />
+
+        <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleMarkdown}"
                 Text="Markdown" />
-
-        <Button Grid.Row="3" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="Chart" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SamplePdf}"
+                Text="PDF" />
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
