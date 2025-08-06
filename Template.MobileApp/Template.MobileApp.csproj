@@ -22,6 +22,15 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' and $(TargetFramework.StartsWith('net9.0-android')) == true">
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <RunAOTCompilation>true</RunAOTCompilation>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release' and $(TargetFramework.StartsWith('net9.0-android')) == true">
+  </ItemGroup>
+
   <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
