@@ -52,62 +52,81 @@ public static class BarcodeBind
             {
                 AssociatedObject.SetBinding(
                     CameraView.CameraEnabledProperty,
-                    new Binding(nameof(BarcodeController.Enable), source: controller));
+                    static (BarcodeController controller) => controller.Enable,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.CameraFacingProperty,
-                    new Binding(nameof(BarcodeController.CameraFace), source: controller));
+                    static (BarcodeController controller) => controller.CameraFace,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.CaptureQualityProperty,
-                    new Binding(nameof(BarcodeController.CaptureQuality), source: controller));
+                    static (BarcodeController controller) => controller.CaptureQuality,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.BarcodeSymbologiesProperty,
-                    new Binding(nameof(BarcodeController.BarcodeFormat), source: controller));
+                    static (BarcodeController controller) => controller.BarcodeFormat,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.AimModeProperty,
-                    new Binding(nameof(BarcodeController.AimMode), source: controller));
+                    static (BarcodeController controller) => controller.AimMode,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.TorchOnProperty,
-                    new Binding(nameof(BarcodeController.TorchOn), source: controller));
+                    static (BarcodeController controller) => controller.TorchOn,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.TapToFocusEnabledProperty,
-                    new Binding(nameof(BarcodeController.TapToFocus), source: controller));
+                    static (BarcodeController controller) => controller.TapToFocus,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.PauseScanningProperty,
-                    new Binding(nameof(BarcodeController.PauseScanning), source: controller));
+                    static (BarcodeController controller) => controller.PauseScanning,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ForceInvertedProperty,
-                    new Binding(nameof(BarcodeController.ForceInvert), source: controller));
+                    static (BarcodeController controller) => controller.ForceInvert,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.VibrationOnDetectedProperty,
-                    new Binding(nameof(BarcodeController.VibrationOnDetect), source: controller));
+                    static (BarcodeController controller) => controller.VibrationOnDetect,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ViewfinderModeProperty,
-                    new Binding(nameof(BarcodeController.ViewfinderMode), source: controller));
+                    static (BarcodeController controller) => controller.ViewfinderMode,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.CaptureNextFrameProperty,
-                    new Binding(nameof(BarcodeController.CaptureNextFrame), source: controller));
+                    static (BarcodeController controller) => controller.CaptureNextFrame,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ForceFrameCaptureProperty,
-                    new Binding(nameof(BarcodeController.ForceFrameCapture), source: controller));
+                    static (BarcodeController controller) => controller.ForceFrameCapture,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.PoolingIntervalProperty,
-                    new Binding(nameof(BarcodeController.PoolingInterval), source: controller));
+                    static (BarcodeController controller) => controller.PoolingInterval,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.RequestZoomFactorProperty,
-                    new Binding(nameof(BarcodeController.RequestZoomFactor), source: controller));
+                    static (BarcodeController controller) => controller.RequestZoomFactor,
+                    source: controller);
 
                 AssociatedObject.SetBinding(
                     CameraView.CurrentZoomFactorProperty,
-                    new Binding(nameof(BarcodeController.CurrentZoomFactor), source: controller));
+                    static (BarcodeController controller) => controller.CurrentZoomFactor,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.MinZoomFactorProperty,
-                    new Binding(nameof(BarcodeController.MinZoomFactor), source: controller));
+                    static (BarcodeController controller) => controller.MinZoomFactor,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.MaxZoomFactorProperty,
-                    new Binding(nameof(BarcodeController.MaxZoomFactor), source: controller));
+                    static (BarcodeController controller) => controller.MaxZoomFactor,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.DeviceSwitchZoomFactorProperty,
-                    new Binding(nameof(BarcodeController.DeviceSwitchZoomFactor), source: controller));
+                    static (BarcodeController controller) => controller.DeviceSwitchZoomFactor,
+                    source: controller);
             }
         }
 

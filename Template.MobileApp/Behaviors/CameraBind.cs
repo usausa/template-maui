@@ -56,25 +56,32 @@ public static class CameraBind
 
                 AssociatedObject.SetBinding(
                     CameraView.IsAvailableProperty,
-                    new Binding(nameof(ICameraController.IsAvailable), source: controller));
+                    static (ICameraController controller) => controller.IsAvailable,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.IsCameraBusyProperty,
-                    new Binding(nameof(ICameraController.IsCameraBusy), source: controller));
+                    static (ICameraController controller) => controller.IsCameraBusy,
+                    source: controller);
                 AssociatedObject.SetBinding(
-                    CameraView.SelectedCameraProperty,
-                    new Binding(nameof(ICameraController.Selected), source: controller));
+                    CameraView.SelectedCameraProperty!,
+                    static (ICameraController controller) => controller.Selected,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.CameraFlashModeProperty,
-                    new Binding(nameof(ICameraController.CameraFlashMode), source: controller));
+                    static (ICameraController controller) => controller.CameraFlashMode,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ImageCaptureResolutionProperty,
-                    new Binding(nameof(ICameraController.CaptureResolution), source: controller));
+                    static (ICameraController controller) => controller.CaptureResolution,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ZoomFactorProperty,
-                    new Binding(nameof(ICameraController.ZoomFactor), source: controller));
+                    static (ICameraController controller) => controller.ZoomFactor,
+                    source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.IsTorchOnProperty,
-                    new Binding(nameof(ICameraController.IsTorchOn), source: controller));
+                    static (ICameraController controller) => controller.IsTorchOn,
+                    source: controller);
             }
         }
 
