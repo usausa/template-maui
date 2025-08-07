@@ -62,6 +62,7 @@ public enum ViewId
     DeviceActivity,
     DeviceBiometric,
 
+    DeviceCommunication,
     DeviceMisc,
 
     // Database

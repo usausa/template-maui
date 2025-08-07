@@ -101,7 +101,12 @@
                 IsEnabled="False"
                 Text="Biometric" />
 
-        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="8" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DeviceCommunication}"
+                Text="Communication" />
+        <Button Grid.Row="8" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceMisc}"
