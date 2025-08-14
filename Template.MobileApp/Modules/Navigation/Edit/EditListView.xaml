@@ -30,14 +30,14 @@
                         <Label Grid.Column="1"
                                Style="{StaticResource ItemCollectionLabel}"
                                Text="{Binding Name}" />
-                        <Button x:DataType="{x:Type module:EditListViewModel}"
-                                Grid.Column="2"
+                        <Button Grid.Column="2"
+                                x:DataType="{x:Type module:EditListViewModel}"
                                 Style="{StaticResource ItemCollectionButtonPrimary}"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
                                 CommandParameter="{Binding}"
                                 Text="{x:Static fonts:MaterialIcons.Edit}" />
-                        <Button x:DataType="{x:Type module:EditListViewModel}"
-                                Grid.Column="3"
+                        <Button Grid.Column="3"
+                                x:DataType="{x:Type module:EditListViewModel}"
                                 Style="{StaticResource ItemCollectionButtonDanger}"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
                                 CommandParameter="{Binding}"

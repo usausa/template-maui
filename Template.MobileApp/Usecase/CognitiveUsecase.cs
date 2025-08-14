@@ -45,10 +45,10 @@ public sealed class CognitiveUsecase : IDisposable
             return;
         }
 
-        await using var modelStream = await fileSystem.OpenAppPackageFileAsync("model.onnx");
+        await using var modelStream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Cognitive", "model.onnx"));
         session = new InferenceSession(await modelStream.ReadAllBytesAsync());
 
-        await using var labelStream = await fileSystem.OpenAppPackageFileAsync("labels.txt");
+        await using var labelStream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Cognitive", "labels.txt"));
         using var reader = new StreamReader(labelStream);
         labels = await reader.ReadLinesAsync().ToArrayAsync();
 

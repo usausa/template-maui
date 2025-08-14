@@ -13,11 +13,11 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
-    public SKBitmapImageSource Image { get; } = new();
-
     public CameraController Controller { get; } = new();
 
     public ColorTreeMapGraphics Graphics { get; } = new();
+
+    public SKBitmapImageSource Image { get; } = new();
 
     public UITreeMapViewModel(
         IDialog dialog,
@@ -92,13 +92,12 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             // Update
             Image.Bitmap = bitmap;
             Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
-
-            IsPreview = false;
         }
         else
         {
             Controller.StartPreview();
-            IsPreview = true;
         }
+
+        IsPreview = !IsPreview;
     }
 }

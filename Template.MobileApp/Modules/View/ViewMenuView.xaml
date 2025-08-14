@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewMenuView"
+             x:DataType="{x:Type module:ViewMenuViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewMenuViewModel}"
+             shell:ShellProperty.Title="View"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <Grid Style="{StaticResource MenuGrid}"
+          RowDefinitions="*,*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*">
+
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewCollection}"
+                Text="Collection" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewGraphics}"
+                Text="Graphics" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewLottie}"
+                Text="Lottie" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewSvg}"
+                Text="Svg" />
+
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Animation" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewDrawing}"
+                Text="Drawing" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="8" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="8" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+    </Grid>
+
+
+</ContentView>

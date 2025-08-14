@@ -11,11 +11,11 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
-    public SKBitmapImageSource Image { get; } = new();
-
     public CameraController Controller { get; } = new();
 
     public DetectGraphics Graphics { get; } = new();
+
+    public SKBitmapImageSource Image { get; } = new();
 
     public SampleCvLocalViewModel(
         CognitiveUsecase cognitiveUsecase)
@@ -80,13 +80,12 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
             // Update
             Graphics.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
-
-            IsPreview = false;
         }
         else
         {
             Controller.StartPreview();
-            IsPreview = true;
         }
+
+        IsPreview = !IsPreview;
     }
 }

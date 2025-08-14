@@ -2,7 +2,10 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed class UISocialViewModel : AppViewModelBase
 {
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    public IObserveCommand BackCommand { get; }
 
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+    public UISocialViewModel()
+    {
+        BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIMenu));
+    }
 }

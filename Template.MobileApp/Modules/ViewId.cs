@@ -12,9 +12,9 @@ public enum ViewId
     BasicFont,
     BasicConverter,
     BasicBehavior,
+    BasicLocale,
     BasicDialog,
     BasicValidation,
-    BasicGraphics,
     BasicAnimation,
 
     // Navigation
@@ -74,14 +74,19 @@ public enum ViewId
 
     // Sample
     SampleMenu,
+
     SampleWebBasic,
     SampleWebApp,
+
     SampleMap1,
     SampleMap2,
+
     SampleChart,
     SampleMedia,
+
     SampleMarkdown,
     SamplePdf,
+
     SampleCvNetMenu,
     SampleCvNetObject,
     SampleCvNetTag,
@@ -89,7 +94,22 @@ public enum ViewId
     SampleCvNetOcr,
     SampleCvNetFace,
     SampleCvLocal,
+
     SampleChat,
+
+    // View
+
+    ViewMenu,
+
+    ViewCollection,
+
+    ViewGraphics,
+
+    ViewLottie,
+    ViewSvg,
+    ViewAnimation,
+
+    ViewDrawing,
 
     // UI
     UIMenu,

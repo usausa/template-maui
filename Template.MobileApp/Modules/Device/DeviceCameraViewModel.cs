@@ -53,13 +53,14 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         if (IsPreview)
         {
             Controller.StopPreview();
-            IsPreview = false;
         }
         else
         {
             Controller.StartPreview();
-            IsPreview = true;
         }
+
+        IsPreview = !IsPreview;
+
         return Task.CompletedTask;
     }
 

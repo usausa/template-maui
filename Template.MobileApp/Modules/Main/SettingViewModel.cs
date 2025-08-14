@@ -74,7 +74,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

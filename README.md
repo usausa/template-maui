@@ -61,7 +61,7 @@ Template project for MAUI.
   - Converter/Behavior
   - Dialog
   - Validation
-  - Grahics
+  - Localization
 - Navigation
   - Basic/Stack/Wizard
 - Device
@@ -81,6 +81,11 @@ Template project for MAUI.
   - Object detection(Local)
   - Markdown
   - PDF reader
+- View
+  - Lottie
+  - SVG
+  - Grahics
+  - Drawing
 - UI
   - Dock
   - Timeline/TreeMap

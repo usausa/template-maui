@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             x:Class="Template.MobileApp.Modules.View.ViewLottieView"
+             x:DataType="{x:Type module:ViewLottieViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewLottieViewModel}"
+             shell:ShellProperty.Title="Lottie"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function3Text="Reset"
+             shell:ShellProperty.Function4Text="{Binding IsAnimationEnabled, Converter={s:BoolToText True='Pause', False='Play'}}"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto">
+        <extended:SKLottieView Grid.Row="0"
+                               Source="Lottie\popping.json"
+                               Progress="{Binding Progress}"
+                               Duration="{Binding Duration}"
+                               IsAnimationEnabled="{Binding IsAnimationEnabled}" />
+
+        <FlexLayout Grid.Row="1"
+                    Style="{StaticResource SideFlexLayout}">
+            <Label Style="{StaticResource ValueLabel}"
+                   Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.fff}'}" />
+            <Label Style="{StaticResource ValueLabel}"
+                   Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.fff}'}" />
+        </FlexLayout>
+    </Grid>
+
+</ContentView>

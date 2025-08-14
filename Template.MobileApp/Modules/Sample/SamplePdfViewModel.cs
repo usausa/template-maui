@@ -49,7 +49,7 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
         }
 
         await using var output = File.OpenWrite(filename);
-        await using var input = await fileSystem.OpenAppPackageFileAsync("sample.pdf");
+        await using var input = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Documents", "sample.pdf"));
         await input.CopyToAsync(output);
 
         PdfSource = filename;

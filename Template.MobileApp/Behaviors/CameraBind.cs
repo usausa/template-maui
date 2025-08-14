@@ -87,9 +87,6 @@ public static class CameraBind
 
         protected override void OnDetachingFrom(CameraView bindable)
         {
-            controller?.Detach();
-            controller = null;
-
             bindable.RemoveBinding(CameraView.IsAvailableProperty);
             bindable.RemoveBinding(CameraView.IsCameraBusyProperty);
             bindable.RemoveBinding(CameraView.SelectedCameraProperty);
@@ -98,6 +95,7 @@ public static class CameraBind
             bindable.RemoveBinding(CameraView.ZoomFactorProperty);
             bindable.RemoveBinding(CameraView.IsTorchOnProperty);
 
+            controller?.Detach();
             controller = null;
 
             base.OnDetachingFrom(bindable);

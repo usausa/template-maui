@@ -5,7 +5,7 @@ public sealed partial class SharedMain1ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string No { get; set; } = default!;
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {

@@ -50,26 +50,27 @@ public static class EntryBind
             base.OnAttachedTo(bindable);
 
             controller = GetController(bindable);
-            controller?.Attach(bindable);
+            if ((controller is not null) && (AssociatedObject is not null))
+            {
+                controller.Attach(bindable);
 
-            bindable.SetBinding(
-                Entry.TextProperty,
-                static (IEntryController controller) => controller.Text,
-                source: controller);
-            bindable.SetBinding(
-                VisualElement.IsEnabledProperty,
-                static (IEntryController controller) => controller.Enable,
-                source: controller);
+                bindable.SetBinding(
+                    Entry.TextProperty,
+                    static (IEntryController controller) => controller.Text,
+                    source: controller);
+                bindable.SetBinding(
+                    VisualElement.IsEnabledProperty,
+                    static (IEntryController controller) => controller.Enable,
+                    source: controller);
+            }
         }
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            controller?.Detach();
-            controller = null;
-
             bindable.RemoveBinding(Entry.TextProperty);
             bindable.RemoveBinding(VisualElement.IsEnabledProperty);
 
+            controller?.Detach();
             controller = null;
 
             base.OnDetachingFrom(bindable);

@@ -20,7 +20,7 @@ public sealed partial class EditDetailViewModel : AppViewModelBase
         this.dataService = dataService;
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {

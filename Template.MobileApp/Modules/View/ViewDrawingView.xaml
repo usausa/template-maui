@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Template.MobileApp.Modules.View.ViewDrawingView"
+             x:DataType="{x:Type module:ViewDrawingViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewDrawingViewModel}"
+             shell:ShellProperty.Title="Drawing"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function3Text="Clear"
+             shell:ShellProperty.Function4Text="Save"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="2*,*">
+        <toolkit:DrawingView Grid.Row="0"
+                             behaviors:DrawingBind.Controller="{Binding Controller}"
+                             BackgroundColor="{StaticResource LightGreenLighten5}"
+                             IsMultiLineModeEnabled="True" />
+
+        <Image Grid.Row="1"
+               Source="{Binding Image}" />
+    </Grid>
+
+</ContentView>

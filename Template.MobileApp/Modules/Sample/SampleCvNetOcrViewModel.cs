@@ -74,13 +74,12 @@ public sealed partial class SampleCvNetOcrViewModel : AppViewModelBase
             Image.Bitmap = bitmap;
 
             // TODO
-
-            IsPreview = false;
         }
         else
         {
             Controller.StartPreview();
-            IsPreview = true;
         }
+
+        IsPreview = !IsPreview;
     }
 }

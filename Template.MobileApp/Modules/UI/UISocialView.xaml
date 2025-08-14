@@ -3,14 +3,255 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UISocialView"
              x:DataType="{x:Type module:UISocialViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UISocialViewModel}"
              shell:ShellProperty.Title="Social"
-             shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Shared -->
+            <Style x:Key="LayoutGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="ColumnSpacing" Value="2" />
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="NotificationBadge"
+                   TargetType="controls:SocialNotificationBadge">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="ButtonEffect"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+            </Style>
+
+            <!-- TODO background -->
+
+            <!-- TODO style -->
+
+            <!-- Menu -->
+            <Style x:Key="Menu"
+                   TargetType="controls:SocialMenu">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Color" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <!-- ReSharper disable MarkupAttributeTypo -->
+    <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
+
+        <!-- TODO style -->
+        <!-- Background -->
+        <Image Grid.RowSpan="8"
+               Aspect="AspectFill" Source="social_background.png" />
+
+        <!-- TODO style -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource LayoutGrid}"
+              RowDefinitions="Auto,Auto"
+              ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialIcon WidthRequest="48" HeightRequest="48"
+                                         Text="{x:Static fonts:MaterialIcons.Settings}"
+                                         VerticalOptions="Start" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialIcon WidthRequest="48" HeightRequest="48"
+                                         Text="{x:Static fonts:MaterialIcons.Mail}"
+                                         VerticalOptions="Start" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialIcon WidthRequest="48" HeightRequest="48"
+                                         Text="{x:Static fonts:MaterialIcons.Info}"
+                                         VerticalOptions="Start" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <controls:SocialEpisode Grid.Row="1" Grid.ColumnSpan="4"
+                                    HeightRequest="24"
+                                    Color="{StaticResource BlueDefault}"
+                                    Text="EP10 豊穣の雨作戦"
+                                    HorizontalOptions="Start" VerticalOptions="End" />
+
+            <controls:SocialPlayer Grid.RowSpan="2" Grid.Column="4"
+                                   WidthRequest="208" HeightRequest="72"
+                                   Color="{StaticResource TealAccent3}"
+                                   Percent="45"
+                                   ProgressColor="{StaticResource TealLighten4}" />
+        </Grid>
+
+        <!-- TODO style -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="*,*,*">
+            <controls:SocialCounter Grid.Column="0"
+                                    HeightRequest="24"
+                                    Counter="65536" Icon="wrench" />
+            <controls:SocialCounter Grid.Column="1"
+                                    HeightRequest="24"
+                                    Counter="30000" Icon="gem" />
+            <controls:SocialCounter Grid.Column="2"
+                                    HeightRequest="24"
+                                    Counter="1024000" Icon="money" />
+        </Grid>
+
+        <!-- TODO style -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="Auto,*">
+            <VerticalStackLayout Grid.Column="0"
+                                 Spacing="2" VerticalOptions="End">
+                <controls:SocialAlert WidthRequest="128" HeightRequest="40"
+                                      Color="{StaticResource RedDefault}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- TODO style -->
+        <Grid Grid.Row="3"
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Column="1"
+                                 Spacing="2">
+                <controls:SocialNotification WidthRequest="168" HeightRequest="48"
+                                             Color="{StaticResource YellowDefault}"
+                                             Percent="87"
+                                             ProgressColor="{StaticResource YellowLighten4}"
+                                             Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
+                <controls:SocialNotification WidthRequest="168" HeightRequest="48"
+                                             Color="{StaticResource YellowDefault}"
+                                             Percent="65"
+                                             ProgressColor="{StaticResource YellowLighten4}"
+                                             Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
+                <controls:SocialNotification WidthRequest="168" HeightRequest="48"
+                                             Color="{StaticResource YellowDefault}"
+                                             Percent="23"
+                                             ProgressColor="{StaticResource YellowLighten4}"
+                                             Text1="VEHICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- TODO style -->
+        <Grid Grid.Row="5"
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="*,*">
+            <controls:SocialStatus Grid.Row="0" Grid.Column="0"
+                                   HeightRequest="120"
+                                   Color="{StaticResource PinkDefault}"
+                                   Color1="{StaticResource PinkAccent2}"
+                                   Color2="{StaticResource BlueAccent2}"
+                                   Color3="{StaticResource OrangeAccent2}"
+                                   Text1="{x:Static fonts:MaterialIcons.Favorite}"
+                                   Text2="{x:Static fonts:MaterialIcons.Star}"
+                                   Text3="{x:Static fonts:MaterialIcons.Shield}"
+                                   Value1="37200" Value2="48800" Value3="23500" />
+            <controls:SocialInformation Grid.Row="0" Grid.Column="1"
+                                        HeightRequest="120"
+                                        Color="{StaticResource LimeDefault}" />
+        </Grid>
+
+        <!-- Menu -->
+        <Grid Grid.Row="7"
+              Style="{StaticResource LayoutGrid}"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnDefinitions="*,*,*">
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="作戦" Text2="OPERATION" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="編成" Text2="FORMATION" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         FontSize1="20" Text1="法術支援要請" Text2="ART" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="0"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="騎体整備" Text2="HANGAR" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="倉庫" Text2="WEAPON STORAGE" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="技術開発" Text2="DEVELOPMENT" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="0"
+                                   Style="{StaticResource ButtonEffect}"
+                                   TouchDownCommand="{Binding BackCommand}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="作戦中止" Text2="ABORT MISSION" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="1"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="司令部" Text2="HEADQUARTER" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="2"
+                                   Style="{StaticResource ButtonEffect}">
+                <Grid>
+                    <controls:SocialMenu Style="{StaticResource Menu}"
+                                         Text1="公演" Text2="LIVE" />
+                </Grid>
+            </toolkit:SfEffectsView>
+        </Grid>
+
+    </Grid>
+    <!-- ReSharper restore MarkupAttributeTypo -->
 
 </ContentView>

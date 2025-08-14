@@ -74,13 +74,12 @@ public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
             Image.Bitmap = bitmap;
 
             // TODO
-
-            IsPreview = false;
         }
         else
         {
             Controller.StartPreview();
-            IsPreview = true;
         }
+
+        IsPreview = !IsPreview;
     }
 }

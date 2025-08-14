@@ -45,7 +45,7 @@ public sealed partial class DataViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
         BulkDataCount = await dataService.CountBulkDataAsync();
     }
