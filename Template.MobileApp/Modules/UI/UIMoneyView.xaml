@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
@@ -17,6 +16,11 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <s:CompareToColorConverter x:Key="EqualToSelectColorConverter"
+                                       Expression="{x:Static s:CompareExpressions.Equal}"
+                                       TrueValue="{StaticResource PinkAccent3}"
+                                       FalseValue="{StaticResource GrayDefault}" />
 
             <!-- Background -->
             <Style x:Key="BackgroundGrid"
@@ -371,7 +375,6 @@
                 <Setter Property="HeightRequest" Value="36" />
             </Style>
 
-
             <Style x:Key="CenterButtonLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -472,51 +475,99 @@
                           ColumnDefinitions="*,*,*,*">
 
                         <VerticalStackLayout Grid.Row="0" Grid.Column="0">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="stars.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Stars}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="クーポン" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="view_compact.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.View_comfy}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="スタンプ" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="2">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="paid.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Paid}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="ポイント" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="3">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="add_circle.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add_circle}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="チャージ" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Row="1" Grid.Column="0">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="scan.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Document_scanner}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="スキャン" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="send_money.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Send}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="送る" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="2">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="receipt.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Receipt_long}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="履歴" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="3">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="shopping_cart.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Shopping_cart}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="カート" />
                         </VerticalStackLayout>
@@ -572,8 +623,8 @@
                                     <Button Grid.Column="1"
                                             Style="{StaticResource DetailButton}"
                                             Margin="0" Padding="8,2"
-                                            FontSize="14"
                                             Text="クレジット設定"
+                                            FontSize="14"
                                             TextColor="White"
                                             BackgroundColor="{StaticResource BlueDefault}"
                                             CornerRadius="4" />
@@ -597,46 +648,64 @@
 
             <toolkit:SfEffectsView Grid.Column="0"
                                    TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Home}"
+                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Home}"
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}" />
+                           Style="{StaticResource BottomSelectImage}">
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Home}"
+                                             FontFamily="MaterialIcons"
+                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}"
+                                             Size="36" />
+                        </Image.Source>
+                    </Image>
                     <Label Grid.Row="1"
                            Style="{StaticResource BottomSelectLabel}"
                            Text="ホーム"
-                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Home, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
             <toolkit:SfEffectsView Grid.Column="1"
                                    TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Search}"
+                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Search}"
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}" />
+                           Style="{StaticResource BottomSelectImage}">
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Search}"
+                                             FontFamily="MaterialIcons"
+                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
+                                             Size="36" />
+                        </Image.Source>
+                    </Image>
                     <Label Grid.Row="1"
                            Style="{StaticResource BottomSelectLabel}"
                            Text="検索"
-                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Search, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
             <toolkit:SfEffectsView Grid.Column="3"
                                    TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Notifications}"
+                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Notifications}"
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}" />
+                           Style="{StaticResource BottomSelectImage}">
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Notifications_none}"
+                                             FontFamily="MaterialIcons"
+                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}"
+                                             Size="36" />
+                        </Image.Source>
+                    </Image>
                     <Label Grid.Row="1"
                            Style="{StaticResource BottomSelectLabel}"
                            Text="お知らせ"
-                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Notifications, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}" />
                     <Border Grid.Row="0" Grid.RowSpan="2"
                             Style="{StaticResource BottomSelectBadgeBorder}"
                             IsVisible="{Binding HasAccountAlert}">
@@ -648,16 +717,22 @@
 
             <toolkit:SfEffectsView Grid.Column="4"
                                    TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static models:MoneyPage.Account}"
+                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Account}"
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           Source="{Binding Selected, Converter={markup:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}" />
+                           Style="{StaticResource BottomSelectImage}">
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
+                                             FontFamily="MaterialIcons"
+                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}"
+                                             Size="36" />
+                        </Image.Source>
+                    </Image>
                     <Label Grid.Row="1"
                            Style="{StaticResource BottomSelectLabel}"
                            Text="アカウント"
-                           TextColor="{Binding Selected, Converter={markup:MoneyPageToColor Page=Account, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}" />
                     <Border Grid.Row="0" Grid.RowSpan="2"
                             Style="{StaticResource BottomSelectBadgeBorder}"
                             IsVisible="{Binding HasAccountAlert}">
@@ -674,8 +749,14 @@
                 Style="{StaticResource CenterButtonBorder}">
             <toolkit:SfEffectsView Style="{StaticResource CenterButtonEffect}">
                 <VerticalStackLayout Style="{StaticResource CenterButtonLayout}">
-                    <Image Style="{StaticResource CenterButtonImage}"
-                           Source="qr_code.png" />
+                    <Image Style="{StaticResource CenterButtonImage}">
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Qr_code}"
+                                             FontFamily="MaterialIcons"
+                                             Color="White"
+                                             Size="36" />
+                        </Image.Source>
+                    </Image>
                     <Label Style="{StaticResource CenterButtonLabel}"
                            Text="支払い" />
                 </VerticalStackLayout>

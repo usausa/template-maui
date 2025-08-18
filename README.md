@@ -50,8 +50,6 @@ Template project for MAUI.
   - [ ] Progress
   - [ ] Cloud log
   - [ ] Device status
-- ReCheck
-  - [ ] Check old style splash
 - Ex
   - [ ] **.NET 10/XAML**
 

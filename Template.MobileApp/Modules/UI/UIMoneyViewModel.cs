@@ -1,5 +1,13 @@
 namespace Template.MobileApp.Modules.UI;
 
+public enum MoneyPage
+{
+    Home,
+    Search,
+    Notifications,
+    Account
+}
+
 public sealed partial class UIMoneyViewModel : AppViewModelBase
 {
     [ObservableProperty]
