@@ -59,6 +59,7 @@ public static partial class MauiProgram
             .UseSkiaSharp()
             .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
+            .UseMauiCommunityToolkitMediaElement()
             .UseBarcodeScanning()
             .UseShiny()
             .UseMarkdownView()

@@ -26,6 +26,12 @@
                 <Setter Property="RowSpacing" Value="2" />
             </Style>
 
+            <Style x:Key="LayoutVerticalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="NotificationBadge"
                    TargetType="controls:SocialNotificationBadge">
                 <Setter Property="HorizontalOptions" Value="End" />
@@ -37,9 +43,77 @@
                 <Setter Property="TouchDownEffects" Value="Ripple" />
             </Style>
 
-            <!-- TODO background -->
+            <!-- background -->
+            <Style x:Key="BackgroundImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
 
-            <!-- TODO style -->
+            <!-- Icon -->
+            <Style x:Key="Icon"
+                   TargetType="controls:SocialIcon">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Episode -->
+            <Style x:Key="Episode"
+                   TargetType="controls:SocialEpisode">
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <!-- Episode -->
+            <Style x:Key="Player"
+                   TargetType="controls:SocialPlayer">
+                <Setter Property="WidthRequest" Value="208" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Color" Value="{StaticResource CyanDefault}" />
+                <Setter Property="ProgressColor" Value="{StaticResource CyanLighten3}" />
+            </Style>
+
+            <!-- Counter -->
+            <Style x:Key="Counter"
+                   TargetType="controls:SocialCounter">
+                <Setter Property="HeightRequest" Value="24" />
+            </Style>
+
+            <!-- Alert -->
+            <Style x:Key="Alert"
+                   TargetType="controls:SocialAlert">
+                <Setter Property="WidthRequest" Value="128" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Color" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <!-- Notification -->
+            <Style x:Key="Notification"
+                   TargetType="controls:SocialNotification">
+                <Setter Property="WidthRequest" Value="168" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Color" Value="{StaticResource YellowDefault}" />
+                <Setter Property="ProgressColor" Value="{StaticResource YellowLighten3}" />
+            </Style>
+
+            <!-- Status -->
+            <Style x:Key="Status"
+                   TargetType="controls:SocialStatus">
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="Color" Value="{StaticResource PinkDefault}" />
+                <Setter Property="Color1" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="Color2" Value="{StaticResource BlueAccent2}" />
+                <Setter Property="Color3" Value="{StaticResource OrangeAccent2}" />
+            </Style>
+
+            <!-- Information -->
+            <Style x:Key="Information"
+                   TargetType="controls:SocialInformation">
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="Color" Value="{StaticResource LimeDefault}" />
+            </Style>
 
             <!-- Menu -->
             <Style x:Key="Menu"
@@ -55,12 +129,11 @@
     <!-- ReSharper disable MarkupAttributeTypo -->
     <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
 
-        <!-- TODO style -->
         <!-- Background -->
         <Image Grid.RowSpan="8"
-               Aspect="AspectFill" Source="social_background.png" />
+               Style="{StaticResource BackgroundImage}"
+               Source="social_background.png" />
 
-        <!-- TODO style -->
         <Grid Grid.Row="0"
               Style="{StaticResource LayoutGrid}"
               RowDefinitions="Auto,Auto"
@@ -69,110 +142,95 @@
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialIcon WidthRequest="48" HeightRequest="48"
-                                         Text="{x:Static fonts:MaterialIcons.Settings}"
-                                         VerticalOptions="Start" />
+                    <controls:SocialIcon Style="{StaticResource Icon}"
+                                         Text="{x:Static fonts:MaterialIcons.Settings}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
                                    Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialIcon WidthRequest="48" HeightRequest="48"
-                                         Text="{x:Static fonts:MaterialIcons.Mail}"
-                                         VerticalOptions="Start" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialIcon Style="{StaticResource Icon}"
+                                         Text="{x:Static fonts:MaterialIcons.Mail}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasIconNotificationMail}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
                                    Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialIcon WidthRequest="48" HeightRequest="48"
-                                         Text="{x:Static fonts:MaterialIcons.Info}"
-                                         VerticalOptions="Start" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialIcon Style="{StaticResource Icon}"
+                                         Text="{x:Static fonts:MaterialIcons.Info}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasIconNotificationInfo}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
             <controls:SocialEpisode Grid.Row="1" Grid.ColumnSpan="4"
-                                    HeightRequest="24"
-                                    Color="{StaticResource BlueDefault}"
-                                    Text="EP10 豊穣の雨作戦"
-                                    HorizontalOptions="Start" VerticalOptions="End" />
+                                    Style="{StaticResource Episode}"
+                                    Text="{Binding Episode}" />
 
             <controls:SocialPlayer Grid.RowSpan="2" Grid.Column="4"
-                                   WidthRequest="208" HeightRequest="72"
-                                   Color="{StaticResource TealAccent3}"
-                                   Percent="45"
-                                   ProgressColor="{StaticResource TealLighten4}" />
+                                   Style="{StaticResource Player}"
+                                   Percent="{Binding PlayerExpPercent}" />
         </Grid>
 
-        <!-- TODO style -->
         <Grid Grid.Row="1"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,*,*">
             <controls:SocialCounter Grid.Column="0"
-                                    HeightRequest="24"
-                                    Counter="65536" Icon="wrench" />
+                                    Style="{StaticResource Counter}"
+                                    Counter="{Binding CountParts}"
+                                    Icon="wrench" />
             <controls:SocialCounter Grid.Column="1"
-                                    HeightRequest="24"
-                                    Counter="30000" Icon="gem" />
+                                    Style="{StaticResource Counter}"
+                                    Counter="{Binding CountGem}"
+                                    Icon="gem" />
             <controls:SocialCounter Grid.Column="2"
-                                    HeightRequest="24"
-                                    Counter="1024000" Icon="money" />
+                                    Style="{StaticResource Counter}"
+                                    Counter="{Binding CountMoney}"
+                                    Icon="money" />
         </Grid>
 
-        <!-- TODO style -->
         <Grid Grid.Row="2"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="Auto,*">
             <VerticalStackLayout Grid.Column="0"
-                                 Spacing="2" VerticalOptions="End">
-                <controls:SocialAlert WidthRequest="128" HeightRequest="40"
-                                      Color="{StaticResource RedDefault}" />
+                                 Style="{StaticResource LayoutVerticalStack}">
+                <!-- TODO bind -->
+                <controls:SocialAlert Style="{StaticResource Alert}" />
             </VerticalStackLayout>
         </Grid>
 
-        <!-- TODO style -->
         <Grid Grid.Row="3"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,Auto">
+            <!-- TODO bind -->
             <VerticalStackLayout Grid.Column="1"
-                                 Spacing="2">
-                <controls:SocialNotification WidthRequest="168" HeightRequest="48"
-                                             Color="{StaticResource YellowDefault}"
-                                             Percent="87"
-                                             ProgressColor="{StaticResource YellowLighten4}"
-                                             Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
-                <controls:SocialNotification WidthRequest="168" HeightRequest="48"
-                                             Color="{StaticResource YellowDefault}"
-                                             Percent="65"
-                                             ProgressColor="{StaticResource YellowLighten4}"
-                                             Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
-                <controls:SocialNotification WidthRequest="168" HeightRequest="48"
-                                             Color="{StaticResource YellowDefault}"
-                                             Percent="23"
-                                             ProgressColor="{StaticResource YellowLighten4}"
-                                             Text1="VEHICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
+                                 Style="{StaticResource LayoutVerticalStack}">
+                <controls:SocialNotification Style="{StaticResource Notification}"
+                                             Percent="87" Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
+                <controls:SocialNotification Style="{StaticResource Notification}"
+                                             Percent="65" Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
+                <controls:SocialNotification Style="{StaticResource Notification}"
+                                             Percent="23" Text1="VEHICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
             </VerticalStackLayout>
         </Grid>
 
-        <!-- TODO style -->
         <Grid Grid.Row="5"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,*">
+            <!-- TODO bind -->
             <controls:SocialStatus Grid.Row="0" Grid.Column="0"
-                                   HeightRequest="120"
-                                   Color="{StaticResource PinkDefault}"
-                                   Color1="{StaticResource PinkAccent2}"
-                                   Color2="{StaticResource BlueAccent2}"
-                                   Color3="{StaticResource OrangeAccent2}"
+                                   Style="{StaticResource Status}"
                                    Text1="{x:Static fonts:MaterialIcons.Favorite}"
                                    Text2="{x:Static fonts:MaterialIcons.Star}"
                                    Text3="{x:Static fonts:MaterialIcons.Shield}"
-                                   Value1="37200" Value2="48800" Value3="23500" />
+                                   Value1="{Binding StatusHeal}"
+                                   Value2="{Binding StatusBuff}"
+                                   Value3="{Binding StatusDebuff}" />
+            <!-- TODO bind -->
             <controls:SocialInformation Grid.Row="0" Grid.Column="1"
-                                        HeightRequest="120"
-                                        Color="{StaticResource LimeDefault}" />
+                                        Style="{StaticResource Information}" />
         </Grid>
 
         <!-- Menu -->
@@ -185,7 +243,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="作戦" Text2="OPERATION" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationOperation}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
@@ -193,6 +252,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="編成" Text2="FORMATION" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationFormation}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
@@ -200,6 +261,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          FontSize1="20" Text1="法術支援要請" Text2="ART" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationArt}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
@@ -208,6 +271,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="騎体整備" Text2="HANGAR" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationHangar}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
@@ -215,7 +280,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="倉庫" Text2="WEAPON STORAGE" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationWeaponStorage}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
@@ -223,7 +289,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="技術開発" Text2="DEVELOPMENT" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationDevelopment}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
@@ -240,6 +307,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="司令部" Text2="HEADQUARTER" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationHeadquarter}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="2" Grid.Column="2"
@@ -247,6 +316,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="公演" Text2="LIVE" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationLive}" />
                 </Grid>
             </toolkit:SfEffectsView>
         </Grid>

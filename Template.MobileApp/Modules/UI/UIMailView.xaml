@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMailView"
              x:DataType="{x:Type module:UIMailViewModel}"
@@ -11,6 +16,320 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <converters:MailDateTimeStringConverter x:Key="MailDateTimeStringConverter" />
+
+            <s:CompareToColorConverter x:Key="EqualToSelectColorConverter"
+                                       Expression="{x:Static s:CompareExpressions.Equal}"
+                                       TrueValue="{StaticResource BlueDarken2}"
+                                       FalseValue="{StaticResource GrayDarken1}" />
+
+            <Style x:Key="HeaderRowLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Padding" Value="6,0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="JustifyContent" Value="SpaceBetween" />
+            </Style>
+
+            <Style x:Key="HeaderColumnLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="HeaderIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
+
+            <Style x:Key="HeaderLabel"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="HeaderOptionButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
+
+            <Style x:Key="HeaderToggle"
+                   TargetType="controls:TextToggle">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="SelectedTextColor" Value="{StaticResource BlueDarken4}" />
+                <Setter Property="SelectedBackgroundColor" Value="White" />
+                <Setter Property="UnselectedTextColor" Value="White" />
+                <Setter Property="UnselectedBackgroundColor" Value="{StaticResource BlueDarken4}" />
+            </Style>
+
+            <Style x:Key="HeaderFilterButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="ContentLayout" Value="Left, 8" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="MessageCollection"
+                   TargetType="CollectionView">
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="MessageGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="6,3" />
+                <Setter Property="ColumnSpacing" Value="3" />
+            </Style>
+
+            <Style x:Key="MessageImage"
+                   TargetType="Image">
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Aspect" Value="AspectFill" />
+                <Setter Property="Clip">
+                    <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="MessageFromLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="MessageTitleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="MessageBodyLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <Style x:Key="MessageDateTimeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="LoadingIndicator"
+                   TargetType="ActivityIndicator">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="FloatingButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="CornerRadius" Value="28" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="4,4"
+                            Brush="Black" Opacity="0.5" Radius="8" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="MenuGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="MenuButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="56,48,*,64">
+
+        <!-- Header1 -->
+        <FlexLayout Grid.Row="0"
+                    Style="{StaticResource HeaderRowLayout}">
+            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
+                <Button Style="{StaticResource HeaderIconButton}"
+                        Text="{x:Static fonts:MaterialIcons.Inbox}" />
+                <Label Style="{StaticResource HeaderLabel}"
+                       Text="受信トレイ" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
+                <Button Style="{StaticResource HeaderOptionButton}"
+                        Text="{x:Static fonts:MaterialIcons.Notifications}" />
+                <Button Style="{StaticResource HeaderOptionButton}"
+                        Text="{x:Static fonts:MaterialIcons.Search}" />
+            </HorizontalStackLayout>
+        </FlexLayout>
+
+        <!-- Header2 -->
+        <FlexLayout Grid.Row="1"
+                    Style="{StaticResource HeaderRowLayout}">
+            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
+                <controls:TextToggle Style="{StaticResource HeaderToggle}"
+                                     OnText="優先" OffText="その他" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
+                <Button Style="{StaticResource HeaderFilterButton}"
+                        Text="フィルター">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Filter_list}"
+                                         FontFamily="MaterialIcons"
+                                         Color="White"
+                                         Size="24" />
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
+        </FlexLayout>
+
+        <!-- Messages -->
+        <CollectionView Grid.Row="2"
+                        Style="{StaticResource MessageCollection}"
+                        ItemsSource="{Binding Messages}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type models:MailMessage}">
+                    <Grid Style="{StaticResource MessageGrid}"
+                          RowDefinitions="24,20,32"
+                          ColumnDefinitions="48,*,56">
+                        <Image Grid.RowSpan="3"
+                               Style="{StaticResource MessageImage}"
+                               Source="{Binding Image}" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource MessageFromLabel}"
+                               Text="{Binding From}" />
+                        <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                               Style="{StaticResource MessageTitleLabel}"
+                               Text="{Binding Title}" />
+                        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                               Style="{StaticResource MessageBodyLabel}"
+                               Text="{Binding Body}" />
+                        <Label Grid.Row="0" Grid.Column="2"
+                               Style="{StaticResource MessageDateTimeLabel}"
+                               Text="{Binding DateTime, Converter={StaticResource MailDateTimeStringConverter}}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Indicator -->
+        <ActivityIndicator Grid.Row="2"
+                           Style="{StaticResource LoadingIndicator}"
+                           IsRunning="{Binding IsLoading}" />
+
+        <!-- Floating Button -->
+        <Button Grid.Row="2"
+                Style="{StaticResource FloatingButton}">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="36" />
+            </Button.ImageSource>
+            <Button.Shadow />
+        </Button>
+
+        <!-- Tab -->
+        <Grid Grid.Row="3"
+              Style="{StaticResource MenuGrid}"
+              ColumnDefinitions="*,*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static module:MailPage.Mail}"
+                    Text="メール"
+                    TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MailPage.Mail}}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Mail}"
+                                     FontFamily="MaterialIcons"
+                                     Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
+                                     Size="36" />
+                </Button.ImageSource>
+            </Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static module:MailPage.Schedule}"
+                    Text="予定表"
+                    TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MailPage.Schedule}}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Calendar_month}"
+                                     FontFamily="MaterialIcons"
+                                     Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MailPage.Schedule}}"
+                                     Size="36" />
+                </Button.ImageSource>
+            </Button>
+            <Button Grid.Column="2"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static module:MailPage.Application}"
+                    Text="アプリ"
+                    TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MailPage.Application}}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Apps}"
+                                     FontFamily="MaterialIcons"
+                                     Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MailPage.Application}}"
+                                     Size="36" />
+                </Button.ImageSource>
+            </Button>
+        </Grid>
+
+    </Grid>
 
 </ContentView>
