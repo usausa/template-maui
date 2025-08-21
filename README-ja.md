@@ -31,17 +31,18 @@ Template project for MAUI.
   - [ ] **WiFi manager**
   - [ ] Biometric
 - UI
+  - [ ] **Chat**
+  - [ ] **Chart**
   - [ ] **Bottom sheet**
-  - [ ] **Gauge**
-  - [ ] Chart
-  - [ ] Calendar
+  - [ ] **Gauge++**
+  - [ ] Calendar/Schedule
 - Other
+  - [ ] **Animation**
+  - [ ] **Map**
+  - [ ] **Media play**
   - [ ] **Cognitive service**
-  - [ ] **Map2**
+  - [ ] **Chat AI**
   - [ ] **HybridWebView**
-  - [ ] Chat
-  - [ ] Animation
-  - [ ] Media play
   - [ ] Push -> Hybrid?
   - [ ] Local notification -> Hybrid?
 - API server
@@ -80,6 +81,7 @@ Template project for MAUI.
 - Network
   - Web API
 - Sample
+  - Map2
   - Object detection(Local)
   - Markdown
   - PDF reader
@@ -90,7 +92,12 @@ Template project for MAUI.
   - Drawing
 - UI
   - Dock
-  - Timeline/TreeMap
+  - Gauge
+  - Mail
+  - Money
+  - Pos
+  - Timeline
+  - TreeMap
 
 # ドキュメント
 

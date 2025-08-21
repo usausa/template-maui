@@ -105,9 +105,10 @@ public enum ViewId
 
     ViewLottie,
     ViewSvg,
-    ViewAnimation,
 
     ViewDrawing,
+
+    ViewEasing,
 
     // UI
     UIMenu,

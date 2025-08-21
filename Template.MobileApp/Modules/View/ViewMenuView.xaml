@@ -39,8 +39,9 @@
 
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="Animation" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewDrawing}"
+                Text="Drawing" />
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
@@ -49,8 +50,8 @@
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewDrawing}"
-                Text="Drawing" />
+                CommandParameter="{markup:ViewId ViewEasing}"
+                Text="Easing" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

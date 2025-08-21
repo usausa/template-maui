@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             xmlns:animations="clr-namespace:Template.MobileApp.Animations"
              x:Class="Template.MobileApp.Modules.Basic.BasicAnimationView"
              x:DataType="{x:Type module:BasicAnimationViewModel}"
              s:BindingContextResolver.Type="{x:Type module:BasicAnimationViewModel}"
@@ -11,6 +12,174 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="AnimationButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="AnimationBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="StrokeShape">
+                    <RoundRectangle CornerRadius="16" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="AnimationLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,*,2*,2*,2*"
+          ColumnDefinitions="*,*">
+
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource AnimationButton}"
+                Text="Fade"
+                BackgroundColor="{StaticResource BlueDefault}">
+            <Button.Behaviors>
+                <s:EventActionBehavior EventName="Clicked">
+                    <s:BeginAnimationAction>
+                        <s:SequentialAnimation>
+                            <s:FadeToAnimation Opacity="0.5" />
+                            <s:FadeToAnimation Opacity="1.0" />
+                        </s:SequentialAnimation>
+                    </s:BeginAnimationAction>
+                </s:EventActionBehavior>
+            </Button.Behaviors>
+        </Button>
+
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource AnimationButton}"
+                Text="Rotate"
+                BackgroundColor="{StaticResource BlueDefault}">
+            <Button.Behaviors>
+                <s:EventActionBehavior EventName="Clicked">
+                    <s:BeginAnimationAction>
+                        <s:SequentialAnimation>
+                            <s:RotateToAnimation Rotation="10" />
+                            <s:RotateToAnimation Rotation="0" />
+                        </s:SequentialAnimation>
+                    </s:BeginAnimationAction>
+                </s:EventActionBehavior>
+            </Button.Behaviors>
+        </Button>
+
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource AnimationButton}"
+                Text="Scale"
+                BackgroundColor="{StaticResource BlueDefault}">
+            <Button.Behaviors>
+                <s:EventActionBehavior EventName="Clicked">
+                    <s:BeginAnimationAction>
+                        <s:SequentialAnimation>
+                            <s:ScaleToAnimation Scale="0.8" />
+                            <s:ScaleToAnimation Scale="1" />
+                        </s:SequentialAnimation>
+                    </s:BeginAnimationAction>
+                </s:EventActionBehavior>
+            </Button.Behaviors>
+        </Button>
+
+        <Border Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource AnimationBorder}"
+                BackgroundColor="{StaticResource OrangeDefault}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
+            <Border.Behaviors>
+                <s:TapActionBehavior>
+                    <s:BeginAnimationAction>
+                        <s:SequentialAnimation>
+                            <s:RotateToAnimation Duration="1000"
+                                                 Rotation="360" />
+                            <s:RotateToAnimation Duration="200"
+                                                 Rotation="0" />
+                        </s:SequentialAnimation>
+                    </s:BeginAnimationAction>
+                </s:TapActionBehavior>
+            </Border.Behaviors>
+            <Label Style="{StaticResource AnimationLabel}"
+                   Text="Rotate" />
+
+        </Border>
+
+        <Border Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource AnimationBorder}"
+                BackgroundColor="{StaticResource OrangeDefault}">
+            <Border.Behaviors>
+                <s:TapActionBehavior>
+                    <s:BeginAnimationAction>
+                        <s:RelRotateToAnimation Rotation="90" />
+                    </s:BeginAnimationAction>
+                </s:TapActionBehavior>
+            </Border.Behaviors>
+            <Label Style="{StaticResource AnimationLabel}"
+                   Text="RelRotate" />
+        </Border>
+
+        <Border Grid.Row="3" Grid.ColumnSpan="2"
+                Style="{StaticResource AnimationBorder}"
+                BackgroundColor="{StaticResource PurpleDefault}">
+            <Border.Behaviors>
+                <s:TapActionBehavior>
+                    <s:BeginAnimationAction>
+                        <s:SequentialAnimation>
+                            <s:ParallelAnimation>
+                                <s:TranslateToAnimation Duration="600"
+                                                        Easing="{x:Static Easing.SinInOut}"
+                                                        TranslateX="90" TranslateY="-30" />
+                                <s:RotateToAnimation Duration="600"
+                                                     Easing="{x:Static Easing.CubicInOut}"
+                                                     Rotation="270" />
+                                <s:ScaleToAnimation Duration="600"
+                                                    Easing="{x:Static Easing.CubicOut}"
+                                                    Scale="1.4" />
+                            </s:ParallelAnimation>
+                            <s:ScaleToAnimation Duration="300"
+                                                Scale="1" />
+                            <s:RotateToAnimation Duration="300"
+                                                 Rotation="0" />
+                            <s:TranslateToAnimation Duration="300"
+                                                    TranslateX="0" TranslateY="0" />
+                        </s:SequentialAnimation>
+                    </s:BeginAnimationAction>
+                </s:TapActionBehavior>
+            </Border.Behaviors>
+            <Label Style="{StaticResource AnimationLabel}"
+                   Text="Sequence" />
+        </Border>
+
+        <Border Grid.Row="4" Grid.ColumnSpan="2"
+                Style="{StaticResource AnimationBorder}"
+                BackgroundColor="{StaticResource PinkDefault}">
+            <Border.Behaviors>
+                <s:TapActionBehavior>
+                    <s:BeginAnimationAction>
+                        <animations:SpringAnimation />
+                    </s:BeginAnimationAction>
+                </s:TapActionBehavior>
+            </Border.Behaviors>
+            <Label Style="{StaticResource AnimationLabel}"
+                   Text="Custom" />
+        </Border>
+
+    </Grid>
 
 </ContentView>
