@@ -27,26 +27,28 @@
     <MandroidI18n>CJK</MandroidI18n>
   </PropertyGroup>
 
-  <!---
-  <PropertyGroup>
-    <ConstantFlavor>Development</ConstantFlavor>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Constant Include="Flavor" Value="$(ConstantFlavor)" />
-  </ItemGroup>
-
-  <Import Project="..\.Variants.props" Condition="Exists('..\.Variants.props')" />
-  -->
-
-  <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
-
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
     <AndroidKeyStore>True</AndroidKeyStore>
     <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
     <AndroidSigningKeyAlias>example</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>example</AndroidSigningKeyPass>
     <AndroidSigningStorePass>example</AndroidSigningStorePass>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EmbeddedFlavor>Development</EmbeddedFlavor>
+    <EmbeddedApiEndPoint></EmbeddedApiEndPoint>
+    <EmbeddedGoogleMapsApiKey></EmbeddedGoogleMapsApiKey>
+  </PropertyGroup>
+
+  <Import Project="..\.EmbeddedProperty.props" Condition="Exists('..\.EmbeddedProperty.props')" />
+
+  <PropertyGroup>
+    <EmbeddedPropertyValues>
+      Flavor=string:$(EmbeddedFlavor),
+      ApiEndPoint=string:$(EmbeddedApiEndPoint),
+      GoogleMapsApiKey=string:$(EmbeddedGoogleMapsApiKey)
+    </EmbeddedPropertyValues>
   </PropertyGroup>
 
   <ItemGroup>
@@ -99,7 +101,10 @@
     <PackageReference Include="Azure.AI.Vision.Face" Version="1.0.0-beta.2" />
     <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
     <PackageReference Include="BarcodeScanning.Native.Maui" Version="2.2.1" />
-    <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.5.0" />
+    <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.7.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="3.0.2" />
@@ -112,6 +117,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
+    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="9.0.100" />
     <PackageReference Include="Microsoft.ML" Version="4.0.2" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.22.1" />
     <PackageReference Include="SkiaSharp" Version="3.119.0" />

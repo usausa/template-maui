@@ -12,7 +12,7 @@ public sealed partial class MenuViewModel : AppViewModelBase
 
     public MenuViewModel(IAppInfo appInfo)
     {
-        Flavor = !String.IsNullOrEmpty(Variants.Flavor) ? Variants.Flavor : "Unknown";
+        Flavor = !String.IsNullOrEmpty(EmbeddedProperty.Flavor) ? EmbeddedProperty.Flavor : "Unknown";
         Version = appInfo.Version;
 
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));

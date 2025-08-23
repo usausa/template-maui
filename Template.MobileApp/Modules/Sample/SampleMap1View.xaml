@@ -4,13 +4,18 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
              x:Class="Template.MobileApp.Modules.Sample.SampleMap1View"
              x:DataType="{x:Type module:SampleMap1ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMap1ViewModel}"
-             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Title="Map"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid Style="{StaticResource FillGrid}">
+
+        <maps:Map />
+
+    </Grid>
 
 </ContentView>

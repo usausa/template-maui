@@ -16,6 +16,7 @@ using Maui.PDFView;
 
 using MauiComponents.Resolver;
 
+using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 
 using Plugin.Maui.Audio;
@@ -60,6 +61,7 @@ public static partial class MauiProgram
             .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
             .UseMauiCommunityToolkitMediaElement()
+            .UseMauiMaps()
             .UseBarcodeScanning()
             .UseShiny()
             .UseMarkdownView()

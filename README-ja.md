@@ -35,10 +35,9 @@ Template project for MAUI.
   - [ ] **Chart**
   - [ ] **Bottom sheet**
   - [ ] **Gauge++**
+  - [ ] Carouse/Swipe/Pull to refresh
   - [ ] Calendar/Schedule
 - Other
-  - [ ] **Animation**
-  - [ ] **Map**
   - [ ] **Media play**
   - [ ] **Cognitive service**
   - [ ] **Chat AI**
@@ -81,7 +80,8 @@ Template project for MAUI.
 - Network
   - Web API
 - Sample
-  - Map2
+  - Animation
+  - Map/Map2
   - Object detection(Local)
   - Markdown
   - PDF reader
