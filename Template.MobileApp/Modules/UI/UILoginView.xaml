@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:effectsView="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UILoginView"
              x:DataType="{x:Type module:UILoginViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UILoginViewModel}"
@@ -11,19 +14,219 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Background -->
+            <Style x:Key="TitlePath"
+                   TargetType="Path">
+                <Setter Property="Aspect" Value="Fill" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Fill">
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Offset="0.0" Color="{StaticResource LightBlueAccent2}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource LightBlueAccent4}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TitleBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="TitleImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <!-- Layout -->
+            <Style x:Key="LayoutGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="20" />
+            </Style>
+
+            <!-- Message -->
+            <Style x:Key="MessageLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SubMessageLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <!-- Input -->
+            <Style x:Key="InputBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Stroke" Value="{StaticResource LightBlueDarken1}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 30" />
+            </Style>
+
+            <Style x:Key="InputImageBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource LightBlueDarken1}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="InputEntry"
+                   TargetType="Entry">
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Keep login -->
+            <Style x:Key="KeepLoginLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="KeepLoginCheckBox"
+                   TargetType="CheckBox">
+                <Setter Property="Color" Value="{StaticResource LightBlueDarken1}" />
+            </Style>
+
+            <Style x:Key="KeepLoginLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <!-- Login -->
+            <Style x:Key="LoginButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="32" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Forget password -->
+            <Style x:Key="ForgetPasswordEffect"
+                   TargetType="effectsView:SfEffectsView">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+            </Style>
+
+            <Style x:Key="ForgetPasswordLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource LightBlueDarken4}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="192,*">
+          RowDefinitions="160,*">
 
-        <Path Aspect="Fill" Data="M0 0 L112 0 L112 48 A12 12 90 0 1 100 60 L12 60 A12 12 90 0 1 0 48 L0 0 Z" Fill="#03a9f4" StrokeThickness="0" />
+        <Path Grid.Row="0"
+              Style="{StaticResource TitlePath}"
+              Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" />
 
-        <VerticalStackLayout>
-            <Border WidthRequest="96" HeightRequest="96"
-                    Margin="0,48,0,0" Padding="0"
-                    HorizontalOptions="Center" StrokeShape="RoundRectangle 48">
-                <Image Source="profile.jpg"
-                       Aspect="AspectFill" />
+        <Border Grid.Row="0"
+                Style="{StaticResource TitleBorder}">
+            <Image Style="{StaticResource TitleImage}"
+                   Source="profile.jpg" />
+        </Border>
+
+        <Grid Grid.Row="1"
+              Style="{StaticResource LayoutGrid}"
+              RowDefinitions="2*,Auto,8,Auto,40,Auto,16,Auto,40,Auto,40,Auto,40,Auto,3*">
+
+            <Label Grid.Row="1"
+                   Style="{StaticResource MessageLabel}"
+                   Text="ようこそ" />
+
+            <Label Grid.Row="3"
+                   Style="{StaticResource SubMessageLabel}"
+                   Text="ログインして続けてください" />
+
+            <Border Grid.Row="5"
+                    Style="{StaticResource InputBorder}">
+                <Grid ColumnDefinitions="Auto,*,16">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource InputImageBorder}">
+                        <Image>
+                            <Image.Source>
+                                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
+                                                 FontFamily="MaterialIcons"
+                                                 Color="White" />
+                            </Image.Source>
+                        </Image>
+                    </Border>
+                    <Entry Grid.Column="1"
+                           Style="{StaticResource InputEntry}"
+                           Placeholder="ユーザーID" />
+                </Grid>
             </Border>
-        </VerticalStackLayout>
+
+            <Border Grid.Row="7"
+                    Style="{StaticResource InputBorder}">
+                <Grid ColumnDefinitions="Auto,*,16">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource InputImageBorder}">
+                        <Image>
+                            <Image.Source>
+                                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Key}"
+                                                 FontFamily="MaterialIcons"
+                                                 Color="White" />
+                            </Image.Source>
+                        </Image>
+                    </Border>
+                    <Entry Grid.Column="1"
+                           Style="{StaticResource InputEntry}"
+                           IsPassword="True" Placeholder="パスワード" />
+                </Grid>
+            </Border>
+
+            <HorizontalStackLayout Grid.Row="9"
+                                   Style="{StaticResource KeepLoginLayout}">
+                <CheckBox Style="{StaticResource KeepLoginCheckBox}" />
+                <Label Style="{StaticResource KeepLoginLabel}"
+                       Text="ログイン状態を保持" />
+            </HorizontalStackLayout>
+
+            <Button Grid.Row="11"
+                    Style="{StaticResource LoginButton}"
+                    Text="ログイン" />
+
+            <effectsView:SfEffectsView Grid.Row="13"
+                                       Style="{StaticResource ForgetPasswordEffect}">
+                <Label Style="{StaticResource ForgetPasswordLabel}"
+                       Text="パスワードを忘れた場合" />
+            </effectsView:SfEffectsView>
+
+        </Grid>
 
     </Grid>
 

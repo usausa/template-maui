@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Behaviors;
 
+using Android.Content.Res;
 using Android.Text;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -34,6 +35,13 @@ public static partial class EntryOption
             EditorHandler.Mapper.AppendToMapping(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
+        // NoBorder
+        if (options.NoBorder)
+        {
+            EntryHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Editor)handler.VirtualView));
+        }
+
         // InputFilter
         if (options.InputFilter)
         {
@@ -52,6 +60,12 @@ public static partial class EntryOption
     {
         var value = GetSelectAllOnFocus(element);
         editText.SetSelectAllOnFocus(value);
+    }
+
+    private static void UpdateHandleNoBorder(TextView editText, BindableObject element)
+    {
+        var value = GetNoBorder(element);
+        editText.BackgroundTintList = value ? ColorStateList.ValueOf(Android.Graphics.Color.Transparent) : null;
     }
 
     private static void UpdateInputFilter(TextView editText, BindableObject element)
