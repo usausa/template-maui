@@ -6,21 +6,23 @@ Template project for MAUI.
 
 # Image
 
-<img style="width: 25%;" src="Document/Device_BLE.png" />
-<img style="width: 25%;" src="Document/Device_NFC.png" />
-<img style="width: 25%;" src="Document/Device_Activity.png" />
-<img style="width: 25%;" src="Document/Sample_CV.png" />
-<img style="width: 25%;" src="Document/UI_Deck.png" />
-<img style="width: 25%;" src="Document/UI_Load.png" />
-<img style="width: 25%;" src="Document/UI_Login.png" />
-<img style="width: 25%;" src="Document/UI_Mail.png" />
-<img style="width: 25%;" src="Document/UI_Meter.png" />
-<img style="width: 25%;" src="Document/UI_Money.png" />
-<img style="width: 25%;" src="Document/UI_Pos.png" />
-<img style="width: 25%;" src="Document/UI_Radar.png" />
-<img style="width: 25%;" src="Document/UI_Social.png" />
-<img style="width: 25%;" src="Document/UI_Timeline.png" />
-<img style="width: 25%;" src="Document/UI_TreeMap.png" />
+<p>
+<img width="25%" src="Document/Device_BLE.png" />
+<img width="25%" src="Document/Device_NFC.png" />
+<img width="25%" src="Document/Device_Activity.png" />
+<img width="25%" src="Document/Sample_CV.png" />
+<img width="25%" src="Document/UI_Deck.png" />
+<img width="25%" src="Document/UI_Load.png" />
+<img width="25%" src="Document/UI_Login.png" />
+<img width="25%" src="Document/UI_Mail.png" />
+<img width="25%" src="Document/UI_Meter.png" />
+<img width="25%" src="Document/UI_Money.png" />
+<img width="25%" src="Document/UI_Pos.png" />
+<img width="25%" src="Document/UI_Radar.png" />
+<img width="25%" src="Document/UI_Social.png" />
+<img width="25%" src="Document/UI_Timeline.png" />
+<img width="25%" src="Document/UI_TreeMap.png" />
+</p>
 
 # TODO
 
