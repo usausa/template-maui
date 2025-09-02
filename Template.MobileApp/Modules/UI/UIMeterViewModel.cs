@@ -16,8 +16,13 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     private readonly PeriodicTimer timer;
     private readonly CancellationTokenSource cancellationTokenSource;
 
-    private readonly AtomicBoolean accelerator = new();
-    private readonly AtomicBoolean brake = new();
+    private readonly AtomicInteger stickX = new();
+    private readonly AtomicInteger stickY = new();
+
+    private readonly AtomicBoolean buttonA = new();
+    private readonly AtomicBoolean buttonB = new();
+    private readonly AtomicBoolean buttonX = new();
+    private readonly AtomicBoolean buttonY = new();
 
     [ObservableProperty]
     public partial int Fps { get; set; }
@@ -25,16 +30,40 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int Speed { get; set; }
 
-    public bool Accelerator
+    public int StickX
     {
-        get => accelerator.Value;
-        set => accelerator.Value = value;
+        get => stickX.Value;
+        set => stickX.Value = value;
     }
 
-    public bool Brake
+    public int StickY
     {
-        get => brake.Value;
-        set => brake.Value = value;
+        get => stickY.Value;
+        set => stickY.Value = value;
+    }
+
+    public bool ButtonA
+    {
+        get => buttonA.Value;
+        set => buttonA.Value = value;
+    }
+
+    public bool ButtonB
+    {
+        get => buttonB.Value;
+        set => buttonB.Value = value;
+    }
+
+    public bool ButtonX
+    {
+        get => buttonX.Value;
+        set => buttonX.Value = value;
+    }
+
+    public bool ButtonY
+    {
+        get => buttonY.Value;
+        set => buttonY.Value = value;
     }
 
     public UIMeterViewModel()
@@ -72,8 +101,8 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
             while (await timer.WaitForNextTickAsync(cancellationTokenSource.Token))
             {
                 // Speed
-                var a = Accelerator;
-                var b = Brake;
+                var a = ButtonA;
+                var b = ButtonB;
 
                 if (b)
                 {

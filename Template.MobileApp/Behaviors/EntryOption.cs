@@ -2,6 +2,8 @@ namespace Template.MobileApp.Behaviors;
 
 public static partial class EntryOption
 {
+    public static partial void UseCustomMapper(BehaviorOptions options);
+
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty DisableShowSoftInputOnFocusProperty = BindableProperty.CreateAttached(
         "DisableShowSoftInputOnFocus",
@@ -59,8 +61,5 @@ public static partial class EntryOption
     // ReSharper restore InconsistentNaming
 
     public static bool GetHandleEnterKey(BindableObject bindable) => (bool)bindable.GetValue(HandleEnterKeyProperty);
-
     public static void SetHandleEnterKey(BindableObject bindable, bool value) => bindable.SetValue(HandleEnterKeyProperty, value);
-
-    public static partial void UseCustomMapper(BehaviorOptions options);
 }

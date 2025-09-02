@@ -2,6 +2,8 @@ namespace Template.MobileApp.Behaviors;
 
 public static partial class Border
 {
+    public static partial void UseCustomMapper(BehaviorOptions options);
+
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty WidthProperty =
         BindableProperty.CreateAttached(
@@ -47,6 +49,4 @@ public static partial class Border
     public static void SetRadius(BindableObject bindable, double? value) => bindable.SetValue(RadiusProperty, value);
 
     public static double? GetRadius(BindableObject bindable) => (double?)bindable.GetValue(RadiusProperty);
-
-    public static partial void UseCustomMapper(BehaviorOptions options);
 }

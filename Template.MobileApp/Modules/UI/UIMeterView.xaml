@@ -13,8 +13,104 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="JoyStick"
+                   TargetType="controls:JoyStickView">
+                <Setter Property="WidthRequest" Value="160" />
+                <Setter Property="HeightRequest" Value="160" />
+                <Setter Property="ThumbSize" Value="80" />
+                <Setter Property="RangeOfMotion" Value="56" />
+                <Setter Property="Mode" Value="Both" />
+                <Setter Property="ArrowColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="BaseBackground">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource GrayDefault}" />
+                        <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
+                    </LinearGradientBrush>
+                </Setter>
+                <Setter Property="ThumbBackground">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource LightBlueDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource LightBlueLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+                <Setter Property="ThumbBorderBackground">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource LightBlueLighten2}" />
+                        <GradientStop Offset="1" Color="{StaticResource LightBlueDarken2}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="JoyButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="32" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="behaviors:ButtonOption.PressBind" Value="True" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="AButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="A" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource GreenDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource GreenLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="BButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="B" />
+                <Setter Property="TextColor" Value="{StaticResource RedDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource RedDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource RedLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="XButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="X" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource BlueDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource BlueLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="YButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="Y" />
+                <Setter Property="TextColor" Value="{StaticResource YellowDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource YellowDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource YellowLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto"
+          RowDefinitions="*,Auto,80"
           ColumnDefinitions="*,*"
           BackgroundColor="#2E2F45">
 
@@ -27,39 +123,40 @@
         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2"
                              VerticalOptions="Center">
             <Label HorizontalTextAlignment="Center"
-                   FontFamily="Gkktt" FontSize="96"
                    Text="{Binding Speed}"
+                   FontFamily="Gkktt" FontSize="96"
                    TextColor="White" />
             <Label HorizontalTextAlignment="Center"
-                   FontFamily="Gkktt" FontSize="24"
                    Text="km/h"
+                   FontFamily="Gkktt" FontSize="24"
                    TextColor="White" />
         </VerticalStackLayout>
 
         <Label Grid.Row="0" Grid.Column="1"
                HorizontalTextAlignment="End" VerticalTextAlignment="Start"
-               FontSize="12"
                Text="{Binding Fps, StringFormat='{0} fps'}"
+               FontSize="12"
                TextColor="White" />
 
-        <Button Grid.Row="1" Grid.Column="0"
-                HeightRequest="160"
-                FontSize="72" FontAttributes="Bold"
-                Text="+"
-                BackgroundColor="{StaticResource GreenLighten2}">
-            <Button.Behaviors>
-                <behaviors:PressStateBehavior IsPressed="{Binding Accelerator}" />
-            </Button.Behaviors>
-        </Button>
-        <Button Grid.Row="1" Grid.Column="1"
-                HeightRequest="160"
-                FontSize="72" FontAttributes="Bold"
-                Text="-"
-                BackgroundColor="{StaticResource RedLighten2}">
-            <Button.Behaviors>
-                <behaviors:PressStateBehavior IsPressed="{Binding Brake}" />
-            </Button.Behaviors>
-        </Button>
+        <controls:JoyStickView Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource JoyStick}"
+                               XValue="{Binding StickX}"
+                               YValue="{Binding StickY}" />
+
+        <AbsoluteLayout Grid.Row="1" Grid.Column="1">
+            <Button AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
+                    Style="{StaticResource YButton}"
+                    behaviors:ButtonOption.IsPressed="{Binding ButtonY}" />
+            <Button AbsoluteLayout.LayoutBounds="0,0,0.5,1" AbsoluteLayout.LayoutFlags="All"
+                    Style="{StaticResource XButton}"
+                    behaviors:ButtonOption.IsPressed="{Binding ButtonX}" />
+            <Button AbsoluteLayout.LayoutBounds="0,0,1.5,1" AbsoluteLayout.LayoutFlags="All"
+                    Style="{StaticResource BButton}"
+                    behaviors:ButtonOption.IsPressed="{Binding ButtonB}" />
+            <Button AbsoluteLayout.LayoutBounds="0,0,1,1.6" AbsoluteLayout.LayoutFlags="All"
+                    Style="{StaticResource AButton}"
+                    behaviors:ButtonOption.IsPressed="{Binding ButtonA}" />
+        </AbsoluteLayout>
     </Grid>
 
 </ContentView>

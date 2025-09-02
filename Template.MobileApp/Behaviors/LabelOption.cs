@@ -2,6 +2,8 @@ namespace Template.MobileApp.Behaviors;
 
 public static partial class LabelOption
 {
+    public static partial void UseCustomMapper(BehaviorOptions options);
+
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty AutoSizeProperty = BindableProperty.CreateAttached(
         "AutoSize",
@@ -25,6 +27,4 @@ public static partial class LabelOption
     public static double GetMaxSize(BindableObject bindable) => (double)bindable.GetValue(MaxSizeProperty);
 
     public static void SetMaxSize(BindableObject bindable, double value) => bindable.SetValue(MaxSizeProperty, value);
-
-    public static partial void UseCustomMapper(BehaviorOptions options);
 }
