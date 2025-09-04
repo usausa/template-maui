@@ -16,56 +16,53 @@
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
 
-    <shell:OverwrapLayout OverwrapVisible="{Binding BusyState.IsBusy}">
-        <shell:OverwrapLayout.Overwrap>
-            <ContentView BackgroundColor="Black"
-                         Opacity="0.5" />
-        </shell:OverwrapLayout.Overwrap>
+    <Grid Style="{StaticResource MainGrid}"
+          RowDefinitions="Auto,*,Auto">
+        <!-- overlay -->
+        <Rectangle Grid.RowSpan="3"
+                   shell:ShellProperty.BusyOverlay="True"
+                   IsVisible="{Binding BusyState.IsBusy}" />
 
-        <Grid Style="{StaticResource MainGrid}"
-              RowDefinitions="Auto,*,Auto">
-            <!-- header -->
-            <Grid Grid.Row="0"
-                  Style="{StaticResource HeaderGrid}"
-                  ColumnDefinitions="*"
-                  IsVisible="{Binding HeaderVisible}">
-                <Label Grid.Column="0"
-                       Style="{StaticResource HeaderTitleLabel}"
-                       Text="{Binding Title}" />
-            </Grid>
-
-            <!-- view container -->
-            <AbsoluteLayout Grid.Row="1"
-                            Style="{StaticResource ContainerLayout}">
-                <AbsoluteLayout.Behaviors>
-                    <navigation:NavigationContainerBehavior Navigator="{Binding Navigator}" />
-                </AbsoluteLayout.Behaviors>
-            </AbsoluteLayout>
-
-            <!-- function -->
-            <Grid Grid.Row="2"
-                  Style="{StaticResource FunctionGrid}"
-                  ColumnDefinitions="*,*,*,*"
-                  IsVisible="{Binding FunctionVisible}">
-                <Button Grid.Column="0"
-                        Style="{StaticResource FunctionButton1}"
-                        Command="{Binding Function1Command}"
-                        Text="{Binding Function1Text}" />
-                <Button Grid.Column="1"
-                        Style="{StaticResource FunctionButton2}"
-                        Command="{Binding Function2Command}"
-                        Text="{Binding Function2Text}" />
-                <Button Grid.Column="2"
-                        Style="{StaticResource FunctionButton3}"
-                        Command="{Binding Function3Command}"
-                        Text="{Binding Function3Text}" />
-                <Button Grid.Column="3"
-                        Style="{StaticResource FunctionButton4}"
-                        Command="{Binding Function4Command}"
-                        Text="{Binding Function4Text}" />
-            </Grid>
+        <!-- header -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource HeaderGrid}"
+              ColumnDefinitions="*"
+              IsVisible="{Binding HeaderVisible}">
+            <Label Grid.Column="0"
+                   Style="{StaticResource HeaderTitleLabel}"
+                   Text="{Binding Title}" />
         </Grid>
 
-    </shell:OverwrapLayout>
+        <!-- view container -->
+        <AbsoluteLayout Grid.Row="1"
+                        Style="{StaticResource ContainerLayout}">
+            <AbsoluteLayout.Behaviors>
+                <navigation:NavigationContainerBehavior Navigator="{Binding Navigator}" />
+            </AbsoluteLayout.Behaviors>
+        </AbsoluteLayout>
+
+        <!-- function -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource FunctionGrid}"
+              ColumnDefinitions="*,*,*,*"
+              IsVisible="{Binding FunctionVisible}">
+            <Button Grid.Column="0"
+                    Style="{StaticResource FunctionButton1}"
+                    Command="{Binding Function1Command}"
+                    Text="{Binding Function1Text}" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource FunctionButton2}"
+                    Command="{Binding Function2Command}"
+                    Text="{Binding Function2Text}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource FunctionButton3}"
+                    Command="{Binding Function3Command}"
+                    Text="{Binding Function3Text}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource FunctionButton4}"
+                    Command="{Binding Function4Command}"
+                    Text="{Binding Function4Text}" />
+        </Grid>
+    </Grid>
 
 </ContentPage>
