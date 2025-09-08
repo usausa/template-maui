@@ -96,6 +96,9 @@ public static class Extensions
     // Reactive
     //--------------------------------------------------------------------------------
 
+    public static IObservable<EventArgs> TickAsObservable(this IDispatcherTimer timer) =>
+        Observable.FromEvent<EventHandler, EventArgs>(static h => (_, e) => h(e), h => timer.Tick += h, h => timer.Tick -= h);
+
     public static IObservable<ScreenStateEventArgs> StateChangedAsObservable(this IScreen screen) =>
         Observable.FromEvent<EventHandler<ScreenStateEventArgs>, ScreenStateEventArgs>(static h => (_, e) => h(e), h => screen.ScreenStateChanged += h, h => screen.ScreenStateChanged -= h);
 
