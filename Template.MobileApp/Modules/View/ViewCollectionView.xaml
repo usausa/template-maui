@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             xmlns:font="clr-namespace:Fonts"
+             x:Class="Template.MobileApp.Modules.View.ViewCollectionView"
+             x:DataType="{x:Type module:ViewCollectionViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewCollectionViewModel}"
+             shell:ShellProperty.Title="Collection"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:BoolToTextConverter x:Key="BoolToExpandImageConverter"
+                                   TrueValue="▼"
+                                   FalseValue="▲" />
+            <s:BoolToColorConverter x:Key="BoolToBackgroundColorConverter"
+                                    TrueValue="White"
+                                    FalseValue="{StaticResource YellowLighten5}" />
+
+            <Style x:Key="AddressHeaderGrid"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="AddressHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="AddressHeaderButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="AddressCollectionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="4" />
+            </Style>
+
+            <Style x:Key="AddressImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AddressNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <Style x:Key="AddressIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
+
+            <Style x:Key="AddressValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+            <Style x:Key="AddressMailSwipe"
+                   TargetType="SwipeItemView">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="AddressPhoneSwipe"
+                   TargetType="SwipeItemView">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDarken1}" />
+            </Style>
+
+            <Style x:Key="AddressSwipeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <CollectionView ItemsSource="{Binding List}"
+                    IsGrouped="True">
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate x:DataType="{x:Type models:AddressGroup}">
+                <Grid Style="{StaticResource AddressHeaderGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource AddressHeaderLabel}"
+                           Text="{Binding Key}" />
+                    <Button Grid.Column="1"
+                            Style="{StaticResource AddressHeaderButton}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=ToggleCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
+                            CommandParameter="{Binding .}"
+                            Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandImageConverter}}" />
+                </Grid>
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="{x:Type models:AddressRow}">
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems>
+                            <SwipeItemView Style="{StaticResource AddressMailSwipe}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=MailCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
+                                           CommandParameter="{Binding .}">
+                                <Label Style="{StaticResource AddressSwipeLabel}"
+                                       Text="メール" />
+                            </SwipeItemView>
+                            <SwipeItemView Style="{StaticResource AddressPhoneSwipe}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=PhoneCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
+                                           CommandParameter="{Binding .}">
+                                <Label Style="{StaticResource AddressSwipeLabel}"
+                                       Text="通話" />
+                            </SwipeItemView>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <Grid Style="{StaticResource AddressCollectionGrid}"
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="56,Auto,4,*,Auto,4,*"
+                          BackgroundColor="{Binding IsEven, Converter={StaticResource BoolToBackgroundColorConverter}}">
+                        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                               Style="{StaticResource AddressImage}"
+                               Source="{Binding Value.Image}" />
+                        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6"
+                               Style="{StaticResource AddressNameLabel}"
+                               Text="{Binding Value.Name}" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource AddressIconLabel}"
+                               Text="{x:Static font:MaterialIcons.Phone}" />
+                        <Label Grid.Row="1" Grid.Column="3"
+                               Style="{StaticResource AddressValueLabel}"
+                               Text="{Binding Value.PhoneNumber}" />
+                        <Label Grid.Row="1" Grid.Column="4"
+                               Style="{StaticResource AddressIconLabel}"
+                               Text="{x:Static font:MaterialIcons.Email}" />
+                        <Label Grid.Row="1" Grid.Column="6"
+                               Style="{StaticResource AddressValueLabel}"
+                               Text="{Binding Value.MailAddress}" />
+                    </Grid>
+                </SwipeView>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+</ContentView>

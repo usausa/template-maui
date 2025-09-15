@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewRefreshView"
+             x:DataType="{x:Type module:ViewRefreshViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewRefreshViewModel}"
+             shell:ShellProperty.Title="Refresh"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="HeaderLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Padding" Value="6,0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="JustifyContent" Value="SpaceBetween" />
+            </Style>
+
+            <Style x:Key="HeaderLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="NewsBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="NewsImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="NewsTitleLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="MaxLines" Value="1" />
+            </Style>
+
+            <Style x:Key="NewsSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="MaxLines" Value="2" />
+            </Style>
+
+            <Style x:Key="NewsTimestampLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="48,*">
+
+        <FlexLayout Grid.Row="0"
+                    Style="{StaticResource HeaderLayout}">
+            <Label Style="{StaticResource HeaderLabel}"
+                   Text="News" />
+        </FlexLayout>
+
+        <RefreshView Grid.Row="1"
+                     Command="{Binding RefreshCommand}"
+                     IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.Behaviors>
+                    <s:CollectionControlBehavior Controller="{Binding Controller}" />
+                </CollectionView.Behaviors>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:NewsItem}">
+
+                        <Border Style="{StaticResource NewsBorder}">
+                            <Grid RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,Auto">
+                                <Image Grid.RowSpan="2" Grid.Column="0"
+                                       Style="{StaticResource NewsImage}">
+                                    <Image.Source>
+                                        <FontImageSource Glyph="{Binding CategoryIcon}"
+                                                         FontFamily="MaterialIcons"
+                                                         Color="{StaticResource GrayDarken2}" />
+                                    </Image.Source>
+                                </Image>
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Style="{StaticResource NewsTitleLabel}"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Row="0" Grid.Column="2"
+                                       Style="{StaticResource NewsTimestampLabel}"
+                                       Text="{Binding PublishedAt, StringFormat='{0:MM/dd HH:mm}'}" />
+                                <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                       Style="{StaticResource NewsSummaryLabel}"
+                                       Text="{Binding Summary}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+
+</ContentView>

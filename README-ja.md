@@ -26,6 +26,9 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Social.png" />
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
+<img width="25%" src="Document/UI_Carousel.png" />
+<img width="25%" src="Document/UI_Collection.png" />
+<img width="25%" src="Document/UI_Refresh.png" />
 </p>
 
 # TODO

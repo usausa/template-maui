@@ -101,6 +101,11 @@ public enum ViewId
 
     ViewMenu,
 
+    ViewCollection,
+
+    ViewCarousel,
+    ViewRefresh,
+
     ViewGraphics,
 
     ViewLottie,

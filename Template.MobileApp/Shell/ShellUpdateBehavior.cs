@@ -20,7 +20,7 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
     {
         if (Navigator is not null)
         {
-            Navigator.Navigated -= NavigatorOnNavigated;
+            Navigator.Navigating -= NavigatorOnNavigating;
             Navigator.Exited -= NavigatorOnExited;
         }
 
@@ -41,18 +41,18 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
 
         if (oldValue is not null)
         {
-            oldValue.Navigated -= NavigatorOnNavigated;
+            oldValue.Navigating -= NavigatorOnNavigating;
             oldValue.Exited -= NavigatorOnExited;
         }
 
         if (newValue is not null)
         {
-            newValue.Navigated += NavigatorOnNavigated;
+            newValue.Navigating += NavigatorOnNavigating;
             newValue.Exited += NavigatorOnExited;
         }
     }
 
-    private void NavigatorOnNavigated(object? sender, Smart.Navigation.NavigationEventArgs e)
+    private void NavigatorOnNavigating(object? sender, Smart.Navigation.NavigationEventArgs e)
     {
         UpdateShell(e.ToView as Element);
     }

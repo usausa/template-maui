@@ -48,7 +48,7 @@
             </Style>
 
             <DataTemplate x:Key="TextTemplate"
-                          x:DataType="models:DeckButtonInfo">
+                          x:DataType="{x:Type models:DeckButtonInfo}">
                 <VerticalStackLayout Grid.Row="{Binding Row}"
                                      Grid.Column="{Binding Column}"
                                      Style="{StaticResource DeckButtonLayout}">
@@ -70,14 +70,14 @@
             </DataTemplate>
 
             <DataTemplate x:Key="ImageTemplate"
-                          x:DataType="models:DeckButtonInfo">
+                          x:DataType="{x:Type models:DeckButtonInfo}">
                 <VerticalStackLayout Grid.Row="{Binding Row}"
                                      Grid.Column="{Binding Column}"
                                      Style="{StaticResource DeckButtonLayout}">
                     <ImageButton Style="{StaticResource DeckImageButton}"
+                                 Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
                                  Command="{Binding Command}"
-                                 CommandParameter="{Binding Parameter}"
-                                 Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}">
+                                 CommandParameter="{Binding Parameter}">
                         <ImageButton.Background>
                             <LinearGradientBrush>
                                 <GradientStop Offset="0.1" Color="{Binding BackColor1}" />

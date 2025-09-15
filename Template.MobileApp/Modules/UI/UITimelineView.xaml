@@ -42,7 +42,7 @@
         <CollectionView Style="{StaticResource TimelineCollectionView}"
                         ItemsSource="{Binding Rows}">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:TimelineRow">
+                <DataTemplate x:DataType="{x:Type models:TimelineRow}">
                     <Grid ColumnDefinitions="Auto,Auto,*">
                         <controls:TimelineCell Grid.Column="0"
                                                Row="{Binding}" />
