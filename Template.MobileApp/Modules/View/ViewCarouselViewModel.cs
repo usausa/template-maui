@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.View;
 
-public sealed partial class ViewCarouselViewModel : AppViewModelBase
+public sealed class ViewCarouselViewModel : AppViewModelBase
 {
     public ObservableCollection<PhotoItem> Items { get; }
 
