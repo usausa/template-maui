@@ -24,13 +24,13 @@
           RowDefinitions="*,*">
 
         <mct:CameraView Grid.Row="0" Grid.RowSpan="2"
-                        IsVisible="{Binding IsPreview}"
-                        behaviors:CameraBind.Controller="{Binding Controller}" />
+                        behaviors:CameraBind.Controller="{Binding Controller}"
+                        IsVisible="{Binding IsPreview}" />
 
         <Image Grid.Row="0"
+               Source="{Binding Image}"
                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-               BackgroundColor="Black"
-               Source="{Binding Image}" />
+               BackgroundColor="Black" />
         <graphics:GraphicsControl Grid.Row="1"
                                   IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                                   Graphics="{Binding Graphics}" />

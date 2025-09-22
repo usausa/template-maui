@@ -14,21 +14,22 @@ Template project for MAUI.
 <img width="25%" src="Document/Device_NFC.png" />
 <img width="25%" src="Document/Device_Activity.png" />
 <img width="25%" src="Document/Sample_CV.png" />
+<img width="25%" src="Document/UI_Money.png" />
+<img width="25%" src="Document/UI_Pos.png" />
 <img width="25%" src="Document/UI_Deck.png" />
 <img width="25%" src="Document/UI_Load.png" />
 <img width="25%" src="Document/UI_Login.png" />
 <img width="25%" src="Document/UI_Mail.png" />
 <img width="25%" src="Document/UI_Meter.png" />
 <img width="25%" src="Document/UI_Mixier.png" />
-<img width="25%" src="Document/UI_Money.png" />
-<img width="25%" src="Document/UI_Pos.png" />
 <img width="25%" src="Document/UI_Radar.png" />
-<img width="25%" src="Document/UI_Social.png" />
-<img width="25%" src="Document/UI_Timeline.png" />
-<img width="25%" src="Document/UI_TreeMap.png" />
 <img width="25%" src="Document/UI_Carousel.png" />
 <img width="25%" src="Document/UI_Collection.png" />
 <img width="25%" src="Document/UI_Refresh.png" />
+<img width="25%" src="Document/UI_Social.png" />
+<img width="25%" src="Document/UI_Character.png" />
+<img width="25%" src="Document/UI_Timeline.png" />
+<img width="25%" src="Document/UI_TreeMap.png" />
 </p>
 
 # TODO

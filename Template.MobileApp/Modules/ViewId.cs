@@ -133,5 +133,6 @@ public enum ViewId
     UITreeMap,
     UIRadar,
     UICockpit,
-    UISocial
+    UISocial,
+    UICharacter
 }
