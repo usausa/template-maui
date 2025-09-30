@@ -15,7 +15,6 @@ public enum ViewId
     BasicLocale,
     BasicDialog,
     BasicValidation,
-    BasicAnimation,
 
     // Navigation
     NavigationMenu,
@@ -106,14 +105,18 @@ public enum ViewId
     ViewCarousel,
     ViewRefresh,
 
-    ViewGraphics,
+    ViewBorder,
+    ViewShadow,
+
+    ViewAnimation,
+    ViewEasing,
 
     ViewLottie,
     ViewSvg,
 
-    ViewDrawing,
+    ViewGraphics,
 
-    ViewEasing,
+    ViewDrawing,
 
     // UI
     UIMenu,

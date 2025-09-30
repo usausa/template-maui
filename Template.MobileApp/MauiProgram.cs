@@ -294,6 +294,9 @@ public static partial class MauiProgram
 
         config.BindSingleton(AudioManager.Current);
 
+        // Resource
+        config.BindSingleton<ResourceDictionary>(_ => Application.Current!.Resources);
+
         // State
         config.BindSingleton<DeviceState>();
         config.BindSingleton<Session>();

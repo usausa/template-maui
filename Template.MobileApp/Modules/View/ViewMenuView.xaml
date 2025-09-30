@@ -40,39 +40,41 @@
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewGraphics}"
-                Text="Graphics" />
+                CommandParameter="{markup:ViewId ViewBorder}"
+                Text="Border" />
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewShadow}"
+                Text="Shadow" />
 
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewAnimation}"
+                Text="Animation" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewEasing}"
+                Text="Easing" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewLottie}"
                 Text="Lottie" />
-        <Button Grid.Row="3" Grid.Column="1"
+        <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewSvg}"
                 Text="Svg" />
 
-        <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewDrawing}"
-                Text="Drawing" />
-        <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
-
         <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewEasing}"
-                Text="Easing" />
+                CommandParameter="{markup:ViewId ViewGraphics}"
+                Text="Graphics" />
         <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
@@ -80,8 +82,9 @@
 
         <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewDrawing}"
+                Text="Drawing" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

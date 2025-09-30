@@ -1,9 +1,10 @@
 namespace Template.MobileApp.Extender;
 
-using Template.MobileApp.Helpers;
-
 using Smart.Maui;
 using Smart.Navigation.Plugins;
+
+using Template.MobileApp.Behaviors;
+using Template.MobileApp.Helpers;
 
 public sealed class NavigationFocusPlugin : PluginBase
 {
@@ -42,10 +43,13 @@ public sealed class NavigationFocusPlugin : PluginBase
         else
         {
             var element = (Element)view;
-            var page = element.FindParent<Page>();
-            if (page is not null)
+            if (!Focus.GetSuppressDefaultFocus(element))
             {
-                Application.Current?.Dispatcher.Dispatch(page.SetDefaultFocus);
+                var page = element.FindParent<Page>();
+                if (page is not null)
+                {
+                    Application.Current?.Dispatcher.Dispatch(page.SetDefaultFocus);
+                }
             }
         }
     }

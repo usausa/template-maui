@@ -25,6 +25,12 @@ public sealed class Settings
         set => preferences.Set(nameof(ApiEndPoint), value);
     }
 
+    public string MonitorEndPoint
+    {
+        get => preferences.Get<string>(nameof(MonitorEndPoint), default!);
+        set => preferences.Set(nameof(MonitorEndPoint), value);
+    }
+
     // AI Service
 
     public string AIServiceEndPoint
