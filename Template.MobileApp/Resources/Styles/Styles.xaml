@@ -32,6 +32,9 @@
                            NullValue="False"
                            NonNullValue="True" />
 
+    <s:CompareToBoolConverter x:Key="EqualsConverter"
+                              Expression="{x:Static s:CompareExpressions.Equal}" />
+
     <s:CompareToBoolConverter x:Key="GreaterThanToBoolConverter"
                               Expression="{x:Static s:CompareExpressions.GreaterThan}" />
 
@@ -89,10 +92,10 @@
 
     <Style x:Key="MainGrid"
            TargetType="Grid">
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
     </Style>
 
     <Style x:Key="ContainerLayout"
@@ -109,23 +112,23 @@
 
     <Style x:Key="HeaderGrid"
            TargetType="Grid">
-        <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken4}" />
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
         <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken4}" />
     </Style>
 
     <Style x:Key="HeaderTitleLabel"
            TargetType="Label">
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="FontSize" Value="36" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="36" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
@@ -138,16 +141,16 @@
            TargetType="FlexLayout">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="JustifyContent" Value="SpaceBetween" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="JustifyContent" Value="SpaceBetween" />
     </Style>
 
     <Style x:Key="FooterInfoLabel"
            TargetType="Label">
-        <Setter Property="FontSize" Value="24" />
         <Setter Property="Padding" Value="6,0,6,0" />
+        <Setter Property="FontSize" Value="24" />
     </Style>
 
     <!-- ================================================================================ -->
@@ -156,21 +159,21 @@
 
     <Style x:Key="FunctionGrid"
            TargetType="Grid">
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="1" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="1" />
     </Style>
 
     <Style x:Key="FunctionButtonBase"
            TargetType="Button">
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="FontSize" Value="24" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="24" />
     </Style>
 
     <Style x:Key="FunctionButton1"
@@ -283,21 +286,21 @@
 
     <Style x:Key="SubMenuGrid"
            TargetType="Grid">
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="1" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="1" />
     </Style>
 
     <Style x:Key="SubMenuButton"
            TargetType="Button">
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="FontSize" Value="24" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -327,20 +330,20 @@
 
     <Style x:Key="MenuGrid"
            TargetType="Grid">
-        <Setter Property="RowSpacing" Value="6" />
-        <Setter Property="ColumnSpacing" Value="6" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="6" />
+        <Setter Property="RowSpacing" Value="6" />
+        <Setter Property="ColumnSpacing" Value="6" />
     </Style>
 
     <Style x:Key="FillGrid"
            TargetType="Grid">
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
     </Style>
 
     <Style x:Key="FillVerticalStack"
@@ -376,12 +379,12 @@
 
     <Style x:Key="MenuButton"
            TargetType="Button">
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="FontSize" Value="24" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -409,12 +412,12 @@
 
     <Style x:Key="ActionButtonBase"
            TargetType="Button">
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="FontSize" Value="24" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="24" />
     </Style>
 
     <Style x:Key="PrimaryButton"
@@ -603,13 +606,13 @@
 
     <Style x:Key="SelectButtonBase"
            TargetType="Button">
-        <Setter Property="TextColor" Value="Black" />
-        <Setter Property="FontSize" Value="18" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="3" />
-        <Setter Property="BorderColor" Value="{StaticResource BorderColor}" />
         <Setter Property="BorderWidth" Value="1" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="BorderColor" Value="{StaticResource BorderColor}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -771,8 +774,22 @@
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
+    <Style x:Key="GroupSpan"
+           TargetType="Span">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
     <Style x:Key="NameLabel"
            TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="NameSpan"
+           TargetType="Span">
         <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontAttributes" Value="Bold" />
@@ -840,13 +857,13 @@
 
     <Style x:Key="ItemCollectionGrid"
            TargetType="Grid">
-        <Setter Property="HeightRequest" Value="48" />
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
     </Style>
 
     <Style x:Key="ItemCollectionLabel"
@@ -858,12 +875,12 @@
 
     <Style x:Key="ItemCollectionButtonBase"
            TargetType="Button">
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="FontFamily" Value="MaterialIcons" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="3" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontFamily" Value="MaterialIcons" />
     </Style>
 
     <Style x:Key="ItemCollectionButtonPrimary"
@@ -886,56 +903,56 @@
 
     <Style x:Key="DialogTitleLabel"
            TargetType="Label">
-        <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken4}" />
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="HeightRequest" Value="48" />
-        <Setter Property="FontSize" Value="36" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken4}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="36" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="InputGrid"
            TargetType="Grid">
-        <Setter Property="RowSpacing" Value="6" />
-        <Setter Property="ColumnSpacing" Value="6" />
         <Setter Property="Margin" Value="6" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="RowSpacing" Value="6" />
+        <Setter Property="ColumnSpacing" Value="6" />
     </Style>
 
     <Style x:Key="LeftInputLabel"
            TargetType="Label">
-        <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="FontSize" Value="48" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="6,0,6,0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="HorizontalTextAlignment" Value="End" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="48" />
     </Style>
 
     <Style x:Key="InputTextButton"
            TargetType="Button">
-        <Setter Property="TextColor" Value="Black" />
-        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-        <Setter Property="FontSize" Value="36" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="FontSize" Value="36" />
     </Style>
 
     <Style x:Key="InputCommandButton"
            TargetType="Button">
-        <Setter Property="TextColor" Value="White" />
-        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken2}" />
-        <Setter Property="FontSize" Value="36" />
-        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken2}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="36" />
     </Style>
 
     <Style x:Key="InputFunctionButton"

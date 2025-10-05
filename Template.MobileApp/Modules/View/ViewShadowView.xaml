@@ -24,17 +24,17 @@
 
             <Style x:Key="ShadowTargetBorder"
                    TargetType="Border">
+                <Setter Property="Margin" Value="20" />
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="WidthRequest" Value="256" />
-                <Setter Property="HeightRequest" Value="64" />
-                <Setter Property="Margin" Value="24" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
             <Style x:Key="SeparateBoxView"
                    TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="2" />
                 <Setter Property="Margin" Value="0,8" />
+                <Setter Property="HeightRequest" Value="2" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
@@ -42,6 +42,8 @@
     </ContentView.Resources>
 
     <VerticalStackLayout Style="{StaticResource ShadowVerticalStackLayout}">
+
+        <!-- Target -->
 
         <Border Style="{StaticResource ShadowTargetBorder}"
                 BackgroundColor="{Binding BorderColor.Color}">
@@ -53,11 +55,12 @@
             </Border.Shadow>
         </Border>
 
+        <!-- Setting -->
+
         <BoxView Style="{StaticResource SeparateBoxView}" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="Border" />
-
         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
         <Picker ItemsSource="{Binding BorderColors}"
                 ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
@@ -67,7 +70,6 @@
 
         <Label Style="{StaticResource NameLabel}"
                Text="Color" />
-
         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
         <Picker ItemsSource="{Binding ShadowColors}"
                 ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
@@ -76,17 +78,17 @@
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowOffsetX, StringFormat='OffsetX: {0:F2}'}" />
         <Slider Value="{Binding ShadowOffsetX, Mode=TwoWay}"
-                Minimum="-16" Maximum="16" />
+                Minimum="-20" Maximum="20" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowOffsetY, StringFormat='OffsetY: {0:F2}'}" />
         <Slider Value="{Binding ShadowOffsetY, Mode=TwoWay}"
-                Minimum="-16" Maximum="16" />
+                Minimum="-20" Maximum="20" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowRadius, StringFormat='Radius: {0:F2}'}" />
         <Slider Value="{Binding ShadowRadius, Mode=TwoWay}"
-                Minimum="0" Maximum="32" />
+                Minimum="0" Maximum="40" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowOpacity, StringFormat='Opacity: {0:F2}'}" />
