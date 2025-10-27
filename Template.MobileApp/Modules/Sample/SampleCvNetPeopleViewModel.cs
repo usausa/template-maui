@@ -22,22 +22,20 @@ public sealed partial class SampleCvNetPeopleViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         if (IsPreview)
         {
-            Controller.StartPreview();
+            await Controller.StartPreviewAsync();
         }
-        return Task.CompletedTask;
     }
 
-    public override Task OnNavigatingFromAsync(INavigationContext context)
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
         if (IsPreview)
         {
-            Controller.StopPreview();
+            await Controller.StopPreviewAsync();
         }
-        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleCvNetMenu);
@@ -67,7 +65,7 @@ public sealed partial class SampleCvNetPeopleViewModel : AppViewModelBase
                 return;
             }
 
-            Controller.StopPreview();
+            await Controller.StopPreviewAsync();
 
             // Bitmap
             using var bitmap = ImageHelper.ToNormalizeBitmap(input);
@@ -77,7 +75,7 @@ public sealed partial class SampleCvNetPeopleViewModel : AppViewModelBase
         }
         else
         {
-            Controller.StartPreview();
+            await Controller.StartPreviewAsync();
         }
 
         IsPreview = !IsPreview;

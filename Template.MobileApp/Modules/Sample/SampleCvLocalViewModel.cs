@@ -24,22 +24,20 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         if (IsPreview)
         {
-            Controller.StartPreview();
+            await Controller.StartPreviewAsync();
         }
-        return Task.CompletedTask;
     }
 
-    public override Task OnNavigatingFromAsync(INavigationContext context)
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
         if (IsPreview)
         {
-            Controller.StopPreview();
+            await Controller.StopPreviewAsync();
         }
-        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
@@ -69,7 +67,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
                 return;
             }
 
-            Controller.StopPreview();
+            await Controller.StopPreviewAsync();
 
             // Bitmap
             using var bitmap = ImageHelper.ToNormalizeBitmap(input);
@@ -83,7 +81,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         }
         else
         {
-            Controller.StartPreview();
+            await Controller.StartPreviewAsync();
         }
 
         IsPreview = !IsPreview;

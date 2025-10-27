@@ -44,7 +44,8 @@ public static class SqlHelper
 
             sql.Append(type);
 
-            if ((!isNullable && propertyType.IsValueType) ||
+            if ((propertyType.IsValueType && !isNullable) ||
+                (column.Property.GetCustomAttribute<NullableAttribute>() is null) ||
                 (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() is not null))
             {
                 sql.Append(" NOT NULL");

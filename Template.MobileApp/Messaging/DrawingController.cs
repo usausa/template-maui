@@ -1,28 +1,20 @@
 namespace Template.MobileApp.Messaging;
 
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
 
-public interface IDrawingController : INotifyPropertyChanged
+using Template.MobileApp.Helpers;
+
+public sealed class GetImageStreamEventArgs : ValueTaskEventArgs<Stream?>
 {
-    Color LineColor { get; set; }
+    public CancellationToken Token { get; set; } = CancellationToken.None;
 
-    float LineWidth { get; set; }
-
-#pragma warning disable CA2227
-    ObservableCollection<IDrawingLine> Lines { get; set; }
-#pragma warning restore CA2227
-
-    // Attach
-
-    void Attach(DrawingView view);
-
-    void Detach();
+    public Stream? Stream { get; set; }
 }
 
-public sealed partial class DrawingController : ObservableObject, IDrawingController
+public sealed partial class DrawingController : ObservableObject
 {
-    private DrawingView? drawing;
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public event EventHandler<GetImageStreamEventArgs>? GetImageStreamRequest;
 
     // Property
 
@@ -32,29 +24,17 @@ public sealed partial class DrawingController : ObservableObject, IDrawingContro
     [ObservableProperty]
     public partial float LineWidth { get; set; } = 5;
 
-    public ObservableCollection<IDrawingLine> Lines { get; set; } = new();
-
-    // Attach
-
-    void IDrawingController.Attach(DrawingView view)
-    {
-        drawing = view;
-    }
-
-    void IDrawingController.Detach()
-    {
-        drawing = null;
-    }
+    public ObservableCollection<IDrawingLine> Lines { get; } = new();
 
     // Message
 
-    public async ValueTask<Stream?> GetImageStream(CancellationToken cancel = default)
+    public ValueTask<Stream?> GetImageStream(CancellationToken token = default)
     {
-        if (drawing is null)
+        var args = new GetImageStreamEventArgs
         {
-            return null;
-        }
-
-        return await drawing.GetImageStream(drawing.Width, drawing.Height, cancel);
+            Token = token
+        };
+        GetImageStreamRequest?.Invoke(this, args);
+        return args.Task;
     }
 }

@@ -41,6 +41,13 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public IObserveCommand Function3Command { get; }
     public IObserveCommand Function4Command { get; }
 
+    [ObservableProperty]
+    public partial bool DebugEnabled { get; set; }
+    [ObservableProperty]
+    public partial bool DebugWindowVisible { get; set; }
+
+    public IObserveCommand DebugCommand { get; }
+
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
@@ -58,6 +65,11 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         Function2Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function2), () => Function2Enabled);
         Function3Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function3), () => Function3Enabled);
         Function4Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function4), () => Function4Enabled);
+
+#if DEBUG
+        DebugEnabled = true;
+#endif
+        DebugCommand = MakeDelegateCommand(() => DebugWindowVisible = !DebugWindowVisible);
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda

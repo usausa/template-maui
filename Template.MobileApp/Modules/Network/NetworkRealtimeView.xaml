@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkRealtimeView"
              x:DataType="{x:Type module:NetworkRealtimeViewModel}"
@@ -11,6 +12,12 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid RowDefinitions="100"
+          Padding="3">
+        <controls:StatControl Grid.Row="0"
+                              DataSet="{Binding CpuLoadSet}"
+                              GraphColor="#2196F3" Label="CPU used" />
+
+    </Grid>
 
 </ContentView>

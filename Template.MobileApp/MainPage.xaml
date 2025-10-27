@@ -26,11 +26,16 @@
         <!-- header -->
         <Grid Grid.Row="0"
               Style="{StaticResource HeaderGrid}"
-              ColumnDefinitions="*"
+              ColumnDefinitions="48,*,48"
               IsVisible="{Binding HeaderVisible}">
-            <Label Grid.Column="0"
+            <Label Grid.Column="0" Grid.ColumnSpan="3"
                    Style="{StaticResource HeaderTitleLabel}"
                    Text="{Binding Title}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource HeaderIconButton}"
+                    Command="{Binding DebugCommand}"
+                    IsVisible="{Binding DebugEnabled}"
+                    Text="📈" />
         </Grid>
 
         <!-- view container -->

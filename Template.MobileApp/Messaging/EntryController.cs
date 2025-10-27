@@ -1,42 +1,32 @@
 namespace Template.MobileApp.Messaging;
 
-using Template.MobileApp.Helpers;
-
 public sealed class EntryCompleteEvent
 {
     public bool Handled { get; set; }
 }
 
-public interface IEntryController : INotifyPropertyChanged
+public sealed class EntryController : NotificationObject
 {
-    // Property
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public event EventHandler<EventArgs>? FocusRequest;
 
-    string? Text { get; set; }
-
-    bool Enable { get; set; }
-
-    // Attach
-
-    void Attach(Entry view);
-
-    void Detach();
-}
-
-public sealed partial class EntryController : ObservableObject, IEntryController
-{
     // Field
 
     private readonly ICommand? command;
 
-    private Entry? entry;
-
     // Property
 
-    [ObservableProperty]
-    public partial string? Text { get; set; }
+    public string? Text
+    {
+        get;
+        set => SetProperty(ref field, value);
+    }
 
-    [ObservableProperty]
-    public partial bool Enable { get; set; }
+    public bool Enable
+    {
+        get;
+        set => SetProperty(ref field, value);
+    }
 
     // Constructor
 
@@ -62,42 +52,21 @@ public sealed partial class EntryController : ObservableObject, IEntryController
         this.command = command;
     }
 
-    // Attach
-
-    void IEntryController.Attach(Entry view)
-    {
-        entry = view;
-        view.Completed += HandleCompleted;
-    }
-
-    void IEntryController.Detach()
-    {
-        if (entry is not null)
-        {
-            entry.Completed -= HandleCompleted;
-        }
-        entry = null;
-    }
-
     // Request
 
-    public void FocusRequest()
+    public void Focus()
     {
-        entry?.Focus();
+        FocusRequest?.Invoke(this, EventArgs.Empty);
     }
 
-    // Event
+    // Handle
 
-    private void HandleCompleted(object? sender, EventArgs e)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void HandleCompleted(EntryCompleteEvent e)
     {
-        var ice = new EntryCompleteEvent();
-        if ((command is not null) && command.CanExecute(ice))
+        if ((command is not null) && command.CanExecute(e))
         {
-            command.Execute(ice);
-            if (!ice.Handled)
-            {
-                ElementHelper.MoveFocusInRoot((Entry)sender!, true);
-            }
+            command.Execute(e);
         }
     }
 }

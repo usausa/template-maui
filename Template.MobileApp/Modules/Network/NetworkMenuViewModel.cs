@@ -16,6 +16,8 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
     public IObserveCommand DownloadCommand { get; }
     public IObserveCommand UploadCommand { get; }
 
+    public IObserveCommand RealtimeCommand { get; }
+
     public NetworkMenuViewModel(
         ApiContext apiContext,
         NetworkUsecase networkUsecase)
@@ -32,6 +34,8 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
         UploadCommand = MakeAsyncCommand(async () => await networkUsecase.UploadAsync(), () => configured);
         TestErrorCommand = MakeAsyncCommand<int>(async x => await networkUsecase.GetTestErrorAsync(x), _ => configured);
         TestDelayCommand = MakeAsyncCommand<int>(async x => await networkUsecase.GetTestDelayAsync(x), _ => configured);
+
+        RealtimeCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
