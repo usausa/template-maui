@@ -41,7 +41,6 @@ Template project for MAUI.
   - [ ] **Chart**
   - [ ] **Bottom sheet**
   - [ ] **Gauge**
-  - [ ] Carouse/Swipe/Pull to refresh
   - [ ] Calendar/Schedule
 - Other
   - [ ] **Media play**
