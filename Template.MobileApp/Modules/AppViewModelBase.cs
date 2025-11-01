@@ -31,7 +31,7 @@ public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INav
         }
 
         var value = propertyAccessor.GetValue(this, name);
-        var context = new ValidationContext(this, DefaultResolveProvider.Default, null)
+        var context = new ValidationContext(this, ResolveProvider.Default, null)
         {
             MemberName = name
         };
