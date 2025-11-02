@@ -69,7 +69,11 @@ public enum ViewId
 
     // Network
     NetworkMenu,
+
+    NetworkHttp,
+    NetworkGrpc,
     NetworkRealtime,
+    NetworkScp,
 
     // Sample
     SampleMenu,
@@ -97,7 +101,6 @@ public enum ViewId
     SampleChat,
 
     // View
-
     ViewMenu,
 
     ViewCollection,

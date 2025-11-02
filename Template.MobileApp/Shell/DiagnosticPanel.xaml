@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Template.MobileApp.Shell.DiagnosticPanel"
+             Margin="4,0"
+             InputTransparent="True">
+
+    <Border Style="{StaticResource DiagnosticBorder}">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto,4,Auto">
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="FPS:" />
+            <Label x:Name="FpsLabel"
+                   Grid.Row="0" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <BoxView Grid.Row="1" Grid.ColumnSpan="3"
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="CPU:" />
+            <Label x:Name="CpuLabel"
+                   Grid.Row="2" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <BoxView Grid.Row="3" Grid.ColumnSpan="3"
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
+
+            <Label Grid.Row="4" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="Threads:" />
+            <Label x:Name="ThreadsLabel"
+                   Grid.Row="4" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <BoxView Grid.Row="5" Grid.ColumnSpan="3"
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
+
+            <Label Grid.Row="6" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="Memory:" />
+            <Label x:Name="MemoryLabel"
+                   Grid.Row="6" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <Label Grid.Row="7" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="GC0:" />
+            <Label x:Name="Gc0Label"
+                   Grid.Row="7" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <Label Grid.Row="8" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="GC1:" />
+            <Label x:Name="Gc1Label"
+                   Grid.Row="8" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <Label Grid.Row="9" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="GC2:" />
+            <Label x:Name="Gc2Label"
+                   Grid.Row="9" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <Label Grid.Row="10" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="Alloc/sec:" />
+            <Label x:Name="AllocLabel"
+                   Grid.Row="10" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+        </Grid>
+    </Border>
+
+</ContentView>

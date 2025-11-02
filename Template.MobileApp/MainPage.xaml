@@ -33,10 +33,15 @@
                    Text="{Binding Title}" />
             <Button Grid.Column="2"
                     Style="{StaticResource HeaderIconButton}"
-                    Command="{Binding DebugCommand}"
-                    IsVisible="{Binding DebugEnabled}"
+                    Command="{Binding DiagnosticCommand}"
+                    IsVisible="{Binding DiagnosticEnabled}"
                     Text="📈" />
         </Grid>
+
+        <!-- diagnostic -->
+        <shell:DiagnosticPanel Grid.Row="1"
+                               Style="{StaticResource DiagnosticPanel}"
+                               IsVisible="{Binding DiagnosticVisible}" />
 
         <!-- view container -->
         <AbsoluteLayout Grid.Row="1"
