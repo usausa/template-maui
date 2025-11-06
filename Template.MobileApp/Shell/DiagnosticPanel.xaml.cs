@@ -1,8 +1,8 @@
 namespace Template.MobileApp.Shell;
 
-using Smart.Mvvm.Resolver;
-
 using System.Diagnostics;
+
+using Smart.Mvvm.Resolver;
 
 public partial class DiagnosticPanel
 {

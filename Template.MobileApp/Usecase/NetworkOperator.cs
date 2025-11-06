@@ -17,23 +17,23 @@ public sealed class NetworkOperator
 
     private readonly DeviceState deviceState;
 
-    private readonly NetworkService networkService;
+    private readonly HttpService httpService;
 
     public NetworkOperator(
         IDialog dialog,
         DeviceState deviceState,
-        NetworkService networkService)
+        HttpService httpService)
     {
         this.dialog = dialog;
         this.deviceState = deviceState;
-        this.networkService = networkService;
+        this.httpService = httpService;
     }
 
-    public ValueTask<IResult<T>> ExecuteVerbose<T>(Func<NetworkService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
+    public ValueTask<IResult<T>> ExecuteVerbose<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
 
-    public ValueTask<IResult<T>> Execute<T>(Func<NetworkService, ValueTask<IRestResponse<T>>> func) => Execute(func, false);
+    public ValueTask<IResult<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, false);
 
-    private async ValueTask<IResult<T>> Execute<T>(Func<NetworkService, ValueTask<IRestResponse<T>>> func, bool verbose)
+    private async ValueTask<IResult<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func, bool verbose)
     {
         while (true)
         {
@@ -49,7 +49,7 @@ public sealed class NetworkOperator
             IRestResponse<T> response;
             using (dialog.Indicator())
             {
-                response = await func(networkService);
+                response = await func(httpService);
             }
 
             switch (response.RestResult)
@@ -93,11 +93,11 @@ public sealed class NetworkOperator
         }
     }
 
-    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<NetworkService, ValueTask<IRestResponse>> func) => Execute(func, true);
+    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<HttpService, ValueTask<IRestResponse>> func) => Execute(func, true);
 
-    public ValueTask<NetworkOperationResult> Execute(Func<NetworkService, ValueTask<IRestResponse>> func) => Execute(func, false);
+    public ValueTask<NetworkOperationResult> Execute(Func<HttpService, ValueTask<IRestResponse>> func) => Execute(func, false);
 
-    private async ValueTask<NetworkOperationResult> Execute(Func<NetworkService, ValueTask<IRestResponse>> func, bool verbose)
+    private async ValueTask<NetworkOperationResult> Execute(Func<HttpService, ValueTask<IRestResponse>> func, bool verbose)
     {
         while (true)
         {
@@ -113,7 +113,7 @@ public sealed class NetworkOperator
             IRestResponse response;
             using (dialog.Indicator())
             {
-                response = await func(networkService);
+                response = await func(httpService);
             }
 
             switch (response.RestResult)
@@ -162,15 +162,15 @@ public sealed class NetworkOperator
         }
     }
 
-    public ValueTask<NetworkOperationResult> ExecuteProgressVerbose(Func<NetworkService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, true);
+    public ValueTask<NetworkOperationResult> ExecuteProgressVerbose(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, true);
 
-    public ValueTask<NetworkOperationResult> ExecuteProgress(Func<NetworkService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, false);
+    public ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, false);
 
-    private async ValueTask<NetworkOperationResult> ExecuteProgress(Func<NetworkService, MauiComponents.IProgress, ValueTask<IRestResponse>> func, bool verbose)
+    private async ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func, bool verbose)
     {
         using var progress = dialog.Progress();
 
-        var response = await func(networkService, progress);
+        var response = await func(httpService, progress);
 
         switch (response.RestResult)
         {

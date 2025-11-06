@@ -317,7 +317,7 @@ public static partial class MauiProgram
         });
         config.BindSingleton<DataService>();
 
-        config.BindSingleton<NetworkService>();
+        config.BindSingleton<HttpService>();
 
         // Usecase
         config.BindSingleton<NetworkOperator>();

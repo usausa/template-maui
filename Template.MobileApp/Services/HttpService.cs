@@ -2,11 +2,11 @@ namespace Template.MobileApp.Services;
 
 using Rester;
 
-public sealed class NetworkService
+public sealed class HttpService
 {
     private readonly IHttpClientFactory httpClientFactory;
 
-    public NetworkService(IHttpClientFactory httpClientFactory)
+    public HttpService(IHttpClientFactory httpClientFactory)
     {
         this.httpClientFactory = httpClientFactory;
     }
