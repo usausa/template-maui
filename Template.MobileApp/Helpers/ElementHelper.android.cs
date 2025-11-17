@@ -32,7 +32,7 @@ public static partial class ElementHelper
             var next = ff.FindNextFocus(viewGroup, focused, forward ? FocusSearchDirection.Forward : FocusSearchDirection.Backward);
 
             // No more control
-            if ((next is null) || (next == start))
+            if ((next is null) || next.Equals(start))
             {
                 return false;
             }
