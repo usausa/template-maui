@@ -266,7 +266,6 @@ public static partial class MauiProgram
         });
         config.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
         config.AddComponentsPopupPlugin<PopupFocusPlugin>();
-        config.AddComponentsSerializer();
         config.AddComponentsScreen();
         config.AddComponentsLocation();
         config.AddComponentsSpeech();

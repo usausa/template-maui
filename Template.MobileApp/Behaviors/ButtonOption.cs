@@ -194,8 +194,8 @@ public static partial class ButtonOption
         {
             if (sender is Button button)
             {
-                button.ScaleTo(0.9, 50, Easing.CubicOut);
-                button.FadeTo(0.8, 50, Easing.CubicOut);
+                button.ScaleToAsync(0.9, 50, Easing.CubicOut);
+                button.FadeToAsync(0.8, 50, Easing.CubicOut);
             }
         }
 
@@ -203,8 +203,8 @@ public static partial class ButtonOption
         {
             if (sender is Button button)
             {
-                button.ScaleTo(1.0, 100, Easing.CubicOut);
-                button.FadeTo(1.0, 100, Easing.CubicOut);
+                button.ScaleToAsync(1.0, 100, Easing.CubicOut);
+                button.FadeToAsync(1.0, 100, Easing.CubicOut);
             }
         }
     }

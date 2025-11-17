@@ -17,6 +17,6 @@ public sealed class EasingDemoAnimation : AnimationBase
 
         var x = parent.Width - target.Width;
         var y = parent.Height - target.Height;
-        await target.TranslateTo(x, y, Duration, Easing);
+        await target.TranslateToAsync(x, y, Duration, Easing);
     }
 }

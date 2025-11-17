@@ -43,7 +43,7 @@ public static partial class CrashReport
         var page = Application.Current?.Windows[0].Page;
         if (page is not null)
         {
-            await page.DisplayAlert("Crash report", log, "Close");
+            await page.DisplayAlertAsync("Crash report", log, "Close");
         }
 
         var oldPath = ResolveOldCrashLogPath();
