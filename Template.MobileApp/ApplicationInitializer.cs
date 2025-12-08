@@ -32,10 +32,10 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         };
 
         // Setting
-        if (String.IsNullOrEmpty(settings.UniqId))
+        if (String.IsNullOrEmpty(settings.UniqueId))
         {
-            var uniqId = Guid.NewGuid();
-            settings.UniqId = uniqId.ToString();
+            var uniqueId = Guid.NewGuid();
+            settings.UniqueId = uniqueId.ToString();
         }
 
         // Service

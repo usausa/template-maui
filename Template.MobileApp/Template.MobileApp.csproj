@@ -8,6 +8,9 @@
     <SingleProject>true</SingleProject>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
+    <!--
+    <MauiXamlInflator>SourceGen</MauiXamlInflator>
+    -->
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
     <NoWarn>$(NoWarn);NU1608</NoWarn>
 
@@ -21,7 +24,7 @@
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-android'">
@@ -112,8 +115,8 @@
     <PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="5.0.0" />
     <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="7.0.0" />
-    <PackageReference Include="Components.Maui" Version="1.25.0" />
-    <PackageReference Include="Components.Maui.Resolver" Version="1.25.0" />
+    <PackageReference Include="Components.Maui" Version="1.25.1" />
+    <PackageReference Include="Components.Maui.Resolver" Version="1.25.1" />
     <PackageReference Include="Google.Protobuf" Version="3.33.2" />
     <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
     <PackageReference Include="Grpc.Tools" Version="2.76.0">
@@ -131,6 +134,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.11" />
     <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.11" />
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.23.2" />
     <PackageReference Include="OllamaSharp" Version="5.4.12" />
@@ -145,28 +149,28 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="QRCoder" Version="1.7.0" />
-    <PackageReference Include="Rester" Version="2.7.0" />
+    <PackageReference Include="Rester" Version="2.7.1" />
     <PackageReference Include="Shiny.BluetoothLE" version="3.3.4" />
     <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="3.3.4" />
     <PackageReference Include="Shiny.Hosting.Maui" Version="3.3.4" />
     <PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.8" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
-    <PackageReference Include="Usa.Smart.Converter" Version="2.5.0" />
+    <PackageReference Include="Usa.Smart.Converter" Version="2.5.1" />
     <PackageReference Include="Usa.Smart.Core" Version="2.5.0" />
     <PackageReference Include="Usa.Smart.Data" Version="2.6.0" />
-    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.7.0" />
-    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.7.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.7.1" />
+    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.7.1" />
     <PackageReference Include="Usa.Smart.Mapper" Version="0.9.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="2.10.0" />
-    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.10.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.10.1" />
+    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.10.1" />
     <PackageReference Include="Usa.Smart.Mvvm" Version="1.9.1" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="2.16.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.16.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.16.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.16.0" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.17.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.17.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.17.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.17.1" />
     <PackageReference Include="Usa.Smart.Reactive" Version="2.6.0" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.7.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.7.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.7.1" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.7.1" />
     <PackageReference Include="Vitvov.Maui.PDFView" Version="1.6.0" />
     <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.5" />
   </ItemGroup>

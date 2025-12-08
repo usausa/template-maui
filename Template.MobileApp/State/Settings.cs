@@ -11,10 +11,10 @@ public sealed class Settings
 
     // Id
 
-    public string UniqId
+    public string UniqueId
     {
-        get => preferences.Get<string>(nameof(UniqId), default!);
-        set => preferences.Set(nameof(UniqId), value);
+        get => preferences.Get<string>(nameof(UniqueId), default!);
+        set => preferences.Set(nameof(UniqueId), value);
     }
 
     // API

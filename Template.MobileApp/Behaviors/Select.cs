@@ -6,7 +6,7 @@ public static class Select
 {
     public static readonly BindableProperty ListProperty = BindableProperty.CreateAttached(
         "List",
-        typeof(IEnumerable<SelectItem>),
+        typeof(IEnumerable<SelectItem?>),
         typeof(Select),
         null,
         propertyChanged: HandlePropertyChanged);
@@ -25,7 +25,7 @@ public static class Select
         null,
         propertyChanged: HandlePropertyChanged);
 
-    public static IEnumerable<SelectItem?>? GetList(BindableObject obj) => (IEnumerable<SelectItem>)obj.GetValue(ListProperty);
+    public static IEnumerable<SelectItem?>? GetList(BindableObject obj) => (IEnumerable<SelectItem?>)obj.GetValue(ListProperty);
 
     public static void SetList(BindableObject obj, IEnumerable<SelectItem?>? value) => obj.SetValue(ListProperty, value);
 

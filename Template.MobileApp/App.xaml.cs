@@ -13,7 +13,7 @@ public sealed partial class App
     {
         this.serviceProvider = serviceProvider;
 
-        // Default theme light
+        // Light theme based application
         Current!.UserAppTheme = AppTheme.Light;
 
         InitializeComponent();

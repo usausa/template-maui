@@ -10,7 +10,7 @@ public sealed class UserCharacteristic : BleGattCharacteristic
 
     public UserCharacteristic(Settings settings)
     {
-        guid = Guid.Parse(settings.UniqId);
+        guid = Guid.Parse(settings.UniqueId);
     }
 
     public override Task<GattResult> OnRead(ReadRequest request)

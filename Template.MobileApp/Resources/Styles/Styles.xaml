@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:s="http://smart/maui"
@@ -14,8 +13,11 @@
 
     <!-- Color -->
 
-    <Color x:Key="BorderColor">#616161</Color>
-    <Color x:Key="DisabledColor">#BDBDBD</Color>
+    <Color x:Key="PrimaryTextColor">#DE000000</Color>
+    <Color x:Key="SecondaryTextColor">#99000000</Color>
+    <Color x:Key="DisabledColor">#61000000</Color>
+    <Color x:Key="BorderColor">#1F000000</Color>
+
     <Color x:Key="SelectFocusColor">#FFF9C4</Color>
 
     <Color x:Key="NoErrorColor">Transparent</Color>
@@ -105,6 +107,7 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="White" />
     </Style>
 
     <!-- ================================================================================ -->
@@ -163,6 +166,7 @@
     <Style x:Key="FooterInfoLabel"
            TargetType="Label">
         <Setter Property="Padding" Value="6,0,6,0" />
+        <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
         <Setter Property="FontSize" Value="24" />
     </Style>
 
@@ -713,6 +717,12 @@
     <!-- Label -->
     <!-- ================================================================================ -->
 
+    <!-- Default -->
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+    </Style>
+
     <!-- Alignment -->
 
     <Style TargetType="Label"
@@ -858,11 +868,13 @@
 
     <Style x:Key="ValueLabel"
            TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
         <Setter Property="FontSize" Value="18" />
     </Style>
 
     <Style x:Key="ResultLabel"
            TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
         <Setter Property="FontSize" Value="24" />
     </Style>
 
