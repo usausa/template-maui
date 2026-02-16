@@ -3,15 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:navigation="http://smart/navigation"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:Template.MobileApp"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
-             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
+             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+             SafeAreaEdges="Default">
 
     <ContentPage.Behaviors>
         <s:AppLifecycleBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
+        <toolkit:StatusBarBehavior ApplyOn="OnBehaviorAttachedTo"
+                                   StatusBarColor="{StaticResource BlueDefault}"
+                                   StatusBarStyle="LightContent" />
     </ContentPage.Behaviors>
 
     <Grid Style="{StaticResource MainGrid}"

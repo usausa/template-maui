@@ -38,19 +38,19 @@ public sealed partial class CameraController : ObservableObject
     public partial bool IsAvailable { get; set; }
 
     [ObservableProperty]
-    public partial bool IsCameraBusy { get; set; }
+    public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
     public partial CameraInfo? Selected { get; set; }
 
     [ObservableProperty]
-    public partial CameraFlashMode CameraFlashMode { get; set; } = CameraViewDefaults.CameraFlashMode;
+    public partial CameraFlashMode CameraFlashMode { get; set; } = CameraFlashMode.Off;
 
     [ObservableProperty]
-    public partial Size CaptureResolution { get; set; } = CameraViewDefaults.ImageCaptureResolution;
+    public partial Size CaptureResolution { get; set; } = Size.Zero;
 
     [ObservableProperty]
-    public partial float ZoomFactor { get; set; } = CameraViewDefaults.ZoomFactor;
+    public partial float ZoomFactor { get; set; } = 1.0f;
 
     [ObservableProperty]
     public partial bool IsTorchOn { get; set; }

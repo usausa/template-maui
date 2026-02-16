@@ -62,11 +62,11 @@ public static class CameraBind
                     static (CameraController controller) => controller.IsAvailable,
                     source: controller);
                 AssociatedObject.SetBinding(
-                    CameraView.IsCameraBusyProperty,
-                    static (CameraController controller) => controller.IsCameraBusy,
+                    CameraView.IsBusyProperty,
+                    static (CameraController controller) => controller.IsBusy,
                     source: controller);
                 AssociatedObject.SetBinding(
-                    CameraView.SelectedCameraProperty!,
+                    CameraView.SelectedCameraProperty,
                     static (CameraController controller) => controller.Selected,
                     source: controller);
                 AssociatedObject.SetBinding(
@@ -91,7 +91,7 @@ public static class CameraBind
         protected override void OnDetachingFrom(CameraView bindable)
         {
             bindable.RemoveBinding(CameraView.IsAvailableProperty);
-            bindable.RemoveBinding(CameraView.IsCameraBusyProperty);
+            bindable.RemoveBinding(CameraView.IsBusyProperty);
             bindable.RemoveBinding(CameraView.SelectedCameraProperty);
             bindable.RemoveBinding(CameraView.CameraFlashModeProperty);
             bindable.RemoveBinding(CameraView.ImageCaptureResolutionProperty);

@@ -96,7 +96,7 @@ public static class SuicaLogic
     public static string ConvertRegionString(int region) =>
         RegionNames.TryGetValue(region, out var value) ? value : region.ToString("X");
 
-    private static DateTime ExtractDate(Span<byte> bytes)
+    private static DateTime ExtractDate(ReadOnlySpan<byte> bytes)
     {
         var year = 2000 + (bytes[0] >> 1);
         var month = BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5 & 0b1111;
@@ -104,7 +104,7 @@ public static class SuicaLogic
         return new DateTime(year, month, day);
     }
 
-    private static DateTime ExtractDateTime(Span<byte> bytes)
+    private static DateTime ExtractDateTime(ReadOnlySpan<byte> bytes)
     {
         var year = 2000 + (bytes[0] >> 1);
         var month = BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5 & 0b1111;
@@ -114,27 +114,27 @@ public static class SuicaLogic
         return new DateTime(year, month, day, hour, minute, 0);
     }
 
-    public static int ExtractAccessBalance(Span<byte> bytes) =>
+    public static int ExtractAccessBalance(ReadOnlySpan<byte> bytes) =>
         BinaryPrimitives.ReadUInt16LittleEndian(bytes.Slice(11, 2));
 
-    public static int ExtractAccessTransactionId(Span<byte> bytes) =>
+    public static int ExtractAccessTransactionId(ReadOnlySpan<byte> bytes) =>
         BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(14, 2));
 
-    public static bool IsValidLog(Span<byte> bytes) =>
+    public static bool IsValidLog(ReadOnlySpan<byte> bytes) =>
         bytes[1] != 0x00;
 
-    public static byte ExtractLogTerminal(Span<byte> bytes) =>
+    public static byte ExtractLogTerminal(ReadOnlySpan<byte> bytes) =>
         bytes[0];
 
-    public static byte ExtractLogProcess(Span<byte> bytes) =>
+    public static byte ExtractLogProcess(ReadOnlySpan<byte> bytes) =>
         bytes[1];
 
-    public static DateTime ExtractLogDateTime(Span<byte> bytes) =>
+    public static DateTime ExtractLogDateTime(ReadOnlySpan<byte> bytes) =>
         IsProcessOfSales(ExtractLogProcess(bytes)) ? ExtractDateTime(bytes[4..]) : ExtractDate(bytes[4..]);
 
-    public static int ExtractLogBalance(Span<byte> bytes) =>
+    public static int ExtractLogBalance(ReadOnlySpan<byte> bytes) =>
         BinaryPrimitives.ReadUInt16LittleEndian(bytes.Slice(10, 2));
 
-    public static int ExtractLogTransactionId(Span<byte> bytes) =>
+    public static int ExtractLogTransactionId(ReadOnlySpan<byte> bytes) =>
         BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(13, 2));
 }
