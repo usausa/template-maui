@@ -19,9 +19,7 @@ public sealed partial class App
         InitializeComponent();
 
         // Start
-#pragma warning disable CA1873
         log.InfoApplicationStart(typeof(App).Assembly.GetName().Version, Environment.Version);
-#pragma warning restore CA1873
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
