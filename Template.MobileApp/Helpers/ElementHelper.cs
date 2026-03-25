@@ -74,7 +74,7 @@ public static partial class ElementHelper
 
     public static bool MoveFocusInRoot(VisualElement current, bool forward)
     {
-        var parent = FindRoot(current);
+        var parent = current.FindRoot();
         if (parent is null)
         {
             return false;
