@@ -67,6 +67,7 @@ public sealed partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCall
     private partial void Stop()
     {
         nfcAdapter?.DisableReaderMode(currentActivity);
+        currentActivity?.Application!.UnregisterActivityLifecycleCallbacks(this);
         currentActivity = null;
     }
 

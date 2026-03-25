@@ -131,7 +131,7 @@ public partial class DiagnosticPanel
             return;
         }
 
-        display.StartMonitor();
+        display.StopMonitor();
         stopwatch.Stop();
 
         isMonitoring = false;

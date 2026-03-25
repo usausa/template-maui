@@ -31,7 +31,7 @@ public sealed partial class NoiseMonitor : INoiseMonitor
 
     public void Dispose()
     {
-        cts?.Dispose();
+        Stop();
     }
 
     // ReSharper disable once AsyncVoidMethod
