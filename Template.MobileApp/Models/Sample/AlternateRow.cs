@@ -2,7 +2,7 @@ namespace Template.MobileApp.Models.Sample;
 
 public interface IAlternateRow
 {
-    public bool IsEven { get; }
+    bool IsEven { get; }
 }
 
 public partial class AlternateRow<T> : ObservableObject, IAlternateRow

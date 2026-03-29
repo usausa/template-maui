@@ -17,7 +17,7 @@ public interface IActivityRecognizer
 {
     event EventHandler<ActivityEventArgs>? Changed;
 
-    public bool Enabled { get; set; }
+    bool Enabled { get; set; }
 }
 
 public sealed partial class ActivityRecognizer : IActivityRecognizer

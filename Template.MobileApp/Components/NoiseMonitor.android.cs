@@ -36,7 +36,7 @@ public sealed partial class NoiseMonitor
         }
     }
 
-    private partial async ValueTask<double> Measure()
+    private async partial ValueTask<double> Measure()
     {
         var read = await audioRecord!.ReadAsync(buffer!, 0, bufferSize);
         if (read <= 0)

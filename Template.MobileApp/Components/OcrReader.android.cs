@@ -10,7 +10,7 @@ using Xamarin.Google.MLKit.Vision.Text.Japanese;
 #pragma warning disable CA1822
 public sealed partial class OcrReader
 {
-    public partial async Task<string?> ReadTextAsync(Stream stream)
+    public async partial Task<string?> ReadTextAsync(Stream stream)
     {
         using var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
         if (bitmap is null)

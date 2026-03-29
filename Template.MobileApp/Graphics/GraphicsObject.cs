@@ -33,7 +33,7 @@ public abstract class GraphicsObject : IGraphicsObject
         {
             if (control.Dispatcher.IsDispatchRequired)
             {
-                control.Dispatcher.Dispatch(() => control.Invalidate());
+                control.Dispatcher.Dispatch(control.Invalidate);
             }
             else
             {

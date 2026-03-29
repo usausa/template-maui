@@ -24,7 +24,7 @@ public sealed partial class DrawingController : ObservableObject
     [ObservableProperty]
     public partial float LineWidth { get; set; } = 5;
 
-    public ObservableCollection<IDrawingLine> Lines { get; } = new();
+    public ObservableCollection<IDrawingLine> Lines { get; } = [];
 
     // Message
 

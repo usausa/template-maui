@@ -99,7 +99,7 @@ public static class SuicaLogic
     private static DateTime ExtractDate(ReadOnlySpan<byte> bytes)
     {
         var year = 2000 + (bytes[0] >> 1);
-        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5 & 0b1111;
+        var month = (BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5) & 0b1111;
         var day = bytes[1] & 0b11111;
         return new DateTime(year, month, day);
     }
@@ -107,10 +107,10 @@ public static class SuicaLogic
     private static DateTime ExtractDateTime(ReadOnlySpan<byte> bytes)
     {
         var year = 2000 + (bytes[0] >> 1);
-        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5 & 0b1111;
+        var month = (BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5) & 0b1111;
         var day = bytes[1] & 0b11111;
         var hour = bytes[2] >> 3;
-        var minute = BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(2, 2)) >> 5 & 0b111111;
+        var minute = (BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(2, 2)) >> 5) & 0b111111;
         return new DateTime(year, month, day, hour, minute, 0);
     }
 

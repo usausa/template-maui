@@ -5,6 +5,8 @@ using SkiaSharp.Views.Maui;
 //--------------------------------------------------------------------------------
 // Resources
 //--------------------------------------------------------------------------------
+#pragma warning disable IDE0032
+#pragma warning disable CA1822 // Mark members as static
 public static class SocialFonts
 {
     private static SKTypeface? notoSerifJP;
@@ -50,6 +52,7 @@ public static class SocialResources
         return SKBitmap.Decode(stream);
     }
 }
+#pragma warning restore IDE0032
 
 //--------------------------------------------------------------------------------
 // Base
@@ -61,10 +64,12 @@ public abstract class SocialControl : SKCanvasView
         BackgroundColor = Colors.Transparent;
     }
 
+#pragma warning disable IDE0060
     protected static void Invalidate(BindableObject bindable, object oldValue, object newValue)
     {
         ((SocialControl)bindable).InvalidateSurface();
     }
+#pragma warning restore IDE0060
 }
 
 //--------------------------------------------------------------------------------

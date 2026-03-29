@@ -1,12 +1,12 @@
 namespace Template.MobileApp.Services;
 
-using Template.MobileApp.Helpers.Data;
-
 using Microsoft.Data.Sqlite;
 
 using Smart.Data;
 using Smart.Data.Mapper;
 using Smart.Data.Mapper.Builders;
+
+using Template.MobileApp.Helpers.Data;
 
 public sealed class DataServiceOptions
 {

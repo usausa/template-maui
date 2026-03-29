@@ -21,7 +21,7 @@ public sealed partial class BluetoothSerialFactory
         adapter = bluetoothManager.Adapter!;
     }
 
-    public partial async ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin)
+    public async partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin)
     {
         var status = await Microsoft.Maui.ApplicationModel.Permissions.CheckStatusAsync<Microsoft.Maui.ApplicationModel.Permissions.Bluetooth>();
         if (status != PermissionStatus.Granted)

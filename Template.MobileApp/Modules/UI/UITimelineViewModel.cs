@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed class UITimelineViewModel : AppViewModelBase
 {
-    public ObservableCollection<TimelineRow> Rows { get; } = new();
+    public ObservableCollection<TimelineRow> Rows { get; } = [];
 
     public UITimelineViewModel()
     {

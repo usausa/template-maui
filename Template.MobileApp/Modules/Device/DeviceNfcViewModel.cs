@@ -12,7 +12,7 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
     [ObservableProperty]
     public partial SuicaAccessData? Access { get; set; }
 
-    public ObservableCollection<SuicaLogData> Logs { get; } = new();
+    public ObservableCollection<SuicaLogData> Logs { get; } = [];
 
     public DeviceNfcViewModel(INfcReader nfcReader)
     {

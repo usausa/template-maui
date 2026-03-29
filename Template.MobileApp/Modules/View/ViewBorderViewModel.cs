@@ -38,7 +38,7 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double StrokeDashLength2 { get; set; } = 0;
 
-    public DoubleCollection StrokeDashArray { get; } = new();
+    public DoubleCollection StrokeDashArray { get; } = [];
 
     [ObservableProperty]
     public partial double StrokeDashOffset { get; set; } = 0;

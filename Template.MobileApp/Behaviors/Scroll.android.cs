@@ -21,10 +21,4 @@ public static partial class Scroll
             platformView.OverScrollMode = OverScrollMode.Never;
         }
     }
-
-    private static void UpdateOverScroll(View view, BindableObject element)
-    {
-        var value = GetDisableOverScroll(element);
-        view.OverScrollMode = value ? OverScrollMode.Never : OverScrollMode.IfContentScrolls;
-    }
 }

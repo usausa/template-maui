@@ -35,7 +35,7 @@ public abstract class AppViewModelBase : ExtendViewModelBase, IValidatable, INav
         {
             MemberName = name
         };
-        validationResults ??= new List<ValidationResult>();
+        validationResults ??= [];
 
         if (!Validator.TryValidateProperty(value, context, validationResults))
         {

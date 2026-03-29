@@ -29,7 +29,7 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     }
 
     // ReSharper disable once ArrangeModifiersOrder
-    public async override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         await Navigator.PostActionAsync(LoadMessagesAsync);
     }

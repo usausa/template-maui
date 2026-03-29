@@ -30,14 +30,14 @@ public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
         {
             throw new InvalidOperationException($"Accessor is not supported. type=[{GetType()}]");
         }
-        validationResults ??= new List<ValidationResult>();
+        validationResults ??= [];
 
         var value = propertyAccessor.GetValue(this, name);
         var context = new ValidationContext(this, ResolveProvider.Default, null)
         {
             MemberName = name
         };
-        validationResults ??= new List<ValidationResult>();
+        validationResults ??= [];
 
         if (!Validator.TryValidateProperty(value, context, validationResults))
         {

@@ -9,7 +9,7 @@ public sealed partial class ViewRefreshViewModel : AppViewModelBase
 
     public CollectionController Controller { get; } = new();
 
-    public ObservableCollection<NewsItem> Items { get; } = new();
+    public ObservableCollection<NewsItem> Items { get; } = [];
 
     [ObservableProperty]
     public partial bool IsRefreshing { get; set; }

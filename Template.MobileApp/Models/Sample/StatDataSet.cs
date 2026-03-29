@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Models.Sample;
 
+#pragma warning disable IDE0032
 public sealed class StatDataSet
 {
     public event EventHandler<EventArgs>? Updated;
@@ -42,3 +43,4 @@ public sealed class StatDataSet
         return buffer[actualIndex];
     }
 }
+#pragma warning restore IDE0032

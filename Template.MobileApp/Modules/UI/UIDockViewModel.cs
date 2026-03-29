@@ -18,7 +18,7 @@ public sealed class UIDockViewModel : AppViewModelBase
         this.fileSystem = fileSystem;
     }
 
-    public ObservableCollection<DeckButtonInfo> Buttons { get; } = new();
+    public ObservableCollection<DeckButtonInfo> Buttons { get; } = [];
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

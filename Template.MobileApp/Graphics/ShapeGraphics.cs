@@ -40,7 +40,7 @@ public sealed class ShapeGraphics : GraphicsObject
 {
     public SizeF Size { get; set; }
 
-    public List<IShape> Shapes { get; } = new();
+    public List<IShape> Shapes { get; } = [];
 
     protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
