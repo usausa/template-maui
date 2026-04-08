@@ -320,10 +320,8 @@ public static partial class MauiProgram
 
         // Usecase
         config.BindSingleton<NetworkOperator>();
-
         config.BindSingleton<NetworkUsecase>();
         config.BindSingleton<CognitiveUsecase>();
-        config.BindSingleton<SampleUsecase>();
 
         // Models
         config.BindSingleton(new ActivityCalculator(0.0005, 65, 0.6));

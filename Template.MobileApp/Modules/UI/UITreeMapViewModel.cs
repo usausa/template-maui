@@ -2,13 +2,10 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Graphics;
 using Template.MobileApp.Helpers;
-using Template.MobileApp.Usecase;
 
 public sealed partial class UITreeMapViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
-
-    private readonly SampleUsecase sampleUsecase;
 
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
@@ -19,12 +16,9 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
     public SKBitmapImageSource Image { get; } = new();
 
-    public UITreeMapViewModel(
-        IDialog dialog,
-        SampleUsecase sampleUsecase)
+    public UITreeMapViewModel(IDialog dialog)
     {
         this.dialog = dialog;
-        this.sampleUsecase = sampleUsecase;
 
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
@@ -81,8 +75,8 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             {
                 var bitmap = ImageHelper.ToNormalizeBitmap(input);
 
-                using var resized = ImageHelper.Resize(bitmap, 0.25);
-                var colors = sampleUsecase.ClusterColors(resized, 20, 5, 1e-3f);
+                using var extractor = new ColorExtractor();
+                var colors = extractor.Extract(bitmap, 20);
 
                 return (bitmap, colors);
             }).ConfigureAwait(true);
