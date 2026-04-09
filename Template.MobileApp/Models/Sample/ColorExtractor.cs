@@ -164,36 +164,41 @@ public sealed unsafe class ColorExtractor : IDisposable
                 var sampleIndex = (ySample * SampleWidth) + xSample;
                 samplingWeights[sampleIndex] = (srcXEnd - srcXStart) * (srcYEnd - srcYStart);
 
-                var bestPixel = 0u;
-                var maxSaturation = -1;
+                samplingBuffer[sampleIndex] = FindBestPixel(basePointer, rowBytes, srcYStart, srcYEnd, yStep, srcXStart, srcXEnd, xStep);
+            }
+        }
 
-                for (var y = srcYStart; y < srcYEnd; y += yStep)
+        return;
+
+        static uint FindBestPixel(byte* basePointer, int rowBytes, int srcYStart, int srcYEnd, int yStep, int srcXStart, int srcXEnd, int xStep)
+        {
+            var bestPixel = 0u;
+            var maxSaturation = -1;
+            for (var y = srcYStart; y < srcYEnd; y += yStep)
+            {
+                var row = basePointer + (y * rowBytes);
+                for (var x = srcXStart; x < srcXEnd; x += xStep)
                 {
-                    var row = basePointer + (y * rowBytes);
-                    for (var x = srcXStart; x < srcXEnd; x += xStep)
+                    var pixel = row + (x * 4);
+                    var b = pixel[0];
+                    var g = pixel[1];
+                    var r = pixel[2];
+                    var saturation = CalcSaturation(r, g, b);
+                    if (saturation <= maxSaturation)
                     {
-                        var pixel = row + (x * 4);
-                        var b = pixel[0];
-                        var g = pixel[1];
-                        var r = pixel[2];
-                        var saturation = CalcSaturation(r, g, b);
-                        if (saturation <= maxSaturation)
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        maxSaturation = saturation;
-                        bestPixel = PackRgb(r, g, b);
-                        if (saturation == 255)
-                        {
-                            goto WriteBgraPixel;
-                        }
+                    maxSaturation = saturation;
+                    bestPixel = PackRgb(r, g, b);
+                    if (saturation == 255)
+                    {
+                        return bestPixel;
                     }
                 }
-
-            WriteBgraPixel:
-                samplingBuffer[sampleIndex] = bestPixel;
             }
+
+            return bestPixel;
         }
     }
 
@@ -213,36 +218,41 @@ public sealed unsafe class ColorExtractor : IDisposable
                 var sampleIndex = (ySample * SampleWidth) + xSample;
                 samplingWeights[sampleIndex] = (srcXEnd - srcXStart) * (srcYEnd - srcYStart);
 
-                var bestPixel = 0u;
-                var maxSaturation = -1;
+                samplingBuffer[sampleIndex] = FindBestPixel(basePointer, rowBytes, srcYStart, srcYEnd, yStep, srcXStart, srcXEnd, xStep);
+            }
+        }
 
-                for (var y = srcYStart; y < srcYEnd; y += yStep)
+        return;
+
+        static uint FindBestPixel(byte* basePointer, int rowBytes, int srcYStart, int srcYEnd, int yStep, int srcXStart, int srcXEnd, int xStep)
+        {
+            var bestPixel = 0u;
+            var maxSaturation = -1;
+            for (var y = srcYStart; y < srcYEnd; y += yStep)
+            {
+                var row = basePointer + (y * rowBytes);
+                for (var x = srcXStart; x < srcXEnd; x += xStep)
                 {
-                    var row = basePointer + (y * rowBytes);
-                    for (var x = srcXStart; x < srcXEnd; x += xStep)
+                    var pixel = row + (x * 4);
+                    var r = pixel[0];
+                    var g = pixel[1];
+                    var b = pixel[2];
+                    var saturation = CalcSaturation(r, g, b);
+                    if (saturation <= maxSaturation)
                     {
-                        var pixel = row + (x * 4);
-                        var r = pixel[0];
-                        var g = pixel[1];
-                        var b = pixel[2];
-                        var saturation = CalcSaturation(r, g, b);
-                        if (saturation <= maxSaturation)
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        maxSaturation = saturation;
-                        bestPixel = PackRgb(r, g, b);
-                        if (saturation == 255)
-                        {
-                            goto WriteRgbaPixel;
-                        }
+                    maxSaturation = saturation;
+                    bestPixel = PackRgb(r, g, b);
+                    if (saturation == 255)
+                    {
+                        return bestPixel;
                     }
                 }
-
-            WriteRgbaPixel:
-                samplingBuffer[sampleIndex] = bestPixel;
             }
+
+            return bestPixel;
         }
     }
 

@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Graphics;
 
-using Template.MobileApp.Usecase;
-
 public sealed class ColorTreeMapGraphics : GraphicsObject
 {
     private TreeMapNode<ColorCount>? root;
