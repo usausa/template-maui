@@ -9,9 +9,7 @@
     <SingleProject>true</SingleProject>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
-    <!--
     <MauiXamlInflator>SourceGen</MauiXamlInflator>
-    -->
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
     <NoWarn>$(NoWarn);NU1608</NoWarn>
 
@@ -28,9 +26,17 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-android'">
-    <MandroidI18n>CJK</MandroidI18n>
+  <!--
+  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+    <UseMonoRuntime>false</UseMonoRuntime>
   </PropertyGroup>
+  -->
+
+  <!--
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+  -->
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
     <AndroidKeyStore>True</AndroidKeyStore>
@@ -108,17 +114,17 @@
     <PackageReference Include="Azure.AI.Vision.Face" Version="1.0.0-beta.2" />
     <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
     <PackageReference Include="BarcodeScanning.Native.Maui" Version="3.0.3" />
-    <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.8.4">
+    <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.8.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="BunnyTail.MemberAccessor" Version="1.8.4" />
+    <PackageReference Include="BunnyTail.MemberAccessor" Version="1.8.5" />
     <PackageReference Include="CommunityToolkit.Maui" Version="14.1.0" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.0.1" />
     <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="9.0.0" />
     <PackageReference Include="Google.Protobuf" Version="3.34.1" />
-    <PackageReference Include="Components.Maui" Version="1.26.4" />
-    <PackageReference Include="Components.Maui.Resolver" Version="1.26.4" />
+    <PackageReference Include="Components.Maui" Version="1.26.5" />
+    <PackageReference Include="Components.Maui.Resolver" Version="1.26.5" />
     <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
     <PackageReference Include="Grpc.Tools" Version="2.80.0">
       <PrivateAssets>all</PrivateAssets>
@@ -126,13 +132,13 @@
     </PackageReference>
     <PackageReference Include="Indiko.Maui.Controls.Markdown" Version="1.5.0" />
     <PackageReference Include="Mapsui.Maui" Version="5.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.5" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.5">
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.6">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">none</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.6" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
     <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.51" />
     <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.51" />
@@ -143,7 +149,7 @@
     <PackageReference Include="SkiaSharp.Extended" Version="3.0.0" />
     <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0" />
     <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.2" />
-    <PackageReference Include="Svg.Skia" Version="3.7.0" />
+    <PackageReference Include="Svg.Skia" Version="4.3.0" />
     <PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
     <PackageReference Include="Plugin.Maui.DebugRainbows" Version="1.2.2">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">none</IncludeAssets>
@@ -164,11 +170,11 @@
     <PackageReference Include="Usa.Smart.Mapper" Version="0.9.0" />
     <PackageReference Include="Usa.Smart.Maui" Version="2.11.4" />
     <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.11.4" />
-    <PackageReference Include="Usa.Smart.Mvvm" Version="1.9.3" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="2.17.2" />
-    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.17.2" />
-    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.17.2" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.17.2" />
+    <PackageReference Include="Usa.Smart.Mvvm" Version="1.9.4" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.18.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.18.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.18.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.18.1" />
     <PackageReference Include="Usa.Smart.Reactive" Version="2.6.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.7.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.7.1" />
