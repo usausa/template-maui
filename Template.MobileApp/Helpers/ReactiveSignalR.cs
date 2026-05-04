@@ -18,7 +18,7 @@ public static class ReactiveSignalR
             var disposable = new CompositeDisposable();
             var cts = new CancellationTokenSource();
 
-            disposable.Add(Disposable.Create(() => cts.Cancel()));
+            disposable.Add(Disposable.Create(cts.Cancel));
             disposable.Add(Observable.FromAsync(() => TryConnectWithRetryAsync(connection, retryInterval, cts.Token)).Subscribe());
             // ReSharper disable once AsyncVoidLambda
             disposable.Add(Disposable.Create(async () =>
