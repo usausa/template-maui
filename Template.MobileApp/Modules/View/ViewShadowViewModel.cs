@@ -28,8 +28,10 @@ public sealed partial class ViewShadowViewModel : AppViewModelBase
 
     public ViewShadowViewModel(ResourceDictionary resources)
     {
+#pragma warning disable IDE0028
         BorderColors = new(resources.EnumValues<Color>().Where(x => x.Key.EndsWith("Default", StringComparison.Ordinal)).Select(x => new ColorItem(x.Key, x.Value)));
         ShadowColors = new(resources.EnumValues<Color>().Where(x => x.Key.StartsWith("Gray", StringComparison.Ordinal)).Select(x => new ColorItem(x.Key, x.Value)));
+#pragma warning restore IDE0028
 
         BorderColor = BorderColors[0];
         ShadowColor = ShadowColors[0];

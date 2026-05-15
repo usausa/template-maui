@@ -65,8 +65,10 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
 
     public ViewBorderViewModel(ResourceDictionary resources)
     {
+#pragma warning disable IDE0028
         BorderColors = new(resources.EnumValues<Color>().Where(x => x.Key.EndsWith("Default", StringComparison.Ordinal)).Select(x => new ColorItem(x.Key, x.Value)));
         StrokeColors = new(resources.EnumValues<Color>().Where(x => x.Key.EndsWith("Accent1", StringComparison.Ordinal) || x.Key.EndsWith("Accent4", StringComparison.Ordinal)).Select(x => new ColorItem(x.Key, x.Value)));
+#pragma warning restore IDE0028
 
         BorderColor = BorderColors[0];
         StrokeColor = StrokeColors[0];
