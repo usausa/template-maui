@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceAudioView"
              x:DataType="{x:Type module:DeviceAudioViewModel}"
@@ -11,24 +13,193 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*">
-        <Button Grid.Row="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding PlayCommand}"
-                Text="Play" />
-        <Button Grid.Row="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding PauseCommand}"
-                Text="Pause" />
-        <Button Grid.Row="2"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding StopCommand}"
-                Text="Stop" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Slider Grid.Row="3"
-                Value="{Binding AudioPlayer.Volume, FallbackValue=0.5}"
-                Maximum="1" Minimum="0" />
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="IconCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="IconCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SeekStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="TimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TransportRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="24" />
+            </Style>
+
+            <Style x:Key="TransportButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="MainTransportButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource TransportButton}">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="VolumeGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="VolumeIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="VolumeValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource TimeLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource RootGrid}">
+
+        <Border Style="{StaticResource CenterCardBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <VerticalStackLayout Style="{StaticResource CardStack}">
+
+                <Border Style="{StaticResource IconCircleBorder}"
+                        behaviors:AnimationOption.Pulse="{Binding IsPlaying}">
+                    <Label Style="{StaticResource IconCircleLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Music_note}" />
+                </Border>
+
+                <Label Style="{StaticResource CenterTitleLabel}"
+                       Text="Sample.mp3" />
+
+                <VerticalStackLayout Style="{StaticResource SeekStack}">
+                    <Slider Minimum="0"
+                            Maximum="1"
+                            Value="{Binding PositionRatio, Mode=OneWay}"
+                            behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource TimeLabel}"
+                               Text="{Binding PositionText}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TimeLabel}"
+                               Text="{Binding DurationText}" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Style="{StaticResource TransportRow}">
+                    <Button Style="{StaticResource TransportButton}"
+                            Command="{Binding PlayCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Replay}" />
+                    <Button Style="{StaticResource MainTransportButton}"
+                            behaviors:ButtonOption.HapticFeedback="True"
+                            Command="{Binding PauseCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Play_arrow}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsPlaying}"
+                                         Value="True">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Pause}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource TransportButton}"
+                            Command="{Binding StopCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Stop}" />
+                </HorizontalStackLayout>
+
+                <Grid Style="{StaticResource VolumeGrid}"
+                      ColumnDefinitions="Auto,*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource VolumeIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Volume_up}" />
+                    <Slider x:Name="VolumeSlider"
+                            Grid.Column="1"
+                            Minimum="0"
+                            Maximum="1"
+                            Value="{Binding AudioPlayer.Volume, FallbackValue=0.5}" />
+                    <Label Grid.Column="2"
+                           Style="{StaticResource VolumeValueLabel}"
+                           Text="{Binding Source={x:Reference VolumeSlider}, Path=Value, StringFormat='{0:P0}', x:DataType=Slider}" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
 
     </Grid>
 

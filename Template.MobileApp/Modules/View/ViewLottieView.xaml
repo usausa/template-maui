@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              x:Class="Template.MobileApp.Modules.View.ViewLottieView"
@@ -16,21 +18,202 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto">
-        <extended:SKLottieView Grid.Row="0"
-                               Source="Lottie/popping.json"
-                               Progress="{Binding Progress}"
-                               Duration="{Binding Duration}"
-                               IsAnimationEnabled="{Binding IsAnimationEnabled}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <FlexLayout Grid.Row="1"
-                    Style="{StaticResource SideFlexLayout}">
-            <Label Style="{StaticResource ValueLabel}"
-                   Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.fff}'}" />
-            <Label Style="{StaticResource ValueLabel}"
-                   Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.fff}'}" />
-        </FlexLayout>
+            <Style x:Key="RootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource FillGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="FrameBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="PlayerPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="PlayerStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SeekStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="TimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TransportRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="24" />
+            </Style>
+
+            <Style x:Key="TransportButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="MainTransportButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource TransportButton}">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="32" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <!-- スクロール連動 / 長押し進行 (B-7) -->
+            <Style x:Key="ScrubStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="ScrubCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ScrubTrackBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="900" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource BlueDefault}" Offset="0" />
+                            <GradientStop Color="{StaticResource PinkDefault}" Offset="1" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ScrubTrackLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HoldButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
+
+        <Border Grid.Row="0"
+                Style="{StaticResource FrameBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <extended:SKLottieView Source="Lottie/popping.json"
+                                   Progress="{Binding Progress}"
+                                   Duration="{Binding Duration}"
+                                   IsAnimationEnabled="{Binding IsAnimationEnabled}" />
+        </Border>
+
+        <!-- プレイヤーコントロール -->
+        <Border Grid.Row="1"
+                Style="{StaticResource PlayerPanelBorder}">
+            <VerticalStackLayout Style="{StaticResource PlayerStack}">
+
+                <VerticalStackLayout Style="{StaticResource SeekStack}">
+                    <Slider Minimum="0"
+                            Maximum="{Binding DurationSeconds}"
+                            Value="{Binding ProgressSeconds, Mode=OneWay}"
+                            behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource TimeLabel}"
+                               Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.f}'}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TimeLabel}"
+                               Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.f}'}" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- スクロール連動 / 長押し進行 -->
+                <VerticalStackLayout Style="{StaticResource ScrubStack}">
+                    <Label Style="{StaticResource ScrubCaptionLabel}"
+                           Text="スクロール連動 (横スクロールでシーク) / 長押しで進行" />
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                behaviors:Scroll.RatioCommand="{Binding ScrubCommand}">
+                        <Border Style="{StaticResource ScrubTrackBorder}">
+                            <Label Style="{StaticResource ScrubTrackLabel}"
+                                   Text="→ → → スクロールで再生位置が進みます → → →" />
+                        </Border>
+                    </ScrollView>
+                    <Button Style="{StaticResource HoldButton}"
+                            behaviors:AnimationOption.HoldCommand="{Binding ScrubCommand}"
+                            behaviors:AnimationOption.HoldDuration="2000"
+                            Text="長押しで進行 (2 秒)" />
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Style="{StaticResource TransportRow}">
+                    <Button Style="{StaticResource TransportButton}"
+                            VerticalOptions="Center"
+                            Command="{Binding ResetCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Replay}" />
+                    <Button Style="{StaticResource MainTransportButton}"
+                            behaviors:ButtonOption.HapticFeedback="True"
+                            Command="{Binding PlayPauseCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Play_arrow}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsAnimationEnabled}"
+                                         Value="True">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Pause}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </Border>
+
     </Grid>
 
 </ContentView>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppGameView"
+             x:DataType="{x:Type module:AppGameViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppGameViewModel}"
+             shell:ShellProperty.Title="Sudoku"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- 数独。盤面ロジックは純モデル Models/App/SudokuGame、VM は表示同期のみ -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="BoardBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="Padding" Value="4" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="CellBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="HeightRequest" Value="38" />
+            </Style>
+
+            <Style x:Key="CellLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="PadButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="EraseButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PadButton}">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="NewButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PrimaryButton}">
+                <Setter Property="Margin" Value="3,12,3,0" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="CompleteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="8">
+
+            <!-- Board (9x9) -->
+            <Border Style="{StaticResource BoardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <mct:UniformItemsLayout MaxColumns="9"
+                                        BindableLayout.ItemsSource="{Binding Cells}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type module:SudokuCellViewModel}">
+                            <Border Style="{StaticResource CellBorder}"
+                                    Margin="{Binding Margin}">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsGiven}"
+                                                 Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsSelected}"
+                                                 Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppGameViewModel}}, Path=SelectCommand, x:DataType={x:Type module:AppGameViewModel}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label Style="{StaticResource CellLabel}"
+                                       TextColor="{StaticResource BlueDefault}"
+                                       FontAttributes="None"
+                                       Text="{Binding Text}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsGiven}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                                            <Setter Property="FontAttributes" Value="Bold" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsConflict}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </mct:UniformItemsLayout>
+            </Border>
+
+            <!-- Complete banner -->
+            <Label Style="{StaticResource CompleteLabel}"
+                   IsVisible="{Binding IsCompleted}"
+                   Text="COMPLETE!"
+                   behaviors:AnimationOption.BounceTrigger="{Binding IsCompleted}" />
+
+            <!-- Number pad -->
+            <Grid RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="*,*,*,*,*"
+                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                  behaviors:AnimationOption.EnterDelay="80">
+                <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="1" Text="1" />
+                <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="2" Text="2" />
+                <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="3" Text="3" />
+                <Button Grid.Row="0" Grid.Column="3" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="4" Text="4" />
+                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="5" Text="5" />
+                <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="6" Text="6" />
+                <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="7" Text="7" />
+                <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="8" Text="8" />
+                <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="9" Text="9" />
+                <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource EraseButton}" Command="{Binding EraseCommand}" Text="消去" />
+            </Grid>
+
+            <Button Style="{StaticResource NewButton}"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding NewGameCommand}"
+                    Text="新しい問題" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

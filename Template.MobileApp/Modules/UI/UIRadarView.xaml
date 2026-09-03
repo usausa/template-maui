@@ -12,9 +12,42 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="StatusLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="Lime" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*">
-        <controls:RadarScreen Grid.Row="0" />
+          RowDefinitions="*,Auto"
+          BackgroundColor="#061206">
+
+        <controls:RadarScreen Grid.Row="0"
+                              Targets="{Binding Targets}" />
+
+        <!-- 飾りステータス -->
+        <HorizontalStackLayout Grid.Row="1"
+                               HorizontalOptions="Center"
+                               Spacing="24"
+                               Padding="0,0,0,16">
+            <Label Style="{StaticResource StatusLabel}"
+                   Text="SWEEP 120°/s" />
+            <Label Style="{StaticResource StatusLabel}"
+                   Text="RANGE 5.0km" />
+            <Label Style="{StaticResource StatusLabel}"
+                   Text="MODE PULSE" />
+            <Label Style="{StaticResource StatusLabel}"
+                   Text="{Binding TargetCount, StringFormat='TGT {0}'}" />
+        </HorizontalStackLayout>
     </Grid>
 
 </ContentView>

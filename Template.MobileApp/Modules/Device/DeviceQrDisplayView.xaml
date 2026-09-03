@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceQrDisplayView"
              x:DataType="{x:Type module:DeviceQrDisplayViewModel}"
@@ -11,8 +13,152 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Image Source="{Binding Text, Converter={StaticResource QrImageSourceConverter}}" />
-    </VerticalStackLayout>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:NullToBoolConverter x:Key="EmptyConverter"
+                                   HandleEmptyString="True"
+                                   NullValue="True"
+                                   NonNullValue="False" />
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="MinimumHeightRequest" Value="560" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="QrFrameBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="QrFrameGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="240" />
+            </Style>
+
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EncodedTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="FieldStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="FieldBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <Grid Style="{StaticResource RootGrid}">
+
+            <Border Style="{StaticResource CenterCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Style="{StaticResource CardStack}">
+
+                    <Border Style="{StaticResource QrFrameBorder}">
+                        <Grid Style="{StaticResource QrFrameGrid}">
+                            <Image Source="{Binding Text, Converter={StaticResource QrImageSourceConverter}}"
+                                   IsVisible="{Binding Text, Converter={StaticResource NotEmptyConverter}}" />
+                            <VerticalStackLayout Style="{StaticResource EmptyStack}"
+                                                 IsVisible="{Binding Text, Converter={StaticResource EmptyConverter}}">
+                                <Label Style="{StaticResource EmptyIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Qr_code_2}" />
+                                <Label Style="{StaticResource EmptyHintLabel}"
+                                       Text="Enter text to encode" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <Label Style="{StaticResource EncodedTextLabel}"
+                           Text="{Binding Text}" />
+
+                    <BoxView Style="{StaticResource CardDivider}" />
+
+                    <VerticalStackLayout Style="{StaticResource FieldStack}">
+                        <Label Style="{StaticResource NameLabel}"
+                               Text="Content" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry Placeholder="Text to encode"
+                                   Text="{Binding Text}"
+                                   behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+        </Grid>
+    </ScrollView>
 
 </ContentView>

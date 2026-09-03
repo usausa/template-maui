@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              xmlns:strings="clr-namespace:Template.MobileApp.Resources.Strings"
              x:Class="Template.MobileApp.Modules.Basic.BasicLocaleView"
@@ -12,13 +15,247 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{x:Static strings:Names.Label}" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{x:Static strings:Messages.Hello_World}" />
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
 
-    </VerticalStackLayout>
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="CultureGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CardContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="ResourceGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="KeyLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ResourceValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ResourceCurrentValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ResourceValueLabel}">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="ResourceValueGrid"
+                   TargetType="Grid">
+                <Setter Property="RowDefinitions" Value="Auto,Auto,Auto" />
+                <Setter Property="ColumnDefinitions" Value="72,*" />
+                <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="FormatValueGrid"
+                   TargetType="Grid">
+                <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto" />
+                <Setter Property="ColumnDefinitions" Value="72,*" />
+                <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ResourceTagLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="CultureNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CurrentChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,1" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CurrentChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="NoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="Current culture"
+                               Icon="{x:Static fonts:MaterialIcons.Language}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <Grid Style="{StaticResource CultureGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Culture" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding CultureName}" />
+
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="UICulture" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding UICultureName}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Localized resources"
+                               Icon="{x:Static fonts:MaterialIcons.Translate}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <VerticalStackLayout Spacing="10"
+                                         BindableLayout.ItemsSource="{Binding ResourceEntries}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type module:ResourceEntry}">
+                                <VerticalStackLayout Style="{StaticResource ResourceGroupStack}">
+                                    <Label Style="{StaticResource KeyLabel}"
+                                           Text="{Binding Key}" />
+                                    <Grid Style="{StaticResource ResourceValueGrid}">
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="neutral" />
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Style="{StaticResource ResourceValueLabel}"
+                                               Text="{Binding NeutralValue}" />
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="ja" />
+                                        <Label Grid.Row="1" Grid.Column="1"
+                                               Style="{StaticResource ResourceValueLabel}"
+                                               Text="{Binding JapaneseValue}" />
+                                        <Label Grid.Row="2" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="current" />
+                                        <Label Grid.Row="2" Grid.Column="1"
+                                               Style="{StaticResource ResourceCurrentValueLabel}"
+                                               Text="{Binding CurrentValue}" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <BoxView Style="{StaticResource CardDivider}" />
+                    <VerticalStackLayout Style="{StaticResource ResourceGroupStack}">
+                        <Label Style="{StaticResource KeyLabel}"
+                               Text="x:Static reference" />
+                        <Label Style="{StaticResource ResourceValueLabel}"
+                               Text="{x:Static strings:Messages.Hello_World}" />
+                    </VerticalStackLayout>
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="Values switch with the system language (en / ja resx)" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Culture formats"
+                               Icon="{x:Static fonts:MaterialIcons.Public}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <VerticalStackLayout Spacing="12"
+                                         BindableLayout.ItemsSource="{Binding FormatEntries}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type module:CultureFormatEntry}">
+                                <VerticalStackLayout Style="{StaticResource ResourceGroupStack}">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Style="{StaticResource CultureNameLabel}"
+                                               Text="{Binding Name}" />
+                                        <Border Style="{StaticResource CurrentChipBorder}"
+                                                IsVisible="{Binding IsCurrent}">
+                                            <Label Style="{StaticResource CurrentChipLabel}"
+                                                   Text="current" />
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                    <Grid Style="{StaticResource FormatValueGrid}">
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="Number" />
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Style="{StaticResource ResourceValueLabel}"
+                                               Text="{Binding Number}" />
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="Currency" />
+                                        <Label Grid.Row="1" Grid.Column="1"
+                                               Style="{StaticResource ResourceValueLabel}"
+                                               Text="{Binding Currency}" />
+                                        <Label Grid.Row="2" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="Date" />
+                                        <Label Grid.Row="2" Grid.Column="1"
+                                               Style="{StaticResource ResourceValueLabel}"
+                                               Text="{Binding Date}" />
+                                        <Label Grid.Row="3" Grid.Column="0"
+                                               Style="{StaticResource ResourceTagLabel}"
+                                               Text="Time" />
+                                        <Label Grid.Row="3" Grid.Column="1"
+                                               Style="{StaticResource ResourceValueLabel}"
+                                               Text="{Binding Time}" />
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

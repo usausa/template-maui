@@ -5,7 +5,7 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITreeMapView"
              x:DataType="{x:Type module:UITreeMapViewModel}"
@@ -31,9 +31,16 @@
                Source="{Binding Image}"
                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                BackgroundColor="Black" />
-        <graphics:GraphicsControl Grid.Row="1"
+        <drawing:DrawingControl Grid.Row="1"
                                   IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-                                  Graphics="{Binding Graphics}" />
+                                  Drawing="{Binding Drawing}" />
+
+        <!-- 撮影瞬間のシャッターフラッシュ -->
+        <BoxView Grid.Row="0" Grid.RowSpan="2"
+                 Color="White"
+                 Opacity="0"
+                 InputTransparent="True"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
 
     </Grid>
 

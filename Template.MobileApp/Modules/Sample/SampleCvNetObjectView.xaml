@@ -5,6 +5,7 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleCvNetObjectView"
              x:DataType="{x:Type module:SampleCvNetObjectViewModel}"
@@ -19,6 +20,31 @@
              shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RetryHintBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,24" />
+                <Setter Property="Padding" Value="20,8" />
+                <Setter Property="BackgroundColor" Value="#B3000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+            </Style>
+
+            <Style x:Key="RetryHintLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
 
@@ -29,6 +55,26 @@
                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                BackgroundColor="Black"
                Source="{Binding Image}" />
+
+        <!-- 撮影ガイドオーバーレイ -->
+        <controls:CameraOverlayView Grid.Row="0"
+                                    IsVisible="{Binding IsPreview}" />
+
+        <!-- 撮影後の再開ヒント -->
+        <Border Grid.Row="0"
+                Style="{StaticResource RetryHintBorder}"
+                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding IsPreview}">
+            <Label Style="{StaticResource RetryHintLabel}"
+                   Text="Retry でプレビューを再開" />
+        </Border>
+
+        <!-- 撮影瞬間のシャッターフラッシュ -->
+        <BoxView Grid.Row="0"
+                 Color="White"
+                 Opacity="0"
+                 InputTransparent="True"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
 
     </Grid>
 

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Models.Sample;
 
-public sealed class CharacterItem
+public sealed partial class CharacterItem : ObservableObject
 {
     public string Name { get; set; } = default!;
 
@@ -9,4 +9,7 @@ public sealed class CharacterItem
     public string Face { get; set; } = default!;
 
     public string Full { get; set; } = default!;
+
+    [ObservableProperty]
+    public partial bool IsFavorite { get; set; }
 }

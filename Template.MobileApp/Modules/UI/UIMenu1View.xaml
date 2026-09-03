@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIMenu1View"
+             x:DataType="{x:Type module:UIMenu1ViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMenu1ViewModel}"
+             shell:ShellProperty.Title="UI 1"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function4Text="UI 2"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!-- グループ毎に行を分け、余りセルは可視の無効ボタンにする -->
+    <Grid Style="{StaticResource MenuGrid}"
+          RowDefinitions="*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*,*">
+
+        <!-- 決済・EC -->
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UILogin}"
+                Text="Login"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Login}}" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIMoney}"
+                Text="Money"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Account_balance_wallet}}" />
+        <Button Grid.Row="0" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISuper}"
+                Text="Super"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Widgets}}" />
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIPos}"
+                Text="POS"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Point_of_sale}}" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIShop}"
+                Text="Shop"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Storefront}}" />
+        <Button Grid.Row="1" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- ツール・ホーム -->
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIDock}"
+                Text="Dock"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Apps}}" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIKitDash}"
+                Text="Kit"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Grid_view}}" />
+        <Button Grid.Row="2" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- プロフィール・キャラクター -->
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIProfile}"
+                Text="Profile"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Account_circle}}" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UICharacter}"
+                Text="Character"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Face}}" />
+        <Button Grid.Row="3" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIPet}"
+                Text="Pet"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Pets}}" />
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIFeel}"
+                Text="Feel"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Mood}}" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="4" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- 通信・SNS・配信 -->
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIMail}"
+                Text="Mail"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Mail}}" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIChat}"
+                Text="Chat"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Chat}}" />
+        <Button Grid.Row="5" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISocial}"
+                Text="Social"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Sports_esports}}" />
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIStream}"
+                Text="Stream"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Live_tv}}" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="6" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- 日付・予定 -->
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISchedule}"
+                Text="Schedule"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Schedule}}" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UICalendar}"
+                Text="Calendar"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Calendar_month}}" />
+        <Button Grid.Row="7" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITimeline}"
+                Text="Timeline"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.View_timeline}}" />
+
+    </Grid>
+
+</ContentView>

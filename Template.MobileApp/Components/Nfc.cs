@@ -21,9 +21,16 @@ public sealed class NfcEventArgs : EventArgs
     }
 }
 
-public interface INfcReader
+public interface INfcReader : IDisposable
 {
+    /// <summary>
+    /// タグ検出時にUIスレッド以外から発火する。UI更新時はObserveOnCurrentContext等でマーシャリングすること。
+    /// タグはイベントハンドラ内でのみ有効で、ハンドラ復帰後に解放される。
+    /// </summary>
     event EventHandler<NfcEventArgs>? Detected;
+
+    // 非搭載端末ではfalse。falseの場合Enabledを設定しても何も起きない
+    bool IsSupported { get; }
 
     bool Enabled { get; set; }
 }
@@ -31,6 +38,8 @@ public interface INfcReader
 public sealed partial class NfcReader : INfcReader
 {
     public event EventHandler<NfcEventArgs>? Detected;
+
+    public partial bool IsSupported { get; }
 
     public bool Enabled
     {

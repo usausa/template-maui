@@ -1,16 +1,8 @@
 namespace Template.MobileApp.Modules;
 
-using System.ComponentModel.DataAnnotations;
-
-using Smart.Mvvm.Resolver;
-
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
 {
-    private List<ValidationResult>? validationResults;
-
-    private IAccessor? propertyAccessor;
-
     protected AppDialogViewModelBase()
         : base(new ExtendViewModelOptions { BusyState = new BusyState() })
     {
@@ -25,25 +17,6 @@ public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
 
     public void Validate(string name)
     {
-        propertyAccessor ??= AccessorRegistry.FindAccessor(GetType());
-        if (propertyAccessor is null)
-        {
-            throw new InvalidOperationException($"Accessor is not supported. type=[{GetType()}]");
-        }
-        validationResults ??= [];
-
-        var value = propertyAccessor.GetValue(this, name);
-        var context = new ValidationContext(this, ResolveProvider.Default, null)
-        {
-            MemberName = name
-        };
-        validationResults ??= [];
-
-        if (!Validator.TryValidateProperty(value, context, validationResults))
-        {
-            Errors.AddError(name, validationResults[0].ErrorMessage!);
-        }
-
-        validationResults.Clear();
+        ValidationHelper.Validate(this, name, Errors);
     }
 }

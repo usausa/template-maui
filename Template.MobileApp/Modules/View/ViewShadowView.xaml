@@ -38,63 +38,174 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
+            <!-- ニューモーフィズム: 同色タイルに明暗 2 方向の影を重ねて凹凸を表現する -->
+            <Style x:Key="NeumorphPanel"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,4" />
+                <Setter Property="Padding" Value="16,24" />
+                <Setter Property="BackgroundColor" Value="#E0E5EC" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="NeumorphTile"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="BackgroundColor" Value="#E0E5EC" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="NeumorphRaisedDark"
+                   TargetType="Border"
+                   BasedOn="{StaticResource NeumorphTile}">
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#A3B1C6" Offset="8,8" Radius="12" Opacity="0.9" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="NeumorphRaisedLight"
+                   TargetType="Border"
+                   BasedOn="{StaticResource NeumorphTile}">
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="White" Offset="-8,-8" Radius="12" Opacity="1" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="NeumorphPressedLight"
+                   TargetType="Border"
+                   BasedOn="{StaticResource NeumorphTile}">
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="White" Offset="8,8" Radius="12" Opacity="1" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="NeumorphPressedDark"
+                   TargetType="Border"
+                   BasedOn="{StaticResource NeumorphTile}">
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#A3B1C6" Offset="-8,-8" Radius="12" Opacity="0.9" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="NeumorphGlyphLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+            </Style>
+
+            <Style x:Key="NeumorphCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <VerticalStackLayout Style="{StaticResource ShadowVerticalStackLayout}">
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource ShadowVerticalStackLayout}">
 
-        <!-- Target -->
+            <!-- Target -->
 
-        <Border Style="{StaticResource ShadowTargetBorder}"
-                BackgroundColor="{Binding BorderColor.Color}">
-            <Border.Shadow>
-                <Shadow Offset="{Binding ShadowOffset}"
-                        Brush="{Binding ShadowColor.Color, Converter={StaticResource ColorToBrushConverter}}"
-                        Opacity="{Binding ShadowOpacity}"
-                        Radius="{Binding ShadowRadius}" />
-            </Border.Shadow>
-        </Border>
+            <Border Style="{StaticResource ShadowTargetBorder}"
+                    BackgroundColor="{Binding BorderColor.Color}">
+                <Border.Shadow>
+                    <Shadow Offset="{Binding ShadowOffset}"
+                            Brush="{Binding ShadowColor.Color, Converter={StaticResource ColorToBrushConverter}}"
+                            Opacity="{Binding ShadowOpacity}"
+                            Radius="{Binding ShadowRadius}" />
+                </Border.Shadow>
+            </Border>
 
-        <!-- Setting -->
+            <!-- Setting -->
 
-        <BoxView Style="{StaticResource SeparateBoxView}" />
+            <BoxView Style="{StaticResource SeparateBoxView}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Border" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding BorderColors}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
-                SelectedItem="{Binding BorderColor, Mode=TwoWay}" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="Border" />
+            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+            <Picker ItemsSource="{Binding BorderColors}"
+                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
+                    SelectedItem="{Binding BorderColor, Mode=TwoWay}" />
 
-        <BoxView Style="{StaticResource SeparateBoxView}" />
+            <BoxView Style="{StaticResource SeparateBoxView}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Color" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding ShadowColors}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
-                SelectedItem="{Binding ShadowColor, Mode=TwoWay}" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="Color" />
+            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+            <Picker ItemsSource="{Binding ShadowColors}"
+                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
+                    SelectedItem="{Binding ShadowColor, Mode=TwoWay}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding ShadowOffsetX, StringFormat='OffsetX: {0:F2}'}" />
-        <Slider Value="{Binding ShadowOffsetX, Mode=TwoWay}"
-                Minimum="-20" Maximum="20" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="{Binding ShadowOffsetX, StringFormat='OffsetX: {0:F2}'}" />
+            <Slider Value="{Binding ShadowOffsetX, Mode=TwoWay}"
+                    Minimum="-20" Maximum="20" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding ShadowOffsetY, StringFormat='OffsetY: {0:F2}'}" />
-        <Slider Value="{Binding ShadowOffsetY, Mode=TwoWay}"
-                Minimum="-20" Maximum="20" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="{Binding ShadowOffsetY, StringFormat='OffsetY: {0:F2}'}" />
+            <Slider Value="{Binding ShadowOffsetY, Mode=TwoWay}"
+                    Minimum="-20" Maximum="20" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding ShadowRadius, StringFormat='Radius: {0:F2}'}" />
-        <Slider Value="{Binding ShadowRadius, Mode=TwoWay}"
-                Minimum="0" Maximum="40" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="{Binding ShadowRadius, StringFormat='Radius: {0:F2}'}" />
+            <Slider Value="{Binding ShadowRadius, Mode=TwoWay}"
+                    Minimum="0" Maximum="40" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding ShadowOpacity, StringFormat='Opacity: {0:F2}'}" />
-        <Slider Value="{Binding ShadowOpacity, Mode=TwoWay}"
-                Minimum="0" Maximum="1.0" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="{Binding ShadowOpacity, StringFormat='Opacity: {0:F2}'}" />
+            <Slider Value="{Binding ShadowOpacity, Mode=TwoWay}"
+                    Minimum="0" Maximum="1.0" />
 
-    </VerticalStackLayout>
+            <!-- Neumorphism (C-3): Border 2 枚重ねで明暗 2 方向の影を合成する -->
+
+            <BoxView Style="{StaticResource SeparateBoxView}" />
+
+            <Label Style="{StaticResource NameLabel}"
+                   Text="Neumorphism (影 2 方向の重ね合わせ)" />
+
+            <Border Style="{StaticResource NeumorphPanel}">
+                <HorizontalStackLayout HorizontalOptions="Center"
+                                       Spacing="48">
+                    <VerticalStackLayout Spacing="16">
+                        <Grid>
+                            <Border Style="{StaticResource NeumorphRaisedDark}" />
+                            <Border Style="{StaticResource NeumorphRaisedLight}">
+                                <Label Style="{StaticResource NeumorphGlyphLabel}"
+                                       Text="凸" />
+                            </Border>
+                        </Grid>
+                        <Label Style="{StaticResource NeumorphCaptionLabel}"
+                               Text="Raised" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="16">
+                        <Grid>
+                            <Border Style="{StaticResource NeumorphPressedLight}" />
+                            <Border Style="{StaticResource NeumorphPressedDark}">
+                                <Label Style="{StaticResource NeumorphGlyphLabel}"
+                                       Text="凹" />
+                            </Border>
+                        </Grid>
+                        <Label Style="{StaticResource NeumorphCaptionLabel}"
+                               Text="Pressed" />
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

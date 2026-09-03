@@ -3,21 +3,104 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Wizard"
              x:Class="Template.MobileApp.Modules.Navigation.Wizard.WizardResultView"
              x:DataType="{x:Type module:WizardResultViewModel}"
              s:BindingContextResolver.Type="{x:Type module:WizardResultViewModel}"
              shell:ShellProperty.Title="Result"
              shell:ShellProperty.Function1Text="◀️"
-             shell:ShellProperty.Function4Text="▶️"
+             shell:ShellProperty.Function4Text="✔️"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Context.Data1}" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Context.Data2}" />
-    </VerticalStackLayout>
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SummaryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="SummaryGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="SummaryCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="SummaryDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:StepIndicator Margin="0,8,0,0"
+                                    CurrentStep="3"
+                                    TotalSteps="3"
+                                    behaviors:AnimationOption.EnterAnimation="FadeUp" />
+
+            <controls:InfoCard Title="Summary"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Style="{StaticResource SummaryStack}">
+                    <VerticalStackLayout Style="{StaticResource SummaryGroupStack}">
+                        <Label Style="{StaticResource SummaryCaptionLabel}"
+                               Text="Data1" />
+                        <Label Style="{StaticResource SummaryValueLabel}"
+                               Text="{Binding Context.Data1}" />
+                    </VerticalStackLayout>
+                    <BoxView Style="{StaticResource SummaryDivider}" />
+                    <VerticalStackLayout Style="{StaticResource SummaryGroupStack}">
+                        <Label Style="{StaticResource SummaryCaptionLabel}"
+                               Text="Data2" />
+                        <Label Style="{StaticResource SummaryValueLabel}"
+                               Text="{Binding Context.Data2}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Done"
+                               Icon="{x:Static fonts:MaterialIcons.Check_circle}"
+                               IconColor="{StaticResource GreenDefault}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160">
+                <Label Style="{StaticResource SummaryCaptionLabel}"
+                       Text="Press ✔️ to finish the wizard and return to the menu" />
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

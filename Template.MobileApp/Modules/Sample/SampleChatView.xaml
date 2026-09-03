@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleChatView"
              x:DataType="{x:Type module:SampleChatViewModel}"
@@ -11,6 +14,270 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- 音声フロー (C-7) -->
+            <Style x:Key="VoiceFabButton"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,16,72" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="CornerRadius" Value="28" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="VoiceOverlayGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="#80000000" />
+            </Style>
+
+            <Style x:Key="VoiceCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="24" />
+                <Setter Property="Padding" Value="20" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="VoiceTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="VoiceCloseButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="VoiceHintLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="VoiceMicButton"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="88" />
+                <Setter Property="HeightRequest" Value="88" />
+                <Setter Property="CornerRadius" Value="44" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
+            </Style>
+
+            <Style x:Key="VoiceTimeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="VoiceTextBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="VoiceTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="VoiceTagBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0,3" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="VoiceTagLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="VoiceValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="VoiceNextButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="VoiceSubButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource VoiceNextButton}">
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}">
+
+        <controls:ChatView Messages="{Binding Messages}"
+                           InputText="{Binding InputText, Mode=TwoWay}"
+                           SendCommand="{Binding SendCommand}" />
+
+        <!-- 音声入力の呼び出し FAB -->
+        <Button Style="{StaticResource VoiceFabButton}"
+                Command="{Binding OpenVoiceCommand}"
+                Text="{x:Static fonts:MaterialIcons.Mic}" />
+
+        <!-- 音声フロー 4 ステップ (録音 → 文字起こし → 抽出 → 承認) -->
+        <Grid Style="{StaticResource VoiceOverlayGrid}"
+              IsVisible="{Binding VoiceVisible}">
+            <Border Style="{StaticResource VoiceCardBorder}">
+                <VerticalStackLayout Spacing="16">
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource VoiceTitleLabel}"
+                               Text="音声入力" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource VoiceCloseButton}"
+                                Command="{Binding CloseVoiceCommand}"
+                                Text="{x:Static fonts:MaterialIcons.Close}" />
+                    </Grid>
+
+                    <controls:StepIndicator CurrentStep="{Binding VoiceStep}"
+                                            TotalSteps="4" />
+
+                    <!-- Step 1: 録音 -->
+                    <VerticalStackLayout Spacing="12"
+                                         IsVisible="{Binding IsStep1}">
+                        <Label Style="{StaticResource VoiceHintLabel}"
+                               Text="タップで録音を開始 / 停止します (モック)" />
+                        <Button Style="{StaticResource VoiceMicButton}"
+                                behaviors:AnimationOption.Pulse="{Binding IsRecording}"
+                                Command="{Binding ToggleRecordCommand}"
+                                Text="{x:Static fonts:MaterialIcons.Mic}">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding IsRecording}"
+                                             Value="True">
+                                    <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Stop}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Label Style="{StaticResource VoiceTimeLabel}"
+                               Text="{Binding RecordSeconds, StringFormat='{0} 秒'}" />
+                    </VerticalStackLayout>
+
+                    <!-- Step 2: 文字起こし -->
+                    <VerticalStackLayout Spacing="12"
+                                         IsVisible="{Binding IsStep2}">
+                        <ActivityIndicator HorizontalOptions="Center"
+                                           IsRunning="{Binding Transcribing}"
+                                           IsVisible="{Binding Transcribing}" />
+                        <Label Style="{StaticResource VoiceHintLabel}"
+                               IsVisible="{Binding Transcribing}"
+                               Text="文字起こし中..." />
+                        <Border Style="{StaticResource VoiceTextBorder}"
+                                IsVisible="{Binding TranscribedText, Converter={StaticResource NotEmptyConverter}}">
+                            <Label Style="{StaticResource VoiceTextLabel}"
+                                   Text="{Binding TranscribedText}" />
+                        </Border>
+                        <Button Style="{StaticResource VoiceNextButton}"
+                                Command="{Binding GoExtractCommand}"
+                                Text="抽出プレビューへ" />
+                    </VerticalStackLayout>
+
+                    <!-- Step 3: 抽出プレビュー -->
+                    <VerticalStackLayout Spacing="12"
+                                         IsVisible="{Binding IsStep3}">
+                        <Label Style="{StaticResource VoiceHintLabel}"
+                               Text="内容から以下を抽出しました (モック)" />
+                        <VerticalStackLayout Spacing="6"
+                                             BindableLayout.ItemsSource="{Binding ExtractItems}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type module:VoiceExtractItem}">
+                                    <Grid ColumnDefinitions="64,*"
+                                          ColumnSpacing="8">
+                                        <Border Grid.Column="0"
+                                                Style="{StaticResource VoiceTagBorder}">
+                                            <Label Style="{StaticResource VoiceTagLabel}"
+                                                   Text="{Binding Label}" />
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Style="{StaticResource VoiceValueLabel}"
+                                               Text="{Binding Value}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Button Style="{StaticResource VoiceNextButton}"
+                                Command="{Binding GoApproveCommand}"
+                                Text="承認へ" />
+                    </VerticalStackLayout>
+
+                    <!-- Step 4: 承認 -->
+                    <VerticalStackLayout Spacing="12"
+                                         IsVisible="{Binding IsStep4}">
+                        <Label Style="{StaticResource VoiceHintLabel}"
+                               Text="この内容を入力欄へ反映します" />
+                        <Border Style="{StaticResource VoiceTextBorder}">
+                            <Label Style="{StaticResource VoiceTextLabel}"
+                                   Text="{Binding TranscribedText}" />
+                        </Border>
+                        <Button Style="{StaticResource VoiceNextButton}"
+                                Command="{Binding ApplyVoiceCommand}"
+                                Text="入力欄へ反映" />
+                        <Button Style="{StaticResource VoiceSubButton}"
+                                Command="{Binding RetryVoiceCommand}"
+                                Text="やり直す" />
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+    </Grid>
 
 </ContentView>

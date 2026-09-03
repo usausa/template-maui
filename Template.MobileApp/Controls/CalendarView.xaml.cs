@@ -1,0 +1,1417 @@
+namespace Template.MobileApp.Controls;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Input;
+
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
+
+using Template.MobileApp.Models.Sample.Calendar;
+
+public partial class CalendarView : ContentView
+{
+    // ------------------------------------------------------------------ BindableProperties: Commands / View
+
+    public static readonly BindableProperty ViewProperty =
+        BindableProperty.Create(nameof(View), typeof(MonthView), typeof(CalendarView),
+            defaultValue: null, propertyChanged: OnViewChanged);
+
+    public static readonly BindableProperty PrevMonthCommandProperty =
+        BindableProperty.Create(nameof(PrevMonthCommand), typeof(ICommand), typeof(CalendarView));
+
+    public static readonly BindableProperty NextMonthCommandProperty =
+        BindableProperty.Create(nameof(NextMonthCommand), typeof(ICommand), typeof(CalendarView));
+
+    public static readonly BindableProperty GoToTodayCommandProperty =
+        BindableProperty.Create(nameof(GoToTodayCommand), typeof(ICommand), typeof(CalendarView));
+
+    public static readonly BindableProperty DayTappedCommandProperty =
+        BindableProperty.Create(nameof(DayTappedCommand), typeof(ICommand), typeof(CalendarView));
+
+    public static readonly BindableProperty EventTappedCommandProperty =
+        BindableProperty.Create(nameof(EventTappedCommand), typeof(ICommand), typeof(CalendarView));
+
+    // ------------------------------------------------------------------ BindableProperties: Selection
+
+    public static readonly BindableProperty SelectionModeProperty =
+        BindableProperty.Create(nameof(SelectionMode), typeof(CalendarSelectionMode), typeof(CalendarView),
+            CalendarSelectionMode.None, propertyChanged: OnSelectionPropertyChanged);
+
+    public static readonly BindableProperty SelectedDateProperty =
+        BindableProperty.Create(nameof(SelectedDate), typeof(DateOnly?), typeof(CalendarView),
+            null, BindingMode.TwoWay, propertyChanged: OnSelectionPropertyChanged);
+
+    public static readonly BindableProperty SelectedDatesProperty =
+        BindableProperty.Create(nameof(SelectedDates), typeof(ObservableCollection<DateOnly>), typeof(CalendarView),
+            null, BindingMode.TwoWay, propertyChanged: OnSelectedDatesChanged);
+
+    public static readonly BindableProperty SelectedStartDateProperty =
+        BindableProperty.Create(nameof(SelectedStartDate), typeof(DateOnly?), typeof(CalendarView),
+            null, BindingMode.TwoWay, propertyChanged: OnSelectionPropertyChanged);
+
+    public static readonly BindableProperty SelectedEndDateProperty =
+        BindableProperty.Create(nameof(SelectedEndDate), typeof(DateOnly?), typeof(CalendarView),
+            null, BindingMode.TwoWay, propertyChanged: OnSelectionPropertyChanged);
+
+    public static readonly BindableProperty SelectedDayBackgroundProperty =
+        BindableProperty.Create(nameof(SelectedDayBackground), typeof(Color), typeof(CalendarView),
+            Color.FromArgb("#1A73E8"), propertyChanged: OnSelectionPropertyChanged);
+
+    public static readonly BindableProperty SelectedDayTextColorProperty =
+        BindableProperty.Create(nameof(SelectedDayTextColor), typeof(Color), typeof(CalendarView),
+            Colors.White, propertyChanged: OnSelectionPropertyChanged);
+
+    public static readonly BindableProperty RangeBackgroundProperty =
+        BindableProperty.Create(nameof(RangeBackground), typeof(Color), typeof(CalendarView),
+            Color.FromArgb("#BDD7F5"), propertyChanged: OnSelectionPropertyChanged);
+
+    // ------------------------------------------------------------------ BindableProperties: Navigation limits
+
+    public static readonly BindableProperty MinDateProperty =
+        BindableProperty.Create(nameof(MinDate), typeof(DateOnly?), typeof(CalendarView), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty MaxDateProperty =
+        BindableProperty.Create(nameof(MaxDate), typeof(DateOnly?), typeof(CalendarView), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty DisabledDayTextColorProperty =
+        BindableProperty.Create(nameof(DisabledDayTextColor), typeof(Color), typeof(CalendarView),
+            Color.FromArgb("#C0C0C0"), propertyChanged: OnRenderPropertyChanged);
+
+    // ------------------------------------------------------------------ BindableProperties: Localization
+
+    public static readonly BindableProperty CultureProperty =
+        BindableProperty.Create(nameof(Culture), typeof(CultureInfo), typeof(CalendarView), propertyChanged: OnCultureChanged);
+
+    // ------------------------------------------------------------------ BindableProperties: Layout / Sizes
+
+    public static readonly BindableProperty DateRowHeightProperty =
+        BindableProperty.Create(nameof(DateRowHeight), typeof(double), typeof(CalendarView), 26d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty SlotRowHeightProperty =
+        BindableProperty.Create(nameof(SlotRowHeight), typeof(double), typeof(CalendarView), 17d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty DateNumberSizeProperty =
+        BindableProperty.Create(nameof(DateNumberSize), typeof(double), typeof(CalendarView), 22d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty DateNumberMarginProperty =
+        BindableProperty.Create(nameof(DateNumberMargin), typeof(Thickness), typeof(CalendarView), new Thickness(4, 2, 0, 0), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty DateNumberFontSizeProperty =
+        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView), 14d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty EventFontSizeProperty =
+        BindableProperty.Create(nameof(EventFontSize), typeof(double), typeof(CalendarView), 11d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty EventRowHeightProperty =
+        BindableProperty.Create(nameof(EventRowHeight), typeof(double), typeof(CalendarView), 15d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty StampMarginEdgeProperty =
+        BindableProperty.Create(nameof(StampMarginEdge), typeof(double), typeof(CalendarView), 2d, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty NavButtonWidthProperty =
+        BindableProperty.Create(nameof(NavButtonWidth), typeof(double), typeof(CalendarView), 44d);
+
+    public static readonly BindableProperty NavButtonHeightProperty =
+        BindableProperty.Create(nameof(NavButtonHeight), typeof(double), typeof(CalendarView), 44d);
+
+    public static readonly BindableProperty NavButtonFontSizeProperty =
+        BindableProperty.Create(nameof(NavButtonFontSize), typeof(double), typeof(CalendarView), 18d);
+
+    public static readonly BindableProperty FirstDayOfWeekProperty =
+        BindableProperty.Create(nameof(FirstDayOfWeek), typeof(DayOfWeek), typeof(CalendarView),
+            DayOfWeek.Monday, propertyChanged: OnFirstDayOfWeekChanged);
+
+    public static readonly BindableProperty SwipeEnabledProperty =
+        BindableProperty.Create(nameof(SwipeEnabled), typeof(bool), typeof(CalendarView), true, propertyChanged: OnSwipeEnabledChanged);
+
+    public static readonly BindableProperty HeaderPaddingProperty =
+        BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(16, 12, 16, 8));
+
+    public static readonly BindableProperty WeekdayHeaderFontSizeProperty =
+        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView), 14d);
+
+    public static readonly BindableProperty WeekdayHeaderPaddingProperty =
+        BindableProperty.Create(nameof(WeekdayHeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(0, 6, 0, 6));
+
+    public static readonly BindableProperty YearFontSizeProperty =
+        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView), 14d);
+
+    public static readonly BindableProperty MonthFontSizeProperty =
+        BindableProperty.Create(nameof(MonthFontSize), typeof(double), typeof(CalendarView), 28d);
+
+    // ------------------------------------------------------------------ BindableProperties: Colors
+
+    public static readonly BindableProperty GridLineColorProperty =
+        BindableProperty.Create(nameof(GridLineColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E0E0E0"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty WeekdayTextColorProperty =
+        BindableProperty.Create(nameof(WeekdayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#1F1F1F"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty SaturdayTextColorProperty =
+        BindableProperty.Create(nameof(SaturdayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#2196F3"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty SundayTextColorProperty =
+        BindableProperty.Create(nameof(SundayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E53935"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty OutsideMonthTextColorProperty =
+        BindableProperty.Create(nameof(OutsideMonthTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#BDBDBD"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty OutsideMonthBackgroundProperty =
+        BindableProperty.Create(nameof(OutsideMonthBackground), typeof(Color), typeof(CalendarView), Color.FromArgb("#F2F2F2"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty WeekendBackgroundProperty =
+        BindableProperty.Create(nameof(WeekendBackground), typeof(Color), typeof(CalendarView), Color.FromArgb("#FFF1F1"), propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty TodayBackgroundProperty =
+        BindableProperty.Create(nameof(TodayBackground), typeof(Color), typeof(CalendarView), Colors.Black, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty TodayTextColorProperty =
+        BindableProperty.Create(nameof(TodayTextColor), typeof(Color), typeof(CalendarView), Colors.White, propertyChanged: OnRenderPropertyChanged);
+
+    public static readonly BindableProperty NavButtonColorProperty =
+        BindableProperty.Create(nameof(NavButtonColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#333333"));
+
+    public static readonly BindableProperty YearTextColorProperty =
+        BindableProperty.Create(nameof(YearTextColor), typeof(Color), typeof(CalendarView), Colors.Black);
+
+    public static readonly BindableProperty MonthTextColorProperty =
+        BindableProperty.Create(nameof(MonthTextColor), typeof(Color), typeof(CalendarView), Colors.Black);
+
+    public static readonly BindableProperty WeekdayHeaderColorProperty =
+        BindableProperty.Create(nameof(WeekdayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#333333"));
+
+    public static readonly BindableProperty SaturdayHeaderColorProperty =
+        BindableProperty.Create(nameof(SaturdayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#2196F3"));
+
+    public static readonly BindableProperty SundayHeaderColorProperty =
+        BindableProperty.Create(nameof(SundayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E53935"));
+
+    // ------------------------------------------------------------------ BindableProperties: Templates
+
+    // ヘッダー全体のカスタムテンプレート。null の場合はデフォルトの年月+ナビボタンを使用。BindingContext は MonthView
+    public static readonly BindableProperty HeaderTemplateProperty =
+        BindableProperty.Create(nameof(HeaderTemplate), typeof(DataTemplate), typeof(CalendarView),
+            propertyChanged: OnHeaderTemplateChanged);
+
+    // 月インジケータのカスタムテンプレート。null の場合は MonthIndicatorEnabled に基づくデフォルト表示。BindingContext は MonthView
+    public static readonly BindableProperty MonthIndicatorTemplateProperty =
+        BindableProperty.Create(nameof(MonthIndicatorTemplate), typeof(DataTemplate), typeof(CalendarView),
+            propertyChanged: OnMonthIndicatorChanged);
+
+    // デフォルトの月インジケータ(大きな月数字)を表示するか。MonthIndicatorTemplate が設定されている場合は無視される
+    public static readonly BindableProperty MonthIndicatorEnabledProperty =
+        BindableProperty.Create(nameof(MonthIndicatorEnabled), typeof(bool), typeof(CalendarView),
+            false, propertyChanged: OnMonthIndicatorChanged);
+
+    // デフォルト月インジケータの文字色(半透明推奨)
+    public static readonly BindableProperty MonthIndicatorColorProperty =
+        BindableProperty.Create(nameof(MonthIndicatorColor), typeof(Color), typeof(CalendarView),
+            Color.FromArgb("#10000000"), propertyChanged: OnMonthIndicatorChanged);
+
+    // デフォルト月インジケータのフォントサイズ
+    public static readonly BindableProperty MonthIndicatorFontSizeProperty =
+        BindableProperty.Create(nameof(MonthIndicatorFontSize), typeof(double), typeof(CalendarView),
+            160d, propertyChanged: OnMonthIndicatorChanged);
+
+    // ------------------------------------------------------------------ CLR Properties
+
+    public MonthView? View
+    {
+        get => (MonthView?)GetValue(ViewProperty);
+        set => SetValue(ViewProperty, value);
+    }
+
+    public ICommand? PrevMonthCommand
+    {
+        get => (ICommand?)GetValue(PrevMonthCommandProperty);
+        set => SetValue(PrevMonthCommandProperty, value);
+    }
+
+    public ICommand? NextMonthCommand
+    {
+        get => (ICommand?)GetValue(NextMonthCommandProperty);
+        set => SetValue(NextMonthCommandProperty, value);
+    }
+
+    public ICommand? GoToTodayCommand
+    {
+        get => (ICommand?)GetValue(GoToTodayCommandProperty);
+        set => SetValue(GoToTodayCommandProperty, value);
+    }
+
+    public ICommand? DayTappedCommand
+    {
+        get => (ICommand?)GetValue(DayTappedCommandProperty);
+        set => SetValue(DayTappedCommandProperty, value);
+    }
+
+    public ICommand? EventTappedCommand
+    {
+        get => (ICommand?)GetValue(EventTappedCommandProperty);
+        set => SetValue(EventTappedCommandProperty, value);
+    }
+
+    public CalendarSelectionMode SelectionMode
+    {
+        get => (CalendarSelectionMode)GetValue(SelectionModeProperty);
+        set => SetValue(SelectionModeProperty, value);
+    }
+
+    public DateOnly? SelectedDate
+    {
+        get => (DateOnly?)GetValue(SelectedDateProperty);
+        set => SetValue(SelectedDateProperty, value);
+    }
+
+#pragma warning disable CA2227
+    public ObservableCollection<DateOnly>? SelectedDates
+    {
+        get => (ObservableCollection<DateOnly>?)GetValue(SelectedDatesProperty);
+        set => SetValue(SelectedDatesProperty, value);
+    }
+#pragma warning restore CA2227
+
+    public DateOnly? SelectedStartDate
+    {
+        get => (DateOnly?)GetValue(SelectedStartDateProperty);
+        set => SetValue(SelectedStartDateProperty, value);
+    }
+
+    public DateOnly? SelectedEndDate
+    {
+        get => (DateOnly?)GetValue(SelectedEndDateProperty);
+        set => SetValue(SelectedEndDateProperty, value);
+    }
+
+    public Color SelectedDayBackground { get => (Color)GetValue(SelectedDayBackgroundProperty); set => SetValue(SelectedDayBackgroundProperty, value); }
+    public Color SelectedDayTextColor { get => (Color)GetValue(SelectedDayTextColorProperty); set => SetValue(SelectedDayTextColorProperty, value); }
+    public Color RangeBackground { get => (Color)GetValue(RangeBackgroundProperty); set => SetValue(RangeBackgroundProperty, value); }
+
+    public DateOnly? MinDate { get => (DateOnly?)GetValue(MinDateProperty); set => SetValue(MinDateProperty, value); }
+    public DateOnly? MaxDate { get => (DateOnly?)GetValue(MaxDateProperty); set => SetValue(MaxDateProperty, value); }
+    public Color DisabledDayTextColor { get => (Color)GetValue(DisabledDayTextColorProperty); set => SetValue(DisabledDayTextColorProperty, value); }
+
+    public CultureInfo? Culture
+    {
+        get => (CultureInfo?)GetValue(CultureProperty);
+        set => SetValue(CultureProperty, value);
+    }
+
+    public double DateRowHeight { get => (double)GetValue(DateRowHeightProperty); set => SetValue(DateRowHeightProperty, value); }
+    public double SlotRowHeight { get => (double)GetValue(SlotRowHeightProperty); set => SetValue(SlotRowHeightProperty, value); }
+    public double DateNumberSize { get => (double)GetValue(DateNumberSizeProperty); set => SetValue(DateNumberSizeProperty, value); }
+    public Thickness DateNumberMargin { get => (Thickness)GetValue(DateNumberMarginProperty); set => SetValue(DateNumberMarginProperty, value); }
+    public double DateNumberFontSize { get => (double)GetValue(DateNumberFontSizeProperty); set => SetValue(DateNumberFontSizeProperty, value); }
+    public double EventFontSize { get => (double)GetValue(EventFontSizeProperty); set => SetValue(EventFontSizeProperty, value); }
+    public double EventRowHeight { get => (double)GetValue(EventRowHeightProperty); set => SetValue(EventRowHeightProperty, value); }
+    public double StampMarginEdge { get => (double)GetValue(StampMarginEdgeProperty); set => SetValue(StampMarginEdgeProperty, value); }
+    public double NavButtonWidth { get => (double)GetValue(NavButtonWidthProperty); set => SetValue(NavButtonWidthProperty, value); }
+    public double NavButtonHeight { get => (double)GetValue(NavButtonHeightProperty); set => SetValue(NavButtonHeightProperty, value); }
+    public double NavButtonFontSize { get => (double)GetValue(NavButtonFontSizeProperty); set => SetValue(NavButtonFontSizeProperty, value); }
+    public DayOfWeek FirstDayOfWeek { get => (DayOfWeek)GetValue(FirstDayOfWeekProperty); set => SetValue(FirstDayOfWeekProperty, value); }
+    public bool SwipeEnabled { get => (bool)GetValue(SwipeEnabledProperty); set => SetValue(SwipeEnabledProperty, value); }
+    public Thickness HeaderPadding { get => (Thickness)GetValue(HeaderPaddingProperty); set => SetValue(HeaderPaddingProperty, value); }
+    public double WeekdayHeaderFontSize { get => (double)GetValue(WeekdayHeaderFontSizeProperty); set => SetValue(WeekdayHeaderFontSizeProperty, value); }
+    public Thickness WeekdayHeaderPadding { get => (Thickness)GetValue(WeekdayHeaderPaddingProperty); set => SetValue(WeekdayHeaderPaddingProperty, value); }
+    public double YearFontSize { get => (double)GetValue(YearFontSizeProperty); set => SetValue(YearFontSizeProperty, value); }
+    public double MonthFontSize { get => (double)GetValue(MonthFontSizeProperty); set => SetValue(MonthFontSizeProperty, value); }
+
+    public Color GridLineColor { get => (Color)GetValue(GridLineColorProperty); set => SetValue(GridLineColorProperty, value); }
+    public Color WeekdayTextColor { get => (Color)GetValue(WeekdayTextColorProperty); set => SetValue(WeekdayTextColorProperty, value); }
+    public Color SaturdayTextColor { get => (Color)GetValue(SaturdayTextColorProperty); set => SetValue(SaturdayTextColorProperty, value); }
+    public Color SundayTextColor { get => (Color)GetValue(SundayTextColorProperty); set => SetValue(SundayTextColorProperty, value); }
+    public Color OutsideMonthTextColor { get => (Color)GetValue(OutsideMonthTextColorProperty); set => SetValue(OutsideMonthTextColorProperty, value); }
+    public Color OutsideMonthBackground { get => (Color)GetValue(OutsideMonthBackgroundProperty); set => SetValue(OutsideMonthBackgroundProperty, value); }
+    public Color WeekendBackground { get => (Color)GetValue(WeekendBackgroundProperty); set => SetValue(WeekendBackgroundProperty, value); }
+    public Color TodayBackground { get => (Color)GetValue(TodayBackgroundProperty); set => SetValue(TodayBackgroundProperty, value); }
+    public Color TodayTextColor { get => (Color)GetValue(TodayTextColorProperty); set => SetValue(TodayTextColorProperty, value); }
+    public Color NavButtonColor { get => (Color)GetValue(NavButtonColorProperty); set => SetValue(NavButtonColorProperty, value); }
+    public Color YearTextColor { get => (Color)GetValue(YearTextColorProperty); set => SetValue(YearTextColorProperty, value); }
+    public Color MonthTextColor { get => (Color)GetValue(MonthTextColorProperty); set => SetValue(MonthTextColorProperty, value); }
+    public Color WeekdayHeaderColor { get => (Color)GetValue(WeekdayHeaderColorProperty); set => SetValue(WeekdayHeaderColorProperty, value); }
+    public Color SaturdayHeaderColor { get => (Color)GetValue(SaturdayHeaderColorProperty); set => SetValue(SaturdayHeaderColorProperty, value); }
+    public Color SundayHeaderColor { get => (Color)GetValue(SundayHeaderColorProperty); set => SetValue(SundayHeaderColorProperty, value); }
+
+    public DataTemplate? HeaderTemplate { get => (DataTemplate?)GetValue(HeaderTemplateProperty); set => SetValue(HeaderTemplateProperty, value); }
+    public DataTemplate? MonthIndicatorTemplate { get => (DataTemplate?)GetValue(MonthIndicatorTemplateProperty); set => SetValue(MonthIndicatorTemplateProperty, value); }
+    public bool MonthIndicatorEnabled { get => (bool)GetValue(MonthIndicatorEnabledProperty); set => SetValue(MonthIndicatorEnabledProperty, value); }
+    public Color MonthIndicatorColor { get => (Color)GetValue(MonthIndicatorColorProperty); set => SetValue(MonthIndicatorColorProperty, value); }
+    public double MonthIndicatorFontSize { get => (double)GetValue(MonthIndicatorFontSizeProperty); set => SetValue(MonthIndicatorFontSizeProperty, value); }
+
+    // ------------------------------------------------------------------ Constructor
+
+    private const int DaysPerWeek = 7;
+    private const int MaxWeekRows = 6;
+
+    // ------------------------------------------------------------------ Swipe & animation tuning
+
+    // スワイプで月切り替えが発動するまでの最小水平移動距離 (dp)。小さいほど反応が速い
+    private const double SwipeThreshold = 36d;
+
+    // フリック(短い素早いスワイプ)を検知する最小ステップ幅 (dp)。小さいほど素早いフリックに反応しやすい
+    private const double SwipeFlickThreshold = 20d;
+
+    // 水平方向のずれが垂直方向の何倍以上でないとスワイプと見なさない。大きいほど縦スクロールとの誤検知が減る
+    private const double SwipeHorizontalBias = 1.25d;
+
+    private readonly WeekRowVisual[] weekRows = new WeekRowVisual[MaxWeekRows];
+
+    private sealed class EventBorderVisual
+    {
+        private readonly RoundRectangle shape = new();
+
+        public Label Label { get; } = new()
+        {
+            FontAttributes = FontAttributes.Bold,
+            LineBreakMode = LineBreakMode.TailTruncation,
+            VerticalTextAlignment = TextAlignment.Center
+        };
+
+        public Border Root { get; }
+
+        public TapGestureRecognizer TapGesture { get; } = new();
+
+        public EventBorderVisual()
+        {
+            Root = new Border { StrokeThickness = 0, Content = Label };
+            Root.GestureRecognizers.Add(TapGesture);
+        }
+
+        public void Apply(EventPlacement placement, double fontSize, double rowHeight)
+        {
+            var evt = placement.Event;
+            Label.Text = evt.Title;
+            Label.FontSize = fontSize;
+            Label.TextColor = evt.TextColor;
+            Label.TextDecorations = evt.Underline ? TextDecorations.Underline : TextDecorations.None;
+
+            if (evt.Style == ScheduleStyle.Filled)
+            {
+                var left = placement.ContinuesFromPreviousWeek ? 0 : 2;
+                var right = placement.ContinuesToNextWeek ? 0 : 2;
+                shape.CornerRadius = new CornerRadius(left, right, left, right);
+                Root.BackgroundColor = evt.BackgroundColor;
+                Root.StrokeShape = shape;
+                Root.Padding = new Thickness(4, 0);
+                Root.HeightRequest = rowHeight;
+                Root.Margin = new Thickness(
+                    placement.ContinuesFromPreviousWeek ? 0 : 1, 1,
+                    placement.ContinuesToNextWeek ? 0 : 1, 0);
+            }
+            else
+            {
+                Root.BackgroundColor = Colors.Transparent;
+                Root.StrokeShape = null;
+                Root.Padding = new Thickness(4, 0);
+                Root.HeightRequest = rowHeight;
+                Root.Margin = new Thickness(1, 1, 1, 0);
+            }
+
+            TapGesture.CommandParameter = evt;
+        }
+    }
+
+    private sealed class WeekRowVisual
+    {
+        public WeekRowVisual()
+        {
+            Root = new Grid
+            {
+                ColumnSpacing = 0,
+                RowSpacing = 0,
+                VerticalOptions = LayoutOptions.Fill,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+            for (var i = 0; i < DaysPerWeek; i++)
+            {
+                Root.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+            }
+
+            for (var i = 0; i < DaysPerWeek; i++)
+            {
+                var day = new DayCellVisual();
+                Days[i] = day;
+
+                Grid.SetColumn(day.Background, i);
+                Grid.SetRow(day.Background, 0);
+                Root.Children.Add(day.Background);
+
+                Grid.SetColumn(day.RangeBackground, i);
+                Grid.SetRow(day.RangeBackground, 0);
+                Root.Children.Add(day.RangeBackground);
+            }
+
+            Grid.SetRow(TopDivider, 0);
+            Grid.SetColumnSpan(TopDivider, DaysPerWeek);
+            Root.Children.Add(TopDivider);
+
+            for (var i = 0; i < VerticalDividers.Length; i++)
+            {
+                var divider = VerticalDividers[i];
+                Grid.SetColumn(divider, i);
+                Grid.SetRow(divider, 0);
+                Root.Children.Add(divider);
+            }
+
+            for (var i = 0; i < DaysPerWeek; i++)
+            {
+                var day = Days[i];
+                Grid.SetColumn(day.TapTarget, i);
+                Grid.SetRow(day.TapTarget, 0);
+                Root.Children.Add(day.TapTarget);
+
+                Grid.SetColumn(day.DateBubble, i);
+                Grid.SetRow(day.DateBubble, 0);
+                Root.Children.Add(day.DateBubble);
+            }
+        }
+
+        public Grid Root { get; }
+
+        public DayCellVisual[] Days { get; } = new DayCellVisual[DaysPerWeek];
+
+        public BoxView TopDivider { get; } = new()
+        {
+            HeightRequest = 0.5,
+            VerticalOptions = LayoutOptions.Start,
+            InputTransparent = true
+        };
+
+        public BoxView[] VerticalDividers { get; } = Enumerable.Range(0, DaysPerWeek - 1)
+            .Select(_ => new BoxView
+            {
+                WidthRequest = 0.5,
+                HorizontalOptions = LayoutOptions.End,
+                InputTransparent = true
+            })
+            .ToArray();
+
+        public List<EventBorderVisual> EventPool { get; } = [];
+
+        // [DIFF-UPDATE: UpdateRows] slotCount が変わらなければ RowDefinitions を再生成しない
+        // [DIFF-UPDATE: HideDynamic] 前回使用した数だけループすれば十分
+        internal int LastSlotCount { get; set; } = -1;
+
+        internal int ActiveEventCount { get; set; }
+
+        internal int[] ActiveStampCounts { get; } = new int[DaysPerWeek];
+
+        public void UpdateRows(int slotCount, double dateRowHeight, double slotRowHeight)
+        {
+            // [DIFF-UPDATE: UpdateRows] slotCount が同じなら再構築をスキップ
+            if (slotCount == LastSlotCount)
+            {
+                return;
+            }
+            LastSlotCount = slotCount;
+
+            var totalRows = 2 + slotCount;
+            Root.RowDefinitions.Clear();
+            Root.RowDefinitions.Add(new RowDefinition(new GridLength(dateRowHeight)));
+            for (var i = 0; i < slotCount; i++)
+            {
+                Root.RowDefinitions.Add(new RowDefinition(new GridLength(slotRowHeight)));
+            }
+            Root.RowDefinitions.Add(new RowDefinition(GridLength.Star));
+
+            for (var i = 0; i < DaysPerWeek; i++)
+            {
+                Grid.SetRowSpan(Days[i].Background, totalRows);
+                Grid.SetRowSpan(Days[i].RangeBackground, totalRows);
+                Grid.SetRowSpan(Days[i].TapTarget, totalRows);
+            }
+            foreach (var divider in VerticalDividers)
+            {
+                Grid.SetRowSpan(divider, totalRows);
+            }
+        }
+
+        // Hide pooled event and stamp views without removing them from the visual tree.
+        public void HideDynamicViews()
+        {
+            // [DIFF-UPDATE: HideDynamic] 前回使用数だけループして非表示にする(全件走査を回避)
+            for (var i = 0; i < ActiveEventCount; i++)
+            {
+                EventPool[i].Root.IsVisible = false;
+            }
+            ActiveEventCount = 0;
+
+            for (var c = 0; c < DaysPerWeek; c++)
+            {
+                var pool = Days[c].StampLabelPool;
+                var count = ActiveStampCounts[c];
+                for (var i = 0; i < count; i++)
+                {
+                    pool[i].IsVisible = false;
+                }
+                ActiveStampCounts[c] = 0;
+            }
+        }
+    }
+
+    private sealed class DayCellVisual
+    {
+        public BoxView Background { get; } = new() { InputTransparent = true, IsVisible = false };
+
+        public BoxView RangeBackground { get; } = new() { InputTransparent = true, IsVisible = false };
+
+        public Border TapTarget { get; } = new()
+        {
+            BackgroundColor = Colors.Transparent,
+            StrokeThickness = 0
+        };
+
+        public Label DateLabel { get; } = new()
+        {
+            FontAttributes = FontAttributes.Bold,
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center,
+            InputTransparent = true
+        };
+
+        public Border DateBubble { get; }
+
+        public TapGestureRecognizer TapGesture { get; } = new();
+
+        public PanGestureRecognizer PanGesture { get; } = new();
+
+        public Command<DayView>? TapCommand { get; set; }
+
+        // スタンプ表示用の再利用可能な Label プール
+        public List<Label> StampLabelPool { get; } = [];
+
+#pragma warning disable IDE0032
+        // [DIFF-UPDATE: DateBubble] RoundRectangle を毎回 new せず同一インスタンスを再利用
+        private readonly RoundRectangle dateBubbleShape = new() { CornerRadius = new CornerRadius(2) };
+
+        internal RoundRectangle DateBubbleShape => dateBubbleShape;
+#pragma warning restore IDE0032
+
+        public DayCellVisual()
+        {
+            DateBubble = new Border
+            {
+                StrokeThickness = 0,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Start,
+                Padding = 0,
+                InputTransparent = true,
+                Content = DateLabel
+            };
+            TapTarget.GestureRecognizers.Add(TapGesture);
+            TapTarget.GestureRecognizers.Add(PanGesture);
+        }
+    }
+
+    // Direction of the last month navigation: +1 = forward (next), -1 = backward (prev), 0 = jump
+    private int lastNavDirection;
+    private int previousYear;
+    private int previousMonth;
+
+    // [DIFF-UPDATE: Header] Nav ボタン・パディングなどの不変プロパティは初回のみ設定
+    private bool headerStyleInitialized;
+
+    public CalendarView()
+    {
+        InitializeComponent();
+
+        // Pre-create the six fixed week rows and forty-two fixed day cells.
+        for (var i = 0; i < MaxWeekRows; i++)
+        {
+            var row = new WeekRowVisual();
+            Grid.SetRow(row.Root, i);
+            WeeksHost.Children.Add(row.Root);
+            weekRows[i] = row;
+        }
+
+        // 曜日ヘッダーは初期化時に一度だけ構築する(FirstDayOfWeek/Culture変更時に再構築)
+        UpdateWeekdayHeaderLabels();
+
+        // ヘッダー・月インジケータは初期状態をデフォルトで確立する
+        ApplyHeaderTemplate();
+        ApplyMonthIndicatorTemplate();
+
+        AttachSwipeGestures();
+    }
+
+    // ------------------------------------------------------------------ Property changed callbacks
+
+    private static void OnViewChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if ((bindable is CalendarView view) && (newValue is MonthView month))
+        {
+            view.Render(month);
+        }
+    }
+
+    private static void OnRenderPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is CalendarView view)
+        {
+            // [DIFF-UPDATE: DayCell] 色などのプロパティ変更時はキャッシュを破棄して全セルを再描画
+            view.InvalidateDayCellCaches();
+            if (view.View is { } month)
+            {
+                view.Render(month);
+            }
+        }
+    }
+
+    // BindableProperty (色・サイズ) 変更時にキャッシュを無効化する
+    private void InvalidateDayCellCaches()
+    {
+        // [DIFF-UPDATE: Header] 不変プロパティも再設定させる
+        headerStyleInitialized = false;
+        // [DIFF-UPDATE: UpdateRows] slotCount キャッシュをリセット
+        foreach (var row in weekRows)
+        {
+            row.LastSlotCount = -1;
+        }
+    }
+
+    private static void OnFirstDayOfWeekChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is CalendarView view)
+        {
+            view.UpdateWeekdayHeaderLabels();
+            if (view.View is { } month)
+            {
+                view.Render(month);
+            }
+        }
+    }
+
+    private static void OnSwipeEnabledChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is CalendarView view)
+        {
+            view.UpdateSwipeGestureState((bool)newValue);
+        }
+    }
+
+    private static void OnHeaderTemplateChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is CalendarView view)
+        {
+            view.ApplyHeaderTemplate();
+            if (view.View is { } month)
+            {
+                view.UpdateHeaderContent(month);
+            }
+        }
+    }
+
+    private static void OnMonthIndicatorChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is CalendarView view)
+        {
+            view.ApplyMonthIndicatorTemplate();
+            if (view.View is { } month)
+            {
+                view.UpdateMonthIndicator(month);
+            }
+        }
+    }
+
+    private static void OnSelectionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if ((bindable is CalendarView view) && (view.View is { } month))
+        {
+            view.RebuildWeeksHostOnly(month);
+        }
+    }
+
+    private static void OnSelectedDatesChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var view = (CalendarView)bindable;
+        if (oldValue is ObservableCollection<DateOnly> old)
+        {
+            old.CollectionChanged -= view.OnSelectedDatesCollectionChanged;
+        }
+        if (newValue is ObservableCollection<DateOnly> next)
+        {
+            next.CollectionChanged += view.OnSelectedDatesCollectionChanged;
+        }
+        if (view.View is { } month)
+        {
+            view.RebuildWeeksHostOnly(month);
+        }
+    }
+
+    private static void OnCultureChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is CalendarView view)
+        {
+            view.UpdateWeekdayHeaderLabels();
+            if (view.View is { } month)
+            {
+                view.Render(month);
+            }
+        }
+    }
+
+    private void OnSelectedDatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (View is { } month)
+        {
+            RebuildWeeksHostOnly(month);
+        }
+    }
+
+    // ------------------------------------------------------------------ Render
+
+    private void Render(MonthView month)
+    {
+        var sw = Stopwatch.StartNew();
+
+        // Determine navigation direction from previous displayed month.
+        // lastNavDirection is pre-set by swipe; otherwise auto-detect from date comparison.
+        if ((lastNavDirection == 0) && (previousYear != 0))
+        {
+            var prevOrdinal = (previousYear * 12) + previousMonth;
+            var newOrdinal = (month.Year * 12) + month.Month;
+            lastNavDirection = newOrdinal > prevOrdinal ? 1 : newOrdinal < prevOrdinal ? -1 : 0;
+        }
+
+        previousYear = month.Year;
+        previousMonth = month.Month;
+
+        var t0 = sw.Elapsed;
+
+        UpdateHeaderContent(month);
+        UpdateMonthIndicator(month);
+
+        // [DIFF-UPDATE: Header] フォント・サイズ・パディングなどの不変プロパティは初回のみ設定
+        if (!headerStyleInitialized)
+        {
+            headerStyleInitialized = true;
+            YearLabel.FontSize = YearFontSize;
+            MonthLabel.FontSize = MonthFontSize;
+
+            PrevButton.TextColor = NavButtonColor;
+            PrevButton.FontSize = NavButtonFontSize;
+            PrevButton.WidthRequest = NavButtonWidth;
+            PrevButton.HeightRequest = NavButtonHeight;
+            NextButton.TextColor = NavButtonColor;
+            NextButton.FontSize = NavButtonFontSize;
+            NextButton.WidthRequest = NavButtonWidth;
+            NextButton.HeightRequest = NavButtonHeight;
+
+            HeaderGrid.Padding = HeaderPadding;
+            WeekdayHeaderGrid.Padding = WeekdayHeaderPadding;
+        }
+
+        var t1 = sw.Elapsed;
+
+        var slotCount = Math.Max(2, month.Weeks.Count > 0 ? month.Weeks.Max(static w => w.SlotCount) : 0);
+
+        var t2 = sw.Elapsed;
+
+        RebuildWeeksHost(month, slotCount);
+
+        var t3 = sw.Elapsed;
+
+        //AnimateSlideAsync().FireAndForget();
+        lastNavDirection = 0;
+
+        sw.Stop();
+        Debug.WriteLine(
+            $"[Render] {month.Year}/{month.Month:D2} {sw.Elapsed.TotalMilliseconds:F3}ms" +
+            $" | Header: {(t1 - t0).TotalMilliseconds:F3}ms" +
+            $" | SlotCount: {(t2 - t1).TotalMilliseconds:F3}ms" +
+            $" | RebuildWeeksHost: {(t3 - t2).TotalMilliseconds:F3}ms");
+    }
+
+    private void RebuildWeeksHost(MonthView month, int slotCount)
+    {
+        var sw = Stopwatch.StartNew();
+        var weekCount = month.Weeks.Count;
+
+        for (var i = 0; i < MaxWeekRows; i++)
+        {
+            var row = weekRows[i];
+            row.Root.IsVisible = i < weekCount;
+            if (i < weekCount)
+            {
+                var t0 = sw.Elapsed;
+                UpdateWeekRow(row, month.Weeks[i], slotCount);
+                var t1 = sw.Elapsed;
+                Debug.WriteLine(
+                    $"[RebuildWeeksHost] week[{i}] {(t1 - t0).TotalMilliseconds:F3}ms");
+            }
+            else
+            {
+                row.HideDynamicViews();
+            }
+        }
+
+        sw.Stop();
+        Debug.WriteLine($"[RebuildWeeksHost] total {sw.Elapsed.TotalMilliseconds:F3}ms");
+    }
+
+    // Update only fixed day-cell state. Used when selection/color state changes.
+    private void RebuildWeeksHostOnly(MonthView month)
+    {
+        for (var weekIndex = 0; weekIndex < Math.Min(MaxWeekRows, month.Weeks.Count); weekIndex++)
+        {
+            var row = weekRows[weekIndex];
+            var week = month.Weeks[weekIndex];
+            for (var dayIndex = 0; dayIndex < DaysPerWeek; dayIndex++)
+            {
+                UpdateDayCell(row.Days[dayIndex], week.Days[dayIndex]);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------ Template helpers
+
+    // HeaderTemplate が設定されていれば HeaderContentHost にカスタムビューを生成し、
+    // 未設定の場合はデフォルトの HeaderGrid に切り替える
+    private void ApplyHeaderTemplate()
+    {
+        var template = HeaderTemplate;
+        if (template is null)
+        {
+            // デフォルトに戻す
+            HeaderContentHost.Content = HeaderGrid;
+        }
+        else
+        {
+            var view = (View)template.CreateContent();
+            HeaderContentHost.Content = view;
+        }
+    }
+
+    // ヘッダーのコンテンツに現在の月を反映させる。
+    // カスタムテンプレートの場合は BindingContext に MonthView をセット。
+    // デフォルトの場合は YearLabel / MonthLabel を直接更新
+    private void UpdateHeaderContent(MonthView month)
+    {
+        if (HeaderTemplate is not null)
+        {
+            HeaderContentHost.BindingContext = month;
+        }
+        else
+        {
+            YearLabel.Text = month.Year.ToString(CultureInfo.InvariantCulture);
+            YearLabel.TextColor = YearTextColor;
+            MonthLabel.Text = GetMonthDisplayName(month.Month);
+            MonthLabel.TextColor = MonthTextColor;
+        }
+    }
+
+    // MonthIndicatorTemplate / MonthIndicatorEnabled に応じて MonthIndicatorHost にビューを設定する
+    private void ApplyMonthIndicatorTemplate()
+    {
+        var template = MonthIndicatorTemplate;
+        if (template is not null)
+        {
+            MonthIndicatorHost.Content = (View)template.CreateContent();
+            MonthIndicatorHost.IsVisible = true;
+        }
+        else if (MonthIndicatorEnabled)
+        {
+            MonthIndicatorHost.Content = BuildDefaultMonthIndicator();
+            MonthIndicatorHost.IsVisible = true;
+        }
+        else
+        {
+            MonthIndicatorHost.Content = null;
+            MonthIndicatorHost.IsVisible = false;
+        }
+    }
+
+    // 月インジケータのコンテンツに現在の月を反映させる
+    private void UpdateMonthIndicator(MonthView month)
+    {
+        if (MonthIndicatorTemplate is not null)
+        {
+            MonthIndicatorHost.BindingContext = month;
+        }
+        else if (MonthIndicatorEnabled && (MonthIndicatorHost.Content is Label indicatorLabel))
+        {
+            indicatorLabel.Text = month.Month.ToString(CultureInfo.InvariantCulture);
+            indicatorLabel.TextColor = MonthIndicatorColor;
+            indicatorLabel.FontSize = MonthIndicatorFontSize;
+        }
+    }
+
+    private static Label BuildDefaultMonthIndicator() => new()
+    {
+        HorizontalTextAlignment = TextAlignment.Center,
+        VerticalTextAlignment = TextAlignment.Center,
+        FontAttributes = FontAttributes.Bold,
+        InputTransparent = true
+    };
+
+    private void UpdateWeekdayHeaderLabels()
+    {
+        WeekdayHeaderGrid.Children.Clear();
+        var start = (int)FirstDayOfWeek;
+        for (var i = 0; i < DaysPerWeek; i++)
+        {
+            var dayOfWeek = (DayOfWeek)((start + i) % DaysPerWeek);
+            var label = new Label
+            {
+                Text = GetDayOfWeekShortName(dayOfWeek),
+                FontSize = WeekdayHeaderFontSize,
+                HorizontalTextAlignment = TextAlignment.Center,
+                TextColor = dayOfWeek == DayOfWeek.Saturday ? SaturdayHeaderColor
+                    : dayOfWeek == DayOfWeek.Sunday ? SundayHeaderColor
+                    : WeekdayHeaderColor
+            };
+            Grid.SetColumn(label, i);
+            WeekdayHeaderGrid.Children.Add(label);
+        }
+    }
+
+    private string GetDayOfWeekShortName(DayOfWeek dow)
+    {
+        var culture = Culture;
+        if (culture is not null)
+        {
+            // Use the culture's abbreviated day name, truncated to 1 char for compact display.
+            var abbreviated = culture.DateTimeFormat.GetAbbreviatedDayName(dow);
+            return abbreviated.Length > 0 ? abbreviated[..1].ToUpper(culture) : abbreviated;
+        }
+
+        return dow switch
+        {
+            DayOfWeek.Monday => "月",
+            DayOfWeek.Tuesday => "火",
+            DayOfWeek.Wednesday => "水",
+            DayOfWeek.Thursday => "木",
+            DayOfWeek.Friday => "金",
+            DayOfWeek.Saturday => "土",
+            DayOfWeek.Sunday => "日",
+            _ => string.Empty
+        };
+    }
+
+    private string GetMonthDisplayName(int month)
+    {
+        var culture = Culture;
+        if (culture is not null)
+        {
+            return culture.DateTimeFormat.GetMonthName(month).ToUpper(culture);
+        }
+        return $"{month}\u6708";
+    }
+
+    private void UpdateWeekRow(WeekRowVisual row, WeekView week, int slotCount)
+    {
+        var sw = Stopwatch.StartNew();
+
+        var totalRows = 2 + slotCount;
+        row.UpdateRows(slotCount, DateRowHeight, SlotRowHeight);
+        row.TopDivider.Color = GridLineColor;
+        foreach (var divider in row.VerticalDividers)
+        {
+            divider.Color = GridLineColor;
+        }
+
+        var t0 = sw.Elapsed;
+
+        for (var c = 0; c < DaysPerWeek; c++)
+        {
+            UpdateDayCell(row.Days[c], week.Days[c]);
+        }
+
+        var t1 = sw.Elapsed;
+
+        row.HideDynamicViews();
+
+        var t2 = sw.Elapsed;
+
+        AddStampViews(row, week, totalRows);
+
+        var t3 = sw.Elapsed;
+
+        AddEventViews(row, week);
+
+        var t4 = sw.Elapsed;
+
+        Debug.WriteLine(
+            $"[UpdateWeekRow] {week.Days[0].Date:MM/dd}" +
+            $" | DayCells: {(t1 - t0).TotalMilliseconds:F3}ms" +
+            $" | HideDynamic: {(t2 - t1).TotalMilliseconds:F3}ms" +
+            $" | Stamps: {(t3 - t2).TotalMilliseconds:F3}ms" +
+            $" | Events: {(t4 - t3).TotalMilliseconds:F3}ms" +
+            $" | Total: {t4.TotalMilliseconds:F3}ms");
+    }
+
+    private void UpdateDayCell(DayCellVisual cell, DayView day)
+    {
+        var background = GetCellBackgroundColor(day);
+        cell.Background.Color = background;
+        cell.Background.IsVisible = !Equals(background, Colors.Transparent);
+
+        var rangeBackground = GetRangeCellBackground(day.Date);
+        cell.RangeBackground.Color = rangeBackground;
+        cell.RangeBackground.IsVisible = !Equals(rangeBackground, Colors.Transparent);
+
+        UpdateDateNumberView(cell, day);
+
+        cell.TapTarget.IsEnabled = !IsDateDisabled(day.Date);
+        cell.TapCommand ??= new Command<DayView>(OnDayTapped);
+        cell.TapGesture.Command = cell.TapTarget.IsEnabled ? cell.TapCommand : null;
+        cell.TapGesture.CommandParameter = cell.TapTarget.IsEnabled ? day : null;
+    }
+
+    private void AddStampViews(WeekRowVisual row, WeekView week, int totalRows)
+    {
+        for (var c = 0; c < DaysPerWeek; c++)
+        {
+            var cell = row.Days[c];
+            var stamps = week.Days[c].Stamps;
+
+            // 必要なスタンプ数に合わせてプールを拡張し、初回のみ Grid に追加
+            while (cell.StampLabelPool.Count < stamps.Count)
+            {
+                var newLabel = new Label { InputTransparent = true };
+                cell.StampLabelPool.Add(newLabel);
+                Grid.SetColumn(newLabel, c);
+                row.Root.Children.Add(newLabel);
+            }
+
+            var m = StampMarginEdge;
+            for (var i = 0; i < stamps.Count; i++)
+            {
+                var label = cell.StampLabelPool[i];
+                var stamp = stamps[i];
+                label.Text = stamp.Glyph;
+                label.FontSize = stamp.FontSize;
+                label.Opacity = stamp.Opacity;
+                label.HorizontalTextAlignment = TextAlignment.Center;
+                label.VerticalTextAlignment = TextAlignment.Center;
+
+                (label.HorizontalOptions, label.VerticalOptions, label.Margin) = stamp.Position switch
+                {
+                    StampPosition.TopLeft => (LayoutOptions.Start, LayoutOptions.Start, new Thickness(m, 0, 0, 0)),
+                    StampPosition.TopCenter => (LayoutOptions.Center, LayoutOptions.Start, new Thickness(0)),
+                    StampPosition.TopRight => (LayoutOptions.End, LayoutOptions.Start, new Thickness(0, 0, m, 0)),
+                    StampPosition.BottomLeft => (LayoutOptions.Start, LayoutOptions.End, new Thickness(m, 0, 0, m)),
+                    StampPosition.BottomCenter => (LayoutOptions.Center, LayoutOptions.End, new Thickness(0, 0, 0, m)),
+                    StampPosition.BottomRight => (LayoutOptions.End, LayoutOptions.End, new Thickness(0, 0, m, m)),
+                    _ => (LayoutOptions.Center, LayoutOptions.Center, new Thickness(0))
+                };
+
+                Grid.SetRow(label, 0);
+                Grid.SetRowSpan(label, totalRows);
+                label.IsVisible = true;
+            }
+
+            // [DIFF-UPDATE: HideDynamic] 次回 HideDynamicViews で使用数だけ非表示にするために記録
+            row.ActiveStampCounts[c] = stamps.Count;
+        }
+    }
+
+    private void AddEventViews(WeekRowVisual row, WeekView week)
+    {
+        var placements = week.EventPlacements;
+
+        // プールを拡張し、初回のみ Grid に追加
+        while (row.EventPool.Count < placements.Count)
+        {
+            var visual = new EventBorderVisual
+            {
+                TapGesture =
+                {
+                    Command = new Command<ScheduleEvent>(OnEventTapped)
+                }
+            };
+            row.EventPool.Add(visual);
+            row.Root.Children.Add(visual.Root);
+        }
+
+        for (var i = 0; i < placements.Count; i++)
+        {
+            var visual = row.EventPool[i];
+            var placement = placements[i];
+            visual.Apply(placement, EventFontSize, EventRowHeight);
+            Grid.SetColumn(visual.Root, placement.StartColumn);
+            Grid.SetColumnSpan(visual.Root, placement.ColumnSpan);
+            Grid.SetRow(visual.Root, placement.Slot + 1);
+            visual.Root.IsVisible = true;
+        }
+
+        // [DIFF-UPDATE: HideDynamic] 次回 HideDynamicViews で使用数だけ非表示にするために記録
+        row.ActiveEventCount = placements.Count;
+    }
+
+    // ------------------------------------------------------------------ View builders
+
+    private void UpdateDateNumberView(DayCellVisual cell, DayView day)
+    {
+        var disabled = IsDateDisabled(day.Date);
+        var selected = IsDateSelected(day.Date);
+
+        Color textColor;
+        Color bubbleBg;
+
+        if (disabled)
+        {
+            textColor = DisabledDayTextColor;
+            bubbleBg = Colors.Transparent;
+        }
+        else if (selected)
+        {
+            textColor = SelectedDayTextColor;
+            bubbleBg = SelectedDayBackground;
+        }
+        else if (day.IsToday)
+        {
+            textColor = TodayTextColor;
+            bubbleBg = TodayBackground;
+        }
+        else
+        {
+            textColor = GetDateTextColor(day);
+            bubbleBg = Colors.Transparent;
+        }
+
+        cell.DateLabel.Text = day.Date.Day.ToString(CultureInfo.InvariantCulture);
+        cell.DateLabel.FontSize = DateNumberFontSize;
+        cell.DateLabel.TextColor = textColor;
+        cell.DateLabel.WidthRequest = DateNumberSize;
+        cell.DateLabel.HeightRequest = DateNumberSize;
+
+        cell.DateBubble.BackgroundColor = bubbleBg;
+        cell.DateBubble.Margin = DateNumberMargin;
+        // [DIFF-UPDATE: DateBubble] 毎回 new RoundRectangle を避け同一インスタンスを再利用
+        cell.DateBubble.StrokeShape = !Equals(bubbleBg, Colors.Transparent) ? cell.DateBubbleShape : null;
+    }
+
+    // ------------------------------------------------------------------ Color helpers
+
+    private Color GetCellBackgroundColor(DayView day)
+    {
+        if (!day.IsCurrentMonth)
+        {
+            return OutsideMonthBackground;
+        }
+        return day.Kind switch
+        {
+            DayKind.Saturday or DayKind.Sunday or DayKind.Holiday => WeekendBackground,
+            _ => Colors.Transparent
+        };
+    }
+
+    private Color GetDateTextColor(DayView day)
+    {
+        if (!day.IsCurrentMonth)
+        {
+            return OutsideMonthTextColor;
+        }
+        return day.Kind switch
+        {
+            DayKind.Sunday or DayKind.Holiday => SundayTextColor,
+            DayKind.Saturday => SaturdayTextColor,
+            _ => WeekdayTextColor
+        };
+    }
+
+    // ------------------------------------------------------------------ Selection / disabled helpers
+
+    private bool IsDateDisabled(DateOnly date)
+    {
+        if ((MinDate is { } min) && (date < min))
+        {
+            return true;
+        }
+        if ((MaxDate is { } max) && (date > max))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsDateSelected(DateOnly date) => SelectionMode switch
+    {
+        CalendarSelectionMode.Single => SelectedDate == date,
+        CalendarSelectionMode.Multiple => SelectedDates?.Contains(date) == true,
+        CalendarSelectionMode.Range => IsInRange(date, endpoints: true),
+        _ => false
+    };
+
+    // Returns true for the interior of the range (excluding endpoints, which are drawn as full bubbles).
+    private Color GetRangeCellBackground(DateOnly date)
+    {
+        if (SelectionMode != CalendarSelectionMode.Range)
+        {
+            return Colors.Transparent;
+        }
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
+        {
+            return Colors.Transparent;
+        }
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+        return ((date > start) && (date < end)) ? RangeBackground : Colors.Transparent;
+    }
+
+    private bool IsInRange(DateOnly date, bool endpoints)
+    {
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
+        {
+            return false;
+        }
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+        return endpoints ? ((date >= start) && (date <= end)) : ((date > start) && (date < end));
+    }
+
+    // ------------------------------------------------------------------ Swipe gestures (PanGestureRecognizer for reliable Android detection)
+
+    private PanGestureRecognizer? panGesture;
+    private double panStartX;
+    private double panStartY;
+    private double lastPanX;
+    private bool panConsumed;
+
+    private void AttachSwipeGestures()
+    {
+        panGesture = new PanGestureRecognizer();
+        panGesture.PanUpdated += OnPanUpdated;
+        foreach (var row in weekRows)
+        {
+            foreach (var day in row.Days)
+            {
+                day.PanGesture.PanUpdated += OnPanUpdated;
+            }
+        }
+        UpdateSwipeGestureState(SwipeEnabled);
+    }
+
+    private void UpdateSwipeGestureState(bool enabled)
+    {
+        if (panGesture is null)
+        {
+            return;
+        }
+
+        RootGrid.GestureRecognizers.Remove(panGesture);
+        if (enabled)
+        {
+            RootGrid.GestureRecognizers.Add(panGesture);
+        }
+    }
+
+    private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
+    {
+        switch (e.StatusType)
+        {
+            case GestureStatus.Started:
+                panStartX = e.TotalX;
+                panStartY = e.TotalY;
+                lastPanX = e.TotalX;
+                panConsumed = false;
+                break;
+
+            case GestureStatus.Running:
+                if (panConsumed)
+                {
+                    break;
+                }
+                var dx = e.TotalX - panStartX;
+                var dy = e.TotalY - panStartY;
+                var stepDx = e.TotalX - lastPanX;
+                lastPanX = e.TotalX;
+                var absDx = Math.Abs(dx);
+                var absDy = Math.Abs(dy);
+                if (absDx < 8d)
+                {
+                    break;
+                }
+                if (absDx < absDy * SwipeHorizontalBias)
+                {
+                    break;
+                }
+                if ((absDx >= SwipeThreshold) || (Math.Abs(stepDx) >= SwipeFlickThreshold))
+                {
+                    NavigateBySwipe(dx < 0 ? 1 : -1);
+                }
+                break;
+
+            case GestureStatus.Completed:
+            case GestureStatus.Canceled:
+                panConsumed = false;
+                break;
+        }
+    }
+
+    private void NavigateBySwipe(int direction)
+    {
+        if (panConsumed)
+        {
+            return;
+        }
+        panConsumed = true;
+        lastNavDirection = direction;
+        if (direction > 0)
+        {
+            NextMonthCommand?.Execute(null);
+        }
+        else
+        {
+            PrevMonthCommand?.Execute(null);
+        }
+    }
+
+    // ------------------------------------------------------------------ Tap handlers
+
+    private void OnDayTapped(DayView day)
+    {
+        var date = day.Date;
+        switch (SelectionMode)
+        {
+            case CalendarSelectionMode.Single:
+                SelectedDate = SelectedDate == date ? null : date;
+                break;
+
+            case CalendarSelectionMode.Multiple:
+                SelectedDates ??= [];
+                var list = SelectedDates;
+                if (!list.Remove(date))
+                {
+                    list.Add(date);
+                }
+                break;
+
+            case CalendarSelectionMode.Range:
+                if ((SelectedStartDate is null) || ((SelectedStartDate is not null) && (SelectedEndDate is not null)))
+                {
+                    // Start a new range.
+                    SelectedStartDate = date;
+                    SelectedEndDate = null;
+                }
+                else
+                {
+                    // Complete the range.
+                    if (date < SelectedStartDate)
+                    {
+                        (SelectedStartDate, SelectedEndDate) = (date, SelectedStartDate);
+                    }
+                    else
+                    {
+                        SelectedEndDate = date;
+                    }
+                }
+                break;
+        }
+
+        DayTappedCommand?.Execute(day);
+    }
+
+    private void OnEventTapped(ScheduleEvent evt) => EventTappedCommand?.Execute(evt);
+}

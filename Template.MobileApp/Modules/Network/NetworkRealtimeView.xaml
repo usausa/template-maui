@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkRealtimeView"
@@ -12,12 +13,69 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid RowDefinitions="100"
-          Padding="3">
-        <controls:StatControl Grid.Row="0"
-                              DataSet="{Binding CpuLoadSet}"
-                              GraphColor="#2196F3" Label="CPU used" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-    </Grid>
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="StatBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="StatGraph"
+                   TargetType="controls:StatControl">
+                <Setter Property="HeightRequest" Value="110" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <Border Style="{StaticResource StatBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <controls:StatControl Style="{StaticResource StatGraph}"
+                                      DataSet="{Binding CpuLoadSet}"
+                                      GraphColor="{StaticResource BlueDefault}"
+                                      Label="CPU used" />
+            </Border>
+
+            <Border Style="{StaticResource StatBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="80">
+                <controls:StatControl Style="{StaticResource StatGraph}"
+                                      DataSet="{Binding MemoryLoadSet}"
+                                      GraphColor="{StaticResource GreenDefault}"
+                                      Label="Memory used" />
+            </Border>
+
+            <Border Style="{StaticResource StatBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="160">
+                <controls:StatControl Style="{StaticResource StatGraph}"
+                                      DataSet="{Binding NetworkLoadSet}"
+                                      GraphColor="{StaticResource OrangeDefault}"
+                                      Label="Network I/O" />
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

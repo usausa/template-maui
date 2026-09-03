@@ -3,15 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              x:Class="Template.MobileApp.Modules.UI.UIDockView"
              x:DataType="{x:Type module:UIDockViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIDockViewModel}"
              shell:ShellProperty.Title="Dock"
              shell:ShellProperty.HeaderVisible="False"
-             shell:ShellProperty.FunctionVisible="False"
-             BackgroundColor="{StaticResource GrayDarken4}">
+             shell:ShellProperty.FunctionVisible="False">
+
+    <ContentView.Background>
+        <RadialGradientBrush Center="0.5,0.4" Radius="0.75">
+            <GradientStop Offset="0.0" Color="{StaticResource GrayDarken3}" />
+            <GradientStop Offset="1.0" Color="{StaticResource GrayDarken4}" />
+        </RadialGradientBrush>
+    </ContentView.Background>
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
@@ -30,6 +38,7 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
             <Style x:Key="DeckImageButton"
@@ -37,6 +46,7 @@
                 <Setter Property="WidthRequest" Value="80" />
                 <Setter Property="HeightRequest" Value="80" />
                 <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
             <Style x:Key="DeckButtonLabel"
@@ -90,7 +100,7 @@
                 </VerticalStackLayout>
             </DataTemplate>
 
-            <models:DeckButtonTemplateSelector x:Key="DeckButtonTemplateSelector"
+            <controls:DeckButtonTemplateSelector x:Key="DeckButtonTemplateSelector"
                                                ImageTemplate="{StaticResource ImageTemplate}"
                                                TextTemplate="{StaticResource TextTemplate}" />
 

@@ -1,0 +1,31 @@
+namespace Template.MobileApp.Graphics.Drawing;
+
+using BarcodeScanning;
+
+public sealed class BarcodeDrawing : DrawingObject
+{
+    private IReadOnlySet<BarcodeResult>? results;
+
+    public void Update(IReadOnlySet<BarcodeResult>? values)
+    {
+        results = values;
+        Invalidate();
+    }
+
+    protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
+    {
+        if ((results is not null) && (results.Count > 0))
+        {
+            var scale = 1 / canvas.DisplayScale;
+            canvas.Scale(scale, scale);
+
+            canvas.StrokeSize = 15;
+            canvas.StrokeColor = Colors.Red;
+
+            foreach (var barcode in results)
+            {
+                canvas.DrawRectangle(barcode.PreviewBoundingBox);
+            }
+        }
+    }
+}

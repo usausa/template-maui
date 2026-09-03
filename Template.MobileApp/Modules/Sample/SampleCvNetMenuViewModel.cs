@@ -8,10 +8,10 @@ public sealed class SampleCvNetMenuViewModel : AppViewModelBase
         IDialog dialog,
         Settings settings)
     {
-        var configured = !String.IsNullOrEmpty(settings.AIServiceEndPoint) && !String.IsNullOrEmpty(settings.AIServiceKey);
-
         ForwardCommand = MakeAsyncCommand<ViewId>(async x =>
         {
+            var configured = !String.IsNullOrEmpty(settings.AIServiceEndPoint) &&
+                             !String.IsNullOrEmpty(await settings.GetAIServiceKeyAsync());
             if (!configured)
             {
                 await dialog.InformationAsync("AI end point is not configured.");

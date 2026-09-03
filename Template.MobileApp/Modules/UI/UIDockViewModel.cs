@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
+#pragma warning disable CA5394
 public sealed class UIDockViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
@@ -8,14 +9,29 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private readonly IFileSystem fileSystem;
 
+    private readonly IDispatcherTimer timer;
+
+    private DeckButtonInfo? cpuButton;
+
+    private DeckButtonInfo? memButton;
+
+    private int cpuValue = 13;
+
+    private int memValue = 74;
+
     public UIDockViewModel(
         IDialog dialog,
         IScreen screen,
-        IFileSystem fileSystem)
+        IFileSystem fileSystem,
+        IDispatcher dispatcher)
     {
         this.dialog = dialog;
         this.screen = screen;
         this.fileSystem = fileSystem;
+
+        timer = dispatcher.CreateTimer();
+        timer.Interval = TimeSpan.FromSeconds(2);
+        Disposables.Add(timer.TickAsObservable().Subscribe(_ => OnTimerTick()));
     }
 
     public ObservableCollection<DeckButtonInfo> Buttons { get; } = [];
@@ -28,15 +44,31 @@ public sealed class UIDockViewModel : AppViewModelBase
         }
 
         screen.SetFullscreen(true);
+        timer.Start();
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
+        timer.Stop();
         screen.SetFullscreen(false);
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    private void OnTimerTick()
+    {
+        if ((cpuButton is null) || (memButton is null))
+        {
+            return;
+        }
+
+        // 表示のみ: 乱数ウォークで数値をゆらぎ更新する
+        cpuValue = Math.Clamp(cpuValue + Random.Shared.Next(-9, 10), 3, 97);
+        memValue = Math.Clamp(memValue + Random.Shared.Next(-5, 6), 20, 95);
+        cpuButton.Text = String.Join(Environment.NewLine, "CPU", $"{cpuValue}%");
+        memButton.Text = String.Join(Environment.NewLine, "MEM", $"{memValue}%");
+    }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -120,7 +152,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Label = "Volume up",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849"),
-                ImageBytes = await LoadImageAsync("volume_off.png"),
+                ImageBytes = await LoadImageAsync("volume_up.png"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "VolumeUp"
             });
@@ -132,7 +164,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Label = "Mute",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849"),
-                ImageBytes = await LoadImageAsync("volume_up.png"),
+                ImageBytes = await LoadImageAsync("volume_off.png"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Mute"
             });
@@ -200,30 +232,32 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Exit"
             });
-            Buttons.Add(new DeckButtonInfo
+            cpuButton = new DeckButtonInfo
             {
                 Row = 7,
                 Column = 2,
                 ButtonType = DeckButtonType.Text,
                 Label = "CPU",
-                Text = String.Join(Environment.NewLine, "CPU", "13%"),
+                Text = String.Join(Environment.NewLine, "CPU", $"{cpuValue}%"),
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "VolumeDown"
-            });
-            Buttons.Add(new DeckButtonInfo
+                Parameter = "Cpu"
+            };
+            Buttons.Add(cpuButton);
+            memButton = new DeckButtonInfo
             {
                 Row = 7,
                 Column = 3,
                 ButtonType = DeckButtonType.Text,
                 Label = "Memory",
-                Text = String.Join(Environment.NewLine, "MEM", "74%"),
+                Text = String.Join(Environment.NewLine, "MEM", $"{memValue}%"),
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "VolumeDown"
-            });
+                Parameter = "Memory"
+            };
+            Buttons.Add(memButton);
         });
     }
 
@@ -242,7 +276,7 @@ public sealed class UIDockViewModel : AppViewModelBase
     {
         if (parameter == "Exit")
         {
-            await Navigator.ForwardAsync(ViewId.UIMenu);
+            await Navigator.ForwardAsync(ViewId.UIMenu1);
         }
         else
         {
@@ -270,3 +304,4 @@ public sealed class UIDockViewModel : AppViewModelBase
         new("#FF5722", "#FF9E80")
     ];
 }
+#pragma warning restore CA5394

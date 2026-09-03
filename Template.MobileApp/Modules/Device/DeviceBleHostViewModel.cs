@@ -11,6 +11,8 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 
     private readonly IBleHostingManager hostingManager;
 
+    private readonly UserCharacteristic userCharacteristic;
+
     [ObservableProperty]
     public partial string UserId { get; set; }
 
@@ -20,10 +22,12 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
     public DeviceBleHostViewModel(
         IDialog dialog,
         IBleHostingManager hostingManager,
+        UserCharacteristic userCharacteristic,
         Settings settings)
     {
         this.dialog = dialog;
         this.hostingManager = hostingManager;
+        this.userCharacteristic = userCharacteristic;
 
         UserId = settings.UniqueId;
     }
@@ -71,9 +75,9 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 
         if (enable)
         {
-            if (!hostingManager.IsRegisteredServicesAttached)
+            if (hostingManager.Services.Count == 0)
             {
-                await hostingManager.AttachRegisteredServices();
+                await userCharacteristic.Register(hostingManager);
             }
 
             await hostingManager.StartAdvertising(new AdvertisementOptions(BleConstants.LocalName, BleConstants.UserServiceUuid));
@@ -81,7 +85,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
         else
         {
             hostingManager.StopAdvertising();
-            hostingManager.DetachRegisteredServices();
+            hostingManager.RemoveService(BleConstants.UserServiceUuid);
         }
 
         Running = enable;

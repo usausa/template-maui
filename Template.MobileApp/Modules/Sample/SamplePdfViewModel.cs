@@ -16,7 +16,10 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
     public partial int TotalPages { get; set; }
 
     [ObservableProperty]
-    public partial string PageInformation { get; set; } = default!;
+    public partial int MaxPageIndex { get; set; }
+
+    [ObservableProperty]
+    public partial string PageInformation { get; set; } = "1 / -";
 
     [ObservableProperty]
     public partial bool CanMovePrev { get; set; }
@@ -26,6 +29,10 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
 
     public ICommand PageChangedCommand { get; }
 
+    public ICommand PrevPageCommand { get; }
+
+    public ICommand NextPageCommand { get; }
+
     public SamplePdfViewModel(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
@@ -33,10 +40,13 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
         PageChangedCommand = MakeDelegateCommand<PageChangedEventArgs>(x =>
         {
             TotalPages = x.TotalPages;
+            MaxPageIndex = Math.Max(0, x.TotalPages - 1);
             PageInformation = $"{x.CurrentPage} / {x.TotalPages}";
             CanMovePrev = x.CurrentPage > 1;
             CanMoveNext = x.CurrentPage < x.TotalPages;
         });
+        PrevPageCommand = MakeDelegateCommand(() => PageIndex--);
+        NextPageCommand = MakeDelegateCommand(() => PageIndex++);
     }
 
     public override async Task OnNavigatingToAsync(INavigationContext context)

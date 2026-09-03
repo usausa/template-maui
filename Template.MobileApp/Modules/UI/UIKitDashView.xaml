@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIKitDashView"
+             x:DataType="{x:Type module:UIKitDashViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIKitDashViewModel}"
+             shell:ShellProperty.Title="Kit Dashboard"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll" TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
+            </Style>
+
+            <!-- Extra bottom padding keeps the header content clear of the overlapping heart card (-30 margin) -->
+            <Style x:Key="KitDashHeaderGrid" TargetType="Grid">
+                <Setter Property="Padding" Value="20,24,20,62" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="GreetLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Opacity" Value="0.85" />
+            </Style>
+
+            <Style x:Key="UserLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Header hub buttons (notify / settings) -->
+            <Style x:Key="KitIconButton" TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="#22FFFFFF" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
+            <Style x:Key="BellArea" TargetType="Grid">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="BellButton" TargetType="Button"
+                   BasedOn="{StaticResource KitIconButton}">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="UnreadDot" TargetType="Border">
+                <Setter Property="WidthRequest" Value="12" />
+                <Setter Property="HeightRequest" Value="12" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+            </Style>
+
+            <Style x:Key="HeartCardBorder" TargetType="Border">
+                <Setter Property="Margin" Value="16,-30,16,16" />
+                <Setter Property="Padding" Value="20" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="CardCaption" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="CardValue" TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="MetricGrid" TargetType="Grid">
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="MetricBorder" TargetType="Border">
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="MetricIcon" TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="MetricTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="MetricValue" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="MetricUnit" TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <!-- Quick link cards to other kit screens -->
+            <Style x:Key="LinkCardBorder" TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,12" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="LinkCardGrid" TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="LinkIconBorder" TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="LinkIcon" TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LinkTextStack" TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LinkTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="LinkCaption" TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="LinkChevron" TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout>
+            <Grid Style="{StaticResource KitDashHeaderGrid}"
+                  ColumnDefinitions="*,Auto,Auto"
+                  ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Style="{StaticResource GreetLabel}" Text="{Binding Greeting}" />
+                    <Label Style="{StaticResource UserLabel}" Text="{Binding UserName}" />
+                </VerticalStackLayout>
+                <Grid Grid.Column="1" Style="{StaticResource BellArea}">
+                    <Button Style="{StaticResource BellButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            Command="{Binding NotifyCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Notifications}" />
+                    <Border Style="{StaticResource UnreadDot}"
+                            behaviors:AnimationOption.Pulse="True" />
+                </Grid>
+                <Button Grid.Column="2"
+                        Style="{StaticResource KitIconButton}"
+                        Command="{Binding SettingCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Settings}" />
+            </Grid>
+
+            <Border Style="{StaticResource HeartCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource CardCaption}" Text="Average Heart Rate" />
+                    <Label Style="{StaticResource CardValue}" Text="72 bpm" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid Style="{StaticResource MetricGrid}"
+                  ColumnDefinitions="*,*"
+                  RowDefinitions="*,*">
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="80">
+                    <VerticalStackLayout>
+                        <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[0].Icon}" />
+                        <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[0].Title}" />
+                        <Label Style="{StaticResource MetricValue}" Text="{Binding Metrics[0].Value}" />
+                        <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[0].Unit}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="140">
+                    <VerticalStackLayout>
+                        <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[1].Icon}" />
+                        <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[1].Title}" />
+                        <Label Style="{StaticResource MetricValue}" Text="{Binding Metrics[1].Value}" />
+                        <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[1].Unit}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="200">
+                    <VerticalStackLayout>
+                        <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[2].Icon}" />
+                        <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[2].Title}" />
+                        <Label Style="{StaticResource MetricValue}" Text="{Binding Metrics[2].Value}" />
+                        <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[2].Unit}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="260">
+                    <VerticalStackLayout>
+                        <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[3].Icon}" />
+                        <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[3].Title}" />
+                        <Label Style="{StaticResource MetricValue}" Text="{Binding Metrics[3].Value}" />
+                        <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[3].Unit}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Quick links to other kit screens -->
+            <Border Style="{StaticResource LinkCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="320">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding TrackingCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource LinkCardGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Border Grid.Column="0" Style="{StaticResource LinkIconBorder}">
+                            <Label Style="{StaticResource LinkIcon}" Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Style="{StaticResource LinkTextStack}">
+                            <Label Style="{StaticResource LinkTitle}" Text="Order #2412" />
+                            <Label Style="{StaticResource LinkCaption}" Text="Out for delivery · ETA 12:30" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Style="{StaticResource LinkChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
+            </Border>
+
+            <Border Style="{StaticResource LinkCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="380">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OnboardCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource LinkCardGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Border Grid.Column="0" Style="{StaticResource LinkIconBorder}">
+                            <Label Style="{StaticResource LinkIcon}" Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Style="{StaticResource LinkTextStack}">
+                            <Label Style="{StaticResource LinkTitle}" Text="Getting started" />
+                            <Label Style="{StaticResource LinkCaption}" Text="3 quick steps to set up your goals" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Style="{StaticResource LinkChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

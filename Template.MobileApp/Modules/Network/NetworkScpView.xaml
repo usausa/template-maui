@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkScpView"
              x:DataType="{x:Type module:NetworkScpViewModel}"
@@ -11,8 +14,151 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource MenuGrid}">
-        <!-- Menu -->
-    </Grid>
+    <!-- SCP 転送 (SSH.NET)。接続情報は設定画面の QR で投入し、ホスト鍵は配布指紋と照合する -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="CaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="FingerprintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="RemoteEntry"
+                   TargetType="Entry">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Placeholder" Value="リモートファイル名" />
+            </Style>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="CancelButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource ActionButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="TransferProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="LogLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="接続先"
+                               Icon="{x:Static fonts:MaterialIcons.Dns}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource ValueLabel}"
+                           Text="{Binding HostDisplay}" />
+                    <Label Style="{StaticResource CaptionLabel}"
+                           IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="サーバのホスト鍵指紋 (参考表示)" />
+                    <Label Style="{StaticResource FingerprintLabel}"
+                           IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding ServerFingerprint}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="転送"
+                               Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Spacing="10">
+                    <Entry Style="{StaticResource RemoteEntry}"
+                           IsEnabled="{Binding Configured}"
+                           Text="{Binding RemoteFileName}" />
+                    <ProgressBar Style="{StaticResource TransferProgressBar}"
+                                 Progress="{Binding Progress}" />
+                    <Grid ColumnDefinitions="*,*,*"
+                          ColumnSpacing="8">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding UploadCommand}"
+                                Text="アップロード" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding DownloadCommand}"
+                                Text="ダウンロード" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource CancelButton}"
+                                Command="{Binding CancelCommand}"
+                                Text="キャンセル" />
+                    </Grid>
+                    <Label Style="{StaticResource CaptionLabel}"
+                           Text="アップロードは FilePicker で選んだファイルをリモートのホームへ、ダウンロードは上のファイル名をキャッシュへ取得する" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="ログ"
+                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160">
+                <VerticalStackLayout Spacing="4"
+                                     BindableLayout.ItemsSource="{Binding Logs}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Label Style="{StaticResource LogLabel}"
+                                   Text="{Binding .}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource CaptionLabel}"
+                               Text="まだ転送していません" />
+                    </BindableLayout.EmptyView>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

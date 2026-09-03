@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicFontView"
@@ -12,138 +14,217 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <!-- ReSharper disable MarkupAttributeTypo -->
-        <Label Text="Default"
-               FontSize="18" FontAttributes="Bold" />
-        <Label Text="+(1234567890.) ABCDEF 金額履歴"
-               FontSize="12" />
-        <Label Text="+(1234567890.) ABCDEF 金額履歴"
-               FontSize="18" />
-        <Label Text="+(1234567890.) ABCDEF 金額履歴"
-               FontSize="24" />
+            <Style x:Key="IconRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="Padding" Value="0,4" />
+            </Style>
 
-        <Label Text="OpenSansRegular"
-               FontSize="18" FontAttributes="Bold" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="OpenSansRegular" FontSize="12" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="OpenSansRegular" FontSize="18" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="OpenSansRegular" FontSize="24" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
-        <Label Text="OxaniumRegular"
-               FontSize="18" FontAttributes="Bold" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="OxaniumRegular" FontSize="12" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="OxaniumRegular" FontSize="18" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="OxaniumRegular" FontSize="24" />
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
 
-        <Label Text="Gkktt"
-               FontSize="18" FontAttributes="Bold" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="Gkktt" FontSize="12" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="Gkktt" FontSize="18" />
-        <Label Text="+(1234567890.) ABCDEF"
-               FontFamily="Gkktt" FontSize="24" />
+            <!-- ReSharper disable MarkupAttributeTypo -->
 
-        <Label Text="DSEG7"
-               FontSize="18" FontAttributes="Bold" />
-        <Label Text="1234567890."
-               FontFamily="DSEG7" FontSize="12" />
-        <Label Text="1234567890."
-               FontFamily="DSEG7" FontSize="18" />
-        <Label Text="1234567890."
-               FontFamily="DSEG7" FontSize="24" />
+            <controls:InfoCard Title="Default"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="+(1234567890.) ABCDEF 金額履歴"
+                           FontSize="12" />
+                    <Label Text="+(1234567890.) ABCDEF 金額履歴"
+                           FontSize="18" />
+                    <Label Text="+(1234567890.) ABCDEF 金額履歴"
+                           FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <Label Text="MaterialIcons"
-               FontSize="18" FontAttributes="Bold" />
-        <HorizontalStackLayout Style="{StaticResource FillHorizontalStack}">
-            <Label Text="{x:Static fonts:MaterialIcons.Stay_current_portrait}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Create}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Save_alt}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Bluetooth}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Cloud_download}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Cloud_upload}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Phone_android}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Camera_alt}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Favorite}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-            <Label Text="{x:Static fonts:MaterialIcons.Favorite_outline}"
-                   FontFamily="MaterialIcons" FontSize="28"
-                   TextColor="{StaticResource BlueDefault}" />
-        </HorizontalStackLayout>
+            <controls:InfoCard Title="OpenSansRegular"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="OpenSansRegular" FontSize="12" />
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="OpenSansRegular" FontSize="18" />
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="OpenSansRegular" FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <Label Text="FluentUI"
-               FontSize="18" FontAttributes="Bold" />
-        <HorizontalStackLayout Style="{StaticResource FillHorizontalStack}">
-            <Label Text="{x:Static fonts:FluentUI.add_circle_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-            <Label Text="{x:Static fonts:FluentUI.save_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-            <Label Text="{x:Static fonts:FluentUI.bluetooth_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-            <Label Text="{x:Static fonts:FluentUI.phone_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-            <Label Text="{x:Static fonts:FluentUI.camera_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-            <Label Text="{x:Static fonts:FluentUI.heart_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-            <Label Text="{x:Static fonts:FluentUI.star_28_regular}"
-                   FontFamily="FluentUI" FontSize="28"
-                   TextColor="{StaticResource CyanDefault}" />
-        </HorizontalStackLayout>
+            <controls:InfoCard Title="OxaniumRegular"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="OxaniumRegular" FontSize="12" />
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="OxaniumRegular" FontSize="18" />
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="OxaniumRegular" FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <Label Text="ImageSource"
-               FontSize="18" FontAttributes="Bold" />
-        <HorizontalStackLayout Style="{StaticResource FillHorizontalStack}">
-            <Image>
-                <Image.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Error}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource RedDefault}"
-                                     Size="28" />
-                </Image.Source>
-            </Image>
-            <Image>
-                <Image.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Warning}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource OrangeDefault}"
-                                     Size="28" />
-                </Image.Source>
-            </Image>
-        </HorizontalStackLayout>
+            <controls:InfoCard Title="Gkktt"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="Gkktt" FontSize="12" />
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="Gkktt" FontSize="18" />
+                    <Label Text="+(1234567890.) ABCDEF"
+                           FontFamily="Gkktt" FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <!-- ReSharper restore MarkupAttributeTypo -->
+            <controls:InfoCard Title="DSEG7"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="1234567890."
+                           FontFamily="DSEG7" FontSize="12" />
+                    <Label Text="1234567890."
+                           FontFamily="DSEG7" FontSize="18" />
+                    <Label Text="1234567890."
+                           FontFamily="DSEG7" FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-    </VerticalStackLayout>
+            <controls:InfoCard Title="JetBrainsMono"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="+(1234567890.) ABCDEF =&gt; {}"
+                           FontFamily="JetBrainsMono" FontSize="12" />
+                    <Label Text="+(1234567890.) ABCDEF =&gt; {}"
+                           FontFamily="JetBrainsMono" FontSize="18" />
+                    <Label Text="+(1234567890.) ABCDEF =&gt; {}"
+                           FontFamily="JetBrainsMono" FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="NotoSerifJP"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="金額履歴 あいうえお 1234567890"
+                           FontFamily="NotoSerifJP" FontSize="12" />
+                    <Label Text="金額履歴 あいうえお 1234567890"
+                           FontFamily="NotoSerifJP" FontSize="18" />
+                    <Label Text="金額履歴 あいうえお 1234567890"
+                           FontFamily="NotoSerifJP" FontSize="24" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="MaterialIcons"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <HorizontalStackLayout Style="{StaticResource IconRowStack}">
+                    <Label Text="{x:Static fonts:MaterialIcons.Stay_current_portrait}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Create}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Save_alt}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Bluetooth}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Cloud_download}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Cloud_upload}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Phone_android}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Camera_alt}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Favorite}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                    <Label Text="{x:Static fonts:MaterialIcons.Favorite_outline}"
+                           FontFamily="MaterialIcons" FontSize="28"
+                           TextColor="{StaticResource BlueDefault}" />
+                </HorizontalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="FluentUI"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <HorizontalStackLayout Style="{StaticResource IconRowStack}">
+                    <Label Text="{x:Static fonts:FluentUI.add_circle_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                    <Label Text="{x:Static fonts:FluentUI.save_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                    <Label Text="{x:Static fonts:FluentUI.bluetooth_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                    <Label Text="{x:Static fonts:FluentUI.phone_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                    <Label Text="{x:Static fonts:FluentUI.camera_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                    <Label Text="{x:Static fonts:FluentUI.heart_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                    <Label Text="{x:Static fonts:FluentUI.star_28_regular}"
+                           FontFamily="FluentUI" FontSize="28"
+                           TextColor="{StaticResource CyanDefault}" />
+                </HorizontalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="ImageSource"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <HorizontalStackLayout Style="{StaticResource IconRowStack}">
+                    <Image>
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Error}"
+                                             FontFamily="MaterialIcons"
+                                             Color="{StaticResource RedDefault}"
+                                             Size="28" />
+                        </Image.Source>
+                    </Image>
+                    <Image>
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Warning}"
+                                             FontFamily="MaterialIcons"
+                                             Color="{StaticResource OrangeDefault}"
+                                             Size="28" />
+                        </Image.Source>
+                    </Image>
+                </HorizontalStackLayout>
+            </controls:InfoCard>
+
+            <!-- ReSharper restore MarkupAttributeTypo -->
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             x:Class="Template.MobileApp.Controls.CalendarView2"
+             x:Name="_self">
+
+    <Grid x:Name="RootGrid"
+          RowDefinitions="Auto,Auto,Auto,*"
+          RowSpacing="0">
+
+        <!-- Header -->
+        <ContentView x:Name="HeaderContentHost"
+                     Grid.Row="0">
+            <Grid x:Name="HeaderGrid"
+                  ColumnDefinitions="Auto,*,Auto"
+                  Padding="16,12,16,8">
+                <Button x:Name="PrevButton"
+                        Grid.Column="0"
+                        VerticalOptions="Center"
+                        Command="{Binding PrevMonthCommand, Source={x:Reference _self}}"
+                        Text="◀"
+                        BackgroundColor="Transparent"
+                        BorderWidth="0" />
+                <VerticalStackLayout Grid.Column="1"
+                                     HorizontalOptions="Center" VerticalOptions="Center"
+                                     Spacing="-2">
+                    <Label x:Name="YearLabel"
+                           HorizontalTextAlignment="Center"
+                           Text="" />
+                    <Label x:Name="MonthLabel"
+                           HorizontalTextAlignment="Center"
+                           Text=""
+                           FontAttributes="Bold" />
+                </VerticalStackLayout>
+                <Button x:Name="NextButton"
+                        Grid.Column="2"
+                        VerticalOptions="Center"
+                        Command="{Binding NextMonthCommand, Source={x:Reference _self}}"
+                        Text="▶"
+                        BackgroundColor="Transparent"
+                        BorderWidth="0" />
+            </Grid>
+        </ContentView>
+
+        <!-- Divider above weekday header -->
+        <BoxView Grid.Row="1"
+                 HeightRequest="0.5"
+                 Color="#E0E0E0" />
+
+        <!-- Day of week header (Skia) -->
+        <skia:SKCanvasView x:Name="WeekdayHeaderCanvas"
+                           Grid.Row="2"
+                           HeightRequest="32"
+                           PaintSurface="OnWeekdayHeaderPaint" />
+
+        <!-- Calendar body (Skia) -->
+        <skia:SKCanvasView x:Name="BodyCanvas"
+                           Grid.Row="3"
+                           PaintSurface="OnBodyPaint" />
+
+    </Grid>
+
+</ContentView>

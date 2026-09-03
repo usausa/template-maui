@@ -27,8 +27,11 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Controller.StartPreviewAsync();
-        IsPreview = true;
+        if (await Permissions.RequestCameraAsync())
+        {
+            await Controller.StartPreviewAsync();
+            IsPreview = true;
+        }
     }
 
     public override async Task OnNavigatingFromAsync(INavigationContext context)

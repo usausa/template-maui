@@ -1,8 +1,11 @@
 namespace Template.MobileApp.Modules.Navigation.Navigate;
 
-public sealed class NavigateInitializeViewModel : AppViewModelBase
+public sealed partial class NavigateInitializeViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
+
+    [ObservableProperty]
+    public partial bool Initialized { get; set; }
 
     public NavigateInitializeViewModel(
         IDialog dialog)
@@ -30,6 +33,8 @@ public sealed class NavigateInitializeViewModel : AppViewModelBase
             {
                 await Task.Delay(3000);
             }
+
+            Initialized = true;
         });
     }
 }

@@ -43,6 +43,63 @@ public static class MapsuiBind
         }
     }
 
+    // SkiaSharp オーバーレイ (SKCanvasView) を同じコントローラへ結線する
+    public static readonly BindableProperty OverlayProperty = BindableProperty.CreateAttached(
+        "Overlay",
+        typeof(IMapsuiController),
+        typeof(MapsuiBind),
+        null,
+        propertyChanged: OverlayChanged);
+
+    public static IMapsuiController? GetOverlay(BindableObject bindable) =>
+        (IMapsuiController)bindable.GetValue(OverlayProperty);
+
+    public static void SetOverlay(BindableObject bindable, IMapsuiController? value) =>
+        bindable.SetValue(OverlayProperty, value);
+
+    private static void OverlayChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not SkiaSharp.Views.Maui.Controls.SKCanvasView view)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            var behavior = view.Behaviors.FirstOrDefault(static x => x is MapsuiOverlayBehavior);
+            if (behavior is not null)
+            {
+                view.Behaviors.Remove(behavior);
+            }
+        }
+
+        if (newValue is not null)
+        {
+            view.Behaviors.Add(new MapsuiOverlayBehavior());
+        }
+    }
+
+    private sealed class MapsuiOverlayBehavior : BehaviorBase<SkiaSharp.Views.Maui.Controls.SKCanvasView>
+    {
+        private IMapsuiController? controller;
+
+        protected override void OnAttachedTo(SkiaSharp.Views.Maui.Controls.SKCanvasView bindable)
+        {
+            base.OnAttachedTo(bindable);
+
+            controller = GetOverlay(bindable);
+            controller?.AttachOverlay(bindable);
+        }
+
+        protected override void OnDetachingFrom(SkiaSharp.Views.Maui.Controls.SKCanvasView bindable)
+        {
+            controller?.DetachOverlay(bindable);
+            controller = null;
+
+            base.OnDetachingFrom(bindable);
+        }
+    }
+
     private sealed class MapsuiBindBehavior : BehaviorBase<MapControl>
     {
         private IMapsuiController? controller;

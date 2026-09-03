@@ -17,6 +17,17 @@
         <HybridWebView Grid.Row="0"
                        DefaultFile="index.html" HybridRoot="web-app" />
 
+        <Grid x:Name="LoadingOverlay"
+              Grid.Row="0"
+              BackgroundColor="#CCFFFFFF">
+            <ActivityIndicator WidthRequest="48"
+                               HeightRequest="48"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Color="{StaticResource BlueAccent2}"
+                               IsRunning="True" />
+        </Grid>
+
     </Grid>
 
 </ContentView>

@@ -64,6 +64,8 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
 
     private void UpdateShell(BindableObject? view)
     {
+        ShellProperty.SetCurrentView(view);
+
         if (AssociatedObject?.BindingContext is IShellControl shell)
         {
             ShellProperty.UpdateShellControl(shell, view);

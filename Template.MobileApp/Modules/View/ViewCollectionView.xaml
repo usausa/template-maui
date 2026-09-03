@@ -17,14 +17,14 @@
         <ResourceDictionary>
 
             <s:BoolToTextConverter x:Key="BoolToExpandImageConverter"
-                                   TrueValue="▼"
-                                   FalseValue="▲" />
+                                   TrueValue="{x:Static font:MaterialIcons.Expand_less}"
+                                   FalseValue="{x:Static font:MaterialIcons.Expand_more}" />
             <s:BoolToColorConverter x:Key="BoolToBackgroundColorConverter"
                                     TrueValue="White"
                                     FalseValue="{StaticResource YellowLighten5}" />
 
             <Style x:Key="AddressHeaderGrid"
-                   TargetType="Label">
+                   TargetType="Grid">
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
             </Style>
@@ -46,7 +46,8 @@
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
             </Style>
 
             <Style x:Key="AddressCollectionGrid"
@@ -99,20 +100,37 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource RedDarken1}" />
             </Style>
 
+            <Style x:Key="AddressSwipeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="AddressSwipeIcon"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
             <Style x:Key="AddressSwipeLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="12" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <!-- RemainingItemsThreshold: 残り 3 グループまでスクロールしたら追加読み込み -->
     <CollectionView ItemsSource="{Binding List}"
-                    IsGrouped="True">
+                    IsGrouped="True"
+                    RemainingItemsThreshold="3"
+                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
         <CollectionView.GroupHeaderTemplate>
             <DataTemplate x:DataType="{x:Type models:AddressGroup}">
                 <Grid Style="{StaticResource AddressHeaderGrid}"
@@ -136,14 +154,22 @@
                             <SwipeItemView Style="{StaticResource AddressMailSwipe}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=MailCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
                                            CommandParameter="{Binding .}">
-                                <Label Style="{StaticResource AddressSwipeLabel}"
-                                       Text="メール" />
+                                <VerticalStackLayout Style="{StaticResource AddressSwipeStack}">
+                                    <Label Style="{StaticResource AddressSwipeIcon}"
+                                           Text="{x:Static font:MaterialIcons.Email}" />
+                                    <Label Style="{StaticResource AddressSwipeLabel}"
+                                           Text="メール" />
+                                </VerticalStackLayout>
                             </SwipeItemView>
                             <SwipeItemView Style="{StaticResource AddressPhoneSwipe}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=PhoneCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
                                            CommandParameter="{Binding .}">
-                                <Label Style="{StaticResource AddressSwipeLabel}"
-                                       Text="通話" />
+                                <VerticalStackLayout Style="{StaticResource AddressSwipeStack}">
+                                    <Label Style="{StaticResource AddressSwipeIcon}"
+                                           Text="{x:Static font:MaterialIcons.Phone}" />
+                                    <Label Style="{StaticResource AddressSwipeLabel}"
+                                           Text="通話" />
+                                </VerticalStackLayout>
                             </SwipeItemView>
                         </SwipeItems>
                     </SwipeView.RightItems>
@@ -173,6 +199,13 @@
                 </SwipeView>
             </DataTemplate>
         </CollectionView.ItemTemplate>
+        <CollectionView.Footer>
+            <Label Padding="16,12"
+                   FontSize="12"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource SecondaryTextColor}"
+                   Text="{Binding List.Count, StringFormat='{0} グループ読み込み済み (最下部で追加読み込み)'}" />
+        </CollectionView.Footer>
     </CollectionView>
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 

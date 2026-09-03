@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              xmlns:animations="clr-namespace:Template.MobileApp.Animations"
              x:Class="Template.MobileApp.Modules.View.ViewEasingView"
@@ -12,23 +15,36 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function4Text="Run"
              shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function4Enabled="True">
+             shell:ShellProperty.Function4Enabled="{Binding IsRunning, Converter={StaticResource ReverseConverter}}">
 
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="EasingBackgroundGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="3" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+            <Style x:Key="EasingCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
             </Style>
 
-            <Style x:Key="EasingLabel"
+            <Style x:Key="EasingCardGrid"
+                   TargetType="Grid">
+                <Setter Property="RowDefinitions" Value="*,Auto" />
+                <Setter Property="RowSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="EasingTrackGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="EasingNameLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
@@ -45,188 +61,298 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,*,*,*,*"
-          ColumnDefinitions="*,*,*">
+    <Grid RowDefinitions="*,*,*,*"
+          ColumnDefinitions="*,*,*"
+          RowSpacing="8"
+          ColumnSpacing="8"
+          Padding="12"
+          BackgroundColor="{StaticResource GrayLighten5}">
 
-        <Grid Grid.Row="0" Grid.Column="0"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="Linear" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.Linear}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.Linear}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.Linear}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="Linear" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="1" Grid.Column="0"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="SinOut" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.SinOut}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.SinOut}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.SinOut}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="SinOut" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="1" Grid.Column="1"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="SinIn" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.SinIn}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="0" Grid.Column="2"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.SinIn}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.SinIn}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="SinIn" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="1" Grid.Column="2"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="SinInOut" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.SinInOut}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.SinInOut}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.SinInOut}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="SinInOut" />
+            </Grid>
+        </Border>
 
+        <Border Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.CubicIn}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.CubicIn}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="CubicIn" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="2" Grid.Column="0"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="CubicIn" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.CubicIn}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="1" Grid.Column="2"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.CubicOut}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.CubicOut}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="CubicOut" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="2" Grid.Column="1"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="CubicOut" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.CubicOut}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.CubicInOut}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.CubicInOut}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="CubicInOut" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="2" Grid.Column="2"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="CubicInOut" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.CubicInOut}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.BounceOut}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.BounceOut}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="BounceOut" />
+            </Grid>
+        </Border>
 
+        <Border Grid.Row="2" Grid.Column="2"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.BounceIn}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.BounceIn}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="BounceIn" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="3" Grid.Column="0"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="BounceOut" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.BounceOut}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.SpringIn}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.SpringIn}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="SpringIn" />
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="3" Grid.Column="1"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="BounceIn" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.BounceIn}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <Border Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource EasingCardBorder}">
+            <Grid Style="{StaticResource EasingCardGrid}">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource EasingTrackGrid}">
+                    <controls:EasingCurveView Easing="{x:Static Easing.SpringOut}" />
+                    <BoxView Style="{StaticResource EasingBoxView}">
+                        <BoxView.Behaviors>
+                            <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                                <s:BeginAnimationAction>
+                                    <animations:EasingDemoAnimation Duration="2000"
+                                                                    Easing="{x:Static Easing.SpringOut}" />
+                                </s:BeginAnimationAction>
+                            </s:EventRequestBehavior>
+                        </BoxView.Behaviors>
+                    </BoxView>
+                </Grid>
+                <Label Grid.Row="1"
+                       Style="{StaticResource EasingNameLabel}"
+                       Text="SpringOut" />
+            </Grid>
+        </Border>
 
-
-        <Grid Grid.Row="4" Grid.Column="0"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="SpringIn" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.SpringIn}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
-
-        <Grid Grid.Row="4" Grid.Column="1"
-              Style="{StaticResource EasingBackgroundGrid}">
-            <Label Style="{StaticResource EasingLabel}"
-                   Text="SpringOut" />
-            <BoxView Style="{StaticResource EasingBoxView}">
-                <BoxView.Behaviors>
-                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
-                        <s:BeginAnimationAction>
-                            <animations:EasingDemoAnimation Duration="2000"
-                                                            Easing="{x:Static Easing.SpringOut}" />
-                        </s:BeginAnimationAction>
-                    </s:EventRequestBehavior>
-                </BoxView.Behaviors>
-            </BoxView>
-        </Grid>
+        <!-- 実行状態 -->
+        <Border Grid.Row="3" Grid.Column="2"
+                Style="{StaticResource EasingCardBorder}">
+            <VerticalStackLayout VerticalOptions="Center"
+                                 Spacing="4">
+                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                       FontSize="24"
+                       TextColor="{StaticResource BlueGrayDarken1}"
+                       HorizontalOptions="Center"
+                       Text="{x:Static fonts:MaterialIcons.Play_arrow}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding IsRunning}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Schedule}" />
+                            <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Label Style="{StaticResource EasingNameLabel}"
+                       Text="Run key">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding IsRunning}"
+                                     Value="True">
+                            <Setter Property="Text" Value="Running..." />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </VerticalStackLayout>
+        </Border>
 
     </Grid>
 

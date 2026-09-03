@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
+             xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIGraphView"
+             x:DataType="{x:Type module:UIGraphViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGraphViewModel}"
+             shell:ShellProperty.Title="Graph"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <conv:RefKindBrushConverter x:Key="RefBackgroundConverter" Foreground="False" />
+            <conv:RefKindBrushConverter x:Key="RefForegroundConverter" Foreground="True" />
+            <conv:AlternateRowBackgroundConverter x:Key="RowBackgroundConverter"
+                                                  EvenColor="Transparent"
+                                                  OddColor="{StaticResource GrayLighten4}" />
+
+            <Style x:Key="GraphHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="RefBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,12,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="MetaLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,16,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#FF666666" />
+            </Style>
+
+            <Style x:Key="ShaLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource MetaLabel}">
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="TextColor" Value="#FF888888" />
+            </Style>
+
+            <Style x:Key="GraphHeaderBarBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#FF2D2D30" />
+                <Setter Property="Stroke" Value="#FF2D2D30" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="10,6" />
+            </Style>
+
+            <Style x:Key="RefBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,4,0" />
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="Stroke" Value="#FF333333" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="RefListStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="6,0,4,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="Auto,*"
+          Style="{StaticResource FillGrid}">
+        <Border Grid.Row="0"
+                Style="{StaticResource GraphHeaderBarBorder}">
+            <Label Style="{StaticResource GraphHeaderLabel}"
+                   Text="{Binding HeaderText}" />
+        </Border>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Rows}"
+                        HorizontalScrollBarVisibility="Always"
+                        VerticalScrollBarVisibility="Always"
+                        SelectionMode="Single">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type graph:GraphRow}">
+                    <Grid HeightRequest="26"
+                          ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                          ColumnSpacing="0"
+                          BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <controls:GraphRowSurface Grid.Column="0"
+                                                  RowData="{Binding .}"
+                                                  VerticalOptions="Fill" />
+
+                        <HorizontalStackLayout Grid.Column="1"
+                                               Style="{StaticResource RefListStack}"
+                                               BindableLayout.ItemsSource="{Binding Refs}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type graph:GraphRef}">
+                                    <Border Style="{StaticResource RefBadgeBorder}"
+                                            BackgroundColor="{Binding Kind, Converter={StaticResource RefBackgroundConverter}}">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding Kind}"
+                                                         Value="{x:Static graph:GraphRefKind.Head}">
+                                                <Setter Property="StrokeThickness" Value="2" />
+                                                <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding Name}"
+                                               Style="{StaticResource RefBadgeLabel}"
+                                               TextColor="{Binding Kind, Converter={StaticResource RefForegroundConverter}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+
+                        <Label Grid.Column="2"
+                               Style="{StaticResource SummaryLabel}"
+                               Text="{Binding Summary}" />
+
+                        <Label Grid.Column="3"
+                               Style="{StaticResource ShaLabel}"
+                               Text="{Binding ShortSha}" />
+
+                        <Label Grid.Column="4"
+                               Style="{StaticResource MetaLabel}"
+                               Text="{Binding When, StringFormat='{0:yyyy-MM-dd}'}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentView>

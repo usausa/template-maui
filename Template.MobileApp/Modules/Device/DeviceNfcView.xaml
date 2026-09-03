@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceNfcView"
@@ -163,8 +164,48 @@
 
             <Style x:Key="LogCollectionView"
                    TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
@@ -188,13 +229,28 @@
                        Text="￥" />
                 <Label Grid.Column="1"
                        Style="{StaticResource BalanceLabel}"
-                       Text="{Binding Access.Balance, StringFormat='{0:#,0}', FallbackValue='0'}" />
+                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}"
+                       behaviors:LabelOption.CountUpFormat="{}{0:#,0}"
+                       behaviors:LabelOption.CountUpDuration="600" />
             </Grid>
         </Grid>
 
         <CollectionView Grid.Row="1"
                         Style="{StaticResource LogCollectionView}"
                         ItemsSource="{Binding Logs}">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Style="{StaticResource EmptyStack}">
+                    <Border Style="{StaticResource EmptyIconBorder}"
+                            behaviors:AnimationOption.Pulse="True">
+                        <Label Style="{StaticResource EmptyIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Contactless}" />
+                    </Border>
+                    <Label Style="{StaticResource EmptyTitleLabel}"
+                           Text="Suica をかざしてください" />
+                    <Label Style="{StaticResource EmptyHintLabel}"
+                           Text="読み取ると残高と利用履歴を表示します" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:SuicaLogData}">
                     <Border Style="{StaticResource LogBorder}">

@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleWebBasicView"
              x:DataType="{x:Type module:SampleWebBasicViewModel}"
@@ -12,11 +13,43 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function2Text="Send"
              shell:ShellProperty.Function3Text="Call"
-             shell:ShellProperty.Function4Text="Back"
+             shell:ShellProperty.Function4Text="W-Back"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True"
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="StatusBarBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="12,8" />
+            </Style>
+
+            <Style x:Key="StatusIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto">
@@ -25,9 +58,16 @@
                        behaviors:WebViewBind.Controller="{Binding Controller}"
                        DefaultFile="index.html" HybridRoot="web-basic" />
 
-        <Label Grid.Row="1"
-               Style="{StaticResource ResultLabel}"
-               Text="{Binding Result}" />
+        <Border x:Name="StatusBorder"
+                Grid.Row="1"
+                Style="{StaticResource StatusBarBorder}">
+            <HorizontalStackLayout Spacing="8">
+                <Label Style="{StaticResource StatusIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Info}" />
+                <Label Style="{StaticResource StatusTextLabel}"
+                       Text="{Binding Result}" />
+            </HorizontalStackLayout>
+        </Border>
 
     </Grid>
 

@@ -38,15 +38,3 @@ public sealed partial class DeckButtonInfo : ObservableObject
     public string Parameter { get; set; } = default!;
 }
 #pragma warning restore CA1819
-
-public class DeckButtonTemplateSelector : DataTemplateSelector
-{
-    public DataTemplate TextTemplate { get; set; } = default!;
-
-    public DataTemplate ImageTemplate { get; set; } = default!;
-
-    protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
-    {
-        return ((DeckButtonInfo)item).ButtonType == DeckButtonType.Image ? ImageTemplate : TextTemplate;
-    }
-}

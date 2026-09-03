@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicValidationView"
              x:DataType="{x:Type module:BasicValidationViewModel}"
@@ -11,54 +16,227 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <ContentPage.Behaviors>
+    <ContentView.Behaviors>
         <s:ValidationFocusBehavior Request="{Binding ValidationFocusRequest}" />
-    </ContentPage.Behaviors>
+    </ContentView.Behaviors>
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Validate on Unfocused" />
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Text1" />
-        <Entry s:Behavior.Key="Text1"
-               s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
-               Text="{Binding Text1}" />
-        <Label Style="{StaticResource ErrorMessageLabel}"
-               IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
-               Text="{Binding Errors[Text1]}" />
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
 
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Manual Validation" />
+            <Style x:Key="FieldGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Text2" />
-        <Entry s:Behavior.Key="Text2"
-               Text="{Binding Text2}" />
-        <Label Style="{StaticResource ErrorMessageLabel}"
-               IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
-               Text="{Binding Errors[Text2]}" />
+            <Style x:Key="FieldCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
 
-        <Grid Style="{StaticResource MenuGrid}"
-              RowDefinitions="*,*">
-            <Button Grid.Row="0"
-                    Command="{Binding ErrorCommand}"
-                    Text="Error" />
-            <Button Grid.Row="1"
-                    Command="{Binding ClearCommand}"
-                    Text="Clear" />
-        </Grid>
+            <Style x:Key="FieldBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
 
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Focus" />
+            <Style x:Key="ActionGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
 
-        <Grid Style="{StaticResource MenuGrid}"
-              RowDefinitions="*">
-            <Button Command="{Binding FocusCommand}"
-                    Text="Focus" />
-        </Grid>
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
 
-    </VerticalStackLayout>
+            <Style x:Key="InvalidEntry"
+                   TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="ValidEntry"
+                   TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="Validate on Unfocused"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="Text1 (clears error on focus, validates on unfocused)" />
+                    <Border Style="{StaticResource FieldBorder}"
+                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text1]}"
+                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
+                        <Entry s:Behavior.Key="Text1"
+                               s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5"
+                               Text="{Binding Text1}" />
+                    </Border>
+                    <Label Style="{StaticResource ErrorMessageLabel}"
+                           IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding Errors[Text1]}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text1]}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Manual Validation"
+                               Icon="{x:Static fonts:MaterialIcons.Rule}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <VerticalStackLayout Style="{StaticResource ActionGroupStack}">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="Text2" />
+                    <Border Style="{StaticResource FieldBorder}"
+                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text2]}"
+                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
+                        <Entry s:Behavior.Key="Text2"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5"
+                               Text="{Binding Text2}" />
+                    </Border>
+                    <Label Style="{StaticResource ErrorMessageLabel}"
+                           IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding Errors[Text2]}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text2]}" />
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Error}, Color={StaticResource RedDefault}, Size=18}"
+                                Command="{Binding ErrorCommand}"
+                                Text="Error" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Check_circle}, Color={StaticResource GreenDefault}, Size=18}"
+                                Command="{Binding ClearCommand}"
+                                Text="Clear" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Focus Request"
+                               Icon="{x:Static fonts:MaterialIcons.Input}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200">
+                <VerticalStackLayout Style="{StaticResource ActionGroupStack}">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="Moves focus to the first field with an error" />
+                    <Button Style="{StaticResource ActionButton}"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Input}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            Command="{Binding FocusCommand}"
+                            Text="Focus" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Correlation (Compare)"
+                               Icon="{x:Static fonts:MaterialIcons.Link}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="260">
+                <VerticalStackLayout Style="{StaticResource ActionGroupStack}">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="Password" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry IsPassword="True"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5"
+                               Text="{Binding Password}" />
+                    </Border>
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="Confirm ([Compare] で Password との一致を検証。Password 変更時も自動再検証)" />
+                    <Border Style="{StaticResource FieldBorder}"
+                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Confirm]}"
+                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
+                        <Entry s:Behavior.Key="Confirm"
+                               s:ValidationProperty.ValidateOnUnfocused="True"
+                               IsPassword="True"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5"
+                               Text="{Binding Confirm}" />
+                    </Border>
+                    <Label Style="{StaticResource ErrorMessageLabel}"
+                           IsVisible="{Binding Errors[Confirm], Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding Errors[Confirm]}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Confirm]}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Toolkit Validation Behaviors"
+                               Icon="{x:Static fonts:MaterialIcons.Extension}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320">
+                <VerticalStackLayout Style="{StaticResource ActionGroupStack}">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="EmailValidationBehavior (入力の度に検証し文字色が変わる)" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry Keyboard="Email"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5"
+                               Text="{Binding Email}">
+                            <Entry.Behaviors>
+                                <mct:EmailValidationBehavior Flags="ValidateOnValueChanged"
+                                                             InvalidStyle="{StaticResource InvalidEntry}"
+                                                             ValidStyle="{StaticResource ValidEntry}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Border>
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="NumericValidationBehavior (1〜100 の数値のみ)" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry Keyboard="Numeric"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5"
+                               Text="{Binding Quantity}">
+                            <Entry.Behaviors>
+                                <mct:NumericValidationBehavior Flags="ValidateOnValueChanged"
+                                                               MinimumValue="1"
+                                                               MaximumValue="100"
+                                                               InvalidStyle="{StaticResource InvalidEntry}"
+                                                               ValidStyle="{StaticResource ValidEntry}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Border>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

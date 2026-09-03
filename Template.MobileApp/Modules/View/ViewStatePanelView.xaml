@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             x:Class="Template.MobileApp.Modules.View.ViewStatePanelView">
+
+    <Border Padding="16"
+            BackgroundColor="{StaticResource GreenLighten5}"
+            Stroke="{StaticResource GreenLighten2}"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 8"
+            behaviors:AnimationOption.EnterAnimation="FadeUp">
+        <HorizontalStackLayout Spacing="12">
+            <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                   FontSize="32"
+                   TextColor="{StaticResource GreenDefault}"
+                   VerticalTextAlignment="Center"
+                   Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
+            <VerticalStackLayout Spacing="2"
+                                 VerticalOptions="Center">
+                <Label FontSize="14"
+                       TextColor="{StaticResource GrayDarken3}"
+                       Text="遅延生成されたコンテンツ" />
+                <Label FontSize="12"
+                       TextColor="{StaticResource SecondaryTextColor}"
+                       Text="LoadViewAsync が呼ばれるまでインスタンス化されない" />
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+    </Border>
+
+</ContentView>

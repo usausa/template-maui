@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules;
 
+#pragma warning disable CA1724
 public static class Parameters
 {
     private const string NextViewId = nameof(NextViewId);
@@ -20,3 +21,4 @@ public static class Parameters
     public static string GetNo(this INavigationParameter parameter) =>
         parameter.GetValue<string>(No);
 }
+#pragma warning restore CA1724

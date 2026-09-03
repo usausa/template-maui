@@ -3,10 +3,104 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Navigate"
              x:Class="Template.MobileApp.Modules.Navigation.Navigate.NavigateCancelView"
              x:DataType="{x:Type module:NavigateCancelViewModel}"
              s:BindingContextResolver.Type="{x:Type module:NavigateCancelViewModel}"
              shell:ShellProperty.Title="Cancel"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True" />
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="IconCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="IconCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="CenterHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}">
+
+        <Border Style="{StaticResource CenterCardBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <VerticalStackLayout Style="{StaticResource CardStack}">
+
+                <Border Style="{StaticResource IconCircleBorder}">
+                    <Label Style="{StaticResource IconCircleLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Help}" />
+                </Border>
+
+                <Label Style="{StaticResource CenterTitleLabel}"
+                       Text="Navigation cancel pattern" />
+
+                <BoxView Style="{StaticResource CardDivider}" />
+
+                <Label Style="{StaticResource CenterHintLabel}"
+                       Text="A confirm dialog is shown right after navigating here.&#x0a;Yes → return to the menu (cancelled)&#x0a;No → stay on this screen" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+
+</ContentView>

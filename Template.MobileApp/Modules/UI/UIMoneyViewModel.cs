@@ -19,6 +19,9 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool HasAccountAlert { get; set; }
 
+    [ObservableProperty]
+    public partial double Balance { get; set; }
+
     public ICommand PageCommand { get; }
 
     public UIMoneyViewModel()
@@ -27,11 +30,12 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
         PageCommand = MakeDelegateCommand<MoneyPage>(page => Selected = page);
 
-        NotificationCount = 99;
+        NotificationCount = 128;
         HasAccountAlert = true;
+        Balance = 20000;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

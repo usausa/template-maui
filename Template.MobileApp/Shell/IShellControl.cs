@@ -1,26 +1,20 @@
 namespace Template.MobileApp.Shell;
 
+public sealed class FunctionState
+{
+    public NotificationValue<string> Text { get; } = new(string.Empty);
+
+    public NotificationValue<bool> Enabled { get; } = new();
+}
+
 public interface IShellControl
 {
-    string Title { get; set; }
+    NotificationValue<string> Title { get; }
 
-    bool HeaderVisible { get; set; }
+    NotificationValue<bool> HeaderVisible { get; }
 
-    bool FunctionVisible { get; set; }
+    NotificationValue<bool> FunctionVisible { get; }
 
-    string Function1Text { get; set; }
-
-    string Function2Text { get; set; }
-
-    string Function3Text { get; set; }
-
-    string Function4Text { get; set; }
-
-    bool Function1Enabled { get; set; }
-
-    bool Function2Enabled { get; set; }
-
-    bool Function3Enabled { get; set; }
-
-    bool Function4Enabled { get; set; }
+    // [0]=Function1 .. [3]=Function4
+    IReadOnlyList<FunctionState> Functions { get; }
 }

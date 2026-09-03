@@ -1,9 +1,257 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Template.MobileApp.Controls.ChatView">
-    <VerticalStackLayout>
-        <Label Text="Welcome to .NET MAUI!"
-               HorizontalOptions="Center" VerticalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample.Chat"
+             x:Class="Template.MobileApp.Controls.ChatView"
+             x:Name="Root">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="MessageCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,6" />
+                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="Black"
+                                Opacity="0.08"
+                                Radius="6"
+                                Offset="0,2" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="UserCardBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource MessageCardBorder}">
+                <Setter Property="Margin" Value="48,6,12,6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="RoleIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="28" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="RoleIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="RoleNameLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="MessageTextLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="CodeBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="BackgroundColor" Value="#FF1E1E28" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="CodeTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="TextColor" Value="#FFD4EFDF" />
+            </Style>
+
+            <Style x:Key="CopyIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="#80FFFFFF" />
+            </Style>
+
+            <Style x:Key="TypingDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="8" />
+                <Setter Property="HeightRequest" Value="8" />
+                <Setter Property="Margin" Value="2,0" />
+                <Setter Property="Fill" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="TypingStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,12,0,4" />
+            </Style>
+
+            <Style x:Key="InputBarGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="InputBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+            </Style>
+
+            <Style x:Key="SendButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Assistant -->
+            <DataTemplate x:Key="AssistantTemplate"
+                          x:DataType="{x:Type models:AiChatMessage}">
+                <Border Style="{StaticResource MessageCardBorder}">
+                    <VerticalStackLayout Spacing="0">
+                        <HorizontalStackLayout Spacing="8">
+                            <Border Style="{StaticResource RoleIconBorder}">
+                                <Label Style="{StaticResource RoleIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
+                            </Border>
+                            <Label Style="{StaticResource RoleNameLabel}"
+                                   Text="Assistant" />
+                        </HorizontalStackLayout>
+                        <!-- タイピングインジケータ(3 点バウンス) -->
+                        <HorizontalStackLayout Style="{StaticResource TypingStack}"
+                                               IsVisible="{Binding IsTyping}">
+                            <Ellipse Style="{StaticResource TypingDot}"
+                                     behaviors:AnimationOption.Wave="True" />
+                            <Ellipse Style="{StaticResource TypingDot}"
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="180" />
+                            <Ellipse Style="{StaticResource TypingDot}"
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="360" />
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource MessageTextLabel}"
+                               IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}"
+                               Text="{Binding Text}" />
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+
+            <!-- Assistant (code) -->
+            <DataTemplate x:Key="CodeTemplate"
+                          x:DataType="{x:Type models:AiChatMessage}">
+                <Border Style="{StaticResource MessageCardBorder}">
+                    <VerticalStackLayout Spacing="0">
+                        <HorizontalStackLayout Spacing="8">
+                            <Border Style="{StaticResource RoleIconBorder}">
+                                <Label Style="{StaticResource RoleIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
+                            </Border>
+                            <Label Style="{StaticResource RoleNameLabel}"
+                                   Text="Assistant" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource TypingStack}"
+                                               IsVisible="{Binding IsTyping}">
+                            <Ellipse Style="{StaticResource TypingDot}"
+                                     behaviors:AnimationOption.Wave="True" />
+                            <Ellipse Style="{StaticResource TypingDot}"
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="180" />
+                            <Ellipse Style="{StaticResource TypingDot}"
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="360" />
+                        </HorizontalStackLayout>
+                        <!-- コード片(モノスペース+コピー風アイコン) -->
+                        <Border Style="{StaticResource CodeBorder}"
+                                IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}">
+                            <Grid>
+                                <Label Style="{StaticResource CodeTextLabel}"
+                                       Text="{Binding Text}" />
+                                <Label Style="{StaticResource CopyIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Content_copy}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+
+            <!-- User -->
+            <DataTemplate x:Key="UserTemplate"
+                          x:DataType="{x:Type models:AiChatMessage}">
+                <Border Style="{StaticResource UserCardBorder}">
+                    <VerticalStackLayout Spacing="0">
+                        <Label Style="{StaticResource RoleNameLabel}"
+                               Text="You" />
+                        <Label Style="{StaticResource MessageTextLabel}"
+                               Text="{Binding Text}" />
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+
+            <controls:AiChatTemplateSelector x:Key="MessageTemplateSelector"
+                                             AssistantTemplate="{StaticResource AssistantTemplate}"
+                                             CodeTemplate="{StaticResource CodeTemplate}"
+                                             UserTemplate="{StaticResource UserTemplate}" />
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="*,Auto"
+          BackgroundColor="{StaticResource GrayLighten4}">
+
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}"
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default" />
+
+        <Grid Grid.Row="1"
+              Style="{StaticResource InputBarGrid}"
+              ColumnDefinitions="*,Auto">
+            <Border Grid.Column="0"
+                    Style="{StaticResource InputBorder}">
+                <Entry Placeholder="メッセージを入力"
+                       Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}" />
+            </Border>
+            <Button Grid.Column="1"
+                    Style="{StaticResource SendButton}"
+                    Command="{Binding Source={x:Reference Root}, Path=SendCommand, x:DataType={x:Type controls:ChatView}}"
+                    Text="{x:Static fonts:MaterialIcons.Send}" />
+        </Grid>
+
+    </Grid>
+
 </ContentView>

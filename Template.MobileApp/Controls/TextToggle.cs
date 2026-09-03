@@ -195,8 +195,8 @@ public class TextToggle : SKCanvasView
         var onTextX = (onWidth - onTextWidth) / 2f;
         var offTextX = onWidth + ((offWidth - offTextWidth) / 2f);
         var textY = (e.Info.Height - font.Metrics.Ascent - font.Metrics.Descent) / 2f;
-        canvas.DrawText(OnText, onTextX, textY, font, paint);
-        canvas.DrawText(OffText, offTextX, textY, font, paint);
+        canvas.DrawText(OnText, onTextX, textY, SKTextAlign.Left, font, paint);
+        canvas.DrawText(OffText, offTextX, textY, SKTextAlign.Left, font, paint);
 
         // Active mask
         canvas.SaveLayer();
@@ -208,8 +208,8 @@ public class TextToggle : SKCanvasView
         // Selected text
         paint.Color = SelectedTextColor.ToSKColor();
         paint.BlendMode = SKBlendMode.SrcIn;
-        canvas.DrawText(OnText, onTextX, textY, font, paint);
-        canvas.DrawText(OffText, offTextX, textY, font, paint);
+        canvas.DrawText(OnText, onTextX, textY, SKTextAlign.Left, font, paint);
+        canvas.DrawText(OffText, offTextX, textY, SKTextAlign.Left, font, paint);
 
         // Reset mode
         canvas.Restore();

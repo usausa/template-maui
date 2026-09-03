@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Controls;
 
-#pragma warning disable CA1001
 public sealed class SpeedGauge : GraphicsView, IDrawable
 {
     public static readonly BindableProperty GaugeColorProperty = BindableProperty.Create(
@@ -27,6 +26,32 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
     {
         get => (Color)GetValue(ValueColorProperty);
         set => SetValue(ValueColorProperty, value);
+    }
+
+    public static readonly BindableProperty MidColorProperty = BindableProperty.Create(
+        nameof(MidColor),
+        typeof(Color),
+        typeof(SpeedGauge),
+        Colors.Yellow,
+        propertyChanged: Invalidate);
+
+    public Color MidColor
+    {
+        get => (Color)GetValue(MidColorProperty);
+        set => SetValue(MidColorProperty, value);
+    }
+
+    public static readonly BindableProperty HighColorProperty = BindableProperty.Create(
+        nameof(HighColor),
+        typeof(Color),
+        typeof(SpeedGauge),
+        Colors.Red,
+        propertyChanged: Invalidate);
+
+    public Color HighColor
+    {
+        get => (Color)GetValue(HighColorProperty);
+        set => SetValue(HighColorProperty, value);
     }
 
     public static readonly BindableProperty BorderMarginProperty = BindableProperty.Create(
@@ -121,11 +146,26 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         canvas.DrawArc(gaugeRect, startAngle, startAngle - gaugeAngle, true, false);
 
         // Value
-        canvas.StrokeColor = ValueColor;
+        canvas.StrokeColor = CalcValueColor();
         canvas.StrokeSize = gaugeWidth;
 
         canvas.DrawArc(gaugeRect, startAngle, valueAngle, true, false);
     }
-}
 
-#pragma warning restore CA1001
+    private Color CalcValueColor()
+    {
+        var ratio = MaxSpeed > 0 ? (float)Speed / MaxSpeed : 0f;
+        if (ratio < 0.5f)
+        {
+            return LerpColor(ValueColor, MidColor, ratio / 0.5f);
+        }
+        if (ratio < 0.75f)
+        {
+            return LerpColor(MidColor, HighColor, (ratio - 0.5f) / 0.25f);
+        }
+        return HighColor;
+    }
+
+    private static Color LerpColor(Color from, Color to, float t) =>
+        new(from.Red + ((to.Red - from.Red) * t), from.Green + ((to.Green - from.Green) * t), from.Blue + ((to.Blue - from.Blue) * t), from.Alpha + ((to.Alpha - from.Alpha) * t));
+}

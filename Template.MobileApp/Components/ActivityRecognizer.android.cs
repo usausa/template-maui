@@ -4,8 +4,6 @@ using Android.App;
 using Android.Content;
 using Android.Hardware;
 
-using AndroidX.Core.App;
-
 public sealed partial class ActivityRecognizer : Java.Lang.Object, ISensorEventListener
 {
     private SensorManager? sensorManager;
@@ -31,15 +29,11 @@ public sealed partial class ActivityRecognizer : Java.Lang.Object, ISensorEventL
         base.Dispose(disposing);
     }
 
+    // 権限のCheck→Requestは呼び出し側で実施する (ActivityRecognitionPermission)
     private partial void Start()
     {
         sensorManager ??= (SensorManager)Application.Context.GetSystemService(Context.SensorService)!;
         stepCounter ??= sensorManager.GetDefaultSensor(SensorType.StepCounter);
-
-        if (OperatingSystem.IsAndroidVersionAtLeast(29))
-        {
-            ActivityCompat.RequestPermissions(Platform.CurrentActivity, [Android.Manifest.Permission.ActivityRecognition], 1337);
-        }
 
         sensorManager?.RegisterListener(this, stepCounter, SensorDelay.Ui);
     }

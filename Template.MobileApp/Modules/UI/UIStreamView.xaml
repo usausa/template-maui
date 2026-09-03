@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIStreamView"
+             x:DataType="{x:Type module:UIStreamViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIStreamViewModel}"
+             shell:ShellProperty.Title="Stream"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="TopBar"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,12" />
+            </Style>
+
+            <Style x:Key="LogoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource RedAccent3}" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource HeaderIconButton}">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
+
+            <Style x:Key="HeroGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="380" />
+            </Style>
+
+            <Style x:Key="HeroImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="HeroOverlay"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="Black" />
+                <Setter Property="Opacity" Value="0.45" />
+            </Style>
+
+            <!-- Floating info card over the hero (from UI3Camp's weather card) -->
+            <Style x:Key="HeroRatingBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="#66000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="HeroRatingLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
+            </Style>
+
+            <Style x:Key="HeroRatingSubLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Opacity" Value="0.9" />
+            </Style>
+
+            <Style x:Key="HeroInfo"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="HeroBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,3" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedAccent3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="HeroBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HeroTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HeroMetaLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="Margin" Value="0,4,0,12" />
+            </Style>
+
+            <Style x:Key="HeroButtonsRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="HeroPlayButton"
+                   TargetType="Button">
+                <Setter Property="Text" Value="▶ Play" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="CornerRadius" Value="6" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="HeroListButton"
+                   TargetType="Button">
+                <Setter Property="Text" Value="+ My List" />
+                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="6" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="120" />
+            </Style>
+
+            <Style x:Key="SectionHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="16,16,16,8" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SeeAllLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RowCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="170" />
+            </Style>
+
+            <Style x:Key="PosterBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,0" />
+                <Setter Property="WidthRequest" Value="110" />
+                <Setter Property="HeightRequest" Value="160" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="PosterImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="PosterBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,2" />
+                <Setter Property="Margin" Value="6" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedAccent3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="PosterBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="9" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="PosterDurationBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,2" />
+                <Setter Property="Margin" Value="6" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="#CC000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="PosterDurationLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="9" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout>
+
+            <Grid Style="{StaticResource TopBar}"
+                  ColumnDefinitions="*,Auto,Auto"
+                  behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <Label Grid.Column="0" Style="{StaticResource LogoLabel}" Text="STREAM" />
+                <Button Grid.Column="1" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Search}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Button Grid.Column="2" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Notifications}"
+                        behaviors:ButtonOption.PressEffect="True" />
+            </Grid>
+
+            <Grid Style="{StaticResource HeroGrid}">
+                <Image Style="{StaticResource HeroImage}" Source="social_background.png" />
+                <BoxView Style="{StaticResource HeroOverlay}" />
+                <Border Style="{StaticResource HeroRatingBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="200">
+                    <VerticalStackLayout>
+                        <Label Style="{StaticResource HeroRatingLabel}" Text="{Binding HeroRating}" />
+                        <Label Style="{StaticResource HeroRatingSubLabel}" Text="{Binding HeroRatingSub}" />
+                    </VerticalStackLayout>
+                </Border>
+                <VerticalStackLayout Style="{StaticResource HeroInfo}"
+                                     behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                     behaviors:AnimationOption.EnterDelay="80">
+                    <Border Style="{StaticResource HeroBadgeBorder}">
+                        <Label Style="{StaticResource HeroBadgeLabel}" Text="{Binding HeroBadge}" />
+                    </Border>
+                    <Label Style="{StaticResource HeroTitleLabel}" Text="{Binding HeroTitle}" />
+                    <Label Style="{StaticResource HeroMetaLabel}" Text="{Binding HeroMeta}" />
+                    <HorizontalStackLayout Style="{StaticResource HeroButtonsRow}">
+                        <Button Style="{StaticResource HeroPlayButton}"
+                                behaviors:ButtonOption.PressEffect="True"
+                                Command="{Binding DetailCommand}" />
+                        <Button Style="{StaticResource HeroListButton}"
+                                behaviors:ButtonOption.PressEffect="True"
+                                Command="{Binding MyListCommand}">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding InMyList}"
+                                             Value="True">
+                                    <Setter Property="Text" Value="✓ In My List" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="module:UIStreamSection">
+                        <VerticalStackLayout behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                             behaviors:AnimationOption.EnterDelay="{Binding Delay}">
+                            <Grid Style="{StaticResource SectionHeaderGrid}"
+                                  ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0" Style="{StaticResource SectionLabel}" Text="{Binding Title}" />
+                                <Label Grid.Column="1" Style="{StaticResource SeeAllLabel}" Text="See all ›" />
+                            </Grid>
+                            <CollectionView Style="{StaticResource RowCollection}"
+                                            ItemsSource="{Binding Items}"
+                                            ItemsLayout="HorizontalList">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="module:UIStreamPoster">
+                                        <Border Style="{StaticResource PosterBorder}">
+                                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                                                <toolkit:SfEffectsView.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}" />
+                                                </toolkit:SfEffectsView.GestureRecognizers>
+                                                <Grid>
+                                                    <Image Style="{StaticResource PosterImage}" Source="{Binding Image}" />
+                                                    <Border Style="{StaticResource PosterBadgeBorder}"
+                                                            IsVisible="{Binding HasBadge}">
+                                                        <Label Style="{StaticResource PosterBadgeLabel}" Text="{Binding Badge}" />
+                                                    </Border>
+                                                    <Border Style="{StaticResource PosterDurationBorder}"
+                                                            IsVisible="{Binding HasDuration}">
+                                                        <Label Style="{StaticResource PosterDurationLabel}" Text="{Binding Duration}" />
+                                                    </Border>
+                                                </Grid>
+                                            </toolkit:SfEffectsView>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

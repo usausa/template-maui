@@ -4,25 +4,39 @@ using Android.Bluetooth;
 using Android.Content;
 using Android.Util;
 
+using AndroidX.Core.Content;
+
 using Java.Util;
 
 public sealed partial class BluetoothSerialFactory
 {
     private static readonly UUID SppUuid = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB")!;
 
+    private static readonly TimeSpan DiscoveryTimeout = TimeSpan.FromSeconds(30);
+
+    // ペアリング確認ダイアログのユーザー操作を考慮した値
+    private static readonly TimeSpan BondTimeout = TimeSpan.FromSeconds(60);
+
     private readonly Context context;
 
-    private readonly BluetoothAdapter adapter;
+    private readonly BluetoothAdapter? adapter;
+
+    public partial bool IsSupported => adapter is not null;
 
     public BluetoothSerialFactory()
     {
         context = ActivityResolver.CurrentActivity.ApplicationContext!;
-        var bluetoothManager = (BluetoothManager)context.GetSystemService(Context.BluetoothService)!;
-        adapter = bluetoothManager.Adapter!;
+        var bluetoothManager = (BluetoothManager?)context.GetSystemService(Context.BluetoothService);
+        adapter = bluetoothManager?.Adapter;
     }
 
     public async partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin)
     {
+        if (adapter is null)
+        {
+            return null;
+        }
+
         var status = await Microsoft.Maui.ApplicationModel.Permissions.CheckStatusAsync<Microsoft.Maui.ApplicationModel.Permissions.Bluetooth>();
         if (status != PermissionStatus.Granted)
         {
@@ -34,7 +48,7 @@ public sealed partial class BluetoothSerialFactory
         }
 
         // Find
-        var device = await FindAsync(name);
+        var device = await FindAsync(adapter, name);
         if (device is null)
         {
             return null;
@@ -72,7 +86,7 @@ public sealed partial class BluetoothSerialFactory
         }
     }
 
-    private async ValueTask<BluetoothDevice?> FindAsync(string name)
+    private async ValueTask<BluetoothDevice?> FindAsync(BluetoothAdapter adapter, string name)
     {
         // Find
         var tcs = new TaskCompletionSource<BluetoothDevice?>();
@@ -81,21 +95,26 @@ public sealed partial class BluetoothSerialFactory
         using var filter = new IntentFilter();
         filter.AddAction(BluetoothDevice.ActionFound);
         filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
-        context.RegisterReceiver(receiver, filter);
-
-        if (!adapter.StartDiscovery())
+        ContextCompat.RegisterReceiver(context, receiver, filter, ContextCompat.ReceiverNotExported);
+        try
         {
-            context.UnregisterReceiver(receiver);
+            if (!adapter.StartDiscovery())
+            {
+                return null;
+            }
+
+            using var cts = new CancellationTokenSource(DiscoveryTimeout);
+            return await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
             return null;
         }
-
-        var device = await tcs.Task;
-
-        adapter.CancelDiscovery();
-
-        context.UnregisterReceiver(receiver);
-
-        return device;
+        finally
+        {
+            adapter.CancelDiscovery();
+            context.UnregisterReceiver(receiver);
+        }
     }
 
     private async ValueTask<bool> BondAsync(BluetoothDevice device, byte[] pin)
@@ -106,25 +125,25 @@ public sealed partial class BluetoothSerialFactory
         using var filter = new IntentFilter();
         filter.AddAction(BluetoothDevice.ActionPairingRequest);
         filter.AddAction(BluetoothDevice.ActionBondStateChanged);
-        //filter.Priority = (int)IntentFilterPriority.HighPriority;
-        context.RegisterReceiver(receiver, filter);
-
-        // Timeout
-        //var cts = new CancellationTokenSource(10_000);
-        //cts.Token.Register(() => tcs.TrySetResult(false));
-
-        if (!device.CreateBond())
+        ContextCompat.RegisterReceiver(context, receiver, filter, ContextCompat.ReceiverNotExported);
+        try
         {
-            context.UnregisterReceiver(receiver);
+            if (!device.CreateBond())
+            {
+                return false;
+            }
+
+            using var cts = new CancellationTokenSource(BondTimeout);
+            return await tcs.Task.WaitAsync(cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
             return false;
         }
-
-        var result = await tcs.Task;
-
-        //cts.Dispose();
-        context.UnregisterReceiver(receiver);
-
-        return result;
+        finally
+        {
+            context.UnregisterReceiver(receiver);
+        }
     }
 
     // ------------------------------------------------------------
@@ -231,6 +250,7 @@ public sealed partial class BluetoothSerialFactory
         public void Dispose()
         {
             socket.Close();
+            socket.Dispose();
         }
     }
 }

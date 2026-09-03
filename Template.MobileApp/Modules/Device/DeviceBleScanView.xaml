@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBleScanView"
@@ -17,9 +18,43 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="SensorCollectionView"
-                   TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="SensorBorder"
@@ -61,7 +96,7 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="ValueHorizontalStack"
+            <Style x:Key="BleScanValueHorizontalStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="0" />
@@ -74,7 +109,7 @@
                 <Setter Property="FontSize" Value="36" />
             </Style>
 
-            <Style x:Key="ValueLabel"
+            <Style x:Key="BleScanValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="48" />
@@ -90,8 +125,20 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <CollectionView Style="{StaticResource SensorCollectionView}"
-                    ItemsSource="{Binding Devices}">
+    <CollectionView ItemsSource="{Binding Devices}">
+        <CollectionView.EmptyView>
+            <VerticalStackLayout Style="{StaticResource EmptyStack}">
+                <Border Style="{StaticResource EmptyIconBorder}"
+                        behaviors:AnimationOption.Pulse="True">
+                    <Label Style="{StaticResource EmptyIconLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Bluetooth_searching}" />
+                </Border>
+                <Label Style="{StaticResource EmptyTitleLabel}"
+                       Text="Scanning..." />
+                <Label Style="{StaticResource EmptyHintLabel}"
+                       Text="Waiting for SwitchBot sensors" />
+            </VerticalStackLayout>
+        </CollectionView.EmptyView>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="{x:Type models:SwitchBotTemperature}">
 
@@ -111,21 +158,23 @@
 
                         <Grid ColumnDefinitions="*,*">
                             <HorizontalStackLayout Grid.Column="0"
-                                                   Style="{StaticResource ValueHorizontalStack}">
+                                                   Style="{StaticResource BleScanValueHorizontalStack}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="🌡" />
-                                <Label Style="{StaticResource ValueLabel}"
-                                       Text="{Binding Temperature, StringFormat='{0:F1}'}" />
+                                <Label Style="{StaticResource BleScanValueLabel}"
+                                       Text="{Binding Temperature, StringFormat='{0:F1}'}"
+                                       behaviors:AnimationOption.BounceTrigger="{Binding Temperature}" />
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="°C" />
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Grid.Column="1"
-                                                   Style="{StaticResource ValueHorizontalStack}">
+                                                   Style="{StaticResource BleScanValueHorizontalStack}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="💧" />
-                                <Label Style="{StaticResource ValueLabel}"
-                                       Text="{Binding Humidity}" />
+                                <Label Style="{StaticResource BleScanValueLabel}"
+                                       Text="{Binding Humidity}"
+                                       behaviors:AnimationOption.BounceTrigger="{Binding Humidity}" />
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="%" />
                             </HorizontalStackLayout>
@@ -138,13 +187,14 @@
                         <BoxView Style="{StaticResource MarginBoxView}"
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
 
-                        <HorizontalStackLayout Style="{StaticResource ValueHorizontalStack}"
+                        <HorizontalStackLayout Style="{StaticResource BleScanValueHorizontalStack}"
                                                IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}"
                                                HorizontalOptions="Center">
                             <Label Style="{StaticResource IconLabel}"
                                    Text="💨" />
-                            <Label Style="{StaticResource ValueLabel}"
-                                   Text="{Binding Co2}" />
+                            <Label Style="{StaticResource BleScanValueLabel}"
+                                   Text="{Binding Co2}"
+                                   behaviors:AnimationOption.BounceTrigger="{Binding Co2}" />
                             <Label Style="{StaticResource UnitLabel}"
                                    Text="ppm" />
                         </HorizontalStackLayout>

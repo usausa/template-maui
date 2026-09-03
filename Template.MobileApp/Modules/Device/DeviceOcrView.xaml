@@ -5,6 +5,8 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceOcrView"
              x:DataType="{x:Type module:DeviceOcrViewModel}"
@@ -15,8 +17,141 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <mct:CameraView behaviors:CameraBind.Controller="{Binding Controller}" />
-    </VerticalStackLayout>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:NullToBoolConverter x:Key="EmptyConverter"
+                                   HandleEmptyString="True"
+                                   NullValue="True"
+                                   NonNullValue="False" />
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="ProcessingOverlayGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="#80000000" />
+            </Style>
+
+            <Style x:Key="ProcessingStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ProcessingLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="ResultPanelStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ResultHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ResultHeaderIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultHeaderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultScroll"
+                   TargetType="ScrollView">
+                <Setter Property="HeightRequest" Value="140" />
+            </Style>
+
+            <Style x:Key="ResultTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ResultPlaceholderLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
+
+        <mct:CameraView Grid.Row="0"
+                        behaviors:CameraBind.Controller="{Binding Controller}" />
+
+        <!-- 読取ガイドオーバーレイ -->
+        <controls:CameraOverlayView Grid.Row="0" />
+
+        <!-- OCR 実行中の表示 -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource ProcessingOverlayGrid}"
+              IsVisible="{Binding IsProcessing}">
+            <VerticalStackLayout Style="{StaticResource ProcessingStack}">
+                <ActivityIndicator IsRunning="{Binding IsProcessing}"
+                                   Color="White" />
+                <Label Style="{StaticResource ProcessingLabel}"
+                       Text="Recognizing..." />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- 認識結果パネル -->
+        <Border Grid.Row="1"
+                Style="{StaticResource ResultPanelBorder}">
+            <VerticalStackLayout Style="{StaticResource ResultPanelStack}">
+
+                <Grid Style="{StaticResource ResultHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ResultHeaderIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Text_fields}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource ResultHeaderLabel}"
+                           Text="Result" />
+                </Grid>
+
+                <ScrollView Style="{StaticResource ResultScroll}">
+                    <Grid>
+                        <Label Style="{StaticResource ResultTextLabel}"
+                               Text="{Binding RecognizedText}"
+                               behaviors:AnimationOption.FadeInTrigger="{Binding RecognizedText}" />
+                        <Label Style="{StaticResource ResultPlaceholderLabel}"
+                               IsVisible="{Binding RecognizedText, Converter={StaticResource EmptyConverter}}"
+                               Text="Point the camera at text and press Scan" />
+                    </Grid>
+                </ScrollView>
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
 
 </ContentView>

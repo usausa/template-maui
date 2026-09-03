@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicConverterView"
              x:DataType="{x:Type module:BasicConverterViewModel}"
@@ -23,74 +27,170 @@
 
             <s:AnyConverter x:Key="AnyConverter" />
 
+            <Style x:Key="CheckRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="Auto,*" />
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="CheckCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="2*,3*" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
 
-        <!-- Boolean -->
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Boolean" />
+            <controls:InfoCard Title="Boolean"
+                               Icon="{x:Static fonts:MaterialIcons.Rule}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="8">
+                    <Grid Style="{StaticResource CheckRowGrid}">
+                        <CheckBox Grid.Column="0"
+                                  IsChecked="{Binding ReverseChecked}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CheckCaptionLabel}"
+                               Text="ReverseChecked" />
+                    </Grid>
+                    <Grid Style="{StaticResource ResultRowGrid}"
+                          RowDefinitions="Auto,Auto">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="Reverse" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}"
+                               Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}"
+                               behaviors:AnimationOption.HighlightTrigger="{Binding ReverseChecked}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
 
-        <CheckBox IsChecked="{Binding ReverseChecked}" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="BoolTo" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}"
+                               Text="{Binding ReverseChecked, Converter={s:BoolToText True='ON', False='OFF'}}"
+                               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True=Red, False=Black}}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Reverse" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}" />
+            <controls:InfoCard Title="Multi"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <VerticalStackLayout Spacing="8">
+                    <Grid Style="{StaticResource CheckRowGrid}">
+                        <CheckBox Grid.Column="0"
+                                  IsChecked="{Binding MultiChecked1}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CheckCaptionLabel}"
+                               Text="Checked1" />
+                    </Grid>
+                    <Grid Style="{StaticResource CheckRowGrid}">
+                        <CheckBox Grid.Column="0"
+                                  IsChecked="{Binding MultiChecked2}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CheckCaptionLabel}"
+                               Text="Checked2" />
+                    </Grid>
+                    <Grid Style="{StaticResource ResultRowGrid}"
+                          RowDefinitions="Auto,Auto">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="Any" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}">
+                            <Label.Text>
+                                <MultiBinding Converter="{StaticResource AnyConverter}">
+                                    <Binding Path="MultiChecked1" />
+                                    <Binding Path="MultiChecked2" />
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="BoolTo" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding ReverseChecked, Converter={s:BoolToText True='ON', False='OFF'}}"
-               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True=Red, False=Black}}" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="All" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}">
+                            <Label.Text>
+                                <MultiBinding Converter="{StaticResource AllConverter}">
+                                    <Binding Path="MultiChecked1" />
+                                    <Binding Path="MultiChecked2" />
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <!-- Multi -->
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Multi" />
+            <controls:InfoCard Title="Text"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200">
+                <VerticalStackLayout Spacing="8">
+                    <Button Style="{StaticResource ActionButton}"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Text_format}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            Command="{Binding SwitchTextCommand}"
+                            Text="Switch Text" />
+                    <Grid Style="{StaticResource ResultRowGrid}"
+                          RowDefinitions="Auto,Auto,Auto">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="Upper" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}"
+                               Text="{Binding Text, Converter={StaticResource ToUpperConverter}}"
+                               behaviors:AnimationOption.HighlightTrigger="{Binding Text}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
 
-        <CheckBox IsChecked="{Binding MultiChecked1}" />
-        <CheckBox IsChecked="{Binding MultiChecked2}" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="Lower" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}"
+                               Text="{Binding Text, Converter={StaticResource ToLowerConverter}}"
+                               behaviors:AnimationOption.HighlightTrigger="{Binding Text}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
 
-        <Label Style="{StaticResource NameLabel}">
-            <Label.Text>
-                <MultiBinding Converter="{StaticResource AnyConverter}">
-                    <Binding Path="MultiChecked1" />
-                    <Binding Path="MultiChecked2" />
-                </MultiBinding>
-            </Label.Text>
-        </Label>
+                        <Label Grid.Row="2" Grid.Column="0"
+                               Style="{StaticResource NameLabel}"
+                               Text="EmptyTo" />
+                        <Label Grid.Row="2" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}"
+                               Text="{Binding Text, Converter={s:NullToText HandleEmptyString=True, Null='No value', NonNull='Has value'}}"
+                               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null=Red, NonNull=Black}}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
-        <Label Style="{StaticResource NameLabel}">
-            <Label.Text>
-                <MultiBinding Converter="{StaticResource AllConverter}">
-                    <Binding Path="MultiChecked1" />
-                    <Binding Path="MultiChecked2" />
-                </MultiBinding>
-            </Label.Text>
-        </Label>
-
-        <!-- Text -->
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Text" />
-
-        <Button Command="{Binding SwitchTextCommand}"
-                Text="Switch Text" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="Upper/Lowwer" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Text, Converter={StaticResource ToUpperConverter}}" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Text, Converter={StaticResource ToLowerConverter}}" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="EmptyTo" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Text, Converter={s:NullToText HandleEmptyString=True, Null='No value', NonNull='Has value'}}"
-               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null=Red, NonNull=Black}}" />
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

@@ -26,18 +26,19 @@ public sealed class AndroidNfcF : INfc
 
     public byte[] Access(byte[] command)
     {
-        if (!nfc.IsConnected)
-        {
-            nfc.Connect();
-        }
-
         try
         {
+            if (!nfc.IsConnected)
+            {
+                nfc.Connect();
+            }
+
             var response = nfc.Transceive(command);
             return response ?? [];
         }
-        catch (TagLostException)
+        catch (Java.IO.IOException)
         {
+            // TagLostExceptionを含む。タグ喪失・接続失敗は応答なしとして扱い、購読側のシーケンスに例外を伝播させない
             return [];
         }
     }
@@ -48,20 +49,51 @@ public sealed partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCall
 {
     private NfcAdapter? nfcAdapter;
 
+    private bool adapterResolved;
+
     private Activity? currentActivity;
+
+    public partial bool IsSupported => ResolveAdapter() is not null;
+
+    private NfcAdapter? ResolveAdapter()
+    {
+        if (!adapterResolved)
+        {
+            var nfcManager = (NfcManager?)Application.Context.GetSystemService(Context.NfcService);
+            nfcAdapter = nfcManager?.DefaultAdapter;
+            adapterResolved = true;
+        }
+
+        return nfcAdapter;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (Enabled)
+            {
+                Enabled = false;
+            }
+
+            nfcAdapter?.Dispose();
+            nfcAdapter = null;
+        }
+        base.Dispose(disposing);
+    }
 
     private partial void Start()
     {
-        if (nfcAdapter is null)
+        var adapter = ResolveAdapter();
+        if (adapter is null)
         {
-            var nfcManager = (NfcManager)Application.Context.GetSystemService(Context.NfcService)!;
-            nfcAdapter = nfcManager.DefaultAdapter!;
+            return;
         }
 
         currentActivity = ActivityResolver.CurrentActivity;
         currentActivity.Application!.RegisterActivityLifecycleCallbacks(this);
 
-        nfcAdapter.EnableReaderMode(currentActivity, this, NfcReaderFlags.NfcF, null);
+        adapter.EnableReaderMode(currentActivity, this, NfcReaderFlags.NfcF, null);
     }
 
     private partial void Stop()
@@ -110,7 +142,23 @@ public sealed partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCall
             {
                 var id = tag.GetId()!;
                 var nfc = NfcF.Get(tag)!;
-                Detected?.Invoke(this, new NfcEventArgs(new AndroidNfcF(id, nfc)));
+                try
+                {
+                    Detected?.Invoke(this, new NfcEventArgs(new AndroidNfcF(id, nfc)));
+                }
+                finally
+                {
+                    // タグはイベントハンドラ内でのみ有効な契約とし、検出ごとの接続リークを防ぐ
+                    try
+                    {
+                        nfc.Close();
+                    }
+                    catch (Java.IO.IOException)
+                    {
+                    }
+
+                    nfc.Dispose();
+                }
             }
         }
         catch (TagLostException)

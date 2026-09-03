@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:layouts="clr-namespace:Template.MobileApp.Layouts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewLayoutView"
+             x:DataType="{x:Type module:ViewLayoutViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewLayoutViewModel}"
+             shell:ShellProperty.Title="Layout"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- CommunityToolkit のレイアウトデモ (DockLayout / UniformItemsLayout)。
+         自作レイアウト (CircularLayout / StaggeredGrid) は後続フェーズで本画面へ追記する -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="DockPane"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+                <Setter Property="Padding" Value="8" />
+            </Style>
+
+            <Style x:Key="DockPaneLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="UniformCell"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="HeightRequest" Value="56" />
+            </Style>
+
+            <Style x:Key="UniformCellLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="NoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="DockLayout"
+                               Icon="{x:Static fonts:MaterialIcons.Dashboard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="子要素を上下左右へドッキングし、最後の要素が残りを埋める" />
+                    <mct:DockLayout HeightRequest="240"
+                                    HorizontalSpacing="4"
+                                    VerticalSpacing="4"
+                                    ShouldExpandLastChild="True">
+                        <Border Style="{StaticResource DockPane}"
+                                mct:DockLayout.DockPosition="Top"
+                                BackgroundColor="{StaticResource BlueDefault}"
+                                HeightRequest="40">
+                            <Label Style="{StaticResource DockPaneLabel}"
+                                   Text="Top (ツールバー)" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}"
+                                mct:DockLayout.DockPosition="Bottom"
+                                BackgroundColor="{StaticResource BlueGrayDefault}"
+                                HeightRequest="32">
+                            <Label Style="{StaticResource DockPaneLabel}"
+                                   Text="Bottom (ステータス)" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}"
+                                mct:DockLayout.DockPosition="Left"
+                                BackgroundColor="{StaticResource GreenDefault}"
+                                WidthRequest="64">
+                            <Label Style="{StaticResource DockPaneLabel}"
+                                   Text="Left" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}"
+                                mct:DockLayout.DockPosition="Right"
+                                BackgroundColor="{StaticResource OrangeDefault}"
+                                WidthRequest="64">
+                            <Label Style="{StaticResource DockPaneLabel}"
+                                   Text="Right" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}"
+                                BackgroundColor="{StaticResource GrayLighten2}">
+                            <Label Style="{StaticResource DockPaneLabel}"
+                                   TextColor="{StaticResource GrayDarken3}"
+                                   Text="Fill (コンテンツ)" />
+                        </Border>
+                    </mct:DockLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="UniformItemsLayout"
+                               Icon="{x:Static fonts:MaterialIcons.Grid_view}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="全セルが同じサイズになる (MaxColumns=4)" />
+                    <mct:UniformItemsLayout MaxColumns="4">
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="A" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="B" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="C" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="D" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="E" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="F" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="G" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="H" />
+                        </Border>
+                    </mct:UniformItemsLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="CircularLayout (自作)"
+                               Icon="{x:Static fonts:MaterialIcons.Data_usage}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="ILayoutManager 自作。子要素を円周へ均等配置 (Angle 指定で個別配置も可)" />
+                    <Grid HeightRequest="240">
+                        <layouts:CircularLayout>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="月" />
+                            </Border>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="火" />
+                            </Border>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="水" />
+                            </Border>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="木" />
+                            </Border>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="金" />
+                            </Border>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="土" />
+                            </Border>
+                            <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
+                                <Label Style="{StaticResource UniformCellLabel}" Text="日" />
+                            </Border>
+                        </layouts:CircularLayout>
+                        <Label Style="{StaticResource UniformCellLabel}"
+                               FontSize="12"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="WEEK" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="StaggeredGrid (自作)"
+                               Icon="{x:Static fonts:MaterialIcons.Dashboard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
+                    <layouts:StaggeredGrid Columns="3"
+                                           Spacing="6">
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="90" BackgroundColor="{StaticResource BlueLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="1" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="56" BackgroundColor="{StaticResource GreenLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="2" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="120" BackgroundColor="{StaticResource AmberLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="3" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="72" BackgroundColor="{StaticResource PinkLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="4" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="100" BackgroundColor="{StaticResource CyanLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="5" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="64" BackgroundColor="{StaticResource PurpleLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="6" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="84" BackgroundColor="{StaticResource OrangeLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="7" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="110" BackgroundColor="{StaticResource GrayLighten2}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="8" />
+                        </Border>
+                    </layouts:StaggeredGrid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="ILayoutManagerFactory (Cascade)"
+                               Icon="{x:Static fonts:MaterialIcons.Layers}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="DI 登録した ILayoutManagerFactory が CascadeStackLayout (VerticalStackLayout 派生) のマネージャだけをカスケード配置に差し替える" />
+                    <layouts:CascadeStackLayout HorizontalOptions="Start">
+                        <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource BlueDefault}" WidthRequest="200" HeightRequest="72">
+                            <Label Style="{StaticResource DockPaneLabel}" Text="Window 1" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource GreenDefault}" WidthRequest="200" HeightRequest="72">
+                            <Label Style="{StaticResource DockPaneLabel}" Text="Window 2" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource OrangeDefault}" WidthRequest="200" HeightRequest="72">
+                            <Label Style="{StaticResource DockPaneLabel}" Text="Window 3" />
+                        </Border>
+                        <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource BlueGrayDefault}" WidthRequest="200" HeightRequest="72">
+                            <Label Style="{StaticResource DockPaneLabel}" Text="Window 4" />
+                        </Border>
+                    </layouts:CascadeStackLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

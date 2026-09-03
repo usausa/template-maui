@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:calendar="clr-namespace:Template.MobileApp.Models.Sample.Calendar"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UICalendarView"
+             x:DataType="{x:Type module:UICalendarViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UICalendarViewModel}"
+             shell:ShellProperty.Title="Calendar"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CalendarDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="#E0E0E0" />
+            </Style>
+
+            <Style x:Key="ModeButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="TodayButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="*,Auto,Auto"
+          BackgroundColor="White"
+          RowSpacing="0">
+
+        <!-- カレンダー本体。CalendarView(従来版)と CalendarView2(Skia 自前描画版)は
+             BindableProperty API が互換なので、下のタグ名を controls:CalendarView に
+             変えるだけで従来版へ切り替えられる(どちらを採用するかは未決定) -->
+        <controls:CalendarView2 Grid.Row="0"
+                                Culture="{Binding Culture}"
+                                DayTappedCommand="{Binding DayTappedCommand}"
+                                EventTappedCommand="{Binding EventTappedCommand}"
+                                FirstDayOfWeek="{Binding FirstDayOfWeek}"
+                                GoToTodayCommand="{Binding GoToTodayCommand}"
+                                MaxDate="{Binding MaxDate}"
+                                MinDate="{Binding MinDate}"
+                                MonthIndicatorEnabled="True"
+                                NextMonthCommand="{Binding NextMonthCommand}"
+                                PrevMonthCommand="{Binding PrevMonthCommand}"
+                                SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                                SelectedDates="{Binding SelectedDates}"
+                                SelectedEndDate="{Binding SelectedEndDate, Mode=TwoWay}"
+                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
+                                SelectionMode="{Binding SelectionMode}"
+                                View="{Binding MonthView}" />
+
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource CalendarDivider}" />
+
+        <!-- 選択モード切替+今日へ -->
+        <Grid Grid.Row="2"
+              Padding="12,8"
+              ColumnDefinitions="*,*,*,*,8,Auto"
+              ColumnSpacing="4">
+            <Button Grid.Column="0"
+                    Style="{StaticResource ModeButton}"
+                    Command="{Binding SelectModeCommand}"
+                    CommandParameter="{x:Static calendar:CalendarSelectionMode.None}"
+                    Text="None">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding SelectionMode}"
+                                 Value="{x:Static calendar:CalendarSelectionMode.None}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource ModeButton}"
+                    Command="{Binding SelectModeCommand}"
+                    CommandParameter="{x:Static calendar:CalendarSelectionMode.Single}"
+                    Text="Single">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding SelectionMode}"
+                                 Value="{x:Static calendar:CalendarSelectionMode.Single}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="2"
+                    Style="{StaticResource ModeButton}"
+                    Command="{Binding SelectModeCommand}"
+                    CommandParameter="{x:Static calendar:CalendarSelectionMode.Multiple}"
+                    Text="Multi">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding SelectionMode}"
+                                 Value="{x:Static calendar:CalendarSelectionMode.Multiple}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="3"
+                    Style="{StaticResource ModeButton}"
+                    Command="{Binding SelectModeCommand}"
+                    CommandParameter="{x:Static calendar:CalendarSelectionMode.Range}"
+                    Text="Range">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding SelectionMode}"
+                                 Value="{x:Static calendar:CalendarSelectionMode.Range}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="5"
+                    Style="{StaticResource TodayButton}"
+                    Command="{Binding GoToTodayCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Today}" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

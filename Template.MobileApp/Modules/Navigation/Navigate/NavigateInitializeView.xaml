@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Navigate"
              x:Class="Template.MobileApp.Modules.Navigation.Navigate.NavigateInitializeView"
              x:DataType="{x:Type module:NavigateInitializeViewModel}"
@@ -11,6 +13,147 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout />
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="SkeletonStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="32" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="LoadingCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="LoadingCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SkeletonBar"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="7" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="DoneCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="DoneCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="CenterHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}">
+
+        <!-- 初期化中のスケルトン -->
+        <VerticalStackLayout Style="{StaticResource SkeletonStack}"
+                             IsVisible="{Binding Initialized, Converter={StaticResource ReverseConverter}}">
+            <Border Style="{StaticResource LoadingCircleBorder}"
+                    behaviors:AnimationOption.Pulse="True">
+                <Label Style="{StaticResource LoadingCircleLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Hourglass_top}" />
+            </Border>
+            <Label Style="{StaticResource CenterTitleLabel}"
+                   Text="Initializing..." />
+            <BoxView Style="{StaticResource SkeletonBar}" />
+            <BoxView Style="{StaticResource SkeletonBar}"
+                     Margin="24,0" />
+            <BoxView Style="{StaticResource SkeletonBar}"
+                     Margin="48,0" />
+        </VerticalStackLayout>
+
+        <!-- 初期化完了 -->
+        <Border Style="{StaticResource CenterCardBorder}"
+                IsVisible="{Binding Initialized}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding Initialized}">
+            <VerticalStackLayout Style="{StaticResource CardStack}">
+
+                <Border Style="{StaticResource DoneCircleBorder}">
+                    <Label Style="{StaticResource DoneCircleLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Task_alt}" />
+                </Border>
+
+                <Label Style="{StaticResource CenterTitleLabel}"
+                       Text="Initialization completed" />
+
+                <BoxView Style="{StaticResource CardDivider}" />
+
+                <Label Style="{StaticResource CenterHintLabel}"
+                       Text="A 3-second setup ran right after navigating here&#x0a;(loading dialog pattern)" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
 
 </ContentView>

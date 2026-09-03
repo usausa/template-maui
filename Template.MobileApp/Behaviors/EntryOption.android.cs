@@ -95,13 +95,12 @@ public static partial class EntryOption
     private static void UpdateHandleEnterKey(EditText editText, BindableObject element)
     {
         var value = GetHandleEnterKey(element);
+
+        // Mapper再実行時の多重購読を防ぐため一度解除してから購読する
+        editText.EditorAction -= OnEditorAction;
         if (value)
         {
             editText.EditorAction += OnEditorAction;
-        }
-        else
-        {
-            editText.EditorAction -= OnEditorAction;
         }
     }
 

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppCalcView"
+             x:DataType="{x:Type module:AppCalcViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppCalcViewModel}"
+             shell:ShellProperty.Title="Calculator"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- 科学電卓 (MauiScientificCalculator の UI 構成を参考)。
+         式評価は純モデル Models/App/ExpressionCalculator (トークナイザ→操車場→RPN)。表示は DSEG7 -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ExpressionSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="#E6EDF3" />
+            </Style>
+
+            <Style x:Key="CursorSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="#4FC3F7" />
+            </Style>
+
+            <Style x:Key="ResultLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="#7DF36B" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+            </Style>
+
+            <Style x:Key="EqualsSignLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="#5E8CA8" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ErrorLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#FF7043" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="CalcButtonBase"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="SciButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource CalcButtonBase}">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="BackgroundColor" Value="#2C3240" />
+                <Setter Property="TextColor" Value="#9FB2C4" />
+            </Style>
+
+            <Style x:Key="KeyButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource CalcButtonBase}">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="BackgroundColor" Value="#222B36" />
+                <Setter Property="TextColor" Value="#E6EDF3" />
+            </Style>
+
+            <Style x:Key="OpButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource CalcButtonBase}">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="BackgroundColor" Value="#2C3A4D" />
+                <Setter Property="TextColor" Value="#7FC4FF" />
+            </Style>
+
+            <Style x:Key="ClearButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource CalcButtonBase}">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="BackgroundColor" Value="#2C3240" />
+                <Setter Property="TextColor" Value="#FF8A65" />
+            </Style>
+
+            <Style x:Key="EqualsButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource CalcButtonBase}">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="BackgroundColor" Value="#1E88E5" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="*,44,44,60,60,60,60,60"
+          ColumnDefinitions="*,*,*,*,*"
+          Padding="6"
+          BackgroundColor="#1B222C">
+
+        <!-- Display -->
+        <Grid Grid.Row="0" Grid.ColumnSpan="5"
+              Margin="6"
+              RowDefinitions="*,Auto,Auto">
+            <ScrollView Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalOptions="End">
+                <Label Padding="4,0"
+                      LineBreakMode="NoWrap"
+                      HorizontalOptions="End">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource ExpressionSpan}"
+                                  Text="{Binding Expression}" />
+                            <Span Style="{StaticResource CursorSpan}"
+                                  Text="│" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </ScrollView>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*"
+                  Margin="4,8,4,0">
+                <Label Grid.Column="0"
+                       Style="{StaticResource EqualsSignLabel}"
+                       Text="=" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource ResultLabel}"
+                       Text="{Binding Result}" />
+            </Grid>
+            <Label Grid.Row="2"
+                   Style="{StaticResource ErrorLabel}"
+                   Margin="4,4,4,0"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmptyConverter}}"
+                   Text="{Binding ErrorMessage}"
+                   behaviors:AnimationOption.FadeInTrigger="{Binding ErrorMessage}" />
+        </Grid>
+
+        <!-- Scientific row 1 -->
+        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="sin(" Text="sin" />
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="cos(" Text="cos" />
+        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="tan(" Text="tan" />
+        <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="log(" Text="log" />
+        <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="ln(" Text="ln" />
+
+        <!-- Scientific row 2 -->
+        <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="asin(" Text="asin" />
+        <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="acos(" Text="acos" />
+        <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="atan(" Text="atan" />
+        <Button Grid.Row="2" Grid.Column="3" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="exp(" Text="exp" />
+        <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="√(" Text="√" />
+
+        <!-- Keys -->
+        <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource ClearButton}" Command="{Binding ClearCommand}" Text="C" />
+        <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="(" Text="(" />
+        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter=")" Text=")" />
+        <Button Grid.Row="3" Grid.Column="3" Style="{StaticResource ClearButton}" Command="{Binding BackspaceCommand}" Text="⌫" />
+        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="÷" Text="÷" />
+
+        <Button Grid.Row="4" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="7" Text="7" />
+        <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="8" Text="8" />
+        <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="9" Text="9" />
+        <Button Grid.Row="4" Grid.Column="3" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="%" Text="%" />
+        <Button Grid.Row="4" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="×" Text="×" />
+
+        <Button Grid.Row="5" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="4" Text="4" />
+        <Button Grid.Row="5" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="5" Text="5" />
+        <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="6" Text="6" />
+        <Button Grid.Row="5" Grid.Column="3" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="!" Text="!" />
+        <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="−" Text="−" />
+
+        <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="1" Text="1" />
+        <Button Grid.Row="6" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="2" Text="2" />
+        <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="3" Text="3" />
+        <Button Grid.Row="6" Grid.Column="3" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="^" Text="xʸ" />
+        <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="+" Text="+" />
+
+        <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="0" Text="0" />
+        <Button Grid.Row="7" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="." Text="." />
+        <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="π" Text="π" />
+        <Button Grid.Row="7" Grid.Column="3" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="e" Text="e" />
+        <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource EqualsButton}" Command="{Binding EvaluateCommand}" Text="=" />
+
+    </Grid>
+
+</ContentView>

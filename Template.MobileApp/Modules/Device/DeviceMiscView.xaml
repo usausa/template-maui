@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceMiscView"
              x:DataType="{x:Type module:DeviceMiscViewModel}"
@@ -11,90 +15,219 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*,*"
-          ColumnDefinitions="*,*">
-        <Button Grid.Row="0" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding KeepScreenOnCommand}"
-                Text="Keep on" />
-        <Button Grid.Row="0" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding KeepScreenOffCommand}"
-                Text="Keep off" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Button Grid.Row="1" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding OrientationPortraitCommand}"
-                Text="Portrait" />
-        <Button Grid.Row="1" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding OrientationLandscapeCommand}"
-                Text="Landscape" />
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
 
-        <Button Grid.Row="2" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding VibrateCommand}"
-                Text="Vibrate" />
-        <Button Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding VibrateCancelCommand}"
-                Text="Vibrate cancel" />
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
 
-        <Button Grid.Row="3" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding FeedbackClickCommand}"
-                Text="Feed click" />
-        <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding FeedbackLongPressCommand}"
-                Text="Feed press" />
+            <Style x:Key="ActionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
 
-        <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding LightOnCommand}"
-                Text="Light on" />
-        <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding LightOffCommand}"
-                Text="Light off" />
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="*,*" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
 
-        <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding BrightnessCommand}"
-                CommandParameter="{s:Float Value=0.0}"
-                Text="Bright 0" />
-        <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding BrightnessCommand}"
-                CommandParameter="{s:Float Value=1.0}"
-                Text="Bright 1" />
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="ContentLayout" Value="Left,8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
 
-        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding ScreenshotCommand}"
-                Text="Screenshot" />
+            <Style x:Key="ListeningGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
 
-        <Button Grid.Row="7" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding SpeakCommand}"
-                Text="Speak" />
-        <Button Grid.Row="7" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding SpeakCancelCommand}"
-                Text="Speak cancel" />
+            <Style x:Key="ListeningIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
 
-        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding RecognizeCommand}"
-                Text="Recognize" />
+            <Style x:Key="ListeningLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
 
-        <VerticalStackLayout Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
-                             Style="{StaticResource FillVerticalStack}">
-            <Label Style="{StaticResource ValueLabel}"
-                   Text="{Binding RecognizeText}" />
+            <Style x:Key="RecognizeTextLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="Screen"
+                               Icon="{x:Static fonts:MaterialIcons.Smartphone}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Visibility}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding KeepScreenOnCommand}"
+                                Text="Keep on" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Visibility_off}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding KeepScreenOffCommand}"
+                                Text="Keep off" />
+                    </Grid>
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Stay_current_portrait}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding OrientationPortraitCommand}"
+                                Text="Portrait" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Stay_current_landscape}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding OrientationLandscapeCommand}"
+                                Text="Landscape" />
+                    </Grid>
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Brightness_low}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding BrightnessCommand}"
+                                CommandParameter="{s:Float Value=0.0}"
+                                Text="Bright 0" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Brightness_high}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding BrightnessCommand}"
+                                CommandParameter="{s:Float Value=1.0}"
+                                Text="Bright 1" />
+                    </Grid>
+                    <Button Style="{StaticResource ActionButton}"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Screenshot}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            Command="{Binding ScreenshotCommand}"
+                            Text="Screenshot" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Feedback"
+                               Icon="{x:Static fonts:MaterialIcons.Vibration}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Vibration}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding VibrateCommand}"
+                                Text="Vibrate" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Do_not_disturb}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding VibrateCancelCommand}"
+                                Text="Cancel" />
+                    </Grid>
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Touch_app}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding FeedbackClickCommand}"
+                                Text="Feed click" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Touch_app}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding FeedbackLongPressCommand}"
+                                Text="Feed press" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Light"
+                               Icon="{x:Static fonts:MaterialIcons.Flashlight_on}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160">
+                <Grid Style="{StaticResource ActionRowGrid}">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource ActionButton}"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Flashlight_on}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            Command="{Binding LightOnCommand}"
+                            Text="Light on" />
+                    <Button Grid.Column="1"
+                            Style="{StaticResource ActionButton}"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Flashlight_off}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            Command="{Binding LightOffCommand}"
+                            Text="Light off" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Speech"
+                               Icon="{x:Static fonts:MaterialIcons.Record_voice_over}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Record_voice_over}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding SpeakCommand}"
+                                Text="Speak" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Voice_over_off}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding SpeakCancelCommand}"
+                                Text="Cancel" />
+                    </Grid>
+                    <Button Style="{StaticResource ActionButton}"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Mic}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            Command="{Binding RecognizeCommand}"
+                            Text="Recognize" />
+
+                    <Grid Style="{StaticResource ListeningGrid}"
+                          ColumnDefinitions="Auto,*"
+                          IsVisible="{Binding IsListening}">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ListeningIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Mic}"
+                               behaviors:AnimationOption.Pulse="True" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource ListeningLabel}"
+                               Text="Listening..." />
+                    </Grid>
+
+                    <Label Style="{StaticResource RecognizeTextLabel}"
+                           IsVisible="{Binding RecognizeText, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding RecognizeText}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding RecognizeText}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
         </VerticalStackLayout>
-
-    </Grid>
+    </ScrollView>
 
 </ContentView>

@@ -16,13 +16,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="MixierGrid"
+            <Style x:Key="MixerGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
-            <Style x:Key="MixierValueLabel"
+            <Style x:Key="MixerValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="End" />
@@ -30,8 +30,45 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="MixierKnob"
-                   TargetType="controls:MixierKnob">
+            <Style x:Key="KnobNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="ChannelLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,4,0,8" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="ScaleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+
+            <Style x:Key="FreqLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,2,0,8" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+
+            <Style x:Key="MixerKnob"
+                   TargetType="controls:MixerKnob">
                 <Setter Property="PointerMargin" Value="3" />
                 <Setter Property="PointerWidth" Value="16" />
                 <Setter Property="IndicatorBackgroundColor" Value="{StaticResource GrayLighten3}" />
@@ -49,8 +86,8 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="MixierSlider"
-                   TargetType="controls:MixierSlider">
+            <Style x:Key="MixerSlider"
+                   TargetType="controls:MixerSlider">
                 <Setter Property="TrackColor" Value="Black" />
                 <Setter Property="ThumbColor1" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="ThumbColor2" Value="{StaticResource GrayDefault}" />
@@ -61,8 +98,8 @@
                 <Setter Property="TickMarkLength" Value="40" />
             </Style>
 
-            <Style x:Key="MixierEqualizer"
-                   TargetType="controls:MixierEqualizer">
+            <Style x:Key="MixerEqualizer"
+                   TargetType="controls:MixerEqualizer">
                 <Setter Property="HorizontalSpacing" Value="4" />
                 <Setter Property="VerticalSpacing" Value="4" />
                 <Setter Property="Range" Value="16" />
@@ -76,71 +113,142 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource MixierGrid}"
-          RowDefinitions="160,*,Auto,240"
-          ColumnDefinitions="*,*,*">
-
+    <Grid Style="{StaticResource MixerGrid}"
+          RowDefinitions="160,*,Auto,Auto,240,Auto"
+          ColumnDefinitions="32,*,*,*">
 
         <!-- Knob -->
-        <controls:MixierKnob Grid.Row="0" Grid.Column="0"
-                             Style="{StaticResource MixierKnob}"
-                             Value="{Binding KnobValue1}"
-                             IndicatorColor="{StaticResource PinkAccent2}" />
+        <controls:MixerKnob Grid.Row="0" Grid.Column="1"
+                            Style="{StaticResource MixerKnob}"
+                            Value="{Binding KnobValue1}"
+                            IndicatorColor="{StaticResource PinkAccent2}" />
 
-        <controls:MixierKnob Grid.Row="0" Grid.Column="1"
-                             Style="{StaticResource MixierKnob}"
-                             Value="{Binding KnobValue2}"
-                             IndicatorColor="{StaticResource GreenAccent2}" />
+        <controls:MixerKnob Grid.Row="0" Grid.Column="2"
+                            Style="{StaticResource MixerKnob}"
+                            Value="{Binding KnobValue2}"
+                            IndicatorColor="{StaticResource GreenAccent2}" />
 
-        <controls:MixierKnob Grid.Row="0" Grid.Column="2"
-                             Style="{StaticResource MixierKnob}"
-                             Value="{Binding KnobValue3}"
-                             IndicatorColor="{StaticResource LightBlueAccent2}" />
-
-        <Label Grid.Row="0" Grid.Column="0"
-               Style="{StaticResource MixierValueLabel}"
-               Text="{Binding KnobValue1, StringFormat='{0:F1}'}" />
+        <controls:MixerKnob Grid.Row="0" Grid.Column="3"
+                            Style="{StaticResource MixerKnob}"
+                            Value="{Binding KnobValue3}"
+                            IndicatorColor="{StaticResource LightBlueAccent2}" />
 
         <Label Grid.Row="0" Grid.Column="1"
-               Style="{StaticResource MixierValueLabel}"
-               Text="{Binding KnobValue2, StringFormat='{0:F1}'}" />
+               Style="{StaticResource KnobNameLabel}"
+               Text="GAIN" />
 
         <Label Grid.Row="0" Grid.Column="2"
-               Style="{StaticResource MixierValueLabel}"
+               Style="{StaticResource KnobNameLabel}"
+               Text="PAN" />
+
+        <Label Grid.Row="0" Grid.Column="3"
+               Style="{StaticResource KnobNameLabel}"
+               Text="REV" />
+
+        <Label Grid.Row="0" Grid.Column="1"
+               Style="{StaticResource MixerValueLabel}"
+               Text="{Binding KnobValue1, StringFormat='{0:F1}'}" />
+
+        <Label Grid.Row="0" Grid.Column="2"
+               Style="{StaticResource MixerValueLabel}"
+               Text="{Binding KnobValue2, StringFormat='{0:F1}'}" />
+
+        <Label Grid.Row="0" Grid.Column="3"
+               Style="{StaticResource MixerValueLabel}"
                Text="{Binding KnobValue3, StringFormat='{0:F1}'}" />
 
+        <!-- dB scale -->
+        <Grid Grid.Row="1" Grid.Column="0"
+              Padding="8,12,0,12"
+              RowDefinitions="*,*,*,*,*,*,*">
+            <Label Grid.Row="0"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="+6" />
+            <Label Grid.Row="1"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="+3" />
+            <Label Grid.Row="2"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="0" />
+            <Label Grid.Row="3"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="-3" />
+            <Label Grid.Row="4"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="-6" />
+            <Label Grid.Row="5"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="-12" />
+            <Label Grid.Row="6"
+                   Style="{StaticResource ScaleLabel}"
+                   Text="-24" />
+        </Grid>
+
         <!-- Slider -->
-        <controls:MixierSlider Grid.Row="1" Grid.Column="0"
-                               Style="{StaticResource MixierSlider}"
-                               Value="{Binding SliderValue1}"
-                               ProgressColor="{StaticResource PinkAccent2}" />
+        <controls:MixerSlider Grid.Row="1" Grid.Column="1"
+                              Style="{StaticResource MixerSlider}"
+                              Value="{Binding SliderValue1}"
+                              ProgressColor="{StaticResource PinkAccent2}" />
 
-        <controls:MixierSlider Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource MixierSlider}"
-                               Value="{Binding SliderValue2}"
-                               ProgressColor="{StaticResource GreenAccent2}" />
+        <controls:MixerSlider Grid.Row="1" Grid.Column="2"
+                              Style="{StaticResource MixerSlider}"
+                              Value="{Binding SliderValue2}"
+                              ProgressColor="{StaticResource GreenAccent2}" />
 
-        <controls:MixierSlider Grid.Row="1" Grid.Column="2"
-                               Style="{StaticResource MixierSlider}"
-                               Value="{Binding SliderValue3}"
-                               ProgressColor="{StaticResource LightBlueAccent2}" />
-
-        <Label Grid.Row="2" Grid.Column="0"
-               Style="{StaticResource MixierValueLabel}"
-               Text="{Binding SliderValue1, StringFormat='{0:F1}'}" />
+        <controls:MixerSlider Grid.Row="1" Grid.Column="3"
+                              Style="{StaticResource MixerSlider}"
+                              Value="{Binding SliderValue3}"
+                              ProgressColor="{StaticResource LightBlueAccent2}" />
 
         <Label Grid.Row="2" Grid.Column="1"
-               Style="{StaticResource MixierValueLabel}"
-               Text="{Binding SliderValue2, StringFormat='{0:F1}'}" />
+               Style="{StaticResource MixerValueLabel}"
+               Text="{Binding SliderValue1, StringFormat='{0:F1}'}" />
 
         <Label Grid.Row="2" Grid.Column="2"
-               Style="{StaticResource MixierValueLabel}"
+               Style="{StaticResource MixerValueLabel}"
+               Text="{Binding SliderValue2, StringFormat='{0:F1}'}" />
+
+        <Label Grid.Row="2" Grid.Column="3"
+               Style="{StaticResource MixerValueLabel}"
                Text="{Binding SliderValue3, StringFormat='{0:F1}'}" />
 
+        <!-- Channel -->
+        <Label Grid.Row="3" Grid.Column="1"
+               Style="{StaticResource ChannelLabel}"
+               Text="CH1" />
+
+        <Label Grid.Row="3" Grid.Column="2"
+               Style="{StaticResource ChannelLabel}"
+               Text="CH2" />
+
+        <Label Grid.Row="3" Grid.Column="3"
+               Style="{StaticResource ChannelLabel}"
+               Text="CH3" />
+
         <!-- Equalizer -->
-        <controls:MixierEqualizer Grid.Row="3" Grid.ColumnSpan="3"
-                                  Style="{StaticResource MixierEqualizer}"
-                                  Values="{Binding Values}" />
+        <controls:MixerEqualizer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"
+                                 Style="{StaticResource MixerEqualizer}"
+                                 Values="{Binding Values}" />
+
+        <!-- Frequency -->
+        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4"
+              ColumnDefinitions="*,*,*,*,*">
+            <Label Grid.Column="0"
+                   Style="{StaticResource FreqLabel}"
+                   Text="60Hz" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource FreqLabel}"
+                   Text="250Hz" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource FreqLabel}"
+                   Text="1kHz" />
+            <Label Grid.Column="3"
+                   Style="{StaticResource FreqLabel}"
+                   Text="4kHz" />
+            <Label Grid.Column="4"
+                   Style="{StaticResource FreqLabel}"
+                   Text="16kHz" />
+        </Grid>
 
     </Grid>
 

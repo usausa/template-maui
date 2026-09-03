@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIWheelView"
+             x:DataType="{x:Type module:UIWheelViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIWheelViewModel}"
+             shell:ShellProperty.Title="Wheel"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ResultCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultPlaceholderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ResultValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="SpinButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PrimaryButton}">
+                <Setter Property="Margin" Value="48,16,48,24" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="*,Auto,Auto"
+          BackgroundColor="White">
+
+        <!-- ホイール (タップでも回転) -->
+        <drawing:DrawingControl Grid.Row="0"
+                                Margin="8"
+                                Drawing="{Binding Drawing}">
+            <drawing:DrawingControl.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding SpinCommand}" />
+            </drawing:DrawingControl.GestureRecognizers>
+        </drawing:DrawingControl>
+
+        <VerticalStackLayout Grid.Row="1"
+                             Spacing="4">
+            <Label Style="{StaticResource ResultCaptionLabel}"
+                   Text="RESULT" />
+            <Label Style="{StaticResource ResultValueLabel}"
+                   behaviors:AnimationOption.BounceTrigger="{Binding Winner}"
+                   IsVisible="False"
+                   Text="{Binding Winner}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding HasResult}"
+                                 Value="True">
+                        <Setter Property="IsVisible" Value="True" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+            <Label Style="{StaticResource ResultPlaceholderLabel}"
+                   Text="？">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding HasResult}"
+                                 Value="True">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+        </VerticalStackLayout>
+
+        <Button Grid.Row="2"
+                Style="{StaticResource SpinButton}"
+                behaviors:ButtonOption.PressEffect="True"
+                Command="{Binding SpinCommand}"
+                Text="SPIN" />
+
+    </Grid>
+
+</ContentView>

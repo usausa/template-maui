@@ -52,7 +52,7 @@ public sealed partial class DataViewModel : AppViewModelBase
 
     private async Task Insert()
     {
-        var ret = await dataService.InsertDataAsync(new DataEntity { Id = 1L, Name = "Data-1", CreateAt = DateTime.Now });
+        var ret = await dataService.InsertDataAsync(new DataEntity { Id = 1L, Name = "Data-1", CreateAt = DateTime.UtcNow });
 
         if (ret)
         {
@@ -84,7 +84,7 @@ public sealed partial class DataViewModel : AppViewModelBase
 
         if (entity is not null)
         {
-            await dialog.InformationAsync($"Name={entity.Name}\r\nDate={entity.CreateAt:yyyy/MM/dd HH:mm:ss}");
+            await dialog.InformationAsync($"Name={entity.Name}\r\nDate={entity.CreateAt.ToLocalTime():yyyy/MM/dd HH:mm:ss}");
         }
         else
         {

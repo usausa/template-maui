@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Shared"
              x:Class="Template.MobileApp.Modules.Navigation.Shared.SharedInputView"
              x:DataType="{x:Type module:SharedInputViewModel}"
@@ -13,9 +16,75 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Entry Text="{Binding No}"
-               Placeholder="Data1" />
-    </VerticalStackLayout>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="FieldCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="FieldBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
+
+            <!-- 呼び出し元の系統バッジ -->
+            <controls:StatusChip HorizontalOptions="Center"
+                                 Icon="{x:Static fonts:MaterialIcons.Input}"
+                                 Text="{Binding NextName, StringFormat='Return to {0}'}"
+                                 behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <controls:StatusChip.Triggers>
+                    <DataTrigger TargetType="controls:StatusChip"
+                                 Binding="{Binding NextName}"
+                                 Value="Shared1">
+                        <Setter Property="ChipColor" Value="{StaticResource IndigoLighten4}" />
+                        <Setter Property="IconColor" Value="{StaticResource IndigoDarken2}" />
+                        <Setter Property="TextColor" Value="{StaticResource IndigoDarken2}" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="controls:StatusChip"
+                                 Binding="{Binding NextName}"
+                                 Value="Shared2">
+                        <Setter Property="ChipColor" Value="{StaticResource TealLighten4}" />
+                        <Setter Property="IconColor" Value="{StaticResource TealDarken2}" />
+                        <Setter Property="TextColor" Value="{StaticResource TealDarken2}" />
+                    </DataTrigger>
+                </controls:StatusChip.Triggers>
+            </controls:StatusChip>
+
+            <controls:InfoCard Title="Shared Input"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="No" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry Placeholder="No"
+                               Text="{Binding No}"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5" />
+                    </Border>
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="{Binding NextName, StringFormat='This screen is shared — ▶️ returns the value to {0}'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

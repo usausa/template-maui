@@ -7,9 +7,9 @@ public sealed class ParameterBuilder
     public void Add(string key, string value)
     {
         parameterString.Append(parameterString.Length == 0 ? '?' : '&');
-        parameterString.Append(key);
+        parameterString.Append(Uri.EscapeDataString(key));
         parameterString.Append('=');
-        parameterString.Append(value);
+        parameterString.Append(Uri.EscapeDataString(value));
     }
 
     public void AddIfNotEmpty(string key, string value)

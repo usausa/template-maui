@@ -6,7 +6,6 @@ using SkiaSharp.Views.Maui;
 // Resources
 //--------------------------------------------------------------------------------
 #pragma warning disable IDE0032
-#pragma warning disable CA1822 // Mark members as static
 public static class SocialFonts
 {
     private static SKTypeface? notoSerifJP;
@@ -116,7 +115,7 @@ public sealed class SocialIcon : SocialControl
         paint.Color = new SKColor(224, 224, 224);
         var x = (info.Width - font.MeasureText(text)) / 2;
         var y = ((info.Height - fontHeight) / 2) + fontHeight;
-        canvas.DrawText(text, x, y, font, paint);
+        canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);
     }
 }
 
@@ -183,7 +182,7 @@ public sealed class SocialEpisode : SocialControl
         paint.Color = SocialResources.TextColor;
         var x = margin + leftBorder;
         var y = fontHeight;
-        canvas.DrawText(text, x, y, font, paint);
+        canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);
     }
 }
 
@@ -208,7 +207,7 @@ public sealed class SocialPlayer : SocialControl
         nameof(Percent),
         typeof(double),
         typeof(SocialPlayer),
-        propertyChanged: Invalidate);
+        propertyChanged: OnPercentChanged);
 
     public double Percent
     {
@@ -228,9 +227,58 @@ public sealed class SocialPlayer : SocialControl
         set => SetValue(ProgressColorProperty, value);
     }
 
+    private const string ExpAnimationName = "SocialPlayerExp";
+
+    private double displayPercent;
+
     public SocialPlayer()
     {
         PaintSurface += OnPaintSurface;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        // 表示のたびに 0 から現在値までアニメーションする
+        displayPercent = 0;
+        AnimateExp(Percent);
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        this.AbortAnimation(ExpAnimationName);
+    }
+
+    private static void OnPercentChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SocialPlayer)bindable;
+        if (control.IsLoaded)
+        {
+            control.AnimateExp((double)newValue);
+        }
+    }
+
+    private void AnimateExp(double percent)
+    {
+        var from = displayPercent;
+
+        this.AbortAnimation(ExpAnimationName);
+        this.Animate(
+            ExpAnimationName,
+            v =>
+            {
+                displayPercent = from + ((percent - from) * v);
+                InvalidateSurface();
+            },
+            16,
+            800,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                displayPercent = percent;
+                InvalidateSurface();
+            });
     }
 
     // TODO
@@ -267,19 +315,19 @@ public sealed class SocialPlayer : SocialControl
         canvas.DrawRect(new SKRect(imageRight, 0, info.Rect.Right, info.Height), paint);
 
         var bitmap = SocialResources.PlayerBitmap;
-        canvas.DrawBitmap(bitmap, new SKRect(0, 0, bitmap.Width, bitmap.Height), new SKRect(leftBorder + imageBorder, imageBorder, leftBorder + imageBorder + imageSize, imageBorder + imageSize));
+        canvas.DrawBitmap(bitmap, new SKRect(0, 0, bitmap.Width, bitmap.Height), new SKRect(leftBorder + imageBorder, imageBorder, leftBorder + imageBorder + imageSize, imageBorder + imageSize), SKSamplingOptions.Default);
 
         paint.Color = SocialResources.TextColor;
-        canvas.DrawText("PLAYER", imageRight + space, imageBorder + font1Height, font1, paint);
-        canvas.DrawText("山奥通信", imageRight + space, imageBorder + font1Height + font2Height, font2, paint);
+        canvas.DrawText("PLAYER", imageRight + space, imageBorder + font1Height, SKTextAlign.Left, font1, paint);
+        canvas.DrawText("山奥通信", imageRight + space, imageBorder + font1Height + font2Height, SKTextAlign.Left, font2, paint);
 
         var level = "LEVEL 13";
-        canvas.DrawText(level, info.Rect.Right - font3.MeasureText(level) - imageBorder, info.Height - imageBorder - expHeight - space, font3, paint);
+        canvas.DrawText(level, info.Rect.Right - font3.MeasureText(level) - imageBorder, info.Height - imageBorder - expHeight - space, SKTextAlign.Left, font3, paint);
 
         paint.Color = new SKColor(33, 33, 33);
         canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + expWidth, info.Height - imageBorder - expHeight), paint);
         paint.Color = ProgressColor.ToSKColor();
-        canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + (int)(expWidth * Percent / 100), info.Height - imageBorder - expHeight), paint);
+        canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + (int)(expWidth * displayPercent / 100), info.Height - imageBorder - expHeight), paint);
     }
 }
 
@@ -304,7 +352,7 @@ public sealed class SocialCounter : SocialControl
         nameof(Counter),
         typeof(int),
         typeof(SocialCounter),
-        propertyChanged: Invalidate);
+        propertyChanged: OnCounterChanged);
 
     public int Counter
     {
@@ -312,9 +360,61 @@ public sealed class SocialCounter : SocialControl
         set => SetValue(CounterProperty, value);
     }
 
+    private const string ValueAnimationName = "SocialCounterValue";
+
+    private float displayProgress = 1f;
+
     public SocialCounter()
     {
         PaintSurface += OnPaintSurface;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        // 表示のたびに 0 から現在値までカウントアップする
+        displayProgress = 0f;
+        AnimateValues();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        this.AbortAnimation(ValueAnimationName);
+    }
+
+    private static void OnCounterChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SocialCounter)bindable;
+        if (control.IsLoaded)
+        {
+            control.displayProgress = 0f;
+            control.AnimateValues();
+        }
+        else
+        {
+            control.InvalidateSurface();
+        }
+    }
+
+    private void AnimateValues()
+    {
+        this.AbortAnimation(ValueAnimationName);
+        this.Animate(
+            ValueAnimationName,
+            v =>
+            {
+                displayProgress = (float)v;
+                InvalidateSurface();
+            },
+            16,
+            800,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                displayProgress = 1f;
+                InvalidateSurface();
+            });
     }
 
     // TODO
@@ -344,7 +444,7 @@ public sealed class SocialCounter : SocialControl
             "money" => SocialResources.MoneyBitmap,
             _ => default!
         };
-        canvas.DrawBitmap(bitmap, new SKRect(0, 0, bitmap.Width, bitmap.Height), new SKRect(space, space, info.Height - space, info.Height - space));
+        canvas.DrawBitmap(bitmap, new SKRect(0, 0, bitmap.Width, bitmap.Height), new SKRect(space, space, info.Height - space, info.Height - space), SKSamplingOptions.Default);
 
         // Button
         paint.Color = new SKColor(96, 125, 139);
@@ -354,14 +454,14 @@ public sealed class SocialCounter : SocialControl
         var text = "+";
         var x = info.Rect.Right - info.Height + ((info.Height - font.MeasureText(text)) / 2);
         var y = ((info.Height - fontHeight) / 2) + fontHeight;
-        canvas.DrawText(text, x, y, font, paint);
+        canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);
 
         // Counter
         paint.Color = new SKColor(224, 224, 224);
-        text = $"{Counter:N0}";
+        text = $"{(int)(Counter * displayProgress):N0}";
         x = info.Rect.Right - info.Height - font.MeasureText(text);
         y = ((info.Height - fontHeight) / 2) + fontHeight;
-        canvas.DrawText(text, x, y, font, paint);
+        canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);
     }
 }
 
@@ -382,10 +482,24 @@ public sealed class SocialAlert : SocialControl
         set => SetValue(ColorProperty, value);
     }
 
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(
+        nameof(Title),
+        typeof(string),
+        typeof(SocialAlert),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
         nameof(Text),
         typeof(string),
         typeof(SocialAlert),
+        string.Empty,
         propertyChanged: Invalidate);
 
     public string Text
@@ -431,9 +545,11 @@ public sealed class SocialAlert : SocialControl
         canvas.DrawRect(new SKRect(0, 0, sideBorder, titleHeight), paint);
         canvas.DrawRect(new SKRect(info.Rect.Right - sideBorder, 0, info.Rect.Right, titleHeight), paint);
 
-        canvas.DrawText("BEAST ALERT", (info.Width - font1.MeasureText("BEAST ALERT")) / 2, border + space + font1Height, font1, paint);
+        var title = Title;
+        var text = Text;
+        canvas.DrawText(title, (info.Width - font1.MeasureText(title)) / 2, border + space + font1Height, SKTextAlign.Left, font1, paint);
 
-        canvas.DrawText("牛鬼級旅団出現", (info.Width - font2.MeasureText("牛鬼級旅団出現")) / 2, titleHeight + font2Height, font2, paint);
+        canvas.DrawText(text, (info.Width - font2.MeasureText(text)) / 2, titleHeight + font2Height, SKTextAlign.Left, font2, paint);
     }
 }
 
@@ -563,14 +679,14 @@ public sealed class SocialNotification : SocialControl
         paint.Color = SocialResources.TextColor;
 
         y += font1Height;
-        canvas.DrawText(Text1, x, y, font1, paint);
+        canvas.DrawText(Text1, x, y, SKTextAlign.Left, font1, paint);
 
         y += space;
 
         y += font2Height;
-        canvas.DrawText(Text2, x, y, font2, paint);
+        canvas.DrawText(Text2, x, y, SKTextAlign.Left, font2, paint);
         y += font3Height;
-        canvas.DrawText(Text3, x, y, font3, paint);
+        canvas.DrawText(Text3, x, y, SKTextAlign.Left, font3, paint);
     }
 }
 
@@ -631,7 +747,7 @@ public sealed class SocialStatus : SocialControl
         nameof(Value1),
         typeof(int),
         typeof(SocialStatus),
-        propertyChanged: Invalidate);
+        propertyChanged: OnValueChanged);
 
     public int Value1
     {
@@ -643,7 +759,7 @@ public sealed class SocialStatus : SocialControl
         nameof(Value2),
         typeof(int),
         typeof(SocialStatus),
-        propertyChanged: Invalidate);
+        propertyChanged: OnValueChanged);
 
     public int Value2
     {
@@ -655,12 +771,38 @@ public sealed class SocialStatus : SocialControl
         nameof(Value3),
         typeof(int),
         typeof(SocialStatus),
-        propertyChanged: Invalidate);
+        propertyChanged: OnValueChanged);
 
     public int Value3
     {
         get => (int)GetValue(Value3Property);
         set => SetValue(Value3Property, value);
+    }
+
+    public static readonly BindableProperty Title1Property = BindableProperty.Create(
+        nameof(Title1),
+        typeof(string),
+        typeof(SocialStatus),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title1
+    {
+        get => (string)GetValue(Title1Property);
+        set => SetValue(Title1Property, value);
+    }
+
+    public static readonly BindableProperty Title2Property = BindableProperty.Create(
+        nameof(Title2),
+        typeof(string),
+        typeof(SocialStatus),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title2
+    {
+        get => (string)GetValue(Title2Property);
+        set => SetValue(Title2Property, value);
     }
 
     public static readonly BindableProperty Text1Property = BindableProperty.Create(
@@ -699,9 +841,61 @@ public sealed class SocialStatus : SocialControl
         set => SetValue(Text3Property, value);
     }
 
+    private const string ValueAnimationName = "SocialStatusValue";
+
+    private float displayProgress = 1f;
+
     public SocialStatus()
     {
         PaintSurface += OnPaintSurface;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        // 表示のたびに 0 から現在値までアニメーションする
+        displayProgress = 0f;
+        AnimateValues();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        this.AbortAnimation(ValueAnimationName);
+    }
+
+    private static void OnValueChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SocialStatus)bindable;
+        if (control.IsLoaded)
+        {
+            control.displayProgress = 0f;
+            control.AnimateValues();
+        }
+        else
+        {
+            control.InvalidateSurface();
+        }
+    }
+
+    private void AnimateValues()
+    {
+        this.AbortAnimation(ValueAnimationName);
+        this.Animate(
+            ValueAnimationName,
+            v =>
+            {
+                displayProgress = (float)v;
+                InvalidateSurface();
+            },
+            16,
+            800,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                displayProgress = 1f;
+                InvalidateSurface();
+            });
     }
 
     // TODO
@@ -747,9 +941,11 @@ public sealed class SocialStatus : SocialControl
 
         paint.Color = SocialResources.TextColor;
 
+        var title1 = Title1;
+        var title2 = Title2;
         y += font1Height;
-        canvas.DrawText("甲種聖装 瑠璃", x, y, font1, paint);
-        canvas.DrawText("A FORM", info.Rect.Right - margin - font2.MeasureText("A FORM"), y, font2, paint);
+        canvas.DrawText(title1, x, y, SKTextAlign.Left, font1, paint);
+        canvas.DrawText(title2, info.Rect.Right - margin - font2.MeasureText(title2), y, SKTextAlign.Left, font2, paint);
 
         y += margin * 2;
 
@@ -766,14 +962,14 @@ public sealed class SocialStatus : SocialControl
         var text1 = Text1;
         x = (int)(centerX - (font3.MeasureText(text1) / 2));
         y = centerY + (font3Height / 2);
-        canvas.DrawText(text1, x, y, font3, paint);
+        canvas.DrawText(text1, x, y, SKTextAlign.Left, font3, paint);
 
         // Value1
-        var value1 = Value1;
+        var value1 = (int)(Value1 * displayProgress);
         var value1Text = $"{value1:N0}";
         x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
         y = centerY + (font2Height / 2) - levelHeight;
-        canvas.DrawText(value1Text, x, y, font2, paint);
+        canvas.DrawText(value1Text, x, y, SKTextAlign.Left, font2, paint);
 
         // Line1
         y = centerY + (font2Height / 2);
@@ -792,14 +988,14 @@ public sealed class SocialStatus : SocialControl
         var text2 = Text2;
         x = (int)(centerX - (font3.MeasureText(text2) / 2));
         y = centerY + (font3Height / 2);
-        canvas.DrawText(text2, x, y, font3, paint);
+        canvas.DrawText(text2, x, y, SKTextAlign.Left, font3, paint);
 
         // Value2
-        var value2 = Value2;
+        var value2 = (int)(Value2 * displayProgress);
         var value2Text = $"{value2:N0}";
         x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
         y = centerY + (font2Height / 2) - levelHeight;
-        canvas.DrawText(value2Text, x, y, font2, paint);
+        canvas.DrawText(value2Text, x, y, SKTextAlign.Left, font2, paint);
 
         // Line2
         y = centerY + (font2Height / 2);
@@ -818,14 +1014,14 @@ public sealed class SocialStatus : SocialControl
         var text3 = Text3;
         x = (int)(centerX - (font3.MeasureText(text3) / 2));
         y = centerY + (font3Height / 2);
-        canvas.DrawText(text3, x, y, font3, paint);
+        canvas.DrawText(text3, x, y, SKTextAlign.Left, font3, paint);
 
         // Value3
-        var value3 = Value3;
+        var value3 = (int)(Value3 * displayProgress);
         var value3Text = $"{value3:N0}";
         x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
         y = centerY + (font2Height / 2) - levelHeight;
-        canvas.DrawText(value3Text, x, y, font2, paint);
+        canvas.DrawText(value3Text, x, y, SKTextAlign.Left, font2, paint);
 
         // Line3
         y = centerY + (font2Height / 2);
@@ -851,6 +1047,31 @@ public sealed class SocialInformation : SocialControl
     {
         get => (Color)GetValue(ColorProperty);
         set => SetValue(ColorProperty, value);
+    }
+
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(
+        nameof(Title),
+        typeof(string),
+        typeof(SocialInformation),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    public static readonly BindableProperty UnitsProperty = BindableProperty.Create(
+        nameof(Units),
+        typeof(IReadOnlyList<SocialUnit>),
+        typeof(SocialInformation),
+        propertyChanged: Invalidate);
+
+    public IReadOnlyList<SocialUnit>? Units
+    {
+        get => (IReadOnlyList<SocialUnit>?)GetValue(UnitsProperty);
+        set => SetValue(UnitsProperty, value);
     }
 
     public SocialInformation()
@@ -896,31 +1117,24 @@ public sealed class SocialInformation : SocialControl
         paint.Color = SocialResources.TextColor;
 
         y += font1Height;
-        canvas.DrawText("投入戦力 支援部隊", x, y, font1, paint);
-
-        y += margin * 2;
-
-        y += font2Height;
-        canvas.DrawText("辺境伯直属戦術機甲大隊", x, y, font2, paint);
-        y += font3Height;
-        canvas.DrawText("WOLF GRP", x, y, font3, paint);
-        canvas.DrawText("MF-4000 x36", info.Rect.Right - margin - font3.MeasureText("MF-4000 x36"), y, font3, paint);
+        canvas.DrawText(Title, x, y, SKTextAlign.Left, font1, paint);
 
         y += margin;
 
-        y += font2Height;
-        canvas.DrawText("第二騎士団聖女計画特務中隊", x, y, font2, paint);
-        y += font3Height;
-        canvas.DrawText("HOUND SQD", x, y, font3, paint);
-        canvas.DrawText("TYPE-19E x10 + JXD-20", info.Rect.Right - margin - font3.MeasureText("TYPE-19E x10 + JXD-20"), y, font3, paint);
+        var units = Units;
+        if (units is not null)
+        {
+            foreach (var unit in units)
+            {
+                y += margin;
 
-        y += margin;
-
-        y += font2Height;
-        canvas.DrawText("第三騎士団突撃前衛部隊", x, y, font2, paint);
-        y += font3Height;
-        canvas.DrawText("VIPPERS", x, y, font3, paint);
-        canvas.DrawText("TYPE-19 BLOOD x8", info.Rect.Right - margin - font3.MeasureText("TYPE-19 BLOOD x8"), y, font3, paint);
+                y += font2Height;
+                canvas.DrawText(unit.Name, x, y, SKTextAlign.Left, font2, paint);
+                y += font3Height;
+                canvas.DrawText(unit.Code, x, y, SKTextAlign.Left, font3, paint);
+                canvas.DrawText(unit.Force, info.Rect.Right - margin - font3.MeasureText(unit.Force), y, SKTextAlign.Left, font3, paint);
+            }
+        }
     }
 }
 
@@ -1039,12 +1253,12 @@ public sealed class SocialMenu : SocialControl
         var text1X = (int)((clientRect.Width - text1Width) / 2) + leftBorder;
         var text1H = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var text1Y = ((info.Height - text2Height - (border * 5)) / 2) + (text1H / 2);
-        canvas.DrawText(text1, text1X, text1Y, font1, paint);
+        canvas.DrawText(text1, text1X, text1Y, SKTextAlign.Left, font1, paint);
 
         // Text2
         paint.Color = SocialResources.MenuTextColor;
         var text2Width = font2.MeasureText(text2, paint);
         var text2X = (int)((clientRect.Width - text2Width) / 2) + leftBorder;
-        canvas.DrawText(text2, text2X, info.Height - (border * 3), font2, paint);
+        canvas.DrawText(text2, text2X, info.Height - (border * 3), SKTextAlign.Left, font2, paint);
     }
 }

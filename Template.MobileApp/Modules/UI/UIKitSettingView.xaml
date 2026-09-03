@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIKitSettingView"
+             x:DataType="{x:Type module:UIKitSettingViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIKitSettingViewModel}"
+             shell:ShellProperty.Title="Kit Settings"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll" TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
+            </Style>
+
+            <Style x:Key="SectionLabel" TargetType="Label">
+                <Setter Property="Margin" Value="16,16,16,4" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="GroupBorder" TargetType="Border">
+                <Setter Property="Margin" Value="12,0,12,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="RowGrid" TargetType="Grid">
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="RowIcon" TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="RowTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="RowChevron" TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout>
+
+            <Label Style="{StaticResource SectionLabel}" Text="ACCOUNT"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp" />
+            <Border Style="{StaticResource GroupBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AccountItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="module:UIKitSettingItem">
+                            <Grid Style="{StaticResource RowGrid}"
+                                  ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Style="{StaticResource RowIcon}" Text="{Binding Icon}" />
+                                <Label Grid.Column="1" Style="{StaticResource RowTitle}" Text="{Binding Title}" />
+                                <Label Grid.Column="2" Style="{StaticResource RowChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource SectionLabel}" Text="PREFERENCES"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="160" />
+            <Border Style="{StaticResource GroupBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreferenceItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="module:UIKitSettingItem">
+                            <Grid Style="{StaticResource RowGrid}"
+                                  ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Style="{StaticResource RowIcon}" Text="{Binding Icon}" />
+                                <Label Grid.Column="1" Style="{StaticResource RowTitle}" Text="{Binding Title}" />
+                                <Switch Grid.Column="2" IsToggled="{Binding IsOn}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

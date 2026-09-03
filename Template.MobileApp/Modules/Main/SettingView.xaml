@@ -5,6 +5,8 @@
              xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
              x:Class="Template.MobileApp.Modules.Main.SettingView"
              x:DataType="{x:Type module:SettingViewModel}"
@@ -13,38 +15,266 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:NullToBoolConverter x:Key="EmptyConverter"
+                                   HandleEmptyString="True"
+                                   NullValue="True"
+                                   NonNullValue="False" />
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource FillGrid}">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="GuideBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="GuideStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="GuideIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="GuideLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SettingPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="SettingPanelStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="SectionHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SectionHeaderIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SectionHeaderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SettingRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="MinimumHeightRequest" Value="26" />
+            </Style>
+
+            <Style x:Key="SettingCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="WidthRequest" Value="108" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SettingValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="behaviors:AnimationOption.HighlightColor" Value="{StaticResource AmberLighten4}" />
+            </Style>
+
+            <Style x:Key="SettingEmptyLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="Text" Value="(not set)" />
+            </Style>
+
+            <Style x:Key="PanelDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="*,Auto">
 
         <scanner:CameraView Grid.Row="0"
                             behaviors:BarcodeBind.Controller="{Binding Controller}"
                             OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
-        <VerticalStackLayout Grid.Row="1"
-                             Style="{StaticResource FillVerticalStack}">
+        <!-- スキャンガイド -->
+        <Border Grid.Row="0"
+                Style="{StaticResource GuideBorder}">
+            <HorizontalStackLayout Style="{StaticResource GuideStack}">
+                <Label Style="{StaticResource GuideIcon}"
+                       Text="{x:Static fonts:MaterialIcons.Qr_code}" />
+                <Label Style="{StaticResource GuideLabel}"
+                       Text="Scan configuration QR" />
+            </HorizontalStackLayout>
+        </Border>
 
-            <Label Style="{StaticResource GroupLabel}"
-                   Text="Network" />
+        <!-- 設定値パネル -->
+        <Border Grid.Row="1"
+                Style="{StaticResource SettingPanelBorder}">
+            <VerticalStackLayout Style="{StaticResource SettingPanelStack}">
 
-            <Label Style="{StaticResource NameLabel}"
-                   Text="EndPoint" />
-            <Label Style="{StaticResource ValueLabel}"
-                   Text="{Binding ApiEndPoint}" />
+                <Grid Style="{StaticResource SectionHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SectionHeaderIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Public}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SectionHeaderLabel}"
+                           Text="Network" />
+                </Grid>
 
-            <Label Style="{StaticResource GroupLabel}"
-                   Text="AI Service" />
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="EndPoint" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding ApiEndPoint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding ApiEndPoint}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ApiEndPoint}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding ApiEndPoint, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
 
-            <Label Style="{StaticResource NameLabel}"
-                   Text="EndPoint" />
-            <Label Style="{StaticResource ValueLabel}"
-                   Text="{Binding AIServiceEndPoint}" />
+                <BoxView Style="{StaticResource PanelDivider}" />
 
-            <Label Style="{StaticResource NameLabel}"
-                   Text="ServiceKey" />
-            <Label Style="{StaticResource ValueLabel}"
-                   Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}" />
+                <Grid Style="{StaticResource SectionHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SectionHeaderIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Memory}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SectionHeaderLabel}"
+                           Text="AI Service" />
+                </Grid>
 
-        </VerticalStackLayout>
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="EndPoint" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding AIServiceEndPoint}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceEndPoint}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="ServiceKey" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceKey}" />
+                </Grid>
+
+                <BoxView Style="{StaticResource PanelDivider}" />
+
+                <Grid Style="{StaticResource SectionHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SectionHeaderIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Sync_alt}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SectionHeaderLabel}"
+                           Text="SCP" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Host" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding ScpHost, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding ScpHost}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpHost}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding ScpHost, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="User" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding ScpUser, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding ScpUser}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpUser}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding ScpUser, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Password" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           Text="{Binding ScpPassword, Converter={StaticResource MaskTextConverter}}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpPassword}" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
     </Grid>
 
 </ContentView>

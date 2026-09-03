@@ -2,20 +2,33 @@ namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components;
 
-public sealed class DeviceOcrViewModel : AppViewModelBase
+public sealed partial class DeviceOcrViewModel : AppViewModelBase
 {
-    private readonly IDialog dialog;
-
     private readonly IOcrReader ocrReader;
 
     public CameraController Controller { get; } = new();
 
+    [ObservableProperty]
+    public partial string RecognizedText { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsProcessing { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsCameraEnabled { get; set; }
+
     public DeviceOcrViewModel(
-        IDialog dialog,
         IOcrReader ocrReader)
     {
-        this.dialog = dialog;
         this.ocrReader = ocrReader;
+
+        RecognizedText = string.Empty;
+    }
+
+    public override async Task OnNavigatedToAsync(INavigationContext context)
+    {
+        // CameraViewがプレビューを自動開始するため事前に権限を要求しておく
+        IsCameraEnabled = await Permissions.RequestCameraAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -24,16 +37,29 @@ public sealed class DeviceOcrViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-        if (input is null)
+        if (IsProcessing || !IsCameraEnabled)
         {
             return;
         }
 
-        var text = await ocrReader.ReadTextAsync(input);
-        if (!String.IsNullOrEmpty(text))
+        IsProcessing = true;
+        try
         {
-            await dialog.InformationAsync(text);
+            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
+            if (input is null)
+            {
+                return;
+            }
+
+            var text = await ocrReader.ReadTextAsync(input);
+            if (!String.IsNullOrEmpty(text))
+            {
+                RecognizedText = text;
+            }
+        }
+        finally
+        {
+            IsProcessing = false;
         }
     }
 }

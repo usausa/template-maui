@@ -13,6 +13,7 @@ public sealed class DataServiceOptions
     public string Path { get; set; } = default!;
 }
 
+#pragma warning disable CA1002
 public sealed class DataService
 {
     private readonly DataServiceOptions options;
@@ -23,20 +24,28 @@ public sealed class DataService
     {
         this.options = options;
 
-        var connectionString = $"Data Source={options.Path}";
+        // busy_timeoutはPRAGMAだと接続単位になり他接続へ効かないため、接続文字列で全接続に適用する
+        var connectionString = $"Data Source={options.Path};Default Timeout=3";
         provider = new DelegateDbProvider(() => new SqliteConnection(connectionString));
     }
 
     public async ValueTask RebuildAsync()
     {
-        if (File.Exists(options.Path))
+        // WAL有効時は-wal/-shmも消さないと、異常終了後に旧WALが新しいDBへ適用される
+        foreach (var path in new[] { options.Path, $"{options.Path}-wal", $"{options.Path}-shm" })
         {
-            File.Delete(options.Path);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
         }
 
         await provider.UsingAsync(static async con =>
         {
             await con.ExecuteAsync("PRAGMA AUTO_VACUUM=1");
+            // WALはDBファイルに永続化され以後の全接続に適用される。busy_timeoutは複数スレッド同時アクセス時のSQLITE_BUSY対策
+            await con.ExecuteAsync("PRAGMA journal_mode=WAL");
+            await con.ExecuteAsync("PRAGMA busy_timeout=3000");
             await con.ExecuteAsync(SqlHelper.MakeCreate<DataEntity>());
             await con.ExecuteAsync(SqlHelper.MakeCreate<BulkDataEntity>());
             await con.ExecuteAsync(SqlHelper.MakeCreate<WorkEntity>());
@@ -128,10 +137,10 @@ public sealed class DataService
     //--------------------------------------------------------------------------------
 
     public ValueTask<List<WorkEntity>> QueryWorkListAsync() =>
-        provider.Using(static con => con.QueryListAsync<WorkEntity>(SqlSelect<WorkEntity>.All()));
+        provider.UsingAsync(static con => con.QueryListAsync<WorkEntity>(SqlSelect<WorkEntity>.All()));
 
     public ValueTask<WorkEntity?> QueryWorkAsync(int id) =>
-        provider.Using(con =>
+        provider.UsingAsync(con =>
             con.QueryFirstOrDefaultAsync<WorkEntity>(SqlSelect<WorkEntity>.ByKey(), new { Id = id }));
 
     public ValueTask InsertWorkEnumerableAsync(IEnumerable<WorkEntity> source) =>
@@ -148,8 +157,10 @@ public sealed class DataService
     public ValueTask InsertWorkAsync(string name) =>
         provider.UsingAsync(async con =>
         {
-            var maxId = await con.ExecuteScalarAsync<int>("SELECT MAX(Id) FROM Work");
-            await con.ExecuteAsync(SqlInsert<WorkEntity>.Values(), new WorkEntity { Id = maxId + 1, Name = name });
+            // 採番をINSERT単文内で行い、SELECT MAX→INSERTの非アトミック競合を解消
+            await con.ExecuteAsync(
+                "INSERT INTO Work (Id, Name) VALUES ((SELECT COALESCE(MAX(Id), 0) + 1 FROM Work), @Name)",
+                new { Name = name });
         });
 
     public ValueTask<int> UpdateWorkAsync(WorkEntity entity) =>
@@ -158,3 +169,4 @@ public sealed class DataService
     public ValueTask<int> DeleteWorkAsync(long id) =>
         provider.UsingAsync(con => con.ExecuteAsync(SqlDelete<WorkEntity>.ByKey(), new { Id = id }));
 }
+#pragma warning restore CA1002

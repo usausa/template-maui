@@ -70,6 +70,18 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         set => SetValue(ThresholdProperty, value);
     }
 
+    public static readonly BindableProperty PeakValueProperty = BindableProperty.Create(
+        nameof(PeakValue),
+        typeof(double),
+        typeof(NoiseGauge),
+        propertyChanged: Invalidate);
+
+    public double PeakValue
+    {
+        get => (double)GetValue(PeakValueProperty);
+        set => SetValue(PeakValueProperty, value);
+    }
+
     // Size
 
     public static readonly BindableProperty BorderMarginProperty = BindableProperty.Create(
@@ -325,6 +337,19 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         set => SetValue(NeedleCenterColorProperty, value);
     }
 
+    public static readonly BindableProperty PeakNeedleColorProperty = BindableProperty.Create(
+        nameof(PeakNeedleColor),
+        typeof(Color),
+        typeof(NoiseGauge),
+        Colors.Gold,
+        propertyChanged: Invalidate);
+
+    public Color PeakNeedleColor
+    {
+        get => (Color)GetValue(PeakNeedleColorProperty);
+        set => SetValue(PeakNeedleColorProperty, value);
+    }
+
     public NoiseGauge()
     {
         Drawable = this;
@@ -457,11 +482,23 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         canvas.StrokeColor = warningGaugeColor;
         canvas.DrawArc(rect, warningStart, EndAngle, true, false);
 
+        // Peak needle (直近ピークを示す細針。本針より先に描いて下に重ねる)
+        var needleLengthBase = (radius - MajorTickLength) * NeedleLengthPercentage;
+        var peak = PeakValue;
+        if (peak > min)
+        {
+            var peakRadian = (float)((StartAngle - (RangeAngle * (Math.Clamp(peak, min, max) - min) / range)) * MathF.PI / 180);
+            canvas.StrokeLineCap = LineCap.Round;
+            canvas.StrokeColor = PeakNeedleColor;
+            canvas.StrokeSize = 3f;
+            canvas.DrawLine(cx, cy, cx + (needleLengthBase * MathF.Cos(peakRadian)), cy - (needleLengthBase * MathF.Sin(peakRadian)));
+        }
+
         // Needle
         var value = Math.Clamp(Value, min, max);
         var needleRadian = (float)((StartAngle - (RangeAngle * (value - Min) / range)) * MathF.PI / 180);
 
-        var needleLength = (radius - MajorTickLength) * NeedleLengthPercentage;
+        var needleLength = needleLengthBase;
         var needleBackLength = (radius - MajorTickLength) * NeedleBackLengthPercentage;
         var baseCenterX = cx - (needleBackLength * MathF.Cos(needleRadian));
         var baseCenterY = cy + (needleBackLength * MathF.Sin(needleRadian));

@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceInfoView"
              x:DataType="{x:Type module:DeviceInfoViewModel}"
@@ -11,100 +14,119 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Device" />
+            <Style x:Key="InfoRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="2*,3*" />
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="Padding" Value="0,4" />
+            </Style>
 
-        <Grid Style="{StaticResource FillGrid}"
-              RowDefinitions="*,*,*"
-              ColumnDefinitions="2*,3*">
-            <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Version" />
-            <Label Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding DeviceVersion}" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
-            <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Name" />
-            <Label Grid.Row="1" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding DeviceName}" />
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
 
-            <Label Grid.Row="2" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Emulator" />
-            <Label Grid.Row="2" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding IsDeviceEmulator}" />
-        </Grid>
+            <controls:InfoCard Title="Device"
+                               Icon="{x:Static fonts:MaterialIcons.Smartphone}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <Grid Style="{StaticResource InfoRowGrid}"
+                      RowDefinitions="Auto,Auto,Auto">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Version" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceVersion}" />
 
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Application" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Name" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceName}" />
 
-        <Grid Style="{StaticResource FillGrid}"
-              RowDefinitions="*,*,*,*"
-              ColumnDefinitions="2*,3*">
-            <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Name" />
-            <Label Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding ApplicationName}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Emulator" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding IsDeviceEmulator}" />
+                </Grid>
+            </controls:InfoCard>
 
-            <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="PackageName" />
-            <Label Grid.Row="1" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding ApplicationPackageName}" />
+            <controls:InfoCard Title="Application"
+                               Icon="{x:Static fonts:MaterialIcons.Apps}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <Grid Style="{StaticResource InfoRowGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Name" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationName}" />
 
-            <Label Grid.Row="2" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Version" />
-            <Label Grid.Row="2" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding ApplicationVersion}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="PackageName" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationPackageName}" />
 
-            <Label Grid.Row="3" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Build" />
-            <Label Grid.Row="3" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding ApplicationBuild}" />
-        </Grid>
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Version" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationVersion}" />
 
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Display" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Build" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationBuild}" />
+                </Grid>
+            </controls:InfoCard>
 
-        <Grid Style="{StaticResource FillGrid}"
-              RowDefinitions="*,*,*"
-              ColumnDefinitions="2*,3*">
-            <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Width" />
-            <Label Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding DisplayWidth}" />
+            <controls:InfoCard Title="Display"
+                               Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200">
+                <Grid Style="{StaticResource InfoRowGrid}"
+                      RowDefinitions="Auto,Auto,Auto">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Width" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DisplayWidth, StringFormat='{0:F0} px'}" />
 
-            <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Height" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Height" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DisplayHeight, StringFormat='{0:F0} px'}" />
 
-            <Label Grid.Row="1" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding DisplayHeight}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Density" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DisplayDensity, StringFormat='{0:F1}'}" />
+                </Grid>
+            </controls:InfoCard>
 
-            <Label Grid.Row="2" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Density" />
-            <Label Grid.Row="2" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding DisplayDensity}" />
-        </Grid>
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

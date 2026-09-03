@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewDragDropView"
+             x:DataType="{x:Type module:ViewDragDropViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewDragDropViewModel}"
+             shell:ShellProperty.Title="DragDrop"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- 標準の DragGestureRecognizer / DropGestureRecognizer のデモ (長押しでドラッグ開始) -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="NoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TaskBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0,3" />
+            </Style>
+
+            <Style x:Key="TaskLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="Padding" Value="10,12" />
+            </Style>
+
+            <Style x:Key="ColumnBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="MinimumHeightRequest" Value="200" />
+            </Style>
+
+            <Style x:Key="ColumnHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="TrashBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeDashArray" Value="4,4" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="Padding" Value="0,10" />
+            </Style>
+
+            <Style x:Key="TrashLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- ドラッグ可能 + アイテム上へのドロップを受けるタスク行 (3 リスト共用) -->
+            <DataTemplate x:Key="TaskTemplate"
+                          x:DataType="{x:Type module:DragTask}">
+                <Border Style="{StaticResource TaskBorder}">
+                    <Border.GestureRecognizers>
+                        <DragGestureRecognizer CanDrag="True"
+                                               DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragStartingCommandParameter="{Binding .}" />
+                        <DropGestureRecognizer AllowDrop="True"
+                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DropCommandParameter="{Binding .}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="4,*">
+                        <BoxView Grid.Column="0"
+                                 Color="{Binding Accent}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TaskLabel}"
+                               Text="{Binding Text}" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="並べ替え"
+                               Icon="{x:Static fonts:MaterialIcons.Swap_vert}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="4">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="行を長押しでドラッグし、別の行に重ねて離すとその位置へ挿入される" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
+                                         BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="リスト間移動とゴミ箱"
+                               Icon="{x:Static fonts:MaterialIcons.Move_up}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Spacing="8">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除" />
+                    <Grid ColumnDefinitions="*,*"
+                          ColumnSpacing="8">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource ColumnBorder}">
+                            <Border.GestureRecognizers>
+                                <DropGestureRecognizer AllowDrop="True"
+                                                       DropCommand="{Binding DropOnListCommand}"
+                                                       DropCommandParameter="Todo" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="4">
+                                <Label Style="{StaticResource ColumnHeaderLabel}"
+                                       Text="TODO" />
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding TodoList}"
+                                                     BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1"
+                                Style="{StaticResource ColumnBorder}">
+                            <Border.GestureRecognizers>
+                                <DropGestureRecognizer AllowDrop="True"
+                                                       DropCommand="{Binding DropOnListCommand}"
+                                                       DropCommandParameter="Done" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="4">
+                                <Label Style="{StaticResource ColumnHeaderLabel}"
+                                       Text="DONE" />
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding DoneList}"
+                                                     BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                    <Border Style="{StaticResource TrashBorder}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding TrashActive}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
+                                <Setter Property="Stroke" Value="{StaticResource RedDefault}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <DropGestureRecognizer AllowDrop="True"
+                                                   DropCommand="{Binding DropOnTrashCommand}"
+                                                   DragOverCommand="{Binding TrashOverCommand}"
+                                                   DragLeaveCommand="{Binding TrashLeaveCommand}" />
+                        </Border.GestureRecognizers>
+                        <Label Style="{StaticResource TrashLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Delete}" />
+                    </Border>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

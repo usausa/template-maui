@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIGaugeView"
              x:DataType="{x:Type module:UIGaugeViewModel}"
@@ -11,6 +13,466 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <ContentView.Resources>
+        <conv:CompassDirectionConverter x:Key="CompassLabelConverter" />
+
+        <Style x:Key="GaugeScroll"
+               TargetType="ScrollView">
+            <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+        </Style>
+        <Style x:Key="GaugeGrid"
+               TargetType="Grid">
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="ColumnSpacing" Value="8" />
+            <Setter Property="RowSpacing" Value="8" />
+        </Style>
+        <Style x:Key="GaugePanel"
+               TargetType="Border">
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <Setter Property="Padding" Value="4,8,4,0" />
+            <Setter Property="Shadow">
+                <Shadow Brush="Black"
+                        Opacity="0.15"
+                        Radius="6"
+                        Offset="0,2" />
+            </Setter>
+        </Style>
+        <Style x:Key="GaugePanelTitle"
+               TargetType="Label">
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            <Setter Property="CharacterSpacing" Value="2" />
+        </Style>
+        <Style x:Key="GaugeItemLayout"
+               TargetType="VerticalStackLayout">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+
+        <Style x:Key="GaugeSliderBase"
+               TargetType="Slider">
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="MaximumTrackColor" Value="{StaticResource GrayLighten2}" />
+        </Style>
+        <Style x:Key="SliderPressure"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC0000" />
+            <Setter Property="MinimumTrackColor" Value="#CC0000" />
+        </Style>
+        <Style x:Key="SliderHumidity"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#2880FF" />
+            <Setter Property="MinimumTrackColor" Value="#2880FF" />
+        </Style>
+        <Style x:Key="SliderTemperature"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#DD6010" />
+            <Setter Property="MinimumTrackColor" Value="#DD6010" />
+        </Style>
+        <Style x:Key="SliderWindDirection"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC2020" />
+            <Setter Property="MinimumTrackColor" Value="#606060" />
+        </Style>
+        <Style x:Key="SliderSpeed"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC1818" />
+            <Setter Property="MinimumTrackColor" Value="#CC1818" />
+        </Style>
+        <Style x:Key="SliderTachometer"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC4400" />
+            <Setter Property="MinimumTrackColor" Value="#CC4400" />
+        </Style>
+
+        <!-- Sample 1: Pressure -->
+        <Style x:Key="GaugePressure"
+               TargetType="controls:Gauge">
+            <Setter Property="HeightRequest" Value="200" />
+            <Setter Property="MinValue" Value="950" />
+            <Setter Property="MaxValue" Value="1050" />
+            <Setter Property="BezelOuterThickness" Value="6" />
+            <Setter Property="BezelOuterStartColor" Value="#D0D0D0" />
+            <Setter Property="BezelOuterEndColor" Value="#606060" />
+            <Setter Property="BezelInnerThickness" Value="0" />
+            <Setter Property="ArcInnerExtent" Value="0.64" />
+            <Setter Property="ArcOuterExtent" Value="0.76" />
+            <Setter Property="MajorTickInterval" Value="10" />
+            <Setter Property="MajorTickInnerExtent" Value="0.63" />
+            <Setter Property="MajorTickOuterExtent" Value="0.77" />
+            <Setter Property="MajorTickColor" Value="#404040" />
+            <Setter Property="MinorTickInterval" Value="2" />
+            <Setter Property="MinorTickInnerExtent" Value="0.64" />
+            <Setter Property="MinorTickOuterExtent" Value="0.76" />
+            <Setter Property="MinorTickThickness" Value="0.5" />
+            <Setter Property="MinorTickColor" Value="#909090" />
+            <Setter Property="LabelInterval" Value="20" />
+            <Setter Property="LabelExtent" Value="0.88" />
+            <Setter Property="LabelFormat" Value="{}{0:N0}" />
+            <Setter Property="LabelFontSize" Value="9" />
+            <Setter Property="ValueFormat" Value="{}{0:N0}" />
+            <Setter Property="ValueFontSize" Value="18" />
+            <Setter Property="ValueOffsetY" Value="0.5" />
+            <Setter Property="Unit" Value="hPa" />
+            <Setter Property="UnitFontSize" Value="9" />
+            <Setter Property="UnitPosition" Value="Bottom" />
+            <Setter Property="NeedleEndExtent" Value="0.84" />
+            <Setter Property="NeedleStartWidth" Value="5" />
+            <Setter Property="PivotRadius" Value="5" />
+            <Setter Property="Ranges">
+                <Setter.Value>
+                    <x:Array Type="{x:Type controls:GaugeRange}">
+                        <controls:GaugeRange EndColor="#CC0000" EndValue="1050" StartColor="#FFB0B0" StartValue="950" />
+                    </x:Array>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sample 2: Humidity -->
+        <Style x:Key="GaugeHumidity"
+               TargetType="controls:Gauge">
+            <Setter Property="HeightRequest" Value="200" />
+            <Setter Property="MinValue" Value="0" />
+            <Setter Property="MaxValue" Value="100" />
+            <Setter Property="ValueColor" Value="White" />
+            <Setter Property="GaugeBackgroundColor" Value="#1A1E30" />
+            <Setter Property="BezelOuterThickness" Value="6" />
+            <Setter Property="BezelOuterStartColor" Value="#A0A8C0" />
+            <Setter Property="BezelOuterEndColor" Value="#404860" />
+            <Setter Property="BezelInnerThickness" Value="0" />
+            <Setter Property="ArcInnerExtent" Value="0.62" />
+            <Setter Property="ArcOuterExtent" Value="0.74" />
+            <Setter Property="ArcTrackColor" Value="#30FFFFFF" />
+            <Setter Property="MajorTickInterval" Value="10" />
+            <Setter Property="MajorTickInnerExtent" Value="0.62" />
+            <Setter Property="MajorTickOuterExtent" Value="0.78" />
+            <Setter Property="MajorTickColor" Value="White" />
+            <Setter Property="MinorTickInterval" Value="0" />
+            <Setter Property="LabelInterval" Value="20" />
+            <Setter Property="LabelExtent" Value="0.88" />
+            <Setter Property="LabelFormat" Value="{}{0:N0}%" />
+            <Setter Property="LabelFontSize" Value="9" />
+            <Setter Property="LabelColor" Value="White" />
+            <Setter Property="ValueFormat" Value="{}{0:N0}" />
+            <Setter Property="ValueFontSize" Value="14" />
+            <Setter Property="ValueOffsetY" Value="0.5" />
+            <Setter Property="Unit" Value="%" />
+            <Setter Property="UnitFontSize" Value="9" />
+            <Setter Property="UnitColor" Value="#80B0FF" />
+            <Setter Property="UnitPosition" Value="Right" />
+            <Setter Property="NeedleEndExtent" Value="0.86" />
+            <Setter Property="NeedleStartWidth" Value="6" />
+            <Setter Property="NeedleLeftColor" Value="#1848C0" />
+            <Setter Property="NeedleRightColor" Value="#2858D0" />
+            <Setter Property="PivotRadius" Value="5" />
+            <Setter Property="PivotColor" Value="#1848C0" />
+            <Setter Property="Ranges">
+                <Setter.Value>
+                    <x:Array Type="{x:Type controls:GaugeRange}">
+                        <controls:GaugeRange EndColor="#2060CC" EndValue="40" StartColor="#2060CC" StartValue="0" />
+                        <controls:GaugeRange EndColor="#40A0FF" EndValue="70" StartColor="#2880FF" StartValue="40" />
+                        <controls:GaugeRange EndColor="#60C0FF" EndValue="100" StartColor="#40A0FF" StartValue="70" />
+                    </x:Array>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sample 3: Temperature -->
+        <Style x:Key="GaugeTemperature"
+               TargetType="controls:Gauge">
+            <Setter Property="HeightRequest" Value="200" />
+            <Setter Property="MinValue" Value="-10" />
+            <Setter Property="MaxValue" Value="40" />
+            <Setter Property="ValueColor" Value="White" />
+            <Setter Property="GaugeBackgroundColor" Value="#1A1E30" />
+            <Setter Property="BezelOuterThickness" Value="6" />
+            <Setter Property="BezelOuterStartColor" Value="#A0A8C0" />
+            <Setter Property="BezelOuterEndColor" Value="#404860" />
+            <Setter Property="BezelInnerThickness" Value="0" />
+            <Setter Property="ArcInnerExtent" Value="0.84" />
+            <Setter Property="ArcOuterExtent" Value="0.92" />
+            <Setter Property="ArcTrackColor" Value="#30FFFFFF" />
+            <Setter Property="MajorTickInterval" Value="5" />
+            <Setter Property="MajorTickInnerExtent" Value="0.72" />
+            <Setter Property="MajorTickOuterExtent" Value="0.80" />
+            <Setter Property="MajorTickColor" Value="White" />
+            <Setter Property="MinorTickInterval" Value="1" />
+            <Setter Property="MinorTickInnerExtent" Value="0.76" />
+            <Setter Property="MinorTickOuterExtent" Value="0.80" />
+            <Setter Property="MinorTickColor" Value="#8090B0" />
+            <Setter Property="LabelInterval" Value="10" />
+            <Setter Property="LabelExtent" Value="0.64" />
+            <Setter Property="LabelFormat" Value="{}{0:N0}" />
+            <Setter Property="LabelFontSize" Value="10" />
+            <Setter Property="LabelColor" Value="White" />
+            <Setter Property="ValueFormat" Value="{}{0:N1}" />
+            <Setter Property="ValueFontSize" Value="14" />
+            <Setter Property="ValueOffsetY" Value="0.4" />
+            <Setter Property="Unit" Value="°C" />
+            <Setter Property="UnitFontSize" Value="9" />
+            <Setter Property="UnitColor" Value="#FFA040" />
+            <Setter Property="UnitPosition" Value="Right" />
+            <Setter Property="NeedleStartWidth" Value="8" />
+            <Setter Property="NeedleLeftColor" Value="#CC5000" />
+            <Setter Property="NeedleRightColor" Value="#DD6010" />
+            <Setter Property="PivotRadius" Value="8" />
+            <Setter Property="PivotColor" Value="#CC5000" />
+            <Setter Property="Ranges">
+                <Setter.Value>
+                    <x:Array Type="{x:Type controls:GaugeRange}">
+                        <controls:GaugeRange EndColor="#40C060" EndValue="10" StartColor="#3080FF" StartValue="-10" />
+                        <controls:GaugeRange EndColor="#C8D040" EndValue="25" StartColor="#40C060" StartValue="10" />
+                        <controls:GaugeRange EndColor="#FFA040" EndValue="35" StartColor="#C8D040" StartValue="25" />
+                        <controls:GaugeRange EndColor="#FF3010" EndValue="40" StartColor="#FFA040" StartValue="35" />
+                    </x:Array>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sample 4: Wind Direction -->
+        <Style x:Key="GaugeWindDirection"
+               TargetType="controls:Gauge">
+            <Setter Property="HeightRequest" Value="200" />
+            <Setter Property="MinValue" Value="0" />
+            <Setter Property="MaxValue" Value="360" />
+            <Setter Property="StartAngle" Value="0" />
+            <Setter Property="SweepAngle" Value="360" />
+            <Setter Property="GaugeBackgroundColor" Value="#383838" />
+            <Setter Property="BezelOuterThickness" Value="10" />
+            <Setter Property="BezelOuterStartColor" Value="#252525" />
+            <Setter Property="BezelOuterEndColor" Value="#252525" />
+            <Setter Property="BezelInnerThickness" Value="0" />
+            <Setter Property="ArcTrackColor" Value="Transparent" />
+            <Setter Property="ArcStartColor" Value="Transparent" />
+            <Setter Property="ArcEndColor" Value="Transparent" />
+            <Setter Property="MajorTickInterval" Value="45" />
+            <Setter Property="MajorTickInnerExtent" Value="0.62" />
+            <Setter Property="MajorTickOuterExtent" Value="0.78" />
+            <Setter Property="MajorTickThickness" Value="3" />
+            <Setter Property="MajorTickColor" Value="White" />
+            <Setter Property="MinorTickInterval" Value="22.5" />
+            <Setter Property="MinorTickInnerExtent" Value="0.66" />
+            <Setter Property="MinorTickOuterExtent" Value="0.78" />
+            <Setter Property="MinorTickColor" Value="#C0C0C0" />
+            <Setter Property="LabelInterval" Value="90" />
+            <Setter Property="LabelExtent" Value="0.90" />
+            <Setter Property="LabelFontSize" Value="18" />
+            <Setter Property="LabelColor" Value="White" />
+            <Setter Property="LabelConverter" Value="{StaticResource CompassLabelConverter}" />
+            <Setter Property="ShowValue" Value="False" />
+            <Setter Property="NeedleEndExtent" Value="0.54" />
+            <Setter Property="NeedleStartWidth" Value="12" />
+            <Setter Property="NeedleLeftColor" Value="#CC2020" />
+            <Setter Property="NeedleRightColor" Value="#E03030" />
+            <Setter Property="PivotRadius" Value="10" />
+            <Setter Property="PivotColor" Value="#CC2020" />
+            <Setter Property="AnimationDuration" Value="0" />
+        </Style>
+
+        <!-- Sample 5: Speed -->
+        <Style x:Key="GaugeSpeed"
+               TargetType="controls:Gauge">
+            <Setter Property="HeightRequest" Value="200" />
+            <Setter Property="MinValue" Value="0" />
+            <Setter Property="MaxValue" Value="200" />
+            <Setter Property="ValueColor" Value="#1A2E48" />
+            <Setter Property="GaugeBackgroundColor" Value="#5070A0" />
+            <Setter Property="GaugeBackgroundColor2" Value="#E4F2FC" />
+            <Setter Property="BezelOuterThickness" Value="6" />
+            <Setter Property="BezelOuterStartColor" Value="#D8EEFF" />
+            <Setter Property="BezelOuterEndColor" Value="#7888A8" />
+            <Setter Property="BezelInnerThickness" Value="3" />
+            <Setter Property="BezelInnerStartColor" Value="#5A6878" />
+            <Setter Property="BezelInnerEndColor" Value="#B8D4F0" />
+            <Setter Property="ArcInnerExtent" Value="0.82" />
+            <Setter Property="ArcOuterExtent" Value="0.94" />
+            <Setter Property="ArcTrackColor" Value="#25000000" />
+            <Setter Property="MajorTickInterval" Value="20" />
+            <Setter Property="MajorTickInnerExtent" Value="0.76" />
+            <Setter Property="MajorTickOuterExtent" Value="0.94" />
+            <Setter Property="MajorTickColor" Value="White" />
+            <Setter Property="MinorTickInterval" Value="10" />
+            <Setter Property="MinorTickInnerExtent" Value="0.82" />
+            <Setter Property="MinorTickOuterExtent" Value="0.94" />
+            <Setter Property="MinorTickColor" Value="#B0C8E0" />
+            <Setter Property="LabelInterval" Value="40" />
+            <Setter Property="LabelExtent" Value="0.64" />
+            <Setter Property="LabelFormat" Value="{}{0:N0}" />
+            <Setter Property="LabelFontSize" Value="12" />
+            <Setter Property="LabelColor" Value="#1A2E48" />
+            <Setter Property="ValueFormat" Value="{}{0:N0}" />
+            <Setter Property="ValueFontSize" Value="28" />
+            <Setter Property="ValueOffsetY" Value="0.5" />
+            <Setter Property="Unit" Value="km/h" />
+            <Setter Property="UnitFontSize" Value="9" />
+            <Setter Property="UnitColor" Value="#204060" />
+            <Setter Property="UnitPosition" Value="Bottom" />
+            <Setter Property="NeedleEndExtent" Value="0.90" />
+            <Setter Property="NeedleStartWidth" Value="8" />
+            <Setter Property="NeedleLeftColor" Value="#CC1818" />
+            <Setter Property="NeedleRightColor" Value="#DD2828" />
+            <Setter Property="PivotRadius" Value="6" />
+            <Setter Property="PivotColor" Value="#CC1818" />
+            <Setter Property="AnimationDuration" Value="1000" />
+            <Setter Property="Ranges">
+                <Setter.Value>
+                    <x:Array Type="{x:Type controls:GaugeRange}">
+                        <controls:GaugeRange EndColor="#C8D020" EndValue="80" StartColor="#30CC30" StartValue="0" />
+                        <controls:GaugeRange EndColor="#FF8020" EndValue="140" StartColor="#C8D020" StartValue="80" />
+                        <controls:GaugeRange EndColor="#FF2020" EndValue="200" StartColor="#FF8020" StartValue="140" />
+                    </x:Array>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sample 6: Tachometer -->
+        <Style x:Key="GaugeTachometer"
+               TargetType="controls:Gauge">
+            <Setter Property="HeightRequest" Value="200" />
+            <Setter Property="MinValue" Value="0" />
+            <Setter Property="MaxValue" Value="8" />
+            <Setter Property="StartAngle" Value="-150" />
+            <Setter Property="SweepAngle" Value="270" />
+            <Setter Property="GaugeBackgroundColor" Value="#141414" />
+            <Setter Property="GaugeBackgroundColor2" Value="#D0D0D8" />
+            <Setter Property="BezelOuterThickness" Value="6" />
+            <Setter Property="BezelOuterStartColor" Value="#D0D0D8" />
+            <Setter Property="BezelOuterEndColor" Value="#505058" />
+            <Setter Property="BezelInnerThickness" Value="0" />
+            <Setter Property="ArcInnerExtent" Value="0.80" />
+            <Setter Property="ArcOuterExtent" Value="0.88" />
+            <Setter Property="ArcTrackColor" Value="Transparent" />
+            <Setter Property="MajorTickInterval" Value="1" />
+            <Setter Property="MajorTickInnerExtent" Value="0.74" />
+            <Setter Property="MajorTickOuterExtent" Value="0.90" />
+            <Setter Property="MajorTickThickness" Value="3" />
+            <Setter Property="MajorTickColor" Value="White" />
+            <Setter Property="MinorTickInterval" Value="0.25" />
+            <Setter Property="MinorTickInnerExtent" Value="0.78" />
+            <Setter Property="MinorTickOuterExtent" Value="0.90" />
+            <Setter Property="MinorTickColor" Value="#A0A0A0" />
+            <Setter Property="LabelInterval" Value="2" />
+            <Setter Property="LabelExtent" Value="0.65" />
+            <Setter Property="LabelFormat" Value="{}{0:N0}" />
+            <Setter Property="LabelFontSize" Value="14" />
+            <Setter Property="LabelColor" Value="White" />
+            <Setter Property="ShowValue" Value="False" />
+            <Setter Property="NeedleEndExtent" Value="0.94" />
+            <Setter Property="NeedleStartWidth" Value="8" />
+            <Setter Property="NeedleLeftColor" Value="#CC4400" />
+            <Setter Property="NeedleRightColor" Value="#DD5010" />
+            <Setter Property="PivotRadius" Value="8" />
+            <Setter Property="PivotColor" Value="#CC4400" />
+            <Setter Property="AnimationDuration" Value="1000" />
+            <Setter Property="Ranges">
+                <Setter.Value>
+                    <x:Array Type="{x:Type controls:GaugeRange}">
+                        <controls:GaugeRange EndColor="#FF2020" EndValue="8" StartColor="#CC2020" StartValue="6" />
+                    </x:Array>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource GaugeScroll}">
+        <Grid Style="{StaticResource GaugeGrid}"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnDefinitions="*,*">
+
+            <!-- Sample 1: Pressure -->
+            <Border Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="PRESSURE" />
+                    <controls:Gauge Style="{StaticResource GaugePressure}"
+                                    Value="{Binding Pressure}" />
+                    <Slider Style="{StaticResource SliderPressure}"
+                            Value="{Binding Pressure, Mode=TwoWay}"
+                            Minimum="950" Maximum="1050" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sample 2: Humidity -->
+            <Border Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="HUMIDITY" />
+                    <controls:Gauge Style="{StaticResource GaugeHumidity}"
+                                    Value="{Binding Humidity}" />
+                    <Slider Style="{StaticResource SliderHumidity}"
+                            Value="{Binding Humidity, Mode=TwoWay}"
+                            Minimum="0" Maximum="100" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sample 3: Temperature -->
+            <Border Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="TEMPERATURE" />
+                    <controls:Gauge Style="{StaticResource GaugeTemperature}"
+                                    Value="{Binding Temperature}" />
+                    <Slider Style="{StaticResource SliderTemperature}"
+                            Value="{Binding Temperature, Mode=TwoWay}"
+                            Minimum="-10" Maximum="40" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sample 4: Wind Direction -->
+            <Border Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="WIND" />
+                    <controls:Gauge Style="{StaticResource GaugeWindDirection}"
+                                    Value="{Binding WindDirection}" />
+                    <Slider Style="{StaticResource SliderWindDirection}"
+                            Value="{Binding WindDirection, Mode=TwoWay}"
+                            Minimum="0" Maximum="360" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sample 5: Speed -->
+            <Border Grid.Row="2" Grid.Column="0"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="SPEED" />
+                    <controls:Gauge Style="{StaticResource GaugeSpeed}"
+                                    Value="{Binding SpeedKmh}" />
+                    <Slider Style="{StaticResource SliderSpeed}"
+                            Value="{Binding SpeedKmh, Mode=TwoWay}"
+                            Minimum="0" Maximum="200" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sample 6: Tachometer -->
+            <Border Grid.Row="2" Grid.Column="1"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="TACHO" />
+                    <controls:Gauge Style="{StaticResource GaugeTachometer}"
+                                    Value="{Binding Rpm}" />
+                    <Slider Style="{StaticResource SliderTachometer}"
+                            Value="{Binding Rpm, Mode=TwoWay}"
+                            Minimum="0" Maximum="8" />
+                </VerticalStackLayout>
+            </Border>
+
+        </Grid>
+    </ScrollView>
 
 </ContentView>

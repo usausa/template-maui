@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewStateView"
+             x:DataType="{x:Type module:ViewStateViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewStateViewModel}"
+             shell:ShellProperty.Title="State"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- CommunityToolkit の StateContainer (状態別ビュー切替) と LazyView (遅延生成) のデモ -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="StateButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="StateIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StateTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatePanelStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="StateContainer"
+                               Icon="{x:Static fonts:MaterialIcons.Swap_horiz}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,*,*,*"
+                          ColumnSpacing="6">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource StateButton}"
+                                Command="{Binding StateCommand}"
+                                CommandParameter="Loading"
+                                Text="Loading" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource StateButton}"
+                                Command="{Binding StateCommand}"
+                                CommandParameter="Empty"
+                                Text="Empty" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource StateButton}"
+                                Command="{Binding StateCommand}"
+                                CommandParameter="Error"
+                                Text="Error" />
+                        <Button Grid.Column="3"
+                                Style="{StaticResource StateButton}"
+                                Command="{Binding StateCommand}"
+                                CommandParameter=""
+                                Text="Success" />
+                    </Grid>
+
+                    <VerticalStackLayout HeightRequest="180"
+                                         mct:StateContainer.CurrentState="{Binding CurrentState}">
+                        <mct:StateContainer.StateViews>
+                            <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                                                 mct:StateView.StateKey="Loading"
+                                                 HeightRequest="180">
+                                <ActivityIndicator IsRunning="True"
+                                                   Color="{StaticResource BlueDefault}" />
+                                <Label Style="{StaticResource StateTextLabel}"
+                                       Text="読み込み中..." />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                                                 mct:StateView.StateKey="Empty"
+                                                 HeightRequest="180">
+                                <Label Style="{StaticResource StateIconLabel}"
+                                       TextColor="{StaticResource GrayLighten1}"
+                                       Text="{x:Static fonts:MaterialIcons.Inbox}" />
+                                <Label Style="{StaticResource StateTextLabel}"
+                                       Text="データがありません" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                                                 mct:StateView.StateKey="Error"
+                                                 HeightRequest="180">
+                                <Label Style="{StaticResource StateIconLabel}"
+                                       TextColor="{StaticResource RedDefault}"
+                                       Text="{x:Static fonts:MaterialIcons.Error}" />
+                                <Label Style="{StaticResource StateTextLabel}"
+                                       Text="読み込みに失敗しました" />
+                            </VerticalStackLayout>
+                        </mct:StateContainer.StateViews>
+
+                        <!-- 既定コンテンツ (CurrentState が空のとき表示) -->
+                        <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                                             HeightRequest="180">
+                            <Label Style="{StaticResource StateIconLabel}"
+                                   TextColor="{StaticResource GreenDefault}"
+                                   Text="{x:Static fonts:MaterialIcons.Check_circle}" />
+                            <Label Style="{StaticResource StateTextLabel}"
+                                   Text="読み込み完了 (既定コンテンツ)" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="LazyView"
+                               Icon="{x:Static fonts:MaterialIcons.Hourglass_empty}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Spacing="8">
+                    <Label FontSize="12"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           Text="ボタンを押すまで下のコンテンツは生成されない" />
+                    <Button Style="{StaticResource StateButton}"
+                            Command="{Binding LoadPanelCommand}"
+                            Text="コンテンツを読み込む" />
+                    <mct:LazyView x:TypeArguments="module:ViewStatePanelView"
+                                  behaviors:LazyViewOption.Load="{Binding PanelRequested}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

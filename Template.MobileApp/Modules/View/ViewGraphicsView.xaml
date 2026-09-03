@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewGraphicsView"
              x:DataType="{x:Type module:ViewGraphicsViewModel}"
@@ -12,10 +16,225 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*">
-        <graphics:GraphicsControl Grid.Row="0"
-                                  Graphics="{Binding Graphics}" />
-    </Grid>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="CardContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CanvasBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="280" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="CountChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="NoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="Shape drawing"
+                               Icon="{x:Static fonts:MaterialIcons.Format_paint}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+
+                    <Border Style="{StaticResource CanvasBorder}">
+                        <drawing:DrawingControl Drawing="{Binding Drawing}" />
+                    </Border>
+
+                    <controls:StatusChip Style="{StaticResource CountChip}"
+                                         Icon="{x:Static fonts:MaterialIcons.Palette}"
+                                         Text="{Binding ShapeCount, StringFormat='{0} shapes'}" />
+
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*"
+                          RowDefinitions="Auto,Auto">
+                        <Button Grid.Row="0" Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding AddLineCommand}"
+                                Text="Add line" />
+                        <Button Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding AddCircleCommand}"
+                                Text="Add circle" />
+                        <Button Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding AddRectCommand}"
+                                Text="Add rect" />
+                        <Button Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Do_not_disturb}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding ClearCommand}"
+                                Text="Clear" />
+                    </Grid>
+
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="Shapes are added to a DrawingControl and redrawn with Invalidate()" />
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Sketch + PNG export"
+                               Icon="{x:Static fonts:MaterialIcons.Draw}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+
+                    <Border Style="{StaticResource CanvasBorder}"
+                            HeightRequest="240">
+                        <drawing:DrawingControl Drawing="{Binding Sketch}" />
+                    </Border>
+
+                    <controls:StatusChip Style="{StaticResource CountChip}"
+                                         Icon="{x:Static fonts:MaterialIcons.Gesture}"
+                                         Text="{Binding SketchCount, StringFormat='{0} strokes'}" />
+
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding UndoSketchCommand}"
+                                Text="Undo" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding ClearSketchCommand}"
+                                Text="Clear" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding ExportSketchCommand}"
+                                Text="PNG出力" />
+                    </Grid>
+
+                    <Border Style="{StaticResource CanvasBorder}"
+                            HeightRequest="160"
+                            IsVisible="{Binding HasExport}">
+                        <Image Aspect="AspectFit"
+                               Source="{Binding ExportedImage}"
+                               behaviors:AnimationOption.FadeInTrigger="{Binding ExportedImage}" />
+                    </Border>
+
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="指でなぞって描く (IInteractiveDrawing)。PNG 出力は表示と同じ OnDraw を BitmapExportContext へ流して生成し、下の Image に表示する" />
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Pulse ring"
+                               Icon="{x:Static fonts:MaterialIcons.Sensors}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+
+                    <Border Style="{StaticResource CanvasBorder}"
+                            HeightRequest="160">
+                        <drawing:DrawingControl Drawing="{Binding Pulse}" />
+                    </Border>
+
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="アイコン周囲に波紋リングを広げる演出。単発アニメーションを完了時に再開始してループさせている" />
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Countdown button"
+                               Icon="{x:Static fonts:MaterialIcons.Timer}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+
+                    <Grid HeightRequest="130">
+                        <drawing:DrawingControl WidthRequest="112"
+                                                HeightRequest="112"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                Drawing="{Binding Countdown}" />
+                        <Button WidthRequest="84"
+                                HeightRequest="84"
+                                CornerRadius="42"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                FontSize="18"
+                                BackgroundColor="{StaticResource BlueDefault}"
+                                TextColor="White"
+                                behaviors:ButtonOption.PressEffect="True"
+                                Command="{Binding StartCountdownCommand}"
+                                Text="GO">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding CountdownRunning}"
+                                             Value="True">
+                                    <Setter Property="Text" Value="…" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+
+                    <Label FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource GreenDefault}"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="{Binding CountdownDone}"
+                           Text="DONE!"
+                           behaviors:AnimationOption.BounceTrigger="{Binding CountdownDone}" />
+
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="ボタン背面のリングが 5 秒で減り、完走時のみ DONE が出る (画面離脱で中断=通知なし)" />
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

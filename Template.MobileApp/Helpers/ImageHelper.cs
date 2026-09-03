@@ -2,6 +2,16 @@ namespace Template.MobileApp.Helpers;
 
 public static class ImageHelper
 {
+    public static void ReplaceBitmap(SKBitmapImageSource source, SKBitmap? bitmap)
+    {
+        var old = source.Bitmap;
+        source.Bitmap = bitmap;
+        if (!ReferenceEquals(old, bitmap))
+        {
+            old.Dispose();
+        }
+    }
+
     public static SKBitmap ToNormalizeBitmap(Stream stream)
     {
         using var codec = SKCodec.Create(stream);
@@ -15,7 +25,7 @@ public static class ImageHelper
                 using (var surface = new SKCanvas(bitmap))
                 {
                     surface.RotateDegrees(180, (float)bitmap.Width / 2, (float)bitmap.Height / 2);
-                    surface.DrawBitmap(bitmap.Copy(), 0, 0);
+                    surface.DrawBitmap(bitmap.Copy(), 0, 0, SKSamplingOptions.Default);
                     return bitmap;
                 }
             case SKEncodedOrigin.RightTop:
@@ -24,7 +34,7 @@ public static class ImageHelper
                 {
                     surface.Translate(rotated.Width, 0);
                     surface.RotateDegrees(90);
-                    surface.DrawBitmap(bitmap, 0, 0);
+                    surface.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default);
                     bitmap.Dispose();
                     return rotated;
                 }
@@ -34,7 +44,7 @@ public static class ImageHelper
                 {
                     surface.Translate(0, rotated.Height);
                     surface.RotateDegrees(270);
-                    surface.DrawBitmap(bitmap, 0, 0);
+                    surface.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default);
                     bitmap.Dispose();
                     return rotated;
                 }

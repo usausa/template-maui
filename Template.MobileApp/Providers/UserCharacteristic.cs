@@ -1,10 +1,8 @@
 namespace Template.MobileApp.Providers;
 
 using Shiny.BluetoothLE.Hosting;
-using Shiny.BluetoothLE.Hosting.Managed;
 
-[BleGattCharacteristic(BleConstants.UserServiceUuid, BleConstants.UserCharacteristicUuid)]
-public sealed class UserCharacteristic : BleGattCharacteristic
+public sealed class UserCharacteristic
 {
     private readonly Guid guid;
 
@@ -13,8 +11,8 @@ public sealed class UserCharacteristic : BleGattCharacteristic
         guid = Guid.Parse(settings.UniqueId);
     }
 
-    public override Task<GattResult> OnRead(ReadRequest request)
-    {
-        return Task.FromResult(new GattResult(GattState.Success, guid.ToByteArray()));
-    }
+    public Task Register(IBleHostingManager manager) =>
+        manager.AddService(BleConstants.UserServiceUuid, true, service =>
+            service.AddCharacteristic(BleConstants.UserCharacteristicUuid, characteristic =>
+                characteristic.SetRead(_ => Task.FromResult(GattResult.Success(guid.ToByteArray())))));
 }

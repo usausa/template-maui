@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIShopView"
+             x:DataType="{x:Type module:UIShopViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIShopViewModel}"
+             shell:ShellProperty.Title="Shop"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Root -->
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <!-- Header -->
+            <Style x:Key="ShopHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="AvatarBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+            </Style>
+
+            <Style x:Key="AvatarImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="ShopHeaderTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="GreetingLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="SubGreetingLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <!-- Search -->
+            <Style x:Key="SearchRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SearchBorder"
+                   TargetType="Border">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black" Opacity="0.08" Radius="8" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="SearchRowLayout"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SearchIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SearchEntry"
+                   TargetType="Entry">
+                <Setter Property="Placeholder" Value="Search" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FilterButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black" Opacity="0.15" Radius="6" />
+                </Setter>
+            </Style>
+
+            <!-- Section title -->
+            <Style x:Key="SectionTitleRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+            </Style>
+
+            <Style x:Key="SectionAccent"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="3" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="Color" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SectionTitle"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Popular: horizontal cards -->
+            <Style x:Key="PopularCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="200" />
+            </Style>
+
+            <Style x:Key="PopularCardBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="150" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="PopularImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+                <Setter Property="HeightRequest" Value="132" />
+            </Style>
+
+            <Style x:Key="PopularTitleLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="10,8,10,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="PopularPriceLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="10,2,10,10" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+            </Style>
+
+            <!-- All items: 2-column grid -->
+            <Style x:Key="ItemsCollection"
+                   TargetType="CollectionView">
+                <Setter Property="VerticalOptions" Value="Fill" />
+            </Style>
+
+            <Style x:Key="ItemCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="ItemImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+                <Setter Property="HeightRequest" Value="120" />
+            </Style>
+
+            <Style x:Key="ItemTitleLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="12,8,12,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="ItemPriceLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="12,0,12,10" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource ShopHeaderGrid}"
+              ColumnDefinitions="Auto,*"
+              behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <Border Grid.Column="0"
+                    Style="{StaticResource AvatarBorder}">
+                <Image Style="{StaticResource AvatarImage}"
+                       Source="profile.jpg" />
+            </Border>
+            <VerticalStackLayout Grid.Column="1"
+                                 Style="{StaticResource ShopHeaderTextStack}">
+                <Label Style="{StaticResource GreetingLabel}"
+                       Text="{Binding Greeting}" />
+                <Label Style="{StaticResource SubGreetingLabel}"
+                       Text="{Binding SubGreeting}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Search + filter -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource SearchRowGrid}"
+              ColumnDefinitions="*,Auto"
+              behaviors:AnimationOption.EnterAnimation="FadeUp"
+              behaviors:AnimationOption.EnterDelay="80">
+            <Border Grid.Column="0"
+                    Style="{StaticResource SearchBorder}">
+                <Grid Style="{StaticResource SearchRowLayout}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SearchIconLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Search}" />
+                    <Entry Grid.Column="1"
+                           Style="{StaticResource SearchEntry}"
+                           Text="{Binding SearchText}" />
+                </Grid>
+            </Border>
+            <Button Grid.Column="1"
+                    Style="{StaticResource FilterButton}"
+                    Text="{x:Static fonts:MaterialIcons.Tune}" />
+        </Grid>
+
+        <!-- Popular (horizontal scroll) -->
+        <HorizontalStackLayout Grid.Row="2"
+                               Style="{StaticResource SectionTitleRow}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160">
+            <BoxView Style="{StaticResource SectionAccent}" />
+            <Label Style="{StaticResource SectionTitle}"
+                   Text="Popular" />
+        </HorizontalStackLayout>
+
+        <CollectionView Grid.Row="3"
+                        Style="{StaticResource PopularCollection}"
+                        ItemsSource="{Binding Popular}"
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="200">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal"
+                                   ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="module:UIShopItem">
+                    <Border Style="{StaticResource PopularCardBorder}">
+                        <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                            <toolkit:SfEffectsView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
+                            </toolkit:SfEffectsView.GestureRecognizers>
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <Image Grid.Row="0"
+                                       Style="{StaticResource PopularImage}"
+                                       Source="{Binding Image}" />
+                                <Label Grid.Row="1"
+                                       Style="{StaticResource PopularTitleLabel}"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Row="2"
+                                       Style="{StaticResource PopularPriceLabel}"
+                                       Text="{Binding Price}" />
+                            </Grid>
+                        </toolkit:SfEffectsView>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- All items (2-column grid) -->
+        <HorizontalStackLayout Grid.Row="4"
+                               Style="{StaticResource SectionTitleRow}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+            <BoxView Style="{StaticResource SectionAccent}" />
+            <Label Style="{StaticResource SectionTitle}"
+                   Text="All Items" />
+        </HorizontalStackLayout>
+
+        <CollectionView Grid.Row="5"
+                        Style="{StaticResource ItemsCollection}"
+                        ItemsSource="{Binding Items}"
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="280">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="module:UIShopItem">
+                    <Border Style="{StaticResource ItemCardBorder}">
+                        <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                            <toolkit:SfEffectsView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
+                            </toolkit:SfEffectsView.GestureRecognizers>
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <Image Grid.Row="0"
+                                       Style="{StaticResource ItemImage}"
+                                       Source="{Binding Image}" />
+                                <Label Grid.Row="1"
+                                       Style="{StaticResource ItemTitleLabel}"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Row="2"
+                                       Style="{StaticResource ItemPriceLabel}"
+                                       Text="{Binding Price}" />
+                            </Grid>
+                        </toolkit:SfEffectsView>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentView>

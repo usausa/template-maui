@@ -2,6 +2,7 @@ namespace Template.MobileApp.Models.Sample;
 
 using System.Runtime.InteropServices;
 
+#pragma warning disable CA1002
 public readonly record struct ColorCount(byte R, byte G, byte B, long Count);
 
 public sealed unsafe class ColorExtractor : IDisposable
@@ -654,3 +655,4 @@ public sealed unsafe class ColorExtractor : IDisposable
         return x.B.CompareTo(y.B);
     });
 }
+#pragma warning restore CA1002

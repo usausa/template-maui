@@ -74,7 +74,9 @@ public static class NfcExtensions
 
     private static byte[] SubArray(this byte[] array, int offset, int length)
     {
-        var bytes = new byte[Math.Min(length, array.Length - offset)];
+        // 応答が想定より短い場合にサイズが負にならないようクランプする
+        var size = Math.Clamp(Math.Min(length, array.Length - offset), 0, length);
+        var bytes = new byte[size];
         Buffer.BlockCopy(array, offset, bytes, 0, bytes.Length);
         return bytes;
     }

@@ -1,21 +1,27 @@
 namespace Template.MobileApp.Controls;
 
+using Template.MobileApp.Models.Sample.Chat;
+
 public sealed class ChatMessageTemplateSelector : DataTemplateSelector
 {
-    public DataTemplate? SendMessage { get; set; }
+    public DataTemplate SendTemplate { get; set; } = default!;
 
-    public DataTemplate? ReceiveMessage { get; set; }
+    public DataTemplate ReceiveTemplate { get; set; } = default!;
 
-    public DataTemplate? SystemMessage { get; set; }
+    public DataTemplate SystemTemplate { get; set; } = default!;
 
-    protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
+    protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
     {
-        return ((ChatMessage)item).Type switch
+        if (item is not ChatMessage message)
         {
-            MessageType.Send => SendMessage,
-            MessageType.Receive => ReceiveMessage,
-            MessageType.System => SystemMessage,
-            _ => null
+            return SystemTemplate;
+        }
+
+        return message.Type switch
+        {
+            MessageType.Send => SendTemplate,
+            MessageType.Receive => ReceiveTemplate,
+            _ => SystemTemplate
         };
     }
 }

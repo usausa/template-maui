@@ -28,7 +28,24 @@
                 <Setter Property="Margin" Value="8" />
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="Black"
+                                Opacity="0.15"
+                                Radius="8"
+                                Offset="0,3" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CarouselImageBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="CarouselImage"
@@ -64,19 +81,34 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto,64,*">
+          RowDefinitions="*,Auto,64,*"
+          BackgroundColor="{StaticResource GrayLighten5}">
 
-        <CarouselView Grid.Row="1"
+        <CarouselView x:Name="PhotoCarousel"
+                      Grid.Row="1"
                       Style="{StaticResource CarouselView}"
                       ItemsSource="{Binding Items}"
-                      IndicatorView="{x:Reference Indicator}">
+                      IndicatorView="{x:Reference Indicator}"
+                      CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
+                      CurrentItemChangedCommandParameter="{Binding Source={x:Reference PhotoCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:PhotoItem}">
                     <Border Style="{StaticResource CarouselBorder}">
-                        <Grid RowDefinitions="*,Auto,Auto">
-                            <Image Grid.Row="0"
-                                   Style="{StaticResource CarouselImage}"
-                                   Source="{Binding ImageUrl}" />
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding IsCurrent}"
+                                         Value="False">
+                                <Setter Property="Scale" Value="0.92" />
+                                <Setter Property="Opacity" Value="0.55" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid RowDefinitions="*,Auto,Auto"
+                              RowSpacing="6">
+                            <Border Grid.Row="0"
+                                    Style="{StaticResource CarouselImageBorder}">
+                                <Image Style="{StaticResource CarouselImage}"
+                                       Source="{Binding ImageUrl}" />
+                            </Border>
                             <Label Grid.Row="1"
                                    Style="{StaticResource CarouselTitleLabel}"
                                    Text="{Binding Title}" />

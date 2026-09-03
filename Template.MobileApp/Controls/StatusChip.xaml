@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fonts="clr-namespace:Fonts"
+             x:Class="Template.MobileApp.Controls.StatusChip">
+
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <Border Padding="10,4"
+                    BackgroundColor="{TemplateBinding ChipColor}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 14">
+                <HorizontalStackLayout Spacing="6">
+                    <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           TextColor="{TemplateBinding IconColor}"
+                           Text="{TemplateBinding Icon}"
+                           IsVisible="{TemplateBinding Icon, Converter={StaticResource NotEmptyConverter}}" />
+                    <Label FontSize="14"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"
+                           TextColor="{TemplateBinding TextColor}"
+                           Text="{TemplateBinding Text}" />
+                </HorizontalStackLayout>
+            </Border>
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
+
+</ContentView>

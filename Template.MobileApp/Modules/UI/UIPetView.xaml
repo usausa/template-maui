@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIPetView"
+             x:DataType="{x:Type module:UIPetViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIPetViewModel}"
+             shell:ShellProperty.Title="Pet"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Hero -->
+            <Style x:Key="HeroImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="DetailCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="20,16,20,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 40,40,0,0" />
+            </Style>
+
+            <!-- Name + level -->
+            <Style x:Key="NameRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="PetNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="BreedLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="8,0,0,5" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="LevelBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12,5" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="LevelBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Type tags -->
+            <Style x:Key="TagRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="Margin" Value="0,10,0,0" />
+            </Style>
+
+            <Style x:Key="TagBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12,5" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 13" />
+            </Style>
+
+            <Style x:Key="TagLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Base stats: fill ratio is expressed by star-sized columns (e.g. 80*/20*) -->
+            <Style x:Key="StatStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="Margin" Value="0,14,0,0" />
+            </Style>
+
+            <Style x:Key="StatRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="StatNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatBar"
+                   TargetType="ProgressBar">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Flavor text -->
+            <Style x:Key="FlavorBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="FlavorGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="FlavorQuoteIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDarken2}" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="FlavorLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Italic" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <!-- Actions -->
+            <Style x:Key="ButtonRow"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0,12,0,8" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="HeartButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="CornerRadius" Value="28" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,3"
+                            Brush="Black" Opacity="0.2" Radius="6" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="PartyButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="CornerRadius" Value="28" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,3"
+                            Brush="Black" Opacity="0.2" Radius="6" />
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Rows 0-1: hero image / rows 1-2: sheet card. The shared 40px row makes the card overlap the image without negative margins -->
+    <Grid RowDefinitions="*,40,Auto">
+        <Image Grid.Row="0" Grid.RowSpan="2"
+               Style="{StaticResource HeroImage}"
+               Source="usa1_full.jpg" />
+
+        <Border Grid.Row="1" Grid.RowSpan="2"
+                Style="{StaticResource DetailCardBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <VerticalStackLayout>
+
+                <Grid Style="{StaticResource NameRowGrid}"
+                      ColumnDefinitions="Auto,*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource PetNameLabel}"
+                           Text="{Binding PetName}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource BreedLabel}"
+                           Text="{Binding Breed}" />
+                    <Border Grid.Column="2"
+                            Style="{StaticResource LevelBadgeBorder}">
+                        <Label Style="{StaticResource LevelBadgeLabel}"
+                               Text="{Binding Level}" />
+                    </Border>
+                </Grid>
+
+                <!-- Type tags -->
+                <HorizontalStackLayout Style="{StaticResource TagRow}"
+                                       BindableLayout.ItemsSource="{Binding Tags}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="module:UIPetTag">
+                            <Border Style="{StaticResource TagBorder}"
+                                    BackgroundColor="{Binding BackgroundColor}">
+                                <Label Style="{StaticResource TagLabel}"
+                                       Text="{Binding Label}"
+                                       TextColor="{Binding TextColor}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+
+                <!-- Base stats (bars animate 0 → value on load) -->
+                <VerticalStackLayout Style="{StaticResource StatStack}">
+                    <Grid Style="{StaticResource StatRowGrid}"
+                          ColumnDefinitions="56,*,34">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource StatNameLabel}"
+                               Text="HP" />
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource GreenDefault}"
+                                     behaviors:AnimationOption.ProgressTo="{Binding HpProgress}" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource StatValueLabel}"
+                               behaviors:LabelOption.CountUpValue="{Binding Hp}"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                    </Grid>
+                    <Grid Style="{StaticResource StatRowGrid}"
+                          ColumnDefinitions="56,*,34">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource StatNameLabel}"
+                               Text="Attack" />
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource OrangeDefault}"
+                                     behaviors:AnimationOption.ProgressTo="0.78" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource StatValueLabel}"
+                               behaviors:LabelOption.CountUpValue="78"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                    </Grid>
+                    <Grid Style="{StaticResource StatRowGrid}"
+                          ColumnDefinitions="56,*,34">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource StatNameLabel}"
+                               Text="Defense" />
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource BlueDefault}"
+                                     behaviors:AnimationOption.ProgressTo="0.64" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource StatValueLabel}"
+                               behaviors:LabelOption.CountUpValue="64"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                    </Grid>
+                    <Grid Style="{StaticResource StatRowGrid}"
+                          ColumnDefinitions="56,*,34">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource StatNameLabel}"
+                               Text="Speed" />
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource AmberDefault}"
+                                     behaviors:AnimationOption.ProgressTo="0.92" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource StatValueLabel}"
+                               behaviors:LabelOption.CountUpValue="92"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Flavor text -->
+                <Border Style="{StaticResource FlavorBorder}">
+                    <Grid Style="{StaticResource FlavorGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource FlavorQuoteIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Format_quote}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource FlavorLabel}"
+                               Text="{Binding FlavorText}" />
+                    </Grid>
+                </Border>
+
+                <!-- Actions -->
+                <Grid Style="{StaticResource ButtonRow}"
+                      ColumnDefinitions="Auto,*">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource HeartButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            behaviors:AnimationOption.BounceTrigger="{Binding Hp}"
+                            Command="{Binding HeartCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Favorite}" />
+                    <Button Grid.Column="1"
+                            Style="{StaticResource PartyButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            Command="{Binding PartyCommand}"
+                            Text="Add to Party">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding InParty}"
+                                         Value="True">
+                                <Setter Property="Text" Value="✓ In Party" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+
+</ContentView>

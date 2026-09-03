@@ -69,7 +69,7 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
         Values = currentValues;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

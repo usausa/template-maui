@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
              x:Class="Template.MobileApp.Modules.Navigation.Edit.EditDetailView"
              x:DataType="{x:Type module:EditDetailViewModel}"
@@ -13,8 +16,57 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="{Binding Name, Converter={StaticResource NotEmptyConverter}}">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Entry Text="{Binding Name}" />
-    </VerticalStackLayout>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:NullToBoolConverter x:Key="EmptyConverter"
+                                   HandleEmptyString="True"
+                                   NullValue="True"
+                                   NonNullValue="False" />
+
+            <Style x:Key="FieldCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="FieldBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
+
+            <controls:InfoCard Title="Work item"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource FieldCaptionLabel}"
+                           Text="Name (required)" />
+                    <Border Style="{StaticResource FieldBorder}">
+                        <Entry Placeholder="Name"
+                               Text="{Binding Name}"
+                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                               behaviors:Focus.FocusedThickness="2.5" />
+                    </Border>
+                    <Label Style="{StaticResource ErrorMessageLabel}"
+                           IsVisible="{Binding Name, Converter={StaticResource EmptyConverter}}"
+                           Text="Name is required" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

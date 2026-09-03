@@ -53,6 +53,7 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="behaviors:ButtonOption.PressBind" Value="True" />
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
             </Style>
 
             <Style x:Key="AButton"
@@ -118,6 +119,8 @@
                              Margin="0,20,0,-20"
                              GaugeColor="#484D5F"
                              ValueColor="Turquoise"
+                             MidColor="Yellow"
+                             HighColor="Red"
                              MaxSpeed="255"
                              Speed="{Binding Speed}" />
         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2"
@@ -125,7 +128,14 @@
             <Label HorizontalTextAlignment="Center"
                    Text="{Binding Speed}"
                    FontFamily="Gkktt" FontSize="96"
-                   TextColor="White" />
+                   TextColor="White">
+                <Label.Shadow>
+                    <Shadow Brush="Turquoise"
+                            Offset="0,0"
+                            Radius="16"
+                            Opacity="0.8" />
+                </Label.Shadow>
+            </Label>
             <Label HorizontalTextAlignment="Center"
                    Text="km/h"
                    FontFamily="Gkktt" FontSize="24"
@@ -157,6 +167,19 @@
                     Style="{StaticResource AButton}"
                     behaviors:ButtonOption.IsPressed="{Binding ButtonA}" />
         </AbsoluteLayout>
+
+        <!-- 四隅を暗くするビネット(最前面・タッチ透過) -->
+        <Border Grid.RowSpan="3" Grid.ColumnSpan="2"
+                InputTransparent="True"
+                StrokeThickness="0">
+            <Border.Background>
+                <RadialGradientBrush Center="0.5,0.4"
+                                     Radius="0.9">
+                    <GradientStop Offset="0.55" Color="#00000000" />
+                    <GradientStop Offset="1.0" Color="#59000000" />
+                </RadialGradientBrush>
+            </Border.Background>
+        </Border>
     </Grid>
 
 </ContentView>

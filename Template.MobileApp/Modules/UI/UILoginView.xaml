@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              xmlns:effectsView="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UILoginView"
@@ -84,7 +85,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
-            <Style x:Key="InputEntry"
+            <Style x:Key="LoginInputEntry"
                    TargetType="Entry">
                 <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
@@ -124,6 +125,31 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,4"
+                            Brush="{StaticResource BlueDarken2}"
+                            Opacity="0.4" Radius="10" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="LoginIndicator"
+                   TargetType="ActivityIndicator">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Color" Value="White" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <!-- Password toggle -->
+            <Style x:Key="PasswordToggleButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
             <!-- Forget password -->
@@ -151,10 +177,15 @@
 
         <Path Grid.Row="0"
               Style="{StaticResource TitlePath}"
+              Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" Opacity="0.4" TranslationY="10" />
+
+        <Path Grid.Row="0"
+              Style="{StaticResource TitlePath}"
               Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" />
 
         <Border Grid.Row="0"
-                Style="{StaticResource TitleBorder}">
+                Style="{StaticResource TitleBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
             <Image Style="{StaticResource TitleImage}"
                    Source="profile.jpg" />
         </Border>
@@ -165,52 +196,64 @@
 
             <Label Grid.Row="1"
                    Style="{StaticResource MessageLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="80"
                    Text="ようこそ" />
 
             <Label Grid.Row="3"
                    Style="{StaticResource SubMessageLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="160"
                    Text="ログインして続けてください" />
 
             <Border Grid.Row="5"
-                    Style="{StaticResource InputBorder}">
+                    Style="{StaticResource InputBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="240">
                 <Grid ColumnDefinitions="Auto,*,16">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
-                        <Image>
-                            <Image.Source>
-                                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
-                                                 FontFamily="MaterialIcons"
-                                                 Color="White" />
-                            </Image.Source>
-                        </Image>
+                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Account_circle}, Color=White, Size=28}" />
                     </Border>
                     <Entry Grid.Column="1"
-                           Style="{StaticResource InputEntry}"
+                           Style="{StaticResource LoginInputEntry}"
+                           behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                           behaviors:Focus.FocusedThickness="2.5"
                            Placeholder="ユーザーID" />
                 </Grid>
             </Border>
 
             <Border Grid.Row="7"
-                    Style="{StaticResource InputBorder}">
-                <Grid ColumnDefinitions="Auto,*,16">
+                    Style="{StaticResource InputBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="320">
+                <Grid ColumnDefinitions="Auto,*,Auto,8">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
-                        <Image>
-                            <Image.Source>
-                                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Key}"
-                                                 FontFamily="MaterialIcons"
-                                                 Color="White" />
-                            </Image.Source>
-                        </Image>
+                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Key}, Color=White, Size=28}" />
                     </Border>
                     <Entry Grid.Column="1"
-                           Style="{StaticResource InputEntry}"
-                           IsPassword="True" Placeholder="パスワード" />
+                           Style="{StaticResource LoginInputEntry}"
+                           behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                           behaviors:Focus.FocusedThickness="2.5"
+                           IsPassword="{Binding PasswordVisible, Converter={StaticResource ReverseConverter}}"
+                           Placeholder="パスワード" />
+                    <ImageButton Grid.Column="2"
+                                 Style="{StaticResource PasswordToggleButton}"
+                                 Source="{markup:Material {x:Static fonts:MaterialIcons.Visibility},
+                                                          Color={StaticResource GrayDefault},
+                                                          Size=24}"
+                                 Command="{Binding TogglePasswordCommand}">
+                        <ImageButton.Triggers>
+                            <DataTrigger TargetType="ImageButton"
+                                         Value="True"
+                                         Binding="{Binding PasswordVisible}">
+                                <Setter Property="Source" Value="{markup:Material {x:Static fonts:MaterialIcons.Visibility_off}, Color={StaticResource LightBlueDarken1}, Size=24}" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
                 </Grid>
             </Border>
 
             <HorizontalStackLayout Grid.Row="9"
-                                   Style="{StaticResource KeepLoginLayout}">
+                                   Style="{StaticResource KeepLoginLayout}"
+                                   behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="400">
                 <CheckBox Style="{StaticResource KeepLoginCheckBox}" />
                 <Label Style="{StaticResource KeepLoginLabel}"
                        Text="ログイン状態を保持" />
@@ -218,10 +261,26 @@
 
             <Button Grid.Row="11"
                     Style="{StaticResource LoginButton}"
-                    Text="ログイン" />
+                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="480"
+                    Command="{Binding LoginCommand}"
+                    Text="ログイン">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Value="True"
+                                 Binding="{Binding LoggingIn}">
+                        <Setter Property="Text" Value="" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <ActivityIndicator Grid.Row="11"
+                               Style="{StaticResource LoginIndicator}"
+                               IsVisible="{Binding LoggingIn}"
+                               IsRunning="{Binding LoggingIn}" />
 
             <effectsView:SfEffectsView Grid.Row="13"
-                                       Style="{StaticResource ForgetPasswordEffect}">
+                                       Style="{StaticResource ForgetPasswordEffect}"
+                                       behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="560">
                 <Label Style="{StaticResource ForgetPasswordLabel}"
                        Text="パスワードを忘れた場合" />
             </effectsView:SfEffectsView>

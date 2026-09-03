@@ -31,8 +31,6 @@ Template project for MAUI.
 
 # TODO
 
-# TODO
-
 - Device
   - [ ] **WiFi manager**
   - [ ] Biometric

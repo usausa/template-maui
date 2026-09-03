@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              xmlns:animations="clr-namespace:Template.MobileApp.Animations"
              x:Class="Template.MobileApp.Modules.View.ViewAnimationView"
@@ -15,13 +18,51 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ClickGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="AnimationButton"
                    TargetType="Button">
-                <Setter Property="WidthRequest" Value="120" />
                 <Setter Property="HeightRequest" Value="48" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="TapStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="HintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TileRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SequenceAreaGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="140" />
             </Style>
 
             <Style x:Key="AnimationBorder"
@@ -42,144 +83,195 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
+            <Style x:Key="OrangeTile"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AnimationBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+            <Style x:Key="PurpleTile"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AnimationBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="PinkTile"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AnimationBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,*,2*,2*,2*"
-          ColumnDefinitions="*,*">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
-        <Button Grid.Row="0" Grid.Column="0"
-                Style="{StaticResource AnimationButton}"
-                Text="Fade"
-                BackgroundColor="{StaticResource BlueDefault}">
-            <Button.Behaviors>
-                <s:EventActionBehavior EventName="Clicked">
-                    <s:BeginAnimationAction>
-                        <s:SequentialAnimation>
-                            <s:FadeToAnimation Opacity="0.5" />
-                            <s:FadeToAnimation Opacity="1.0" />
-                        </s:SequentialAnimation>
-                    </s:BeginAnimationAction>
-                </s:EventActionBehavior>
-            </Button.Behaviors>
-        </Button>
+            <controls:InfoCard Title="Click animation (Button)"
+                               Icon="{x:Static fonts:MaterialIcons.Touch_app}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <Grid Style="{StaticResource ClickGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
 
-        <Button Grid.Row="0" Grid.Column="1"
-                Style="{StaticResource AnimationButton}"
-                Text="Rotate"
-                BackgroundColor="{StaticResource BlueDefault}">
-            <Button.Behaviors>
-                <s:EventActionBehavior EventName="Clicked">
-                    <s:BeginAnimationAction>
-                        <s:SequentialAnimation>
-                            <s:RotateToAnimation Rotation="10" />
-                            <s:RotateToAnimation Rotation="0" />
-                        </s:SequentialAnimation>
-                    </s:BeginAnimationAction>
-                </s:EventActionBehavior>
-            </Button.Behaviors>
-        </Button>
+                    <Button Grid.Row="0" Grid.Column="0"
+                            Style="{StaticResource AnimationButton}"
+                            Text="Fade">
+                        <Button.Behaviors>
+                            <s:EventActionBehavior EventName="Clicked">
+                                <s:BeginAnimationAction>
+                                    <s:SequentialAnimation>
+                                        <s:FadeToAnimation Opacity="0.5" />
+                                        <s:FadeToAnimation Opacity="1.0" />
+                                    </s:SequentialAnimation>
+                                </s:BeginAnimationAction>
+                            </s:EventActionBehavior>
+                        </Button.Behaviors>
+                    </Button>
 
-        <Button Grid.Row="1" Grid.Column="0"
-                Style="{StaticResource AnimationButton}"
-                Text="Scale"
-                BackgroundColor="{StaticResource BlueDefault}">
-            <Button.Behaviors>
-                <s:EventActionBehavior EventName="Clicked">
-                    <s:BeginAnimationAction>
-                        <s:SequentialAnimation>
-                            <s:ScaleToAnimation Scale="0.8" />
-                            <s:ScaleToAnimation Scale="1" />
-                        </s:SequentialAnimation>
-                    </s:BeginAnimationAction>
-                </s:EventActionBehavior>
-            </Button.Behaviors>
-        </Button>
+                    <Button Grid.Row="0" Grid.Column="1"
+                            Style="{StaticResource AnimationButton}"
+                            Text="Rotate">
+                        <Button.Behaviors>
+                            <s:EventActionBehavior EventName="Clicked">
+                                <s:BeginAnimationAction>
+                                    <s:SequentialAnimation>
+                                        <s:RotateToAnimation Rotation="10" />
+                                        <s:RotateToAnimation Rotation="0" />
+                                    </s:SequentialAnimation>
+                                </s:BeginAnimationAction>
+                            </s:EventActionBehavior>
+                        </Button.Behaviors>
+                    </Button>
 
-        <Border Grid.Row="2" Grid.Column="0"
-                Style="{StaticResource AnimationBorder}"
-                BackgroundColor="{StaticResource OrangeDefault}">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="16" />
-            </Border.StrokeShape>
-            <Border.Behaviors>
-                <s:TapActionBehavior>
-                    <s:BeginAnimationAction>
-                        <s:SequentialAnimation>
-                            <s:RotateToAnimation Duration="1000"
-                                                 Rotation="360" />
-                            <s:RotateToAnimation Duration="200"
-                                                 Rotation="0" />
-                        </s:SequentialAnimation>
-                    </s:BeginAnimationAction>
-                </s:TapActionBehavior>
-            </Border.Behaviors>
-            <Label Style="{StaticResource AnimationLabel}"
-                   Text="Rotate" />
+                    <Button Grid.Row="1" Grid.Column="0"
+                            Style="{StaticResource AnimationButton}"
+                            Text="Scale">
+                        <Button.Behaviors>
+                            <s:EventActionBehavior EventName="Clicked">
+                                <s:BeginAnimationAction>
+                                    <s:SequentialAnimation>
+                                        <s:ScaleToAnimation Scale="0.8" />
+                                        <s:ScaleToAnimation Scale="1" />
+                                    </s:SequentialAnimation>
+                                </s:BeginAnimationAction>
+                            </s:EventActionBehavior>
+                        </Button.Behaviors>
+                    </Button>
 
-        </Border>
+                    <Button Grid.Row="1" Grid.Column="1"
+                            Style="{StaticResource AnimationButton}"
+                            Text="Shake">
+                        <Button.Behaviors>
+                            <s:EventActionBehavior EventName="Clicked">
+                                <s:BeginAnimationAction>
+                                    <s:SequentialAnimation>
+                                        <s:TranslateToAnimation Duration="60" TranslateX="8" />
+                                        <s:TranslateToAnimation Duration="60" TranslateX="-8" />
+                                        <s:TranslateToAnimation Duration="60" TranslateX="4" />
+                                        <s:TranslateToAnimation Duration="60" TranslateX="0" />
+                                    </s:SequentialAnimation>
+                                </s:BeginAnimationAction>
+                            </s:EventActionBehavior>
+                        </Button.Behaviors>
+                    </Button>
 
-        <Border Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource AnimationBorder}"
-                BackgroundColor="{StaticResource OrangeDefault}">
-            <Border.Behaviors>
-                <s:TapActionBehavior>
-                    <s:BeginAnimationAction>
-                        <s:RelRotateToAnimation Rotation="90" />
-                    </s:BeginAnimationAction>
-                </s:TapActionBehavior>
-            </Border.Behaviors>
-            <Label Style="{StaticResource AnimationLabel}"
-                   Text="RelRotate" />
-        </Border>
+                </Grid>
+            </controls:InfoCard>
 
-        <Border Grid.Row="3" Grid.ColumnSpan="2"
-                Style="{StaticResource AnimationBorder}"
-                BackgroundColor="{StaticResource PurpleDefault}">
-            <Border.Behaviors>
-                <s:TapActionBehavior>
-                    <s:BeginAnimationAction>
-                        <s:SequentialAnimation>
-                            <s:ParallelAnimation>
-                                <s:TranslateToAnimation Duration="600"
-                                                        Easing="{x:Static Easing.SinInOut}"
-                                                        TranslateX="90" TranslateY="-30" />
-                                <s:RotateToAnimation Duration="600"
-                                                     Easing="{x:Static Easing.CubicInOut}"
-                                                     Rotation="270" />
-                                <s:ScaleToAnimation Duration="600"
-                                                    Easing="{x:Static Easing.CubicOut}"
-                                                    Scale="1.4" />
-                            </s:ParallelAnimation>
-                            <s:ScaleToAnimation Duration="300"
-                                                Scale="1" />
-                            <s:RotateToAnimation Duration="300"
-                                                 Rotation="0" />
-                            <s:TranslateToAnimation Duration="300"
-                                                    TranslateX="0" TranslateY="0" />
-                        </s:SequentialAnimation>
-                    </s:BeginAnimationAction>
-                </s:TapActionBehavior>
-            </Border.Behaviors>
-            <Label Style="{StaticResource AnimationLabel}"
-                   Text="Sequence" />
-        </Border>
+            <controls:InfoCard Title="Tap animation (Border)"
+                               Icon="{x:Static fonts:MaterialIcons.Play_arrow}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <VerticalStackLayout Style="{StaticResource TapStack}">
 
-        <Border Grid.Row="4" Grid.ColumnSpan="2"
-                Style="{StaticResource AnimationBorder}"
-                BackgroundColor="{StaticResource PinkDefault}">
-            <Border.Behaviors>
-                <s:TapActionBehavior>
-                    <s:BeginAnimationAction>
-                        <animations:SpringAnimation />
-                    </s:BeginAnimationAction>
-                </s:TapActionBehavior>
-            </Border.Behaviors>
-            <Label Style="{StaticResource AnimationLabel}"
-                   Text="Custom" />
-        </Border>
+                    <Label Style="{StaticResource HintLabel}"
+                           Text="Tap each tile to play its animation" />
 
-    </Grid>
+                    <Grid Style="{StaticResource TileRowGrid}"
+                          ColumnDefinitions="*,*">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource OrangeTile}">
+                            <Border.Behaviors>
+                                <s:TapActionBehavior>
+                                    <s:BeginAnimationAction>
+                                        <s:SequentialAnimation>
+                                            <s:RotateToAnimation Duration="1000"
+                                                                 Rotation="360" />
+                                            <s:RotateToAnimation Duration="200"
+                                                                 Rotation="0" />
+                                        </s:SequentialAnimation>
+                                    </s:BeginAnimationAction>
+                                </s:TapActionBehavior>
+                            </Border.Behaviors>
+                            <Label Style="{StaticResource AnimationLabel}"
+                                   Text="Rotate" />
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                Style="{StaticResource OrangeTile}">
+                            <Border.Behaviors>
+                                <s:TapActionBehavior>
+                                    <s:BeginAnimationAction>
+                                        <s:RelRotateToAnimation Rotation="90" />
+                                    </s:BeginAnimationAction>
+                                </s:TapActionBehavior>
+                            </Border.Behaviors>
+                            <Label Style="{StaticResource AnimationLabel}"
+                                   Text="RelRotate" />
+                        </Border>
+                    </Grid>
+
+                    <Grid Style="{StaticResource SequenceAreaGrid}">
+                        <Border Style="{StaticResource PurpleTile}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="End">
+                            <Border.Behaviors>
+                                <s:TapActionBehavior>
+                                    <s:BeginAnimationAction>
+                                        <s:SequentialAnimation>
+                                            <s:ParallelAnimation>
+                                                <s:TranslateToAnimation Duration="600"
+                                                                        Easing="{x:Static Easing.SinInOut}"
+                                                                        TranslateX="90" TranslateY="-30" />
+                                                <s:RotateToAnimation Duration="600"
+                                                                     Easing="{x:Static Easing.CubicInOut}"
+                                                                     Rotation="270" />
+                                                <s:ScaleToAnimation Duration="600"
+                                                                    Easing="{x:Static Easing.CubicOut}"
+                                                                    Scale="1.4" />
+                                            </s:ParallelAnimation>
+                                            <s:ScaleToAnimation Duration="300"
+                                                                Scale="1" />
+                                            <s:RotateToAnimation Duration="300"
+                                                                 Rotation="0" />
+                                            <s:TranslateToAnimation Duration="300"
+                                                                    TranslateX="0" TranslateY="0" />
+                                        </s:SequentialAnimation>
+                                    </s:BeginAnimationAction>
+                                </s:TapActionBehavior>
+                            </Border.Behaviors>
+                            <Label Style="{StaticResource AnimationLabel}"
+                                   Text="Sequence" />
+                        </Border>
+                    </Grid>
+
+                    <Border Style="{StaticResource PinkTile}">
+                        <Border.Behaviors>
+                            <s:TapActionBehavior>
+                                <s:BeginAnimationAction>
+                                    <animations:SpringAnimation />
+                                </s:BeginAnimationAction>
+                            </s:TapActionBehavior>
+                        </Border.Behaviors>
+                        <Label Style="{StaticResource AnimationLabel}"
+                               Text="Custom" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

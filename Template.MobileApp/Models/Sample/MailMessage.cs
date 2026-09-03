@@ -11,4 +11,6 @@ public sealed class MailMessage
     public string Title { get; set; } = default!;
 
     public string Body { get; set; } = default!;
+
+    public bool IsUnread { get; set; }
 }

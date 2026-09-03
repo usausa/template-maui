@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Shared"
              x:Class="Template.MobileApp.Modules.Navigation.Shared.SharedMain2View"
              x:DataType="{x:Type module:SharedMain2ViewModel}"
@@ -13,9 +16,133 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding No}" />
-    </VerticalStackLayout>
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="NumberCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TealDefault}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="NumberCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SharedInputChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="ChipColor" Value="{StaticResource TealLighten4}" />
+                <Setter Property="IconColor" Value="{StaticResource TealDarken2}" />
+                <Setter Property="TextColor" Value="{StaticResource TealDarken2}" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="NoStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="NoCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="NoValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TealDarken2}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}">
+
+        <Border Style="{StaticResource CenterCardBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <VerticalStackLayout Style="{StaticResource CardStack}">
+
+                <Border Style="{StaticResource NumberCircleBorder}">
+                    <Label Style="{StaticResource NumberCircleLabel}"
+                           Text="2" />
+                </Border>
+
+                <Label Style="{StaticResource CenterTitleLabel}"
+                       Text="Shared Main 2" />
+
+                <controls:StatusChip Style="{StaticResource SharedInputChip}"
+                                     Icon="{x:Static fonts:MaterialIcons.Input}"
+                                     Text="Uses the shared input screen" />
+
+                <BoxView Style="{StaticResource CardDivider}" />
+
+                <VerticalStackLayout Style="{StaticResource NoStack}">
+                    <Label Style="{StaticResource NoCaptionLabel}"
+                           Text="No" />
+                    <Label Style="{StaticResource NoValueLabel}"
+                           Text="{Binding No}" />
+                </VerticalStackLayout>
+
+                <Label Style="{StaticResource CenterHintLabel}"
+                       Text="◀️ → Shared input&#x0a;✔ → Menu" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
 
 </ContentView>

@@ -16,9 +16,7 @@ public static partial class LabelOption
                 if (GetAutoSize(label))
                 {
                     label.LineBreakMode = LineBreakMode.NoWrap;
-#pragma warning disable CA1416
                     handler.PlatformView.SetAutoSizeTextTypeWithDefaults(AutoSizeTextType.Uniform);
-#pragma warning restore CA1416
 
                     UpdateLabelSize(handler, label);
                 }
@@ -37,9 +35,7 @@ public static partial class LabelOption
     public static void UpdateLabelSize(ILabelHandler handler, Label label)
     {
         var max = (int)GetMaxSize(label);
-#pragma warning disable CA1416
         handler.PlatformView.SetAutoSizeTextTypeUniformWithConfiguration(1, max, 1, 1);
-#pragma warning restore CA1416
         label.MinimumHeightRequest = max;
     }
 }

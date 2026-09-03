@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIKitOnboardView"
+             x:DataType="{x:Type module:UIKitOnboardViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIKitOnboardViewModel}"
+             shell:ShellProperty.Title="Kit Onboarding"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootGrid" TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="0,32,0,16" />
+            </Style>
+
+            <Style x:Key="PageImage" TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFit" />
+                <Setter Property="HeightRequest" Value="240" />
+            </Style>
+
+            <Style x:Key="PageTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="Margin" Value="24,16,24,8" />
+            </Style>
+
+            <Style x:Key="PageDescription" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="Margin" Value="32,0" />
+            </Style>
+
+            <Style x:Key="BottomBar" TargetType="Grid">
+                <Setter Property="Margin" Value="24,24" />
+            </Style>
+
+            <Style x:Key="SkipButton" TargetType="Button">
+                <Setter Property="Text" Value="Skip" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="StartButton" TargetType="Button">
+                <Setter Property="Text" Value="Get Started" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="WidthRequest" Value="160" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto,Auto">
+
+        <CarouselView x:Name="OnboardCarousel"
+                      Grid.Row="0"
+                      ItemsSource="{Binding Pages}"
+                      IndicatorView="{x:Reference indicators}"
+                      Loop="False">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="module:UIKitOnboardPage">
+                    <VerticalStackLayout VerticalOptions="Center">
+                        <Image Style="{StaticResource PageImage}" Source="{Binding Image}" />
+                        <!-- ページ切替でテキストをフェードイン -->
+                        <VerticalStackLayout behaviors:AnimationOption.FadeInTrigger="{Binding Source={x:Reference OnboardCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
+                            <Label Style="{StaticResource PageTitle}" Text="{Binding Title}" />
+                            <Label Style="{StaticResource PageDescription}" Text="{Binding Description}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <IndicatorView Grid.Row="1"
+                       x:Name="indicators"
+                       IndicatorColor="{StaticResource GrayLighten2}"
+                       SelectedIndicatorColor="{StaticResource BlueDefault}"
+                       HorizontalOptions="Center"
+                       Margin="0,8,0,16" />
+
+        <Grid Grid.Row="2"
+              Style="{StaticResource BottomBar}"
+              ColumnDefinitions="*,Auto">
+            <Button Grid.Column="0" Style="{StaticResource SkipButton}" HorizontalOptions="Start"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CompleteCommand}" />
+            <Button Grid.Column="1" Style="{StaticResource StartButton}"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CompleteCommand}" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

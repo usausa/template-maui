@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleChartView"
              x:DataType="{x:Type module:SampleChartViewModel}"
@@ -11,6 +12,142 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SegmentButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="BorderColor" Value="{StaticResource BlueLighten3}" />
+                <Setter Property="BorderWidth" Value="1" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,*"
+          BackgroundColor="White">
+
+        <!-- 切替セグメント -->
+        <Grid Grid.Row="0"
+              Margin="16,12"
+              RowDefinitions="Auto,Auto"
+              ColumnDefinitions="*,*,*,*"
+              RowSpacing="8"
+              ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Line}"
+                    Text="Line">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Line}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Bar}"
+                    Text="Bar">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Bar}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="2"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Donut}"
+                    Text="Donut">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Donut}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="3"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Candle}"
+                    Text="Candle">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Candle}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Stacked}"
+                    Text="Stacked">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Stacked}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Scatter}"
+                    Text="Scatter">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Scatter}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="2"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Heat}"
+                    Text="Heat">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Heat}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- チャート -->
+        <drawing:DrawingControl Grid.Row="1"
+                                  Margin="8,0,8,16"
+                                  Drawing="{Binding Drawing}" />
+
+    </Grid>
 
 </ContentView>

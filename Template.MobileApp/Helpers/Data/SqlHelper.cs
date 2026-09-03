@@ -8,6 +8,8 @@ using Smart.Data.Mapper.Builders.Metadata;
 
 public static class SqlHelper
 {
+    private static readonly NullabilityInfoContext NullabilityContext = new();
+
     private static readonly Dictionary<Type, string> TypeMap = new()
     {
         { typeof(string), "TEXT" },
@@ -44,9 +46,8 @@ public static class SqlHelper
 
             sql.Append(type);
 
-            if ((propertyType.IsValueType && !isNullable) ||
-                (column.Property.GetCustomAttribute<NullableAttribute>() is null) ||
-                (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() is not null))
+            var nullableColumn = isNullable || (NullabilityContext.Create(column.Property).WriteState == NullabilityState.Nullable);
+            if (!nullableColumn || (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() is not null))
             {
                 sql.Append(" NOT NULL");
             }

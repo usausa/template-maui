@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIPosView"
@@ -54,14 +55,14 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
-            <Style x:Key="NameLabel"
+            <Style x:Key="PosNameLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="SubNameLabel"
+            <Style x:Key="PosSubNameLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
@@ -69,46 +70,46 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="NameWithSubLabel"
+            <Style x:Key="PosNameWithSubLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
-            <Style x:Key="NameWithSubNameSpan"
-                   TargetType="Label">
+            <Style x:Key="PosNameWithSubNameSpan"
+                   TargetType="Span">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="NameWithSubOptionSpan"
-                   TargetType="Label">
+            <Style x:Key="PosNameWithSubOptionSpan"
+                   TargetType="Span">
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="ValueLabel"
+            <Style x:Key="PosValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="SubValueLabel"
+            <Style x:Key="PosSubValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="LargeValueLabel"
+            <Style x:Key="PosLargeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="28" />
             </Style>
 
-            <Style x:Key="HugeValueLabel"
+            <Style x:Key="PosHugeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
@@ -161,6 +162,19 @@
                              Color="White"
                              Size="24" />
 
+            <Style x:Key="QuantityButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
             <Style x:Key="ExecuteButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -170,6 +184,14 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="ContentLayout" Value="Left" />
                 <Setter Property="FontSize" Value="24" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="Black"
+                                Offset="0,-2"
+                                Radius="8"
+                                Opacity="0.25" />
+                    </Setter.Value>
+                </Setter>
             </Style>
 
         </ResourceDictionary>
@@ -181,13 +203,24 @@
 
         <Grid Grid.Row="0"
               Style="{StaticResource ValueRowGrid}"
-              ColumnDefinitions="*,Auto,24">
+              ColumnDefinitions="*,Auto,Auto,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="数量" />
-            <Label Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="3点" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource QuantityButton}"
+                    Command="{Binding QuantityDownCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Remove}" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource PosValueLabel}"
+                   WidthRequest="56"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center"
+                   Text="{Binding Quantity, StringFormat='{0}点'}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource QuantityButton}"
+                    Command="{Binding QuantityUpCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Add}" />
         </Grid>
 
         <BoxView Grid.Row="1"
@@ -197,11 +230,11 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="小計" />
             <Label Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="￥ 888" />
+                   Style="{StaticResource PosValueLabel}"
+                   Text="{Binding Subtotal, StringFormat='￥ {0:N0}'}" />
         </Grid>
 
         <BoxView Grid.Row="3"
@@ -212,10 +245,10 @@
             <Grid Style="{StaticResource ValueRowGrid}"
                   ColumnDefinitions="*,Auto,24">
                 <Label Grid.Column="0"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="値引・割引" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="￥ 0" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"
@@ -230,18 +263,18 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameWithSubLabel}">
+                   Style="{StaticResource PosNameWithSubLabel}">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Style="{StaticResource NameWithSubNameSpan}"
+                        <Span Style="{StaticResource PosNameWithSubNameSpan}"
                               Text="外税" />
-                        <Span Style="{StaticResource NameWithSubOptionSpan}"
+                        <Span Style="{StaticResource PosNameWithSubOptionSpan}"
                               Text=" 8%" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
             <Label Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
+                   Style="{StaticResource PosValueLabel}"
                    Text="￥ 0" />
         </Grid>
 
@@ -250,13 +283,17 @@
 
         <Grid Grid.Row="8"
               Style="{StaticResource ValueRowGrid}"
-              ColumnDefinitions="*,Auto,24">
+              ColumnDefinitions="*,Auto,24"
+              behaviors:AnimationOption.HighlightTrigger="{Binding Total}"
+              behaviors:AnimationOption.HighlightColor="{StaticResource YellowLighten2}">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="合計" />
             <Label Grid.Column="1"
-                   Style="{StaticResource HugeValueLabel}"
-                   Text="￥ 888" />
+                   Style="{StaticResource PosHugeValueLabel}"
+                   behaviors:LabelOption.CountUpValue="{Binding Total}"
+                   behaviors:LabelOption.CountUpFormat="{}￥ {0:N0}"
+                   behaviors:LabelOption.CountUpDuration="450" />
         </Grid>
 
         <BoxView Grid.Row="9"
@@ -267,11 +304,11 @@
             <Grid Style="{StaticResource ValueRowGrid}"
                   ColumnDefinitions="*,Auto,24">
                 <Label Grid.Column="0"
-                       Style="{StaticResource SubNameLabel}"
+                       Style="{StaticResource PosSubNameLabel}"
                        Text="内消費税" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource SubValueLabel}"
-                       Text="(￥ 65)" />
+                       Style="{StaticResource PosSubValueLabel}"
+                       Text="{Binding InnerTax, StringFormat='(￥ {0:N0})'}" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"
                        Text="›" />
@@ -285,9 +322,8 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*"
               BackgroundColor="{StaticResource GrayLighten3}">
-            <Label Grid.Column="1"
-                   Style="{StaticResource NameLabel}"
-                   Text="預金り" />
+            <Label Style="{StaticResource PosNameLabel}"
+                   Text="預かり" />
         </Grid>
 
         <BoxView Grid.Row="14"
@@ -301,11 +337,11 @@
                        Style="{StaticResource IconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Money}" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="現金預り" />
                 <Label Grid.Column="2"
-                       Style="{StaticResource ValueLabel}"
-                       Text="￥ 888" />
+                       Style="{StaticResource PosValueLabel}"
+                       Text="{Binding Deposit, StringFormat='￥ {0:N0}'}" />
                 <Label Grid.Column="3"
                        Style="{StaticResource LinkLabel}"
                        Text="›" />
@@ -323,10 +359,10 @@
                        Style="{StaticResource IconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Credit_card}" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="クレジット" />
                 <Label Grid.Column="2"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="￥ 0" />
                 <Label Grid.Column="3"
                        Style="{StaticResource LinkLabel}"
@@ -341,11 +377,20 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="お釣り" />
             <Label Grid.Column="1"
-                   Style="{StaticResource LargeValueLabel}"
-                   Text="￥ 0" />
+                   Style="{StaticResource PosLargeValueLabel}"
+                   Text="{Binding Change, StringFormat='￥ {0:N0}'}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding HasChange}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="{StaticResource GreenDarken1}" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
         </Grid>
 
         <BoxView Grid.Row="20"
@@ -359,10 +404,10 @@
             <Grid Style="{StaticResource ValueRowGrid}"
                   ColumnDefinitions="*,Auto,24">
                 <Label Grid.Column="0"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="担当者" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="うさうさ" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"
@@ -383,7 +428,7 @@
                     Text="閉店セール" />
             <Button Grid.Column="2"
                     Style="{StaticResource CyanOptionButton}"
-                    Text="会員得点" />
+                    Text="会員特典" />
             <Button Grid.Column="3"
                     Style="{StaticResource GreenOptionButton}"
                     Text="メルマガ割引" />

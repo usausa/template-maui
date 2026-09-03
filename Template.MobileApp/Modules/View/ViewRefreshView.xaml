@@ -5,6 +5,8 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:fonts="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Modules.View.ViewRefreshView"
              x:DataType="{x:Type module:ViewRefreshViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewRefreshViewModel}"
@@ -16,14 +18,27 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="HeaderLayout"
+            <Style x:Key="RefreshHeaderLayout"
                    TargetType="FlexLayout">
                 <Setter Property="Padding" Value="6,0" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="JustifyContent" Value="SpaceBetween" />
             </Style>
 
-            <Style x:Key="HeaderLabel"
+            <Style x:Key="RefreshHeaderRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="RefreshHeaderIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RefreshHeaderLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
@@ -31,12 +46,75 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
+            <Style x:Key="RefreshHeaderCountBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,4" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="RefreshHeaderCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="RootRefresh"
+                   TargetType="RefreshView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="SkeletonCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SkeletonGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SkeletonCircle"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="SkeletonBar"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="7" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+            </Style>
+
+            <Style x:Key="SkeletonBarThin"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource SkeletonBar}">
+                <Setter Property="HeightRequest" Value="12" />
+            </Style>
+
             <Style x:Key="NewsBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="8,4" />
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
             <Style x:Key="NewsImage"
@@ -56,20 +134,20 @@
                 <Setter Property="MaxLines" Value="1" />
             </Style>
 
-            <Style x:Key="NewsSummaryLabel"
-                   TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="LineBreakMode" Value="WordWrap" />
-                <Setter Property="MaxLines" Value="2" />
-            </Style>
-
             <Style x:Key="NewsTimestampLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="NewsSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="MaxLines" Value="2" />
             </Style>
 
         </ResourceDictionary>
@@ -79,18 +157,89 @@
     <Grid RowDefinitions="48,*">
 
         <FlexLayout Grid.Row="0"
-                    Style="{StaticResource HeaderLayout}">
-            <Label Style="{StaticResource HeaderLabel}"
-                   Text="News" />
+                    Style="{StaticResource RefreshHeaderLayout}">
+            <HorizontalStackLayout Style="{StaticResource RefreshHeaderRow}">
+                <Label Style="{StaticResource RefreshHeaderIcon}"
+                       Text="{x:Static fonts:MaterialIcons.Newspaper}" />
+                <Label Style="{StaticResource RefreshHeaderLabel}"
+                       Text="News" />
+            </HorizontalStackLayout>
+            <Border Style="{StaticResource RefreshHeaderCountBorder}">
+                <Label Style="{StaticResource RefreshHeaderCountLabel}"
+                       Text="{Binding Items.Count, StringFormat='{0} items'}" />
+            </Border>
         </FlexLayout>
 
         <RefreshView Grid.Row="1"
+                     Style="{StaticResource RootRefresh}"
                      Command="{Binding RefreshCommand}"
                      IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding Items}">
                 <CollectionView.Behaviors>
                     <s:CollectionControlBehavior Controller="{Binding Controller}" />
                 </CollectionView.Behaviors>
+                <CollectionView.EmptyView>
+                    <!-- 初回ロード中のスケルトン (SfShimmer が自作スケルトンの形に沿って波アニメーションを描く) -->
+                    <sf:SfShimmer IsActive="True"
+                                  VerticalOptions="Start">
+                        <sf:SfShimmer.CustomView>
+                            <VerticalStackLayout>
+                        <Border Style="{StaticResource SkeletonCardBorder}">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
+                                <BoxView Grid.RowSpan="2" Grid.Column="0"
+                                         Style="{StaticResource SkeletonCircle}" />
+                                <BoxView Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource SkeletonBar}" />
+                                <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                         Style="{StaticResource SkeletonBarThin}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource SkeletonCardBorder}">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
+                                <BoxView Grid.RowSpan="2" Grid.Column="0"
+                                         Style="{StaticResource SkeletonCircle}" />
+                                <BoxView Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource SkeletonBar}" />
+                                <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                         Style="{StaticResource SkeletonBarThin}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource SkeletonCardBorder}">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
+                                <BoxView Grid.RowSpan="2" Grid.Column="0"
+                                         Style="{StaticResource SkeletonCircle}" />
+                                <BoxView Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource SkeletonBar}" />
+                                <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                         Style="{StaticResource SkeletonBarThin}" />
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource SkeletonCardBorder}">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
+                                <BoxView Grid.RowSpan="2" Grid.Column="0"
+                                         Style="{StaticResource SkeletonCircle}" />
+                                <BoxView Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource SkeletonBar}" />
+                                <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                         Style="{StaticResource SkeletonBarThin}" />
+                            </Grid>
+                        </Border>
+                            </VerticalStackLayout>
+                        </sf:SfShimmer.CustomView>
+                        <sf:SfShimmer.Content>
+                            <BoxView HeightRequest="0"
+                                     Color="Transparent" />
+                        </sf:SfShimmer.Content>
+                    </sf:SfShimmer>
+                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:NewsItem}">
 

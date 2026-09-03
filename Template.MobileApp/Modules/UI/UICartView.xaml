@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UICartView"
+             x:DataType="{x:Type module:UICartViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UICartViewModel}"
+             shell:ShellProperty.Title="Cart"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Root -->
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="RootStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,0,0,16" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <!-- Header banner -->
+            <Style x:Key="BannerBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="20,18" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 0,0,24,24" />
+            </Style>
+
+            <Style x:Key="BannerTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="BannerCountLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,2,0,0" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Opacity" Value="0.9" />
+            </Style>
+
+            <!-- Cart items -->
+            <Style x:Key="ItemsStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="16,4,16,0" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="ItemBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="ItemGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ItemImageBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="ItemImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="ItemTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ItemTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="ItemPriceLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+            </Style>
+
+            <Style x:Key="StepperRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StepperButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="28" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="QuantityLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Coupon / points -->
+            <Style x:Key="CouponBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="CouponRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CouponIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CouponLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AppliedBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,3" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AppliedBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
+            <Style x:Key="CouponDivider"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="0,10" />
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="PointsIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="PointsLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Totals -->
+            <Style x:Key="TotalsBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="TotalsStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TotalsCaption"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="TotalsValue"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="DiscountValue"
+                   TargetType="Label"
+                   BasedOn="{StaticResource TotalsValue}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
+            <Style x:Key="TotalCaption"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TotalValue"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <!-- Fixed footer -->
+            <Style x:Key="FooterBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,10,16,14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,-2"
+                            Brush="Black" Opacity="0.08" Radius="8" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="CheckoutButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,3"
+                            Brush="Black" Opacity="0.2" Radius="6" />
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Style="{StaticResource RootStack}">
+
+            <!-- Header banner -->
+            <Border Style="{StaticResource BannerBorder}">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource BannerTitleLabel}"
+                           Text="Shopping Cart" />
+                    <Label Style="{StaticResource BannerCountLabel}"
+                           Text="{Binding ItemCount, StringFormat='{0} items in cart'}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Cart items -->
+            <VerticalStackLayout Style="{StaticResource ItemsStack}"
+                                 BindableLayout.ItemsSource="{Binding Items}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="module:UICartItem">
+                        <Border Style="{StaticResource ItemBorder}"
+                                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                behaviors:AnimationOption.EnterDelay="{Binding Delay}">
+                            <Grid Style="{StaticResource ItemGrid}"
+                                  ColumnDefinitions="Auto,*,Auto">
+                                <Border Grid.Column="0"
+                                        Style="{StaticResource ItemImageBorder}">
+                                    <Image Style="{StaticResource ItemImage}"
+                                           Source="{Binding Image}" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Style="{StaticResource ItemTextStack}">
+                                    <Label Style="{StaticResource ItemTitleLabel}"
+                                           Text="{Binding Title}" />
+                                    <Label Style="{StaticResource ItemPriceLabel}"
+                                           Text="{Binding PriceText}" />
+                                </VerticalStackLayout>
+                                <HorizontalStackLayout Grid.Column="2"
+                                                       Style="{StaticResource StepperRow}">
+                                    <Button Style="{StaticResource StepperButton}"
+                                            behaviors:ButtonOption.PressEffect="True"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=DecrementCommand, x:DataType={x:Type module:UICartViewModel}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="−" />
+                                    <Label Style="{StaticResource QuantityLabel}"
+                                           Text="{Binding Quantity}" />
+                                    <Button Style="{StaticResource StepperButton}"
+                                            behaviors:ButtonOption.PressEffect="True"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=IncrementCommand, x:DataType={x:Type module:UICartViewModel}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="+" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- Coupon / points -->
+            <Border Style="{StaticResource CouponBorder}">
+                <VerticalStackLayout>
+                    <Grid Style="{StaticResource CouponRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CouponIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Local_offer}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CouponLabel}"
+                               Text="{Binding Coupon}" />
+                        <Border Grid.Column="2"
+                                Style="{StaticResource AppliedBadgeBorder}">
+                            <Label Style="{StaticResource AppliedBadgeLabel}"
+                                   Text="Applied" />
+                        </Border>
+                    </Grid>
+                    <BoxView Style="{StaticResource CouponDivider}" />
+                    <Grid Style="{StaticResource CouponRowGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource PointsIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Star}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource PointsLabel}"
+                               Text="{Binding Points}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Totals -->
+            <Border Style="{StaticResource TotalsBorder}">
+                <VerticalStackLayout Style="{StaticResource TotalsStack}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource TotalsCaption}"
+                               Text="Subtotal" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TotalsValue}"
+                               Text="{Binding Subtotal, StringFormat='$ {0:N2}'}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource TotalsCaption}"
+                               Text="Discount" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource DiscountValue}"
+                               Text="{Binding Discount, StringFormat='− $ {0:N2}'}" />
+                    </Grid>
+                    <BoxView Style="{StaticResource CouponDivider}" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource TotalCaption}"
+                               Text="Total" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TotalValue}"
+                               behaviors:LabelOption.CountUpValue="{Binding TotalValue}"
+                               behaviors:LabelOption.CountUpFormat="$ {0:N2}"
+                               behaviors:LabelOption.CountUpDuration="450"
+                               behaviors:AnimationOption.BounceTrigger="{Binding TotalValue}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Fixed checkout footer -->
+        <Border Grid.Row="1"
+                Style="{StaticResource FooterBorder}">
+            <Button Style="{StaticResource CheckoutButton}"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CheckoutCommand}"
+                    Text="Checkout" />
+        </Border>
+
+    </Grid>
+
+</ContentView>

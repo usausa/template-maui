@@ -6,6 +6,7 @@ using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components;
 using Template.MobileApp.Helpers;
 
+#pragma warning disable CA1724
 public static class Extensions
 {
     //--------------------------------------------------------------------------------
@@ -145,3 +146,4 @@ public static class Extensions
     public static IObservable<ActivityEventArgs> ChangedAsObservable(this IActivityRecognizer activityRecognizer) =>
         Observable.FromEvent<EventHandler<ActivityEventArgs>, ActivityEventArgs>(static h => (_, e) => h(e), h => activityRecognizer.Changed += h, h => activityRecognizer.Changed -= h);
 }
+#pragma warning restore CA1724

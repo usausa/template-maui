@@ -15,7 +15,9 @@ public sealed class CognitiveUsecase : IDisposable
 {
     private readonly IFileSystem fileSystem;
 
-    private bool initialized;
+    private readonly SemaphoreSlim initLock = new(1, 1);
+
+    private volatile bool initialized;
 
     private InferenceSession session = default!;
 
@@ -28,6 +30,7 @@ public sealed class CognitiveUsecase : IDisposable
 
     public void Dispose()
     {
+        initLock.Dispose();
         if (initialized)
         {
             session.Dispose();
@@ -45,14 +48,28 @@ public sealed class CognitiveUsecase : IDisposable
             return;
         }
 
-        await using var modelStream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Cognitive", "model.onnx"));
-        session = new InferenceSession(await modelStream.ReadAllBytesAsync());
+        // 並行初期化によるInferenceSessionリークを防ぐ
+        await initLock.WaitAsync();
+        try
+        {
+            if (initialized)
+            {
+                return;
+            }
 
-        await using var labelStream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Cognitive", "labels.txt"));
-        using var reader = new StreamReader(labelStream);
-        labels = await reader.ReadLinesAsync().ToArrayAsync();
+            await using var modelStream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Cognitive", "model.onnx"));
+            session = new InferenceSession(await modelStream.ReadAllBytesAsync());
 
-        initialized = true;
+            await using var labelStream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Cognitive", "labels.txt"));
+            using var reader = new StreamReader(labelStream);
+            labels = await reader.ReadLinesAsync().ToArrayAsync();
+
+            initialized = true;
+        }
+        finally
+        {
+            initLock.Release();
+        }
     }
 
     public async Task<DetectResult[]> DetectAsync(SKBitmap bitmap)
@@ -66,31 +83,37 @@ public sealed class CognitiveUsecase : IDisposable
 
         var size = 3 * height * width;
         var buffer = ArrayPool<float>.Shared.Rent(size);
-        var inputTensor = new DenseTensor<float>(buffer.AsMemory(0, size), [1, 3, height, width]);
-        PrepareTensor(bitmap, inputTensor, width, height);
-
-        var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor(metadata.Key, inputTensor) };
-        using var values = session.Run(inputs);
-
-        ArrayPool<float>.Shared.Return(buffer);
-
-        var boxes = values.First(x => x.Name == "detected_boxes").AsTensor<float>();
-        var classes = values.First(x => x.Name == "detected_classes").AsTensor<long>();
-        var scores = values.First(x => x.Name == "detected_scores").AsTensor<float>();
-
-        var results = new DetectResult[scores.Length];
-        // ReSharper disable once LoopCanBeConvertedToQuery
-        for (var i = 0; i < scores.Length; i++)
+        try
         {
-            results[i] = new DetectResult(boxes[0, i, 0], boxes[0, i, 1], boxes[0, i, 2], boxes[0, i, 3], scores[0, i], labels[classes[0, i]]);
-        }
+            var inputTensor = new DenseTensor<float>(buffer.AsMemory(0, size), [1, 3, height, width]);
+            PrepareTensor(bitmap, inputTensor, width, height);
 
-        return results;
+            var inputs = new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor(metadata.Key, inputTensor) };
+            using var values = session.Run(inputs);
+
+            var boxes = values.First(x => x.Name == "detected_boxes").AsTensor<float>();
+            var classes = values.First(x => x.Name == "detected_classes").AsTensor<long>();
+            var scores = values.First(x => x.Name == "detected_scores").AsTensor<float>();
+
+            var results = new DetectResult[scores.Length];
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var i = 0; i < scores.Length; i++)
+            {
+                results[i] = new DetectResult(boxes[0, i, 0], boxes[0, i, 1], boxes[0, i, 2], boxes[0, i, 3], scores[0, i], labels[classes[0, i]]);
+            }
+
+            return results;
+        }
+        finally
+        {
+            // 出力values読み取り完了までは入力バッファを返却しない
+            ArrayPool<float>.Shared.Return(buffer);
+        }
     }
 
     private static void PrepareTensor(SKBitmap bitmap, DenseTensor<float> tensor, int width, int height)
     {
-        var resizedBitmap = bitmap.Resize(new SKImageInfo(width, height), new SKSamplingOptions(SKCubicResampler.Mitchell));
+        using var resizedBitmap = bitmap.Resize(new SKImageInfo(width, height), new SKSamplingOptions(SKCubicResampler.Mitchell));
         for (var y = 0; y < resizedBitmap.Height; y++)
         {
             for (var x = 0; x < resizedBitmap.Width; x++)

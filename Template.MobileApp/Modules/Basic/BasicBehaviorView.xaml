@@ -3,6 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicBehaviorView"
              x:DataType="{x:Type module:BasicBehaviorViewModel}"
@@ -11,47 +15,193 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <!-- Entry -->
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Entry" />
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Focus" />
-        <Entry>
-            <Entry.Behaviors>
-                <s:DefaultFocusBehavior />
-                <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
-                                          CommandParameter="Entry1"
-                                          EventName="Focused" />
-                <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
-                                          CommandParameter="Entry1"
-                                          EventName="Unfocused" />
-            </Entry.Behaviors>
-        </Entry>
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
 
-        <Entry>
-            <Entry.Behaviors>
-                <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
-                                          CommandParameter="Entry2"
-                                          EventName="Focused" />
-                <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
-                                          CommandParameter="Entry2"
-                                          EventName="Unfocused" />
-            </Entry.Behaviors>
-        </Entry>
+            <Style x:Key="FieldsStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Focused" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Focused}" />
+            <Style x:Key="FieldGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Unfocused" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Unfocused}" />
+            <Style x:Key="FieldCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
 
-    </VerticalStackLayout>
+            <Style x:Key="FieldBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="EventGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="Entry Focus"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Style="{StaticResource FieldsStack}">
+
+                    <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="Entry1 (default focus / blue)" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5">
+                                <Entry.Behaviors>
+                                    <s:DefaultFocusBehavior />
+                                    <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
+                                                              CommandParameter="Entry1"
+                                                              EventName="Focused" />
+                                    <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
+                                                              CommandParameter="Entry1"
+                                                              EventName="Unfocused" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="Entry2 (green)" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry behaviors:Focus.FocusedStroke="{StaticResource GreenDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5">
+                                <Entry.Behaviors>
+                                    <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
+                                                              CommandParameter="Entry2"
+                                                              EventName="Focused" />
+                                    <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
+                                                              CommandParameter="Entry2"
+                                                              EventName="Unfocused" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Focus Events"
+                               Icon="{x:Static fonts:MaterialIcons.Bolt}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <Grid Style="{StaticResource EventGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Focused" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Focused}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding Focused}"
+                           behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Unfocused" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Unfocused}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding Unfocused}"
+                           behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Toolkit Behaviors"
+                               Icon="{x:Static fonts:MaterialIcons.Extension}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200">
+                <VerticalStackLayout Style="{StaticResource FieldsStack}">
+                    <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="MaskedBehavior (電話番号 000-0000-0000)" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry Keyboard="Telephone"
+                                   behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5"
+                                   Text="{Binding Phone}">
+                                <Entry.Behaviors>
+                                    <mct:MaskedBehavior Mask="000-0000-0000" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="UserStoppedTypingBehavior (入力停止 800ms で確定)" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5"
+                                   Text="{Binding TypingText}">
+                                <Entry.Behaviors>
+                                    <mct:UserStoppedTypingBehavior StoppedTypingTimeThreshold="800"
+                                                                   Command="{Binding TypingStoppedCommand}" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               IsVisible="{Binding LastStopped, Converter={StaticResource NotEmptyConverter}}"
+                               Text="{Binding LastStopped, StringFormat='確定: {0}'}"
+                               behaviors:AnimationOption.HighlightTrigger="{Binding LastStopped}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="EventToCommandBehavior (Toggled イベント → Command)" />
+                        <Grid ColumnDefinitions="Auto,*"
+                              ColumnSpacing="12">
+                            <Switch Grid.Column="0">
+                                <Switch.Behaviors>
+                                    <mct:EventToCommandBehavior EventName="Toggled"
+                                                                Command="{Binding SwitchToggledCommand}" />
+                                </Switch.Behaviors>
+                            </Switch>
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource FieldCaptionLabel}"
+                                   VerticalOptions="Center"
+                                   Text="{Binding SwitchCount, StringFormat='イベント発火: {0} 回'}"
+                                   behaviors:AnimationOption.BounceTrigger="{Binding SwitchCount}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

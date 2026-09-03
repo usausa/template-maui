@@ -16,9 +16,12 @@ public static partial class Scroll
 
     private static void UpdateDisableOverScroll(IViewHandler handler, IView view)
     {
-        if ((view is BindableObject bindable) && GetDisableOverScroll(bindable) && (handler.PlatformView is View platformView))
+        if ((view is ScrollView or ItemsView) &&
+            (handler.PlatformView is View platformView))
         {
-            platformView.OverScrollMode = OverScrollMode.Never;
+            platformView.OverScrollMode = GetDisableOverScroll((BindableObject)view)
+                ? OverScrollMode.Never
+                : OverScrollMode.IfContentScrolls;
         }
     }
 }

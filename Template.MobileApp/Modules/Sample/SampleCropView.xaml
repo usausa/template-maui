@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             x:Class="Template.MobileApp.Modules.Sample.SampleCropView"
+             x:DataType="{x:Type module:SampleCropViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SampleCropViewModel}"
+             shell:ShellProperty.Title="Crop"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="PanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="PreviewBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="88" />
+                <Setter Property="HeightRequest" Value="88" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="ResultLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="CropButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="CropButtonPrimary"
+                   TargetType="Button"
+                   BasedOn="{StaticResource CropButton}">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto">
+
+        <!-- トリミング編集 (枠のドラッグ移動 / 四隅ハンドルでリサイズ) -->
+        <drawing:DrawingControl Grid.Row="0"
+                                Drawing="{Binding Crop}" />
+
+        <!-- 書き出し結果 -->
+        <Border Grid.Row="1"
+                Style="{StaticResource PanelBorder}">
+            <Grid ColumnDefinitions="Auto,*"
+                  ColumnSpacing="16">
+                <Border Grid.Column="0"
+                        Style="{StaticResource PreviewBorder}">
+                    <Image Aspect="AspectFit"
+                           Source="{Binding CroppedImage}" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1"
+                                     VerticalOptions="Center"
+                                     Spacing="8">
+                    <Label Style="{StaticResource ResultLabel}"
+                           Text="{Binding ResultText}" />
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Style="{StaticResource CropButtonPrimary}"
+                                Command="{Binding ExportCommand}"
+                                Text="書き出し" />
+                        <Button Style="{StaticResource CropButton}"
+                                Command="{Binding ResetCommand}"
+                                Text="リセット" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</ContentView>

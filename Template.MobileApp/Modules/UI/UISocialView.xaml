@@ -2,11 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:model="clr-namespace:Template.MobileApp.Models.Sample"
              x:Class="Template.MobileApp.Modules.UI.UISocialView"
              x:DataType="{x:Type module:UISocialViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UISocialViewModel}"
@@ -36,6 +38,7 @@
                    TargetType="controls:SocialNotificationBadge">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
             </Style>
 
             <Style x:Key="ButtonEffect"
@@ -196,41 +199,49 @@
               ColumnDefinitions="Auto,*">
             <VerticalStackLayout Grid.Column="0"
                                  Style="{StaticResource LayoutVerticalStack}">
-                <!-- TODO bind -->
-                <controls:SocialAlert Style="{StaticResource Alert}" />
+                <controls:SocialAlert Style="{StaticResource Alert}"
+                                      Text="{Binding AlertMessage}"
+                                      Title="{Binding AlertTitle}" />
             </VerticalStackLayout>
         </Grid>
 
         <Grid Grid.Row="3"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,Auto">
-            <!-- TODO bind -->
             <VerticalStackLayout Grid.Column="1"
-                                 Style="{StaticResource LayoutVerticalStack}">
-                <controls:SocialNotification Style="{StaticResource Notification}"
-                                             Percent="87" Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
-                <controls:SocialNotification Style="{StaticResource Notification}"
-                                             Percent="65" Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
-                <controls:SocialNotification Style="{StaticResource Notification}"
-                                             Percent="23" Text1="VEHICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
+                                 Style="{StaticResource LayoutVerticalStack}"
+                                 BindableLayout.ItemsSource="{Binding Notifications}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type model:SocialNotificationInfo}">
+                        <controls:SocialNotification Style="{StaticResource Notification}"
+                                                     behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                                     behaviors:AnimationOption.EnterDelay="{Binding Delay}"
+                                                     Percent="{Binding Percent}"
+                                                     Text1="{Binding Category}"
+                                                     Text2="{Binding Name}"
+                                                     Text3="{Binding Code}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
         </Grid>
 
         <Grid Grid.Row="5"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,*">
-            <!-- TODO bind -->
             <controls:SocialStatus Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource Status}"
                                    Text1="{x:Static fonts:MaterialIcons.Favorite}"
                                    Text2="{x:Static fonts:MaterialIcons.Star}"
                                    Text3="{x:Static fonts:MaterialIcons.Shield}"
+                                   Title1="{Binding StatusName}"
+                                   Title2="{Binding StatusForm}"
                                    Value1="{Binding StatusHeal}"
                                    Value2="{Binding StatusBuff}"
                                    Value3="{Binding StatusDebuff}" />
-            <!-- TODO bind -->
             <controls:SocialInformation Grid.Row="0" Grid.Column="1"
-                                        Style="{StaticResource Information}" />
+                                        Style="{StaticResource Information}"
+                                        Title="{Binding InformationTitle}"
+                                        Units="{Binding InformationUnits}" />
         </Grid>
 
         <!-- Menu -->

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 using Template.MobileApp.Helpers;
 
 public sealed partial class UITreeMapViewModel : AppViewModelBase
@@ -10,9 +10,12 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
+    [ObservableProperty]
+    public partial int CaptureCount { get; set; }
+
     public CameraController Controller { get; } = new();
 
-    public ColorTreeMapGraphics Graphics { get; } = new();
+    public ColorTreeMapDrawing Drawing { get; } = new();
 
     public SKBitmapImageSource Image { get; } = new();
 
@@ -20,12 +23,23 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     {
         this.dialog = dialog;
 
+        Disposables.Add(Drawing);
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            ImageHelper.ReplaceBitmap(Image, null);
+        }
+
+        base.Dispose(disposing);
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (IsPreview)
+        if (IsPreview && await Permissions.RequestCameraAsync())
         {
             await Controller.StartPreviewAsync();
         }
@@ -39,7 +53,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
         }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -82,8 +96,11 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             }).ConfigureAwait(true);
 
             // Update
-            Image.Bitmap = bitmap;
-            Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
+            ImageHelper.ReplaceBitmap(Image, bitmap);
+            Drawing.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
+
+            // シャッターフラッシュのトリガー
+            CaptureCount++;
         }
         else
         {

@@ -1,5 +1,3 @@
 namespace Template.MobileApp.Behaviors;
 
-internal static partial class Extensions
-{
-}
+internal static partial class Extensions;

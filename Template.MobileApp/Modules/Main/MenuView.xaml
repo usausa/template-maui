@@ -15,52 +15,63 @@
           RowDefinitions="*,Auto">
         <Grid Grid.Row="0"
               Style="{StaticResource MenuGrid}"
-              RowDefinitions="*,*,*,*,*,*,*,*,*">
-            <Button Grid.Row="0"
+              RowDefinitions="*,*,*,*,*,*,*,*,*,*"
+              ColumnDefinitions="*,*">
+            <Button Grid.Row="0" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId BasicMenu}"
-                    Text="1.Basic" />
-            <Button Grid.Row="1"
+                    Text="Basic" />
+            <Button Grid.Row="1" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId NavigationMenu}"
-                    Text="2.Navigation" />
-            <Button Grid.Row="2"
+                    Text="Navigation" />
+            <Button Grid.Row="2" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId DeviceMenu}"
-                    Text="3.Device" />
-            <Button Grid.Row="3"
+                    Text="Device" />
+            <Button Grid.Row="3" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId Data}"
-                    Text="4.Data" />
-            <Button Grid.Row="4"
+                    Text="Data" />
+            <Button Grid.Row="4" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId NetworkMenu}"
-                    Text="5.Network" />
-            <Button Grid.Row="5"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId SampleMenu}"
-                    Text="6.Sample" />
-            <Button Grid.Row="6"
+                    Text="Network" />
+            <Button Grid.Row="5" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId ViewMenu}"
-                    Text="7.View" />
-            <Button Grid.Row="7"
+                    Text="View" />
+            <Button Grid.Row="6" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId UIMenu}"
-                    Text="8.UI" />
-            <Button Grid.Row="8"
+                    CommandParameter="{markup:ViewId SampleMenu}"
+                    Text="Sample" />
+            <Button Grid.Row="7" Grid.Column="0"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId UIMenu1}"
+                    Text="UI 1" />
+            <Button Grid.Row="7" Grid.Column="1"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId UIMenu2}"
+                    Text="UI 2" />
+            <Button Grid.Row="8" Grid.ColumnSpan="2"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId AppMenu}"
+                    Text="App" />
+            <Button Grid.Row="9" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId Setting}"
-                    Text="9.Setting" />
+                    Text="Setting" />
         </Grid>
 
         <FlexLayout Grid.Row="1"

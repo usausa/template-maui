@@ -1,4 +1,3 @@
-#pragma warning disable SA1135
 namespace Template.MobileApp.Modules.Device;
 
 public sealed partial class DeviceInfoViewModel : AppViewModelBase

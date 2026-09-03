@@ -11,9 +11,6 @@ public sealed partial class BasicConverterViewModel : AppViewModelBase
     public partial bool MultiChecked2 { get; set; }
 
     [ObservableProperty]
-    public partial bool ToChecked { get; set; }
-
-    [ObservableProperty]
     public partial string Text { get; set; } = string.Empty;
 
     public IObserveCommand SwitchTextCommand { get; }

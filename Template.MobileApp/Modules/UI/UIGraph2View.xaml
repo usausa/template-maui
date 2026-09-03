@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
+             x:Class="Template.MobileApp.Modules.UI.UIGraph2View"
+             x:DataType="{x:Type module:UIGraph2ViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGraph2ViewModel}"
+             shell:ShellProperty.Title="Graph2"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="TimelineSurface"
+                   TargetType="controls:GraphRowSurface">
+                <Setter Property="VerticalOptions" Value="Fill" />
+                <Setter Property="LineWidth" Value="4" />
+                <Setter Property="NodeRadius" Value="10" />
+                <Setter Property="LaneWidth" Value="24" />
+                <Setter Property="NodeCenterY" Value="28" />
+                <Setter Property="UseCurves" Value="True" />
+            </Style>
+
+            <Style x:Key="ShaLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#FF888888" />
+            </Style>
+
+            <Style x:Key="CommitIconLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="8,0,4,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="DateLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,12,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="#FF999999" />
+            </Style>
+
+            <Style x:Key="DetailBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,12,10" />
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="DetailIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="DetailTextLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="6,0,16,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}">
+        <CollectionView ItemsSource="{Binding Rows}"
+                        VerticalScrollBarVisibility="Default"
+                        behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="0" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type graph:TimelineRow}">
+                    <Grid RowDefinitions="56,Auto"
+                          ColumnDefinitions="Auto,*">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGraph2ViewModel}}, Path=ToggleCommand, x:DataType={x:Type module:UIGraph2ViewModel}}"
+                                                  CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
+                        <controls:GraphRowSurface Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                                  Style="{StaticResource TimelineSurface}"
+                                                  RowData="{Binding Row}" />
+
+                        <Grid Grid.Row="0" Grid.Column="1"
+                              RowDefinitions="Auto,Auto"
+                              ColumnDefinitions="Auto,Auto,*,Auto"
+                              VerticalOptions="Center"
+                              RowSpacing="2">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Style="{StaticResource ShaLabel}"
+                                   Text="{Binding Row.ShortSha}" />
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Style="{StaticResource CommitIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Commit}" />
+                            <Label Grid.Row="0" Grid.Column="3"
+                                   Style="{StaticResource DateLabel}"
+                                   Text="{Binding Row.When, StringFormat='{0:yyyy-MM-dd}'}" />
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                   Style="{StaticResource SummaryLabel}"
+                                   Text="{Binding Row.Summary}" />
+                        </Grid>
+
+                        <!-- タップで展開する詳細 -->
+                        <Border Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource DetailBorder}"
+                                behaviors:AnimationOption.FadeInTrigger="{Binding IsExpanded}"
+                                IsVisible="{Binding IsExpanded}">
+                            <HorizontalStackLayout>
+                                <Label Style="{StaticResource DetailIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Person}" />
+                                <Label Style="{StaticResource DetailTextLabel}"
+                                       Text="{Binding Row.Author}" />
+                                <Label Style="{StaticResource DetailIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Schedule}" />
+                                <Label Style="{StaticResource DetailTextLabel}"
+                                       Text="{Binding Row.When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentView>

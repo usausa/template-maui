@@ -15,16 +15,26 @@ public sealed partial class SampleCvNetFaceViewModel : AppViewModelBase
     public CameraController Controller { get; } = new();
 
     // TODO
-    //public DetectGraphics Graphics { get; } = new();
+    //public DetectDrawing Drawing { get; } = new();
 
     public SampleCvNetFaceViewModel()
     {
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            ImageHelper.ReplaceBitmap(Image, null);
+        }
+
+        base.Dispose(disposing);
+    }
+
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (IsPreview)
+        if (IsPreview && await Permissions.RequestCameraAsync())
         {
             await Controller.StartPreviewAsync();
         }
@@ -67,9 +77,9 @@ public sealed partial class SampleCvNetFaceViewModel : AppViewModelBase
 
             await Controller.StopPreviewAsync();
 
-            // Bitmap
-            using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-            Image.Bitmap = bitmap;
+            // Bitmap (所有権はImage側のため差し替え時に旧ビットマップを解放する)
+            var bitmap = ImageHelper.ToNormalizeBitmap(input);
+            ImageHelper.ReplaceBitmap(Image, bitmap);
 
             // TODO
         }

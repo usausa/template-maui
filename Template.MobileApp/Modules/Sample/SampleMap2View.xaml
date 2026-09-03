@@ -4,12 +4,15 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="Template.MobileApp.Modules.Sample.SampleMap2View"
              x:DataType="{x:Type module:SampleMap2ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMap2ViewModel}"
-             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Title="Map2"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function2Text="ZoomIn"
              shell:ShellProperty.Function3Text="ZoomOut"
@@ -19,9 +22,152 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="MapFabButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,2"
+                                Brush="Black" Opacity="0.3" Radius="6" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TogglePanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,8" />
+                <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,2"
+                                Brush="Black" Opacity="0.3" Radius="6" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ToggleRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="4" />
+                <Setter Property="HeightRequest" Value="32" />
+            </Style>
+
+            <Style x:Key="ToggleNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="ToggleSwitch"
+                   TargetType="Switch">
+                <Setter Property="Scale" Value="0.8" />
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}">
 
         <mapsui:MapControl behaviors:MapsuiBind.Controller="{Binding Controller}" />
+
+        <!-- SkiaSharp オーバーレイ (グラデーション経路) -->
+        <skia:SKCanvasView behaviors:MapsuiBind.Overlay="{Binding Controller}"
+                           InputTransparent="True" />
+
+        <!-- 機能グループ別マネージャのトグル -->
+        <Border Style="{StaticResource TogglePanelBorder}"
+                Margin="16,16,0,0"
+                HorizontalOptions="Start" VerticalOptions="Start"
+                WidthRequest="148">
+            <VerticalStackLayout Spacing="0">
+                <Grid Style="{StaticResource ToggleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ToggleNameLabel}"
+                           Text="Widget" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource ToggleSwitch}"
+                            IsToggled="{Binding WidgetsEnabled}" />
+                </Grid>
+                <Grid Style="{StaticResource ToggleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ToggleNameLabel}"
+                           Text="Spot" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource ToggleSwitch}"
+                            IsToggled="{Binding SpotsEnabled}" />
+                </Grid>
+                <Grid Style="{StaticResource ToggleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ToggleNameLabel}"
+                           Text="Shape" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource ToggleSwitch}"
+                            IsToggled="{Binding ShapesEnabled}" />
+                </Grid>
+                <Grid Style="{StaticResource ToggleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ToggleNameLabel}"
+                           Text="GeoJSON" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource ToggleSwitch}"
+                            IsToggled="{Binding GeoJsonEnabled}" />
+                </Grid>
+                <Grid Style="{StaticResource ToggleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ToggleNameLabel}"
+                           Text="Cluster" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource ToggleSwitch}"
+                            IsToggled="{Binding ClusterEnabled}" />
+                </Grid>
+                <Grid Style="{StaticResource ToggleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ToggleNameLabel}"
+                           Text="Overlay" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource ToggleSwitch}"
+                            IsToggled="{Binding OverlayEnabled}" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+        <VerticalStackLayout Margin="0,0,16,16"
+                             HorizontalOptions="End" VerticalOptions="End"
+                             Spacing="12">
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Add},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding ZoomInCommand}" />
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Remove},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding ZoomOutCommand}" />
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Home},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding HomeCommand}" />
+        </VerticalStackLayout>
 
     </Grid>
 

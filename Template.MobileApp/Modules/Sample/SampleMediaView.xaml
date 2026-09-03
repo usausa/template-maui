@@ -4,7 +4,11 @@
              xmlns:s="http://smart/maui"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.Sample.SampleMediaView"
              x:DataType="{x:Type module:SampleMediaViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMediaViewModel}"
@@ -12,12 +16,107 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <toolkit:MediaElement Grid.Row="0"
-                              Source="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                              ShouldAutoPlay="True" />
+            <conv:DurationToSecondsConverter x:Key="DurationToSecondsConverter" />
+
+            <Style x:Key="ControlBarBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="#B3000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="PlayPauseButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="TimeLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SeekSlider"
+                   TargetType="Slider">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="ThumbColor" Value="White" />
+                <Setter Property="MinimumTrackColor" Value="{StaticResource BlueAccent2}" />
+                <Setter Property="MaximumTrackColor" Value="#66FFFFFF" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          BackgroundColor="Black">
+
+        <toolkit:MediaElement x:Name="Player"
+                              behaviors:MediaBind.Controller="{Binding Controller}"
+                              Source="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4"
+                              Aspect="AspectFit" ShouldAutoPlay="True" ShouldShowPlaybackControls="False" />
+
+        <!-- タップでコントロールバーの表示を切り替える -->
+        <BoxView Color="#01000000">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ToggleControlBarCommand}" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <!-- 再生開始・バッファリング中のローディング表示 -->
+        <ActivityIndicator WidthRequest="48" HeightRequest="48"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           IsVisible="{Binding IsLoading}"
+                           Color="White"
+                           InputTransparent="True"
+                           IsRunning="{Binding IsLoading}" />
+
+        <Border Style="{StaticResource ControlBarBorder}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
+                IsVisible="{Binding IsControlBarVisible}">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto"
+                  ColumnSpacing="8">
+                <ImageButton Grid.Column="0"
+                             Style="{StaticResource PlayPauseButton}"
+                             Source="{markup:Material {x:Static fonts:MaterialIcons.Play_arrow},
+                                                      Color=White,
+                                                      Size=28}"
+                             Command="{Binding TogglePlayCommand}">
+                    <ImageButton.Triggers>
+                        <DataTrigger TargetType="ImageButton"
+                                     Value="True"
+                                     Binding="{Binding IsPlaying}">
+                            <Setter Property="Source" Value="{markup:Material {x:Static fonts:MaterialIcons.Pause}, Color=White, Size=28}" />
+                        </DataTrigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
+
+                <Label Grid.Column="1"
+                       Style="{StaticResource TimeLabel}"
+                       Text="{Binding Source={x:Reference Player}, Path=Position, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
+
+                <Slider Grid.Column="2"
+                        Style="{StaticResource SeekSlider}"
+                        behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}"
+                        Value="{Binding Source={x:Reference Player}, Path=Position.TotalSeconds, Mode=OneWay, x:DataType={x:Type toolkit:MediaElement}}"
+                        Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type toolkit:MediaElement}}" />
+
+                <Label Grid.Column="3"
+                       Style="{StaticResource TimeLabel}"
+                       Text="{Binding Source={x:Reference Player}, Path=Duration, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
+            </Grid>
+        </Border>
 
     </Grid>
 

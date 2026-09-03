@@ -30,10 +30,10 @@
         <Grid Grid.Row="0"
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="48,*,48"
-              IsVisible="{Binding HeaderVisible}">
+              IsVisible="{Binding HeaderVisible.Value}">
             <Label Grid.Column="0" Grid.ColumnSpan="3"
                    Style="{StaticResource HeaderTitleLabel}"
-                   Text="{Binding Title}" />
+                   Text="{Binding Title.Value}" />
             <Button Grid.Column="2"
                     Style="{StaticResource HeaderIconButton}"
                     Command="{Binding DiagnosticCommand}"
@@ -58,23 +58,23 @@
         <Grid Grid.Row="2"
               Style="{StaticResource FunctionGrid}"
               ColumnDefinitions="*,*,*,*"
-              IsVisible="{Binding FunctionVisible}">
+              IsVisible="{Binding FunctionVisible.Value}">
             <Button Grid.Column="0"
                     Style="{StaticResource FunctionButton1}"
                     Command="{Binding Function1Command}"
-                    Text="{Binding Function1Text}" />
+                    Text="{Binding Function1.Text.Value}" />
             <Button Grid.Column="1"
                     Style="{StaticResource FunctionButton2}"
                     Command="{Binding Function2Command}"
-                    Text="{Binding Function2Text}" />
+                    Text="{Binding Function2.Text.Value}" />
             <Button Grid.Column="2"
                     Style="{StaticResource FunctionButton3}"
                     Command="{Binding Function3Command}"
-                    Text="{Binding Function3Text}" />
+                    Text="{Binding Function3.Text.Value}" />
             <Button Grid.Column="3"
                     Style="{StaticResource FunctionButton4}"
                     Command="{Binding Function4Command}"
-                    Text="{Binding Function4Text}" />
+                    Text="{Binding Function4.Text.Value}" />
         </Grid>
     </Grid>
 

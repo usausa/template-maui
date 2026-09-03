@@ -7,6 +7,7 @@ public interface IResult<out T>
     T Value { get; }
 }
 
+#pragma warning disable CA1724
 public static class Result
 {
     public static IResult<T> Success<T>(T value) => new ResultImpl<T>(true, value);
@@ -28,3 +29,4 @@ public static class Result
         }
     }
 }
+#pragma warning restore CA1724

@@ -9,8 +9,8 @@ internal static partial class Extensions
         return alignment switch
         {
             Microsoft.Maui.TextAlignment.Center => GravityFlags.CenterHorizontal,
-            Microsoft.Maui.TextAlignment.Start => GravityFlags.Right,
-            Microsoft.Maui.TextAlignment.End => GravityFlags.Left,
+            Microsoft.Maui.TextAlignment.Start => GravityFlags.Start,
+            Microsoft.Maui.TextAlignment.End => GravityFlags.End,
             _ => GravityFlags.Center
         };
     }

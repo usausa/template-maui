@@ -2,7 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceCommunicationView"
              x:DataType="{x:Type module:DeviceCommunicationViewModel}"
@@ -11,24 +14,197 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Button Grid.Row="0"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding DialCommand}"
-                Text="Dial" />
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
 
-        <Button Grid.Row="1"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding SmsCommand}"
-                Text="SMS" />
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
 
-        <Button Grid.Row="2"
-                Style="{StaticResource MenuButton}"
-                Command="{Binding EmailCommand}"
-                Text="Email" />
+            <Style x:Key="ActionRowBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
 
-    </Grid>
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="ColumnDefinitions" Value="Auto,*,Auto" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ActionIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ActionIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ActionTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="ActionDetailLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ChevronLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Chevron_right}" />
+            </Style>
+
+            <Style x:Key="DialIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ActionIconBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+            </Style>
+
+            <Style x:Key="DialIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
+            <Style x:Key="SmsIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ActionIconBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="SmsIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="EmailIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ActionIconBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+            </Style>
+
+            <Style x:Key="EmailIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <Border Style="{StaticResource ActionRowBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DialCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource DialIconBorder}">
+                            <Label Style="{StaticResource DialIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Call}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource ActionTextStack}">
+                            <Label Style="{StaticResource NameLabel}"
+                                   Text="Dial" />
+                            <Label Style="{StaticResource ActionDetailLabel}"
+                                   Text="000-0000-0000" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2"
+                               Style="{StaticResource ChevronLabel}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
+            </Border>
+
+            <Border Style="{StaticResource ActionRowBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="80">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SmsCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource SmsIconBorder}">
+                            <Label Style="{StaticResource SmsIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Sms}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource ActionTextStack}">
+                            <Label Style="{StaticResource NameLabel}"
+                                   Text="SMS" />
+                            <Label Style="{StaticResource ActionDetailLabel}"
+                                   Text="000-0000-0000 / Hello world." />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2"
+                               Style="{StaticResource ChevronLabel}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
+            </Border>
+
+            <Border Style="{StaticResource ActionRowBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="160">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EmailCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource ActionRowGrid}">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource EmailIconBorder}">
+                            <Label Style="{StaticResource EmailIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Mail}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource ActionTextStack}">
+                            <Label Style="{StaticResource NameLabel}"
+                                   Text="Email" />
+                            <Label Style="{StaticResource ActionDetailLabel}"
+                                   Text="dummy@example.com / Hello world" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2"
+                               Style="{StaticResource ChevronLabel}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

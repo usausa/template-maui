@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:calendar="clr-namespace:Template.MobileApp.Models.Sample.Calendar"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIScheduleView"
              x:DataType="{x:Type module:UIScheduleViewModel}"
@@ -11,6 +13,164 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="DayChipGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="Padding" Value="0,8" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="DayChipBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="60" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+            </Style>
+
+            <Style x:Key="DayChipDowLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="DayChipDayLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <!-- 日合計サマリー -->
+            <Style x:Key="SummaryBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,0,12,8" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="SummaryCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
+            <Style x:Key="SummaryFreeValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SummaryValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,Auto,*"
+          BackgroundColor="White">
+
+        <!-- 7 日チップ -->
+        <CollectionView Grid.Row="0"
+                        HeightRequest="84"
+                        ItemsSource="{Binding Days}"
+                        SelectedItem="{Binding SelectedDay, Mode=TwoWay}"
+                        SelectionMode="Single">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="0" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type calendar:TimetableDay}">
+                    <Grid Style="{StaticResource DayChipGrid}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                            <Setter TargetName="ChipBorder" Property="Border.BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                            <Setter TargetName="ChipDow" Property="Label.TextColor" Value="White" />
+                                            <Setter TargetName="ChipDay" Property="Label.TextColor" Value="White" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="ChipBorder"
+                                Style="{StaticResource DayChipBorder}">
+                            <VerticalStackLayout VerticalOptions="Center"
+                                                 Spacing="2">
+                                <Label x:Name="ChipDow"
+                                       Style="{StaticResource DayChipDowLabel}"
+                                       Text="{Binding DowText}" />
+                                <Label x:Name="ChipDay"
+                                       Style="{StaticResource DayChipDayLabel}"
+                                       Text="{Binding Day}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- 日合計サマリー (件数 / 所要時間合計 / 空き時間) -->
+        <Border Grid.Row="1"
+                Style="{StaticResource SummaryBorder}">
+            <Grid ColumnDefinitions="*,*,*">
+                <VerticalStackLayout Grid.Column="0"
+                                     Spacing="2">
+                    <Label Style="{StaticResource SummaryCaptionLabel}"
+                           Text="予定" />
+                    <Label Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding EventCount, StringFormat='{0} 件'}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="2">
+                    <Label Style="{StaticResource SummaryCaptionLabel}"
+                           Text="合計" />
+                    <Label Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding TotalTimeText}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2"
+                                     Spacing="2">
+                    <Label Style="{StaticResource SummaryCaptionLabel}"
+                           Text="空き" />
+                    <Label Style="{StaticResource SummaryFreeValueLabel}"
+                           Text="{Binding FreeTimeText}" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- タイムテーブル -->
+        <ScrollView Grid.Row="2">
+            <controls:DayTimetableView Events="{Binding Events}"
+                                       CurrentTime="{Binding CurrentTime}"
+                                       ShowCurrentTime="{Binding ShowCurrentTime}" />
+        </ScrollView>
+
+    </Grid>
 
 </ContentView>

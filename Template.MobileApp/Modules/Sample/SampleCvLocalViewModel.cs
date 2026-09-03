@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Usecase;
 
@@ -11,9 +11,12 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
+    [ObservableProperty]
+    public partial bool IsProcessing { get; set; }
+
     public CameraController Controller { get; } = new();
 
-    public DetectGraphics Graphics { get; } = new();
+    public DetectDrawing Drawing { get; } = new();
 
     public SKBitmapImageSource Image { get; } = new();
 
@@ -24,9 +27,19 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            ImageHelper.ReplaceBitmap(Image, null);
+        }
+
+        base.Dispose(disposing);
+    }
+
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (IsPreview)
+        if (IsPreview && await Permissions.RequestCameraAsync())
         {
             await Controller.StartPreviewAsync();
         }
@@ -58,32 +71,46 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        if (IsPreview)
+        // 推論中の再入でReplaceBitmapが使用中のビットマップを破棄しないようガードする
+        if (IsProcessing)
         {
-            // Capture
-            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-            if (input is null)
+            return;
+        }
+
+        IsProcessing = true;
+        try
+        {
+            if (IsPreview)
             {
-                return;
+                // Capture
+                await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
+                if (input is null)
+                {
+                    return;
+                }
+
+                await Controller.StopPreviewAsync();
+
+                // Bitmap
+                var bitmap = ImageHelper.ToNormalizeBitmap(input);
+                ImageHelper.ReplaceBitmap(Image, bitmap);
+
+                // Detect
+                var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
+
+                // Update
+                Drawing.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+            }
+            else
+            {
+                await Controller.StartPreviewAsync();
             }
 
-            await Controller.StopPreviewAsync();
-
-            // Bitmap
-            using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-            Image.Bitmap = bitmap;
-
-            // Detect
-            var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
-
-            // Update
-            Graphics.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+            IsPreview = !IsPreview;
         }
-        else
+        finally
         {
-            await Controller.StartPreviewAsync();
+            IsProcessing = false;
         }
-
-        IsPreview = !IsPreview;
     }
 }

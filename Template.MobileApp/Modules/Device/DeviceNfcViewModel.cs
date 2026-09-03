@@ -4,6 +4,10 @@ using Template.MobileApp.Components;
 
 public sealed partial class DeviceNfcViewModel : AppViewModelBase
 {
+    private readonly ILogger<DeviceNfcViewModel> log;
+
+    private readonly IDialog dialog;
+
     private readonly INfcReader nfcReader;
 
     [ObservableProperty]
@@ -14,23 +18,37 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
 
     public ObservableCollection<SuicaLogData> Logs { get; } = [];
 
-    public DeviceNfcViewModel(INfcReader nfcReader)
+    public DeviceNfcViewModel(
+        ILogger<DeviceNfcViewModel> log,
+        IDialog dialog,
+        INfcReader nfcReader)
     {
+        this.log = log;
+        this.dialog = dialog;
         this.nfcReader = nfcReader;
 
-        Disposables.Add(nfcReader.DetectedAsObservable().Select(ConvertResult).WhereNotNull().ObserveOnCurrentContext().Subscribe(x =>
-        {
-            Idm = x.Idm;
-            Access = x.Access;
-            Logs.Clear();
-            Logs.AddRange(x.Logs);
-        }));
+        // OnErrorはシーケンスを終了させるため、変換失敗はnullで握って読み取りを継続する
+        Disposables.Add(nfcReader.DetectedAsObservable().Select(ConvertResult).WhereNotNull().ObserveOnCurrentContext().Subscribe(
+            x =>
+            {
+                Idm = x.Idm;
+                Access = x.Access;
+                Logs.Clear();
+                Logs.AddRange(x.Logs);
+            },
+            log.WarnNfcReadError));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        nfcReader.Enabled = true;
-        return Task.CompletedTask;
+        if (nfcReader.IsSupported)
+        {
+            nfcReader.Enabled = true;
+        }
+        else
+        {
+            await dialog.InformationAsync("NFC is not supported on this device.");
+        }
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
@@ -51,10 +69,23 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    private static (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ConvertResult(NfcEventArgs args)
+    private (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ConvertResult(NfcEventArgs args)
     {
-        var nfcF = args.Tag;
+        // 破損データの解析失敗は外部入力として予期されるため、nullを返して読み取りを継続する
+        // (ここで例外を漏らすとRxシーケンスが終了しNFCが無反応になる)
+        try
+        {
+            return ParseTag(args.Tag);
+        }
+        catch (Exception ex) when (ex is ArgumentException or OverflowException or IndexOutOfRangeException)
+        {
+            log.WarnNfcReadError(ex);
+            return null;
+        }
+    }
 
+    private static (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ParseTag(INfc nfcF)
+    {
         //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
         var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
         if (idm.Length == 0)

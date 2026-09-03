@@ -11,23 +11,54 @@ public enum NetworkOperationResult
     NotFound
 }
 
+// 通信結果の分類 (UI非依存の純粋ロジック)
+public enum NetworkErrorKind
+{
+    None,
+    Canceled,
+    NotFound,
+    HttpError,
+    Unknown
+}
+
 public sealed class NetworkOperator
 {
-    private readonly IDialog dialog;
+    // 接続実行の最大試行回数 (初回 + 人力リトライ)
+    private const int MaxAttempts = 3;
+
+    private readonly ILogger<NetworkOperator> log;
+
+    private readonly INetworkInteraction interaction;
 
     private readonly DeviceState deviceState;
 
     private readonly HttpService httpService;
 
     public NetworkOperator(
-        IDialog dialog,
+        ILogger<NetworkOperator> log,
+        INetworkInteraction interaction,
         DeviceState deviceState,
         HttpService httpService)
     {
-        this.dialog = dialog;
+        this.log = log;
+        this.interaction = interaction;
         this.deviceState = deviceState;
         this.httpService = httpService;
     }
+
+    public static NetworkErrorKind ClassifyError(IRestResponse response) =>
+        response.RestResult switch
+        {
+            RestResult.Success => NetworkErrorKind.None,
+            RestResult.Cancel => NetworkErrorKind.Canceled,
+            RestResult.RequestError or RestResult.HttpError =>
+                response.StatusCode == HttpStatusCode.NotFound ? NetworkErrorKind.NotFound : NetworkErrorKind.HttpError,
+            _ => NetworkErrorKind.Unknown
+        };
+
+    //--------------------------------------------------------------------------------
+    // Typed
+    //--------------------------------------------------------------------------------
 
     public ValueTask<IResult<T>> ExecuteVerbose<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
 
@@ -35,119 +66,74 @@ public sealed class NetworkOperator
 
     private async ValueTask<IResult<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func, bool verbose)
     {
-        while (true)
-        {
-            if (!deviceState.NetworkState.IsConnected())
-            {
-                if (verbose)
-                {
-                    await dialog.InformationAsync("Network is not connected.");
-                }
-                return Result.Failed<T>();
-            }
+        var response = default(IRestResponse<T>);
 
-            IRestResponse<T> response;
-            using (dialog.Indicator())
-            {
-                response = await func(httpService);
-            }
-
-            switch (response.RestResult)
-            {
-                case RestResult.Success:
-                    return Result.Success(response.Content!);
-                case RestResult.Cancel:
-                    if (!verbose || !await dialog.ConfirmAsync("Canceled.\r\nRetry ?"))
-                    {
-                        return Result.Failed<T>();
-                    }
-                    break;
-                case RestResult.RequestError:
-                case RestResult.HttpError:
-                    if (verbose)
-                    {
-                        var message = new StringBuilder();
-                        message.AppendLine("Network error.");
-                        if (response.StatusCode > 0)
-                        {
-                            message.AppendLine($"StatusCode={(int)response.StatusCode}");
-                        }
-                        message.AppendLine("Retry ?");
-                        if (!await dialog.ConfirmAsync(message.ToString()))
-                        {
-                            return Result.Failed<T>();
-                        }
-                    }
-                    else
-                    {
-                        return Result.Failed<T>();
-                    }
-                    break;
-                default:
-                    if (verbose)
-                    {
-                        await dialog.InformationAsync("Unknown error.");
-                    }
-                    return Result.Failed<T>();
-            }
-        }
+        // 型付き版では404も通常のHTTPエラーとして扱う
+        var result = await ExecuteCore(async h => response = await func(h), verbose, notFoundAsResult: false);
+        return result == NetworkOperationResult.Success ? Result.Success(response!.Content!) : Result.Failed<T>();
     }
 
-    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<HttpService, ValueTask<IRestResponse>> func) => Execute(func, true);
+    //--------------------------------------------------------------------------------
+    // Plain
+    //--------------------------------------------------------------------------------
 
-    public ValueTask<NetworkOperationResult> Execute(Func<HttpService, ValueTask<IRestResponse>> func) => Execute(func, false);
+    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<HttpService, ValueTask<IRestResponse>> func) => ExecuteCore(func, true, notFoundAsResult: true);
 
-    private async ValueTask<NetworkOperationResult> Execute(Func<HttpService, ValueTask<IRestResponse>> func, bool verbose)
+    public ValueTask<NetworkOperationResult> Execute(Func<HttpService, ValueTask<IRestResponse>> func) => ExecuteCore(func, false, notFoundAsResult: true);
+
+    private async ValueTask<NetworkOperationResult> ExecuteCore(Func<HttpService, ValueTask<IRestResponse>> func, bool verbose, bool notFoundAsResult)
     {
-        while (true)
+        for (var attempt = 1; attempt <= MaxAttempts; attempt++)
         {
             if (!deviceState.NetworkState.IsConnected())
             {
                 if (verbose)
                 {
-                    await dialog.InformationAsync("Network is not connected.");
+                    await interaction.NotifyNetworkUnavailableAsync();
                 }
                 return NetworkOperationResult.Error;
             }
 
             IRestResponse response;
-            using (dialog.Indicator())
+            using (interaction.Indicator())
             {
                 response = await func(httpService);
             }
 
-            switch (response.RestResult)
+            var kind = ClassifyError(response);
+            if (kind == NetworkErrorKind.None)
             {
-                case RestResult.Success:
-                    return NetworkOperationResult.Success;
-                case RestResult.Cancel:
-                    if (!verbose || !await dialog.ConfirmAsync("Canceled.\r\nRetry ?"))
+                return NetworkOperationResult.Success;
+            }
+
+            log.WarnNetworkOperationFailed(response.RestResult, (int)response.StatusCode, response.InnerException);
+
+            if (notFoundAsResult && (kind == NetworkErrorKind.NotFound))
+            {
+                return NetworkOperationResult.NotFound;
+            }
+
+            switch (kind)
+            {
+                case NetworkErrorKind.Canceled:
+                case NetworkErrorKind.NotFound:
+                case NetworkErrorKind.HttpError:
+                    if (!verbose)
                     {
                         return NetworkOperationResult.Error;
                     }
-                    break;
-                case RestResult.RequestError:
-                case RestResult.HttpError:
-                    if (response.StatusCode == HttpStatusCode.NotFound)
+
+                    // 試行上限に達した場合はリトライ確認せずに打ち切る
+                    if (attempt == MaxAttempts)
                     {
-                        return NetworkOperationResult.NotFound;
+                        if (kind != NetworkErrorKind.Canceled)
+                        {
+                            await interaction.NotifyErrorAsync(kind, response.StatusCode);
+                        }
+                        return NetworkOperationResult.Error;
                     }
 
-                    if (verbose)
-                    {
-                        var message = new StringBuilder();
-                        message.AppendLine("Network error.");
-                        if (response.StatusCode > 0)
-                        {
-                            message.AppendLine($"StatusCode={(int)response.StatusCode}");
-                        }
-                        message.AppendLine("Retry ?");
-                        if (!await dialog.ConfirmAsync(message.ToString()))
-                        {
-                            return NetworkOperationResult.Error;
-                        }
-                    }
-                    else
+                    if (!await interaction.ConfirmRetryAsync(kind, response.StatusCode))
                     {
                         return NetworkOperationResult.Error;
                     }
@@ -155,57 +141,48 @@ public sealed class NetworkOperator
                 default:
                     if (verbose)
                     {
-                        await dialog.InformationAsync("Unknown error.");
+                        await interaction.NotifyErrorAsync(kind, response.StatusCode);
                     }
                     return NetworkOperationResult.Error;
             }
         }
+
+        return NetworkOperationResult.Error;
     }
+
+    //--------------------------------------------------------------------------------
+    // Progress
+    //--------------------------------------------------------------------------------
 
     public ValueTask<NetworkOperationResult> ExecuteProgressVerbose(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, true);
 
     public ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, false);
 
+    // 進捗付き転送は途中失敗時の再実行コストが大きいため自動・人力ともリトライしない仕様
     private async ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func, bool verbose)
     {
-        using var progress = dialog.Progress();
+        using var progress = interaction.Progress();
 
         var response = await func(httpService, progress);
 
-        switch (response.RestResult)
+        var kind = ClassifyError(response);
+        if (kind == NetworkErrorKind.None)
         {
-            case RestResult.Success:
-                return NetworkOperationResult.Success;
-            case RestResult.Cancel:
-                if (verbose)
-                {
-                    await dialog.InformationAsync("Canceled.");
-                }
-                return NetworkOperationResult.Error;
-            case RestResult.RequestError:
-            case RestResult.HttpError:
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return NetworkOperationResult.NotFound;
-                }
-
-                if (verbose)
-                {
-                    var message = new StringBuilder();
-                    message.AppendLine("Network error.");
-                    if (response.StatusCode > 0)
-                    {
-                        message.AppendLine($"statusCode={(int)response.StatusCode}");
-                    }
-                    await dialog.InformationAsync(message.ToString());
-                }
-                return NetworkOperationResult.Error;
-            default:
-                if (verbose)
-                {
-                    await dialog.InformationAsync("Unknown error.");
-                }
-                return NetworkOperationResult.Error;
+            return NetworkOperationResult.Success;
         }
+
+        log.WarnNetworkOperationFailed(response.RestResult, (int)response.StatusCode, response.InnerException);
+
+        if (kind == NetworkErrorKind.NotFound)
+        {
+            return NetworkOperationResult.NotFound;
+        }
+
+        if (verbose)
+        {
+            await interaction.NotifyErrorAsync(kind, response.StatusCode);
+        }
+
+        return NetworkOperationResult.Error;
     }
 }

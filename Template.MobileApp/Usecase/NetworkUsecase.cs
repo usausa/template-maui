@@ -34,7 +34,7 @@ public sealed class NetworkUsecase
         var result = await networkOperator.ExecuteVerbose(static n => n.GetServerTimeAsync());
         if (result.IsSuccess)
         {
-            await dialog.InformationAsync($"Get success.\r\ntime=[{result.Value.DateTime:yyyy/MM/dd HH:mm:ss}]");
+            await dialog.InformationAsync($"Get success.\r\ntime=[{result.Value.DateTime.ToLocalTime():yyyy/MM/dd HH:mm:ss}]");
         }
     }
 

@@ -8,19 +8,25 @@ public sealed class DeviceBleScanViewModel : AppViewModelBase
 
     private IDisposable? scanning;
 
-    public DeviceBleScanViewModel(IBleManager bleManager)
+    public DeviceBleScanViewModel(
+        ILogger<DeviceBleScanViewModel> log,
+        IBleManager bleManager)
     {
         Disposables.Add(Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(1))
             .ObserveOnCurrentContext()
-            .Subscribe(_ =>
-            {
-                scanning?.Dispose();
-                scanning = bleManager.Scan()
-                    .Select(ConvertData)
-                    .WhereNotNull()
-                    .ObserveOnCurrentContext()
-                    .Subscribe(UpdateList);
-            }));
+            .Subscribe(
+                _ =>
+                {
+                    scanning?.Dispose();
+                    scanning = bleManager.Scan()
+                        .Select(ConvertData)
+                        .WhereNotNull()
+                        .ObserveOnCurrentContext()
+                        // Rxの未処理OnErrorはアプリを落とすため必ず処理する (BT OFF等で発生)
+                        .Subscribe(UpdateList, log.WarnBleScanError);
+                },
+                // 再スキャン起動自体が失敗した場合もシーケンスを落とさない
+                log.WarnBleScanError));
         Disposables.Add(new DelegateDisposable(() =>
         {
             scanning?.Dispose();

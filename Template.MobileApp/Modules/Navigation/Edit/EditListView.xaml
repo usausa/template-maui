@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
              xmlns:entity="clr-namespace:Template.MobileApp.Models.Entity"
@@ -11,42 +12,236 @@
              s:BindingContextResolver.Type="{x:Type module:EditListViewModel}"
              shell:ShellProperty.Title="List"
              shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function3Text="{Binding IsSelectionMode, Converter={s:BoolToText True='Cancel', False='Select'}}"
              shell:ShellProperty.Function4Text="New"
              shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <CollectionView Style="{StaticResource ItemCollectionView}"
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="WorkRowBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="WorkIdBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="MinimumWidthRequest" Value="44" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="WorkIdLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="WorkNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- 選択モード時の一括操作バー -->
+            <Style x:Key="SelectionBarBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="SelectionCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SelectionBarButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="SelectionBarButtonDanger"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SelectionBarButton}">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
+
+        <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Items}"
-                        SelectionMode="Single">
+                        SelectionMode="{Binding SelectionMode}"
+                        SelectedItems="{Binding SelectedItems}">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Style="{StaticResource EmptyStack}">
+                    <Border Style="{StaticResource EmptyIconBorder}">
+                        <Label Style="{StaticResource EmptyIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Inbox}" />
+                    </Border>
+                    <Label Style="{StaticResource EmptyTitleLabel}"
+                           Text="No items" />
+                    <Label Style="{StaticResource EmptyHintLabel}"
+                           Text="Press New to add a work item" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type entity:WorkEntity}">
-                    <Grid Style="{StaticResource ItemCollectionGrid}"
-                          ColumnDefinitions="*,6*,*,*">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource ItemCollectionLabel}"
-                               Text="{Binding Id}" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource ItemCollectionLabel}"
-                               Text="{Binding Name}" />
-                        <Button Grid.Column="2"
-                                x:DataType="{x:Type module:EditListViewModel}"
-                                Style="{StaticResource ItemCollectionButtonPrimary}"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
-                                CommandParameter="{Binding}"
-                                Text="{x:Static fonts:MaterialIcons.Edit}" />
-                        <Button Grid.Column="3"
-                                x:DataType="{x:Type module:EditListViewModel}"
-                                Style="{StaticResource ItemCollectionButtonDanger}"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
-                                CommandParameter="{Binding}"
-                                Text="{x:Static fonts:MaterialIcons.Delete}" />
-                    </Grid>
+                    <Border x:Name="RowBorder"
+                            Style="{StaticResource WorkRowBorder}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="RowBorder" Property="Border.BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                                            <Setter TargetName="RowBorder" Property="Border.Stroke" Value="{StaticResource BlueDefault}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                              ColumnSpacing="10">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource WorkIdBorder}">
+                                <Label Style="{StaticResource WorkIdLabel}"
+                                       Text="{Binding Id, StringFormat='#{0}'}" />
+                            </Border>
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource WorkNameLabel}"
+                                   Text="{Binding Name}" />
+                            <Button Grid.Column="2"
+                                    Style="{StaticResource ItemCollectionButtonPrimary}"
+                                    behaviors:ButtonOption.PressEffect="True"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand, x:DataType={x:Type module:EditListViewModel}}"
+                                    CommandParameter="{Binding}"
+                                    Text="{x:Static fonts:MaterialIcons.Edit}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=IsSelectionMode, x:DataType={x:Type module:EditListViewModel}}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button Grid.Column="3"
+                                    Style="{StaticResource ItemCollectionButtonDanger}"
+                                    behaviors:ButtonOption.PressEffect="True"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:EditListViewModel}}"
+                                    CommandParameter="{Binding}"
+                                    Text="{x:Static fonts:MaterialIcons.Delete}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=IsSelectionMode, x:DataType={x:Type module:EditListViewModel}}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-    </VerticalStackLayout>
+        <!-- 選択モード時の一括操作バー -->
+        <Border Grid.Row="1"
+                Style="{StaticResource SelectionBarBorder}"
+                IsVisible="{Binding IsSelectionMode}">
+            <Grid ColumnDefinitions="*,Auto,Auto"
+                  ColumnSpacing="8">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SelectionCountLabel}"
+                       Text="{Binding SelectedItems.Count, StringFormat='{0} 件選択'}" />
+                <Button Grid.Column="1"
+                        Style="{StaticResource SelectionBarButton}"
+                        Command="{Binding SelectAllCommand}"
+                        Text="全選択" />
+                <Button Grid.Column="2"
+                        Style="{StaticResource SelectionBarButtonDanger}"
+                        Command="{Binding BulkDeleteCommand}"
+                        Text="削除" />
+            </Grid>
+        </Border>
+
+    </Grid>
 
 </ContentView>

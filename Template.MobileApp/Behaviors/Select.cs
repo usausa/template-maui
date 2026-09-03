@@ -2,6 +2,7 @@ namespace Template.MobileApp.Behaviors;
 
 using System.Collections.Generic;
 
+#pragma warning disable CA1716
 public static class Select
 {
     public static readonly BindableProperty ListProperty = BindableProperty.CreateAttached(
@@ -81,3 +82,4 @@ public static class Select
         }
     }
 }
+#pragma warning restore CA1716

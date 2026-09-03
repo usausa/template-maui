@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIStreamDetailView"
+             x:DataType="{x:Type module:UIStreamDetailViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIStreamDetailViewModel}"
+             shell:ShellProperty.Title="Stream Detail"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="PlayerGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="220" />
+            </Style>
+
+            <Style x:Key="PlayerImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="PlayButtonOverlay"
+                   TargetType="Button">
+                <Setter Property="Text" Value="▶" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="BackgroundColor" Value="#88000000" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="35" />
+                <Setter Property="WidthRequest" Value="70" />
+                <Setter Property="HeightRequest" Value="70" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Watch progress on the player (fill ratio via star-sized columns) -->
+            <Style x:Key="ProgressGrid"
+                   TargetType="Grid">
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="ProgressTrack"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="3" />
+                <Setter Property="Color" Value="#33FFFFFF" />
+            </Style>
+
+            <Style x:Key="ProgressFill"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="3" />
+                <Setter Property="Color" Value="{StaticResource RedAccent3}" />
+            </Style>
+
+            <Style x:Key="StreamDetailTitleLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="16,16,16,4" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="MetaRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="MatchLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="MetaLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="ActionRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="16,12" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="PrimaryPlayButton"
+                   TargetType="Button">
+                <Setter Property="Text" Value="▶ Resume" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedAccent3}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="CornerRadius" Value="6" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="IconActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
+            <Style x:Key="SynopsisLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="16,4,16,6" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="CastLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="16,0,16,12" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <!-- Friends watching: overlapping avatars (from UI3Camp's participants row) -->
+            <Style x:Key="FriendsRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="16,0,16,12" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="FriendsAvatarsLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="-10" />
+            </Style>
+
+            <Style x:Key="FriendAvatar"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="FriendImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="FriendMoreBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource FriendAvatar}">
+                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+            </Style>
+
+            <Style x:Key="FriendMoreLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FriendsLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TabRow"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="16,8" />
+            </Style>
+
+            <Style x:Key="TabLabelActive"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="TabLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="TabIndicator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="2" />
+                <Setter Property="Color" Value="{StaticResource RedAccent3}" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+            </Style>
+
+            <Style x:Key="TabIndicatorInactive"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource TabIndicator}">
+                <Setter Property="Color" Value="Transparent" />
+            </Style>
+
+            <!-- Trailers tab content -->
+            <Style x:Key="TrailerStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="16,4,16,16" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="TrailerRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="TrailerThumbBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="68" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="TrailerImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="TrailerPlayBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="28" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="#88000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="TrailerPlayLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TrailerTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TrailerTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TrailerMetaLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="RelatedBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="RelatedImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="RelatedOverlay"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="#AA000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="RelatedTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RelatedDurationLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="6,0,0,0" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout>
+
+            <Grid Style="{StaticResource PlayerGrid}">
+                <Image Style="{StaticResource PlayerImage}" Source="social_background.png" />
+                <Button Style="{StaticResource PlayButtonOverlay}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Grid Style="{StaticResource ProgressGrid}"
+                      ColumnDefinitions="40*,60*">
+                    <BoxView Grid.ColumnSpan="2" Style="{StaticResource ProgressTrack}" />
+                    <BoxView Grid.Column="0" Style="{StaticResource ProgressFill}" />
+                </Grid>
+            </Grid>
+
+            <Label Style="{StaticResource StreamDetailTitleLabel}" Text="{Binding Title}" />
+            <HorizontalStackLayout Style="{StaticResource MetaRow}">
+                <Label Style="{StaticResource MatchLabel}" Text="{Binding Match}" />
+                <Label Style="{StaticResource MetaLabel}" Text="{Binding Meta}" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Style="{StaticResource ActionRow}">
+                <Button Style="{StaticResource PrimaryPlayButton}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Download}"
+                        behaviors:ButtonOption.PressEffect="True"
+                        Command="{Binding DownloadCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding IsDownloaded}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
+                            <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Share}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Favorite_outline}"
+                        behaviors:ButtonOption.PressEffect="True"
+                        behaviors:AnimationOption.BounceTrigger="{Binding IsFavorite}"
+                        Command="{Binding FavoriteCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding IsFavorite}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Favorite}" />
+                            <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </HorizontalStackLayout>
+
+            <Label Style="{StaticResource SynopsisLabel}" Text="{Binding Synopsis}" />
+            <Label Style="{StaticResource CastLabel}" Text="{Binding CastLine}" />
+
+            <!-- Friends watching (overlapping avatars) -->
+            <HorizontalStackLayout Style="{StaticResource FriendsRow}">
+                <HorizontalStackLayout Style="{StaticResource FriendsAvatarsLayout}">
+                    <Border Style="{StaticResource FriendAvatar}">
+                        <Image Style="{StaticResource FriendImage}" Source="usa1_face.jpg" />
+                    </Border>
+                    <Border Style="{StaticResource FriendAvatar}">
+                        <Image Style="{StaticResource FriendImage}" Source="usa2_face.jpg" />
+                    </Border>
+                    <Border Style="{StaticResource FriendAvatar}">
+                        <Image Style="{StaticResource FriendImage}" Source="usa3_face.jpg" />
+                    </Border>
+                    <Border Style="{StaticResource FriendMoreBorder}">
+                        <Label Style="{StaticResource FriendMoreLabel}" Text="+3" />
+                    </Border>
+                </HorizontalStackLayout>
+                <Label Style="{StaticResource FriendsLabel}" Text="Friends are watching" />
+            </HorizontalStackLayout>
+
+            <Grid Style="{StaticResource TabRow}"
+                  ColumnDefinitions="*,*">
+                <VerticalStackLayout Grid.Column="0">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}"
+                                              CommandParameter="Trailers" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Style="{StaticResource TabLabelActive}" Text="Trailers"
+                           IsVisible="{Binding TrailersSelected}" />
+                    <Label Style="{StaticResource TabLabel}" Text="Trailers"
+                           IsVisible="{Binding RelatedSelected}" />
+                    <BoxView Style="{StaticResource TabIndicator}"
+                             IsVisible="{Binding TrailersSelected}" />
+                    <BoxView Style="{StaticResource TabIndicatorInactive}"
+                             IsVisible="{Binding RelatedSelected}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}"
+                                              CommandParameter="Related" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Style="{StaticResource TabLabelActive}" Text="More Like This"
+                           IsVisible="{Binding RelatedSelected}" />
+                    <Label Style="{StaticResource TabLabel}" Text="More Like This"
+                           IsVisible="{Binding TrailersSelected}" />
+                    <BoxView Style="{StaticResource TabIndicator}"
+                             IsVisible="{Binding RelatedSelected}" />
+                    <BoxView Style="{StaticResource TabIndicatorInactive}"
+                             IsVisible="{Binding TrailersSelected}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Trailers tab -->
+            <VerticalStackLayout Style="{StaticResource TrailerStack}"
+                                 IsVisible="{Binding TrailersSelected}"
+                                 behaviors:AnimationOption.FadeInTrigger="{Binding TrailersSelected}"
+                                 BindableLayout.ItemsSource="{Binding Trailers}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="module:UIStreamDetailTrailer">
+                        <Grid Style="{StaticResource TrailerRowGrid}"
+                              ColumnDefinitions="Auto,*">
+                            <toolkit:SfEffectsView Grid.ColumnSpan="2"
+                                                   TouchDownEffects="Ripple">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Border Grid.Column="0" Style="{StaticResource TrailerThumbBorder}">
+                                        <Grid>
+                                            <Image Style="{StaticResource TrailerImage}" Source="{Binding Image}" />
+                                            <Border Style="{StaticResource TrailerPlayBorder}">
+                                                <Label Style="{StaticResource TrailerPlayLabel}" Text="▶" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Style="{StaticResource TrailerTextStack}">
+                                        <Label Style="{StaticResource TrailerTitleLabel}" Text="{Binding Title}" />
+                                        <Label Style="{StaticResource TrailerMetaLabel}" Text="{Binding Duration}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </toolkit:SfEffectsView>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- More Like This tab -->
+            <CollectionView ItemsSource="{Binding Related}"
+                            IsVisible="{Binding RelatedSelected}"
+                            behaviors:AnimationOption.FadeInTrigger="{Binding RelatedSelected}"
+                            Margin="12,0,12,16"
+                            HeightRequest="260">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="module:UIStreamDetailRelated">
+                        <Border Style="{StaticResource RelatedBorder}">
+                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                                <Grid>
+                                    <Image Style="{StaticResource RelatedImage}" Source="{Binding Image}" />
+                                    <Border Style="{StaticResource RelatedOverlay}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" Style="{StaticResource RelatedTitleLabel}" Text="{Binding Title}" />
+                                            <Label Grid.Column="1" Style="{StaticResource RelatedDurationLabel}" Text="{Binding Duration}" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </toolkit:SfEffectsView>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

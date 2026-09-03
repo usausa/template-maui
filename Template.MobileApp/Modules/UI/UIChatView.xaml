@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample.Chat"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             x:Class="Template.MobileApp.Modules.UI.UIChatView"
+             x:DataType="{x:Type module:UIChatViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIChatViewModel}"
+             shell:ShellProperty.Title="Chat"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <converters:ChatTimeConverter x:Key="ChatTimeConverter" />
+            <converters:CollectionNotEmptyConverter x:Key="CollectionNotEmptyConverter" />
+            <s:NullToBoolConverter x:Key="NullToBoolConverter"
+                                   HandleEmptyString="True" />
+            <s:ChainConverter x:Key="NullToReverseBoolConverter">
+                <s:NullToBoolConverter HandleEmptyString="True" />
+                <s:ReverseConverter />
+            </s:ChainConverter>
+            <s:AllConverter x:Key="AllConverter" />
+
+            <Color x:Key="BubbleSend">#4CAF50</Color>
+            <Color x:Key="BubbleSendText">#FFFFFF</Color>
+            <Color x:Key="BubbleReceive">#F0F0F0</Color>
+            <Color x:Key="BubbleReceiveText">#1A1A1A</Color>
+            <Color x:Key="MetaText">#888888</Color>
+            <Color x:Key="AuthorText">#666666</Color>
+            <Color x:Key="DividerLine">#D0D0D0</Color>
+            <Color x:Key="InputBackground">#F5F5F5</Color>
+            <Color x:Key="InputBorder">#E0E0E0</Color>
+            <Color x:Key="ReactionBackground">#FFFFFF</Color>
+            <Color x:Key="ReactionBorder">#D0D0D0</Color>
+
+            <x:Double x:Key="BubbleMaxWidth">280</x:Double>
+
+            <Style x:Key="MetaLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource MetaText}" />
+            </Style>
+            <Style x:Key="SendMetaLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource MetaLabel}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+            <Style x:Key="ReceiveTimeLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource MetaLabel}">
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+            <Style x:Key="BubbleContentLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+            <Style x:Key="SendBubbleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BubbleContentLabel}">
+                <Setter Property="TextColor" Value="{StaticResource BubbleSendText}" />
+            </Style>
+            <Style x:Key="ReceiveBubbleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BubbleContentLabel}">
+                <Setter Property="TextColor" Value="{StaticResource BubbleReceiveText}" />
+            </Style>
+            <Style x:Key="AuthorLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource AuthorText}" />
+            </Style>
+            <Style x:Key="ReactionEmojiLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+            <Style x:Key="ReactionCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="{StaticResource MetaText}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+            <Style x:Key="SystemMessageLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource MetaText}" />
+            </Style>
+
+            <Style x:Key="AvatarBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+            <Style x:Key="SendBubbleBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource BubbleSend}" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="MaximumWidthRequest" Value="{StaticResource BubbleMaxWidth}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14,4,14,14" />
+            </Style>
+            <Style x:Key="ReceiveBubbleBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource BubbleReceive}" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="MaximumWidthRequest" Value="{StaticResource BubbleMaxWidth}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4,14,14,14" />
+            </Style>
+            <Style x:Key="ReactionPillBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource ReactionBackground}" />
+                <Setter Property="Stroke" Value="{StaticResource ReactionBorder}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="Margin" Value="0,0,4,0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+            <Style x:Key="SystemDatePillBorder"
+                   TargetType="Border">
+                <Setter Property="Stroke" Value="{StaticResource DividerLine}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="12,4" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+            <Style x:Key="InputFieldBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource InputBackground}" />
+                <Setter Property="Stroke" Value="{StaticResource InputBorder}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+            <Style x:Key="StampImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Aspect" Value="AspectFit" />
+            </Style>
+            <Style x:Key="ToolbarActionButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Padding" Value="8" />
+            </Style>
+            <Style x:Key="StickerActionButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Padding" Value="6" />
+            </Style>
+            <Style x:Key="ReactionPillContent"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="3" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+            <Style x:Key="SendMessageRow"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="60,4,8,4" />
+            </Style>
+            <Style x:Key="SendBubbleGrid"
+                   TargetType="Grid">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="ColumnSpacing" Value="6" />
+            </Style>
+            <Style x:Key="SendMessageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+            <Style x:Key="SendMetaStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style x:Key="SendReactionList"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style x:Key="ReceiveMessageRow"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,4,60,4" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+            <Style x:Key="ReceiveBubbleGrid"
+                   TargetType="Grid">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="ColumnSpacing" Value="6" />
+            </Style>
+            <Style x:Key="ReceiveContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+            <Style x:Key="ReceiveReactionList"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style x:Key="SystemMessageRow"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,16" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+            <Style x:Key="MessageDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource DividerLine}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+            <Style x:Key="InputBar"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="ColumnSpacing" Value="4" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+            <Style x:Key="MessageInputEditor"
+                   TargetType="Editor">
+                <Setter Property="Margin" Value="14,0,0,0" />
+                <Setter Property="AutoSize" Value="TextChanges" />
+                <Setter Property="MaximumHeightRequest" Value="100" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource MetaText}" />
+                <Setter Property="TextColor" Value="{StaticResource BubbleReceiveText}" />
+            </Style>
+
+            <Style x:Key="JumpToLatestButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#CC424242" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="Scale" Value="0" />
+            </Style>
+
+            <Style x:Key="StampTray"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="JustifyContent" Value="SpaceEvenly" />
+                <Setter Property="AlignItems" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="8" />
+            </Style>
+
+            <Style x:Key="StampTrayButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Aspect" Value="AspectFit" />
+                <!-- 4 列 x 2 行で折り返す -->
+                <Setter Property="FlexLayout.Shrink" Value="0" />
+                <Setter Property="FlexLayout.Basis" Value="25%" />
+            </Style>
+
+            <!-- Reaction pill -->
+            <DataTemplate x:Key="ReactionTemplate"
+                          x:DataType="models:MessageReaction">
+                <Border Style="{StaticResource ReactionPillBorder}">
+                    <HorizontalStackLayout Style="{StaticResource ReactionPillContent}">
+                        <Label Style="{StaticResource ReactionEmojiLabel}"
+                               Text="{Binding Emoji}" />
+                        <Label Style="{StaticResource ReactionCountLabel}"
+                               Text="{Binding Count}" />
+                    </HorizontalStackLayout>
+                </Border>
+            </DataTemplate>
+
+            <!-- Send -->
+            <DataTemplate x:Key="SendTemplate"
+                          x:DataType="models:ChatMessage">
+                <Grid Style="{StaticResource SendMessageRow}">
+                    <VerticalStackLayout Style="{StaticResource SendMessageStack}">
+                        <Grid Style="{StaticResource SendBubbleGrid}"
+                              ColumnDefinitions="Auto,Auto">
+                            <VerticalStackLayout Grid.Column="0"
+                                                 Style="{StaticResource SendMetaStack}">
+                                <Label Style="{StaticResource SendMetaLabel}"
+                                       IsVisible="{Binding IsRead}"
+                                       Text="既読" />
+                                <Label Style="{StaticResource SendMetaLabel}"
+                                       Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource SendBubbleBorder}">
+                                <Border.IsVisible>
+                                    <MultiBinding Converter="{StaticResource AllConverter}">
+                                        <Binding Path="StampSource" Converter="{StaticResource NullToReverseBoolConverter}" />
+                                        <Binding Path="TextContent" Converter="{StaticResource NullToBoolConverter}" />
+                                    </MultiBinding>
+                                </Border.IsVisible>
+                                <Label Style="{StaticResource SendBubbleLabel}"
+                                       Text="{Binding TextContent}" />
+                            </Border>
+                            <Image Grid.Column="1"
+                                   Style="{StaticResource StampImage}"
+                                   Source="{Binding StampSource}"
+                                   IsVisible="{Binding StampSource, Converter={StaticResource NullToBoolConverter}}" />
+                        </Grid>
+                        <HorizontalStackLayout Style="{StaticResource SendReactionList}"
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                               BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
+                                               BindableLayout.ItemsSource="{Binding Reactions}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </DataTemplate>
+
+            <!-- Receive -->
+            <DataTemplate x:Key="ReceiveTemplate"
+                          x:DataType="models:ChatMessage">
+                <Grid Style="{StaticResource ReceiveMessageRow}"
+                      ColumnDefinitions="40,*">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource AvatarBorder}">
+                        <Image Source="{Binding AvatarSource}"
+                               Aspect="AspectFill" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource ReceiveContentStack}">
+                        <Label Style="{StaticResource AuthorLabel}"
+                               Text="{Binding Author}" />
+                        <Grid Style="{StaticResource ReceiveBubbleGrid}"
+                              ColumnDefinitions="Auto,Auto">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource ReceiveBubbleBorder}">
+                                <Border.IsVisible>
+                                    <MultiBinding Converter="{StaticResource AllConverter}">
+                                        <Binding Path="StampSource" Converter="{StaticResource NullToReverseBoolConverter}" />
+                                        <Binding Path="TextContent" Converter="{StaticResource NullToBoolConverter}" />
+                                    </MultiBinding>
+                                </Border.IsVisible>
+                                <Label Style="{StaticResource ReceiveBubbleLabel}"
+                                       Text="{Binding TextContent}" />
+                            </Border>
+                            <Image Grid.Column="0"
+                                   Style="{StaticResource StampImage}"
+                                   Source="{Binding StampSource}"
+                                   IsVisible="{Binding StampSource, Converter={StaticResource NullToBoolConverter}}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource ReceiveTimeLabel}"
+                                   Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
+                        </Grid>
+                        <HorizontalStackLayout Style="{StaticResource ReceiveReactionList}"
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                               BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
+                                               BindableLayout.ItemsSource="{Binding Reactions}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </DataTemplate>
+
+            <!-- System -->
+            <DataTemplate x:Key="SystemTemplate"
+                          x:DataType="models:ChatMessage">
+                <Grid Style="{StaticResource SystemMessageRow}"
+                      ColumnDefinitions="*,Auto,*">
+                    <BoxView Grid.Column="0"
+                             Style="{StaticResource MessageDivider}" />
+                    <Border Grid.Column="1"
+                            Style="{StaticResource SystemDatePillBorder}">
+                        <Label Style="{StaticResource SystemMessageLabel}"
+                               Text="{Binding TextContent}" />
+                    </Border>
+                    <BoxView Grid.Column="2"
+                             Style="{StaticResource MessageDivider}" />
+                </Grid>
+            </DataTemplate>
+
+            <controls:ChatMessageTemplateSelector x:Key="MessageTemplateSelector"
+                                                  ReceiveTemplate="{StaticResource ReceiveTemplate}"
+                                                  SendTemplate="{StaticResource SendTemplate}"
+                                                  SystemTemplate="{StaticResource SystemTemplate}" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="*,1,Auto,Auto"
+          BackgroundColor="White">
+
+        <CollectionView Grid.Row="0"
+                        behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
+                        ItemsSource="{Binding Messages}"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}"
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default">
+            <CollectionView.Behaviors>
+                <s:CollectionControlBehavior Controller="{Binding Controller}" />
+            </CollectionView.Behaviors>
+        </CollectionView>
+
+        <Button x:Name="JumpToLatest"
+                Grid.Row="0"
+                Style="{StaticResource JumpToLatestButton}"
+                Command="{Binding ScrollToLatestCommand}"
+                Text="↓ 最新へ" />
+
+        <BoxView Grid.Row="1"
+                 Color="{StaticResource InputBorder}" />
+
+        <Grid Grid.Row="2"
+              Style="{StaticResource InputBar}"
+              ColumnDefinitions="Auto,*,Auto">
+            <ImageButton Grid.Column="0"
+                         Style="{StaticResource ToolbarActionButton}"
+                         Source="ic_camera.png"
+                         Command="{Binding PickImageCommand}" />
+            <Border Grid.Column="1"
+                    Style="{StaticResource InputFieldBorder}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Editor Grid.Column="0"
+                            Style="{StaticResource MessageInputEditor}"
+                            Text="{Binding InputText}"
+                            Placeholder="メッセージを入力"
+                            behaviors:Focus.FocusedStroke="{StaticResource BubbleSend}"
+                            behaviors:Focus.FocusedThickness="2" />
+                    <ImageButton Grid.Column="1"
+                                 Style="{StaticResource StickerActionButton}"
+                                 Source="ic_sticker.png"
+                                 Command="{Binding PickStickerCommand}" />
+                </Grid>
+            </Border>
+            <ImageButton Grid.Column="2"
+                         Style="{StaticResource ToolbarActionButton}"
+                         behaviors:ButtonOption.PressEffect="True"
+                         Source="ic_send.png"
+                         Command="{Binding SendCommand}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton"
+                                 Binding="{Binding InputText, Converter={StaticResource NullToBoolConverter}}"
+                                 Value="False">
+                        <Setter Property="Opacity" Value="0.3" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
+        </Grid>
+
+        <Grid Grid.Row="3"
+              RowDefinitions="1,Auto"
+              IsVisible="{Binding IsStampTrayVisible}"
+              behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}">
+            <BoxView Grid.Row="0"
+                     Color="{StaticResource InputBorder}" />
+            <FlexLayout Grid.Row="1"
+                        Style="{StaticResource StampTray}"
+                        BindableLayout.ItemsSource="{Binding StampList}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type x:String}">
+                        <ImageButton Style="{StaticResource StampTrayButton}"
+                                     Source="{Binding .}"
+                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand, x:DataType={x:Type module:UIChatViewModel}}"
+                                     CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+    </Grid>
+
+</ContentView>

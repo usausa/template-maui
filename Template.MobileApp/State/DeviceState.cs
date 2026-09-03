@@ -22,7 +22,7 @@ public enum NetworkState
 public static class DeviceStateExtensions
 {
     public static bool IsConnected(this NetworkAccess access) =>
-        access != NetworkAccess.None && access != NetworkAccess.Unknown;
+        (access != NetworkAccess.None) && (access != NetworkAccess.Unknown);
 
     public static bool IsHighSpeed(this NetworkProfile profile) =>
         profile.HasFlag(NetworkProfile.Ethernet) || profile.HasFlag(NetworkProfile.WiFi);
@@ -43,7 +43,7 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
     public partial double BatteryChargeLevel { get; private set; }
 
     [ObservableProperty]
-    public partial BatteryState BatteryState { get; private set; }
+    public partial Microsoft.Maui.Devices.BatteryState BatteryState { get; private set; }
 
     [ObservableProperty]
     public partial BatteryPowerSource BatteryPowerSource { get; private set; }
@@ -90,7 +90,7 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
     // Battery
     // ------------------------------------------------------------
 
-    private void UpdateBattery(double chargeLevel, BatteryState state, BatteryPowerSource powerSource)
+    private void UpdateBattery(double chargeLevel, Microsoft.Maui.Devices.BatteryState state, BatteryPowerSource powerSource)
     {
         log.DebugBatteryState(chargeLevel, state, powerSource);
 

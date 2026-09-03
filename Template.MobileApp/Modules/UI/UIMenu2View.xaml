@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIMenu2View"
+             x:DataType="{x:Type module:UIMenu2ViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMenu2ViewModel}"
+             shell:ShellProperty.Title="UI 2"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function4Text="UI 1"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!-- グループ毎に行を分け、余りセルは可視の無効ボタンにする -->
+    <Grid Style="{StaticResource MenuGrid}"
+          RowDefinitions="*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*,*">
+
+        <!-- データ可視化 -->
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGraph}"
+                Text="Graph"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Account_tree}}" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGraph2}"
+                Text="Graph2"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Timeline}}" />
+        <Button Grid.Row="0" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITreeMap}"
+                Text="TreeMap"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Dashboard}}" />
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIMixer}"
+                Text="Mixer"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Tune}}" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="1" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- 計器・ゲージ -->
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIMeter}"
+                Text="Meter"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Speed}}" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGauge}"
+                Text="Gauge"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Av_timer}}" />
+        <Button Grid.Row="2" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UILoad}"
+                Text="Load"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Hearing}}" />
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIRadar}"
+                Text="Radar"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Radar}}" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="3" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- HUD (フルスクリーン SkiaSharp) -->
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIFlight}"
+                Text="Flight"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Flight_takeoff}}" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITactical}"
+                Text="Tactical"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Smart_toy}}" />
+        <Button Grid.Row="4" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITelemetry}"
+                Text="Telemetry"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Sensors}}" />
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIEnergy}"
+                Text="Energy"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Bolt}}" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="5" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- 描画デモ -->
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIWheel}"
+                Text="Wheel"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Attractions}}" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="6" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <!-- 拡張用 -->
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="7" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+
+    </Grid>
+
+</ContentView>

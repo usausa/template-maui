@@ -2,6 +2,10 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed class ViewCollectionViewModel : AppViewModelBase
 {
+    private const int MaxGroups = 16;
+
+    private int extraIndex;
+
     public ObservableCollection<AddressGroup> List { get; } = [];
 
     public IObserveCommand ToggleCommand { get; }
@@ -9,10 +13,13 @@ public sealed class ViewCollectionViewModel : AppViewModelBase
     public IObserveCommand PhoneCommand { get; }
     public IObserveCommand MailCommand { get; }
 
+    public IObserveCommand LoadMoreCommand { get; }
+
     public ViewCollectionViewModel(
         IDialog dialog)
     {
         ToggleCommand = MakeDelegateCommand<AddressGroup>(g => g.IsExpanded = !g.IsExpanded);
+        LoadMoreCommand = MakeDelegateCommand(LoadMore);
 
         PhoneCommand = MakeAsyncCommand<AddressRow>(async x =>
         {
@@ -37,6 +44,18 @@ public sealed class ViewCollectionViewModel : AppViewModelBase
         List.Add(CreateGroup("ま", ["前田 利長", "最上 義光", "毛利 輝元"]));
         List.Add(CreateGroup("や", ["山内 一豊"]));
         return Task.CompletedTask;
+    }
+
+    // RemainingItemsThresholdReached で末尾に達する前に追加ページを読み込む
+    private void LoadMore()
+    {
+        if (List.Count >= MaxGroups)
+        {
+            return;
+        }
+
+        extraIndex++;
+        List.Add(CreateGroup($"追{extraIndex}", [$"追加 家臣 {extraIndex}-1", $"追加 家臣 {extraIndex}-2", $"追加 家臣 {extraIndex}-3"]));
     }
 
     private static AddressGroup CreateGroup(string key, IEnumerable<string> names) =>

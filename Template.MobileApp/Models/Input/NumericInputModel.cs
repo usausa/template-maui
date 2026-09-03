@@ -40,7 +40,7 @@ public sealed class NumberInputModel : NotificationObject
 
         if (key == ".")
         {
-            if (String.IsNullOrEmpty(text) || text == "0")
+            if (String.IsNullOrEmpty(text) || (text == "0"))
             {
                 Text = "0.";
             }

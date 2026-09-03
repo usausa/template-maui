@@ -4,7 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
              x:DataType="{x:Type module:UILoadViewModel}"
@@ -19,26 +20,29 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <conv:DecibelToColorConverter x:Key="DecibelToColorConverter" />
+
             <Style x:Key="NoiseGauge"
                    TargetType="controls:NoiseGauge">
                 <Setter Property="WarningGaugeColor" Value="{StaticResource RedDefault}" />
                 <Setter Property="NeedleColor" Value="{StaticResource DeepOrangeDarken1}" />
                 <Setter Property="NeedleCenterColor" Value="{StaticResource DeepOrangeDefault}" />
+                <Setter Property="PeakNeedleColor" Value="#B3FFD700" />
             </Style>
 
-            <Style x:Key="ValueLabel"
+            <Style x:Key="LoadValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="End" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <Style x:Key="ValueSpan"
+            <Style x:Key="LoadValueSpan"
                    TargetType="Span">
                 <Setter Property="FontSize" Value="72" />
             </Style>
 
-            <Style x:Key="UnitSpan"
+            <Style x:Key="LoadUnitSpan"
                    TargetType="Span">
                 <Setter Property="FontSize" Value="36" />
             </Style>
@@ -77,15 +81,17 @@
 
         <controls:NoiseGauge Grid.Row="0"
                              Style="{StaticResource NoiseGauge}"
-                             Value="{Binding Current}" />
+                             Value="{Binding Current}"
+                             PeakValue="{Binding Peak}" />
 
         <Label Grid.Row="0"
-               Style="{StaticResource ValueLabel}">
+               Style="{StaticResource LoadValueLabel}">
             <Label.FormattedText>
                 <FormattedString>
-                    <Span Style="{StaticResource ValueSpan}"
+                    <Span Style="{StaticResource LoadValueSpan}"
+                          TextColor="{Binding Current, Converter={StaticResource DecibelToColorConverter}}"
                           Text="{Binding Current, StringFormat='{0:F1}'}" />
-                    <Span Style="{StaticResource UnitSpan}"
+                    <Span Style="{StaticResource LoadUnitSpan}"
                           Text=" dB" />
                 </FormattedString>
             </Label.FormattedText>
@@ -115,7 +121,7 @@
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Label Grid.Row="2" Grid.Column="1"
+            <Label Grid.Row="1" Grid.Column="1"
                    Style="{StaticResource SummaryValueLabel}">
                 <Label.FormattedText>
                     <FormattedString>
@@ -126,7 +132,7 @@
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Label Grid.Row="3" Grid.Column="2"
+            <Label Grid.Row="1" Grid.Column="2"
                    Style="{StaticResource SummaryValueLabel}">
                 <Label.FormattedText>
                     <FormattedString>
@@ -139,8 +145,8 @@
             </Label>
         </Grid>
 
-        <graphics:GraphicsControl Grid.Row="2"
-                                  Graphics="{Binding Graphics}" />
+        <drawing:DrawingControl Grid.Row="2"
+                                  Drawing="{Binding Drawing}" />
 
     </Grid>
 

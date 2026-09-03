@@ -14,11 +14,14 @@ public partial class DiagnosticPanel
 
     private readonly int processorCount = Environment.ProcessorCount;
 
-    private readonly Process currentProcess = Process.GetCurrentProcess();
-
     private readonly IDisplay display;
 
+    private Process? currentProcess;
+
     private bool isMonitoring;
+
+    // StartTimerは次のtickまで停止できないため、世代番号で古いタイマーを打ち切る
+    private int monitorGeneration;
 
     private double emaFps;
 
@@ -74,9 +77,9 @@ public partial class DiagnosticPanel
         InitializeComponent();
 
         display = ResolveProvider.Default.GetRequiredService<IDisplay>();
-        display.FrameUpdated += OnDisplayFrameUpdated;
 
-        HandlerChanged += OnHandlerChanged;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -84,12 +87,24 @@ public partial class DiagnosticPanel
         ((DiagnosticPanel)bindable).UpdateValues();
     }
 
-    private void OnHandlerChanged(object? sender, EventArgs e)
+    private void OnLoaded(object? sender, EventArgs e)
     {
-        if (Handler is null)
+        currentProcess ??= Process.GetCurrentProcess();
+        display.FrameUpdated += OnDisplayFrameUpdated;
+
+        if (IsVisible)
         {
-            StopMonitor();
+            StartMonitor();
         }
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        StopMonitor();
+
+        display.FrameUpdated -= OnDisplayFrameUpdated;
+        currentProcess?.Dispose();
+        currentProcess = null;
     }
 
     protected override void OnPropertyChanged(string? propertyName = null)
@@ -98,13 +113,20 @@ public partial class DiagnosticPanel
 
         if (propertyName == nameof(IsVisible))
         {
-            StartMonitor();
+            if (IsVisible && IsLoaded)
+            {
+                StartMonitor();
+            }
+            else
+            {
+                StopMonitor();
+            }
         }
     }
 
     private void StartMonitor()
     {
-        if (isMonitoring)
+        if (isMonitoring || (currentProcess is null))
         {
             return;
         }
@@ -113,12 +135,18 @@ public partial class DiagnosticPanel
         allocatedBytesPrev = GC.GetTotalAllocatedBytes();
 
         display.StartMonitor();
-        stopwatch.Start();
+        stopwatch.Restart();
 
+        var generation = ++monitorGeneration;
         Application.Current!.Dispatcher.StartTimer(TimeSpan.FromSeconds(1), () =>
         {
+            if (!isMonitoring || (generation != monitorGeneration))
+            {
+                return false;
+            }
+
             UpdateValues();
-            return isMonitoring;
+            return true;
         });
 
         isMonitoring = true;
@@ -147,9 +175,18 @@ public partial class DiagnosticPanel
 
     private void UpdateValues()
     {
+        if (currentProcess is null)
+        {
+            return;
+        }
+
+        // 前回計測からの経過時間で割るため計測ごとにリセットする
+        var elapsedMs = stopwatch.Elapsed.TotalMilliseconds;
+        stopwatch.Restart();
+
         // CPU
         var cpuTimeCurrent = currentProcess.TotalProcessorTime;
-        var cpuUsage = ((cpuTimeCurrent - cpuTimePrev).TotalMilliseconds / stopwatch.Elapsed.TotalMilliseconds) * 100 / processorCount;
+        var cpuUsage = elapsedMs > 0 ? (cpuTimeCurrent - cpuTimePrev).TotalMilliseconds / elapsedMs * 100 / processorCount : 0;
         cpuTimePrev = cpuTimeCurrent;
 
         // Thread
@@ -159,7 +196,7 @@ public partial class DiagnosticPanel
         var memoryUsed = (float)currentProcess.WorkingSet64 / (1024 * 1024);
 
         // Allocation
-        var elapsedSec = stopwatch.Elapsed.TotalSeconds;
+        var elapsedSec = elapsedMs / 1000;
         if (elapsedSec <= 0)
         {
             elapsedSec = 1; // fallback

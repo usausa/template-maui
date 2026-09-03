@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UISuperView"
              x:DataType="{x:Type module:UISuperViewModel}"
@@ -11,6 +13,258 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SearchBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+            </Style>
+
+            <Style x:Key="SearchIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="SearchHintLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="8,0,0,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="PointBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+            </Style>
+
+            <Style x:Key="PointLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource OrangeDarken3}" />
+            </Style>
+
+            <Style x:Key="BannerBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="BannerCaptionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+            </Style>
+
+            <Style x:Key="BannerTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="BannerSubLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#CCFFFFFF" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="20,20,20,8" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="AppIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 26" />
+            </Style>
+
+            <Style x:Key="AppIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="AppNameLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <Style x:Key="CouponBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="Margin" Value="0,0,12,0" />
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CouponTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CouponSubLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="#CCFFFFFF" />
+            </Style>
+
+            <Style x:Key="CouponIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="#4DFFFFFF" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView>
+        <VerticalStackLayout Padding="0,12,0,24">
+
+            <!-- 検索バー+ポイント残高 -->
+            <Grid Margin="16,0"
+                  ColumnDefinitions="*,Auto"
+                  ColumnSpacing="10">
+                <Border Grid.Column="0"
+                        Style="{StaticResource SearchBorder}">
+                    <HorizontalStackLayout>
+                        <Label Style="{StaticResource SearchIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Search}" />
+                        <Label Style="{StaticResource SearchHintLabel}"
+                               Text="サービス・店舗を検索" />
+                    </HorizontalStackLayout>
+                </Border>
+                <Border Grid.Column="1"
+                        Style="{StaticResource PointBorder}">
+                    <Label Style="{StaticResource PointLabel}"
+                           Text="{Binding Point, StringFormat='{0:N0} pt'}" />
+                </Border>
+            </Grid>
+
+            <!-- バナーカルーセル -->
+            <CarouselView x:Name="BannerCarousel"
+                          Margin="0,16,0,0"
+                          HeightRequest="140"
+                          Loop="True"
+                          IndicatorView="BannerIndicator"
+                          ItemsSource="{Binding Banners}"
+                          Position="{Binding BannerPosition, Mode=TwoWay}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:SuperBanner}">
+                        <Border Style="{StaticResource BannerBorder}">
+                            <Grid>
+                                <Image Source="{Binding Image}"
+                                       Aspect="AspectFill" />
+                                <VerticalStackLayout Style="{StaticResource BannerCaptionStack}">
+                                    <Label Style="{StaticResource BannerTitleLabel}"
+                                           Text="{Binding Title}" />
+                                    <Label Style="{StaticResource BannerSubLabel}"
+                                           Text="{Binding Sub}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+            <IndicatorView x:Name="BannerIndicator"
+                           Margin="0,8,0,0"
+                           HorizontalOptions="Center"
+                           IndicatorColor="{StaticResource GrayLighten2}"
+                           SelectedIndicatorColor="{StaticResource BlueDefault}"
+                           IndicatorSize="8" />
+
+            <!-- ミニアプリ -->
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="サービス" />
+            <FlexLayout Margin="8,0"
+                        Wrap="Wrap"
+                        JustifyContent="SpaceEvenly"
+                        BindableLayout.ItemsSource="{Binding Apps}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:SuperApp}">
+                        <VerticalStackLayout Margin="8"
+                                             FlexLayout.Basis="22%">
+                            <Border Style="{StaticResource AppIconBorder}"
+                                    BackgroundColor="{Binding Color}">
+                                <Label Style="{StaticResource AppIconLabel}"
+                                       Text="{Binding Glyph}" />
+                            </Border>
+                            <Label Style="{StaticResource AppNameLabel}"
+                                   Text="{Binding Name}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <!-- クーポン -->
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="クーポン・キャンペーン" />
+            <CollectionView Margin="16,0,0,0"
+                            HeightRequest="128"
+                            ItemsSource="{Binding Coupons}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal"
+                                       SnapPointsType="Mandatory"
+                                       SnapPointsAlignment="Start" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:SuperCoupon}">
+                        <Border Style="{StaticResource CouponBorder}"
+                                Background="{Binding Background}">
+                            <Grid>
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Style="{StaticResource CouponTitleLabel}"
+                                           Text="{Binding Title}" />
+                                    <Label Style="{StaticResource CouponSubLabel}"
+                                           Text="{Binding Sub}" />
+                                </VerticalStackLayout>
+                                <Label Style="{StaticResource CouponIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Confirmation_number}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

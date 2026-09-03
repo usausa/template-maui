@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:data="clr-namespace:Template.MobileApp.Modules.Data"
              x:Class="Template.MobileApp.Modules.Data.DataView"
              x:DataType="{x:Type data:DataViewModel}"
@@ -11,64 +14,132 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,4*,Auto,Auto,3*">
-        <Label Grid.Row="0"
-               Style="{StaticResource GroupLabel}"
-               Text="CRUD" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Grid Grid.Row="1"
-              Style="{StaticResource MenuGrid}"
-              RowDefinitions="*,*,*,*">
-            <Button Grid.Row="0"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding InsertCommand}"
-                    Text="Insert" />
-            <Button Grid.Row="1"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding UpdateCommand}"
-                    Text="Update" />
-            <Button Grid.Row="2"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding DeleteCommand}"
-                    Text="Delete" />
-            <Button Grid.Row="3"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding QueryCommand}"
-                    Text="Query" />
-        </Grid>
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
 
-        <Label Grid.Row="2"
-               Style="{StaticResource GroupLabel}"
-               Text="Bulk" />
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
 
-        <Grid Grid.Row="3"
-              Style="{StaticResource FillGrid}"
-              ColumnDefinitions="2*,3*">
-            <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
-                   Text="Count" />
-            <Label Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
-                   Text="{Binding BulkDataCount}" />
-        </Grid>
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="*,*" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
 
-        <Grid Grid.Row="4"
-              Style="{StaticResource MenuGrid}"
-              RowDefinitions="*,*,*">
-            <Button Grid.Row="0"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding BulkInsertCommand}"
-                    Text="BulkInsert" />
-            <Button Grid.Row="1"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding DeleteAllCommand}"
-                    Text="DeleteAll" />
-            <Button Grid.Row="2"
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding QueryAllCommand}"
-                    Text="QueryAll" />
-        </Grid>
-    </Grid>
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="BulkStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CountRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CountValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+            </Style>
+
+            <Style x:Key="CountUnitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,0,0,6" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="CRUD"
+                               Icon="{x:Static fonts:MaterialIcons.Storage}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <Grid Style="{StaticResource ActionRowGrid}"
+                      RowDefinitions="Auto,Auto">
+                    <Button Grid.Row="0" Grid.Column="0"
+                            Style="{StaticResource ActionButton}"
+                            Command="{Binding InsertCommand}"
+                            Text="Insert" />
+                    <Button Grid.Row="0" Grid.Column="1"
+                            Style="{StaticResource ActionButton}"
+                            Command="{Binding UpdateCommand}"
+                            Text="Update" />
+                    <Button Grid.Row="1" Grid.Column="0"
+                            Style="{StaticResource ActionButton}"
+                            Command="{Binding DeleteCommand}"
+                            Text="Delete" />
+                    <Button Grid.Row="1" Grid.Column="1"
+                            Style="{StaticResource ActionButton}"
+                            Command="{Binding QueryCommand}"
+                            Text="Query" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Bulk"
+                               Icon="{x:Static fonts:MaterialIcons.Dns}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <VerticalStackLayout Style="{StaticResource BulkStack}">
+
+                    <HorizontalStackLayout Style="{StaticResource CountRow}">
+                        <Label Style="{StaticResource CountValueLabel}"
+                               behaviors:LabelOption.CountUpValue="{Binding BulkDataCount}"
+                               behaviors:LabelOption.CountUpDuration="500" />
+                        <Label Style="{StaticResource CountUnitLabel}"
+                               Text="rows" />
+                    </HorizontalStackLayout>
+
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          RowDefinitions="Auto,Auto">
+                        <Button Grid.Row="0" Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding BulkInsertCommand}"
+                                Text="BulkInsert" />
+                        <Button Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding DeleteAllCommand}"
+                                Text="DeleteAll" />
+                        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding QueryAllCommand}"
+                                Text="QueryAll" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

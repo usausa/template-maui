@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:charts="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:spark="clr-namespace:Syncfusion.Maui.Toolkit.SparkCharts;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:sunburst="clr-namespace:Syncfusion.Maui.Toolkit.SunburstChart;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             x:Class="Template.MobileApp.Modules.Sample.SampleSfChartView"
+             x:DataType="{x:Type module:SampleSfChartViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SampleSfChartViewModel}"
+             shell:ShellProperty.Title="Sf Chart"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- 導入済み Syncfusion.Maui.Toolkit の未使用チャート群によるダッシュボード構成。
+         自前 ChartDrawing (SampleChart) との使い分け: 定型チャート = Syncfusion / 独自表現・軽量描画 = ChartDrawing -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="NoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="SparkCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard Title="Column (SfCartesianChart)"
+                               Icon="{x:Static fonts:MaterialIcons.Insert_chart}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <charts:SfCartesianChart HeightRequest="220">
+                    <charts:SfCartesianChart.XAxes>
+                        <charts:CategoryAxis />
+                    </charts:SfCartesianChart.XAxes>
+                    <charts:SfCartesianChart.YAxes>
+                        <charts:NumericalAxis />
+                    </charts:SfCartesianChart.YAxes>
+                    <charts:ColumnSeries ItemsSource="{Binding Monthly}"
+                                     XBindingPath="Label"
+                                     YBindingPath="Value"
+                                     Fill="#2196F3"
+                                     EnableAnimation="True" />
+                </charts:SfCartesianChart>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Doughnut (SfCircularChart)"
+                               Icon="{x:Static fonts:MaterialIcons.Donut_large}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60">
+                <charts:SfCircularChart HeightRequest="240">
+                    <charts:DoughnutSeries ItemsSource="{Binding Share}"
+                                       XBindingPath="Label"
+                                       YBindingPath="Value"
+                                       ShowDataLabels="True"
+                                       EnableAnimation="True" />
+                </charts:SfCircularChart>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Polar (SfPolarChart)"
+                               Icon="{x:Static fonts:MaterialIcons.Radar}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120">
+                <charts:SfPolarChart HeightRequest="260">
+                    <charts:SfPolarChart.PrimaryAxis>
+                        <charts:CategoryAxis />
+                    </charts:SfPolarChart.PrimaryAxis>
+                    <charts:SfPolarChart.SecondaryAxis>
+                        <charts:NumericalAxis Maximum="100" />
+                    </charts:SfPolarChart.SecondaryAxis>
+                    <charts:PolarAreaSeries ItemsSource="{Binding Skills}"
+                                        XBindingPath="Label"
+                                        YBindingPath="Value"
+                                        Fill="#802196F3"
+                                        Stroke="#2196F3"
+                                        StrokeWidth="2" />
+                </charts:SfPolarChart>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Funnel / Pyramid"
+                               Icon="{x:Static fonts:MaterialIcons.Filter_alt}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180">
+                <Grid ColumnDefinitions="*,*"
+                      ColumnSpacing="8">
+                    <charts:SfFunnelChart Grid.Column="0"
+                                      HeightRequest="200"
+                                      ItemsSource="{Binding Funnel}"
+                                      XBindingPath="Label"
+                                      YBindingPath="Value" />
+                    <charts:SfPyramidChart Grid.Column="1"
+                                       HeightRequest="200"
+                                       ItemsSource="{Binding Funnel}"
+                                       XBindingPath="Label"
+                                       YBindingPath="Value" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Spark (SfSparkCharts)"
+                               Icon="{x:Static fonts:MaterialIcons.Show_chart}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <Grid ColumnDefinitions="*,*,*"
+                      RowDefinitions="56,Auto"
+                      ColumnSpacing="8"
+                      RowSpacing="4">
+                    <spark:SfSparkLineChart Grid.Row="0" Grid.Column="0"
+                                         ItemsSource="{Binding Trend}"
+                                         Stroke="#2196F3" />
+                    <spark:SfSparkColumnChart Grid.Row="0" Grid.Column="1"
+                                           ItemsSource="{Binding Trend}"
+                                           Fill="#4CAF50" />
+                    <spark:SfSparkWinLossChart Grid.Row="0" Grid.Column="2"
+                                            ItemsSource="{Binding WinLoss}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource SparkCaptionLabel}"
+                           Text="Line" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource SparkCaptionLabel}"
+                           Text="Column" />
+                    <Label Grid.Row="1" Grid.Column="2"
+                           Style="{StaticResource SparkCaptionLabel}"
+                           Text="WinLoss" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Sunburst (SfSunburstChart)"
+                               Icon="{x:Static fonts:MaterialIcons.Donut_small}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="300">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="地域 → 都市の 2 階層構成比" />
+                    <sunburst:SfSunburstChart HeightRequest="260"
+                                        ItemsSource="{Binding Regions}"
+                                        ValueMemberPath="Value"
+                                        ShowLabels="True">
+                        <sunburst:SfSunburstChart.Levels>
+                            <sunburst:SunburstHierarchicalLevel GroupMemberPath="Category" />
+                            <sunburst:SunburstHierarchicalLevel GroupMemberPath="Item" />
+                        </sunburst:SfSunburstChart.Levels>
+                    </sunburst:SfSunburstChart>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>
