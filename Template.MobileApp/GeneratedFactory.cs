@@ -1,11 +1,12 @@
 #pragma warning disable IDE0001
+[assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::CommunityToolkit.Maui.Services.PopupService))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.AndroidPlatform))]
+[assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.ShinyMauiInitializationService))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.BluetoothLE.BleManager))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.BluetoothLE.Hosting.BleHostingManager))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.BluetoothLE.Intrastructure.SemaphoreOperationQueue))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Template.MobileApp.App))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Template.MobileApp.Extender.PopupFocusPlugin))]
-[assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::CommunityToolkit.Maui.Services.PopupService))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::MauiComponents.DefaultPopupFactory))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::MauiComponents.DialogImplementation))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::MauiComponents.DisplayImplementation))]

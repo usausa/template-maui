@@ -53,6 +53,7 @@ public static partial class MauiProgram
     public static MauiApp CreateMauiApp() =>
         MauiApp.CreateBuilder()
             .UseMauiApp<App>()
+            .UseGeneratedServiceProvider()
             .ConfigureDebug()
             .ConfigureFonts(ConfigureFonts)
             .ConfigureLifecycleEvents(ConfigureLifecycleEvents)
@@ -74,7 +75,6 @@ public static partial class MauiProgram
             .UseCommunityToolkitServices()
             .UseCustomView()
             .UseCustomLayouts()
-            .ConfigureComponents()
             .BuildApplication();
 
     // ------------------------------------------------------------
@@ -257,15 +257,15 @@ public static partial class MauiProgram
     // Components
     // ------------------------------------------------------------
 
-    private static MauiAppBuilder ConfigureComponents(this MauiAppBuilder builder)
+    private static MauiAppBuilder UseGeneratedServiceProvider(this MauiAppBuilder builder)
     {
         builder.ConfigureContainer(
             new GeneratedServiceProviderFactory(static options => options.TrackTransientDisposables = false),
-            ConfigureContainer);
+            ConfigureComponents);
         return builder;
     }
 
-    private static void ConfigureContainer(IServiceCollection services)
+    private static void ConfigureComponents(IServiceCollection services)
     {
         // View & ViewModel
         services.AddTransient<MainPage>();
