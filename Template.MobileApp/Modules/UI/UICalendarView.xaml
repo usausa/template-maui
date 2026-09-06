@@ -54,26 +54,23 @@
           BackgroundColor="White"
           RowSpacing="0">
 
-        <!-- カレンダー本体。CalendarView(従来版)と CalendarView2(Skia 自前描画版)は
-             BindableProperty API が互換なので、下のタグ名を controls:CalendarView に
-             変えるだけで従来版へ切り替えられる(どちらを採用するかは未決定) -->
-        <controls:CalendarView2 Grid.Row="0"
-                                Culture="{Binding Culture}"
-                                DayTappedCommand="{Binding DayTappedCommand}"
-                                EventTappedCommand="{Binding EventTappedCommand}"
-                                FirstDayOfWeek="{Binding FirstDayOfWeek}"
-                                GoToTodayCommand="{Binding GoToTodayCommand}"
-                                MaxDate="{Binding MaxDate}"
-                                MinDate="{Binding MinDate}"
-                                MonthIndicatorEnabled="True"
-                                NextMonthCommand="{Binding NextMonthCommand}"
-                                PrevMonthCommand="{Binding PrevMonthCommand}"
-                                SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
-                                SelectedDates="{Binding SelectedDates}"
-                                SelectedEndDate="{Binding SelectedEndDate, Mode=TwoWay}"
-                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
-                                SelectionMode="{Binding SelectionMode}"
-                                View="{Binding MonthView}" />
+        <controls:CalendarView Grid.Row="0"
+                               Culture="{Binding Culture}"
+                               DayTappedCommand="{Binding DayTappedCommand}"
+                               EventTappedCommand="{Binding EventTappedCommand}"
+                               FirstDayOfWeek="{Binding FirstDayOfWeek}"
+                               GoToTodayCommand="{Binding GoToTodayCommand}"
+                               MaxDate="{Binding MaxDate}"
+                               MinDate="{Binding MinDate}"
+                               MonthIndicatorEnabled="True"
+                               NextMonthCommand="{Binding NextMonthCommand}"
+                               PrevMonthCommand="{Binding PrevMonthCommand}"
+                               SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                               SelectedDates="{Binding SelectedDates}"
+                               SelectedEndDate="{Binding SelectedEndDate, Mode=TwoWay}"
+                               SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
+                               SelectionMode="{Binding SelectionMode}"
+                               View="{Binding MonthView}" />
 
         <BoxView Grid.Row="1"
                  Style="{StaticResource CalendarDivider}" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="Template.MobileApp.Controls.CalendarView"
              x:Name="Self">
 
@@ -16,12 +17,14 @@
                   Padding="16,12,16,8">
                 <Button x:Name="PrevButton"
                         Grid.Column="0"
+                        VerticalOptions="Center"
                         Command="{Binding PrevMonthCommand, Source={x:Reference Self}}"
                         Text="◀"
                         BackgroundColor="Transparent"
-                        BorderWidth="0" VerticalOptions="Center" />
+                        BorderWidth="0" />
                 <VerticalStackLayout Grid.Column="1"
-                                     HorizontalOptions="Center" Spacing="-2" VerticalOptions="Center">
+                                     HorizontalOptions="Center" VerticalOptions="Center"
+                                     Spacing="-2">
                     <Label x:Name="YearLabel"
                            HorizontalTextAlignment="Center"
                            Text="" />
@@ -32,10 +35,11 @@
                 </VerticalStackLayout>
                 <Button x:Name="NextButton"
                         Grid.Column="2"
+                        VerticalOptions="Center"
                         Command="{Binding NextMonthCommand, Source={x:Reference Self}}"
                         Text="▶"
                         BackgroundColor="Transparent"
-                        BorderWidth="0" VerticalOptions="Center" />
+                        BorderWidth="0" />
             </Grid>
         </ContentView>
 
@@ -44,29 +48,16 @@
                  HeightRequest="0.5"
                  Color="#E0E0E0" />
 
-        <!-- Day of week header -->
-        <Grid x:Name="WeekdayHeaderGrid"
-              Grid.Row="2"
-              ColumnDefinitions="*,*,*,*,*,*,*"
-              Padding="0,6,0,6" />
+        <!-- Day of week header (Skia) -->
+        <skia:SKCanvasView x:Name="WeekdayHeaderCanvas"
+                           Grid.Row="2"
+                           HeightRequest="32"
+                           PaintSurface="OnWeekdayHeaderPaint" />
 
-        <!-- Calendar body -->
-        <Grid Grid.Row="3"
-              IsClippedToBounds="True">
-            <ContentView x:Name="MonthIndicatorHost"
-                         InputTransparent="True" />
-            <Grid x:Name="WeeksHost"
-                  RowSpacing="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-            </Grid>
-        </Grid>
+        <!-- Calendar body (Skia) -->
+        <skia:SKCanvasView x:Name="BodyCanvas"
+                           Grid.Row="3"
+                           PaintSurface="OnBodyPaint" />
 
     </Grid>
 

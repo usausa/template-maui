@@ -4,24 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Input;
 
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Shapes;
+
+using SkiaSharp;
+using SkiaSharp.Views.Maui;
 
 using Template.MobileApp.Models.Sample.Calendar;
 
-// ReSharper disable RedundantAssignment
+// CalendarView の SkiaSharp 完全自前描画版
+// カレンダーボディを SKCanvasView 1枚で描画し、タップ・スワイプをすべて自前で処理する
+// CalendarView と同じ BindableProperty API を持つ
 public partial class CalendarView
 {
     // ------------------------------------------------------------------ BindableProperties: Commands / View
 
     public static readonly BindableProperty ViewProperty =
         BindableProperty.Create(nameof(View), typeof(MonthView), typeof(CalendarView),
-            defaultValue: null, propertyChanged: OnViewChanged);
+            propertyChanged: OnViewChanged);
 
     public static readonly BindableProperty PrevMonthCommandProperty =
         BindableProperty.Create(nameof(PrevMonthCommand), typeof(ICommand), typeof(CalendarView));
@@ -42,47 +44,47 @@ public partial class CalendarView
 
     public static readonly BindableProperty SelectionModeProperty =
         BindableProperty.Create(nameof(SelectionMode), typeof(CalendarSelectionMode), typeof(CalendarView),
-            CalendarSelectionMode.None, propertyChanged: OnSelectionPropertyChanged);
+            CalendarSelectionMode.None, propertyChanged: OnInvalidateBody);
 
     public static readonly BindableProperty SelectedDateProperty =
         BindableProperty.Create(nameof(SelectedDate), typeof(DateOnly?), typeof(CalendarView),
-            null, BindingMode.TwoWay, propertyChanged: OnSelectionPropertyChanged);
+            null, BindingMode.TwoWay, propertyChanged: OnInvalidateBody);
 
     public static readonly BindableProperty SelectedDatesProperty =
         BindableProperty.Create(nameof(SelectedDates), typeof(ObservableCollection<DateOnly>), typeof(CalendarView),
-            null, BindingMode.TwoWay, propertyChanged: OnSelectedDatesChanged);
+            propertyChanged: OnSelectedDatesChanged);
 
     public static readonly BindableProperty SelectedStartDateProperty =
         BindableProperty.Create(nameof(SelectedStartDate), typeof(DateOnly?), typeof(CalendarView),
-            null, BindingMode.TwoWay, propertyChanged: OnSelectionPropertyChanged);
+            null, BindingMode.TwoWay, propertyChanged: OnInvalidateBody);
 
     public static readonly BindableProperty SelectedEndDateProperty =
         BindableProperty.Create(nameof(SelectedEndDate), typeof(DateOnly?), typeof(CalendarView),
-            null, BindingMode.TwoWay, propertyChanged: OnSelectionPropertyChanged);
+            null, BindingMode.TwoWay, propertyChanged: OnInvalidateBody);
 
     public static readonly BindableProperty SelectedDayBackgroundProperty =
         BindableProperty.Create(nameof(SelectedDayBackground), typeof(Color), typeof(CalendarView),
-            Color.FromArgb("#1A73E8"), propertyChanged: OnSelectionPropertyChanged);
+            Color.FromArgb("#1A73E8"), propertyChanged: OnInvalidateBody);
 
     public static readonly BindableProperty SelectedDayTextColorProperty =
         BindableProperty.Create(nameof(SelectedDayTextColor), typeof(Color), typeof(CalendarView),
-            Colors.White, propertyChanged: OnSelectionPropertyChanged);
+            Colors.White, propertyChanged: OnInvalidateBody);
 
     public static readonly BindableProperty RangeBackgroundProperty =
         BindableProperty.Create(nameof(RangeBackground), typeof(Color), typeof(CalendarView),
-            Color.FromArgb("#BDD7F5"), propertyChanged: OnSelectionPropertyChanged);
+            Color.FromArgb("#BDD7F5"), propertyChanged: OnInvalidateBody);
 
     // ------------------------------------------------------------------ BindableProperties: Navigation limits
 
     public static readonly BindableProperty MinDateProperty =
-        BindableProperty.Create(nameof(MinDate), typeof(DateOnly?), typeof(CalendarView), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(MinDate), typeof(DateOnly?), typeof(CalendarView), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty MaxDateProperty =
-        BindableProperty.Create(nameof(MaxDate), typeof(DateOnly?), typeof(CalendarView), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(MaxDate), typeof(DateOnly?), typeof(CalendarView), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty DisabledDayTextColorProperty =
         BindableProperty.Create(nameof(DisabledDayTextColor), typeof(Color), typeof(CalendarView),
-            Color.FromArgb("#C0C0C0"), propertyChanged: OnRenderPropertyChanged);
+            Color.FromArgb("#C0C0C0"), propertyChanged: OnInvalidateAll);
 
     // ------------------------------------------------------------------ BindableProperties: Localization
 
@@ -92,204 +94,139 @@ public partial class CalendarView
     // ------------------------------------------------------------------ BindableProperties: Layout / Sizes
 
     public static readonly BindableProperty DateRowHeightProperty =
-        BindableProperty.Create(nameof(DateRowHeight), typeof(double), typeof(CalendarView), 26d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(DateRowHeight), typeof(double), typeof(CalendarView), 26d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty SlotRowHeightProperty =
-        BindableProperty.Create(nameof(SlotRowHeight), typeof(double), typeof(CalendarView), 17d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(SlotRowHeight), typeof(double), typeof(CalendarView), 17d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty DateNumberSizeProperty =
-        BindableProperty.Create(nameof(DateNumberSize), typeof(double), typeof(CalendarView), 22d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(DateNumberSize), typeof(double), typeof(CalendarView), 22d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty DateNumberMarginProperty =
-        BindableProperty.Create(nameof(DateNumberMargin), typeof(Thickness), typeof(CalendarView), new Thickness(4, 2, 0, 0), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(DateNumberMargin), typeof(Thickness), typeof(CalendarView), new Thickness(4, 2, 0, 0), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty DateNumberFontSizeProperty =
-        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView), 14d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView), 14d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty EventFontSizeProperty =
-        BindableProperty.Create(nameof(EventFontSize), typeof(double), typeof(CalendarView), 11d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(EventFontSize), typeof(double), typeof(CalendarView), 11d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty EventRowHeightProperty =
-        BindableProperty.Create(nameof(EventRowHeight), typeof(double), typeof(CalendarView), 15d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(EventRowHeight), typeof(double), typeof(CalendarView), 15d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty StampMarginEdgeProperty =
-        BindableProperty.Create(nameof(StampMarginEdge), typeof(double), typeof(CalendarView), 2d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(StampMarginEdge), typeof(double), typeof(CalendarView), 2d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty NavButtonWidthProperty =
-        BindableProperty.Create(nameof(NavButtonWidth), typeof(double), typeof(CalendarView), 44d);
+        BindableProperty.Create(nameof(NavButtonWidth), typeof(double), typeof(CalendarView), 44d, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty NavButtonHeightProperty =
-        BindableProperty.Create(nameof(NavButtonHeight), typeof(double), typeof(CalendarView), 44d);
+        BindableProperty.Create(nameof(NavButtonHeight), typeof(double), typeof(CalendarView), 44d, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty NavButtonFontSizeProperty =
-        BindableProperty.Create(nameof(NavButtonFontSize), typeof(double), typeof(CalendarView), 18d);
+        BindableProperty.Create(nameof(NavButtonFontSize), typeof(double), typeof(CalendarView), 18d, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty FirstDayOfWeekProperty =
         BindableProperty.Create(nameof(FirstDayOfWeek), typeof(DayOfWeek), typeof(CalendarView),
             DayOfWeek.Monday, propertyChanged: OnFirstDayOfWeekChanged);
 
     public static readonly BindableProperty SwipeEnabledProperty =
-        BindableProperty.Create(nameof(SwipeEnabled), typeof(bool), typeof(CalendarView), true, propertyChanged: OnSwipeEnabledChanged);
+        BindableProperty.Create(nameof(SwipeEnabled), typeof(bool), typeof(CalendarView), true);
 
     public static readonly BindableProperty HeaderPaddingProperty =
-        BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(16, 12, 16, 8));
+        BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(16, 12, 16, 8), propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty WeekdayHeaderFontSizeProperty =
-        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView), 14d);
+        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView), 14d, propertyChanged: OnInvalidateWeekdayHeader);
 
     public static readonly BindableProperty WeekdayHeaderPaddingProperty =
-        BindableProperty.Create(nameof(WeekdayHeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(0, 6, 0, 6));
+        BindableProperty.Create(nameof(WeekdayHeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(0, 6, 0, 6), propertyChanged: OnInvalidateWeekdayHeader);
 
     public static readonly BindableProperty YearFontSizeProperty =
-        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView), 14d);
+        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView), 14d, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty MonthFontSizeProperty =
-        BindableProperty.Create(nameof(MonthFontSize), typeof(double), typeof(CalendarView), 28d);
+        BindableProperty.Create(nameof(MonthFontSize), typeof(double), typeof(CalendarView), 28d, propertyChanged: OnInvalidateHeader);
 
     // ------------------------------------------------------------------ BindableProperties: Colors
 
     public static readonly BindableProperty GridLineColorProperty =
-        BindableProperty.Create(nameof(GridLineColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E0E0E0"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(GridLineColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E0E0E0"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty WeekdayTextColorProperty =
-        BindableProperty.Create(nameof(WeekdayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#1F1F1F"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(WeekdayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#1F1F1F"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty SaturdayTextColorProperty =
-        BindableProperty.Create(nameof(SaturdayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#2196F3"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(SaturdayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#2196F3"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty SundayTextColorProperty =
-        BindableProperty.Create(nameof(SundayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E53935"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(SundayTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E53935"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty OutsideMonthTextColorProperty =
-        BindableProperty.Create(nameof(OutsideMonthTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#BDBDBD"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(OutsideMonthTextColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#BDBDBD"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty OutsideMonthBackgroundProperty =
-        BindableProperty.Create(nameof(OutsideMonthBackground), typeof(Color), typeof(CalendarView), Color.FromArgb("#F2F2F2"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(OutsideMonthBackground), typeof(Color), typeof(CalendarView), Color.FromArgb("#F2F2F2"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty WeekendBackgroundProperty =
-        BindableProperty.Create(nameof(WeekendBackground), typeof(Color), typeof(CalendarView), Color.FromArgb("#FFF1F1"), propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(WeekendBackground), typeof(Color), typeof(CalendarView), Color.FromArgb("#FFF1F1"), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty TodayBackgroundProperty =
-        BindableProperty.Create(nameof(TodayBackground), typeof(Color), typeof(CalendarView), Colors.Black, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(TodayBackground), typeof(Color), typeof(CalendarView), Colors.Black, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty TodayTextColorProperty =
-        BindableProperty.Create(nameof(TodayTextColor), typeof(Color), typeof(CalendarView), Colors.White, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(TodayTextColor), typeof(Color), typeof(CalendarView), Colors.White, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty NavButtonColorProperty =
-        BindableProperty.Create(nameof(NavButtonColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#333333"));
+        BindableProperty.Create(nameof(NavButtonColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#333333"), propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty YearTextColorProperty =
-        BindableProperty.Create(nameof(YearTextColor), typeof(Color), typeof(CalendarView), Colors.Black);
+        BindableProperty.Create(nameof(YearTextColor), typeof(Color), typeof(CalendarView), Colors.Black, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty MonthTextColorProperty =
-        BindableProperty.Create(nameof(MonthTextColor), typeof(Color), typeof(CalendarView), Colors.Black);
+        BindableProperty.Create(nameof(MonthTextColor), typeof(Color), typeof(CalendarView), Colors.Black, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty WeekdayHeaderColorProperty =
-        BindableProperty.Create(nameof(WeekdayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#333333"));
+        BindableProperty.Create(nameof(WeekdayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#333333"), propertyChanged: OnInvalidateWeekdayHeader);
 
     public static readonly BindableProperty SaturdayHeaderColorProperty =
-        BindableProperty.Create(nameof(SaturdayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#2196F3"));
+        BindableProperty.Create(nameof(SaturdayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#2196F3"), propertyChanged: OnInvalidateWeekdayHeader);
 
     public static readonly BindableProperty SundayHeaderColorProperty =
-        BindableProperty.Create(nameof(SundayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E53935"));
+        BindableProperty.Create(nameof(SundayHeaderColor), typeof(Color), typeof(CalendarView), Color.FromArgb("#E53935"), propertyChanged: OnInvalidateWeekdayHeader);
 
     // ------------------------------------------------------------------ BindableProperties: Templates
 
-    // ヘッダー全体のカスタムテンプレート。null の場合はデフォルトの年月+ナビボタンを使用。BindingContext は MonthView
     public static readonly BindableProperty HeaderTemplateProperty =
         BindableProperty.Create(nameof(HeaderTemplate), typeof(DataTemplate), typeof(CalendarView),
             propertyChanged: OnHeaderTemplateChanged);
 
-    // 月インジケータのカスタムテンプレート。null の場合は MonthIndicatorEnabled に基づくデフォルト表示。BindingContext は MonthView
-    public static readonly BindableProperty MonthIndicatorTemplateProperty =
-        BindableProperty.Create(nameof(MonthIndicatorTemplate), typeof(DataTemplate), typeof(CalendarView),
-            propertyChanged: OnMonthIndicatorChanged);
-
-    // デフォルトの月インジケータ(大きな月数字)を表示するか。MonthIndicatorTemplate が設定されている場合は無視される
     public static readonly BindableProperty MonthIndicatorEnabledProperty =
         BindableProperty.Create(nameof(MonthIndicatorEnabled), typeof(bool), typeof(CalendarView),
-            false, propertyChanged: OnMonthIndicatorChanged);
+            false, propertyChanged: OnInvalidateAll);
 
-    // デフォルト月インジケータの文字色(半透明推奨)
     public static readonly BindableProperty MonthIndicatorColorProperty =
         BindableProperty.Create(nameof(MonthIndicatorColor), typeof(Color), typeof(CalendarView),
-            Color.FromArgb("#10000000"), propertyChanged: OnMonthIndicatorChanged);
+            Color.FromArgb("#10000000"), propertyChanged: OnInvalidateAll);
 
-    // デフォルト月インジケータのフォントサイズ
     public static readonly BindableProperty MonthIndicatorFontSizeProperty =
         BindableProperty.Create(nameof(MonthIndicatorFontSize), typeof(double), typeof(CalendarView),
-            160d, propertyChanged: OnMonthIndicatorChanged);
+            160d, propertyChanged: OnInvalidateAll);
 
     // ------------------------------------------------------------------ CLR Properties
 
-    public MonthView? View
-    {
-        get => (MonthView?)GetValue(ViewProperty);
-        set => SetValue(ViewProperty, value);
-    }
+    public MonthView? View { get => (MonthView?)GetValue(ViewProperty); set => SetValue(ViewProperty, value); }
+    public ICommand? PrevMonthCommand { get => (ICommand?)GetValue(PrevMonthCommandProperty); set => SetValue(PrevMonthCommandProperty, value); }
+    public ICommand? NextMonthCommand { get => (ICommand?)GetValue(NextMonthCommandProperty); set => SetValue(NextMonthCommandProperty, value); }
+    public ICommand? GoToTodayCommand { get => (ICommand?)GetValue(GoToTodayCommandProperty); set => SetValue(GoToTodayCommandProperty, value); }
+    public ICommand? DayTappedCommand { get => (ICommand?)GetValue(DayTappedCommandProperty); set => SetValue(DayTappedCommandProperty, value); }
+    public ICommand? EventTappedCommand { get => (ICommand?)GetValue(EventTappedCommandProperty); set => SetValue(EventTappedCommandProperty, value); }
 
-    public ICommand? PrevMonthCommand
-    {
-        get => (ICommand?)GetValue(PrevMonthCommandProperty);
-        set => SetValue(PrevMonthCommandProperty, value);
-    }
-
-    public ICommand? NextMonthCommand
-    {
-        get => (ICommand?)GetValue(NextMonthCommandProperty);
-        set => SetValue(NextMonthCommandProperty, value);
-    }
-
-    public ICommand? GoToTodayCommand
-    {
-        get => (ICommand?)GetValue(GoToTodayCommandProperty);
-        set => SetValue(GoToTodayCommandProperty, value);
-    }
-
-    public ICommand? DayTappedCommand
-    {
-        get => (ICommand?)GetValue(DayTappedCommandProperty);
-        set => SetValue(DayTappedCommandProperty, value);
-    }
-
-    public ICommand? EventTappedCommand
-    {
-        get => (ICommand?)GetValue(EventTappedCommandProperty);
-        set => SetValue(EventTappedCommandProperty, value);
-    }
-
-    public CalendarSelectionMode SelectionMode
-    {
-        get => (CalendarSelectionMode)GetValue(SelectionModeProperty);
-        set => SetValue(SelectionModeProperty, value);
-    }
-
-    public DateOnly? SelectedDate
-    {
-        get => (DateOnly?)GetValue(SelectedDateProperty);
-        set => SetValue(SelectedDateProperty, value);
-    }
-
-#pragma warning disable CA2227
-    public ObservableCollection<DateOnly>? SelectedDates
-    {
-        get => (ObservableCollection<DateOnly>?)GetValue(SelectedDatesProperty);
-        set => SetValue(SelectedDatesProperty, value);
-    }
-#pragma warning restore CA2227
-
-    public DateOnly? SelectedStartDate
-    {
-        get => (DateOnly?)GetValue(SelectedStartDateProperty);
-        set => SetValue(SelectedStartDateProperty, value);
-    }
-
-    public DateOnly? SelectedEndDate
-    {
-        get => (DateOnly?)GetValue(SelectedEndDateProperty);
-        set => SetValue(SelectedEndDateProperty, value);
-    }
-
+    public CalendarSelectionMode SelectionMode { get => (CalendarSelectionMode)GetValue(SelectionModeProperty); set => SetValue(SelectionModeProperty, value); }
+    public DateOnly? SelectedDate { get => (DateOnly?)GetValue(SelectedDateProperty); set => SetValue(SelectedDateProperty, value); }
+    public ObservableCollection<DateOnly>? SelectedDates => (ObservableCollection<DateOnly>?)GetValue(SelectedDatesProperty);
+    public DateOnly? SelectedStartDate { get => (DateOnly?)GetValue(SelectedStartDateProperty); set => SetValue(SelectedStartDateProperty, value); }
+    public DateOnly? SelectedEndDate { get => (DateOnly?)GetValue(SelectedEndDateProperty); set => SetValue(SelectedEndDateProperty, value); }
     public Color SelectedDayBackground { get => (Color)GetValue(SelectedDayBackgroundProperty); set => SetValue(SelectedDayBackgroundProperty, value); }
     public Color SelectedDayTextColor { get => (Color)GetValue(SelectedDayTextColorProperty); set => SetValue(SelectedDayTextColorProperty, value); }
     public Color RangeBackground { get => (Color)GetValue(RangeBackgroundProperty); set => SetValue(RangeBackgroundProperty, value); }
@@ -298,11 +235,7 @@ public partial class CalendarView
     public DateOnly? MaxDate { get => (DateOnly?)GetValue(MaxDateProperty); set => SetValue(MaxDateProperty, value); }
     public Color DisabledDayTextColor { get => (Color)GetValue(DisabledDayTextColorProperty); set => SetValue(DisabledDayTextColorProperty, value); }
 
-    public CultureInfo? Culture
-    {
-        get => (CultureInfo?)GetValue(CultureProperty);
-        set => SetValue(CultureProperty, value);
-    }
+    public CultureInfo? Culture { get => (CultureInfo?)GetValue(CultureProperty); set => SetValue(CultureProperty, value); }
 
     public double DateRowHeight { get => (double)GetValue(DateRowHeightProperty); set => SetValue(DateRowHeightProperty, value); }
     public double SlotRowHeight { get => (double)GetValue(SlotRowHeightProperty); set => SetValue(SlotRowHeightProperty, value); }
@@ -340,559 +273,215 @@ public partial class CalendarView
     public Color SundayHeaderColor { get => (Color)GetValue(SundayHeaderColorProperty); set => SetValue(SundayHeaderColorProperty, value); }
 
     public DataTemplate? HeaderTemplate { get => (DataTemplate?)GetValue(HeaderTemplateProperty); set => SetValue(HeaderTemplateProperty, value); }
-    public DataTemplate? MonthIndicatorTemplate { get => (DataTemplate?)GetValue(MonthIndicatorTemplateProperty); set => SetValue(MonthIndicatorTemplateProperty, value); }
     public bool MonthIndicatorEnabled { get => (bool)GetValue(MonthIndicatorEnabledProperty); set => SetValue(MonthIndicatorEnabledProperty, value); }
     public Color MonthIndicatorColor { get => (Color)GetValue(MonthIndicatorColorProperty); set => SetValue(MonthIndicatorColorProperty, value); }
     public double MonthIndicatorFontSize { get => (double)GetValue(MonthIndicatorFontSizeProperty); set => SetValue(MonthIndicatorFontSizeProperty, value); }
 
-    // ------------------------------------------------------------------ Constructor
+    // ------------------------------------------------------------------ Internal constants
 
     private const int DaysPerWeek = 7;
     private const int MaxWeekRows = 6;
-
-    // ------------------------------------------------------------------ Swipe & animation tuning
-
-    // スワイプで月切り替えが発動するまでの最小水平移動距離 (dp)。小さいほど反応が速い
     private const double SwipeThreshold = 36d;
-
-    // フリック(短い素早いスワイプ)を検知する最小ステップ幅 (dp)。小さいほど素早いフリックに反応しやすい
     private const double SwipeFlickThreshold = 20d;
-
-    // 水平方向のずれが垂直方向の何倍以上でないとスワイプと見なさない。大きいほど縦スクロールとの誤検知が減る
     private const double SwipeHorizontalBias = 1.25d;
+    private const string MonthSlideAnimationName = "CalendarViewMonthSlide";
 
-    private readonly WeekRowVisual[] weekRows = new WeekRowVisual[MaxWeekRows];
+    // 絵文字スタンプ用タイプフェイス(Skia はフォントフォールバックしないため明示解決する)
+    private static readonly SKTypeface EmojiTypeface =
+        SKFontManager.Default.MatchCharacter(0x1F431) ?? SKTypeface.Default;
 
-    private sealed class EventBorderVisual
+    // 絵文字の異体字セレクタ(U+FE0F)。絵文字フォントでは独立グリフ(豆腐)になるため描画前に除去する
+    private static readonly string VariationSelector = ((char)0xFE0F).ToString();
+
+    // ------------------------------------------------------------------ Hit-test records (filled each paint)
+
+    // Day cell hit areas: [weekRow][col]
+    private readonly SKRect[][] dayCellRects = CreateDayCellRects();
+
+    private static SKRect[][] CreateDayCellRects()
     {
-        private readonly RoundRectangle shape = new();
-
-        public Label Label { get; } = new()
+        var rows = new SKRect[MaxWeekRows][];
+        for (var i = 0; i < MaxWeekRows; i++)
         {
-            FontAttributes = FontAttributes.Bold,
-            LineBreakMode = LineBreakMode.TailTruncation,
-            VerticalTextAlignment = TextAlignment.Center
-        };
-
-        public Border Root { get; }
-
-        public TapGestureRecognizer TapGesture { get; } = new();
-
-        public EventBorderVisual()
-        {
-            Root = new Border { StrokeThickness = 0, Content = Label };
-            Root.GestureRecognizers.Add(TapGesture);
+            rows[i] = new SKRect[DaysPerWeek];
         }
-
-        public void Apply(EventPlacement placement, double fontSize, double rowHeight)
-        {
-            var evt = placement.Event;
-            Label.Text = evt.Title;
-            Label.FontSize = fontSize;
-            Label.TextColor = evt.TextColor;
-            Label.TextDecorations = evt.Underline ? TextDecorations.Underline : TextDecorations.None;
-
-            if (evt.Style == ScheduleStyle.Filled)
-            {
-                var left = placement.ContinuesFromPreviousWeek ? 0 : 2;
-                var right = placement.ContinuesToNextWeek ? 0 : 2;
-                shape.CornerRadius = new CornerRadius(left, right, left, right);
-                Root.BackgroundColor = evt.BackgroundColor;
-                Root.StrokeShape = shape;
-                Root.Padding = new Thickness(4, 0);
-                Root.HeightRequest = rowHeight;
-                Root.Margin = new Thickness(
-                    placement.ContinuesFromPreviousWeek ? 0 : 1, 1,
-                    placement.ContinuesToNextWeek ? 0 : 1, 0);
-            }
-            else
-            {
-                Root.BackgroundColor = Colors.Transparent;
-                Root.StrokeShape = null;
-                Root.Padding = new Thickness(4, 0);
-                Root.HeightRequest = rowHeight;
-                Root.Margin = new Thickness(1, 1, 1, 0);
-            }
-
-            TapGesture.CommandParameter = evt;
-        }
+        return rows;
     }
 
-    private sealed class WeekRowVisual
-    {
-        public WeekRowVisual()
-        {
-            Root = new Grid
-            {
-                ColumnSpacing = 0,
-                RowSpacing = 0,
-                VerticalOptions = LayoutOptions.Fill,
-                HorizontalOptions = LayoutOptions.Fill
-            };
-            for (var i = 0; i < DaysPerWeek; i++)
-            {
-                Root.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            }
+    // Event hit areas for the current month
+    private readonly record struct EventHitRect(SKRect Rect, ScheduleEvent Event);
 
-            for (var i = 0; i < DaysPerWeek; i++)
-            {
-                var day = new DayCellVisual();
-                Days[i] = day;
+    private readonly List<EventHitRect> eventHitRects = [];
 
-                Grid.SetColumn(day.Background, i);
-                Grid.SetRow(day.Background, 0);
-                Root.Children.Add(day.Background);
+    // Cached week row info for hit testing
+    private int renderedWeekCount;
 
-                Grid.SetColumn(day.RangeBackground, i);
-                Grid.SetRow(day.RangeBackground, 0);
-                Root.Children.Add(day.RangeBackground);
-            }
+    // ------------------------------------------------------------------ Swipe state
 
-            Grid.SetRow(TopDivider, 0);
-            Grid.SetColumnSpan(TopDivider, DaysPerWeek);
-            Root.Children.Add(TopDivider);
+    private double panStartX;
+    private double panStartY;
+    private double lastPanX;
+    private bool panConsumed;
 
-            for (var i = 0; i < VerticalDividers.Length; i++)
-            {
-                var divider = VerticalDividers[i];
-                Grid.SetColumn(divider, i);
-                Grid.SetRow(divider, 0);
-                Root.Children.Add(divider);
-            }
-
-            for (var i = 0; i < DaysPerWeek; i++)
-            {
-                var day = Days[i];
-                Grid.SetColumn(day.TapTarget, i);
-                Grid.SetRow(day.TapTarget, 0);
-                Root.Children.Add(day.TapTarget);
-
-                Grid.SetColumn(day.DateBubble, i);
-                Grid.SetRow(day.DateBubble, 0);
-                Root.Children.Add(day.DateBubble);
-            }
-        }
-
-        public Grid Root { get; }
-
-        public DayCellVisual[] Days { get; } = new DayCellVisual[DaysPerWeek];
-
-        public BoxView TopDivider { get; } = new()
-        {
-            HeightRequest = 0.5,
-            VerticalOptions = LayoutOptions.Start,
-            InputTransparent = true
-        };
-
-#pragma warning disable IDE0028
-        public BoxView[] VerticalDividers { get; } = Enumerable.Range(0, DaysPerWeek - 1)
-            .Select(_ => new BoxView
-            {
-                WidthRequest = 0.5,
-                HorizontalOptions = LayoutOptions.End,
-                InputTransparent = true
-            })
-            .ToArray();
-#pragma warning restore IDE0028
-
-        public List<EventBorderVisual> EventPool { get; } = [];
-
-        // [DIFF-UPDATE: UpdateRows] slotCount が変わらなければ RowDefinitions を再生成しない
-        // [DIFF-UPDATE: HideDynamic] 前回使用した数だけループすれば十分
-        internal int LastSlotCount { get; set; } = -1;
-
-        internal int ActiveEventCount { get; set; }
-
-        internal int[] ActiveStampCounts { get; } = new int[DaysPerWeek];
-
-        public void UpdateRows(int slotCount, double dateRowHeight, double slotRowHeight)
-        {
-            // [DIFF-UPDATE: UpdateRows] slotCount が同じなら再構築をスキップ
-            if (slotCount == LastSlotCount)
-            {
-                return;
-            }
-            LastSlotCount = slotCount;
-
-            var totalRows = 2 + slotCount;
-            Root.RowDefinitions.Clear();
-            Root.RowDefinitions.Add(new RowDefinition(new GridLength(dateRowHeight)));
-            for (var i = 0; i < slotCount; i++)
-            {
-                Root.RowDefinitions.Add(new RowDefinition(new GridLength(slotRowHeight)));
-            }
-            Root.RowDefinitions.Add(new RowDefinition(GridLength.Star));
-
-            for (var i = 0; i < DaysPerWeek; i++)
-            {
-                Grid.SetRowSpan(Days[i].Background, totalRows);
-                Grid.SetRowSpan(Days[i].RangeBackground, totalRows);
-                Grid.SetRowSpan(Days[i].TapTarget, totalRows);
-            }
-            foreach (var divider in VerticalDividers)
-            {
-                Grid.SetRowSpan(divider, totalRows);
-            }
-        }
-
-        // Hide pooled event and stamp views without removing them from the visual tree.
-        public void HideDynamicViews()
-        {
-            // [DIFF-UPDATE: HideDynamic] 前回使用数だけループして非表示にする(全件走査を回避)
-            for (var i = 0; i < ActiveEventCount; i++)
-            {
-                EventPool[i].Root.IsVisible = false;
-            }
-            ActiveEventCount = 0;
-
-            for (var c = 0; c < DaysPerWeek; c++)
-            {
-                var pool = Days[c].StampLabelPool;
-                var count = ActiveStampCounts[c];
-                for (var i = 0; i < count; i++)
-                {
-                    pool[i].IsVisible = false;
-                }
-                ActiveStampCounts[c] = 0;
-            }
-        }
-    }
-
-    private sealed class DayCellVisual
-    {
-        public BoxView Background { get; } = new() { InputTransparent = true, IsVisible = false };
-
-        public BoxView RangeBackground { get; } = new() { InputTransparent = true, IsVisible = false };
-
-        public Border TapTarget { get; } = new()
-        {
-            BackgroundColor = Colors.Transparent,
-            StrokeThickness = 0
-        };
-
-        public Label DateLabel { get; } = new()
-        {
-            FontAttributes = FontAttributes.Bold,
-            HorizontalTextAlignment = TextAlignment.Center,
-            VerticalTextAlignment = TextAlignment.Center,
-            InputTransparent = true
-        };
-
-        public Border DateBubble { get; }
-
-        public TapGestureRecognizer TapGesture { get; } = new();
-
-        public PanGestureRecognizer PanGesture { get; } = new();
-
-        public Command<DayView>? TapCommand { get; set; }
-
-        // スタンプ表示用の再利用可能な Label プール
-        public List<Label> StampLabelPool { get; } = [];
-
-        // [DIFF-UPDATE: DateBubble] RoundRectangle を毎回 new せず同一インスタンスを再利用
-
-        internal RoundRectangle DateBubbleShape { get; } = new() { CornerRadius = new CornerRadius(2) };
-
-        public DayCellVisual()
-        {
-            DateBubble = new Border
-            {
-                StrokeThickness = 0,
-                HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.Start,
-                Padding = 0,
-                InputTransparent = true,
-                Content = DateLabel
-            };
-            TapTarget.GestureRecognizers.Add(TapGesture);
-            TapTarget.GestureRecognizers.Add(PanGesture);
-        }
-    }
-
-    // Direction of the last month navigation: +1 = forward (next), -1 = backward (prev), 0 = jump
-    private int lastNavDirection;
-    private int previousYear;
-    private int previousMonth;
-
-    // [DIFF-UPDATE: Header] Nav ボタン・パディングなどの不変プロパティは初回のみ設定
-    private bool headerStyleInitialized;
+    // ------------------------------------------------------------------ Constructor
 
     public CalendarView()
     {
         InitializeComponent();
 
-        // Pre-create the six fixed week rows and forty-two fixed day cells.
-        for (var i = 0; i < MaxWeekRows; i++)
-        {
-            var row = new WeekRowVisual();
-            Grid.SetRow(row.Root, i);
-            WeeksHost.Children.Add(row.Root);
-            weekRows[i] = row;
-        }
+        UpdateHeaderStyle();
 
-        // 曜日ヘッダーは初期化時に一度だけ構築する(FirstDayOfWeek/Culture変更時に再構築)
-        UpdateWeekdayHeaderLabels();
+        // Attach PanGestureRecognizer to the body canvas for swipe month navigation and tap
+        var pan = new PanGestureRecognizer();
+        pan.PanUpdated += OnPanUpdated;
+        BodyCanvas.GestureRecognizers.Add(pan);
 
-        // ヘッダー・月インジケータは初期状態をデフォルトで確立する
-        ApplyHeaderTemplate();
-        ApplyMonthIndicatorTemplate();
-
-        AttachSwipeGestures();
+        // Tap on body canvas: resolved in OnPanUpdated Completed with no movement
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += OnBodyTapped;
+        BodyCanvas.GestureRecognizers.Add(tap);
     }
 
     // ------------------------------------------------------------------ Property changed callbacks
 
     private static void OnViewChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if ((bindable is CalendarView view) && (newValue is MonthView month))
-        {
-            view.Render(month);
-        }
+        var self = (CalendarView)bindable;
+        self.UpdateHeaderContent();
+        self.InvalidateCanvases();
+        self.AnimateMonthSlide(oldValue as MonthView, newValue as MonthView);
     }
 
-    private static void OnRenderPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    // 月切替時にボディを進行方向から軽くスライドさせる
+    private void AnimateMonthSlide(MonthView? oldView, MonthView? newView)
     {
-        if (bindable is CalendarView view)
+        if ((oldView is null) || (newView is null))
         {
-            // [DIFF-UPDATE: DayCell] 色などのプロパティ変更時はキャッシュを破棄して全セルを再描画
-            view.InvalidateDayCellCaches();
-            if (view.View is { } month)
+            return;
+        }
+
+        var direction = ((newView.Year * 12) + newView.Month) >= ((oldView.Year * 12) + oldView.Month) ? 1 : -1;
+
+        BodyCanvas.AbortAnimation(MonthSlideAnimationName);
+        BodyCanvas.Animate(
+            MonthSlideAnimationName,
+            v =>
             {
-                view.Render(month);
-            }
-        }
+                BodyCanvas.TranslationX = direction * 48d * (1 - v);
+                BodyCanvas.Opacity = 0.4 + (0.6 * v);
+            },
+            16,
+            220,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                BodyCanvas.TranslationX = 0;
+                BodyCanvas.Opacity = 1;
+            });
     }
 
-    // BindableProperty (色・サイズ) 変更時にキャッシュを無効化する
-    private void InvalidateDayCellCaches()
+    private static void OnInvalidateAll(BindableObject bindable, object oldValue, object newValue)
     {
-        // [DIFF-UPDATE: Header] 不変プロパティも再設定させる
-        headerStyleInitialized = false;
-        // [DIFF-UPDATE: UpdateRows] slotCount キャッシュをリセット
-        foreach (var row in weekRows)
-        {
-            row.LastSlotCount = -1;
-        }
+        var self = (CalendarView)bindable;
+        self.InvalidateCanvases();
+    }
+
+    private static void OnInvalidateBody(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (CalendarView)bindable;
+        self.BodyCanvas.InvalidateSurface();
+    }
+
+    private static void OnInvalidateHeader(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (CalendarView)bindable;
+        self.UpdateHeaderStyle();
+        self.UpdateHeaderContent();
+    }
+
+    private static void OnInvalidateWeekdayHeader(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (CalendarView)bindable;
+        self.WeekdayHeaderCanvas.InvalidateSurface();
     }
 
     private static void OnFirstDayOfWeekChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is CalendarView view)
-        {
-            view.UpdateWeekdayHeaderLabels();
-            if (view.View is { } month)
-            {
-                view.Render(month);
-            }
-        }
-    }
-
-    private static void OnSwipeEnabledChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is CalendarView view)
-        {
-            view.UpdateSwipeGestureState((bool)newValue);
-        }
-    }
-
-    private static void OnHeaderTemplateChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is CalendarView view)
-        {
-            view.ApplyHeaderTemplate();
-            if (view.View is { } month)
-            {
-                view.UpdateHeaderContent(month);
-            }
-        }
-    }
-
-    private static void OnMonthIndicatorChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is CalendarView view)
-        {
-            view.ApplyMonthIndicatorTemplate();
-            if (view.View is { } month)
-            {
-                view.UpdateMonthIndicator(month);
-            }
-        }
-    }
-
-    private static void OnSelectionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if ((bindable is CalendarView view) && (view.View is { } month))
-        {
-            view.RebuildWeeksHostOnly(month);
-        }
-    }
-
-    private static void OnSelectedDatesChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var view = (CalendarView)bindable;
-        if (oldValue is ObservableCollection<DateOnly> old)
-        {
-            old.CollectionChanged -= view.OnSelectedDatesCollectionChanged;
-        }
-        if (newValue is ObservableCollection<DateOnly> next)
-        {
-            next.CollectionChanged += view.OnSelectedDatesCollectionChanged;
-        }
-        if (view.View is { } month)
-        {
-            view.RebuildWeeksHostOnly(month);
-        }
+        var self = (CalendarView)bindable;
+        self.WeekdayHeaderCanvas.InvalidateSurface();
+        self.BodyCanvas.InvalidateSurface();
     }
 
     private static void OnCultureChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is CalendarView view)
+        var self = (CalendarView)bindable;
+        self.WeekdayHeaderCanvas.InvalidateSurface();
+        self.BodyCanvas.InvalidateSurface();
+        self.UpdateHeaderContent();
+    }
+
+    private static void OnSelectedDatesChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (CalendarView)bindable;
+        if (oldValue is ObservableCollection<DateOnly> old)
         {
-            view.UpdateWeekdayHeaderLabels();
-            if (view.View is { } month)
-            {
-                view.Render(month);
-            }
+            old.CollectionChanged -= self.OnSelectedDatesCollectionChanged;
         }
+        if (newValue is ObservableCollection<DateOnly> next)
+        {
+            next.CollectionChanged += self.OnSelectedDatesCollectionChanged;
+        }
+        self.BodyCanvas.InvalidateSurface();
     }
 
     private void OnSelectedDatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (View is { } month)
-        {
-            RebuildWeeksHostOnly(month);
-        }
+        BodyCanvas.InvalidateSurface();
     }
 
-    // ------------------------------------------------------------------ Render
-
-    private void Render(MonthView month)
+    private static void OnHeaderTemplateChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        var sw = Stopwatch.StartNew();
-
-        // Determine navigation direction from previous displayed month.
-        // lastNavDirection is pre-set by swipe; otherwise auto-detect from date comparison.
-        if ((lastNavDirection == 0) && (previousYear != 0))
-        {
-            var prevOrdinal = (previousYear * 12) + previousMonth;
-            var newOrdinal = (month.Year * 12) + month.Month;
-            lastNavDirection = newOrdinal > prevOrdinal ? 1 : newOrdinal < prevOrdinal ? -1 : 0;
-        }
-
-        previousYear = month.Year;
-        previousMonth = month.Month;
-
-        var t0 = sw.Elapsed;
-
-        UpdateHeaderContent(month);
-        UpdateMonthIndicator(month);
-
-        // [DIFF-UPDATE: Header] フォント・サイズ・パディングなどの不変プロパティは初回のみ設定
-        if (!headerStyleInitialized)
-        {
-            headerStyleInitialized = true;
-            YearLabel.FontSize = YearFontSize;
-            MonthLabel.FontSize = MonthFontSize;
-
-            PrevButton.TextColor = NavButtonColor;
-            PrevButton.FontSize = NavButtonFontSize;
-            PrevButton.WidthRequest = NavButtonWidth;
-            PrevButton.HeightRequest = NavButtonHeight;
-            NextButton.TextColor = NavButtonColor;
-            NextButton.FontSize = NavButtonFontSize;
-            NextButton.WidthRequest = NavButtonWidth;
-            NextButton.HeightRequest = NavButtonHeight;
-
-            HeaderGrid.Padding = HeaderPadding;
-            WeekdayHeaderGrid.Padding = WeekdayHeaderPadding;
-        }
-
-        var t1 = sw.Elapsed;
-
-        var slotCount = Math.Max(2, month.Weeks.Count > 0 ? month.Weeks.Max(static w => w.SlotCount) : 0);
-
-        var t2 = sw.Elapsed;
-
-        RebuildWeeksHost(month, slotCount);
-
-        var t3 = sw.Elapsed;
-
-        //AnimateSlideAsync().FireAndForget();
-        lastNavDirection = 0;
-
-        sw.Stop();
-        Debug.WriteLine(
-            $"[Render] {month.Year}/{month.Month:D2} {sw.Elapsed.TotalMilliseconds:F3}ms" +
-            $" | Header: {(t1 - t0).TotalMilliseconds:F3}ms" +
-            $" | SlotCount: {(t2 - t1).TotalMilliseconds:F3}ms" +
-            $" | RebuildWeeksHost: {(t3 - t2).TotalMilliseconds:F3}ms");
+        var self = (CalendarView)bindable;
+        self.ApplyHeaderTemplate();
+        self.UpdateHeaderContent();
     }
 
-    private void RebuildWeeksHost(MonthView month, int slotCount)
+    // ------------------------------------------------------------------ Header
+
+    private void UpdateHeaderStyle()
     {
-        var sw = Stopwatch.StartNew();
-        var weekCount = month.Weeks.Count;
-
-        for (var i = 0; i < MaxWeekRows; i++)
-        {
-            var row = weekRows[i];
-            row.Root.IsVisible = i < weekCount;
-            if (i < weekCount)
-            {
-                var t0 = sw.Elapsed;
-                UpdateWeekRow(row, month.Weeks[i], slotCount);
-                var t1 = sw.Elapsed;
-                Debug.WriteLine(
-                    $"[RebuildWeeksHost] week[{i}] {(t1 - t0).TotalMilliseconds:F3}ms");
-            }
-            else
-            {
-                row.HideDynamicViews();
-            }
-        }
-
-        sw.Stop();
-        Debug.WriteLine($"[RebuildWeeksHost] total {sw.Elapsed.TotalMilliseconds:F3}ms");
+        PrevButton.TextColor = NavButtonColor;
+        PrevButton.FontSize = NavButtonFontSize;
+        PrevButton.WidthRequest = NavButtonWidth;
+        PrevButton.HeightRequest = NavButtonHeight;
+        NextButton.TextColor = NavButtonColor;
+        NextButton.FontSize = NavButtonFontSize;
+        NextButton.WidthRequest = NavButtonWidth;
+        NextButton.HeightRequest = NavButtonHeight;
+        HeaderGrid.Padding = HeaderPadding;
+        YearLabel.FontSize = YearFontSize;
+        MonthLabel.FontSize = MonthFontSize;
     }
 
-    // Update only fixed day-cell state. Used when selection/color state changes.
-    private void RebuildWeeksHostOnly(MonthView month)
-    {
-        for (var weekIndex = 0; weekIndex < Math.Min(MaxWeekRows, month.Weeks.Count); weekIndex++)
-        {
-            var row = weekRows[weekIndex];
-            var week = month.Weeks[weekIndex];
-            for (var dayIndex = 0; dayIndex < DaysPerWeek; dayIndex++)
-            {
-                UpdateDayCell(row.Days[dayIndex], week.Days[dayIndex]);
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------ Template helpers
-
-    // HeaderTemplate が設定されていれば HeaderContentHost にカスタムビューを生成し、
-    // 未設定の場合はデフォルトの HeaderGrid に切り替える
     private void ApplyHeaderTemplate()
     {
-        var template = HeaderTemplate;
-        if (template is null)
+        if (HeaderTemplate is { } template)
         {
-            // デフォルトに戻す
-            HeaderContentHost.Content = HeaderGrid;
+            HeaderContentHost.Content = (View)template.CreateContent();
         }
         else
         {
-            var view = (View)template.CreateContent();
-            HeaderContentHost.Content = view;
+            HeaderContentHost.Content = HeaderGrid;
         }
     }
 
-    // ヘッダーのコンテンツに現在の月を反映させる。
-    // カスタムテンプレートの場合は BindingContext に MonthView をセット。
-    // デフォルトの場合は YearLabel / MonthLabel を直接更新
-    private void UpdateHeaderContent(MonthView month)
+    private void UpdateHeaderContent()
     {
+        if (View is not { } month)
+        {
+            return;
+        }
+
         if (HeaderTemplate is not null)
         {
             HeaderContentHost.BindingContext = month;
@@ -906,81 +495,480 @@ public partial class CalendarView
         }
     }
 
-    // MonthIndicatorTemplate / MonthIndicatorEnabled に応じて MonthIndicatorHost にビューを設定する
-    private void ApplyMonthIndicatorTemplate()
+    // ------------------------------------------------------------------ Canvas invalidation
+
+    private void InvalidateCanvases()
     {
-        var template = MonthIndicatorTemplate;
-        if (template is not null)
-        {
-            MonthIndicatorHost.Content = (View)template.CreateContent();
-            MonthIndicatorHost.IsVisible = true;
-        }
-        else if (MonthIndicatorEnabled)
-        {
-            MonthIndicatorHost.Content = BuildDefaultMonthIndicator();
-            MonthIndicatorHost.IsVisible = true;
-        }
-        else
-        {
-            MonthIndicatorHost.Content = null;
-            MonthIndicatorHost.IsVisible = false;
-        }
+        WeekdayHeaderCanvas.InvalidateSurface();
+        BodyCanvas.InvalidateSurface();
     }
 
-    // 月インジケータのコンテンツに現在の月を反映させる
-    private void UpdateMonthIndicator(MonthView month)
-    {
-        if (MonthIndicatorTemplate is not null)
-        {
-            MonthIndicatorHost.BindingContext = month;
-        }
-        else if (MonthIndicatorEnabled && (MonthIndicatorHost.Content is Label indicatorLabel))
-        {
-            indicatorLabel.Text = month.Month.ToString(CultureInfo.InvariantCulture);
-            indicatorLabel.TextColor = MonthIndicatorColor;
-            indicatorLabel.FontSize = MonthIndicatorFontSize;
-        }
-    }
+    // ------------------------------------------------------------------ Weekday header paint
 
-    private static Label BuildDefaultMonthIndicator() => new()
+    private void OnWeekdayHeaderPaint(object? sender, SKPaintSurfaceEventArgs e)
     {
-        HorizontalTextAlignment = TextAlignment.Center,
-        VerticalTextAlignment = TextAlignment.Center,
-        FontAttributes = FontAttributes.Bold,
-        InputTransparent = true
-    };
+        var canvas = e.Surface.Canvas;
+        var info = e.Info;
+        canvas.Clear();
 
-    private void UpdateWeekdayHeaderLabels()
-    {
-        WeekdayHeaderGrid.Children.Clear();
+        var density = (float)(info.Width / WeekdayHeaderCanvas.Width);
+        var colWidth = (float)info.Width / DaysPerWeek;
+        var padTop = (float)(WeekdayHeaderPadding.Top * density);
+        var padBottom = (float)(WeekdayHeaderPadding.Bottom * density);
+
+        // SKTypeface.Default は日本語グリフを持たないためアプリ内蔵フォントを使う
+        using var font = new SKFont(SocialFonts.NotoSerifJP);
+        font.Size = (float)(WeekdayHeaderFontSize * density);
+        using var paint = new SKPaint();
+        paint.IsAntialias = true;
+
         var start = (int)FirstDayOfWeek;
         for (var i = 0; i < DaysPerWeek; i++)
         {
-            var dayOfWeek = (DayOfWeek)((start + i) % DaysPerWeek);
-            var label = new Label
+            var dow = (DayOfWeek)((start + i) % DaysPerWeek);
+            paint.Color = GetWeekdayHeaderSkColor(dow);
+            var text = GetDayOfWeekShortName(dow);
+            var x = (colWidth * i) + (colWidth / 2f);
+            // vertically center text within padding area
+            var metrics = font.Metrics;
+            var textHeight = metrics.Descent - metrics.Ascent;
+            var y = padTop + ((info.Height - padTop - padBottom - textHeight) / 2f) - metrics.Ascent;
+            canvas.DrawText(text, x, y, SKTextAlign.Center, font, paint);
+        }
+        _ = padBottom; // suppress warning
+    }
+
+    // ------------------------------------------------------------------ Body paint
+
+    private void OnBodyPaint(object? sender, SKPaintSurfaceEventArgs e)
+    {
+        var canvas = e.Surface.Canvas;
+        var info = e.Info;
+        canvas.Clear();
+
+        if (View is not { } month)
+        {
+            return;
+        }
+
+        var density = (float)(info.Width / BodyCanvas.Width);
+        var weekCount = month.Weeks.Count;
+        renderedWeekCount = weekCount;
+
+        var colWidth = (float)info.Width / DaysPerWeek;
+
+        var dateRowH = (float)(DateRowHeight * density);
+        var slotRowH = (float)(SlotRowHeight * density);
+
+        // Total height available per week row
+        var rowH = (float)info.Height / weekCount;
+
+        // Clear hit-test data
+        eventHitRects.Clear();
+
+        // 月番号ウォーターマーク(セル背景より先に描き、背景付きセルの下に沈める)
+        if (MonthIndicatorEnabled)
+        {
+            using var indicatorFont = new SKFont(SocialFonts.NotoSerifJP);
+            indicatorFont.Size = (float)(MonthIndicatorFontSize * density);
+            indicatorFont.Embolden = true;
+            using var indicatorPaint = new SKPaint();
+            indicatorPaint.IsAntialias = true;
+            indicatorPaint.Color = MonthIndicatorColor.ToSKColor();
+            var indicatorMetrics = indicatorFont.Metrics;
+            var indicatorY = ((info.Height - (indicatorMetrics.Descent - indicatorMetrics.Ascent)) / 2f) - indicatorMetrics.Ascent;
+            canvas.DrawText(
+                month.Month.ToString(CultureInfo.InvariantCulture),
+                info.Width / 2f,
+                indicatorY,
+                SKTextAlign.Center,
+                indicatorFont,
+                indicatorPaint);
+        }
+
+        using var fillPaint = new SKPaint();
+        fillPaint.IsAntialias = false;
+        // SKTypeface.Default は日本語グリフを持たないためアプリ内蔵フォントを使う
+        using var textFont = new SKFont(SocialFonts.NotoSerifJP);
+        using var textPaint = new SKPaint();
+        textPaint.IsAntialias = true;
+        // 絵文字スタンプは専用タイプフェイスで描く
+        using var stampFont = new SKFont(EmojiTypeface);
+        using var eventTextFont = new SKFont(SocialFonts.NotoSerifJP);
+        eventTextFont.Size = (float)(EventFontSize * density);
+        using var eventTextPaint = new SKPaint();
+        eventTextPaint.IsAntialias = true;
+        using var dividerPaint = new SKPaint();
+        dividerPaint.Color = GridLineColor.ToSKColor();
+        dividerPaint.StrokeWidth = density * 0.5f;
+        dividerPaint.IsAntialias = false;
+
+        for (var weekIndex = 0; weekIndex < weekCount; weekIndex++)
+        {
+            var week = month.Weeks[weekIndex];
+            var weekTop = rowH * weekIndex;
+            var weekBottom = weekTop + rowH;
+
+            // Top divider
+            canvas.DrawLine(0, weekTop, info.Width, weekTop, dividerPaint);
+
+            for (var col = 0; col < DaysPerWeek; col++)
             {
-                Text = GetDayOfWeekShortName(dayOfWeek),
-                FontSize = WeekdayHeaderFontSize,
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = dayOfWeek == DayOfWeek.Saturday ? SaturdayHeaderColor
-                    : dayOfWeek == DayOfWeek.Sunday ? SundayHeaderColor
-                    : WeekdayHeaderColor
-            };
-            Grid.SetColumn(label, i);
-            WeekdayHeaderGrid.Children.Add(label);
+                var day = week.Days[col];
+                var cellLeft = colWidth * col;
+                var cellRight = cellLeft + colWidth;
+                var cellRect = new SKRect(cellLeft, weekTop, cellRight, weekBottom);
+
+                // Store for hit-testing
+                dayCellRects[weekIndex][col] = cellRect;
+
+                // Cell background
+                var bgColor = GetCellBgSkColor(day);
+                if (bgColor != SKColor.Empty)
+                {
+                    fillPaint.Color = bgColor;
+                    canvas.DrawRect(cellRect, fillPaint);
+                }
+
+                // Range background (interior of range)
+                var rangeBg = GetRangeCellSkBg(day.Date);
+                if (rangeBg != SKColor.Empty)
+                {
+                    fillPaint.Color = rangeBg;
+                    // Draw range bg only on the date row portion
+                    canvas.DrawRect(new SKRect(cellLeft, weekTop, cellRight, weekTop + dateRowH), fillPaint);
+                }
+
+                // Vertical divider (right edge, skip last col)
+                if (col < DaysPerWeek - 1)
+                {
+                    canvas.DrawLine(cellRight, weekTop, cellRight, weekBottom, dividerPaint);
+                }
+
+                // Date number bubble
+                DrawDateNumber(canvas, day, cellLeft, weekTop, density, textFont, textPaint, fillPaint);
+
+                // Stamp glyphs
+                DrawStamps(canvas, day, cellLeft, cellRight, weekTop, weekBottom, density, stampFont, textPaint);
+            }
+
+            // Event slots
+            DrawEvents(canvas, week, colWidth, weekTop, dateRowH, slotRowH, density, eventTextFont, eventTextPaint, fillPaint);
+        }
+
+        // Bottom border of last week
+        var lastBottom = rowH * weekCount;
+        canvas.DrawLine(0, lastBottom, info.Width, lastBottom, dividerPaint);
+    }
+
+    // ------------------------------------------------------------------ Draw helpers
+
+    private void DrawDateNumber(
+        SKCanvas canvas,
+        DayView day,
+        float cellLeft,
+        float weekTop,
+        float density,
+        SKFont textFont,
+        SKPaint textPaint,
+        SKPaint fillPaint)
+    {
+        var disabled = IsDateDisabled(day.Date);
+        var selected = IsDateSelected(day.Date);
+
+        SKColor textColor;
+        SKColor bubbleBg;
+
+        if (disabled)
+        {
+            textColor = DisabledDayTextColor.ToSKColor();
+            bubbleBg = SKColor.Empty;
+        }
+        else if (selected)
+        {
+            textColor = SelectedDayTextColor.ToSKColor();
+            bubbleBg = SelectedDayBackground.ToSKColor();
+        }
+        else if (day.IsToday)
+        {
+            textColor = TodayTextColor.ToSKColor();
+            bubbleBg = TodayBackground.ToSKColor();
+        }
+        else
+        {
+            textColor = GetDateTextSkColor(day);
+            bubbleBg = SKColor.Empty;
+        }
+
+        var size = (float)(DateNumberSize * density);
+        var marginLeft = (float)(DateNumberMargin.Left * density);
+        var marginTop = (float)(DateNumberMargin.Top * density);
+
+        var bubbleLeft = cellLeft + marginLeft;
+        var bubbleTop = weekTop + marginTop;
+        var bubbleRect = new SKRect(bubbleLeft, bubbleTop, bubbleLeft + size, bubbleTop + size);
+
+        if (bubbleBg != SKColor.Empty)
+        {
+            fillPaint.Color = bubbleBg;
+            var radius = size / 2f * 0.3f; // small rounded corner
+            canvas.DrawRoundRect(bubbleRect, radius, radius, fillPaint);
+        }
+
+        textPaint.Color = textColor;
+        textFont.Size = (float)(DateNumberFontSize * density);
+        textFont.Embolden = true;
+        var text = day.Date.Day.ToString(CultureInfo.InvariantCulture);
+        var metrics = textFont.Metrics;
+        var textY = bubbleTop + ((size - (metrics.Descent - metrics.Ascent)) / 2f) - metrics.Ascent;
+        var textX = bubbleLeft + (size / 2f);
+        canvas.DrawText(text, textX, textY, SKTextAlign.Center, textFont, textPaint);
+        textFont.Embolden = false;
+    }
+
+    private void DrawStamps(
+        SKCanvas canvas,
+        DayView day,
+        float cellLeft, float cellRight,
+        float weekTop, float weekBottom,
+        float density,
+        SKFont textFont,
+        SKPaint textPaint)
+    {
+        if (day.Stamps.Count == 0)
+        {
+            return;
+        }
+
+        var cellWidth = cellRight - cellLeft;
+        var cellHeight = weekBottom - weekTop;
+        var edge = (float)(StampMarginEdge * density);
+
+        foreach (var stamp in day.Stamps)
+        {
+            var glyph = stamp.Glyph.Replace(VariationSelector, string.Empty, StringComparison.Ordinal);
+
+            textFont.Size = (float)(stamp.FontSize * density);
+            textPaint.Color = SKColors.Black.WithAlpha((byte)(stamp.Opacity * 255));
+
+            var metrics = textFont.Metrics;
+            var textH = metrics.Descent - metrics.Ascent;
+            var textW = textFont.MeasureText(glyph);
+
+            float x, y;
+            switch (stamp.Position)
+            {
+                case StampPosition.TopLeft:
+                    x = cellLeft + edge + (textW / 2f);
+                    y = weekTop + edge - metrics.Ascent;
+                    break;
+                case StampPosition.TopCenter:
+                    x = cellLeft + (cellWidth / 2f);
+                    y = weekTop + edge - metrics.Ascent;
+                    break;
+                case StampPosition.TopRight:
+                    x = cellRight - edge - (textW / 2f);
+                    y = weekTop + edge - metrics.Ascent;
+                    break;
+                case StampPosition.BottomLeft:
+                    x = cellLeft + edge + (textW / 2f);
+                    y = weekBottom - edge - metrics.Descent;
+                    break;
+                case StampPosition.BottomCenter:
+                    x = cellLeft + (cellWidth / 2f);
+                    y = weekBottom - edge - metrics.Descent;
+                    break;
+                case StampPosition.BottomRight:
+                    x = cellRight - edge - (textW / 2f);
+                    y = weekBottom - edge - metrics.Descent;
+                    break;
+                default: // Center
+                    x = cellLeft + (cellWidth / 2f);
+                    y = weekTop + ((cellHeight - textH) / 2f) - metrics.Ascent;
+                    break;
+            }
+
+            canvas.DrawText(glyph, x, y, SKTextAlign.Center, textFont, textPaint);
         }
     }
+
+    private void DrawEvents(
+        SKCanvas canvas,
+        WeekView week,
+        float colWidth,
+        float weekTop,
+        float dateRowH,
+        float slotRowH,
+        float density,
+        SKFont eventTextFont,
+        SKPaint eventTextPaint,
+        SKPaint fillPaint)
+    {
+        var eventRowH = (float)(EventRowHeight * density);
+        var padding = 4f * density;
+
+        foreach (var placement in week.EventPlacements)
+        {
+            var evt = placement.Event;
+            var left = colWidth * placement.StartColumn;
+            var right = left + (colWidth * placement.ColumnSpan);
+            var top = weekTop + dateRowH + (slotRowH * placement.Slot) + (1f * density);
+            var bottom = top + eventRowH;
+
+            var hitRect = new SKRect(left, top, right, bottom);
+            eventHitRects.Add(new EventHitRect(hitRect, evt));
+
+            if (evt.Style == ScheduleStyle.Filled)
+            {
+                fillPaint.Color = evt.BackgroundColor.ToSKColor();
+                var rl = placement.ContinuesFromPreviousWeek ? 0 : 4f * density;
+                var rr = placement.ContinuesToNextWeek ? 0 : 4f * density;
+                var marginL = placement.ContinuesFromPreviousWeek ? 0 : 1f * density;
+                var marginR = placement.ContinuesToNextWeek ? 0 : 1f * density;
+
+                using var rrRect = new SKRoundRect();
+                rrRect.SetRectRadii(
+                    new SKRect(left + marginL, top, right - marginR, bottom),
+                    [new SKPoint(rl, rl), new SKPoint(rr, rr), new SKPoint(rr, rr), new SKPoint(rl, rl)]);
+                canvas.DrawRoundRect(rrRect, fillPaint);
+            }
+
+            // Event title text
+            eventTextPaint.Color = evt.TextColor.ToSKColor();
+            var textLeft = left + padding;
+            var metrics = eventTextFont.Metrics;
+            var textY = top + ((eventRowH - (metrics.Descent - metrics.Ascent)) / 2f) - metrics.Ascent;
+            var maxWidth = right - left - (padding * 2f);
+            var title = TruncateText(evt.Title, eventTextFont, maxWidth);
+            canvas.DrawText(title, textLeft, textY, SKTextAlign.Left, eventTextFont, eventTextPaint);
+        }
+    }
+
+    // ------------------------------------------------------------------ Utility
+
+    private static string TruncateText(string text, SKFont font, float maxWidth)
+    {
+        if (font.MeasureText(text) <= maxWidth)
+        {
+            return text;
+        }
+        var ellipsis = "…";
+        var ellipsisWidth = font.MeasureText(ellipsis);
+        var available = maxWidth - ellipsisWidth;
+        if (available <= 0)
+        {
+            return ellipsis;
+        }
+        for (var i = text.Length - 1; i >= 0; i--)
+        {
+            var sub = text[..i];
+            if (font.MeasureText(sub) <= available)
+            {
+                return sub + ellipsis;
+            }
+        }
+        return ellipsis;
+    }
+
+    // ------------------------------------------------------------------ Color helpers
+
+    private SKColor GetCellBgSkColor(DayView day)
+    {
+        if (!day.IsCurrentMonth)
+        {
+            return OutsideMonthBackground.ToSKColor();
+        }
+        return day.Kind switch
+        {
+            DayKind.Saturday or DayKind.Sunday or DayKind.Holiday => WeekendBackground.ToSKColor(),
+            _ => SKColor.Empty
+        };
+    }
+
+    private SKColor GetRangeCellSkBg(DateOnly date)
+    {
+        if (SelectionMode != CalendarSelectionMode.Range)
+        {
+            return SKColor.Empty;
+        }
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
+        {
+            return SKColor.Empty;
+        }
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+        return (date > start) && (date < end) ? RangeBackground.ToSKColor() : SKColor.Empty;
+    }
+
+    private SKColor GetDateTextSkColor(DayView day)
+    {
+        if (!day.IsCurrentMonth)
+        {
+            return OutsideMonthTextColor.ToSKColor();
+        }
+        return day.Kind switch
+        {
+            DayKind.Sunday or DayKind.Holiday => SundayTextColor.ToSKColor(),
+            DayKind.Saturday => SaturdayTextColor.ToSKColor(),
+            _ => WeekdayTextColor.ToSKColor()
+        };
+    }
+
+    private SKColor GetWeekdayHeaderSkColor(DayOfWeek dow) => dow switch
+    {
+        DayOfWeek.Saturday => SaturdayHeaderColor.ToSKColor(),
+        DayOfWeek.Sunday => SundayHeaderColor.ToSKColor(),
+        _ => WeekdayHeaderColor.ToSKColor()
+    };
+
+    // ------------------------------------------------------------------ Selection / disabled
+
+    private bool IsDateDisabled(DateOnly date)
+    {
+        if ((MinDate is { } min) && (date < min))
+        {
+            return true;
+        }
+        if ((MaxDate is { } max) && (date > max))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsDateSelected(DateOnly date) => SelectionMode switch
+    {
+        CalendarSelectionMode.Single => SelectedDate == date,
+        CalendarSelectionMode.Multiple => SelectedDates?.Contains(date) == true,
+        CalendarSelectionMode.Range => IsInRange(date),
+        _ => false
+    };
+
+    private bool IsInRange(DateOnly date)
+    {
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
+        {
+            return false;
+        }
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+        return (date >= start) && (date <= end);
+    }
+
+    // ------------------------------------------------------------------ Localization
 
     private string GetDayOfWeekShortName(DayOfWeek dow)
     {
         var culture = Culture;
         if (culture is not null)
         {
-            // Use the culture's abbreviated day name, truncated to 1 char for compact display.
             var abbreviated = culture.DateTimeFormat.GetAbbreviatedDayName(dow);
             return abbreviated.Length > 0 ? abbreviated[..1].ToUpper(culture) : abbreviated;
         }
-
         return dow switch
         {
             DayOfWeek.Monday => "月",
@@ -1004,308 +992,7 @@ public partial class CalendarView
         return $"{month}\u6708";
     }
 
-    private void UpdateWeekRow(WeekRowVisual row, WeekView week, int slotCount)
-    {
-        var sw = Stopwatch.StartNew();
-
-        var totalRows = 2 + slotCount;
-        row.UpdateRows(slotCount, DateRowHeight, SlotRowHeight);
-        row.TopDivider.Color = GridLineColor;
-        foreach (var divider in row.VerticalDividers)
-        {
-            divider.Color = GridLineColor;
-        }
-
-        var t0 = sw.Elapsed;
-
-        for (var c = 0; c < DaysPerWeek; c++)
-        {
-            UpdateDayCell(row.Days[c], week.Days[c]);
-        }
-
-        var t1 = sw.Elapsed;
-
-        row.HideDynamicViews();
-
-        var t2 = sw.Elapsed;
-
-        AddStampViews(row, week, totalRows);
-
-        var t3 = sw.Elapsed;
-
-        AddEventViews(row, week);
-
-        var t4 = sw.Elapsed;
-
-        Debug.WriteLine(
-            $"[UpdateWeekRow] {week.Days[0].Date:MM/dd}" +
-            $" | DayCells: {(t1 - t0).TotalMilliseconds:F3}ms" +
-            $" | HideDynamic: {(t2 - t1).TotalMilliseconds:F3}ms" +
-            $" | Stamps: {(t3 - t2).TotalMilliseconds:F3}ms" +
-            $" | Events: {(t4 - t3).TotalMilliseconds:F3}ms" +
-            $" | Total: {t4.TotalMilliseconds:F3}ms");
-    }
-
-    private void UpdateDayCell(DayCellVisual cell, DayView day)
-    {
-        var background = GetCellBackgroundColor(day);
-        cell.Background.Color = background;
-        cell.Background.IsVisible = !Equals(background, Colors.Transparent);
-
-        var rangeBackground = GetRangeCellBackground(day.Date);
-        cell.RangeBackground.Color = rangeBackground;
-        cell.RangeBackground.IsVisible = !Equals(rangeBackground, Colors.Transparent);
-
-        UpdateDateNumberView(cell, day);
-
-        cell.TapTarget.IsEnabled = !IsDateDisabled(day.Date);
-        cell.TapCommand ??= new Command<DayView>(OnDayTapped);
-        cell.TapGesture.Command = cell.TapTarget.IsEnabled ? cell.TapCommand : null;
-        cell.TapGesture.CommandParameter = cell.TapTarget.IsEnabled ? day : null;
-    }
-
-    private void AddStampViews(WeekRowVisual row, WeekView week, int totalRows)
-    {
-        for (var c = 0; c < DaysPerWeek; c++)
-        {
-            var cell = row.Days[c];
-            var stamps = week.Days[c].Stamps;
-
-            // 必要なスタンプ数に合わせてプールを拡張し、初回のみ Grid に追加
-            while (cell.StampLabelPool.Count < stamps.Count)
-            {
-                var newLabel = new Label { InputTransparent = true };
-                cell.StampLabelPool.Add(newLabel);
-                Grid.SetColumn(newLabel, c);
-                row.Root.Children.Add(newLabel);
-            }
-
-            var m = StampMarginEdge;
-            for (var i = 0; i < stamps.Count; i++)
-            {
-                var label = cell.StampLabelPool[i];
-                var stamp = stamps[i];
-                label.Text = stamp.Glyph;
-                label.FontSize = stamp.FontSize;
-                label.Opacity = stamp.Opacity;
-                label.HorizontalTextAlignment = TextAlignment.Center;
-                label.VerticalTextAlignment = TextAlignment.Center;
-
-                (label.HorizontalOptions, label.VerticalOptions, label.Margin) = stamp.Position switch
-                {
-                    StampPosition.TopLeft => (LayoutOptions.Start, LayoutOptions.Start, new Thickness(m, 0, 0, 0)),
-                    StampPosition.TopCenter => (LayoutOptions.Center, LayoutOptions.Start, new Thickness(0)),
-                    StampPosition.TopRight => (LayoutOptions.End, LayoutOptions.Start, new Thickness(0, 0, m, 0)),
-                    StampPosition.BottomLeft => (LayoutOptions.Start, LayoutOptions.End, new Thickness(m, 0, 0, m)),
-                    StampPosition.BottomCenter => (LayoutOptions.Center, LayoutOptions.End, new Thickness(0, 0, 0, m)),
-                    StampPosition.BottomRight => (LayoutOptions.End, LayoutOptions.End, new Thickness(0, 0, m, m)),
-                    _ => (LayoutOptions.Center, LayoutOptions.Center, new Thickness(0))
-                };
-
-                Grid.SetRow(label, 0);
-                Grid.SetRowSpan(label, totalRows);
-                label.IsVisible = true;
-            }
-
-            // [DIFF-UPDATE: HideDynamic] 次回 HideDynamicViews で使用数だけ非表示にするために記録
-            row.ActiveStampCounts[c] = stamps.Count;
-        }
-    }
-
-    private void AddEventViews(WeekRowVisual row, WeekView week)
-    {
-        var placements = week.EventPlacements;
-
-        // プールを拡張し、初回のみ Grid に追加
-        while (row.EventPool.Count < placements.Count)
-        {
-            var visual = new EventBorderVisual
-            {
-                TapGesture =
-                {
-                    Command = new Command<ScheduleEvent>(OnEventTapped)
-                }
-            };
-            row.EventPool.Add(visual);
-            row.Root.Children.Add(visual.Root);
-        }
-
-        for (var i = 0; i < placements.Count; i++)
-        {
-            var visual = row.EventPool[i];
-            var placement = placements[i];
-            visual.Apply(placement, EventFontSize, EventRowHeight);
-            Grid.SetColumn(visual.Root, placement.StartColumn);
-            Grid.SetColumnSpan(visual.Root, placement.ColumnSpan);
-            Grid.SetRow(visual.Root, placement.Slot + 1);
-            visual.Root.IsVisible = true;
-        }
-
-        // [DIFF-UPDATE: HideDynamic] 次回 HideDynamicViews で使用数だけ非表示にするために記録
-        row.ActiveEventCount = placements.Count;
-    }
-
-    // ------------------------------------------------------------------ View builders
-
-    private void UpdateDateNumberView(DayCellVisual cell, DayView day)
-    {
-        var disabled = IsDateDisabled(day.Date);
-        var selected = IsDateSelected(day.Date);
-
-        Color textColor;
-        Color bubbleBg;
-
-        if (disabled)
-        {
-            textColor = DisabledDayTextColor;
-            bubbleBg = Colors.Transparent;
-        }
-        else if (selected)
-        {
-            textColor = SelectedDayTextColor;
-            bubbleBg = SelectedDayBackground;
-        }
-        else if (day.IsToday)
-        {
-            textColor = TodayTextColor;
-            bubbleBg = TodayBackground;
-        }
-        else
-        {
-            textColor = GetDateTextColor(day);
-            bubbleBg = Colors.Transparent;
-        }
-
-        cell.DateLabel.Text = day.Date.Day.ToString(CultureInfo.InvariantCulture);
-        cell.DateLabel.FontSize = DateNumberFontSize;
-        cell.DateLabel.TextColor = textColor;
-        cell.DateLabel.WidthRequest = DateNumberSize;
-        cell.DateLabel.HeightRequest = DateNumberSize;
-
-        cell.DateBubble.BackgroundColor = bubbleBg;
-        cell.DateBubble.Margin = DateNumberMargin;
-        // [DIFF-UPDATE: DateBubble] 毎回 new RoundRectangle を避け同一インスタンスを再利用
-        cell.DateBubble.StrokeShape = !Equals(bubbleBg, Colors.Transparent) ? cell.DateBubbleShape : null;
-    }
-
-    // ------------------------------------------------------------------ Color helpers
-
-    private Color GetCellBackgroundColor(DayView day)
-    {
-        if (!day.IsCurrentMonth)
-        {
-            return OutsideMonthBackground;
-        }
-        return day.Kind switch
-        {
-            DayKind.Saturday or DayKind.Sunday or DayKind.Holiday => WeekendBackground,
-            _ => Colors.Transparent
-        };
-    }
-
-    private Color GetDateTextColor(DayView day)
-    {
-        if (!day.IsCurrentMonth)
-        {
-            return OutsideMonthTextColor;
-        }
-        return day.Kind switch
-        {
-            DayKind.Sunday or DayKind.Holiday => SundayTextColor,
-            DayKind.Saturday => SaturdayTextColor,
-            _ => WeekdayTextColor
-        };
-    }
-
-    // ------------------------------------------------------------------ Selection / disabled helpers
-
-    private bool IsDateDisabled(DateOnly date)
-    {
-        if ((MinDate is { } min) && (date < min))
-        {
-            return true;
-        }
-        if ((MaxDate is { } max) && (date > max))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private bool IsDateSelected(DateOnly date) => SelectionMode switch
-    {
-        CalendarSelectionMode.Single => SelectedDate == date,
-        CalendarSelectionMode.Multiple => SelectedDates?.Contains(date) == true,
-        CalendarSelectionMode.Range => IsInRange(date, endpoints: true),
-        _ => false
-    };
-
-    // Returns true for the interior of the range (excluding endpoints, which are drawn as full bubbles).
-    private Color GetRangeCellBackground(DateOnly date)
-    {
-        if (SelectionMode != CalendarSelectionMode.Range)
-        {
-            return Colors.Transparent;
-        }
-        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
-        {
-            return Colors.Transparent;
-        }
-        if (start > end)
-        {
-            (start, end) = (end, start);
-        }
-        return ((date > start) && (date < end)) ? RangeBackground : Colors.Transparent;
-    }
-
-    private bool IsInRange(DateOnly date, bool endpoints)
-    {
-        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
-        {
-            return false;
-        }
-        if (start > end)
-        {
-            (start, end) = (end, start);
-        }
-        return endpoints ? ((date >= start) && (date <= end)) : ((date > start) && (date < end));
-    }
-
-    // ------------------------------------------------------------------ Swipe gestures (PanGestureRecognizer for reliable Android detection)
-
-    private PanGestureRecognizer? panGesture;
-    private double panStartX;
-    private double panStartY;
-    private double lastPanX;
-    private bool panConsumed;
-
-    private void AttachSwipeGestures()
-    {
-        panGesture = new PanGestureRecognizer();
-        panGesture.PanUpdated += OnPanUpdated;
-        foreach (var row in weekRows)
-        {
-            foreach (var day in row.Days)
-            {
-                day.PanGesture.PanUpdated += OnPanUpdated;
-            }
-        }
-        UpdateSwipeGestureState(SwipeEnabled);
-    }
-
-    private void UpdateSwipeGestureState(bool enabled)
-    {
-        if (panGesture is null)
-        {
-            return;
-        }
-
-        RootGrid.GestureRecognizers.Remove(panGesture);
-        if (enabled)
-        {
-            RootGrid.GestureRecognizers.Add(panGesture);
-        }
-    }
+    // ------------------------------------------------------------------ PanGesture (swipe + tap fallback)
 
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
@@ -1352,12 +1039,11 @@ public partial class CalendarView
 
     private void NavigateBySwipe(int direction)
     {
-        if (panConsumed)
+        if (!SwipeEnabled || panConsumed)
         {
             return;
         }
         panConsumed = true;
-        lastNavDirection = direction;
         if (direction > 0)
         {
             NextMonthCommand?.Execute(null);
@@ -1365,6 +1051,56 @@ public partial class CalendarView
         else
         {
             PrevMonthCommand?.Execute(null);
+        }
+    }
+
+    // ------------------------------------------------------------------ Tap on body canvas
+
+    private void OnBodyTapped(object? sender, TappedEventArgs e)
+    {
+        if (View is not { } month)
+        {
+            return;
+        }
+
+        var pos = e.GetPosition(BodyCanvas);
+        if (pos is null)
+        {
+            return;
+        }
+
+        var density = (float)(BodyCanvas.Width > 0 ? BodyCanvas.CanvasSize.Width / BodyCanvas.Width : 1.0);
+        var px = (float)(pos.Value.X * density);
+        var py = (float)(pos.Value.Y * density);
+
+        var skPos = new SKPoint(px, py);
+
+        // Check event hit first
+        foreach (var hit in eventHitRects)
+        {
+            if (hit.Rect.Contains(skPos))
+            {
+                OnEventTapped(hit.Event);
+                return;
+            }
+        }
+
+        // Check day cell hit
+        var weekCount = Math.Min(renderedWeekCount, month.Weeks.Count);
+        for (var weekIndex = 0; weekIndex < weekCount; weekIndex++)
+        {
+            for (var col = 0; col < DaysPerWeek; col++)
+            {
+                if (dayCellRects[weekIndex][col].Contains(skPos))
+                {
+                    var day = month.Weeks[weekIndex].Days[col];
+                    if (!IsDateDisabled(day.Date))
+                    {
+                        OnDayTapped(day);
+                    }
+                    return;
+                }
+            }
         }
     }
 
@@ -1380,8 +1116,11 @@ public partial class CalendarView
                 break;
 
             case CalendarSelectionMode.Multiple:
-                SelectedDates ??= [];
-                var list = SelectedDates;
+                if (SelectedDates is not { } list)
+                {
+                    list = [];
+                    SetValue(SelectedDatesProperty, list);
+                }
                 if (!list.Remove(date))
                 {
                     list.Add(date);
@@ -1391,13 +1130,11 @@ public partial class CalendarView
             case CalendarSelectionMode.Range:
                 if ((SelectedStartDate is null) || ((SelectedStartDate is not null) && (SelectedEndDate is not null)))
                 {
-                    // Start a new range.
                     SelectedStartDate = date;
                     SelectedEndDate = null;
                 }
                 else
                 {
-                    // Complete the range.
                     if (date < SelectedStartDate)
                     {
                         (SelectedStartDate, SelectedEndDate) = (date, SelectedStartDate);
