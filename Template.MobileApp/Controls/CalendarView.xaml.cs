@@ -14,6 +14,7 @@ using Microsoft.Maui.Controls.Shapes;
 
 using Template.MobileApp.Models.Sample.Calendar;
 
+// ReSharper disable RedundantAssignment
 public partial class CalendarView
 {
     // ------------------------------------------------------------------ BindableProperties: Commands / View

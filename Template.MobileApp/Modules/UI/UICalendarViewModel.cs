@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 
 using Template.MobileApp.Models.Sample.Calendar;
@@ -23,7 +22,6 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     [ObservableProperty]
     public partial MonthView? MonthView { get; private set; }
 
-    // StyleCop が field キーワードの初期化子構文 (閉じ括弧と同一行) を誤検知するため抑止
 #pragma warning disable SA1500
     public DayOfWeek FirstDayOfWeek
     {
@@ -35,7 +33,9 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
                 return;
             }
             field = value;
+
             RaisePropertyChanged(new PropertyChangedEventArgs(nameof(FirstDayOfWeek)));
+
             builder = new MonthViewBuilder(value);
             LoadMonth(currentYear, currentMonth);
         }
@@ -137,14 +137,12 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 
     private void LoadMonth(int year, int month)
     {
-        var sw = Stopwatch.StartNew();
         var (rangeStart, rangeEnd) = builder.GetDisplayRange(year, month);
         var events = scheduleService.GetEvents(rangeStart, rangeEnd);
         var stamps = scheduleService.GetStamps(rangeStart, rangeEnd);
         var holidays = holidayService.GetHolidays(rangeStart, rangeEnd);
 
         MonthView = builder.Build(year, month, Today, events, stamps, holidays);
-        Debug.WriteLine($"[LoadMonth] {year}/{month:D2} | Total: {sw.Elapsed.TotalMilliseconds:F2}ms");
     }
 
     private async Task OnDayTappedAsync(DayView? day)

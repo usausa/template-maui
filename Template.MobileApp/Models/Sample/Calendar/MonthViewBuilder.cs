@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Models.Sample.Calendar;
 
-using System.Diagnostics;
-
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Monday)
 {
@@ -24,17 +22,10 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
         IReadOnlyList<Stamp> stamps,
         IReadOnlyList<DateOnly> holidays)
     {
-        var sw = Stopwatch.StartNew();
-
         var (firstDayToShow, _) = GetDisplayRange(year, month);
-
-        var t0 = sw.Elapsed;
         var holidaySet = holidays.Count == 0 ? null : new HashSet<DateOnly>(holidays);
-        var t1 = sw.Elapsed;
         var stampLookup = CreateStampLookup(stamps);
-        var t2 = sw.Elapsed;
         var weeklyCandidates = CreateWeeklyEventCandidates(firstDayToShow, events);
-        var t3 = sw.Elapsed;
 
         var weeks = new List<WeekView>(capacity: WeeksPerMonth);
         for (var w = 0; w < WeeksPerMonth; w++)
@@ -66,25 +57,13 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
             });
         }
 
-        var t4 = sw.Elapsed;
-
-        var result = new MonthView
+        return new MonthView
         {
             Year = year,
             Month = month,
             Today = today,
             Weeks = weeks
         };
-
-        sw.Stop();
-        Debug.WriteLine(
-            $"[Build] {year}/{month:D2} {sw.Elapsed.TotalMilliseconds:F3}ms" +
-            $" | HolidaySet: {(t1 - t0).TotalMilliseconds:F3}ms" +
-            $" | StampLookup: {(t2 - t1).TotalMilliseconds:F3}ms" +
-            $" | WeeklyCandidates: {(t3 - t2).TotalMilliseconds:F3}ms" +
-            $" | Weeks: {(t4 - t3).TotalMilliseconds:F3}ms");
-
-        return result;
     }
 
     private DateOnly AlignToWeekStart(DateOnly date)
