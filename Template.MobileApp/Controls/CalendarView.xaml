@@ -2,7 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Template.MobileApp.Controls.CalendarView"
-             x:Name="_self">
+             x:Name="Self">
 
     <Grid x:Name="RootGrid"
           RowDefinitions="Auto,Auto,Auto,*"
@@ -16,7 +16,7 @@
                   Padding="16,12,16,8">
                 <Button x:Name="PrevButton"
                         Grid.Column="0"
-                        Command="{Binding PrevMonthCommand, Source={x:Reference _self}}"
+                        Command="{Binding PrevMonthCommand, Source={x:Reference Self}}"
                         Text="◀"
                         BackgroundColor="Transparent"
                         BorderWidth="0" VerticalOptions="Center" />
@@ -32,7 +32,7 @@
                 </VerticalStackLayout>
                 <Button x:Name="NextButton"
                         Grid.Column="2"
-                        Command="{Binding NextMonthCommand, Source={x:Reference _self}}"
+                        Command="{Binding NextMonthCommand, Source={x:Reference Self}}"
                         Text="▶"
                         BackgroundColor="Transparent"
                         BorderWidth="0" VerticalOptions="Center" />

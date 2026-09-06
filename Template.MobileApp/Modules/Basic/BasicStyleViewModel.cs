@@ -34,7 +34,9 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
 
         ActionCommand = MakeDelegateCommand<string>(x => LastAction = x);
 
+#pragma warning disable IDE0028
         Items = Enumerable.Range(1, 3).Select(x => new SelectItem(x, $"Data-{x}")).Prepend(null).ToList();
+#pragma warning restore IDE0028
 
         Value1 = 1;
         Value2 = 2;

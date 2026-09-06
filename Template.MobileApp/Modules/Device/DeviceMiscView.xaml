@@ -37,7 +37,6 @@
 
             <Style x:Key="ActionRowGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="*,*" />
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
@@ -91,7 +90,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Smartphone}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout Style="{StaticResource ActionStack}">
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Visibility}, Color={StaticResource BlueGrayDarken1}, Size=18}"
@@ -103,7 +103,8 @@
                                 Command="{Binding KeepScreenOffCommand}"
                                 Text="Keep off" />
                     </Grid>
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Stay_current_portrait}, Color={StaticResource BlueGrayDarken1}, Size=18}"
@@ -115,7 +116,8 @@
                                 Command="{Binding OrientationLandscapeCommand}"
                                 Text="Landscape" />
                     </Grid>
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Brightness_low}, Color={StaticResource BlueGrayDarken1}, Size=18}"
@@ -141,7 +143,8 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
                 <VerticalStackLayout Style="{StaticResource ActionStack}">
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Vibration}, Color={StaticResource BlueGrayDarken1}, Size=18}"
@@ -153,7 +156,8 @@
                                 Command="{Binding VibrateCancelCommand}"
                                 Text="Cancel" />
                     </Grid>
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Touch_app}, Color={StaticResource BlueGrayDarken1}, Size=18}"
@@ -172,7 +176,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Flashlight_on}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160">
-                <Grid Style="{StaticResource ActionRowGrid}">
+                <Grid Style="{StaticResource ActionRowGrid}"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
                             Style="{StaticResource ActionButton}"
                             ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Flashlight_on}, Color={StaticResource BlueGrayDarken1}, Size=18}"
@@ -191,7 +196,8 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
                 <VerticalStackLayout Style="{StaticResource ActionStack}">
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Record_voice_over}, Color={StaticResource BlueGrayDarken1}, Size=18}"

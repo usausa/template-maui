@@ -182,9 +182,6 @@ public static partial class ButtonOption
                     }
                     break;
                 }
-
-            default:
-                break;
         }
     }
 
@@ -319,9 +316,6 @@ public static partial class ButtonOption
                     }
                     break;
                 }
-
-            default:
-                break;
         }
     }
 

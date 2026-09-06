@@ -39,6 +39,7 @@ public sealed partial class SampleWebBasicView
         }
 
         // 受信を一瞬ハイライトして通知する
+        // ReSharper disable once AsyncVoidLambda
         Dispatcher.Dispatch(async () =>
         {
             var resources = Application.Current!.Resources;

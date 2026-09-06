@@ -170,13 +170,13 @@
                             <Label Style="{StaticResource CoordCaptionLabel}"
                                    Text="Latitude" />
                             <Label Style="{StaticResource CoordValueLabel}"
-                                   Text="{Binding Location.Latitude, StringFormat='{0:F6}'}" />
+                                   Text="{Binding Location.Latitude, StringFormat='{0:F6}', FallbackValue='-'}" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Style="{StaticResource CoordGroupStack}">
                             <Label Style="{StaticResource CoordCaptionLabel}"
                                    Text="Longitude" />
                             <Label Style="{StaticResource CoordValueLabel}"
-                                   Text="{Binding Location.Longitude, StringFormat='{0:F6}'}" />
+                                   Text="{Binding Location.Longitude, StringFormat='{0:F6}', FallbackValue='-'}" />
                         </VerticalStackLayout>
                         <BoxView Style="{StaticResource CardDivider}" />
                         <Grid Style="{StaticResource TimestampGrid}"
@@ -186,7 +186,7 @@
                                    Text="{x:Static fonts:MaterialIcons.Schedule}" />
                             <Label Grid.Column="1"
                                    Style="{StaticResource TimestampLabel}"
-                                   Text="{Binding Location.Timestamp.LocalDateTime, StringFormat='{0:yyyy-MM-dd HH:mm:ss}'}"
+                                   Text="{Binding Location.Timestamp.LocalDateTime, StringFormat='{0:yyyy-MM-dd HH:mm:ss}', FallbackValue='-'}"
                                    behaviors:AnimationOption.HighlightTrigger="{Binding Location.Timestamp}"
                                    behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
                         </Grid>
@@ -205,28 +205,28 @@
                                Text="Altitude" />
                         <Label Grid.Row="0" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Altitude, StringFormat='{0:F1} m'}" />
+                               Text="{Binding Location.Altitude, StringFormat='{0:F1} m', TargetNullValue='-', FallbackValue='-'}" />
 
                         <Label Grid.Row="1" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Course" />
                         <Label Grid.Row="1" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Course, StringFormat='{0:F0}°'}" />
+                               Text="{Binding Location.Course, StringFormat='{0:F0}°', TargetNullValue='-', FallbackValue='-'}" />
 
                         <Label Grid.Row="2" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Speed" />
                         <Label Grid.Row="2" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Speed, StringFormat='{0:F1} m/s'}" />
+                               Text="{Binding Location.Speed, StringFormat='{0:F1} m/s', TargetNullValue='-', FallbackValue='-'}" />
 
                         <Label Grid.Row="3" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Accuracy" />
                         <Label Grid.Row="3" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Accuracy, StringFormat='±{0:F0} m'}" />
+                               Text="{Binding Location.Accuracy, StringFormat='±{0:F0} m', TargetNullValue='-', FallbackValue='-'}" />
                     </Grid>
                 </controls:InfoCard>
 

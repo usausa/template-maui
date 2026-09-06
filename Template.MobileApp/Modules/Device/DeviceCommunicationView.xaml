@@ -41,7 +41,6 @@
             <Style x:Key="ActionRowGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12" />
-                <Setter Property="ColumnDefinitions" Value="Auto,*,Auto" />
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
@@ -133,7 +132,8 @@
                     <toolkit:SfEffectsView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding DialCommand}" />
                     </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
                         <Border Grid.Column="0"
                                 Style="{StaticResource DialIconBorder}">
                             <Label Style="{StaticResource DialIconLabel}"
@@ -159,7 +159,8 @@
                     <toolkit:SfEffectsView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SmsCommand}" />
                     </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
                         <Border Grid.Column="0"
                                 Style="{StaticResource SmsIconBorder}">
                             <Label Style="{StaticResource SmsIconLabel}"
@@ -185,7 +186,8 @@
                     <toolkit:SfEffectsView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding EmailCommand}" />
                     </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource ActionRowGrid}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
                         <Border Grid.Column="0"
                                 Style="{StaticResource EmailIconBorder}">
                             <Label Style="{StaticResource EmailIconLabel}"

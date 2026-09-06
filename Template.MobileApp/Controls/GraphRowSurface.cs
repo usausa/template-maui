@@ -14,16 +14,16 @@ public sealed class GraphRowSurface : SKCanvasView
 
     private static readonly SKColor[] LaneColors =
     [
-        new SKColor(0x1F, 0x77, 0xB4),
-        new SKColor(0xFF, 0x7F, 0x0E),
-        new SKColor(0x2C, 0xA0, 0x2C),
-        new SKColor(0xD6, 0x27, 0x28),
-        new SKColor(0x94, 0x67, 0xBD),
-        new SKColor(0x8C, 0x56, 0x4B),
-        new SKColor(0xE3, 0x77, 0xC2),
-        new SKColor(0x7F, 0x7F, 0x7F),
-        new SKColor(0xBC, 0xBD, 0x22),
-        new SKColor(0x17, 0xBE, 0xCF),
+        new(0x1F, 0x77, 0xB4),
+        new(0xFF, 0x7F, 0x0E),
+        new(0x2C, 0xA0, 0x2C),
+        new(0xD6, 0x27, 0x28),
+        new(0x94, 0x67, 0xBD),
+        new(0x8C, 0x56, 0x4B),
+        new(0xE3, 0x77, 0xC2),
+        new(0x7F, 0x7F, 0x7F),
+        new(0xBC, 0xBD, 0x22),
+        new(0x17, 0xBE, 0xCF)
     ];
 
     public static readonly BindableProperty RowDataProperty = BindableProperty.Create(
@@ -161,7 +161,7 @@ public sealed class GraphRowSurface : SKCanvasView
     }
 
     private float GetCellWidth(int laneCount) =>
-        MarginLeft + (LaneWidth * System.Math.Max(laneCount, 1)) + MarginRight;
+        MarginLeft + (LaneWidth * Math.Max(laneCount, 1)) + MarginRight;
 
     private void Render(SKCanvas canvas, GraphRow row)
     {
@@ -171,14 +171,12 @@ public sealed class GraphRowSurface : SKCanvasView
         var nodeCenterY = NodeCenterY > 0f ? NodeCenterY : rowHeight / 2f;
         var lineWidth = LineWidth;
 
-        using var strokePaint = new SKPaint
-        {
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = lineWidth,
-            IsAntialias = true,
-            StrokeCap = SKStrokeCap.Round,
-            StrokeJoin = SKStrokeJoin.Round,
-        };
+        using var strokePaint = new SKPaint();
+        strokePaint.Style = SKPaintStyle.Stroke;
+        strokePaint.StrokeWidth = lineWidth;
+        strokePaint.IsAntialias = true;
+        strokePaint.StrokeCap = SKStrokeCap.Round;
+        strokePaint.StrokeJoin = SKStrokeJoin.Round;
 
         foreach (var seg in row.Segments)
         {
@@ -189,19 +187,15 @@ public sealed class GraphRowSurface : SKCanvasView
         var nodeCenterX = LaneCenterX(row.Lane);
         var nodeColor = LaneColors[row.Lane % LaneColors.Length];
 
-        using var fillPaint = new SKPaint
-        {
-            Style = SKPaintStyle.Fill,
-            Color = nodeColor,
-            IsAntialias = true,
-        };
-        using var borderPaint = new SKPaint
-        {
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = 1.5f,
-            Color = SKColors.White,
-            IsAntialias = true,
-        };
+        using var fillPaint = new SKPaint();
+        fillPaint.Style = SKPaintStyle.Fill;
+        fillPaint.Color = nodeColor;
+        fillPaint.IsAntialias = true;
+        using var borderPaint = new SKPaint();
+        borderPaint.Style = SKPaintStyle.Stroke;
+        borderPaint.StrokeWidth = 1.5f;
+        borderPaint.Color = SKColors.White;
+        borderPaint.IsAntialias = true;
 
         canvas.DrawCircle(nodeCenterX, nodeCenterY, NodeRadius, fillPaint);
         canvas.DrawCircle(nodeCenterX, nodeCenterY, NodeRadius, borderPaint);
@@ -227,8 +221,6 @@ public sealed class GraphRowSurface : SKCanvasView
                 break;
             case GraphSegmentKind.DiagonalBranch:
                 DrawConnection(canvas, paint, laneX, radius, LaneCenterX(seg.ToLane), nodeCenterY);
-                break;
-            default:
                 break;
         }
     }

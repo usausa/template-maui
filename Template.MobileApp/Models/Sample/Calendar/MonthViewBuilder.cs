@@ -2,6 +2,7 @@ namespace Template.MobileApp.Models.Sample.Calendar;
 
 using System.Diagnostics;
 
+// ReSharper disable ParameterTypeCanBeEnumerable.Local
 public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Monday)
 {
     private const int DaysPerWeek = 7;
@@ -50,7 +51,7 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
                     IsCurrentMonth = (date.Year == year) && (date.Month == month),
                     IsToday = date == today,
                     Kind = DetermineKind(date, holidaySet),
-                    Stamps = stampLookup.TryGetValue(date, out var s) ? s : [],
+                    Stamps = stampLookup.TryGetValue(date, out var s) ? s : []
                 });
             }
 
@@ -61,7 +62,7 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
             {
                 Days = days,
                 EventPlacements = placements,
-                SlotCount = slotCount,
+                SlotCount = slotCount
             });
         }
 
@@ -72,7 +73,7 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
             Year = year,
             Month = month,
             Today = today,
-            Weeks = weeks,
+            Weeks = weeks
         };
 
         sw.Stop();
@@ -95,9 +96,8 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
     private static Dictionary<DateOnly, List<Stamp>> CreateStampLookup(IReadOnlyList<Stamp> stamps)
     {
         var lookup = new Dictionary<DateOnly, List<Stamp>>();
-        for (var i = 0; i < stamps.Count; i++)
+        foreach (var stamp in stamps)
         {
-            var stamp = stamps[i];
             if (!lookup.TryGetValue(stamp.Date, out var list))
             {
                 list = [];
@@ -119,7 +119,7 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
         {
             DayOfWeek.Sunday => DayKind.Sunday,
             DayOfWeek.Saturday => DayKind.Saturday,
-            _ => DayKind.Weekday,
+            _ => DayKind.Weekday
         };
     }
 
@@ -131,29 +131,28 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
             weeklyCandidates[i] = [];
         }
 
-        for (var i = 0; i < events.Count; i++)
+        foreach (var evEvent in events)
         {
-            var e = events[i];
-            var firstWeek = Math.Max(0, (e.StartDate.DayNumber - firstDayToShow.DayNumber) / DaysPerWeek);
-            var lastWeek = Math.Min(WeeksPerMonth - 1, (e.EndDate.DayNumber - firstDayToShow.DayNumber) / DaysPerWeek);
+            var firstWeek = Math.Max(0, (evEvent.StartDate.DayNumber - firstDayToShow.DayNumber) / DaysPerWeek);
+            var lastWeek = Math.Min(WeeksPerMonth - 1, (evEvent.EndDate.DayNumber - firstDayToShow.DayNumber) / DaysPerWeek);
             for (var weekIndex = firstWeek; weekIndex <= lastWeek; weekIndex++)
             {
                 var weekStart = firstDayToShow.AddDays(weekIndex * DaysPerWeek);
                 var weekEnd = weekStart.AddDays(DaysPerWeek - 1);
-                var clippedStart = e.StartDate < weekStart ? weekStart : e.StartDate;
-                var clippedEnd = e.EndDate > weekEnd ? weekEnd : e.EndDate;
+                var clippedStart = evEvent.StartDate < weekStart ? weekStart : evEvent.StartDate;
+                var clippedEnd = evEvent.EndDate > weekEnd ? weekEnd : evEvent.EndDate;
                 weeklyCandidates[weekIndex].Add(new EventCandidate(
-                    e,
+                    evEvent,
                     clippedStart.DayNumber - weekStart.DayNumber,
                     clippedEnd.DayNumber - weekStart.DayNumber,
-                    e.StartDate < weekStart,
-                    e.EndDate > weekEnd));
+                    evEvent.StartDate < weekStart,
+                    evEvent.EndDate > weekEnd));
             }
         }
 
-        for (var i = 0; i < weeklyCandidates.Length; i++)
+        foreach (var candidate in weeklyCandidates)
         {
-            weeklyCandidates[i].Sort(static (left, right) =>
+            candidate.Sort(static (left, right) =>
             {
                 var startComparison = left.StartCol.CompareTo(right.StartCol);
                 if (startComparison != 0)
@@ -174,10 +173,9 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
         var slotCount = 0;
         var placements = new List<EventPlacement>(capacity: candidates.Count);
 
-        for (var i = 0; i < candidates.Count; i++)
+        foreach (var candidate in candidates)
         {
-            var c = candidates[i];
-            var mask = ((1 << ((c.EndCol - c.StartCol) + 1)) - 1) << c.StartCol;
+            var mask = ((1 << ((candidate.EndCol - candidate.StartCol) + 1)) - 1) << candidate.StartCol;
             var slot = FindAvailableSlot(slotOccupancy[..slotCount], mask);
             if (slot >= slotCount)
             {
@@ -188,12 +186,12 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
 
             placements.Add(new EventPlacement
             {
-                Event = c.Event,
-                StartColumn = c.StartCol,
-                ColumnSpan = (c.EndCol - c.StartCol) + 1,
+                Event = candidate.Event,
+                StartColumn = candidate.StartCol,
+                ColumnSpan = (candidate.EndCol - candidate.StartCol) + 1,
                 Slot = slot,
-                ContinuesFromPreviousWeek = c.ContinuesFromPrev,
-                ContinuesToNextWeek = c.ContinuesToNext,
+                ContinuesFromPreviousWeek = candidate.ContinuesFromPrev,
+                ContinuesToNextWeek = candidate.ContinuesToNext
             });
         }
 
@@ -215,9 +213,9 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
     private static int GetSlotCount(List<EventPlacement> placements)
     {
         var slotCount = 0;
-        for (var i = 0; i < placements.Count; i++)
+        foreach (var placement in placements)
         {
-            var count = placements[i].Slot + 1;
+            var count = placement.Slot + 1;
             if (count > slotCount)
             {
                 slotCount = count;
@@ -233,3 +231,4 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
         bool ContinuesFromPrev,
         bool ContinuesToNext);
 }
+// ReSharper restore ParameterTypeCanBeEnumerable.Local

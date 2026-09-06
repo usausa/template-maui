@@ -69,16 +69,12 @@
 
             <Style x:Key="ResourceValueGrid"
                    TargetType="Grid">
-                <Setter Property="RowDefinitions" Value="Auto,Auto,Auto" />
-                <Setter Property="ColumnDefinitions" Value="72,*" />
                 <Setter Property="RowSpacing" Value="2" />
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
             <Style x:Key="FormatValueGrid"
                    TargetType="Grid">
-                <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto" />
-                <Setter Property="ColumnDefinitions" Value="72,*" />
                 <Setter Property="RowSpacing" Value="2" />
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
@@ -167,7 +163,9 @@
                                 <VerticalStackLayout Style="{StaticResource ResourceGroupStack}">
                                     <Label Style="{StaticResource KeyLabel}"
                                            Text="{Binding Key}" />
-                                    <Grid Style="{StaticResource ResourceValueGrid}">
+                                    <Grid Style="{StaticResource ResourceValueGrid}"
+                                          RowDefinitions="Auto,Auto,Auto"
+                                          ColumnDefinitions="72,*">
                                         <Label Grid.Row="0" Grid.Column="0"
                                                Style="{StaticResource ResourceTagLabel}"
                                                Text="neutral" />
@@ -222,7 +220,9 @@
                                                    Text="current" />
                                         </Border>
                                     </HorizontalStackLayout>
-                                    <Grid Style="{StaticResource FormatValueGrid}">
+                                    <Grid Style="{StaticResource FormatValueGrid}"
+                                          RowDefinitions="Auto,Auto,Auto,Auto"
+                                          ColumnDefinitions="72,*">
                                         <Label Grid.Row="0" Grid.Column="0"
                                                Style="{StaticResource ResourceTagLabel}"
                                                Text="Number" />

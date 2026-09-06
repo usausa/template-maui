@@ -7,7 +7,9 @@ using Smart.Threading;
 #pragma warning disable CA1819
 public sealed class LineReaderWriterOption
 {
+#pragma warning disable IDE0028
     public byte[] Terminator { get; set; } = "\r\n"u8.ToArray();
+#pragma warning restore IDE0028
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
 }

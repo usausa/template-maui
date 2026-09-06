@@ -86,7 +86,7 @@ public sealed partial class BluetoothSerialFactory
         }
     }
 
-    private async ValueTask<BluetoothDevice?> FindAsync(BluetoothAdapter adapter, string name)
+    private async ValueTask<BluetoothDevice?> FindAsync(BluetoothAdapter bluetoothAdapter, string name)
     {
         // Find
         var tcs = new TaskCompletionSource<BluetoothDevice?>();
@@ -98,7 +98,7 @@ public sealed partial class BluetoothSerialFactory
         ContextCompat.RegisterReceiver(context, receiver, filter, ContextCompat.ReceiverNotExported);
         try
         {
-            if (!adapter.StartDiscovery())
+            if (!bluetoothAdapter.StartDiscovery())
             {
                 return null;
             }
@@ -112,7 +112,7 @@ public sealed partial class BluetoothSerialFactory
         }
         finally
         {
-            adapter.CancelDiscovery();
+            bluetoothAdapter.CancelDiscovery();
             context.UnregisterReceiver(receiver);
         }
     }

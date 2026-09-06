@@ -14,7 +14,7 @@ using Microsoft.Maui.Controls.Shapes;
 
 using Template.MobileApp.Models.Sample.Calendar;
 
-public partial class CalendarView : ContentView
+public partial class CalendarView
 {
     // ------------------------------------------------------------------ BindableProperties: Commands / View
 
@@ -483,6 +483,7 @@ public partial class CalendarView : ContentView
             InputTransparent = true
         };
 
+#pragma warning disable IDE0028
         public BoxView[] VerticalDividers { get; } = Enumerable.Range(0, DaysPerWeek - 1)
             .Select(_ => new BoxView
             {
@@ -491,6 +492,7 @@ public partial class CalendarView : ContentView
                 InputTransparent = true
             })
             .ToArray();
+#pragma warning restore IDE0028
 
         public List<EventBorderVisual> EventPool { get; } = [];
 
@@ -586,12 +588,9 @@ public partial class CalendarView : ContentView
         // スタンプ表示用の再利用可能な Label プール
         public List<Label> StampLabelPool { get; } = [];
 
-#pragma warning disable IDE0032
         // [DIFF-UPDATE: DateBubble] RoundRectangle を毎回 new せず同一インスタンスを再利用
-        private readonly RoundRectangle dateBubbleShape = new() { CornerRadius = new CornerRadius(2) };
 
-        internal RoundRectangle DateBubbleShape => dateBubbleShape;
-#pragma warning restore IDE0032
+        internal RoundRectangle DateBubbleShape { get; } = new() { CornerRadius = new CornerRadius(2) };
 
         public DayCellVisual()
         {

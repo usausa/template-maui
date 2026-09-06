@@ -10,6 +10,7 @@ public sealed partial class SampleWebAppView
         Loaded += OnLoaded;
     }
 
+    // ReSharper disable once AsyncVoidEventHandlerMethod
     private async void OnLoaded(object? sender, EventArgs e)
     {
         Loaded -= OnLoaded;

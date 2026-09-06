@@ -17,4 +17,10 @@ public sealed partial class MenuViewModel : AppViewModelBase
 
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }
+
+    protected override Task OnNotifyBackAsync()
+    {
+        AndroidHelper.MoveTaskToBack();
+        return Task.CompletedTask;
+    }
 }

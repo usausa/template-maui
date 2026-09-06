@@ -116,6 +116,7 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
                 Balance = SuicaLogic.ExtractAccessBalance(block.BlockData),
                 TransactionId = SuicaLogic.ExtractAccessTransactionId(block.BlockData)
             },
+#pragma warning disable IDE0028
             blocks1.Concat(blocks2).Concat(blocks3)
                 .Where(static x => SuicaLogic.IsValidLog(x.BlockData))
                 .Select(static x => new SuicaLogData
@@ -127,5 +128,6 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
                     TransactionId = SuicaLogic.ExtractLogTransactionId(x.BlockData)
                 })
                 .ToList());
+#pragma warning restore IDE0028
     }
 }

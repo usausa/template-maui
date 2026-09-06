@@ -16,32 +16,31 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     private readonly IScheduleEventProvider scheduleService;
     private readonly HolidayService holidayService;
 
-    private MonthViewBuilder builder = new(DayOfWeek.Monday);
+    private MonthViewBuilder builder = new();
     private int currentYear;
     private int currentMonth;
 
     [ObservableProperty]
     public partial MonthView? MonthView { get; private set; }
 
-#pragma warning disable IDE0032
-    private DayOfWeek firstDayOfWeek = DayOfWeek.Monday;
-
+    // StyleCop が field キーワードの初期化子構文 (閉じ括弧と同一行) を誤検知するため抑止
+#pragma warning disable SA1500
     public DayOfWeek FirstDayOfWeek
     {
-        get => firstDayOfWeek;
+        get;
         set
         {
-            if (firstDayOfWeek == value)
+            if (field == value)
             {
                 return;
             }
-            firstDayOfWeek = value;
+            field = value;
             RaisePropertyChanged(new PropertyChangedEventArgs(nameof(FirstDayOfWeek)));
             builder = new MonthViewBuilder(value);
             LoadMonth(currentYear, currentMonth);
         }
-    }
-#pragma warning restore IDE0032
+    } = DayOfWeek.Monday;
+#pragma warning restore SA1500
 
     [ObservableProperty]
     public partial CalendarSelectionMode SelectionMode { get; set; } = CalendarSelectionMode.None;

@@ -17,7 +17,7 @@
 
     <!-- グループ毎に行を分け、余りセルは可視の無効ボタンにする -->
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*"
+          RowDefinitions="*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*,*">
 
         <!-- 決済・EC -->
@@ -161,6 +161,20 @@
                 CommandParameter="{markup:ViewId UITimeline}"
                 Text="Timeline"
                 ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.View_timeline}}" />
+
+        <!-- 拡張用 -->
+        <Button Grid.Row="8" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="8" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="8" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
 
     </Grid>
 

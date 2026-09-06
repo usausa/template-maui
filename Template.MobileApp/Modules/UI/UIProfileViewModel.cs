@@ -40,7 +40,7 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
         new() { Label = "Amazon ECS", BackgroundColor = Color.FromArgb("#E8F5E9"), TextColor = Color.FromArgb("#1B5E20") },
         new() { Label = "CDK / Terraform", BackgroundColor = Color.FromArgb("#FCE4EC"), TextColor = Color.FromArgb("#880E4F") },
         new() { Label = ".NET MAUI", BackgroundColor = Color.FromArgb("#F3E5F5"), TextColor = Color.FromArgb("#6A1B9A") },
-        new() { Label = "DynamoDB", BackgroundColor = Color.FromArgb("#E0F2F1"), TextColor = Color.FromArgb("#004D40") },
+        new() { Label = "DynamoDB", BackgroundColor = Color.FromArgb("#E0F2F1"), TextColor = Color.FromArgb("#004D40") }
     ];
 
     public IReadOnlyList<UIProfilePhoto> Photos { get; } =

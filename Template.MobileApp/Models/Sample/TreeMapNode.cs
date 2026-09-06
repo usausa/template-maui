@@ -30,10 +30,12 @@ public sealed class TreeMapNode<T>
 #pragma warning disable CA1000
     public static TreeMapNode<T> Build(IEnumerable<T> values, Func<T, double> areaSelector)
     {
+#pragma warning disable IDE0028
         return BuildRecursive(values
             .Select(value => new TreeMapNode<T>(value, areaSelector(value)))
             .OrderByDescending(node => node.Area)
             .ToArray());
+#pragma warning restore IDE0028
     }
 #pragma warning restore CA1000
 

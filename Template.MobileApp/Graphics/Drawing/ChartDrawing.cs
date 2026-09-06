@@ -38,7 +38,7 @@ public sealed class ChartDrawing : DrawingObject, IDisposable
         Color.FromArgb("#4CAF50"),
         Color.FromArgb("#FFB300"),
         Color.FromArgb("#EC407A"),
-        Color.FromArgb("#26C6DA"),
+        Color.FromArgb("#26C6DA")
     ];
 
     private readonly System.Timers.Timer animationTimer = new(1000d / 60);

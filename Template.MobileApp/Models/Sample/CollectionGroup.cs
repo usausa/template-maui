@@ -5,9 +5,11 @@ using System.Collections.Specialized;
 public class CollectionGroup<TKey, TItem> : IReadOnlyList<TItem>, INotifyPropertyChanged, INotifyCollectionChanged
 {
     // ReSharper disable StaticMemberInGenericType
+#pragma warning disable CA1000
     private static readonly PropertyChangedEventArgs IsExpandedChangedEventArgs = new(nameof(IsExpanded));
 
     private static readonly NotifyCollectionChangedEventArgs ResetEventArgs = new(NotifyCollectionChangedAction.Reset);
+#pragma warning restore CA1000
     // ReSharper restore StaticMemberInGenericType
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -58,7 +60,7 @@ public class CollectionGroup<TKey, TItem> : IReadOnlyList<TItem>, INotifyPropert
     {
         Key = key;
         this.isExpanded = isExpanded;
-        sourceItems = items.ToList();
+        sourceItems = [.. items];
         displayItems = isExpanded ? sourceItems : [];
     }
 

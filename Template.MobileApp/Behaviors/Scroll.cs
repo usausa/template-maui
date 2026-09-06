@@ -110,13 +110,9 @@ public static partial class Scroll
         }
 
         var target = GetParallaxTarget(scrollView);
-        if (target is null)
-        {
-            return;
-        }
 
         // スクロールの半分の速度で追従させて奥行きを出す
-        target.TranslationY = Math.Max(0, e.ScrollY) * 0.5;
+        target?.TranslationY = Math.Max(0, e.ScrollY) * 0.5;
     }
 
     // ------------------------------------------------------------------ RatioCommand

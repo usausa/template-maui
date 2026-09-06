@@ -1074,11 +1074,11 @@ public sealed class Gauge : SKCanvasView
     private void DrawPivot(SKCanvas canvas, SKPoint center)
     {
         // ベースカラーより明るいハイライト色を計算する
-        var pivotSK = PivotColor.ToSKColor();
+        var pivotColor = PivotColor.ToSKColor();
         var highlight = new SKColor(
-            (byte)Math.Min(pivotSK.Red + 80, 255),
-            (byte)Math.Min(pivotSK.Green + 50, 255),
-            (byte)Math.Min(pivotSK.Blue + 40, 255));
+            (byte)Math.Min(pivotColor.Red + 80, 255),
+            (byte)Math.Min(pivotColor.Green + 50, 255),
+            (byte)Math.Min(pivotColor.Blue + 40, 255));
 
         // 左上方向にオフセットした点をハイライトの中心とし、立体感を演出する
         var hiCenter = new SKPoint(
@@ -1089,7 +1089,7 @@ public sealed class Gauge : SKCanvasView
         using var shader = SKShader.CreateRadialGradient(
             hiCenter,
             PivotRadius * 1.1f,
-            [highlight, pivotSK],
+            [highlight, pivotColor],
             null,
             SKShaderTileMode.Clamp);
 

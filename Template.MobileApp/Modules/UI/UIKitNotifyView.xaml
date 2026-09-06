@@ -14,11 +14,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootList" TargetType="CollectionView">
+            <Style x:Key="RootList"
+                   TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="ItemBorder" TargetType="Border">
+            <Style x:Key="ItemBorder"
+                   TargetType="Border">
                 <Setter Property="Margin" Value="12,6" />
                 <Setter Property="Padding" Value="12" />
                 <Setter Property="BackgroundColor" Value="White" />
@@ -27,7 +29,8 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style x:Key="IconBorder" TargetType="Border">
+            <Style x:Key="IconBorder"
+                   TargetType="Border">
                 <Setter Property="WidthRequest" Value="42" />
                 <Setter Property="HeightRequest" Value="42" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
@@ -35,7 +38,8 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 21" />
             </Style>
 
-            <Style x:Key="IconLabel" TargetType="Label">
+            <Style x:Key="IconLabel"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
@@ -43,18 +47,21 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="KitNotifyTitleLabel" TargetType="Label">
+            <Style x:Key="KitNotifyTitleLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
-            <Style x:Key="DescLabel" TargetType="Label">
+            <Style x:Key="DescLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="TimeLabel" TargetType="Label">
+            <Style x:Key="TimeLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="VerticalOptions" Value="Start" />
@@ -68,14 +75,16 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="module:UIKitNotifyItem">
                 <Border Style="{StaticResource ItemBorder}">
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=ReadCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
                                               CommandParameter="{Binding .}" />
                     </Border.GestureRecognizers>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                     <Border.Triggers>
                         <DataTrigger TargetType="Border"
-                                     Binding="{Binding IsUnread}"
-                                     Value="True">
+                                     Value="True"
+                                     Binding="{Binding IsUnread}">
                             <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                             <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
                         </DataTrigger>
@@ -84,34 +93,39 @@
                           ColumnSpacing="12">
                         <BoxView Grid.Column="0"
                                  WidthRequest="4"
-                                 CornerRadius="2"
+                                 IsVisible="{Binding IsUnread}"
                                  Color="{StaticResource BlueDefault}"
-                                 IsVisible="{Binding IsUnread}" />
-                        <Border Grid.Column="1" Style="{StaticResource IconBorder}">
-                            <Label Style="{StaticResource IconLabel}" Text="{Binding Icon}" />
+                                 CornerRadius="2" />
+                        <Border Grid.Column="1"
+                                Style="{StaticResource IconBorder}">
+                            <Label Style="{StaticResource IconLabel}"
+                                   Text="{Binding Icon}" />
                         </Border>
-                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
-                            <Label Style="{StaticResource KitNotifyTitleLabel}" Text="{Binding Title}">
+                        <VerticalStackLayout Grid.Column="2"
+                                             VerticalOptions="Center">
+                            <Label Style="{StaticResource KitNotifyTitleLabel}"
+                                   Text="{Binding Title}">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
-                                                 Binding="{Binding IsUnread}"
-                                                 Value="False">
+                                                 Value="False"
+                                                 Binding="{Binding IsUnread}">
                                         <Setter Property="FontAttributes" Value="None" />
                                         <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
-                            <Label Style="{StaticResource DescLabel}" Text="{Binding Description}" />
+                            <Label Style="{StaticResource DescLabel}"
+                                   Text="{Binding Description}" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="3"
                                              Spacing="6">
-                            <Label Style="{StaticResource TimeLabel}" Text="{Binding Time}" />
-                            <BoxView WidthRequest="8"
-                                     HeightRequest="8"
-                                     CornerRadius="4"
+                            <Label Style="{StaticResource TimeLabel}"
+                                   Text="{Binding Time}" />
+                            <BoxView WidthRequest="8" HeightRequest="8"
                                      HorizontalOptions="End"
+                                     IsVisible="{Binding IsUnread}"
                                      Color="{StaticResource BlueDefault}"
-                                     IsVisible="{Binding IsUnread}" />
+                                     CornerRadius="4" />
                         </VerticalStackLayout>
                     </Grid>
                 </Border>

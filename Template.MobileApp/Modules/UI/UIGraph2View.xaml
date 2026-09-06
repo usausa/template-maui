@@ -104,10 +104,12 @@
                 <DataTemplate x:DataType="{x:Type graph:TimelineRow}">
                     <Grid RowDefinitions="56,Auto"
                           ColumnDefinitions="Auto,*">
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGraph2ViewModel}}, Path=ToggleCommand, x:DataType={x:Type module:UIGraph2ViewModel}}"
                                                   CommandParameter="{Binding .}" />
                         </Grid.GestureRecognizers>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
                         <controls:GraphRowSurface Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
                                                   Style="{StaticResource TimelineSurface}"

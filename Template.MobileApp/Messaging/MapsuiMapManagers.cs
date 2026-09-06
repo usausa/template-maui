@@ -7,7 +7,6 @@ using Mapsui.Layers;
 using Mapsui.Nts;
 using Mapsui.Projections;
 using Mapsui.Styles;
-using Mapsui.Widgets;
 using Mapsui.Widgets.ButtonWidgets;
 using Mapsui.Widgets.ScaleBar;
 
@@ -447,7 +446,7 @@ public sealed class MapsuiClusterManager : IMapsuiMapManager, IDisposable
                     SymbolType = SymbolType.Ellipse,
                     SymbolScale = 0.4,
                     Fill = new MapsuiBrush(MapsuiColor.FromString("#43A047")),
-                    Outline = new MapsuiPen(MapsuiColor.White, 1)
+                    Outline = new MapsuiPen(MapsuiColor.White)
                 });
             }
 

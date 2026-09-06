@@ -93,6 +93,7 @@
             <DataTemplate x:Key="TaskTemplate"
                           x:DataType="{x:Type module:DragTask}">
                 <Border Style="{StaticResource TaskBorder}">
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                     <Border.GestureRecognizers>
                         <DragGestureRecognizer CanDrag="True"
                                                DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
@@ -101,6 +102,7 @@
                                                DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
                                                DropCommandParameter="{Binding .}" />
                     </Border.GestureRecognizers>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                     <Grid ColumnDefinitions="4,*">
                         <BoxView Grid.Column="0"
                                  Color="{Binding Accent}" />

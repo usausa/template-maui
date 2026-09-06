@@ -74,7 +74,7 @@ public sealed class UITimelineViewModel : AppViewModelBase
             Description = "スポンサーブース巡り · AWS Hero / Community Builder との交流",
             Tag1 = "交流", Tag2 = "コミュニティ",
             DotColor = Color.FromArgb("#1E88E5")
-        },
+        }
     ];
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);

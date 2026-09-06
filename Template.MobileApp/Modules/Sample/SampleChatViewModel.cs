@@ -14,7 +14,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         ("なるほど、良い質問ですね。.NET MAUI では XAML でレイアウトを宣言し、データバインディングで ViewModel と接続します。コードビハインドを使わずに Behavior や Trigger で振る舞いを追加するのがおすすめです。", false),
         ("その場合は BindableProperty を定義してコントロールに公開します。例を書いてみますね。", false),
         ("public sealed class GreetingService\n{\n    public string CreateMessage(string name)\n    {\n        ArgumentNullException.ThrowIfNull(name);\n        return $\"Hello, {name}! Welcome to .NET MAUI.\";\n    }\n}", true),
-        ("補足すると、リスト表示には CollectionView を使い、ItemsUpdatingScrollMode を KeepLastItemInView にするとチャットのように末尾へ追従します。パフォーマンスが必要な場面では DataTemplateSelector でテンプレートを分けるのが定石です。", false),
+        ("補足すると、リスト表示には CollectionView を使い、ItemsUpdatingScrollMode を KeepLastItemInView にするとチャットのように末尾へ追従します。パフォーマンスが必要な場面では DataTemplateSelector でテンプレートを分けるのが定石です。", false)
     ];
 
     // 音声フロー (C-7)。録音と AI 処理はモックで UI パターンのみ再現する
@@ -121,7 +121,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
             Messages.Add(new AiChatMessage
             {
                 Role = AiChatRole.Assistant,
-                Text = "こんにちは!AI アシスタントです。開発に関する質問をどうぞ 🤖",
+                Text = "こんにちは!AI アシスタントです。開発に関する質問をどうぞ 🤖"
             });
         }
         return Task.CompletedTask;

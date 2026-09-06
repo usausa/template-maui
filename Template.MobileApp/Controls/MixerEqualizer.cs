@@ -222,7 +222,7 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
 
             // Peak hold cell
             var peak = (i < peakValues.Length) ? peakValues[i] : 0;
-            if ((peak > value) && (peak > 0))
+            if (peak > value)
             {
                 var j = peak - 1;
                 var y = dirtyRect.Height - ((j + 1) * cellHeight) - (j * verticalSpacing);

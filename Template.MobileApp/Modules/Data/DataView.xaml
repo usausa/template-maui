@@ -31,7 +31,6 @@
 
             <Style x:Key="ActionRowGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="*,*" />
                 <Setter Property="ColumnSpacing" Value="8" />
                 <Setter Property="RowSpacing" Value="8" />
             </Style>
@@ -86,6 +85,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Storage}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <Grid Style="{StaticResource ActionRowGrid}"
+                      ColumnDefinitions="*,*"
                       RowDefinitions="Auto,Auto">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource ActionButton}"
@@ -121,6 +121,7 @@
                     </HorizontalStackLayout>
 
                     <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*"
                           RowDefinitions="Auto,Auto">
                         <Button Grid.Row="0" Grid.Column="0"
                                 Style="{StaticResource ActionButton}"

@@ -60,12 +60,14 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    public override async Task OnNavigatingFromAsync(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         if (cts is not null)
         {
-            await cts.CancelAsync();
+            return cts.CancelAsync();
         }
+
+        return Task.CompletedTask;
     }
 
     // FilePicker (端末のファイル選択) でアップロード対象を選び、ファイル名のままリモートへ転送する

@@ -288,9 +288,11 @@
                 <DataTemplate x:DataType="module:UIShopItem">
                     <Border Style="{StaticResource PopularCardBorder}">
                         <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                             <toolkit:SfEffectsView.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
                             </toolkit:SfEffectsView.GestureRecognizers>
+                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                             <Grid RowDefinitions="Auto,Auto,Auto">
                                 <Image Grid.Row="0"
                                        Style="{StaticResource PopularImage}"
@@ -330,9 +332,11 @@
                 <DataTemplate x:DataType="module:UIShopItem">
                     <Border Style="{StaticResource ItemCardBorder}">
                         <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                             <toolkit:SfEffectsView.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
                             </toolkit:SfEffectsView.GestureRecognizers>
+                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                             <Grid RowDefinitions="Auto,Auto,Auto">
                                 <Image Grid.Row="0"
                                        Style="{StaticResource ItemImage}"

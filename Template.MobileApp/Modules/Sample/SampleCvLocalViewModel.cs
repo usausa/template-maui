@@ -99,7 +99,9 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
                 var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
 
                 // Update
+#pragma warning disable IDE0028
                 Drawing.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+#pragma warning restore IDE0028
             }
             else
             {

@@ -32,6 +32,7 @@ using Shiny;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 using Smart.Data.Mapper;
+using Smart.Mvvm.Resolver;
 
 using Syncfusion.Maui.Toolkit.Hosting;
 
@@ -72,9 +73,9 @@ public static partial class MauiProgram
             .UseMauiComponents()
             .UseCommunityToolkitServices()
             .UseCustomView()
-            .ConfigureCustomLayouts()
-            .ConfigureContainer()
-            .Build();
+            .UseCustomLayouts()
+            .ConfigureComponents()
+            .BuildApplication();
 
     // ------------------------------------------------------------
     // Debug
@@ -135,14 +136,6 @@ public static partial class MauiProgram
     // ------------------------------------------------------------
     // Application
     // ------------------------------------------------------------
-
-    private static MauiAppBuilder ConfigureCustomLayouts(this MauiAppBuilder builder)
-    {
-        // ILayoutManagerFactory: レイアウト型ごとにマネージャを DI で差し替えるフック
-        // (Layouts/AppLayoutManagerFactory 参照。CascadeStackLayout のみ対象で他は既定のまま)
-        builder.Services.AddSingleton<ILayoutManagerFactory, Template.MobileApp.Layouts.AppLayoutManagerFactory>();
-        return builder;
-    }
 
     private static void ConfigureLifecycleEvents(ILifecycleBuilder effects)
     {
@@ -221,6 +214,14 @@ public static partial class MauiProgram
         return builder;
     }
 
+    private static MauiAppBuilder UseCustomLayouts(this MauiAppBuilder builder)
+    {
+        // ILayoutManagerFactory: レイアウト型ごとにマネージャを DI で差し替えるフック
+        // (Layouts/AppLayoutManagerFactory 参照。CascadeStackLayout のみ対象で他は既定のまま)
+        builder.Services.AddSingleton<ILayoutManagerFactory, Layouts.AppLayoutManagerFactory>();
+        return builder;
+    }
+
     // ------------------------------------------------------------
     // Design
     // ------------------------------------------------------------
@@ -256,7 +257,7 @@ public static partial class MauiProgram
     // Container
     // ------------------------------------------------------------
 
-    private static MauiAppBuilder ConfigureContainer(this MauiAppBuilder builder)
+    private static MauiAppBuilder ConfigureComponents(this MauiAppBuilder builder)
     {
         builder.ConfigureContainer(
             new GeneratedServiceProviderFactory(static options => options.TrackTransientDisposables = false),
@@ -316,6 +317,8 @@ public static partial class MauiProgram
         services.AddSingleton<ResourceDictionary>(static _ => Application.Current!.Resources);
 
         // State
+        services.AddSingleton(BusyState.Default);
+        services.AddSingleton<StartupState>();
         services.AddSingleton<DeviceState>();
         services.AddSingleton<Session>();
         services.AddSingleton<Settings>();
@@ -325,8 +328,6 @@ public static partial class MauiProgram
             .AddHttpClient(ApiNames.Default, SetupHttpClient)
             .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)
             .AddHttpMessageHandler<ApiDelegatingHandler>();
-        // 転送用: 大きいファイルを通常APIの30秒で切らないよう長めにする。
-        // 無限にすると無応答時に中断手段が無くなるため上限は設ける (呼び出し側がCancellationTokenを渡す場合はそちらが優先)
         services
             .AddHttpClient(ApiNames.Transfer, SetupTransferHttpClient)
             .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)
@@ -364,10 +365,6 @@ public static partial class MauiProgram
         // Models
         services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));
         services.AddSingleton<ScpService>();
-
-        // Startup
-        services.AddSingleton<ApplicationInitializer>();
-        services.AddSingleton<IMauiInitializeService>(static p => p.GetRequiredService<ApplicationInitializer>());
     }
 
     // ------------------------------------------------------------
@@ -396,6 +393,61 @@ public static partial class MauiProgram
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             PooledConnectionLifetime = TimeSpan.FromMinutes(1)
         };
+
+    // ------------------------------------------------------------
+    // Build
+    // ------------------------------------------------------------
+
+    private static MauiApp BuildApplication(this MauiAppBuilder builder)
+    {
+        var app = builder.Build();
+
+        var services = app.Services;
+
+        // Setup provider
+        ResolveProvider.Default.Provider = services;
+
+#if DEBUG
+        // Diagnostics for GeneratedServiceProvider
+        if (services is GeneratedServiceProvider generatedProvider)
+        {
+            foreach (var line in BunnyTail.DependencyInjection.Diagnostics.ServiceFactoryReportExtensions.DescribeRuntimeFallbacks(generatedProvider).Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            {
+                System.Diagnostics.Debug.WriteLine(line);
+            }
+        }
+
+        // Setup navigator
+        var navigator = services.GetRequiredService<INavigator>();
+        navigator.Navigated += (_, args) =>
+        {
+            // for debug
+            System.Diagnostics.Debug.WriteLine($"Navigated: [{args.Context.FromId}]->[{args.Context.ToId}] : stacked=[{navigator.StackedCount}]");
+        };
+#endif
+
+        // Initial setting
+        var settings = services.GetRequiredService<Settings>();
+
+        if (String.IsNullOrEmpty(settings.ApiEndPoint) && !String.IsNullOrEmpty(EmbeddedProperty.ApiEndPoint))
+        {
+            settings.ApiEndPoint = EmbeddedProperty.ApiEndPoint;
+        }
+
+        if (String.IsNullOrEmpty(settings.UniqueId))
+        {
+            var uniqueId = Guid.NewGuid();
+            settings.UniqueId = uniqueId.ToString();
+        }
+
+        var apiContext = services.GetRequiredService<ApiContext>();
+        if (!String.IsNullOrEmpty(settings.ApiEndPoint))
+        {
+            apiContext.BaseAddress = new Uri(settings.ApiEndPoint);
+        }
+
+        return app;
+    }
 
     // ------------------------------------------------------------
     // View & ViewModel

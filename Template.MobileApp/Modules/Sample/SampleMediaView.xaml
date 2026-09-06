@@ -85,6 +85,7 @@
         <Border Style="{StaticResource ControlBarBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
                 IsVisible="{Binding IsControlBarVisible}">
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
             <Grid ColumnDefinitions="Auto,Auto,*,Auto"
                   ColumnSpacing="8">
                 <ImageButton Grid.Column="0"
@@ -116,6 +117,7 @@
                        Style="{StaticResource TimeLabel}"
                        Text="{Binding Source={x:Reference Player}, Path=Duration, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
             </Grid>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
         </Border>
 
     </Grid>

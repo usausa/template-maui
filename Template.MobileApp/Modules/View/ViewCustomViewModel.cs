@@ -6,31 +6,31 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
 {
     public IReadOnlyList<TreeNode> Nodes { get; } =
     [
-        new TreeNode(
+        new(
             "Template.MobileApp",
-            new TreeNode(
+            new(
                 "Controls",
-                new TreeNode("MarqueeLabel.cs"),
-                new TreeNode("TreeView.cs"),
-                new TreeNode("ColorPicker.cs")),
-            new TreeNode(
+                new("MarqueeLabel.cs"),
+                new("TreeView.cs"),
+                new("ColorPicker.cs")),
+            new(
                 "Modules",
-                new TreeNode(
+                new(
                     "Basic",
-                    new TreeNode("BasicMenuView.xaml"),
-                    new TreeNode("BasicSettingView.xaml")),
-                new TreeNode(
+                    new("BasicMenuView.xaml"),
+                    new("BasicSettingView.xaml")),
+                new(
                     "View",
-                    new TreeNode("ViewLayoutView.xaml"),
-                    new TreeNode("ViewCustomView.xaml"))),
-            new TreeNode(
+                    new("ViewLayoutView.xaml"),
+                    new("ViewCustomView.xaml"))),
+            new(
                 "Resources",
-                new TreeNode("Styles"),
-                new TreeNode("Fonts"))),
-        new TreeNode(
+                new("Styles"),
+                new("Fonts"))),
+        new(
             "Document",
-            new TreeNode("Development.md"),
-            new TreeNode("UI_Development_Log.md"))
+            new("Development.md"),
+            new("UI_Development_Log.md"))
     ];
 
     [ObservableProperty]

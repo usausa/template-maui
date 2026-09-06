@@ -16,66 +16,66 @@ public sealed class HttpService
     // Basic
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse<ServerTimeResponse>> GetServerTimeAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<ServerTimeResponse>> GetServerTimeAsync(CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<ServerTimeResponse>("api/server/time", cancel: cancellationToken);
+        return client.GetAsync<ServerTimeResponse>("api/server/time", cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------
     // Data
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse<DataListResponse>> GetDataListAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<DataListResponse>> GetDataListAsync(CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<DataListResponse>("api/data/list", cancel: cancellationToken);
+        return client.GetAsync<DataListResponse>("api/data/list", cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------
     // Secret
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse<SecretMessageResponse>> GetSecretMessageAsync(CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<SecretMessageResponse>> GetSecretMessageAsync(CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<SecretMessageResponse>("api/secret/message", cancel: cancellationToken);
+        return client.GetAsync<SecretMessageResponse>("api/secret/message", cancel: cancellationToken);
     }
 
-    public async ValueTask<IRestResponse<AccountLoginResponse>> PostAccountLoginAsync(AccountLoginRequest request, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<AccountLoginResponse>> PostAccountLoginAsync(AccountLoginRequest request, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.PostAsync<AccountLoginResponse>("api/account/login", request, cancel: cancellationToken);
+        return client.PostAsync<AccountLoginResponse>("api/account/login", request, cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------
     // Storage
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
-        return await client.DownloadAsync(
+        return client.DownloadAsync(
             $"api/storage/{path}",
             filename,
             progress: CreateProgressCallback(action),
             cancel: cancellationToken);
     }
 
-    public async ValueTask<IRestResponse> DownloadAsync(string path, Stream stream, Action<double> action, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> DownloadAsync(string path, Stream stream, Action<double> action, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
-        return await client.DownloadAsync(
+        return client.DownloadAsync(
             $"api/storage/{path}",
             stream,
             progress: CreateProgressCallback(action),
             cancel: cancellationToken);
     }
 
-    public async ValueTask<IRestResponse> UploadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> UploadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
-        return await client.UploadAsync(
+        return client.UploadAsync(
             $"api/storage/{path}",
             filename,
             compress: CompressOption.Gzip,
@@ -83,10 +83,10 @@ public sealed class HttpService
             cancel: cancellationToken);
     }
 
-    public async ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
-        return await client.UploadAsync(
+        return client.UploadAsync(
             $"api/storage/{path}",
             stream,
             compress: CompressOption.Gzip,
@@ -118,15 +118,15 @@ public sealed class HttpService
     // Test
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse<object>> GetTestErrorAsync(int code, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<object>> GetTestErrorAsync(int code, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<object>($"api/test/error/{code}", cancel: cancellationToken);
+        return client.GetAsync<object>($"api/test/error/{code}", cancel: cancellationToken);
     }
 
-    public async ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return await client.GetAsync<object>($"api/test/delay/{timeout}", cancel: cancellationToken);
+        return client.GetAsync<object>($"api/test/delay/{timeout}", cancel: cancellationToken);
     }
 }

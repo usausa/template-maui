@@ -105,7 +105,7 @@ public abstract class DrawingObject : IDrawingObject
     // 画面表示と同じ OnDraw を使って PNG を書き出す (スプライトエディタ記事の Render 共用構成)
     public void ExportPng(Stream stream, int width, int height)
     {
-        using var context = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(width, height, 1f);
+        using var context = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(width, height);
         OnDraw(context.Canvas, new RectF(0f, 0f, width, height));
         context.WriteToStream(stream);
     }

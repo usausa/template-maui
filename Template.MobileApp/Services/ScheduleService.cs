@@ -27,7 +27,7 @@ public sealed class ScheduleService : IScheduleEventProvider
         (DayOfWeek.Monday, "週間報告", ScheduleStyle.Text, GreenText, true),
         (DayOfWeek.Monday, "英会話", ScheduleStyle.Text, PinkText, true),
         (DayOfWeek.Wednesday, "サークル", ScheduleStyle.Text, YellowText, true),
-        (DayOfWeek.Saturday, "水泳教室", ScheduleStyle.Text, CyanText, true),
+        (DayOfWeek.Saturday, "水泳教室", ScheduleStyle.Text, CyanText, true)
     ];
 
     private static readonly (int DayOffset, string Title, int Span, ScheduleStyle Style, Color Bg, Color? Fg)[] MonthlyTemplates =
@@ -37,7 +37,7 @@ public sealed class ScheduleService : IScheduleEventProvider
         (17, "燃えるゴ", 1, ScheduleStyle.Filled, DarkRed, null),
         (24, "燃えるゴ", 1, ScheduleStyle.Filled, DarkRed, null),
         (5,  "○ジム",   1, ScheduleStyle.Filled, Cyan, null),
-        (19, "○ジム",   1, ScheduleStyle.Filled, Cyan, null),
+        (19, "○ジム",   1, ScheduleStyle.Filled, Cyan, null)
     ];
 
     private static readonly (int DayOffset, string Glyph, StampPosition Position, int FontSize, double Opacity)[] StampTemplates =
@@ -49,7 +49,7 @@ public sealed class ScheduleService : IScheduleEventProvider
         (20, "\U0001F45B", StampPosition.TopCenter, 22, 1.0),
         (22, "\U0001F43C", StampPosition.TopLeft,   22, 1.0),
         (26, "\U0001F38F", StampPosition.TopCenter, 22, 1.0),
-        (29, "\U0001F408", StampPosition.TopRight,  24, 1.0),
+        (29, "\U0001F408", StampPosition.TopRight,  24, 1.0)
     ];
 
     private static readonly (int DayOffset, string Title, int Span, ScheduleStyle Style, Color Bg, Color? Fg, bool Underline)[] OccasionalTemplates =
@@ -60,7 +60,7 @@ public sealed class ScheduleService : IScheduleEventProvider
         (12, "大阪出張",   2, ScheduleStyle.Text,   Blue,         Blue,         true),
         (14, "友達泊まり", 3, ScheduleStyle.Filled, HotPink,      null,         false),
         (21, "買い物",     1, ScheduleStyle.Filled, Yellow,       Colors.Black, false),
-        (26, "海外出張",   4, ScheduleStyle.Filled, Blue,         null,         false),
+        (26, "海外出張",   4, ScheduleStyle.Filled, Blue,         null,         false)
     ];
 
     public IReadOnlyList<ScheduleEvent> GetEvents(DateOnly startDate, DateOnly endDate)
@@ -162,7 +162,7 @@ public sealed class ScheduleService : IScheduleEventProvider
                         Glyph = t.Glyph,
                         Position = t.Position,
                         FontSize = t.FontSize,
-                        Opacity = t.Opacity,
+                        Opacity = t.Opacity
                     });
                 }
             }
@@ -200,6 +200,6 @@ public sealed class ScheduleService : IScheduleEventProvider
             Style = style,
             BackgroundColor = bg,
             TextColor = fg,
-            Underline = underline,
+            Underline = underline
         };
 }

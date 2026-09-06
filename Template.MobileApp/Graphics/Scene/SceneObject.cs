@@ -36,6 +36,8 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     private CancellationTokenSource? cts;
 
+    private Task? loopTask;
+
     private float lastTime;
 
     protected SKPaint Stroke { get; } = new() { IsAntialias = true, Style = SKPaintStyle.Stroke };
@@ -93,6 +95,13 @@ public abstract class SceneObject : ISceneObject, IDisposable
                     return;
                 }
             }
+
+            // ループ稼働中の直接描画は行わない (ループスレッドと共有ペイントを同時使用しないため。初回バッファ完成までは空描画)
+            if (cts is not null)
+            {
+                canvas.Clear();
+                return;
+            }
         }
 
         var start = Stopwatch.GetTimestamp();
@@ -146,7 +155,7 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
         clock.Start();
         cts = new CancellationTokenSource();
-        _ = Loop(cts.Token);
+        loopTask = Loop(cts.Token);
     }
 
     public void Stop()
@@ -158,6 +167,18 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
         clock.Stop();
         cts.Cancel();
+
+        // 進行中のフレーム描画の完了を待ってから破棄する (後続の Dispose が使用中の Skia リソースを壊さないように)
+        try
+        {
+            loopTask?.Wait(TimeSpan.FromSeconds(2));
+        }
+        catch (AggregateException)
+        {
+            // キャンセルによる例外は無視
+        }
+
+        loopTask = null;
         cts.Dispose();
         cts = null;
     }
@@ -167,7 +188,8 @@ public abstract class SceneObject : ISceneObject, IDisposable
         try
         {
             using var timer = new PeriodicTimer(Interval);
-            while (await timer.WaitForNextTickAsync(token))
+            // UI スレッドの SynchronizationContext へ戻さずスレッドプールで回す (UI スレッドでは描画しない)
+            while (await timer.WaitForNextTickAsync(token).ConfigureAwait(false))
             {
                 if (UseDoubleBuffer && (lastWidth > 0))
                 {

@@ -21,10 +21,8 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
-                                Opacity="0.08"
-                                Radius="6"
-                                Offset="0,2" />
+                        <Shadow Offset="0,2"
+                                Brush="Black" Opacity="0.08" Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -156,11 +154,9 @@
                             <Ellipse Style="{StaticResource TypingDot}"
                                      behaviors:AnimationOption.Wave="True" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True"
-                                     behaviors:AnimationOption.WaveDelay="180" />
+                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="180" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True"
-                                     behaviors:AnimationOption.WaveDelay="360" />
+                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="360" />
                         </HorizontalStackLayout>
                         <Label Style="{StaticResource MessageTextLabel}"
                                IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}"
@@ -187,11 +183,9 @@
                             <Ellipse Style="{StaticResource TypingDot}"
                                      behaviors:AnimationOption.Wave="True" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True"
-                                     behaviors:AnimationOption.WaveDelay="180" />
+                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="180" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True"
-                                     behaviors:AnimationOption.WaveDelay="360" />
+                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="360" />
                         </HorizontalStackLayout>
                         <!-- コード片(モノスペース+コピー風アイコン) -->
                         <Border Style="{StaticResource CodeBorder}"
@@ -229,22 +223,22 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
     <Grid RowDefinitions="*,Auto"
           BackgroundColor="{StaticResource GrayLighten4}">
 
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
                         ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView"
-                        VerticalScrollBarVisibility="Default" />
+                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default" />
 
         <Grid Grid.Row="1"
               Style="{StaticResource InputBarGrid}"
               ColumnDefinitions="*,Auto">
             <Border Grid.Column="0"
                     Style="{StaticResource InputBorder}">
-                <Entry Placeholder="メッセージを入力"
-                       Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}" />
+                <Entry Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}"
+                       Placeholder="メッセージを入力" />
             </Border>
             <Button Grid.Column="1"
                     Style="{StaticResource SendButton}"
@@ -253,5 +247,6 @@
         </Grid>
 
     </Grid>
+    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
 </ContentView>

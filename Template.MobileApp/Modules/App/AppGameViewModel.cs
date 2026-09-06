@@ -89,10 +89,7 @@ public sealed partial class AppGameViewModel : AppViewModelBase
 
     private void Select(SudokuCellViewModel cell)
     {
-        if (selected is not null)
-        {
-            selected.IsSelected = false;
-        }
+        selected?.IsSelected = false;
 
         selected = cell;
         cell.IsSelected = true;
@@ -105,7 +102,7 @@ public sealed partial class AppGameViewModel : AppViewModelBase
             return;
         }
 
-        if (game.SetValue(selected.Row, selected.Col, int.Parse(number, System.Globalization.CultureInfo.InvariantCulture)))
+        if (game.SetValue(selected.Row, selected.Col, int.Parse(number, CultureInfo.InvariantCulture)))
         {
             RefreshAll();
             IsCompleted = game.IsCompleted;
@@ -128,7 +125,7 @@ public sealed partial class AppGameViewModel : AppViewModelBase
         foreach (var cell in Cells)
         {
             var value = game.GetValue(cell.Row, cell.Col);
-            cell.Text = value == 0 ? string.Empty : value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            cell.Text = value == 0 ? string.Empty : value.ToString(CultureInfo.InvariantCulture);
             cell.IsGiven = game.IsGiven(cell.Row, cell.Col);
             cell.IsConflict = game.HasConflict(cell.Row, cell.Col);
             cell.IsSelected = ReferenceEquals(cell, selected);

@@ -105,10 +105,12 @@
                                         <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
                                     </DataTrigger>
                                 </Border.Triggers>
+                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppGameViewModel}}, Path=SelectCommand, x:DataType={x:Type module:AppGameViewModel}}"
                                                           CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
+                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                 <Label Style="{StaticResource CellLabel}"
                                        TextColor="{StaticResource BlueDefault}"
                                        FontAttributes="None"

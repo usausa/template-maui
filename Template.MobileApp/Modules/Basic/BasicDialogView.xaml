@@ -33,7 +33,6 @@
 
             <Style x:Key="ActionRowGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="*,*" />
                 <Setter Property="ColumnSpacing" Value="8" />
                 <Setter Property="RowSpacing" Value="8" />
             </Style>
@@ -49,7 +48,8 @@
             <controls:InfoCard Title="Notification"
                                Icon="{x:Static fonts:MaterialIcons.Info}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid Style="{StaticResource ActionRowGrid}">
+                <Grid Style="{StaticResource ActionRowGrid}"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
                             Style="{StaticResource ActionButton}"
                             Command="{Binding InformationCommand}"
@@ -62,6 +62,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
                 <Grid Style="{StaticResource ActionRowGrid}"
+                      ColumnDefinitions="*,*"
                       RowDefinitions="Auto,Auto">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource ActionButton}"
@@ -87,6 +88,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160">
                 <Grid Style="{StaticResource ActionRowGrid}"
+                      ColumnDefinitions="*,*"
                       RowDefinitions="Auto,Auto">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource ActionButton}"
@@ -111,7 +113,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Speaker_notes}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
-                <Grid Style="{StaticResource ActionRowGrid}">
+                <Grid Style="{StaticResource ActionRowGrid}"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
                             Style="{StaticResource ActionButton}"
                             Command="{Binding SnackbarCommand}"

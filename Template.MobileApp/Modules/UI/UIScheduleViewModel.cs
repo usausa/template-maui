@@ -100,7 +100,7 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
                 Title = ev.Title,
                 Start = TimeSpan.FromHours(startHour),
                 End = TimeSpan.FromHours(Math.Min(startHour + duration, 20)),
-                Color = color,
+                Color = color
             });
             index++;
         }

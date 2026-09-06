@@ -292,9 +292,11 @@
                                     <DataTemplate x:DataType="module:UIStreamPoster">
                                         <Border Style="{StaticResource PosterBorder}">
                                             <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                                 <toolkit:SfEffectsView.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}" />
                                                 </toolkit:SfEffectsView.GestureRecognizers>
+                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                                 <Grid>
                                                     <Image Style="{StaticResource PosterImage}" Source="{Binding Image}" />
                                                     <Border Style="{StaticResource PosterBadgeBorder}"

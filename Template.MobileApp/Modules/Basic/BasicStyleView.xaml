@@ -36,7 +36,6 @@
 
             <Style x:Key="ButtonRowGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="*,*" />
                 <Setter Property="ColumnSpacing" Value="8" />
                 <Setter Property="RowSpacing" Value="8" />
             </Style>
@@ -64,6 +63,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource ButtonRowGrid}"
+                          ColumnDefinitions="*,*"
                           RowDefinitions="Auto,Auto">
                         <Button Grid.Row="0" Grid.Column="0"
                                 Style="{StaticResource PrimaryButton}"
@@ -92,6 +92,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
                 <Grid Style="{StaticResource ButtonRowGrid}"
+                      ColumnDefinitions="*,*"
                       RowDefinitions="Auto,Auto">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource InformationButton}"

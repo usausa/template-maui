@@ -29,7 +29,6 @@
 
             <Style x:Key="CheckRowGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="Auto,*" />
                 <Setter Property="ColumnSpacing" Value="4" />
             </Style>
 
@@ -42,7 +41,6 @@
 
             <Style x:Key="ResultRowGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="2*,3*" />
                 <Setter Property="RowSpacing" Value="8" />
             </Style>
 
@@ -67,11 +65,12 @@
         <VerticalStackLayout Padding="12"
                              Spacing="12">
 
-            <controls:InfoCard Title="Boolean"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Icon="{x:Static fonts:MaterialIcons.Rule}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                               Title="Boolean">
                 <VerticalStackLayout Spacing="8">
-                    <Grid Style="{StaticResource CheckRowGrid}">
+                    <Grid Style="{StaticResource CheckRowGrid}"
+                          ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding ReverseChecked}" />
                         <Label Grid.Column="1"
@@ -79,15 +78,16 @@
                                Text="ReverseChecked" />
                     </Grid>
                     <Grid Style="{StaticResource ResultRowGrid}"
-                          RowDefinitions="Auto,Auto">
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Reverse" />
                         <Label Grid.Row="0" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding ReverseChecked}"
-                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                               Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}" />
 
                         <Label Grid.Row="1" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
@@ -100,19 +100,20 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Multi"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100"
                                Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="100">
+                               Title="Multi">
                 <VerticalStackLayout Spacing="8">
-                    <Grid Style="{StaticResource CheckRowGrid}">
+                    <Grid Style="{StaticResource CheckRowGrid}"
+                          ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding MultiChecked1}" />
                         <Label Grid.Column="1"
                                Style="{StaticResource CheckCaptionLabel}"
                                Text="Checked1" />
                     </Grid>
-                    <Grid Style="{StaticResource CheckRowGrid}">
+                    <Grid Style="{StaticResource CheckRowGrid}"
+                          ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding MultiChecked2}" />
                         <Label Grid.Column="1"
@@ -120,7 +121,8 @@
                                Text="Checked2" />
                     </Grid>
                     <Grid Style="{StaticResource ResultRowGrid}"
-                          RowDefinitions="Auto,Auto">
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Any" />
@@ -150,34 +152,36 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Text"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200"
                                Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="200">
+                               Title="Text">
                 <VerticalStackLayout Spacing="8">
                     <Button Style="{StaticResource ActionButton}"
-                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Text_format}, Color={StaticResource BlueGrayDarken1}, Size=18}"
                             Command="{Binding SwitchTextCommand}"
-                            Text="Switch Text" />
+                            Text="Switch Text"
+                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Text_format},
+                                                          Color={StaticResource BlueGrayDarken1},
+                                                          Size=18}" />
                     <Grid Style="{StaticResource ResultRowGrid}"
-                          RowDefinitions="Auto,Auto,Auto">
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Upper" />
                         <Label Grid.Row="0" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding Text, Converter={StaticResource ToUpperConverter}}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding Text}"
-                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                               Text="{Binding Text, Converter={StaticResource ToUpperConverter}}" />
 
                         <Label Grid.Row="1" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Lower" />
                         <Label Grid.Row="1" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
-                               Text="{Binding Text, Converter={StaticResource ToLowerConverter}}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding Text}"
-                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                               Text="{Binding Text, Converter={StaticResource ToLowerConverter}}" />
 
                         <Label Grid.Row="2" Grid.Column="0"
                                Style="{StaticResource NameLabel}"

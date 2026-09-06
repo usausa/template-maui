@@ -93,7 +93,7 @@
                                        SelectedNode="{Binding SelectedNode}" />
                     <Label Style="{StaticResource ValueLabel}"
                            IsVisible="{Binding SelectedNode, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding SelectedNode.Text, StringFormat='選択: {0}'}" />
+                           Text="{Binding SelectedNode.Text, StringFormat='選択: {0}', FallbackValue='-'}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

@@ -9,6 +9,9 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Information, Message = "Application start. version=[{version}], runtime=[{runtime}]")]
     public static partial void InfoApplicationStart(this ILogger logger, Version? version, Version runtime);
 
+    [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
+    public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
+
     // State
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Screen state changed. state=[{on}]")]
@@ -37,9 +40,4 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Nfc tag read error.")]
     public static partial void WarnNfcReadError(this ILogger logger, Exception exception);
-
-    // Startup
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
-    public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
 }

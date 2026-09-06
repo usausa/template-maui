@@ -55,6 +55,8 @@ public sealed class DrawingControl : GraphicsView
         if (oldValue is not null)
         {
             oldValue.Detach();
+            // 解除時のクリアの null 代入はコンパイラ上有効 (ReSharper のみ non-null 違反と誤検知)
+            // ReSharper disable once AssignNullToNotNullAttribute
             Drawable = null;
         }
         if (newValue is not null)

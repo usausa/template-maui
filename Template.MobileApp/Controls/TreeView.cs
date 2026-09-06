@@ -80,7 +80,7 @@ public sealed class TreeView : ContentView
         }
     }
 
-    private void AddNodes(IReadOnlyList<TreeNode> nodes, int depth)
+    private void AddNodes(IEnumerable<TreeNode> nodes, int depth)
     {
         foreach (var node in nodes)
         {

@@ -13,7 +13,7 @@ public sealed partial class UISuperViewModel : AppViewModelBase
     [
         new() { Image = "social_background.png", Title = "サマーフェス開催中", Sub = "期間限定ポイント 5 倍キャンペーン" },
         new() { Image = "usa3_full.jpg", Title = "新キャラクター登場", Sub = "いまなら 10 連ガチャ無料" },
-        new() { Image = "profile.jpg", Title = "プレミアム会員", Sub = "初月無料でアップグレード" },
+        new() { Image = "profile.jpg", Title = "プレミアム会員", Sub = "初月無料でアップグレード" }
     ];
 
     public IReadOnlyList<SuperApp> Apps { get; } =
@@ -25,7 +25,7 @@ public sealed partial class UISuperViewModel : AppViewModelBase
         new() { Glyph = Fonts.MaterialIcons.Restaurant, Name = "フード", Color = Color.FromArgb("#E53935") },
         new() { Glyph = Fonts.MaterialIcons.Directions_car, Name = "タクシー", Color = Color.FromArgb("#00ACC1") },
         new() { Glyph = Fonts.MaterialIcons.Hotel, Name = "ホテル", Color = Color.FromArgb("#5E35B1") },
-        new() { Glyph = Fonts.MaterialIcons.More_horiz, Name = "その他", Color = Color.FromArgb("#757575") },
+        new() { Glyph = Fonts.MaterialIcons.More_horiz, Name = "その他", Color = Color.FromArgb("#757575") }
     ];
 
     public IReadOnlyList<SuperCoupon> Coupons { get; } =
@@ -37,7 +37,7 @@ public sealed partial class UISuperViewModel : AppViewModelBase
             Background = new LinearGradientBrush(
                 [new GradientStop(Color.FromArgb("#FF8A65"), 0f), new GradientStop(Color.FromArgb("#FF5252"), 1f)],
                 new Point(0, 0),
-                new Point(1, 1)),
+                new Point(1, 1))
         },
         new()
         {
@@ -46,7 +46,7 @@ public sealed partial class UISuperViewModel : AppViewModelBase
             Background = new LinearGradientBrush(
                 [new GradientStop(Color.FromArgb("#4FC3F7"), 0f), new GradientStop(Color.FromArgb("#1E88E5"), 1f)],
                 new Point(0, 0),
-                new Point(1, 1)),
+                new Point(1, 1))
         },
         new()
         {
@@ -55,7 +55,7 @@ public sealed partial class UISuperViewModel : AppViewModelBase
             Background = new LinearGradientBrush(
                 [new GradientStop(Color.FromArgb("#81C784"), 0f), new GradientStop(Color.FromArgb("#2E7D32"), 1f)],
                 new Point(0, 0),
-                new Point(1, 1)),
+                new Point(1, 1))
         },
         new()
         {
@@ -64,8 +64,8 @@ public sealed partial class UISuperViewModel : AppViewModelBase
             Background = new LinearGradientBrush(
                 [new GradientStop(Color.FromArgb("#BA68C8"), 0f), new GradientStop(Color.FromArgb("#6A1B9A"), 1f)],
                 new Point(0, 0),
-                new Point(1, 1)),
-        },
+                new Point(1, 1))
+        }
     ];
 
     public UISuperViewModel(IDispatcher dispatcher)

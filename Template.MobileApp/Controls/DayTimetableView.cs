@@ -122,7 +122,8 @@ public sealed class DayTimetableView : SKCanvasView
 
         // SKTypeface.Default は日本語グリフを持たないためアプリ内蔵フォントを使う
         using var font = new SKFont(SocialFonts.NotoSerifJP, size: 12f);
-        using var boldFont = new SKFont(SocialFonts.NotoSerifJP, size: 12f) { Embolden = true };
+        using var boldFont = new SKFont(SocialFonts.NotoSerifJP, size: 12f);
+        boldFont.Embolden = true;
 
         using var paint = new SKPaint();
         paint.IsAntialias = true;

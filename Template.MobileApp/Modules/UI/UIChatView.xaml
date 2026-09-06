@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample.Chat"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UIChatView"
              x:DataType="{x:Type module:UIChatViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIChatViewModel}"
@@ -310,8 +310,10 @@
                                     Style="{StaticResource SendBubbleBorder}">
                                 <Border.IsVisible>
                                     <MultiBinding Converter="{StaticResource AllConverter}">
-                                        <Binding Path="StampSource" Converter="{StaticResource NullToReverseBoolConverter}" />
-                                        <Binding Path="TextContent" Converter="{StaticResource NullToBoolConverter}" />
+                                        <Binding Converter="{StaticResource NullToReverseBoolConverter}"
+                                                 Path="StampSource" />
+                                        <Binding Converter="{StaticResource NullToBoolConverter}"
+                                                 Path="TextContent" />
                                     </MultiBinding>
                                 </Border.IsVisible>
                                 <Label Style="{StaticResource SendBubbleLabel}"
@@ -350,8 +352,10 @@
                                     Style="{StaticResource ReceiveBubbleBorder}">
                                 <Border.IsVisible>
                                     <MultiBinding Converter="{StaticResource AllConverter}">
-                                        <Binding Path="StampSource" Converter="{StaticResource NullToReverseBoolConverter}" />
-                                        <Binding Path="TextContent" Converter="{StaticResource NullToBoolConverter}" />
+                                        <Binding Converter="{StaticResource NullToReverseBoolConverter}"
+                                                 Path="StampSource" />
+                                        <Binding Converter="{StaticResource NullToBoolConverter}"
+                                                 Path="TextContent" />
                                     </MultiBinding>
                                 </Border.IsVisible>
                                 <Label Style="{StaticResource ReceiveBubbleLabel}"
@@ -404,8 +408,7 @@
                         behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
                         ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView"
-                        VerticalScrollBarVisibility="Default">
+                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default">
             <CollectionView.Behaviors>
                 <s:CollectionControlBehavior Controller="{Binding Controller}" />
             </CollectionView.Behaviors>
@@ -432,10 +435,10 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <Editor Grid.Column="0"
                             Style="{StaticResource MessageInputEditor}"
-                            Text="{Binding InputText}"
-                            Placeholder="メッセージを入力"
                             behaviors:Focus.FocusedStroke="{StaticResource BubbleSend}"
-                            behaviors:Focus.FocusedThickness="2" />
+                            behaviors:Focus.FocusedThickness="2"
+                            Text="{Binding InputText}"
+                            Placeholder="メッセージを入力" />
                     <ImageButton Grid.Column="1"
                                  Style="{StaticResource StickerActionButton}"
                                  Source="ic_sticker.png"
@@ -449,8 +452,8 @@
                          Command="{Binding SendCommand}">
                 <ImageButton.Triggers>
                     <DataTrigger TargetType="ImageButton"
-                                 Binding="{Binding InputText, Converter={StaticResource NullToBoolConverter}}"
-                                 Value="False">
+                                 Value="False"
+                                 Binding="{Binding InputText, Converter={StaticResource NullToBoolConverter}}">
                         <Setter Property="Opacity" Value="0.3" />
                     </DataTrigger>
                 </ImageButton.Triggers>
@@ -459,8 +462,8 @@
 
         <Grid Grid.Row="3"
               RowDefinitions="1,Auto"
-              IsVisible="{Binding IsStampTrayVisible}"
-              behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}">
+              behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}"
+              IsVisible="{Binding IsStampTrayVisible}">
             <BoxView Grid.Row="0"
                      Color="{StaticResource InputBorder}" />
             <FlexLayout Grid.Row="1"
@@ -468,10 +471,12 @@
                         BindableLayout.ItemsSource="{Binding StampList}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type x:String}">
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <ImageButton Style="{StaticResource StampTrayButton}"
                                      Source="{Binding .}"
                                      Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand, x:DataType={x:Type module:UIChatViewModel}}"
                                      CommandParameter="{Binding .}" />
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>

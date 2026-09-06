@@ -5,7 +5,8 @@ public static class ImageHelper
     public static void ReplaceBitmap(SKBitmapImageSource source, SKBitmap? bitmap)
     {
         var old = source.Bitmap;
-        source.Bitmap = bitmap;
+        // SKBitmapImageSource.Bitmap の注釈は non-null だが、クリア用途の null 代入が実態 (実行時許容)
+        source.Bitmap = bitmap!;
         if (!ReferenceEquals(old, bitmap))
         {
             old.Dispose();

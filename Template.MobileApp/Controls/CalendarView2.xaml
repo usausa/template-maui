@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="Template.MobileApp.Controls.CalendarView2"
-             x:Name="_self">
+             x:Name="Self">
 
     <Grid x:Name="RootGrid"
           RowDefinitions="Auto,Auto,Auto,*"
@@ -18,7 +18,7 @@
                 <Button x:Name="PrevButton"
                         Grid.Column="0"
                         VerticalOptions="Center"
-                        Command="{Binding PrevMonthCommand, Source={x:Reference _self}}"
+                        Command="{Binding PrevMonthCommand, Source={x:Reference Self}}"
                         Text="◀"
                         BackgroundColor="Transparent"
                         BorderWidth="0" />
@@ -36,7 +36,7 @@
                 <Button x:Name="NextButton"
                         Grid.Column="2"
                         VerticalOptions="Center"
-                        Command="{Binding NextMonthCommand, Source={x:Reference _self}}"
+                        Command="{Binding NextMonthCommand, Source={x:Reference Self}}"
                         Text="▶"
                         BackgroundColor="Transparent"
                         BorderWidth="0" />

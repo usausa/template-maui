@@ -58,6 +58,7 @@ public sealed class ViewCollectionViewModel : AppViewModelBase
         List.Add(CreateGroup($"追{extraIndex}", [$"追加 家臣 {extraIndex}-1", $"追加 家臣 {extraIndex}-2", $"追加 家臣 {extraIndex}-3"]));
     }
 
+#pragma warning disable IDE0028
     private static AddressGroup CreateGroup(string key, IEnumerable<string> names) =>
         new(key, names.Select(static (x, i) => new AddressRow(new AddressItem
             {
@@ -67,6 +68,7 @@ public sealed class ViewCollectionViewModel : AppViewModelBase
                 MailAddress = "user@example.com"
             })
             { IsEven = i % 2 == 0 }));
+#pragma warning restore IDE0028
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 

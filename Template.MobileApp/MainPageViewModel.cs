@@ -1,11 +1,16 @@
 namespace Template.MobileApp;
 
+using Template.MobileApp.Modules;
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
 {
     private readonly IScreen screen;
+
+    private readonly StartupState startup;
+
+    private bool destroying;
 
     public INavigator Navigator { get; }
 
@@ -44,10 +49,12 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         ILogger<MainPageViewModel> log,
         INavigator navigator,
         IScreen screen,
-        IDialog dialog)
+        IDialog dialog,
+        StartupState startup)
     {
         Navigator = navigator;
         this.screen = screen;
+        this.startup = startup;
 
         Function1Command = CreateFunctionCommand(Functions[0], ShellEvent.Function1);
         Function2Command = CreateFunctionCommand(Functions[1], ShellEvent.Function2);
@@ -77,7 +84,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         var command = MakeAsyncCommand(() => Navigator.NotifyAsync(shellEvent), () => function.Enabled.Value);
 
         // EnabledはVMと別のオブジェクトのため、CanExecuteの再評価を明示的に接続する
-        Disposables.Add(function.Enabled.AsObservable(nameof(NotificationValue<bool>.Value))
+        Disposables.Add(function.Enabled.AsObservable(nameof(NotificationValue<>.Value))
             .Subscribe(_ => command.RaiseCanExecuteChanged()));
 
         return command;
@@ -87,9 +94,21 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     // Lifecycle
     //--------------------------------------------------------------------------------
 
-    public void OnCreated()
+    // ReSharper disable once AsyncVoidMethod
+    public async void OnCreated()
     {
         screen.EnableDetectScreenState(true);
+
+        await startup.Completed;
+
+        // Guard for the case where the Activity is recreated while initialization is still in progress
+        if (destroying)
+        {
+            return;
+        }
+
+        Navigator.Exit();
+        await Navigator.ForwardAsync(ViewId.Menu);
     }
 
     public void OnActivated()
@@ -110,5 +129,6 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public void OnDestroying()
     {
+        destroying = true;
     }
 }

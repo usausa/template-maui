@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Models.Sample.Graph;
 
+// ReSharper disable ParameterTypeCanBeEnumerable.Local
 public static class GraphBuilder
 {
     public static GraphData Build(
@@ -150,14 +151,14 @@ public static class GraphBuilder
                 Summary = commit.Summary,
                 Refs = refList,
                 Segments = segmentsByRow[i],
-                LaneCount = laneCount,
+                LaneCount = laneCount
             });
         }
 
         return new GraphData
         {
             Rows = rows,
-            LaneCount = laneCount,
+            LaneCount = laneCount
         };
     }
 
@@ -171,7 +172,7 @@ public static class GraphBuilder
             {
                 Kind = GraphSegmentKind.HalfVerticalBottom,
                 Lane = edge.FromLane,
-                ColorIndex = colorIndex,
+                ColorIndex = colorIndex
             });
 
             for (var r = edge.FromRow + 1; r < edge.ToRow; r++)
@@ -180,7 +181,7 @@ public static class GraphBuilder
                 {
                     Kind = GraphSegmentKind.Vertical,
                     Lane = edge.ToLane,
-                    ColorIndex = colorIndex,
+                    ColorIndex = colorIndex
                 });
             }
 
@@ -188,7 +189,7 @@ public static class GraphBuilder
             {
                 Kind = GraphSegmentKind.HalfVerticalTop,
                 Lane = edge.ToLane,
-                ColorIndex = colorIndex,
+                ColorIndex = colorIndex
             });
         }
         else if (edge.BranchFromSource)
@@ -197,7 +198,7 @@ public static class GraphBuilder
             {
                 Kind = GraphSegmentKind.HalfVerticalBottom,
                 Lane = edge.FromLane,
-                ColorIndex = colorIndex,
+                ColorIndex = colorIndex
             });
 
             var diagRow = edge.FromRow + 1;
@@ -206,7 +207,7 @@ public static class GraphBuilder
                 Kind = GraphSegmentKind.DiagonalBranch,
                 Lane = edge.FromLane,
                 ToLane = edge.ToLane,
-                ColorIndex = colorIndex,
+                ColorIndex = colorIndex
             });
 
             if (diagRow < edge.ToRow)
@@ -215,7 +216,7 @@ public static class GraphBuilder
                 {
                     Kind = GraphSegmentKind.HalfVerticalBottom,
                     Lane = edge.ToLane,
-                    ColorIndex = colorIndex,
+                    ColorIndex = colorIndex
                 });
 
                 for (var r = diagRow + 1; r < edge.ToRow; r++)
@@ -224,7 +225,7 @@ public static class GraphBuilder
                     {
                         Kind = GraphSegmentKind.Vertical,
                         Lane = edge.ToLane,
-                        ColorIndex = colorIndex,
+                        ColorIndex = colorIndex
                     });
                 }
 
@@ -232,7 +233,7 @@ public static class GraphBuilder
                 {
                     Kind = GraphSegmentKind.HalfVerticalTop,
                     Lane = edge.ToLane,
-                    ColorIndex = colorIndex,
+                    ColorIndex = colorIndex
                 });
             }
         }
@@ -243,7 +244,7 @@ public static class GraphBuilder
                 Kind = GraphSegmentKind.Diagonal,
                 Lane = edge.FromLane,
                 ToLane = edge.ToLane,
-                ColorIndex = colorIndex,
+                ColorIndex = colorIndex
             });
 
             for (var r = edge.FromRow + 1; r < edge.ToRow; r++)
@@ -252,7 +253,7 @@ public static class GraphBuilder
                 {
                     Kind = GraphSegmentKind.Vertical,
                     Lane = edge.ToLane,
-                    ColorIndex = colorIndex,
+                    ColorIndex = colorIndex
                 });
             }
 
@@ -260,7 +261,7 @@ public static class GraphBuilder
             {
                 Kind = GraphSegmentKind.HalfVerticalTop,
                 Lane = edge.ToLane,
-                ColorIndex = colorIndex,
+                ColorIndex = colorIndex
             });
         }
     }
@@ -298,3 +299,4 @@ public static class GraphBuilder
 
     private readonly record struct ResolvedEdge(int FromRow, int FromLane, int ToRow, int ToLane, bool BranchFromSource);
 }
+// ReSharper restore ParameterTypeCanBeEnumerable.Local

@@ -52,7 +52,7 @@ public partial class CalendarView2
 
     public static readonly BindableProperty SelectedDatesProperty =
         BindableProperty.Create(nameof(SelectedDates), typeof(ObservableCollection<DateOnly>), typeof(CalendarView2),
-            null, propertyChanged: OnSelectedDatesChanged);
+            propertyChanged: OnSelectedDatesChanged);
 
     public static readonly BindableProperty SelectedStartDateProperty =
         BindableProperty.Create(nameof(SelectedStartDate), typeof(DateOnly?), typeof(CalendarView2),
@@ -310,6 +310,7 @@ public partial class CalendarView2
 
     // Event hit areas for the current month
     private readonly record struct EventHitRect(SKRect Rect, ScheduleEvent Event);
+
     private readonly List<EventHitRect> eventHitRects = [];
 
     // Cached week row info for hit testing
