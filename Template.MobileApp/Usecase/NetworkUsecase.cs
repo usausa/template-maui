@@ -13,16 +13,20 @@ public sealed class NetworkUsecase
 
     private readonly ApiContext apiContext;
 
+    private readonly DataService dataService;
+
     public NetworkUsecase(
         IDialog dialog,
         IStorageManager storageManager,
         NetworkOperator networkOperator,
-        ApiContext apiContext)
+        ApiContext apiContext,
+        DataService dataService)
     {
         this.dialog = dialog;
         this.storageManager = storageManager;
         this.networkOperator = networkOperator;
         this.apiContext = apiContext;
+        this.dataService = dataService;
     }
 
     //--------------------------------------------------------------------------------
@@ -47,7 +51,10 @@ public sealed class NetworkUsecase
         var result = await networkOperator.ExecuteVerbose(static n => n.GetDataListAsync());
         if (result.IsSuccess)
         {
-            await dialog.InformationAsync($"Get success.\r\ncount=[{result.Value.Entries.Length}]");
+            // 取得した一覧を Work テーブルへ保存する (Navigation > Edit で確認できる)
+            await dataService.ReplaceWorkEnumerableAsync(result.Value.Entries.Select(ObjectMapper.ToWorkEntity));
+
+            await dialog.InformationAsync($"Get success.\r\ncount=[{result.Value.Entries.Length}]\r\nSaved to Work table.");
         }
     }
 
@@ -127,9 +134,9 @@ public sealed class NetworkUsecase
     // Test
     //--------------------------------------------------------------------------------
 
-    public ValueTask<IResult<object>> GetTestErrorAsync(int code) =>
+    public ValueTask<Result<object>> GetTestErrorAsync(int code) =>
         networkOperator.ExecuteVerbose(n => n.GetTestErrorAsync(code));
 
-    public ValueTask<IResult<object>> GetTestDelayAsync(int timeout) =>
+    public ValueTask<Result<object>> GetTestDelayAsync(int timeout) =>
         networkOperator.ExecuteVerbose(n => n.GetTestDelayAsync(timeout));
 }

@@ -1,16 +1,17 @@
 namespace Template.MobileApp.Models.Entity;
 
-using Smart.Data.Mapper.Attributes;
+using Smart.Data.Accessor.Attributes;
 
+[Name("BulkData")]
 public sealed class BulkDataEntity
 {
-    [PrimaryKey(1)]
+    [Key(1)]
     public string Key1 { get; set; } = default!;
 
-    [PrimaryKey(2)]
+    [Key(2)]
     public string Key2 { get; set; } = default!;
 
-    [PrimaryKey(3)]
+    [Key(3)]
     public string Key3 { get; set; } = default!;
 
     public int Value1 { get; set; }

@@ -47,6 +47,7 @@ global using Smart.Navigation.Attributes;
 global using Smart.Navigation.Plugins.Parameter;
 global using Smart.Navigation.Plugins.Scope;
 global using Smart.Reactive;
+global using Smart.Results;
 global using Smart.Text;
 
 global using SkiaSharp;

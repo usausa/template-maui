@@ -40,15 +40,14 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
     private void Export()
     {
         using var buffer = new MemoryStream();
-        var (width, height) = Crop.ExportCrop(buffer);
-        if (width == 0)
+        if (!Crop.ExportCrop(buffer).TryGetValue(out var size))
         {
             return;
         }
 
         var bytes = buffer.ToArray();
         CroppedImage = ImageSource.FromStream(() => new MemoryStream(bytes));
-        ResultText = $"{width} x {height} px / {bytes.Length:N0} bytes";
+        ResultText = $"{size.Width} x {size.Height} px / {bytes.Length:N0} bytes";
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);

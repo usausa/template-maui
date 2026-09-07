@@ -1,10 +1,11 @@
 namespace Template.MobileApp.Models.Entity;
 
-using Smart.Data.Mapper.Attributes;
+using Smart.Data.Accessor.Attributes;
 
+[Name("Work")]
 public sealed class WorkEntity
 {
-    [PrimaryKey]
+    [Key]
     public long Id { get; set; }
 
     public string Name { get; set; } = default!;

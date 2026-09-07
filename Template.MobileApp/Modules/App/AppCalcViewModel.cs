@@ -83,7 +83,7 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
         }
 
         var result = ExpressionCalculator.Evaluate(Expression);
-        if (result.Success)
+        if (result.IsSuccess)
         {
             lastValue = result.Value;
             Result = FormatValue(result.Value);
@@ -92,7 +92,8 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
         }
         else
         {
-            ErrorMessage = result.Error;
+            // IsSuccess が false なら Error は非 null (MemberNotNullWhen)
+            ErrorMessage = result.Error.Message;
         }
     }
 

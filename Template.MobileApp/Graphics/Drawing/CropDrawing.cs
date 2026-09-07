@@ -57,11 +57,11 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
     }
 
     // 表示中の枠を画像ピクセルへ換算して PNG 書き出しする
-    public (int Width, int Height) ExportCrop(Stream stream)
+    public Result<(int Width, int Height)> ExportCrop(Stream stream)
     {
         if ((image is null) || !cropInitialized || (imageRect.Width <= 0))
         {
-            return (0, 0);
+            return Result.Failure<(int Width, int Height)>("画像が未設定か、枠が未確定です");
         }
 
         var scale = image.Width / imageRect.Width;
@@ -78,7 +78,7 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
             exporting = false;
         }
 
-        return (width, height);
+        return Result.Success((width, height));
     }
 
     //--------------------------------------------------------------------------------

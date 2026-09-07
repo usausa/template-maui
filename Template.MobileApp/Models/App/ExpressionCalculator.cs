@@ -37,28 +37,29 @@ public static class ExpressionCalculator
         "sin", "cos", "tan", "asin", "acos", "atan", "log", "ln", "exp", "sqrt"
     ];
 
-    public static CalculationResult Evaluate(string expression)
+    // 失敗はメッセージ付きの Error として返す (string は Error へ暗黙変換される)
+    public static Result<double> Evaluate(string expression)
     {
         try
         {
             var tokens = Tokenize(expression);
             if (tokens.Count == 0)
             {
-                return CalculationResult.Failed("式が空です");
+                return Result.Failure<double>("式が空です");
             }
 
             var rpn = ToRpn(tokens);
             var value = EvaluateRpn(rpn);
             if (Double.IsNaN(value) || Double.IsInfinity(value))
             {
-                return CalculationResult.Failed("計算できません");
+                return Result.Failure<double>("計算できません");
             }
 
-            return CalculationResult.Succeeded(value);
+            return Result.Success(value);
         }
         catch (CalculationException ex)
         {
-            return CalculationResult.Failed(ex.Message);
+            return Result.Failure<double>(ex.Message);
         }
     }
 
@@ -397,11 +398,4 @@ public sealed class CalculationException : Exception
         : base(message, innerException)
     {
     }
-}
-
-public readonly record struct CalculationResult(bool Success, double Value, string Error)
-{
-    public static CalculationResult Succeeded(double value) => new(true, value, string.Empty);
-
-    public static CalculationResult Failed(string error) => new(false, 0d, error);
 }

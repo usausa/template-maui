@@ -1,0 +1,24 @@
+CREATE TABLE Data (
+    Id INTEGER NOT NULL,
+    Name TEXT NOT NULL,
+    CreateAt INTEGER NOT NULL,
+    PRIMARY KEY (Id)
+);
+
+CREATE TABLE BulkData (
+    Key1 TEXT NOT NULL,
+    Key2 TEXT NOT NULL,
+    Key3 TEXT NOT NULL,
+    Value1 INTEGER NOT NULL,
+    Value2 INTEGER NOT NULL,
+    Value3 INTEGER NOT NULL,
+    Value4 INTEGER NOT NULL,
+    Value5 INTEGER NOT NULL,
+    PRIMARY KEY (Key1, Key2, Key3)
+);
+
+CREATE TABLE Work (
+    Id INTEGER NOT NULL,
+    Name TEXT NOT NULL,
+    PRIMARY KEY (Id)
+)

@@ -68,7 +68,7 @@ public sealed class DeviceBleScanViewModel : AppViewModelBase
         }
         else
         {
-            data.CopyTo(current);
+            ObjectMapper.Copy(data, current);
         }
     }
 

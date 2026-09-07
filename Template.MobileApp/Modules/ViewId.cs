@@ -39,6 +39,10 @@ public enum ViewId
     NavigationNavigateCancel,
     NavigationNavigateInitialize,
 
+    NavigationEffectMenu,
+    NavigationEffectDemo,
+    NavigationEffectDialog,
+
     // Device
     DeviceMenu,
 

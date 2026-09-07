@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Effect"
+             x:Class="Template.MobileApp.Modules.Navigation.Effect.EffectDialogView"
+             x:DataType="{x:Type module:EffectDialogViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:EffectDialogViewModel}"
+             shell:ShellProperty.Title="Dialog Demo"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="#B3263238" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="32,16" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="IconCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="IconCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ItemNameLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ItemValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="CloseButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PrimaryButton}">
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}">
+
+        <Border Style="{StaticResource CenterCardBorder}">
+            <VerticalStackLayout Style="{StaticResource CardStack}">
+
+                <Border Style="{StaticResource IconCircleBorder}">
+                    <Label Style="{StaticResource IconCircleLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Extension}" />
+                </Border>
+
+                <Label Style="{StaticResource CenterTitleLabel}"
+                       Text="Dialog Demo" />
+
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="16">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource ItemNameLabel}"
+                           Text="Applied" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource ItemValueLabel}"
+                           Text="{Binding AppliedEffect}" />
+                </Grid>
+
+                <BoxView Style="{StaticResource CardDivider}" />
+
+                <Button Style="{StaticResource CloseButton}"
+                        Command="{Binding CloseCommand}"
+                        Text="Close" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+
+</ContentView>

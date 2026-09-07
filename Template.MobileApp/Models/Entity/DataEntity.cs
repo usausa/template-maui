@@ -1,13 +1,17 @@
 namespace Template.MobileApp.Models.Entity;
 
-using Smart.Data.Mapper.Attributes;
+using Smart.Data.Accessor.Attributes;
 
+using Template.MobileApp.Helpers.Data;
+
+[Name("Data")]
 public sealed class DataEntity
 {
-    [PrimaryKey]
+    [Key]
     public long Id { get; set; }
 
     public string Name { get; set; } = default!;
 
+    [TypeHandler(typeof(DateTimeTicksConverter))]
     public DateTime CreateAt { get; set; }
 }

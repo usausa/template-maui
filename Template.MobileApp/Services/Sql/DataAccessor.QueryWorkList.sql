@@ -1,0 +1,1 @@
+SELECT * FROM Work ORDER BY Id

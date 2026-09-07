@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:navigation="http://smart/navigation"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:effects="clr-namespace:Template.MobileApp.Extender.Effects"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Effect"
+             x:Class="Template.MobileApp.Modules.Navigation.Effect.EffectMenuView"
+             x:DataType="{x:Type module:EffectMenuViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:EffectMenuViewModel}"
+             shell:ShellProperty.Title="Effect"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <Grid Style="{StaticResource MenuGrid}"
+          RowDefinitions="*,*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*">
+
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Forward}"
+                Text="Forward"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Arrow_forward}}" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Back}"
+                Text="Back"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Arrow_back}}" />
+
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Push}"
+                Text="Push"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Arrow_upward}}" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Pop}"
+                Text="Pop"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Arrow_downward}}" />
+
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Fade}"
+                Text="Fade"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Opacity}}" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.None}"
+                Text="None"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Block}}" />
+
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static effects:AppEffect.Zoom}"
+                Text="Zoom"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Zoom_in}}" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static effects:AppEffect.Drop}"
+                Text="Drop"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Vertical_align_bottom}}" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static effects:AppEffect.Flip}"
+                Text="Flip"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Flip}}" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{x:Static effects:AppEffect.Rotate}"
+                Text="Rotate"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Rotate_right}}" />
+
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding PushCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Push}"
+                Text="Push (Stack)"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Layers}}" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding PushCommand}"
+                CommandParameter="{x:Static navigation:MauiEffect.Fade}"
+                Text="Fade (Stack)"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Layers}}" />
+
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding DialogCommand}"
+                Text="Dialog (Plugin)"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Extension}}" />
+
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+    </Grid>
+
+</ContentView>

@@ -21,6 +21,10 @@ public enum NetworkErrorKind
     Unknown
 }
 
+// 通信失敗の理由 (Smart.Results の Error 派生。呼び出し側が Kind / Status で分岐できる)
+public sealed record NetworkError(NetworkErrorKind Kind, HttpStatusCode Status)
+    : Error($"Network error. kind=[{Kind}] status=[{(int)Status}]");
+
 public sealed class NetworkOperator
 {
     // 接続実行の最大試行回数 (初回 + 人力リトライ)
@@ -60,17 +64,25 @@ public sealed class NetworkOperator
     // Typed
     //--------------------------------------------------------------------------------
 
-    public ValueTask<IResult<T>> ExecuteVerbose<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
+    public ValueTask<Result<T>> ExecuteVerbose<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
 
-    public ValueTask<IResult<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, false);
+    public ValueTask<Result<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, false);
 
-    private async ValueTask<IResult<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func, bool verbose)
+    private async ValueTask<Result<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func, bool verbose)
     {
         var response = default(IRestResponse<T>);
 
         // 型付き版では404も通常のHTTPエラーとして扱う
         var result = await ExecuteCore(async h => response = await func(h), verbose, notFoundAsResult: false);
-        return result == NetworkOperationResult.Success ? Result.Success(response!.Content!) : Result.Failed<T>();
+        if (result == NetworkOperationResult.Success)
+        {
+            return Result.Success(response!.Content!);
+        }
+
+        // 失敗理由を Error として返す (応答自体が無い場合はネットワーク未接続)
+        return response is null
+            ? Result.Failure<T>("Network is unavailable.")
+            : Result.Failure<T>(new NetworkError(ClassifyError(response), response.StatusCode));
     }
 
     //--------------------------------------------------------------------------------
