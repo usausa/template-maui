@@ -154,6 +154,11 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
             </Style>
 
+            <Style x:Key="ExtractItemGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -238,8 +243,8 @@
                                              BindableLayout.ItemsSource="{Binding ExtractItems}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="{x:Type module:VoiceExtractItem}">
-                                    <Grid ColumnDefinitions="64,*"
-                                          ColumnSpacing="8">
+                                    <Grid Style="{StaticResource ExtractItemGrid}"
+                                          ColumnDefinitions="64,*">
                                         <Border Grid.Column="0"
                                                 Style="{StaticResource VoiceTagBorder}">
                                             <Label Style="{StaticResource VoiceTagLabel}"

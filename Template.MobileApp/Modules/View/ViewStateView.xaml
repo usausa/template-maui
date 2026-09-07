@@ -64,6 +64,11 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="StateButtonGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="6" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -75,8 +80,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Swap_horiz}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="*,*,*,*"
-                          ColumnSpacing="6">
+                    <Grid Style="{StaticResource StateButtonGrid}"
+                          ColumnDefinitions="*,*,*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource StateButton}"
                                 Command="{Binding StateCommand}"

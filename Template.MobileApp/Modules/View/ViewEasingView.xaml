@@ -57,13 +57,18 @@
                 <Setter Property="Color" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="*,*,*,*"
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,*,*,*"
           ColumnDefinitions="*,*,*"
-          RowSpacing="8"
-          ColumnSpacing="8"
           Padding="12"
           BackgroundColor="{StaticResource GrayLighten5}">
 

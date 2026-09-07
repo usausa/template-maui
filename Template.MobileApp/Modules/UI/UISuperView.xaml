@@ -152,6 +152,11 @@
                 <Setter Property="TextColor" Value="#4DFFFFFF" />
             </Style>
 
+            <Style x:Key="SearchRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -160,9 +165,9 @@
         <VerticalStackLayout Padding="0,12,0,24">
 
             <!-- 検索バー+ポイント残高 -->
-            <Grid Margin="16,0"
-                  ColumnDefinitions="*,Auto"
-                  ColumnSpacing="10">
+            <Grid Style="{StaticResource SearchRowGrid}"
+                  Margin="16,0"
+                  ColumnDefinitions="*,Auto">
                 <Border Grid.Column="0"
                         Style="{StaticResource SearchBorder}">
                     <HorizontalStackLayout>

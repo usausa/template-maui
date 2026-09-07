@@ -60,6 +60,11 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <Style x:Key="ExportResultGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -74,8 +79,8 @@
         <!-- 書き出し結果 -->
         <Border Grid.Row="1"
                 Style="{StaticResource PanelBorder}">
-            <Grid ColumnDefinitions="Auto,*"
-                  ColumnSpacing="16">
+            <Grid Style="{StaticResource ExportResultGrid}"
+                  ColumnDefinitions="Auto,*">
                 <Border Grid.Column="0"
                         Style="{StaticResource PreviewBorder}">
                     <Image Aspect="AspectFit"

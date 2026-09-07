@@ -141,6 +141,11 @@
                 <Setter Property="TouchDownEffects" Value="Ripple" />
             </Style>
 
+            <Style x:Key="EffectRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -196,8 +201,8 @@
             <Label Style="{StaticResource SectionLabel}"
                    Text="ポップ+バッジ(BadgeCountConverter)" />
             <Border Style="{StaticResource EffectCard}">
-                <Grid ColumnDefinitions="Auto,*,Auto,Auto"
-                      ColumnSpacing="12">
+                <Grid Style="{StaticResource EffectRowGrid}"
+                      ColumnDefinitions="Auto,*,Auto,Auto">
                     <Grid Grid.Column="0"
                           Margin="4,0,12,0"
                           VerticalOptions="Center">
@@ -268,8 +273,8 @@
             <!-- 押下フィードバック比較 -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="押下フィードバック比較" />
-            <Grid ColumnDefinitions="*,*"
-                  ColumnSpacing="12">
+            <Grid Style="{StaticResource EffectRowGrid}"
+                  ColumnDefinitions="*,*">
                 <VerticalStackLayout Grid.Column="0">
                     <Button Style="{StaticResource SmallActionButton}"
                             behaviors:ButtonOption.PressEffect="True"
@@ -301,8 +306,8 @@
             <Label Style="{StaticResource SectionLabel}"
                    Text="常時アニメ(Wave / Pulse)" />
             <Border Style="{StaticResource EffectCard}">
-                <Grid ColumnDefinitions="*,Auto"
-                      ColumnSpacing="12">
+                <Grid Style="{StaticResource EffectRowGrid}"
+                      ColumnDefinitions="*,Auto">
                     <HorizontalStackLayout Grid.Column="0"
                                            Spacing="16"
                                            VerticalOptions="Center">
@@ -341,8 +346,8 @@
                    Text="変化フィードバック(Bounce / Flash / Highlight)" />
             <Border Style="{StaticResource EffectCard}">
                 <VerticalStackLayout Spacing="12">
-                    <Grid ColumnDefinitions="Auto,*,Auto"
-                          ColumnSpacing="12">
+                    <Grid Style="{StaticResource EffectRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
                         <Label Grid.Column="0"
                                FontFamily="MaterialIcons"
                                FontSize="28"
@@ -407,8 +412,8 @@
                                 Command="{Binding CelebrateCommand}"
                                 Text="Celebrate" />
                     </Grid>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="12">
+                    <Grid Style="{StaticResource EffectRowGrid}"
+                          ColumnDefinitions="*,Auto">
                         <Border Grid.Column="0"
                                 Padding="12"
                                 BackgroundColor="{StaticResource BlueLighten5}"

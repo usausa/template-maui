@@ -113,6 +113,11 @@
                 </Border>
             </DataTemplate>
 
+            <Style x:Key="BoardGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -138,8 +143,8 @@
                 <VerticalStackLayout Spacing="8">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除" />
-                    <Grid ColumnDefinitions="*,*"
-                          ColumnSpacing="8">
+                    <Grid Style="{StaticResource BoardGrid}"
+                          ColumnDefinitions="*,*">
                         <Border Grid.Column="0"
                                 Style="{StaticResource ColumnBorder}">
                             <Border.GestureRecognizers>

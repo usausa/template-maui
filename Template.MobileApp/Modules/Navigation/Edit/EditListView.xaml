@@ -138,6 +138,16 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
             </Style>
 
+            <Style x:Key="WorkRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="SelectionBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -179,8 +189,8 @@
                             </VisualStateGroupList>
                         </VisualStateManager.VisualStateGroups>
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
-                              ColumnSpacing="10">
+                        <Grid Style="{StaticResource WorkRowGrid}"
+                              ColumnDefinitions="Auto,*,Auto,Auto">
                             <Border Grid.Column="0"
                                     Style="{StaticResource WorkIdBorder}">
                                 <Label Style="{StaticResource WorkIdLabel}"
@@ -228,8 +238,8 @@
         <Border Grid.Row="1"
                 Style="{StaticResource SelectionBarBorder}"
                 IsVisible="{Binding IsSelectionMode}">
-            <Grid ColumnDefinitions="*,Auto,Auto"
-                  ColumnSpacing="8">
+            <Grid Style="{StaticResource SelectionBarGrid}"
+                  ColumnDefinitions="*,Auto,Auto">
                 <Label Grid.Column="0"
                        Style="{StaticResource SelectionCountLabel}"
                        Text="{Binding SelectedItems.Count, StringFormat='{0} 件選択'}" />

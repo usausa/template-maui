@@ -61,6 +61,11 @@
                 <Setter Property="RowSpacing" Value="8" />
             </Style>
 
+            <Style x:Key="SwitchRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -183,8 +188,8 @@
                     <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
                         <Label Style="{StaticResource FieldCaptionLabel}"
                                Text="EventToCommandBehavior (Toggled イベント → Command)" />
-                        <Grid ColumnDefinitions="Auto,*"
-                              ColumnSpacing="12">
+                        <Grid Style="{StaticResource SwitchRowGrid}"
+                              ColumnDefinitions="Auto,*">
                             <Switch Grid.Column="0">
                                 <Switch.Behaviors>
                                     <mct:EventToCommandBehavior EventName="Toggled"

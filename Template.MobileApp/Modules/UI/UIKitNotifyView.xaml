@@ -67,6 +67,11 @@
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
+            <Style x:Key="NotifyRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -89,8 +94,8 @@
                             <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
                         </DataTrigger>
                     </Border.Triggers>
-                    <Grid ColumnDefinitions="Auto,Auto,*,Auto"
-                          ColumnSpacing="12">
+                    <Grid Style="{StaticResource NotifyRowGrid}"
+                          ColumnDefinitions="Auto,Auto,*,Auto">
                         <BoxView Grid.Column="0"
                                  WidthRequest="4"
                                  IsVisible="{Binding IsUnread}"

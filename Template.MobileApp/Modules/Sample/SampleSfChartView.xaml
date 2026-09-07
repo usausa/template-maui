@@ -47,6 +47,17 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
+            <Style x:Key="FunnelGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SparkGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="4" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -109,8 +120,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Filter_alt}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="180">
-                <Grid ColumnDefinitions="*,*"
-                      ColumnSpacing="8">
+                <Grid Style="{StaticResource FunnelGrid}"
+                      ColumnDefinitions="*,*">
                     <charts:SfFunnelChart Grid.Column="0"
                                       HeightRequest="200"
                                       ItemsSource="{Binding Funnel}"
@@ -128,10 +139,9 @@
                                Icon="{x:Static fonts:MaterialIcons.Show_chart}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
-                <Grid ColumnDefinitions="*,*,*"
-                      RowDefinitions="56,Auto"
-                      ColumnSpacing="8"
-                      RowSpacing="4">
+                <Grid Style="{StaticResource SparkGrid}"
+                      ColumnDefinitions="*,*,*"
+                      RowDefinitions="56,Auto">
                     <spark:SfSparkLineChart Grid.Row="0" Grid.Column="0"
                                          ItemsSource="{Binding Trend}"
                                          Stroke="#2196F3" />

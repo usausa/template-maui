@@ -5,9 +5,20 @@
              x:Class="Template.MobileApp.Controls.CalendarView"
              x:Name="Self">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CalendarRootGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <Grid x:Name="RootGrid"
-          RowDefinitions="Auto,Auto,Auto,*"
-          RowSpacing="0">
+          Style="{StaticResource CalendarRootGrid}"
+          RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- Header -->
         <ContentView x:Name="HeaderContentHost"

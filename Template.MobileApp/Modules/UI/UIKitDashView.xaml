@@ -24,6 +24,7 @@
             <!-- Extra bottom padding keeps the header content clear of the overlapping heart card (-30 margin) -->
             <Style x:Key="KitDashHeaderGrid" TargetType="Grid">
                 <Setter Property="Padding" Value="20,24,20,62" />
+                <Setter Property="ColumnSpacing" Value="10" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
@@ -187,8 +188,7 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout>
             <Grid Style="{StaticResource KitDashHeaderGrid}"
-                  ColumnDefinitions="*,Auto,Auto"
-                  ColumnSpacing="10">
+                  ColumnDefinitions="*,Auto,Auto">
                 <VerticalStackLayout Grid.Column="0">
                     <Label Style="{StaticResource GreetLabel}" Text="{Binding Greeting}" />
                     <Label Style="{StaticResource UserLabel}" Text="{Binding UserName}" />

@@ -76,6 +76,11 @@
                 <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <Style x:Key="CarouselCardGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="6" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -102,8 +107,8 @@
                                 <Setter Property="Opacity" Value="0.55" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Grid RowDefinitions="*,Auto,Auto"
-                              RowSpacing="6">
+                        <Grid Style="{StaticResource CarouselCardGrid}"
+                              RowDefinitions="*,Auto,Auto">
                             <Border Grid.Row="0"
                                     Style="{StaticResource CarouselImageBorder}">
                                 <Image Style="{StaticResource CarouselImage}"

@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Layouts;
+namespace Template.MobileApp.Controls;
 
 using Microsoft.Maui.Layouts;
 

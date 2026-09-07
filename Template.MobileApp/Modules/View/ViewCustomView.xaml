@@ -51,6 +51,11 @@
                 <Setter Property="Padding" Value="8,6" />
             </Style>
 
+            <Style x:Key="ColorPreviewGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -103,8 +108,8 @@
                                behaviors:AnimationOption.EnterDelay="160">
                 <VerticalStackLayout Spacing="8">
                     <controls:ColorPicker SelectedColor="{Binding PickedColor}" />
-                    <Grid ColumnDefinitions="Auto,*"
-                          ColumnSpacing="8">
+                    <Grid Style="{StaticResource ColorPreviewGrid}"
+                          ColumnDefinitions="Auto,*">
                         <BoxView Grid.Column="0"
                                  WidthRequest="24"
                                  HeightRequest="24"

@@ -4,6 +4,17 @@
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Controls.InfoCard">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <ContentView.ControlTemplate>
         <ControlTemplate>
             <Border Padding="0"
@@ -14,9 +25,9 @@
                 <Grid RowDefinitions="Auto,1,Auto">
 
                     <Grid Grid.Row="0"
+                          Style="{StaticResource HeaderGrid}"
                           Padding="12,10"
-                          ColumnDefinitions="Auto,*"
-                          ColumnSpacing="8">
+                          ColumnDefinitions="Auto,*">
                         <Label Grid.Column="0"
                                FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
                                FontSize="24"

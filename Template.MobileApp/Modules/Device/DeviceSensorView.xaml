@@ -77,6 +77,11 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
             </Style>
 
+            <Style x:Key="SensorRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -341,8 +346,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Explore}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320">
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="16"
+                <Grid Style="{StaticResource SensorRowGrid}"
+                      ColumnDefinitions="Auto,*"
                       Padding="0,4">
                     <drawing:DrawingControl Grid.Column="0"
                                             WidthRequest="120"
@@ -363,8 +368,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Straighten}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="400">
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="16"
+                <Grid Style="{StaticResource SensorRowGrid}"
+                      ColumnDefinitions="Auto,*"
                       Padding="0,4">
                     <drawing:DrawingControl Grid.Column="0"
                                             WidthRequest="120"

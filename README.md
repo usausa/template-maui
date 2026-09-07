@@ -2,8 +2,6 @@
 
 Template project for MAUI.
 
-- [日本語](README-ja.md)
-
 # Image
 
 <p>

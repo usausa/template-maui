@@ -7,7 +7,6 @@
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:layouts="clr-namespace:Template.MobileApp.Layouts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewLayoutView"
              x:DataType="{x:Type module:ViewLayoutViewModel}"
@@ -170,7 +169,7 @@
                     <Label Style="{StaticResource NoteLabel}"
                            Text="ILayoutManager 自作。子要素を円周へ均等配置 (Angle 指定で個別配置も可)" />
                     <Grid HeightRequest="240">
-                        <layouts:CircularLayout>
+                        <controls:CircularLayout>
                             <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
                                 <Label Style="{StaticResource UniformCellLabel}" Text="月" />
                             </Border>
@@ -192,7 +191,7 @@
                             <Border Style="{StaticResource UniformCell}" WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Margin="0">
                                 <Label Style="{StaticResource UniformCellLabel}" Text="日" />
                             </Border>
-                        </layouts:CircularLayout>
+                        </controls:CircularLayout>
                         <Label Style="{StaticResource UniformCellLabel}"
                                FontSize="12"
                                HorizontalOptions="Center"
@@ -209,7 +208,7 @@
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
-                    <layouts:StaggeredGrid Columns="3"
+                    <controls:StaggeredGrid Columns="3"
                                            Spacing="6">
                         <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="90" BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}" Text="1" />
@@ -235,18 +234,18 @@
                         <Border Style="{StaticResource UniformCell}" Margin="0" HeightRequest="110" BackgroundColor="{StaticResource GrayLighten2}">
                             <Label Style="{StaticResource UniformCellLabel}" Text="8" />
                         </Border>
-                    </layouts:StaggeredGrid>
+                    </controls:StaggeredGrid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="ILayoutManagerFactory (Cascade)"
+            <controls:InfoCard Title="CascadeStackLayout"
                                Icon="{x:Static fonts:MaterialIcons.Layers}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
-                           Text="DI 登録した ILayoutManagerFactory が CascadeStackLayout (VerticalStackLayout 派生) のマネージャだけをカスケード配置に差し替える" />
-                    <layouts:CascadeStackLayout HorizontalOptions="Start">
+                           Text="Layout 派生クラスの CreateLayoutManager で子要素を左上から右下へ重ねて配置する。ずらす量は Offset プロパティ" />
+                    <controls:CascadeStackLayout HorizontalOptions="Start">
                         <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource BlueDefault}" WidthRequest="200" HeightRequest="72">
                             <Label Style="{StaticResource DockPaneLabel}" Text="Window 1" />
                         </Border>
@@ -259,7 +258,7 @@
                         <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource BlueGrayDefault}" WidthRequest="200" HeightRequest="72">
                             <Label Style="{StaticResource DockPaneLabel}" Text="Window 4" />
                         </Border>
-                    </layouts:CascadeStackLayout>
+                    </controls:CascadeStackLayout>
                 </VerticalStackLayout>
             </controls:InfoCard>
 

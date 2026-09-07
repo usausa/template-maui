@@ -46,13 +46,23 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="ModeBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid RowDefinitions="*,Auto,Auto"
-          BackgroundColor="White"
-          RowSpacing="0">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto,Auto"
+          BackgroundColor="White">
 
         <controls:CalendarView Grid.Row="0"
                                Culture="{Binding Culture}"
@@ -77,9 +87,9 @@
 
         <!-- 選択モード切替+今日へ -->
         <Grid Grid.Row="2"
+              Style="{StaticResource ModeBarGrid}"
               Padding="12,8"
-              ColumnDefinitions="*,*,*,*,8,Auto"
-              ColumnSpacing="4">
+              ColumnDefinitions="*,*,*,*,8,Auto">
             <Button Grid.Column="0"
                     Style="{StaticResource ModeButton}"
                     Command="{Binding SelectModeCommand}"

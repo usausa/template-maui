@@ -51,6 +51,11 @@
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
+            <Style x:Key="SegmentRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="0" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -145,8 +150,8 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource SegmentCaptionLabel}"
                            Text="Segmented select (tap to choose a value)" />
-                    <Grid ColumnDefinitions="*,*,*"
-                          ColumnSpacing="0">
+                    <Grid Style="{StaticResource SegmentRowGrid}"
+                          ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource LeftSelectButton}"
                                 behaviors:Select.EmptyString="-"

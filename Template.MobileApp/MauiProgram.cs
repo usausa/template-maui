@@ -76,7 +76,6 @@ public static partial class MauiProgram
             .UseMauiComponents()
             .UseCommunityToolkitServices()
             .UseCustomView()
-            .UseCustomLayouts()
             .BuildApplication();
 
     // ------------------------------------------------------------
@@ -206,14 +205,6 @@ public static partial class MauiProgram
             options.DisableShowSoftInputOnFocus = false;
         });
 
-        return builder;
-    }
-
-    private static MauiAppBuilder UseCustomLayouts(this MauiAppBuilder builder)
-    {
-        // ILayoutManagerFactory: レイアウト型ごとにマネージャを DI で差し替えるフック
-        // (Layouts/AppLayoutManagerFactory 参照。CascadeStackLayout のみ対象で他は既定のまま)
-        builder.Services.AddSingleton<ILayoutManagerFactory, Layouts.AppLayoutManagerFactory>();
         return builder;
     }
 
@@ -446,6 +437,14 @@ public static partial class MauiProgram
     }
 
     // ------------------------------------------------------------
+    // Data
+    // ------------------------------------------------------------
+
+    // ReSharper disable once UnusedMethodReturnValue.Local
+    [DataAccessorRegistration]
+    private static partial IServiceCollection AddDataAccessors(this IServiceCollection services);
+
+    // ------------------------------------------------------------
     // View & ViewModel
     // ------------------------------------------------------------
 
@@ -459,14 +458,6 @@ public static partial class MauiProgram
     [ComponentRegistration(Lifetime.Transient, "Context$", Namespace = ModulesNamespace)]
     private static partial IServiceCollection AddContexts(this IServiceCollection services);
     // ReSharper restore UnusedMethodReturnValue.Local
-
-    // ------------------------------------------------------------
-    // Data
-    // ------------------------------------------------------------
-
-    // ReSharper disable once UnusedMethodReturnValue.Local
-    [DataAccessorRegistration]
-    private static partial IServiceCollection AddDataAccessors(this IServiceCollection services);
 
     // ------------------------------------------------------------
     // Navigation

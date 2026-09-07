@@ -87,6 +87,11 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
             </Style>
 
+            <Style x:Key="TransferButtonGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -119,8 +124,8 @@
                            Text="{Binding RemoteFileName}" />
                     <ProgressBar Style="{StaticResource TransferProgressBar}"
                                  Progress="{Binding Progress}" />
-                    <Grid ColumnDefinitions="*,*,*"
-                          ColumnSpacing="8">
+                    <Grid Style="{StaticResource TransferButtonGrid}"
+                          ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 Command="{Binding UploadCommand}"

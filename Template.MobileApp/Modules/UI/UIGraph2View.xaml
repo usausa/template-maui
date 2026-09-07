@@ -88,6 +88,11 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
+            <Style x:Key="CommitInfoGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -116,10 +121,10 @@
                                                   RowData="{Binding Row}" />
 
                         <Grid Grid.Row="0" Grid.Column="1"
+                              Style="{StaticResource CommitInfoGrid}"
                               RowDefinitions="Auto,Auto"
                               ColumnDefinitions="Auto,Auto,*,Auto"
-                              VerticalOptions="Center"
-                              RowSpacing="2">
+                              VerticalOptions="Center">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource ShaLabel}"
                                    Text="{Binding Row.ShortSha}" />

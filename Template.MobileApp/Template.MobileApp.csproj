@@ -127,7 +127,6 @@
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.1.0" />
     <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
     <PackageReference Include="Google.Protobuf" Version="3.36.1" />
-    <PackageReference Include="Components.Maui" Version="1.42.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.83.0" />
     <PackageReference Include="Grpc.Tools" Version="2.83.0">
       <PrivateAssets>all</PrivateAssets>
@@ -171,8 +170,6 @@
     <PackageReference Include="Usa.Smart.Data" Version="2.11.0" />
     <PackageReference Include="Usa.Smart.Data.Accessor" Version="3.0.0-beta11" />
     <PackageReference Include="Usa.Smart.Mapper" Version="1.0.0-beta8" />
-    <PackageReference Include="Usa.Smart.Maui" Version="2.25.0" />
-    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.25.0" />
     <PackageReference Include="Usa.Smart.Mvvm" Version="2.12.0" />
     <PackageReference Include="Usa.Smart.Navigation" Version="3.10.0" />
     <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="3.10.0" />
@@ -183,6 +180,13 @@
     <!-- Xamarin.AndroidX.Fragment.Ktx: Shiny.Hosting.Maui and BarcodeScanning.Native.Maui still reference the old ktx package, so pin it to match Xamarin.AndroidX.Fragment 1.9.0 which merged those classes in -->
     <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0" />
     <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MauiComponents\MauiComponents.Generator\MauiComponents.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
+    <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
+    <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
   <!-- Trimmer -->

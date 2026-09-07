@@ -55,6 +55,11 @@
                 <Setter Property="MaximumTrackColor" Value="#66FFFFFF" />
             </Style>
 
+            <Style x:Key="ControlBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -86,8 +91,8 @@
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
                 IsVisible="{Binding IsControlBarVisible}">
             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-            <Grid ColumnDefinitions="Auto,Auto,*,Auto"
-                  ColumnSpacing="8">
+            <Grid Style="{StaticResource ControlBarGrid}"
+                  ColumnDefinitions="Auto,Auto,*,Auto">
                 <ImageButton Grid.Column="0"
                              Style="{StaticResource PlayPauseButton}"
                              Source="{markup:Material {x:Static fonts:MaterialIcons.Play_arrow},
