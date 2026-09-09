@@ -5,7 +5,6 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:conv="clr-namespace:Template.MobileApp.Converters"
@@ -95,15 +94,13 @@
                   ColumnDefinitions="Auto,Auto,*,Auto">
                 <ImageButton Grid.Column="0"
                              Style="{StaticResource PlayPauseButton}"
-                             Source="{markup:Material {x:Static fonts:MaterialIcons.Play_arrow},
-                                                      Color=White,
-                                                      Size=28}"
+                             Source="{x:Static markup:AppIcons.MoneyPlayArrow}"
                              Command="{Binding TogglePlayCommand}">
                     <ImageButton.Triggers>
                         <DataTrigger TargetType="ImageButton"
                                      Value="True"
                                      Binding="{Binding IsPlaying}">
-                            <Setter Property="Source" Value="{markup:Material {x:Static fonts:MaterialIcons.Pause}, Color=White, Size=28}" />
+                            <Setter Property="Source" Value="{x:Static markup:AppIcons.MoneyPause}" />
                         </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>

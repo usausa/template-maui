@@ -16,60 +16,71 @@
           RowDefinitions="*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*">
         <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ServerTimeCommand}"
-                Text="Get server time" />
+                Text="Get server time"
+                ImageSource="{x:Static markup:AppIcons.Schedule}" />
 
         <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding DataListCommand}"
-                Text="Data list" />
+                Text="Data list"
+                ImageSource="{x:Static markup:AppIcons.ListAlt}" />
 
         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding SecureCommand}"
-                Text="Secure" />
+                Text="Secure"
+                ImageSource="{x:Static markup:AppIcons.Lock}" />
 
         <Button Grid.Row="3" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding LoginCommand}"
-                Text="Login" />
+                Text="Login"
+                ImageSource="{x:Static markup:AppIcons.Login}" />
         <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding LogoutCommand}"
-                Text="Logout" />
+                Text="Logout"
+                ImageSource="{x:Static markup:AppIcons.Logout}" />
 
         <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding DownloadCommand}"
-                Text="Download" />
+                Text="Download"
+                ImageSource="{x:Static markup:AppIcons.Download}" />
         <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding UploadCommand}"
-                Text="Upload" />
+                Text="Upload"
+                ImageSource="{x:Static markup:AppIcons.Upload}" />
 
         <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding TestErrorCommand}"
                 CommandParameter="{s:Int32 500}"
-                Text="Error" />
+                Text="Error"
+                ImageSource="{x:Static markup:AppIcons.ErrorOutline}" />
         <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding TestDelayCommand}"
                 CommandParameter="{s:Int32 5000}"
-                Text="Delay" />
+                Text="Delay"
+                ImageSource="{x:Static markup:AppIcons.HourglassEmpty}" />
 
         <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId NetworkRealtime}"
-                Text="Realtime" />
+                Text="Realtime"
+                ImageSource="{x:Static markup:AppIcons.Sync}" />
 
         <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId NetworkScp}"
-                Text="SCP" />
+                Text="SCP"
+                ImageSource="{x:Static markup:AppIcons.CloudUpload}" />
 
         <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"

@@ -12,6 +12,9 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
     public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Font warmup completed. target=[{target}], elapsed=[{elapsed}]")]
+    public static partial void DebugFontWarmup(this ILogger logger, string target, long elapsed);
+
     // State
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Screen state changed. state=[{on}]")]

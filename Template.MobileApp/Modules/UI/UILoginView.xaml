@@ -4,7 +4,6 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              xmlns:effectsView="http://schemas.syncfusion.com/maui/toolkit"
@@ -210,7 +209,7 @@
                 <Grid ColumnDefinitions="Auto,*,16">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
-                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Account_circle}, Color=White, Size=28}" />
+                        <Image Source="{x:Static markup:AppIcons.MoneyAccountCircle}" />
                     </Border>
                     <Entry Grid.Column="1"
                            Style="{StaticResource LoginInputEntry}"
@@ -226,7 +225,7 @@
                 <Grid ColumnDefinitions="Auto,*,Auto,8">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
-                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Key}, Color=White, Size=28}" />
+                        <Image Source="{x:Static markup:AppIcons.MoneyKey}" />
                     </Border>
                     <Entry Grid.Column="1"
                            Style="{StaticResource LoginInputEntry}"
@@ -236,15 +235,13 @@
                            Placeholder="パスワード" />
                     <ImageButton Grid.Column="2"
                                  Style="{StaticResource PasswordToggleButton}"
-                                 Source="{markup:Material {x:Static fonts:MaterialIcons.Visibility},
-                                                          Color={StaticResource GrayDefault},
-                                                          Size=24}"
+                                 Source="{x:Static markup:AppIcons.LoginVisibility}"
                                  Command="{Binding TogglePasswordCommand}">
                         <ImageButton.Triggers>
                             <DataTrigger TargetType="ImageButton"
                                          Value="True"
                                          Binding="{Binding PasswordVisible}">
-                                <Setter Property="Source" Value="{markup:Material {x:Static fonts:MaterialIcons.Visibility_off}, Color={StaticResource LightBlueDarken1}, Size=24}" />
+                                <Setter Property="Source" Value="{x:Static markup:AppIcons.LoginVisibilityOff}" />
                             </DataTrigger>
                         </ImageButton.Triggers>
                     </ImageButton>

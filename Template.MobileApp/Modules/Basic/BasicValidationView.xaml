@@ -140,12 +140,12 @@
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
-                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Error}, Color={StaticResource RedDefault}, Size=18}"
+                                ImageSource="{x:Static markup:AppIcons.ValidationError}"
                                 Command="{Binding ErrorCommand}"
                                 Text="Error" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource ActionButton}"
-                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Check_circle}, Color={StaticResource GreenDefault}, Size=18}"
+                                ImageSource="{x:Static markup:AppIcons.ValidationCheck}"
                                 Command="{Binding ClearCommand}"
                                 Text="Clear" />
                     </Grid>
@@ -160,7 +160,7 @@
                     <Label Style="{StaticResource FieldCaptionLabel}"
                            Text="Moves focus to the first field with an error" />
                     <Button Style="{StaticResource ActionButton}"
-                            ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Input}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                            ImageSource="{x:Static markup:AppIcons.SmallInput}"
                             Command="{Binding FocusCommand}"
                             Text="Focus" />
                 </VerticalStackLayout>

@@ -4,7 +4,6 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
@@ -153,19 +152,13 @@
                              HorizontalOptions="End" VerticalOptions="End"
                              Spacing="12">
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Add},
-                                                  Color={StaticResource GrayDarken3},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapAdd}"
                          Command="{Binding ZoomInCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Remove},
-                                                  Color={StaticResource GrayDarken3},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapRemove}"
                          Command="{Binding ZoomOutCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Home},
-                                                  Color={StaticResource GrayDarken3},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
 

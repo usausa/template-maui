@@ -4,7 +4,6 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
@@ -58,30 +57,20 @@
                              HorizontalOptions="End" VerticalOptions="Start"
                              Spacing="12">
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Layers},
-                                                  Color={StaticResource GrayDarken3},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapLayers}"
                          Command="{Binding ToggleMapTypeCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Home},
-                                                  Color={StaticResource GrayDarken3},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
             <!-- MapElements: 経路 / 範囲 / 半径円 -->
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Route},
-                                                  Color={StaticResource BlueDefault},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapRoute}"
                          Command="{Binding ToggleRouteCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Pentagon},
-                                                  Color={StaticResource GreenDefault},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapPentagon}"
                          Command="{Binding ToggleAreaCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{markup:Material {x:Static fonts:MaterialIcons.Circle},
-                                                  Color={StaticResource RedDefault},
-                                                  Size=24}"
+                         Source="{x:Static markup:AppIcons.MapCircle}"
                          Command="{Binding ToggleCircleCommand}" />
         </VerticalStackLayout>
 

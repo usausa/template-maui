@@ -281,6 +281,7 @@ public static partial class MauiProgram
         {
             config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
             config.AddPlugin<NavigationFocusPlugin>();
+            config.AddPlugin<NavigationFeedbackPlugin>();
             config.AddPlugin(new DialogEffectPlugin(ViewSource()));
             config.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });

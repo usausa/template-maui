@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleMenuView"
@@ -22,84 +21,85 @@
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleWebBasic}"
                 Text="Web Basic"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Language}}" />
+                ImageSource="{x:Static markup:AppIcons.Language}" />
         <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleWebApp}"
                 Text="Web App"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Web}}" />
+                ImageSource="{x:Static markup:AppIcons.Web}" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleMap1}"
                 Text="Map"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Map}}" />
+                ImageSource="{x:Static markup:AppIcons.Map}" />
         <Button Grid.Row="1" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleMap2}"
                 Text="Map2"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Explore}}" />
+                ImageSource="{x:Static markup:AppIcons.Explore}" />
 
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleChart}"
                 Text="Chart"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Bar_chart}}" />
+                ImageSource="{x:Static markup:AppIcons.BarChart}" />
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleMedia}"
                 Text="Media"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Movie}}" />
+                ImageSource="{x:Static markup:AppIcons.Movie}" />
 
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleMarkdown}"
                 Text="Markdown"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Article}}" />
+                ImageSource="{x:Static markup:AppIcons.Article}" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SamplePdf}"
                 Text="PDF"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Picture_as_pdf}}" />
+                ImageSource="{x:Static markup:AppIcons.PictureAsPdf}" />
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetMenu}"
                 Text="CV Net"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Cloud}}" />
+                ImageSource="{x:Static markup:AppIcons.Cloud}" />
         <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvLocal}"
                 Text="CV Local"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Memory}}" />
+                ImageSource="{x:Static markup:AppIcons.Memory}" />
 
         <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleChat}"
                 Text="Chat"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Smart_toy}}" />
+                ImageSource="{x:Static markup:AppIcons.SmartToy}" />
         <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleSfChart}"
-                Text="Sf Chart" />
+                Text="Sf Chart"
+                ImageSource="{x:Static markup:AppIcons.InsertChart}" />
 
         <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCrop}"
                 Text="Crop"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Crop}}" />
+                ImageSource="{x:Static markup:AppIcons.Crop}" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

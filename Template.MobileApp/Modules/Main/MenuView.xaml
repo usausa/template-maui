@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
              x:Class="Template.MobileApp.Modules.Main.MenuView"
@@ -24,61 +23,61 @@
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId BasicMenu}"
                     Text="Basic"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Widgets}}" />
+                    ImageSource="{x:Static markup:AppIcons.Widgets}" />
             <Button Grid.Row="1" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId NavigationMenu}"
                     Text="Navigation"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Navigation}}" />
+                    ImageSource="{x:Static markup:AppIcons.Navigation}" />
             <Button Grid.Row="2" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId DeviceMenu}"
                     Text="Device"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Devices}}" />
+                    ImageSource="{x:Static markup:AppIcons.Devices}" />
             <Button Grid.Row="3" Grid.Column="0"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId Data}"
                     Text="Data"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Storage}}" />
+                    ImageSource="{x:Static markup:AppIcons.Storage}" />
             <Button Grid.Row="3" Grid.Column="1"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId NetworkMenu}"
                     Text="Network"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Cloud}}" />
+                    ImageSource="{x:Static markup:AppIcons.Cloud}" />
             <Button Grid.Row="4" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId ViewMenu}"
                     Text="View"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Layers}}" />
+                    ImageSource="{x:Static markup:AppIcons.Layers}" />
             <Button Grid.Row="5" Grid.Column="0"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId UIMenu1}"
                     Text="UI 1"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Palette}}" />
+                    ImageSource="{x:Static markup:AppIcons.Palette}" />
             <Button Grid.Row="5" Grid.Column="1"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId UIMenu2}"
                     Text="UI 2"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Insights}}" />
+                    ImageSource="{x:Static markup:AppIcons.Insights}" />
             <Button Grid.Row="6" Grid.Column="0"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId SampleMenu}"
                     Text="Sample"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Science}}" />
+                    ImageSource="{x:Static markup:AppIcons.Science}" />
             <Button Grid.Row="6" Grid.Column="1"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId AppMenu}"
                     Text="App"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Apps}}" />
+                    ImageSource="{x:Static markup:AppIcons.Apps}" />
             <Button Grid.Row="7" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     IsEnabled="False"
@@ -88,7 +87,7 @@
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId Setting}"
                     Text="Setting"
-                    ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Settings}}" />
+                    ImageSource="{x:Static markup:AppIcons.Settings}" />
         </Grid>
 
         <FlexLayout Grid.Row="1"

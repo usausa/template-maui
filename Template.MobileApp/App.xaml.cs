@@ -1,9 +1,12 @@
 namespace Template.MobileApp;
 
+using System.Diagnostics;
+
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 using Template.MobileApp.Helpers;
+using Template.MobileApp.Markup;
 using Template.MobileApp.Services;
 
 #pragma warning disable CA1724
@@ -35,6 +38,15 @@ public sealed partial class App
         // Report previous exception
         await CrashReport.ShowReport();
 
+        // Warm up icon fonts
+        var watch = Stopwatch.StartNew();
+        AppIcons.WarmTypefaces(serviceProvider);
+        log.DebugFontWarmup("typeface", watch.ElapsedMilliseconds);
+
+        watch.Restart();
+        await AppIcons.WarmStartupAsync(serviceProvider);
+        log.DebugFontWarmup("glyph(startup)", watch.ElapsedMilliseconds);
+
         // Initialize database
         var initializeError = await InitializeDataAsync();
         if (initializeError is not null)
@@ -54,6 +66,10 @@ public sealed partial class App
 
         // Completed
         serviceProvider.GetRequiredService<StartupState>().NotifyCompleted();
+
+        // Warm up remaining icons
+        await AppIcons.WarmAllAsync(serviceProvider);
+        log.DebugFontWarmup("glyph(rest)", watch.ElapsedMilliseconds);
     }
 
     private async Task<Exception?> InitializeDataAsync()

@@ -268,9 +268,7 @@
             <HorizontalStackLayout Style="{StaticResource MailHeaderColumnLayout}">
                 <Button Style="{StaticResource MailHeaderFilterButton}"
                         Text="フィルター"
-                        ImageSource="{markup:Material {x:Static fonts:MaterialIcons.Filter_list},
-                                                      Color=White,
-                                                      Size=24}" />
+                        ImageSource="{x:Static markup:AppIcons.FilterList}" />
             </HorizontalStackLayout>
         </FlexLayout>
 
@@ -291,9 +289,7 @@
                                            CommandParameter="{Binding .}"
                                            Text="削除"
                                            BackgroundColor="{StaticResource RedDefault}"
-                                           IconImageSource="{markup:Material {x:Static fonts:MaterialIcons.Delete},
-                                                                             Color=White,
-                                                                             Size=24}" />
+                                           IconImageSource="{x:Static markup:AppIcons.Delete}" />
                             </SwipeItems>
                         </SwipeView.LeftItems>
                         <SwipeView.RightItems>
@@ -302,9 +298,7 @@
                                            CommandParameter="{Binding .}"
                                            Text="アーカイブ"
                                            BackgroundColor="{StaticResource GreenDefault}"
-                                           IconImageSource="{markup:Material {x:Static fonts:MaterialIcons.Archive},
-                                                                             Color=White,
-                                                                             Size=24}" />
+                                           IconImageSource="{x:Static markup:AppIcons.Archive}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
@@ -376,9 +370,7 @@
                 Grid.Row="2"
                 Style="{StaticResource FloatingButton}"
                 IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
-                ImageSource="{markup:Material {x:Static fonts:MaterialIcons.Add},
-                                              Color=White,
-                                              Size=36}" />
+                ImageSource="{x:Static markup:AppIcons.LargeAdd}" />
 
         <!-- Tab -->
         <Grid Grid.Row="3"
