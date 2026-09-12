@@ -11,9 +11,9 @@ public sealed partial class UISuperViewModel : AppViewModelBase
 
     public IReadOnlyList<SuperBanner> Banners { get; } =
     [
-        new() { Image = "social_background.png", Title = "サマーフェス開催中", Sub = "期間限定ポイント 5 倍キャンペーン" },
-        new() { Image = "usa3_full.jpg", Title = "新キャラクター登場", Sub = "いまなら 10 連ガチャ無料" },
-        new() { Image = "profile.jpg", Title = "プレミアム会員", Sub = "初月無料でアップグレード" }
+        new() { Image = "banner01.jpg", Title = "オータムセール開催中", Sub = "全館ポイント 5 倍キャンペーン" },
+        new() { Image = "banner02.jpg", Title = "新作ギフト入荷", Sub = "ラッピング無料でお届け" },
+        new() { Image = "banner03.jpg", Title = "ポイントキャンペーン", Sub = "期間限定ポイント 2 倍" }
     ];
 
     public IReadOnlyList<SuperApp> Apps { get; } =

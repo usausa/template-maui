@@ -11,17 +11,17 @@ public sealed partial class UIShopViewModel : AppViewModelBase
 {
     private static readonly IReadOnlyList<UIShopItem> AllItems =
     [
-        new() { Title = "Aqua Serum", Price = "$ 24.00", Image = "usa1_face.jpg" },
-        new() { Title = "Velvet Lip", Price = "$ 18.50", Image = "usa2_face.jpg" },
-        new() { Title = "Glow Cream", Price = "$ 32.00", Image = "usa3_face.jpg" },
-        new() { Title = "Pure Mist", Price = "$ 12.00", Image = "usa4_face.jpg" },
-        new() { Title = "Silky Mask", Price = "$ 22.00", Image = "usa5_face.jpg" },
-        new() { Title = "Petal Blush", Price = "$ 15.80", Image = "usa6_face.jpg" }
+        new() { Title = "メカニカルキーボード", Price = "¥19,800", Image = "product_gear01.jpg" },
+        new() { Title = "ワイヤレスマウス", Price = "¥8,900", Image = "product_gear02.jpg" },
+        new() { Title = "ノイズキャンセリングヘッドセット", Price = "¥14,800", Image = "product_gear03.jpg" },
+        new() { Title = "4K Web カメラ", Price = "¥11,800", Image = "product_gear04.jpg" },
+        new() { Title = "ポータブル SSD 1TB", Price = "¥16,800", Image = "product_gear05.jpg" },
+        new() { Title = "USB-C ドック", Price = "¥27,800", Image = "product_gear06.jpg" }
     ];
 
-    public string Greeting { get; } = "Hello, Anna!";
+    public string Greeting { get; } = "こんにちは、アンナさん";
 
-    public string SubGreeting { get; } = "Discover your style";
+    public string SubGreeting { get; } = "デスク周りをアップグレード";
 
     // 検索は All Items をタイトルの部分一致で絞り込む
     [ObservableProperty(NotifyAlso = [nameof(Items)])]
@@ -36,9 +36,9 @@ public sealed partial class UIShopViewModel : AppViewModelBase
 
     public IReadOnlyList<UIShopItem> Popular { get; } =
     [
-        new() { Title = "Velvet Dress", Price = "$ 89.00", Image = "usa1_full.jpg" },
-        new() { Title = "Denim Jacket", Price = "$ 65.00", Image = "usa2_full.jpg" },
-        new() { Title = "Summer Hat", Price = "$ 22.00", Image = "usa3_full.jpg" }
+        new() { Title = "スリムノート PC 14", Price = "¥179,800", Image = "product_device01.jpg" },
+        new() { Title = "4K モニター 27", Price = "¥64,800", Image = "product_device02.jpg" },
+        new() { Title = "コンパクトデスクトップ", Price = "¥129,800", Image = "product_device03.jpg" }
     ];
 
     public IReadOnlyList<UIShopItem> Items =>

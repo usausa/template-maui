@@ -32,7 +32,7 @@
             <Style x:Key="BannerBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="20,18" />
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 0,0,24,24" />
             </Style>
@@ -103,7 +103,7 @@
             <Style x:Key="ItemPriceLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="StepperRow"
@@ -118,7 +118,7 @@
                 <Setter Property="WidthRequest" Value="28" />
                 <Setter Property="HeightRequest" Value="28" />
                 <Setter Property="CornerRadius" Value="14" />
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -152,7 +152,7 @@
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="18" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
@@ -250,7 +250,7 @@
                    TargetType="Label">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
             </Style>
 
@@ -270,7 +270,7 @@
                    TargetType="Button">
                 <Setter Property="HeightRequest" Value="52" />
                 <Setter Property="CornerRadius" Value="26" />
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -293,9 +293,9 @@
             <Border Style="{StaticResource BannerBorder}">
                 <VerticalStackLayout>
                     <Label Style="{StaticResource BannerTitleLabel}"
-                           Text="Shopping Cart" />
+                           Text="ショッピングカート" />
                     <Label Style="{StaticResource BannerCountLabel}"
-                           Text="{Binding ItemCount, StringFormat='{0} items in cart'}" />
+                           Text="{Binding ItemCount, StringFormat='カートに {0} 点'}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -358,7 +358,7 @@
                         <Border Grid.Column="2"
                                 Style="{StaticResource AppliedBadgeBorder}">
                             <Label Style="{StaticResource AppliedBadgeLabel}"
-                                   Text="Applied" />
+                                   Text="適用済み" />
                         </Border>
                     </Grid>
                     <BoxView Style="{StaticResource CouponDivider}" />
@@ -380,28 +380,28 @@
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource TotalsCaption}"
-                               Text="Subtotal" />
+                               Text="小計" />
                         <Label Grid.Column="1"
                                Style="{StaticResource TotalsValue}"
-                               Text="{Binding Subtotal, StringFormat='$ {0:N2}'}" />
+                               Text="{Binding Subtotal, StringFormat='¥{0:N0}'}" />
                     </Grid>
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource TotalsCaption}"
-                               Text="Discount" />
+                               Text="割引" />
                         <Label Grid.Column="1"
                                Style="{StaticResource DiscountValue}"
-                               Text="{Binding Discount, StringFormat='− $ {0:N2}'}" />
+                               Text="{Binding Discount, StringFormat='− ¥{0:N0}'}" />
                     </Grid>
                     <BoxView Style="{StaticResource CouponDivider}" />
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource TotalCaption}"
-                               Text="Total" />
+                               Text="合計" />
                         <Label Grid.Column="1"
                                Style="{StaticResource TotalValue}"
                                behaviors:LabelOption.CountUpValue="{Binding TotalValue}"
-                               behaviors:LabelOption.CountUpFormat="$ {0:N2}"
+                               behaviors:LabelOption.CountUpFormat="¥{0:N0}"
                                behaviors:LabelOption.CountUpDuration="450"
                                behaviors:AnimationOption.BounceTrigger="{Binding TotalValue}" />
                     </Grid>
@@ -417,7 +417,7 @@
             <Button Style="{StaticResource CheckoutButton}"
                     behaviors:ButtonOption.PressEffect="True"
                     Command="{Binding CheckoutCommand}"
-                    Text="Checkout" />
+                    Text="レジに進む" />
         </Border>
 
     </Grid>

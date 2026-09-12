@@ -166,8 +166,7 @@ public enum ViewId
     UICalendar,
 
     UITimeline,
-    UIFeel,
-    UIPet,
+    UIMonster,
     UIStream,
     UIStreamDetail,
     UIShop,

@@ -46,7 +46,7 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         return (data.Commits, data.Refs);
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 

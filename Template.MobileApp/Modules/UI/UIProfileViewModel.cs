@@ -45,12 +45,12 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
 
     public IReadOnlyList<UIProfilePhoto> Photos { get; } =
     [
-        new() { Image = "usa1_full.jpg" },
-        new() { Image = "usa2_full.jpg" },
-        new() { Image = "usa3_full.jpg" },
-        new() { Image = "usa4_full.jpg" },
-        new() { Image = "usa5_full.jpg" },
-        new() { Image = "usa6_full.jpg" }
+        new() { Image = "gallery01.jpg" },
+        new() { Image = "gallery02.jpg" },
+        new() { Image = "gallery03.jpg" },
+        new() { Image = "gallery04.jpg" },
+        new() { Image = "gallery05.jpg" },
+        new() { Image = "gallery06.jpg" }
     ];
 
     [ObservableProperty]

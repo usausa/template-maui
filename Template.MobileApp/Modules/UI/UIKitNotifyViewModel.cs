@@ -15,11 +15,11 @@ public sealed class UIKitNotifyViewModel : AppViewModelBase
 {
     public IReadOnlyList<UIKitNotifyItem> Notifications { get; } =
     [
-        new() { Icon = Fonts.MaterialIcons.Local_offer, Title = "50% off today", Description = "Spring sale ends tonight. Tap to explore.", Time = "5m", IsUnread = true },
-        new() { Icon = Fonts.MaterialIcons.Local_shipping, Title = "Your order is out for delivery", Description = "Estimated arrival: 14:30 - 16:00.", Time = "1h", IsUnread = true },
-        new() { Icon = Fonts.MaterialIcons.Mail, Title = "New message from Anna", Description = "Hey! Are we still meeting tomorrow?", Time = "3h", IsUnread = true },
-        new() { Icon = Fonts.MaterialIcons.Star, Title = "You earned a badge", Description = "You've completed 10 orders this month.", Time = "1d" },
-        new() { Icon = Fonts.MaterialIcons.Notifications, Title = "Weekly summary", Description = "Check what you achieved this week.", Time = "2d" }
+        new() { Icon = Fonts.MaterialIcons.Local_offer, Title = "本日限定 50% オフ", Description = "スプリングセールは今夜まで。タップして商品を見る。", Time = "5分前", IsUnread = true },
+        new() { Icon = Fonts.MaterialIcons.Local_shipping, Title = "ご注文の商品を配達中です", Description = "到着予定: 14:30 〜 16:00", Time = "1時間前", IsUnread = true },
+        new() { Icon = Fonts.MaterialIcons.Mail, Title = "うさうさうさんから新着メッセージ", Description = "明日の打ち合わせ、予定どおりで大丈夫？", Time = "3時間前", IsUnread = true },
+        new() { Icon = Fonts.MaterialIcons.Star, Title = "バッジを獲得しました", Description = "今月の注文が 10 件に達しました。", Time = "1日前" },
+        new() { Icon = Fonts.MaterialIcons.Notifications, Title = "週間サマリー", Description = "今週の達成状況を確認しましょう。", Time = "2日前" }
     ];
 
     // タップで既読化

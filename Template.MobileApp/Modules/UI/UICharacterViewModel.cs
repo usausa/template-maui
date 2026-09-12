@@ -26,7 +26,7 @@ public sealed partial class UICharacterViewModel : AppViewModelBase
         Characters.Add(new CharacterItem { Name = "Alter Ego", Color = Color.FromArgb("#EEEEEE"), Face = "usa8_face.jpg", Full = "usa8_full.jpg" });
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

@@ -6,10 +6,10 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             x:Class="Template.MobileApp.Modules.UI.UIPetView"
-             x:DataType="{x:Type module:UIPetViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:UIPetViewModel}"
-             shell:ShellProperty.Title="Pet"
+             x:Class="Template.MobileApp.Modules.UI.UIMonsterView"
+             x:DataType="{x:Type module:UIMonsterViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMonsterViewModel}"
+             shell:ShellProperty.Title="Monster"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
@@ -24,10 +24,16 @@
 
             <Style x:Key="DetailCardBorder"
                    TargetType="Border">
-                <Setter Property="Padding" Value="20,16,20,8" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 40,40,0,0" />
+            </Style>
+
+            <!-- Padding lives on the stack (not the card) so the Heart bounce is not clipped at the content edge -->
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,16,20,8" />
             </Style>
 
             <!-- Name + level -->
@@ -36,7 +42,7 @@
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
-            <Style x:Key="PetNameLabel"
+            <Style x:Key="MonsterNameLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="28" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -196,18 +202,18 @@
     <Grid RowDefinitions="*,40,Auto">
         <Image Grid.Row="0" Grid.RowSpan="2"
                Style="{StaticResource HeroImage}"
-               Source="usa1_full.jpg" />
+               Source="monster01.jpg" />
 
         <Border Grid.Row="1" Grid.RowSpan="2"
                 Style="{StaticResource DetailCardBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
-            <VerticalStackLayout>
+            <VerticalStackLayout Style="{StaticResource DetailStack}">
 
                 <Grid Style="{StaticResource NameRowGrid}"
                       ColumnDefinitions="Auto,*,Auto">
                     <Label Grid.Column="0"
-                           Style="{StaticResource PetNameLabel}"
-                           Text="{Binding PetName}" />
+                           Style="{StaticResource MonsterNameLabel}"
+                           Text="{Binding MonsterName}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource BreedLabel}"
                            Text="{Binding Breed}" />
@@ -222,7 +228,7 @@
                 <HorizontalStackLayout Style="{StaticResource TagRow}"
                                        BindableLayout.ItemsSource="{Binding Tags}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="module:UIPetTag">
+                        <DataTemplate x:DataType="module:UIMonsterTag">
                             <Border Style="{StaticResource TagBorder}"
                                     BackgroundColor="{Binding BackgroundColor}">
                                 <Label Style="{StaticResource TagLabel}"
@@ -319,12 +325,12 @@
                             Style="{StaticResource PartyButton}"
                             behaviors:ButtonOption.PressEffect="True"
                             Command="{Binding PartyCommand}"
-                            Text="Add to Party">
+                            Text="パーティーに加える">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button"
                                          Binding="{Binding InParty}"
                                          Value="True">
-                                <Setter Property="Text" Value="✓ In Party" />
+                                <Setter Property="Text" Value="✓ パーティー参加中" />
                                 <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
                             </DataTrigger>
                         </Button.Triggers>

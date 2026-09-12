@@ -10,7 +10,7 @@ public sealed partial class UICartItem : ObservableObject
     [ObservableProperty]
     public partial int Quantity { get; set; }
 
-    public string PriceText => String.Format(CultureInfo.CurrentCulture, "$ {0:N2}", UnitPrice);
+    public string PriceText => String.Format(CultureInfo.CurrentCulture, "¥{0:N0}", UnitPrice);
 }
 
 public sealed partial class UICartViewModel : AppViewModelBase
@@ -34,9 +34,9 @@ public sealed partial class UICartViewModel : AppViewModelBase
     // CountUp 演出用(double)
     public double TotalValue => (double)Total;
 
-    public string Coupon { get; } = "SPRING SALE −10%";
+    public string Coupon { get; } = "スプリングセール −10%";
 
-    public string Points { get; } = "12,540 pt available";
+    public string Points { get; } = "12,540 pt 利用可能";
 
     public IObserveCommand IncrementCommand { get; }
     public IObserveCommand DecrementCommand { get; }
@@ -46,9 +46,9 @@ public sealed partial class UICartViewModel : AppViewModelBase
     {
         Items =
         [
-            new() { Title = "Aqua Serum", UnitPrice = 24.00m, Quantity = 1, Image = "usa1_face.jpg", Delay = 0 },
-            new() { Title = "Velvet Lip", UnitPrice = 18.50m, Quantity = 2, Image = "usa2_face.jpg", Delay = 80 },
-            new() { Title = "Glow Cream", UnitPrice = 32.00m, Quantity = 1, Image = "usa3_face.jpg", Delay = 160 }
+            new() { Title = "メカニカルキーボード", UnitPrice = 19800m, Quantity = 1, Image = "product_gear01.jpg", Delay = 0 },
+            new() { Title = "ワイヤレスマウス", UnitPrice = 8900m, Quantity = 2, Image = "product_gear02.jpg", Delay = 80 },
+            new() { Title = "ノイズキャンセリングヘッドセット", UnitPrice = 14800m, Quantity = 1, Image = "product_gear03.jpg", Delay = 160 }
         ];
 
         IncrementCommand = MakeDelegateCommand<UICartItem>(item =>
@@ -62,7 +62,7 @@ public sealed partial class UICartViewModel : AppViewModelBase
             Recalculate();
         });
         CheckoutCommand = MakeAsyncCommand(async () =>
-            await dialog.InformationAsync(String.Format(CultureInfo.CurrentCulture, "Checkout completed.\n{0} items / $ {1:N2}", ItemCount, Total)));
+            await dialog.InformationAsync(String.Format(CultureInfo.CurrentCulture, "お会計が完了しました。\n{0} 点 / ¥{1:N0}", ItemCount, Total)));
 
         Recalculate();
     }
@@ -71,7 +71,7 @@ public sealed partial class UICartViewModel : AppViewModelBase
     {
         ItemCount = Items.Sum(static x => x.Quantity);
         Subtotal = Items.Sum(static x => x.UnitPrice * x.Quantity);
-        Discount = Math.Round(Subtotal * DiscountRate, 2);
+        Discount = Math.Round(Subtotal * DiscountRate, 0);
         Total = Subtotal - Discount;
     }
 

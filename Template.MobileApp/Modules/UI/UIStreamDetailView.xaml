@@ -5,6 +5,7 @@
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamDetailView"
@@ -133,45 +134,21 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <!-- Friends watching: overlapping avatars (from UI3Camp's participants row) -->
+            <!-- Friends watching: overlapping avatars (from UI3Camp's participants row).
+                 重ね配置と「+N」は AvatarGroup (OverlapPanel ベースの自作部品) が描く -->
             <Style x:Key="FriendsRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="16,0,16,12" />
                 <Setter Property="Spacing" Value="10" />
             </Style>
 
-            <Style x:Key="FriendsAvatarsLayout"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="-10" />
-            </Style>
-
-            <Style x:Key="FriendAvatar"
-                   TargetType="Border">
-                <Setter Property="WidthRequest" Value="32" />
-                <Setter Property="HeightRequest" Value="32" />
-                <Setter Property="Stroke" Value="White" />
-                <Setter Property="StrokeThickness" Value="2" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-            </Style>
-
-            <Style x:Key="FriendImage"
-                   TargetType="Image">
-                <Setter Property="Aspect" Value="AspectFill" />
-            </Style>
-
-            <Style x:Key="FriendMoreBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource FriendAvatar}">
-                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
-            </Style>
-
-            <Style x:Key="FriendMoreLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="11" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+            <Style x:Key="FriendsAvatars"
+                   TargetType="controls:AvatarGroup">
                 <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="MaxDisplayed" Value="3" />
+                <Setter Property="Overlap" Value="10" />
+                <Setter Property="CountBackgroundColor" Value="#33FFFFFF" />
+                <Setter Property="CountTextColor" Value="White" />
             </Style>
 
             <Style x:Key="FriendsLabel"
@@ -322,7 +299,7 @@
         <VerticalStackLayout>
 
             <Grid Style="{StaticResource PlayerGrid}">
-                <Image Style="{StaticResource PlayerImage}" Source="social_background.png" />
+                <Image Style="{StaticResource PlayerImage}" Source="stream_hero.jpg" />
                 <Button Style="{StaticResource PlayButtonOverlay}"
                         behaviors:ButtonOption.PressEffect="True" />
                 <Grid Style="{StaticResource ProgressGrid}"
@@ -375,20 +352,8 @@
 
             <!-- Friends watching (overlapping avatars) -->
             <HorizontalStackLayout Style="{StaticResource FriendsRow}">
-                <HorizontalStackLayout Style="{StaticResource FriendsAvatarsLayout}">
-                    <Border Style="{StaticResource FriendAvatar}">
-                        <Image Style="{StaticResource FriendImage}" Source="usa1_face.jpg" />
-                    </Border>
-                    <Border Style="{StaticResource FriendAvatar}">
-                        <Image Style="{StaticResource FriendImage}" Source="usa2_face.jpg" />
-                    </Border>
-                    <Border Style="{StaticResource FriendAvatar}">
-                        <Image Style="{StaticResource FriendImage}" Source="usa3_face.jpg" />
-                    </Border>
-                    <Border Style="{StaticResource FriendMoreBorder}">
-                        <Label Style="{StaticResource FriendMoreLabel}" Text="+3" />
-                    </Border>
-                </HorizontalStackLayout>
+                <controls:AvatarGroup Style="{StaticResource FriendsAvatars}"
+                                      ItemsSource="{Binding Friends}" />
                 <Label Style="{StaticResource FriendsLabel}" Text="Friends are watching" />
             </HorizontalStackLayout>
 

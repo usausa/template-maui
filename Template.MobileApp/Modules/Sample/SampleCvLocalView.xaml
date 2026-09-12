@@ -27,13 +27,22 @@
         <mct:CameraView Grid.Row="0"
                         IsVisible="{Binding IsPreview}"
                         behaviors:CameraBind.Controller="{Binding Controller}" />
-        <Image Grid.Row="0"
-               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-               BackgroundColor="Black"
-               Source="{Binding Image}" />
-        <drawing:DrawingControl Grid.Row="0"
-                                  IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-                                  Drawing="{Binding Drawing}" />
+        <!-- 撮影後は CompareSlider で原画 (Before=左) と検出枠を重ねた結果 (After=右) を仕切りで見比べる -->
+        <controls:CompareSlider Grid.Row="0"
+                                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}">
+            <controls:CompareSlider.BeforeContent>
+                <Image BackgroundColor="Black"
+                       Source="{Binding Image}" />
+            </controls:CompareSlider.BeforeContent>
+            <controls:CompareSlider.AfterContent>
+                <Grid>
+                    <Image BackgroundColor="Black"
+                           Source="{Binding Image}" />
+                    <drawing:DrawingControl InputTransparent="True"
+                                            Drawing="{Binding Drawing}" />
+                </Grid>
+            </controls:CompareSlider.AfterContent>
+        </controls:CompareSlider>
 
         <!-- 撮影ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0"

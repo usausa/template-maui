@@ -11,12 +11,12 @@ public sealed class UIKitOnboardViewModel : AppViewModelBase
 {
     public IReadOnlyList<UIKitOnboardPage> Pages { get; } =
     [
-        new() { Image = "social_background.png", Title = "Welcome", Description = "Discover the most beautiful design kit for mobile apps." },
-        new() { Image = "social_background.png", Title = "Stay Connected", Description = "Sync your tasks, friends, and content across devices." },
-        new() { Image = "social_background.png", Title = "Get Started", Description = "Sign in to enjoy the full personalized experience." }
+        new() { Image = "onboard01.jpg", Title = "ようこそ", Description = "モバイルアプリのための美しいデザインキットを体験しましょう。" },
+        new() { Image = "onboard02.jpg", Title = "いつでもつながる", Description = "タスクや友だち、コンテンツを端末間で同期します。" },
+        new() { Image = "onboard03.jpg", Title = "さあ、始めよう", Description = "サインインして、あなた専用の体験をお楽しみください。" }
     ];
 
-    // Skip / Get Started はどちらもダッシュボードへ
+    // スキップ / 始める はどちらもダッシュボードへ
     public IObserveCommand CompleteCommand { get; }
 
     public UIKitOnboardViewModel()

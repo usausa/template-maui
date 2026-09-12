@@ -6,11 +6,11 @@ using Template.MobileApp.Models.Sample.Chat;
 
 public sealed partial class UIChatViewModel : AppViewModelBase
 {
-    private const string AvatarAlice = "usa1_face.jpg";
-    private const string AvatarBob = "usa2_face.jpg";
-    private const string AvatarCarol = "usa3_face.jpg";
-    private const string AvatarDave = "usa4_face.jpg";
-    private const string AvatarMe = "usa5_face.jpg";
+    private const string AvatarAlice = "avatar_person01.jpg";
+    private const string AvatarBob = "avatar_person02.jpg";
+    private const string AvatarCarol = "avatar_person03.jpg";
+    private const string AvatarDave = "avatar_person04.jpg";
+    private const string AvatarMe = "avatar_person05.jpg";
 
     private static readonly string[] Stamps =
     [
@@ -28,7 +28,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
     public IReadOnlyList<string> StampList { get; } = Stamps;
 
-    public string CurrentUser { get; } = "Me";
+    public string CurrentUser { get; } = "自分";
 
     [ObservableProperty]
     public partial string InputText { get; set; } = string.Empty;
@@ -122,39 +122,39 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
         AddSystem(yesterday);
 
-        AddReceive(yesterday.AddHours(9).AddMinutes(5), "Alice", AvatarAlice, "おはようございます。");
+        AddReceive(yesterday.AddHours(9).AddMinutes(5), "M･I･O", AvatarAlice, "おはようございます。");
         AddSend(yesterday.AddHours(9).AddMinutes(18), "おはようございます。", isRead: true);
-        AddReceive(yesterday.AddHours(9).AddMinutes(30), "Bob", AvatarBob,
+        AddReceive(yesterday.AddHours(9).AddMinutes(30), "日本酒飲郎", AvatarBob,
             "昨日の PR レビューしました。CI が通っていないようなのでテストの修正をお願いできますか？コメントもいくつか書いてあります。");
         AddSend(yesterday.AddHours(9).AddMinutes(32), "ありがとうございます！\n午前中に対応します。", isRead: true);
-        AddReceive(yesterday.AddHours(12).AddMinutes(30), "Bob", AvatarBob, "お昼ご飯食べてきます〜",
+        AddReceive(yesterday.AddHours(12).AddMinutes(30), "日本酒飲郎", AvatarBob, "お昼ご飯食べてきます〜",
             reactions: [new MessageReaction { Emoji = "🍱", Count = 3 }]);
-        AddReceive(yesterday.AddHours(14), "Carol", AvatarCarol, "定例始めます。");
+        AddReceive(yesterday.AddHours(14), "悪いスライム", AvatarCarol, "定例始めます。");
         AddSend(yesterday.AddHours(14).AddMinutes(1), "入ります。", isRead: true);
-        AddReceive(yesterday.AddHours(16), "Alice", AvatarAlice, "資料 PDF 共有しますね。");
+        AddReceive(yesterday.AddHours(16), "M･I･O", AvatarAlice, "資料 PDF 共有しますね。");
         AddSend(yesterday.AddHours(16).AddMinutes(5), "確認しました！", isRead: true,
             reactions: [new MessageReaction { Emoji = "🙏", Count = 1 }]);
-        AddReceive(yesterday.AddHours(18).AddMinutes(30), "Dave", AvatarDave, "お疲れさまでした！");
+        AddReceive(yesterday.AddHours(18).AddMinutes(30), "†聖天使†", AvatarDave, "お疲れさまでした！");
 
         AddSystem(today);
 
-        AddReceive(today.AddHours(10).AddMinutes(5), "Alice", AvatarAlice,
+        AddReceive(today.AddHours(10).AddMinutes(5), "M･I･O", AvatarAlice,
             "資料できましたー！来週の会議で使うものなので、月曜日までに確認をお願いします🙏");
         AddSend(today.AddHours(10).AddMinutes(7),
             "了解しました！\n以下の点を確認します。\n・議事録\n・来週の資料\n・レビュー", isRead: true);
-        AddReceiveStamp(today.AddHours(10).AddMinutes(10), "Bob", AvatarBob, GetStamp(0));
+        AddReceiveStamp(today.AddHours(10).AddMinutes(10), "日本酒飲郎", AvatarBob, GetStamp(0));
         AddSend(today.AddHours(10).AddMinutes(12), "👀 確認中…", isRead: true,
             reactions: [new MessageReaction { Emoji = "👀", Count = 1 }]);
         AddSendStamp(today.AddHours(10).AddMinutes(15), GetStamp(1), isRead: true);
-        AddReceive(today.AddHours(10).AddMinutes(30), "Carol", AvatarCarol, "今日は 15:00 から会議です。");
-        AddReceiveStamp(today.AddHours(10).AddMinutes(35), "Carol", AvatarCarol, GetStamp(2));
+        AddReceive(today.AddHours(10).AddMinutes(30), "悪いスライム", AvatarCarol, "今日は 15:00 から会議です。");
+        AddReceiveStamp(today.AddHours(10).AddMinutes(35), "悪いスライム", AvatarCarol, GetStamp(2));
         AddSend(today.AddHours(10).AddMinutes(37), "了解しました。", isRead: true);
         AddSendStamp(today.AddHours(10).AddMinutes(40), GetStamp(3), isRead: true);
-        AddReceive(today.AddHours(11), "Alice", AvatarAlice, "ランチ何にします？");
-        AddReceiveStamp(today.AddHours(11).AddMinutes(1), "Alice", AvatarAlice, GetStamp(4));
-        AddReceive(today.AddHours(11).AddMinutes(2), "Bob", AvatarBob, "寿司でどうでしょう。",
+        AddReceive(today.AddHours(11), "M･I･O", AvatarAlice, "ランチ何にします？");
+        AddReceiveStamp(today.AddHours(11).AddMinutes(1), "M･I･O", AvatarAlice, GetStamp(4));
+        AddReceive(today.AddHours(11).AddMinutes(2), "日本酒飲郎", AvatarBob, "寿司でどうでしょう。",
             reactions: [new MessageReaction { Emoji = "🍣", Count = 2 }]);
-        AddReceiveStamp(today.AddHours(11).AddMinutes(3), "Bob", AvatarBob, GetStamp(5));
+        AddReceiveStamp(today.AddHours(11).AddMinutes(3), "日本酒飲郎", AvatarBob, GetStamp(5));
         AddSend(today.AddHours(11).AddMinutes(5),
             "いいですね！ちなみに本日のミーティングお疲れさまでした。共有いただいた資料についていくつか質問があるので、後ほど別途連絡いたします。",
             isRead: false);

@@ -15,8 +15,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- CommunityToolkit のレイアウトデモ (DockLayout / UniformItemsLayout)。
-         自作レイアウト (CircularLayout / StaggeredGrid) は後続フェーズで本画面へ追記する -->
+    <!-- CommunityToolkit のレイアウトデモ (DockLayout / UniformItemsLayout) と、
+         自作レイアウト (CircularLayout=円弧対応 / HoneycombLayout / StaggeredGrid / VariableSizeWrapPanel / OverlapPanel / CascadeStackLayout) のデモ -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -62,6 +62,79 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- VariableSizeWrapPanel のタイル (高さはセルに合わせて伸びるため HeightRequest を持たない) -->
+            <Style x:Key="TileCell"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+            </Style>
+
+            <!-- OverlapPanel で重ねる円 (白枠で重なり順を見せる) -->
+            <Style x:Key="OverlapCircle"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <!-- HoneycombLayout の六角セル (100x110 の Path に中央のアイコン+ラベル、右上に選択バッジ) -->
+            <Style x:Key="HexCell"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="100" />
+                <Setter Property="HeightRequest" Value="110" />
+            </Style>
+
+            <Style x:Key="HexPath"
+                   TargetType="Path">
+                <Setter Property="Aspect" Value="Uniform" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Data" Value="M50,0 L100,28 L100,82 L50,110 L0,82 L0,28 Z" />
+            </Style>
+
+            <Style x:Key="HexContent"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HexIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HexLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HexBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="0,16,6,0" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+            </Style>
+
+            <Style x:Key="HexBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="NoteLabel"
@@ -198,13 +271,91 @@
                                VerticalOptions="Center"
                                Text="WEEK" />
                     </Grid>
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="StartAngle / SweepAngle で円弧配置 (半円: 180°→360°)。FitToArc で弧の外接矩形にサイズを詰める" />
+                    <controls:CircularLayout Radius="88"
+                                             StartAngle="180"
+                                             SweepAngle="180"
+                                             FitToArc="True"
+                                             HorizontalOptions="Center">
+                        <Border Style="{StaticResource UniformCell}" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" Margin="0">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="1" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" Margin="0">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="2" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" Margin="0">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="3" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" Margin="0">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="4" />
+                        </Border>
+                        <Border Style="{StaticResource UniformCell}" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" Margin="0">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="5" />
+                        </Border>
+                    </controls:CircularLayout>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="HoneycombLayout (自作)"
+                               Icon="{x:Static fonts:MaterialIcons.Hexagon}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="列を交互に半セルずらして上から埋める (Columns=3、Spacing=6)。7 個で中央 1 + 周囲 6 の花形。タップで選択 (枠 + バッジ)" />
+                    <controls:HoneycombLayout Columns="3"
+                                              Spacing="6"
+                                              HorizontalOptions="Center"
+                                              BindableLayout.ItemsSource="{Binding Hexes}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="module:ViewLayoutHex">
+                                <Grid Style="{StaticResource HexCell}"
+                                      behaviors:AnimationOption.EnterAnimation="Pop"
+                                      behaviors:AnimationOption.EnterDelay="{Binding Delay}">
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectHexCommand, Source={RelativeSource AncestorType={x:Type module:ViewLayoutViewModel}}, x:DataType={x:Type module:ViewLayoutViewModel}}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                    <Path Style="{StaticResource HexPath}"
+                                          Fill="{Binding Fill}"
+                                          Stroke="{Binding Accent}">
+                                        <Path.Triggers>
+                                            <DataTrigger TargetType="Path"
+                                                         Binding="{Binding IsSelected}"
+                                                         Value="True">
+                                                <Setter Property="StrokeThickness" Value="3" />
+                                            </DataTrigger>
+                                        </Path.Triggers>
+                                    </Path>
+                                    <VerticalStackLayout Style="{StaticResource HexContent}">
+                                        <Label Style="{StaticResource HexIcon}"
+                                               Text="{Binding Icon}"
+                                               TextColor="{Binding Accent}" />
+                                        <Label Style="{StaticResource HexLabel}"
+                                               Text="{Binding Label}"
+                                               TextColor="{Binding Accent}" />
+                                    </VerticalStackLayout>
+                                    <Border Style="{StaticResource HexBadgeBorder}"
+                                            BackgroundColor="{Binding Accent}"
+                                            IsVisible="{Binding IsSelected}"
+                                            behaviors:AnimationOption.EnterAnimation="Pop">
+                                        <Label Style="{StaticResource HexBadgeLabel}"
+                                               Text="{x:Static fonts:MaterialIcons.Check}" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </controls:HoneycombLayout>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard Title="StaggeredGrid (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+                               behaviors:AnimationOption.EnterDelay="320">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
@@ -238,10 +389,82 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <controls:InfoCard Title="VariableSizeWrapPanel (自作)"
+                               Icon="{x:Static fonts:MaterialIcons.View_quilt}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="400">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="ColumnSpan / RowSpan で占有セル数を指定し、空きセルは先頭から埋め戻す (Columns=3、RowHeight=56)" />
+                    <controls:VariableSizeWrapPanel Columns="3"
+                                                    RowHeight="56"
+                                                    Spacing="6">
+                        <Border Style="{StaticResource TileCell}" controls:VariableSizeWrapPanel.ColumnSpan="2" BackgroundColor="{StaticResource BlueLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="2×1" />
+                        </Border>
+                        <Border Style="{StaticResource TileCell}" controls:VariableSizeWrapPanel.RowSpan="2" BackgroundColor="{StaticResource GreenLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="1×2" />
+                        </Border>
+                        <Border Style="{StaticResource TileCell}" BackgroundColor="{StaticResource AmberLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="1×1" />
+                        </Border>
+                        <Border Style="{StaticResource TileCell}" BackgroundColor="{StaticResource PinkLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="1×1" />
+                        </Border>
+                        <Border Style="{StaticResource TileCell}" controls:VariableSizeWrapPanel.ColumnSpan="2" controls:VariableSizeWrapPanel.RowSpan="2" BackgroundColor="{StaticResource CyanLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="2×2" />
+                        </Border>
+                        <Border Style="{StaticResource TileCell}" BackgroundColor="{StaticResource PurpleLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="1×1" />
+                        </Border>
+                        <Border Style="{StaticResource TileCell}" controls:VariableSizeWrapPanel.ColumnSpan="3" BackgroundColor="{StaticResource OrangeLighten4}">
+                            <Label Style="{StaticResource UniformCellLabel}" Text="3×1" />
+                        </Border>
+                    </controls:VariableSizeWrapPanel>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="OverlapPanel (自作)"
+                               Icon="{x:Static fonts:MaterialIcons.Filter_none}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="480">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="子を OffsetX / OffsetY でずらして重ねる (左)。ReverseZIndex=True で先頭が最前面になる (右=重ねアバターの土台)" />
+                    <Grid ColumnDefinitions="*,*">
+                        <controls:OverlapPanel Grid.Column="0"
+                                               OffsetX="18"
+                                               OffsetY="14"
+                                               HorizontalOptions="Start"
+                                               VerticalOptions="Start">
+                            <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource BlueDefault}" WidthRequest="96" HeightRequest="60">
+                                <Label Style="{StaticResource DockPaneLabel}" Text="1" />
+                            </Border>
+                            <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource GreenDefault}" WidthRequest="96" HeightRequest="60">
+                                <Label Style="{StaticResource DockPaneLabel}" Text="2" />
+                            </Border>
+                            <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource OrangeDefault}" WidthRequest="96" HeightRequest="60">
+                                <Label Style="{StaticResource DockPaneLabel}" Text="3" />
+                            </Border>
+                        </controls:OverlapPanel>
+                        <controls:OverlapPanel Grid.Column="1"
+                                               OffsetX="26"
+                                               ReverseZIndex="True"
+                                               HorizontalOptions="Start"
+                                               VerticalOptions="Center">
+                            <Border Style="{StaticResource OverlapCircle}" BackgroundColor="{StaticResource BlueDefault}" />
+                            <Border Style="{StaticResource OverlapCircle}" BackgroundColor="{StaticResource GreenDefault}" />
+                            <Border Style="{StaticResource OverlapCircle}" BackgroundColor="{StaticResource OrangeDefault}" />
+                            <Border Style="{StaticResource OverlapCircle}" BackgroundColor="{StaticResource BlueGrayDefault}" />
+                        </controls:OverlapPanel>
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
             <controls:InfoCard Title="CascadeStackLayout"
                                Icon="{x:Static fonts:MaterialIcons.Layers}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="320">
+                               behaviors:AnimationOption.EnterDelay="560">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="Layout 派生クラスの CreateLayoutManager で子要素を左上から右下へ重ねて配置する。ずらす量は Offset プロパティ" />

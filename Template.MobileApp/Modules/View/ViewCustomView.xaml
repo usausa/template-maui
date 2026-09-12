@@ -15,7 +15,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <!-- 既存パッケージ (標準 / CommunityToolkit / Syncfusion) では埋まらなかった自作コントロール群。
-         MarqueeLabel / TreeView / ColorPicker / DurationPicker (実装は Controls/) -->
+         MarqueeLabel / TreeView / ColorPicker / DurationPicker / AvatarGroup / CompareSlider (実装は Controls/) -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -54,6 +54,37 @@
             <Style x:Key="ColorPreviewGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="AvatarActionGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SmallButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- CompareSlider を角丸で切り抜く外枠と、After 側に重ねる色フィルタ -->
+            <Style x:Key="CompareBorder"
+                   TargetType="Border">
+                <Setter Property="HeightRequest" Value="180" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="CompareTint"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="Opacity" Value="0.45" />
+                <Setter Property="InputTransparent" Value="True" />
             </Style>
 
         </ResourceDictionary>
@@ -131,6 +162,63 @@
                     <controls:DurationPicker Duration="{Binding Duration}" />
                     <Label Style="{StaticResource ValueLabel}"
                            Text="{Binding Duration, StringFormat='TimeSpan: {0}'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="AvatarGroup"
+                               Icon="{x:Static fonts:MaterialIcons.Group}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320">
+                <VerticalStackLayout Spacing="8">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="OverlapPanel で重ねたアバター。MaxDisplayed (4) を超えた分は「+N」になり、件数の増減に追従する" />
+                    <Grid Style="{StaticResource AvatarActionGrid}"
+                          ColumnDefinitions="*,Auto,Auto">
+                        <controls:AvatarGroup Grid.Column="0"
+                                              HorizontalOptions="Start"
+                                              VerticalOptions="Center"
+                                              MaxDisplayed="4"
+                                              Overlap="12"
+                                              AvatarSize="40"
+                                              ItemsSource="{Binding Avatars}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource SmallButton}"
+                                Command="{Binding RemoveAvatarCommand}"
+                                Text="Remove" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource SmallButton}"
+                                Command="{Binding AddAvatarCommand}"
+                                Text="Add" />
+                    </Grid>
+                    <Label Style="{StaticResource ValueLabel}"
+                           Text="{Binding Avatars.Count, StringFormat='{0} 人'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="CompareSlider"
+                               Icon="{x:Static fonts:MaterialIcons.Compare}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="400">
+                <VerticalStackLayout Spacing="8">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="仕切りをドラッグ (またはタップ) して Before / After を見比べる。右側が After (色フィルタ付き)" />
+                    <Border Style="{StaticResource CompareBorder}">
+                        <controls:CompareSlider Position="{Binding ComparePosition}">
+                            <controls:CompareSlider.BeforeContent>
+                                <Image Aspect="AspectFill"
+                                       Source="stream_hero.jpg" />
+                            </controls:CompareSlider.BeforeContent>
+                            <controls:CompareSlider.AfterContent>
+                                <Grid>
+                                    <Image Aspect="AspectFill"
+                                           Source="stream_hero.jpg" />
+                                    <BoxView Style="{StaticResource CompareTint}" />
+                                </Grid>
+                            </controls:CompareSlider.AfterContent>
+                        </controls:CompareSlider>
+                    </Border>
+                    <Label Style="{StaticResource ValueLabel}"
+                           Text="{Binding ComparePosition, StringFormat='Position: {0:P0}'}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

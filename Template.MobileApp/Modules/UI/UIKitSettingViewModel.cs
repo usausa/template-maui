@@ -15,16 +15,16 @@ public sealed class UIKitSettingViewModel : AppViewModelBase
 {
     public IReadOnlyList<UIKitSettingItem> AccountItems { get; } =
     [
-        new() { Icon = Fonts.MaterialIcons.Person, Title = "Profile", Detail = "Anna Walker" },
-        new() { Icon = Fonts.MaterialIcons.Lock, Title = "Password", Detail = "Change" },
-        new() { Icon = Fonts.MaterialIcons.Email, Title = "Email", Detail = "anna@example.com" }
+        new() { Icon = Fonts.MaterialIcons.Person, Title = "プロフィール", Detail = "うさうさうさん" },
+        new() { Icon = Fonts.MaterialIcons.Lock, Title = "パスワード", Detail = "変更" },
+        new() { Icon = Fonts.MaterialIcons.Email, Title = "メールアドレス", Detail = "usausa@example.com" }
     ];
 
     public IReadOnlyList<UIKitSettingItem> PreferenceItems { get; } =
     [
-        new() { Icon = Fonts.MaterialIcons.Notifications, Title = "Push notifications", IsSwitch = true, IsOn = true },
-        new() { Icon = Fonts.MaterialIcons.Mail, Title = "Email updates", IsSwitch = true, IsOn = false },
-        new() { Icon = Fonts.MaterialIcons.Dark_mode, Title = "Dark mode", IsSwitch = true, IsOn = false }
+        new() { Icon = Fonts.MaterialIcons.Notifications, Title = "プッシュ通知", IsSwitch = true, IsOn = true },
+        new() { Icon = Fonts.MaterialIcons.Mail, Title = "メールでのお知らせ", IsSwitch = true, IsOn = false },
+        new() { Icon = Fonts.MaterialIcons.Dark_mode, Title = "ダークモード", IsSwitch = true, IsOn = false }
     ];
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);

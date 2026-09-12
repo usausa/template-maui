@@ -26,7 +26,7 @@
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="260" />
                 <Setter Property="HeightRequest" Value="260" />
-                <Setter Property="Fill" Value="{StaticResource PinkLighten5}" />
+                <Setter Property="Fill" Value="{StaticResource BlueLighten5}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
@@ -89,7 +89,7 @@
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="Shadow">
@@ -133,7 +133,7 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="CharacterSpacing" Value="1.2" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="ItemTitleRowGrid"
@@ -153,18 +153,26 @@
                    TargetType="Label">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Size tags -->
-            <Style x:Key="SizeRow"
+            <!-- Switch variation tags -->
+            <Style x:Key="VariantRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="0,12,0,0" />
                 <Setter Property="Spacing" Value="8" />
             </Style>
 
-            <Style x:Key="SizeTagBorder"
+            <Style x:Key="VariantCaption"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,4,0" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="VariantTagBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="14,6" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
@@ -172,7 +180,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
             </Style>
 
-            <Style x:Key="SizeTagLabel"
+            <Style x:Key="VariantTagLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
@@ -211,8 +219,8 @@
                 <Setter Property="WidthRequest" Value="32" />
                 <Setter Property="HeightRequest" Value="32" />
                 <Setter Property="CornerRadius" Value="16" />
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkLighten5}" />
-                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
@@ -230,7 +238,7 @@
                 <Setter Property="Margin" Value="0,16,0,0" />
                 <Setter Property="HeightRequest" Value="52" />
                 <Setter Property="CornerRadius" Value="26" />
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -254,7 +262,7 @@
                     behaviors:AnimationOption.EnterAnimation="Pop"
                     behaviors:AnimationOption.EnterDelay="80">
                 <Image Style="{StaticResource ProductImage}"
-                       Source="usa1_face.jpg" />
+                       Source="product_gear01.jpg" />
             </Border>
             <Button Style="{StaticResource BackButton}"
                     Command="{Binding BackCommand}"
@@ -286,71 +294,73 @@
                            Text="{Binding Price}" />
                 </Grid>
 
-                <!-- Size variations (tap to select) -->
-                <HorizontalStackLayout Style="{StaticResource SizeRow}">
-                    <Border Style="{StaticResource SizeTagBorder}">
+                <!-- Switch variations (tap to select) -->
+                <HorizontalStackLayout Style="{StaticResource VariantRow}">
+                    <Label Style="{StaticResource VariantCaption}"
+                           Text="スイッチ" />
+                    <Border Style="{StaticResource VariantTagBorder}">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SizeCommand}"
-                                                  CommandParameter="30ml" />
+                            <TapGestureRecognizer Command="{Binding SwitchCommand}"
+                                                  CommandParameter="赤軸" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Binding="{Binding SelectedSize}"
-                                         Value="30ml">
-                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                                         Binding="{Binding SelectedSwitch}"
+                                         Value="赤軸">
+                                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Label Style="{StaticResource SizeTagLabel}" Text="30ml">
+                        <Label Style="{StaticResource VariantTagLabel}" Text="赤軸">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
-                                             Binding="{Binding SelectedSize}"
-                                             Value="30ml">
+                                             Binding="{Binding SelectedSwitch}"
+                                             Value="赤軸">
                                     <Setter Property="TextColor" Value="White" />
                                     <Setter Property="FontAttributes" Value="Bold" />
                                 </DataTrigger>
                             </Label.Triggers>
                         </Label>
                     </Border>
-                    <Border Style="{StaticResource SizeTagBorder}">
+                    <Border Style="{StaticResource VariantTagBorder}">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SizeCommand}"
-                                                  CommandParameter="50ml" />
+                            <TapGestureRecognizer Command="{Binding SwitchCommand}"
+                                                  CommandParameter="茶軸" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Binding="{Binding SelectedSize}"
-                                         Value="50ml">
-                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                                         Binding="{Binding SelectedSwitch}"
+                                         Value="茶軸">
+                                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Label Style="{StaticResource SizeTagLabel}" Text="50ml">
+                        <Label Style="{StaticResource VariantTagLabel}" Text="茶軸">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
-                                             Binding="{Binding SelectedSize}"
-                                             Value="50ml">
+                                             Binding="{Binding SelectedSwitch}"
+                                             Value="茶軸">
                                     <Setter Property="TextColor" Value="White" />
                                     <Setter Property="FontAttributes" Value="Bold" />
                                 </DataTrigger>
                             </Label.Triggers>
                         </Label>
                     </Border>
-                    <Border Style="{StaticResource SizeTagBorder}">
+                    <Border Style="{StaticResource VariantTagBorder}">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SizeCommand}"
-                                                  CommandParameter="100ml" />
+                            <TapGestureRecognizer Command="{Binding SwitchCommand}"
+                                                  CommandParameter="青軸" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Binding="{Binding SelectedSize}"
-                                         Value="100ml">
-                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                                         Binding="{Binding SelectedSwitch}"
+                                         Value="青軸">
+                                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Label Style="{StaticResource SizeTagLabel}" Text="100ml">
+                        <Label Style="{StaticResource VariantTagLabel}" Text="青軸">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
-                                             Binding="{Binding SelectedSize}"
-                                             Value="100ml">
+                                             Binding="{Binding SelectedSwitch}"
+                                             Value="青軸">
                                     <Setter Property="TextColor" Value="White" />
                                     <Setter Property="FontAttributes" Value="Bold" />
                                 </DataTrigger>
@@ -367,7 +377,7 @@
                       ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Style="{StaticResource QuantityCaption}"
-                           Text="Quantity" />
+                           Text="数量" />
                     <HorizontalStackLayout Grid.Column="1"
                                            Style="{StaticResource StepperRow}">
                         <Button Style="{StaticResource StepperButton}"
@@ -386,7 +396,7 @@
                 <Button Style="{StaticResource AddToCartButton}"
                         behaviors:ButtonOption.PressEffect="True"
                         Command="{Binding CartCommand}"
-                        Text="Add to Cart" />
+                        Text="カートに入れる" />
 
             </VerticalStackLayout>
         </Border>

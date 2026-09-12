@@ -14,46 +14,38 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- グループ毎に行を分け、余りセルは可視の無効ボタンにする -->
+    <!-- 余りセルは可視の無効ボタンにする -->
     <Grid Style="{StaticResource MenuGrid}"
           RowDefinitions="*,*,*,*,*,*,*,*,*"
-          ColumnDefinitions="*,*,*">
+          ColumnDefinitions="*,*">
 
-        <!-- データ可視化 -->
+        <!-- 配信・ホーム -->
         <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIGraph}"
-                Text="Graph"
-                ImageSource="{x:Static markup:AppIcons.AccountTree}" />
+                CommandParameter="{markup:ViewId UIStream}"
+                Text="Stream"
+                ImageSource="{x:Static markup:AppIcons.LiveTv}" />
         <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIGraph2}"
-                Text="Graph2"
-                ImageSource="{x:Static markup:AppIcons.Timeline}" />
-        <Button Grid.Row="0" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UITreeMap}"
-                Text="TreeMap"
-                ImageSource="{x:Static markup:AppIcons.Dashboard}" />
+                CommandParameter="{markup:ViewId UIDock}"
+                Text="Dock"
+                ImageSource="{x:Static markup:AppIcons.Apps}" />
+
+        <!-- 計器・可視化 -->
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIMixer}"
-                Text="Mixer"
-                ImageSource="{x:Static markup:AppIcons.Tune}" />
+                CommandParameter="{markup:ViewId UILoad}"
+                Text="Load"
+                ImageSource="{x:Static markup:AppIcons.Hearing}" />
         <Button Grid.Row="1" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="1" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-
-        <!-- 計器・ゲージ -->
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGauge}"
+                Text="Gauge"
+                ImageSource="{x:Static markup:AppIcons.AvTimer}" />
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
@@ -63,102 +55,78 @@
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIGauge}"
-                Text="Gauge"
-                ImageSource="{x:Static markup:AppIcons.AvTimer}" />
-        <Button Grid.Row="2" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UILoad}"
-                Text="Load"
-                ImageSource="{x:Static markup:AppIcons.Hearing}" />
+                CommandParameter="{markup:ViewId UIMixer}"
+                Text="Mixer"
+                ImageSource="{x:Static markup:AppIcons.Tune}" />
+
+        <!-- ゲーム UI・描画 -->
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIRadar}"
-                Text="Radar"
-                ImageSource="{x:Static markup:AppIcons.Radar}" />
+                CommandParameter="{markup:ViewId UIMonster}"
+                Text="Monster"
+                ImageSource="{x:Static markup:AppIcons.Pets}" />
         <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="3" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-
-        <!-- HUD (フルスクリーン SkiaSharp) -->
-        <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIFlight}"
-                Text="Flight"
-                ImageSource="{x:Static markup:AppIcons.FlightTakeoff}" />
-        <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UITactical}"
-                Text="Tactical"
-                ImageSource="{x:Static markup:AppIcons.SmartToy}" />
-        <Button Grid.Row="4" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UITelemetry}"
-                Text="Telemetry"
-                ImageSource="{x:Static markup:AppIcons.Sensors}" />
-        <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIEnergy}"
-                Text="Energy"
-                ImageSource="{x:Static markup:AppIcons.Bolt}" />
-        <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="5" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-
-        <!-- 描画デモ -->
-        <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIWheel}"
                 Text="Wheel"
                 ImageSource="{x:Static markup:AppIcons.Attractions}" />
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UICharacter}"
+                Text="Character"
+                ImageSource="{x:Static markup:AppIcons.Face}" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISocial}"
+                Text="Social"
+                ImageSource="{x:Static markup:AppIcons.SportsEsports}" />
+
+        <!-- レーダー・HUD (SkiaSharp) -->
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIRadar}"
+                Text="Radar"
+                ImageSource="{x:Static markup:AppIcons.Radar}" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIFlight}"
+                Text="Flight"
+                ImageSource="{x:Static markup:AppIcons.FlightTakeoff}" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="6" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-
-        <!-- 拡張用 -->
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITactical}"
+                Text="Tactical"
+                ImageSource="{x:Static markup:AppIcons.SmartToy}" />
         <Button Grid.Row="7" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITelemetry}"
+                Text="Telemetry"
+                ImageSource="{x:Static markup:AppIcons.Sensors}" />
         <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="7" Grid.Column="2"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIEnergy}"
+                Text="Energy"
+                ImageSource="{x:Static markup:AppIcons.Bolt}" />
+
+        <!-- 拡張用 -->
         <Button Grid.Row="8" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
                 Text="" />
         <Button Grid.Row="8" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="8" Grid.Column="2"
                 Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
                 Text="" />
