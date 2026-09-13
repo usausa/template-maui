@@ -33,9 +33,9 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Load.png" />
 <img width="25%" src="Document/UI_Mixier.png" />
 
+<img width="25%" src="Document/Device_Activity.png" />
 <img width="25%" src="Document/Device_BLE.png" />
 <img width="25%" src="Document/Device_NFC.png" />
-<img width="25%" src="Document/Device_Activity.png" />
 
 <img width="25%" src="Document/Sample_CV.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
@@ -58,10 +58,17 @@ Template project for MAUI.
 
 | Category | Feature |
 | --- | --- |
-| Device | **WiFi manager** / Biometric |
-| View | Grid control(Table) |
-| UI | **Bottom sheet** |
-| Other | **Cognitive service** / **Chat AI** / Push -> Hybrid? / Local notification -> Hybrid? |
+| Device | **WiFi manager** |
+| Device | Biometric |
+| UI | **Bottom sheet** / Navigation drawer(SfNavigationDrawer or custom) |
+| Device | Local notification / Push(FCM) |
+| Other | **Cognitive service** / **Chat AI** |
+| Control | Control menu(View \| Control, move Toolkit / Custom / Sf Chart) |
+| Control | **Grid(ClamGrid)** |
+| Control | **Card list(CollectionView)** |
+| Diagnostics | Memory monitor overlay |
+| Diagnostics | Leak detection(DEBUG) |
+| Device | Screen recording |
 
 # Implement
 
