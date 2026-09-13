@@ -46,6 +46,14 @@
                 <Setter Property="Margin" Value="0,3" />
             </Style>
 
+            <!-- 挿入位置の線 (上へ動かすときは行の上端、下へ動かすときは行の下端) -->
+            <Style x:Key="InsertLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="3" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+
             <Style x:Key="TaskLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -57,6 +65,7 @@
             <Style x:Key="ColumnBorder"
                    TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="Stroke" Value="Transparent" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 10" />
                 <Setter Property="Padding" Value="8" />
@@ -94,19 +103,51 @@
                           x:DataType="{x:Type module:DragTask}">
                 <Border Style="{StaticResource TaskBorder}">
                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=IsDragging, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                     Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource BlueLighten2}" />
+                            <Setter Property="StrokeDashArray" Value="4,3" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsOver}"
+                                     Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                            <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsSource}"
+                                     Value="True">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </DataTrigger>
+                    </Border.Triggers>
                     <Border.GestureRecognizers>
                         <DragGestureRecognizer CanDrag="True"
                                                DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DragStartingCommandParameter="{Binding .}" />
+                                               DragStartingCommandParameter="{Binding .}"
+                                               DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:ViewDragDropViewModel}}" />
                         <DropGestureRecognizer AllowDrop="True"
                                                DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DropCommandParameter="{Binding .}" />
+                                               DropCommandParameter="{Binding .}"
+                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemOverCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragOverCommandParameter="{Binding .}"
+                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemLeaveCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragLeaveCommandParameter="{Binding .}" />
                     </Border.GestureRecognizers>
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    <Grid ColumnDefinitions="4,*">
-                        <BoxView Grid.Column="0"
+                    <Grid RowDefinitions="Auto,*,Auto"
+                          ColumnDefinitions="4,*">
+                        <BoxView Grid.Row="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource InsertLine}"
+                                 IsVisible="{Binding IsOverAbove}" />
+                        <BoxView Grid.Row="2" Grid.ColumnSpan="2"
+                                 Style="{StaticResource InsertLine}"
+                                 IsVisible="{Binding IsOverBelow}" />
+                        <BoxView Grid.Row="1" Grid.Column="0"
                                  Color="{Binding Accent}" />
-                        <Label Grid.Column="1"
+                        <Label Grid.Row="1" Grid.Column="1"
                                Style="{StaticResource TaskLabel}"
                                Text="{Binding Text}" />
                     </Grid>
@@ -130,7 +171,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout Spacing="4">
                     <Label Style="{StaticResource NoteLabel}"
-                           Text="行を長押しでドラッグし、別の行に重ねて離すとその位置へ挿入される" />
+                           Text="行を長押しでドラッグし、別の行に重ねて離すとその位置へ移動する (ドラッグ中は受け入れ先が破線、重ねた行に挿入位置の線)" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
                                          BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
                 </VerticalStackLayout>
@@ -142,15 +183,36 @@
                                behaviors:AnimationOption.EnterDelay="80">
                 <VerticalStackLayout Spacing="8">
                     <Label Style="{StaticResource NoteLabel}"
-                           Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除" />
+                           Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除 (重ねている先が濃く光る)" />
                     <Grid Style="{StaticResource BoardGrid}"
                           ColumnDefinitions="*,*">
                         <Border Grid.Column="0"
                                 Style="{StaticResource ColumnBorder}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsDragging}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                                    <Setter Property="Stroke" Value="{StaticResource BlueLighten2}" />
+                                    <Setter Property="StrokeThickness" Value="2" />
+                                    <Setter Property="StrokeDashArray" Value="4,3" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding TodoOver}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                                    <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="StrokeDashArray" Value="1,0" />
+                                </DataTrigger>
+                            </Border.Triggers>
                             <Border.GestureRecognizers>
                                 <DropGestureRecognizer AllowDrop="True"
                                                        DropCommand="{Binding DropOnListCommand}"
-                                                       DropCommandParameter="Todo" />
+                                                       DropCommandParameter="Todo"
+                                                       DragOverCommand="{Binding ListOverCommand}"
+                                                       DragOverCommandParameter="Todo"
+                                                       DragLeaveCommand="{Binding ListLeaveCommand}"
+                                                       DragLeaveCommandParameter="Todo" />
                             </Border.GestureRecognizers>
                             <VerticalStackLayout Spacing="4">
                                 <Label Style="{StaticResource ColumnHeaderLabel}"
@@ -161,10 +223,31 @@
                         </Border>
                         <Border Grid.Column="1"
                                 Style="{StaticResource ColumnBorder}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsDragging}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                                    <Setter Property="Stroke" Value="{StaticResource BlueLighten2}" />
+                                    <Setter Property="StrokeThickness" Value="2" />
+                                    <Setter Property="StrokeDashArray" Value="4,3" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding DoneOver}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                                    <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="StrokeDashArray" Value="1,0" />
+                                </DataTrigger>
+                            </Border.Triggers>
                             <Border.GestureRecognizers>
                                 <DropGestureRecognizer AllowDrop="True"
                                                        DropCommand="{Binding DropOnListCommand}"
-                                                       DropCommandParameter="Done" />
+                                                       DropCommandParameter="Done"
+                                                       DragOverCommand="{Binding ListOverCommand}"
+                                                       DragOverCommandParameter="Done"
+                                                       DragLeaveCommand="{Binding ListLeaveCommand}"
+                                                       DragLeaveCommandParameter="Done" />
                             </Border.GestureRecognizers>
                             <VerticalStackLayout Spacing="4">
                                 <Label Style="{StaticResource ColumnHeaderLabel}"
@@ -176,6 +259,13 @@
                     </Grid>
                     <Border Style="{StaticResource TrashBorder}">
                         <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding IsDragging}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+                                <Setter Property="Stroke" Value="{StaticResource RedLighten2}" />
+                                <Setter Property="StrokeThickness" Value="2" />
+                            </DataTrigger>
                             <DataTrigger TargetType="Border"
                                          Binding="{Binding TrashActive}"
                                          Value="True">

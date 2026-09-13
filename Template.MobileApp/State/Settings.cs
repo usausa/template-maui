@@ -52,24 +52,24 @@ public sealed class Settings
         var legacy = preferences.Get<string?>(AIServiceKeyName, null);
         if (!String.IsNullOrEmpty(legacy))
         {
-            await secureStorage.SetAsync(AIServiceKeyName, legacy);
+            await SetSecureValueAsync(AIServiceKeyName, legacy);
             preferences.Remove(AIServiceKeyName);
             return legacy;
         }
 
-        return await secureStorage.GetAsync(AIServiceKeyName);
+        return await GetSecureValueAsync(AIServiceKeyName);
     }
 
-    public async ValueTask SetAIServiceKeyAsync(string value)
+    public ValueTask SetAIServiceKeyAsync(string value)
     {
         // SetAsyncは空文字を受け付けないため、クリアは削除として扱う
         if (String.IsNullOrEmpty(value))
         {
-            secureStorage.Remove(AIServiceKeyName);
-            return;
+            RemoveSecureValue(AIServiceKeyName);
+            return ValueTask.CompletedTask;
         }
 
-        await secureStorage.SetAsync(AIServiceKeyName, value);
+        return SetSecureValueAsync(AIServiceKeyName, value);
     }
 
     // SCP (接続情報は設定画面のQRで投入する。パスワードはSecureStorageに保存する)
@@ -94,17 +94,75 @@ public sealed class Settings
         set => preferences.Set(nameof(ScpUser), value);
     }
 
-    public async ValueTask<string?> GetScpPasswordAsync() => await secureStorage.GetAsync(ScpPasswordName);
+    public ValueTask<string?> GetScpPasswordAsync() => GetSecureValueAsync(ScpPasswordName);
 
-    public async ValueTask SetScpPasswordAsync(string value)
+    public ValueTask SetScpPasswordAsync(string value)
     {
         if (String.IsNullOrEmpty(value))
         {
-            secureStorage.Remove(ScpPasswordName);
-            return;
+            RemoveSecureValue(ScpPasswordName);
+            return ValueTask.CompletedTask;
         }
 
-        await secureStorage.SetAsync(ScpPasswordName, value);
+        return SetSecureValueAsync(ScpPasswordName, value);
+    }
+
+    // ------------------------------------------------------------
+    // SecureStorage
+    // ------------------------------------------------------------
+
+    // バックアップ復元や端末のロック設定変更でキーストアの鍵が無効になると、復号に失敗して Java 例外になる。
+    // 保存済みの値は取り戻せないため、保存領域ごと初期化して未設定として扱う
+    private async ValueTask<string?> GetSecureValueAsync(string key)
+    {
+        try
+        {
+            return await secureStorage.GetAsync(key);
+        }
+        catch (Java.Lang.Throwable ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            ResetSecureStorage();
+            return null;
+        }
+    }
+
+    private void RemoveSecureValue(string key)
+    {
+        try
+        {
+            secureStorage.Remove(key);
+        }
+        catch (Java.Lang.Throwable ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            ResetSecureStorage();
+        }
+    }
+
+    private async ValueTask SetSecureValueAsync(string key, string value)
+    {
+        try
+        {
+            await secureStorage.SetAsync(key, value);
+        }
+        catch (Java.Lang.Throwable ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+            ResetSecureStorage();
+            await secureStorage.SetAsync(key, value);
+        }
+    }
+
+    // Remove / RemoveAll も復号を伴って同じ例外になるため、暗号化層を通さずに実体の SharedPreferences を消す
+    private static void ResetSecureStorage()
+    {
+#if ANDROID
+        var context = global::Android.App.Application.Context;
+        using var preferences = context.GetSharedPreferences($"{context.PackageName}.microsoft.maui.essentials.preferences", global::Android.Content.FileCreationMode.Private)!;
+        using var editor = preferences.Edit()!;
+        editor.Clear()!.Apply();
+#endif
     }
 }
 #pragma warning restore CA1724

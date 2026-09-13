@@ -4,16 +4,19 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppGameView"
              x:DataType="{x:Type module:AppGameViewModel}"
              s:BindingContextResolver.Type="{x:Type module:AppGameViewModel}"
              shell:ShellProperty.Title="Sudoku"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function3Text="Auto"
+             shell:ShellProperty.Function4Text="New"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
-    <!-- 数独。盤面ロジックは純モデル Models/App/SudokuGame、VM は表示同期のみ -->
+    <!-- 数独。盤面ロジックは純モデル Models/App/SudokuGame、VM は表示同期のみ。F3=Auto (押すたびに正解を 1 マス埋める) / F4=新しい問題 -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -24,6 +27,12 @@
                 <Setter Property="Padding" Value="4" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="BoardGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="1" />
+                <Setter Property="ColumnSpacing" Value="1" />
             </Style>
 
             <Style x:Key="CellBorder"
@@ -61,13 +70,6 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
-            <Style x:Key="NewButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource PrimaryButton}">
-                <Setter Property="Margin" Value="3,12,3,0" />
-                <Setter Property="FontSize" Value="14" />
-            </Style>
-
             <Style x:Key="CompleteLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="24" />
@@ -84,15 +86,18 @@
         <VerticalStackLayout Padding="12"
                              Spacing="8">
 
-            <!-- Board (9x9) -->
+            <!-- Board (9x9)。細線は Spacing、太線は 3x3 境界のスペーサ行・列 (2) + Spacing で作る -->
             <Border Style="{StaticResource BoardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <mct:UniformItemsLayout MaxColumns="9"
-                                        BindableLayout.ItemsSource="{Binding Cells}">
+                <Grid Style="{StaticResource BoardGrid}"
+                      RowDefinitions="Auto,Auto,Auto,2,Auto,Auto,Auto,2,Auto,Auto,Auto"
+                      ColumnDefinitions="*,*,*,2,*,*,*,2,*,*,*"
+                      BindableLayout.ItemsSource="{Binding Cells}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type module:SudokuCellViewModel}">
                             <Border Style="{StaticResource CellBorder}"
-                                    Margin="{Binding Margin}">
+                                    Grid.Row="{Binding GridRow}"
+                                    Grid.Column="{Binding GridColumn}">
                                 <Border.Triggers>
                                     <DataTrigger TargetType="Border"
                                                  Binding="{Binding IsGiven}"
@@ -132,7 +137,7 @@
                             </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
-                </mct:UniformItemsLayout>
+                </Grid>
             </Border>
 
             <!-- Complete banner -->
@@ -157,11 +162,6 @@
                 <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource PadButton}" Command="{Binding NumberCommand}" CommandParameter="9" Text="9" />
                 <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource EraseButton}" Command="{Binding EraseCommand}" Text="消去" />
             </Grid>
-
-            <Button Style="{StaticResource NewButton}"
-                    behaviors:ButtonOption.PressEffect="True"
-                    Command="{Binding NewGameCommand}"
-                    Text="新しい問題" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -180,12 +180,11 @@
                                Text="{Binding Password}" />
                     </Border>
                     <Label Style="{StaticResource FieldCaptionLabel}"
-                           Text="Confirm ([Compare] で Password との一致を検証。Password 変更時も自動再検証)" />
+                           Text="Confirm ([Compare] で Password との一致を入力の度に検証。Password 変更時も再検証)" />
                     <Border Style="{StaticResource FieldBorder}"
                             behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Confirm]}"
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
                         <Entry s:Behavior.Key="Confirm"
-                               s:ValidationProperty.ValidateOnUnfocused="True"
                                IsPassword="True"
                                behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
                                behaviors:Focus.FocusedThickness="2.5"

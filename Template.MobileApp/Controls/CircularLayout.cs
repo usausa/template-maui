@@ -4,10 +4,11 @@ using Microsoft.Maui.Layouts;
 
 // 子要素を円周上に配置するカスタムレイアウト。
 // ILayoutManager の Measure / ArrangeChildren を実装する最小例 (AlohaKit.Layouts の CircularLayout 相当)。
-// StartAngle / SweepAngle で円弧配置にもなる (Nova.Avalonia.UI の ArcPanel 相当。既定値は従来どおりの全周)
+// StartAngle / SweepAngle で円弧 (Nova.Avalonia.UI の ArcPanel 相当)、RotateItems で子を接線方向へ回転 (同 RadialPanel 相当)、
+// 添付 Orbit で中心 + 同心円のリングへの振り分け (同 OrbitPanel 相当) にもなる。既定値は従来どおりの全周・1 リング
 public sealed class CircularLayout : Layout
 {
-    // 円の半径。負値なら利用可能領域から自動算出
+    // 基本の円 (Orbit=1) の半径。負値なら利用可能領域から自動算出 (最外周のリングが収まる大きさ)
     public static readonly BindableProperty RadiusProperty = BindableProperty.Create(
         nameof(Radius),
         typeof(double),
@@ -47,12 +48,45 @@ public sealed class CircularLayout : Layout
         false,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 子要素ごとの角度 (度)。未指定 (NaN) の子は均等配置 (真上開始・時計回り)
+    // 子を接線方向へ回転する (子の上端が円の外側を向く)。中心 (Orbit=0) の子は回転しない
+    public static readonly BindableProperty RotateItemsProperty = BindableProperty.Create(
+        nameof(RotateItems),
+        typeof(bool),
+        typeof(CircularLayout),
+        false,
+        propertyChanged: static (bindable, _, newValue) => ((CircularLayout)bindable).OnRotateItemsChanged((bool)newValue));
+
+    // RotateItems のときに加える回転角 (度)
+    public static readonly BindableProperty ItemAngleProperty = BindableProperty.Create(
+        nameof(ItemAngle),
+        typeof(double),
+        typeof(CircularLayout),
+        0d,
+        propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
+
+    // リングの間隔。Orbit=k の半径は Radius + (k - 1) × OrbitSpacing
+    public static readonly BindableProperty OrbitSpacingProperty = BindableProperty.Create(
+        nameof(OrbitSpacing),
+        typeof(double),
+        typeof(CircularLayout),
+        48d,
+        propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
+
+    // 子要素ごとの角度 (度)。未指定 (NaN) の子は同じリング内で均等配置 (StartAngle から時計回り)
     public static readonly BindableProperty AngleProperty = BindableProperty.CreateAttached(
         "Angle",
         typeof(double),
         typeof(CircularLayout),
-        Double.NaN);
+        Double.NaN,
+        propertyChanged: OnChildPropertyChanged);
+
+    // 子要素ごとのリング番号。0 = 中心、1 = 基本の円 (既定)、2 以降 = 外側のリング
+    public static readonly BindableProperty OrbitProperty = BindableProperty.CreateAttached(
+        "Orbit",
+        typeof(int),
+        typeof(CircularLayout),
+        1,
+        propertyChanged: OnChildPropertyChanged);
 
     public double Radius
     {
@@ -84,11 +118,61 @@ public sealed class CircularLayout : Layout
         set => SetValue(FitToArcProperty, value);
     }
 
+    public bool RotateItems
+    {
+        get => (bool)GetValue(RotateItemsProperty);
+        set => SetValue(RotateItemsProperty, value);
+    }
+
+    public double ItemAngle
+    {
+        get => (double)GetValue(ItemAngleProperty);
+        set => SetValue(ItemAngleProperty, value);
+    }
+
+    public double OrbitSpacing
+    {
+        get => (double)GetValue(OrbitSpacingProperty);
+        set => SetValue(OrbitSpacingProperty, value);
+    }
+
     public static double GetAngle(BindableObject bindable) => (double)bindable.GetValue(AngleProperty);
 
     public static void SetAngle(BindableObject bindable, double value) => bindable.SetValue(AngleProperty, value);
 
+    public static int GetOrbit(BindableObject bindable) => (int)bindable.GetValue(OrbitProperty);
+
+    public static void SetOrbit(BindableObject bindable, int value) => bindable.SetValue(OrbitProperty, value);
+
+    private static void OnChildPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is Element { Parent: CircularLayout layout })
+        {
+            layout.InvalidateMeasure();
+        }
+    }
+
+    // 回転を止めたときは配置で設定した回転を戻す
+    private void OnRotateItemsChanged(bool rotate)
+    {
+        if (!rotate)
+        {
+            foreach (var child in this)
+            {
+                if (child is VisualElement element)
+                {
+                    element.Rotation = 0d;
+                }
+            }
+        }
+
+        InvalidateMeasure();
+    }
+
     protected override ILayoutManager CreateLayoutManager() => new CircularLayoutManager(this);
+
+    // 子の配置。中心 (Orbit=0) の子は Angle=NaN / Radius=0
+    private readonly record struct Placement(IView View, int Orbit, double Angle, double Radius);
 
     private sealed class CircularLayoutManager : ILayoutManager
     {
@@ -117,15 +201,22 @@ public sealed class CircularLayout : Layout
 
             if (layout.Radius > 0d)
             {
+                var placements = ComputePlacements(children, layout.Radius);
                 if (layout.FitToArc && (children.Count > 0))
                 {
-                    var extent = ComputeExtent(ComputeAngles(children), layout.Radius, maxChild);
+                    var extent = ComputeExtent(placements, maxChild);
                     return new Size(
                         extent.Width + layout.Padding.HorizontalThickness,
                         extent.Height + layout.Padding.VerticalThickness);
                 }
 
-                var side = ((layout.Radius + (maxChild / 2d)) * 2d) + layout.Padding.HorizontalThickness;
+                var outer = 0d;
+                foreach (var placement in placements)
+                {
+                    outer = Math.Max(outer, placement.Radius);
+                }
+
+                var side = ((outer + (maxChild / 2d)) * 2d) + layout.Padding.HorizontalThickness;
                 return new Size(side, side);
             }
 
@@ -157,65 +248,117 @@ public sealed class CircularLayout : Layout
 
             var radius = layout.Radius > 0d
                 ? layout.Radius
-                : (Math.Min(bounds.Width, bounds.Height) / 2d) - (maxChild / 2d);
-            var angles = ComputeAngles(children);
+                : AutoRadius(bounds, children, maxChild);
+            var placements = ComputePlacements(children, radius);
 
             // 中心は領域の中央。FitToArc のときは円弧の外接矩形が中央に来るよう中心をずらす
             var cx = bounds.Center.X;
             var cy = bounds.Center.Y;
             if (layout.FitToArc && (layout.Radius > 0d))
             {
-                var extent = ComputeExtent(angles, radius, maxChild);
+                var extent = ComputeExtent(placements, maxChild);
                 cx -= extent.X + (extent.Width / 2d);
                 cy -= extent.Y + (extent.Height / 2d);
             }
 
-            for (var i = 0; i < children.Count; i++)
+            var rotate = layout.RotateItems;
+            foreach (var placement in placements)
             {
-                var child = children[i];
-                var rad = angles[i] * Math.PI / 180d;
+                var child = placement.View;
                 var size = child.DesiredSize;
-                var x = cx + (radius * Math.Cos(rad)) - (size.Width / 2d);
-                var y = cy + (radius * Math.Sin(rad)) - (size.Height / 2d);
+                var (px, py) = Offset(placement);
+                var x = cx + px - (size.Width / 2d);
+                var y = cy + py - (size.Height / 2d);
+                if (rotate && (child is VisualElement element))
+                {
+                    element.Rotation = placement.Orbit > 0 ? placement.Angle + 90d + layout.ItemAngle : 0d;
+                }
+
                 child.Arrange(new Rect(x, y, size.Width, size.Height));
             }
 
             return bounds.Size;
         }
 
-        // 各子の角度。Angle 添付プロパティ指定の子はその値、未指定の子は StartAngle から SweepAngle を等分する
-        private double[] ComputeAngles(List<IView> children)
+        // 自動半径。最外周のリングが領域に収まるように基本の円の半径を決める
+        private double AutoRadius(Rect bounds, List<IView> children, double maxChild)
         {
-            var count = children.Count;
-            var sweep = layout.SweepAngle;
-            var full = sweep >= 360d;
-            var step = full || !layout.DistributeEvenly
-                ? sweep / count
-                : (count > 1 ? sweep / (count - 1) : 0d);
-
-            var angles = new double[count];
-            for (var i = 0; i < count; i++)
+            var maxOrbit = 1;
+            foreach (var child in children)
             {
-                var angle = GetAngle((BindableObject)children[i]);
-                angles[i] = Double.IsNaN(angle) ? layout.StartAngle + (step * i) : angle;
+                maxOrbit = Math.Max(maxOrbit, GetOrbit((BindableObject)child));
             }
 
-            return angles;
+            var outer = (Math.Min(bounds.Width, bounds.Height) / 2d) - (maxChild / 2d);
+            return Math.Max(0d, outer - ((maxOrbit - 1) * layout.OrbitSpacing));
+        }
+
+        // 各子の配置。リング毎に StartAngle から SweepAngle を等分し、Angle 添付プロパティ指定の子はその値を使う
+        private List<Placement> ComputePlacements(List<IView> children, double baseRadius)
+        {
+            var counts = new Dictionary<int, int>();
+            foreach (var child in children)
+            {
+                var orbit = Math.Max(0, GetOrbit((BindableObject)child));
+                counts[orbit] = counts.TryGetValue(orbit, out var count) ? count + 1 : 1;
+            }
+
+            var sweep = layout.SweepAngle;
+            var full = sweep >= 360d;
+            var indices = new Dictionary<int, int>();
+            var placements = new List<Placement>(children.Count);
+            foreach (var child in children)
+            {
+                var bindable = (BindableObject)child;
+                var orbit = Math.Max(0, GetOrbit(bindable));
+                if (orbit == 0)
+                {
+                    placements.Add(new Placement(child, 0, Double.NaN, 0d));
+                    continue;
+                }
+
+                var count = counts[orbit];
+                var step = full || !layout.DistributeEvenly
+                    ? sweep / count
+                    : (count > 1 ? sweep / (count - 1) : 0d);
+                var index = indices.GetValueOrDefault(orbit);
+                indices[orbit] = index + 1;
+
+                var angle = GetAngle(bindable);
+                if (Double.IsNaN(angle))
+                {
+                    angle = layout.StartAngle + (step * index);
+                }
+
+                placements.Add(new Placement(child, orbit, angle, baseRadius + ((orbit - 1) * layout.OrbitSpacing)));
+            }
+
+            return placements;
+        }
+
+        // 円の中心を原点とした子の中心位置
+        private static (double X, double Y) Offset(Placement placement)
+        {
+            if (placement.Orbit == 0)
+            {
+                return (0d, 0d);
+            }
+
+            var rad = placement.Angle * Math.PI / 180d;
+            return (placement.Radius * Math.Cos(rad), placement.Radius * Math.Sin(rad));
         }
 
         // 円の中心を原点とした、全ての子を含む外接矩形
-        private static Rect ComputeExtent(double[] angles, double radius, double maxChild)
+        private static Rect ComputeExtent(List<Placement> placements, double maxChild)
         {
             var minX = Double.PositiveInfinity;
             var maxX = Double.NegativeInfinity;
             var minY = Double.PositiveInfinity;
             var maxY = Double.NegativeInfinity;
             var half = maxChild / 2d;
-            foreach (var angle in angles)
+            foreach (var placement in placements)
             {
-                var rad = angle * Math.PI / 180d;
-                var x = radius * Math.Cos(rad);
-                var y = radius * Math.Sin(rad);
+                var (x, y) = Offset(placement);
                 minX = Math.Min(minX, x - half);
                 maxX = Math.Max(maxX, x + half);
                 minY = Math.Min(minY, y - half);

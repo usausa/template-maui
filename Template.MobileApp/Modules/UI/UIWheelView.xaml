@@ -11,7 +11,9 @@
              s:BindingContextResolver.Type="{x:Type module:UIWheelViewModel}"
              shell:ShellProperty.Title="Wheel"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function4Text="Spin"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
     <ContentView.Resources>
         <ResourceDictionary>
@@ -31,26 +33,25 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
+            <Style x:Key="ResultStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="Margin" Value="0,0,0,24" />
+            </Style>
+
             <Style x:Key="ResultPlaceholderLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource ResultValueLabel}">
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
             </Style>
 
-            <Style x:Key="SpinButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource PrimaryButton}">
-                <Setter Property="Margin" Value="48,16,48,24" />
-                <Setter Property="FontSize" Value="16" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="*,Auto,Auto"
+    <Grid RowDefinitions="*,Auto"
           BackgroundColor="White">
 
-        <!-- ホイール (タップでも回転) -->
+        <!-- ホイール (F4 のほかタップでも回転) -->
         <drawing:DrawingControl Grid.Row="0"
                                 Margin="8"
                                 Drawing="{Binding Drawing}">
@@ -60,9 +61,19 @@
         </drawing:DrawingControl>
 
         <VerticalStackLayout Grid.Row="1"
-                             Spacing="4">
+                             Style="{StaticResource ResultStack}">
             <Label Style="{StaticResource ResultCaptionLabel}"
-                   Text="RESULT" />
+                   Text="RESULT">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding IsJackpot}"
+                                 Value="True">
+                        <Setter Property="Text" Value="JACKPOT!" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                        <Setter Property="TextColor" Value="{StaticResource AmberDarken2}" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
             <Label Style="{StaticResource ResultValueLabel}"
                    behaviors:AnimationOption.BounceTrigger="{Binding Winner}"
                    IsVisible="False"
@@ -86,12 +97,6 @@
                 </Label.Triggers>
             </Label>
         </VerticalStackLayout>
-
-        <Button Grid.Row="2"
-                Style="{StaticResource SpinButton}"
-                behaviors:ButtonOption.PressEffect="True"
-                Command="{Binding SpinCommand}"
-                Text="SPIN" />
 
     </Grid>
 

@@ -33,9 +33,9 @@ public sealed class NetworkUsecase
     // Simple
     //--------------------------------------------------------------------------------
 
-    public async ValueTask GetServerTimeAsync()
+    public async ValueTask GetServerTimeAsync(CancellationToken cancellationToken = default)
     {
-        var result = await networkOperator.ExecuteVerbose(static n => n.GetServerTimeAsync());
+        var result = await networkOperator.ExecuteVerbose(static (n, t) => n.GetServerTimeAsync(t), cancellationToken);
         if (result.IsSuccess)
         {
             await dialog.InformationAsync($"Get success.\r\ntime=[{result.Value.DateTime.ToLocalTime():yyyy/MM/dd HH:mm:ss}]");
@@ -46,9 +46,9 @@ public sealed class NetworkUsecase
     // Data
     //--------------------------------------------------------------------------------
 
-    public async ValueTask GetDataListAsync()
+    public async ValueTask GetDataListAsync(CancellationToken cancellationToken = default)
     {
-        var result = await networkOperator.ExecuteVerbose(static n => n.GetDataListAsync());
+        var result = await networkOperator.ExecuteVerbose(static (n, t) => n.GetDataListAsync(t), cancellationToken);
         if (result.IsSuccess)
         {
             // 取得した一覧を Work テーブルへ保存する (Navigation > Edit で確認できる)
@@ -62,19 +62,19 @@ public sealed class NetworkUsecase
     // Secret
     //--------------------------------------------------------------------------------
 
-    public async ValueTask GetSecretMessageAsync()
+    public async ValueTask GetSecretMessageAsync(CancellationToken cancellationToken = default)
     {
-        var result = await networkOperator.ExecuteVerbose(static n => n.GetSecretMessageAsync());
+        var result = await networkOperator.ExecuteVerbose(static (n, t) => n.GetSecretMessageAsync(t), cancellationToken);
         if (result.IsSuccess)
         {
             await dialog.InformationAsync($"Get success.\r\nmessage=[{result.Value.Message}]");
         }
     }
 
-    public async ValueTask PostAccountLoginAsync(string id)
+    public async ValueTask PostAccountLoginAsync(string id, CancellationToken cancellationToken = default)
     {
         var request = new AccountLoginRequest { Id = id };
-        var result = await networkOperator.ExecuteVerbose(n => n.PostAccountLoginAsync(request));
+        var result = await networkOperator.ExecuteVerbose((n, t) => n.PostAccountLoginAsync(request, t), cancellationToken);
         if (result.IsSuccess)
         {
             await dialog.InformationAsync("Login success.");
@@ -91,13 +91,13 @@ public sealed class NetworkUsecase
     // Download/Upload
     //--------------------------------------------------------------------------------
 
-    public async ValueTask DownloadAsync()
+    public async ValueTask DownloadAsync(CancellationToken cancellationToken = default)
     {
         var path = Path.Combine(storageManager.PublicFolder, "data.txt");
 
         // Download
         var result = await networkOperator.ExecuteProgressVerbose(
-            (n, p) => n.DownloadAsync("data.txt", path, p.Update));
+            (n, p, t) => n.DownloadAsync("data.txt", path, p.Update, t), cancellationToken);
         if (result == NetworkOperationResult.Success)
         {
             await dialog.InformationAsync("Download success.");
@@ -108,7 +108,7 @@ public sealed class NetworkUsecase
         }
     }
 
-    public async ValueTask UploadAsync()
+    public async ValueTask UploadAsync(CancellationToken cancellationToken = default)
     {
         var path = Path.Combine(storageManager.PublicFolder, "data.txt");
 
@@ -117,13 +117,13 @@ public sealed class NetworkUsecase
         {
             using (dialog.Loading("Make dummy file..."))
             {
-                await File.WriteAllLinesAsync(path, Enumerable.Range(1, 100000).Select(static x => $"{x:D10}"));
+                await File.WriteAllLinesAsync(path, Enumerable.Range(1, 100000).Select(static x => $"{x:D10}"), cancellationToken);
             }
         }
 
         // Upload
         var result = await networkOperator.ExecuteProgressVerbose(
-            (n, p) => n.UploadAsync("data.txt", path, p.Update));
+            (n, p, t) => n.UploadAsync("data.txt", path, p.Update, t), cancellationToken);
         if (result == NetworkOperationResult.Success)
         {
             await dialog.InformationAsync("Upload success.");
@@ -134,9 +134,9 @@ public sealed class NetworkUsecase
     // Test
     //--------------------------------------------------------------------------------
 
-    public ValueTask<Result<object>> GetTestErrorAsync(int code) =>
-        networkOperator.ExecuteVerbose(n => n.GetTestErrorAsync(code));
+    public ValueTask<Result<object>> GetTestErrorAsync(int code, CancellationToken cancellationToken = default) =>
+        networkOperator.ExecuteVerbose((n, t) => n.GetTestErrorAsync(code, t), cancellationToken);
 
-    public ValueTask<Result<object>> GetTestDelayAsync(int timeout) =>
-        networkOperator.ExecuteVerbose(n => n.GetTestDelayAsync(timeout));
+    public ValueTask<Result<object>> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default) =>
+        networkOperator.ExecuteVerbose((n, t) => n.GetTestDelayAsync(timeout, t), cancellationToken);
 }

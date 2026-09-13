@@ -1,10 +1,25 @@
 namespace Template.MobileApp.Modules.View;
 
-public sealed class DragTask
+public sealed partial class DragTask : ObservableObject
 {
     public string Text { get; }
 
     public Color Accent { get; }
+
+    // ドラッグ中の元アイテム (半透明表示)
+    [ObservableProperty]
+    public partial bool IsSource { get; set; }
+
+    // ドラッグ中のアイテムがこの行に重なっている (行の強調)
+    [ObservableProperty]
+    public partial bool IsOver { get; set; }
+
+    // 挿入位置の線。上へ動かすときは行の上端、下へ動かすときは行の下端に出す
+    [ObservableProperty]
+    public partial bool IsOverAbove { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsOverBelow { get; set; }
 
     public DragTask(string text, Color accent)
     {
@@ -44,10 +59,30 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         new("朝会", Purple)
     ];
 
+    // ドラッグ中は受け入れ先 (列・行・ゴミ箱) を全て示し、重なっている先だけ強調する
+    [ObservableProperty]
+    public partial bool IsDragging { get; set; }
+
+    [ObservableProperty]
+    public partial bool TodoOver { get; set; }
+
+    [ObservableProperty]
+    public partial bool DoneOver { get; set; }
+
     [ObservableProperty]
     public partial bool TrashActive { get; set; }
 
     public IObserveCommand DragStartingCommand { get; }
+
+    public IObserveCommand DropCompletedCommand { get; }
+
+    public IObserveCommand ItemOverCommand { get; }
+
+    public IObserveCommand ItemLeaveCommand { get; }
+
+    public IObserveCommand ListOverCommand { get; }
+
+    public IObserveCommand ListLeaveCommand { get; }
 
     public IObserveCommand DropOnItemCommand { get; }
 
@@ -61,7 +96,12 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
 
     public ViewDragDropViewModel()
     {
-        DragStartingCommand = MakeDelegateCommand<DragTask>(x => dragging = x);
+        DragStartingCommand = MakeDelegateCommand<DragTask>(BeginDrag);
+        DropCompletedCommand = MakeDelegateCommand(EndDrag);
+        ItemOverCommand = MakeDelegateCommand<DragTask>(x => SetItemOver(x, true));
+        ItemLeaveCommand = MakeDelegateCommand<DragTask>(x => SetItemOver(x, false));
+        ListOverCommand = MakeDelegateCommand<string>(x => SetListOver(x, true));
+        ListLeaveCommand = MakeDelegateCommand<string>(x => SetListOver(x, false));
         DropOnItemCommand = MakeDelegateCommand<DragTask>(DropOnItem);
         DropOnListCommand = MakeDelegateCommand<string>(DropOnList);
         DropOnTrashCommand = MakeDelegateCommand(DropOnTrash);
@@ -69,11 +109,64 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         TrashLeaveCommand = MakeDelegateCommand(() => TrashActive = false);
     }
 
-    // ドロップ先アイテムの位置へ挿入する (同一リスト内=並べ替え / 別リスト=位置指定の移動)
+    private void BeginDrag(DragTask item)
+    {
+        dragging = item;
+        item.IsSource = true;
+        IsDragging = true;
+    }
+
+    // 強調表示を全て戻す。対象外へ落とした場合は DropCompleted で呼ばれるが、ドロップ成功時は
+    // 元の行が再生成されて DropCompleted が届かないため、各ドロップ処理の最後でも呼ぶ
+    private void EndDrag()
+    {
+        dragging = null;
+        IsDragging = false;
+        TodoOver = false;
+        DoneOver = false;
+        TrashActive = false;
+        foreach (var item in ReorderList.Concat(TodoList).Concat(DoneList))
+        {
+            item.IsSource = false;
+            item.IsOver = false;
+            item.IsOverAbove = false;
+            item.IsOverBelow = false;
+        }
+    }
+
+    private void SetItemOver(DragTask target, bool value)
+    {
+        var over = value && (dragging is not null) && !ReferenceEquals(target, dragging);
+        var below = over && IsMovingDown(dragging!, target);
+        target.IsOver = over;
+        target.IsOverAbove = over && !below;
+        target.IsOverBelow = below;
+    }
+
+    // 同じリスト内で下方向へ動かす場合はドロップ先の後ろに入る
+    private bool IsMovingDown(DragTask item, DragTask target)
+    {
+        var list = FindList(item);
+        return (list is not null) && ReferenceEquals(list, FindList(target)) && (list.IndexOf(item) < list.IndexOf(target));
+    }
+
+    private void SetListOver(string name, bool value)
+    {
+        if (name == "Done")
+        {
+            DoneOver = value;
+        }
+        else
+        {
+            TodoOver = value;
+        }
+    }
+
+    // ドロップ先アイテムの位置へ挿入する (同一リスト内=並べ替え / 別リスト=位置指定の移動)。
+    // 同じリスト内で下へ動かす場合はドロップ先の後ろに入る (隣の行へ落として入れ替わらないのを防ぐ)
     private void DropOnItem(DragTask target)
     {
         var item = dragging;
-        dragging = null;
         if ((item is null) || ReferenceEquals(item, target))
         {
             return;
@@ -86,15 +179,16 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
             return;
         }
 
+        var after = IsMovingDown(item, target);
         source.Remove(item);
-        destination.Insert(destination.IndexOf(target), item);
+        destination.Insert(destination.IndexOf(target) + (after ? 1 : 0), item);
+        EndDrag();
     }
 
     // リストの空き領域へのドロップは末尾に追加する
     private void DropOnList(string name)
     {
         var item = dragging;
-        dragging = null;
         if (item is null)
         {
             return;
@@ -109,19 +203,19 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
 
         source.Remove(item);
         destination.Add(item);
+        EndDrag();
     }
 
     private void DropOnTrash()
     {
         var item = dragging;
-        dragging = null;
-        TrashActive = false;
         if (item is null)
         {
             return;
         }
 
         FindList(item)?.Remove(item);
+        EndDrag();
     }
 
     private ObservableCollection<DragTask>? FindList(DragTask item)

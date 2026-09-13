@@ -25,5 +25,5 @@ public sealed class MailDateTimeStringConverter : IValueConverter
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        throw new NotSupportedException();
+        Binding.DoNothing;
 }

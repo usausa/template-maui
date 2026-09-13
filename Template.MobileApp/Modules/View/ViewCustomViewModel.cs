@@ -59,10 +59,6 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
     // AvatarGroup デモ (Add / Remove で「+N」の変化を見る)
     public ObservableCollection<string> Avatars { get; } = [.. AvatarPool.Take(5)];
 
-    // CompareSlider デモ (仕切り位置 0〜1)
-    [ObservableProperty]
-    public partial double ComparePosition { get; set; } = 0.5;
-
     public IObserveCommand AddAvatarCommand { get; }
 
     public IObserveCommand RemoveAvatarCommand { get; }

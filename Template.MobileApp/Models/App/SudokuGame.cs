@@ -113,6 +113,8 @@ public sealed class SudokuGame
 
     public int GetValue(int row, int col) => cells[row][col];
 
+    public int GetSolution(int row, int col) => solution[row][col];
+
     public bool IsGiven(int row, int col) => given[row][col];
 
     public bool SetValue(int row, int col, int value)

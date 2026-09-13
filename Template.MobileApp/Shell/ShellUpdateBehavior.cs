@@ -1,5 +1,8 @@
 namespace Template.MobileApp.Shell;
 
+using CommunityToolkit.Maui.Behaviors;
+using CommunityToolkit.Maui.Core;
+
 using Smart.Maui.Interactivity;
 
 public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
@@ -15,6 +18,12 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
         get => (INavigator)GetValue(NavigatorProperty);
         set => SetValue(NavigatorProperty, value);
     }
+    // ステータスバーの変更を購読している IShellControl
+    private IShellControl? shell;
+
+    private StatusBarBehavior? statusBar;
+    private Color defaultStatusBarColor = Colors.Transparent;
+    private StatusBarStyle defaultStatusBarStyle = StatusBarStyle.Default;
 
     protected override void OnDetachingFrom(ContentPage bindable)
     {
@@ -23,6 +32,8 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
             Navigator.Navigating -= NavigatorOnNavigating;
             Navigator.Exited -= NavigatorOnExited;
         }
+
+        DetachShell();
 
         base.OnDetachingFrom(bindable);
     }
@@ -66,9 +77,65 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
     {
         ShellProperty.SetCurrentView(view);
 
-        if (AssociatedObject?.BindingContext is IShellControl shell)
+        if (AssociatedObject?.BindingContext is IShellControl control)
         {
-            ShellProperty.UpdateShellControl(shell, view);
+            AttachShell(control);
+            ShellProperty.UpdateShellControl(control, view);
         }
+    }
+
+    private void AttachShell(IShellControl control)
+    {
+        if (ReferenceEquals(shell, control))
+        {
+            return;
+        }
+
+        DetachShell();
+
+        shell = control;
+        control.StatusBarColor.PropertyChanged += OnStatusBarChanged;
+        control.StatusBarStyle.PropertyChanged += OnStatusBarChanged;
+    }
+
+    private void DetachShell()
+    {
+        if (shell is null)
+        {
+            return;
+        }
+
+        shell.StatusBarColor.PropertyChanged -= OnStatusBarChanged;
+        shell.StatusBarStyle.PropertyChanged -= OnStatusBarChanged;
+        shell = null;
+    }
+
+    private void OnStatusBarChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        ApplyStatusBar();
+    }
+
+    private void ApplyStatusBar()
+    {
+        if (shell is null)
+        {
+            return;
+        }
+
+        if (statusBar is null)
+        {
+            statusBar = AssociatedObject?.Behaviors.OfType<StatusBarBehavior>().FirstOrDefault();
+            if (statusBar is null)
+            {
+                return;
+            }
+
+            defaultStatusBarColor = statusBar.StatusBarColor;
+            defaultStatusBarStyle = statusBar.StatusBarStyle;
+        }
+
+        var style = shell.StatusBarStyle.Value;
+        statusBar.StatusBarColor = shell.StatusBarColor.Value ?? defaultStatusBarColor;
+        statusBar.StatusBarStyle = style == StatusBarStyle.Default ? defaultStatusBarStyle : style;
     }
 }

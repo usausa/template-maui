@@ -1,5 +1,7 @@
 namespace Template.MobileApp;
 
+using CommunityToolkit.Maui.Core;
+
 using Template.MobileApp.Modules;
 using Template.MobileApp.Shell;
 
@@ -20,6 +22,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public NotificationValue<bool> HeaderVisible { get; } = new();
 
     public NotificationValue<bool> FunctionVisible { get; } = new();
+
+    public NotificationValue<Color?> StatusBarColor { get; } = new();
+
+    public NotificationValue<StatusBarStyle> StatusBarStyle { get; } = new(CommunityToolkit.Maui.Core.StatusBarStyle.Default);
 
     public IReadOnlyList<FunctionState> Functions { get; } = [new(), new(), new(), new()];
 

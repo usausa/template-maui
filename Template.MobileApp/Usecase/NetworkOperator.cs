@@ -8,7 +8,8 @@ public enum NetworkOperationResult
 {
     Success,
     Error,
-    NotFound
+    NotFound,
+    Canceled
 }
 
 // 通信結果の分類 (UI非依存の純粋ロジック)
@@ -64,16 +65,16 @@ public sealed class NetworkOperator
     // Typed
     //--------------------------------------------------------------------------------
 
-    public ValueTask<Result<T>> ExecuteVerbose<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, true);
+    public ValueTask<Result<T>> ExecuteVerbose<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, CancellationToken cancellationToken = default) => Execute(func, true, cancellationToken);
 
-    public ValueTask<Result<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func) => Execute(func, false);
+    public ValueTask<Result<T>> Execute<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, CancellationToken cancellationToken = default) => Execute(func, false, cancellationToken);
 
-    private async ValueTask<Result<T>> Execute<T>(Func<HttpService, ValueTask<IRestResponse<T>>> func, bool verbose)
+    private async ValueTask<Result<T>> Execute<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, bool verbose, CancellationToken cancellationToken)
     {
         var response = default(IRestResponse<T>);
 
         // 型付き版では404も通常のHTTPエラーとして扱う
-        var result = await ExecuteCore(async h => response = await func(h), verbose, notFoundAsResult: false);
+        var result = await ExecuteCore(async (h, t) => response = await func(h, t), verbose, notFoundAsResult: false, cancellationToken);
         if (result == NetworkOperationResult.Success)
         {
             return Result.Success(response!.Content!);
@@ -89,11 +90,11 @@ public sealed class NetworkOperator
     // Plain
     //--------------------------------------------------------------------------------
 
-    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<HttpService, ValueTask<IRestResponse>> func) => ExecuteCore(func, true, notFoundAsResult: true);
+    public ValueTask<NetworkOperationResult> ExecuteVerbose(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken = default) => ExecuteCore(func, true, notFoundAsResult: true, cancellationToken);
 
-    public ValueTask<NetworkOperationResult> Execute(Func<HttpService, ValueTask<IRestResponse>> func) => ExecuteCore(func, false, notFoundAsResult: true);
+    public ValueTask<NetworkOperationResult> Execute(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken = default) => ExecuteCore(func, false, notFoundAsResult: true, cancellationToken);
 
-    private async ValueTask<NetworkOperationResult> ExecuteCore(Func<HttpService, ValueTask<IRestResponse>> func, bool verbose, bool notFoundAsResult)
+    private async ValueTask<NetworkOperationResult> ExecuteCore(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, bool verbose, bool notFoundAsResult, CancellationToken cancellationToken)
     {
         for (var attempt = 1; attempt <= MaxAttempts; attempt++)
         {
@@ -109,13 +110,19 @@ public sealed class NetworkOperator
             IRestResponse response;
             using (interaction.Indicator())
             {
-                response = await func(httpService);
+                response = await func(httpService, cancellationToken);
             }
 
             var kind = ClassifyError(response);
             if (kind == NetworkErrorKind.None)
             {
                 return NetworkOperationResult.Success;
+            }
+
+            // 呼び出し側の中断は失敗として扱わない (通知・再試行確認なし)
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return NetworkOperationResult.Canceled;
             }
 
             log.WarnNetworkOperationFailed(response.RestResult, (int)response.StatusCode, response.InnerException);
@@ -166,21 +173,26 @@ public sealed class NetworkOperator
     // Progress
     //--------------------------------------------------------------------------------
 
-    public ValueTask<NetworkOperationResult> ExecuteProgressVerbose(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, true);
+    public ValueTask<NetworkOperationResult> ExecuteProgressVerbose(Func<HttpService, MauiComponents.IProgress, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken = default) => ExecuteProgress(func, true, cancellationToken);
 
-    public ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func) => ExecuteProgress(func, false);
+    public ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken = default) => ExecuteProgress(func, false, cancellationToken);
 
     // 進捗付き転送は途中失敗時の再実行コストが大きいため自動・人力ともリトライしない仕様
-    private async ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, ValueTask<IRestResponse>> func, bool verbose)
+    private async ValueTask<NetworkOperationResult> ExecuteProgress(Func<HttpService, MauiComponents.IProgress, CancellationToken, ValueTask<IRestResponse>> func, bool verbose, CancellationToken cancellationToken)
     {
         using var progress = interaction.Progress();
 
-        var response = await func(httpService, progress);
+        var response = await func(httpService, progress, cancellationToken);
 
         var kind = ClassifyError(response);
         if (kind == NetworkErrorKind.None)
         {
             return NetworkOperationResult.Success;
+        }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return NetworkOperationResult.Canceled;
         }
 
         log.WarnNetworkOperationFailed(response.RestResult, (int)response.StatusCode, response.InnerException);

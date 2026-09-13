@@ -14,14 +14,12 @@ public sealed class AvatarGroup : ContentView
         nameof(ItemsSource),
         typeof(IEnumerable),
         typeof(AvatarGroup),
-        null,
         propertyChanged: static (bindable, oldValue, newValue) => ((AvatarGroup)bindable).OnItemsSourceChanged(oldValue as IEnumerable, newValue as IEnumerable));
 
     public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(
         nameof(ItemTemplate),
         typeof(DataTemplate),
         typeof(AvatarGroup),
-        null,
         propertyChanged: Rebuild);
 
     public static readonly BindableProperty MaxDisplayedProperty = BindableProperty.Create(
@@ -185,7 +183,7 @@ public sealed class AvatarGroup : ContentView
 
     private View CreateItem(object item)
     {
-        if ((ItemTemplate is not null) && (ItemTemplate.CreateContent() is View view))
+        if (ItemTemplate?.CreateContent() is View view)
         {
             view.BindingContext = item;
             return view;

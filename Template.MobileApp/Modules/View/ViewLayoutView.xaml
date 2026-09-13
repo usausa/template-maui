@@ -16,7 +16,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <!-- CommunityToolkit のレイアウトデモ (DockLayout / UniformItemsLayout) と、
-         自作レイアウト (CircularLayout=円弧対応 / HoneycombLayout / StaggeredGrid / VariableSizeWrapPanel / OverlapPanel / CascadeStackLayout) のデモ -->
+         自作レイアウト (CircularLayout=円弧 / 回転 / リング対応 / HoneycombLayout / StaggeredGrid / VariableSizeWrapPanel / OverlapPanel / CascadeStackLayout) のデモ -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -79,6 +79,34 @@
                 <Setter Property="Stroke" Value="White" />
                 <Setter Property="StrokeThickness" Value="2" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <!-- CircularLayout の回転 (扇のピル) とリング (中心 + 同心円の点) -->
+            <Style x:Key="FanPill"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="OrbitDot"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="22" />
+                <Setter Property="HeightRequest" Value="22" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 11" />
+            </Style>
+
+            <Style x:Key="OrbitCenter"
+                   TargetType="Border"
+                   BasedOn="{StaticResource OrbitDot}">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
             </Style>
 
             <!-- HoneycombLayout の六角セル (100x110 の Path に中央のアイコン+ラベル、右上に選択バッジ) -->
@@ -297,10 +325,62 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <controls:InfoCard Title="CircularLayout 回転 / リング (自作)"
+                               Icon="{x:Static fonts:MaterialIcons.Track_changes}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource NoteLabel}"
+                           Text="左: RotateItems で子を接線方向へ回転した扇。右: 添付 Orbit で中心 (0) と 2 つのリング (1 / 2) へ振り分け" />
+                    <Grid ColumnDefinitions="*,*">
+                        <controls:CircularLayout Grid.Column="0"
+                                                 Radius="64"
+                                                 StartAngle="200"
+                                                 SweepAngle="140"
+                                                 RotateItems="True"
+                                                 FitToArc="True"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center">
+                            <Border Style="{StaticResource FanPill}">
+                                <Label Style="{StaticResource UniformCellLabel}" FontSize="12" Text="A" />
+                            </Border>
+                            <Border Style="{StaticResource FanPill}">
+                                <Label Style="{StaticResource UniformCellLabel}" FontSize="12" Text="B" />
+                            </Border>
+                            <Border Style="{StaticResource FanPill}">
+                                <Label Style="{StaticResource UniformCellLabel}" FontSize="12" Text="C" />
+                            </Border>
+                            <Border Style="{StaticResource FanPill}">
+                                <Label Style="{StaticResource UniformCellLabel}" FontSize="12" Text="D" />
+                            </Border>
+                            <Border Style="{StaticResource FanPill}">
+                                <Label Style="{StaticResource UniformCellLabel}" FontSize="12" Text="E" />
+                            </Border>
+                        </controls:CircularLayout>
+                        <controls:CircularLayout Grid.Column="1"
+                                                 Radius="36"
+                                                 OrbitSpacing="40"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center">
+                            <Border Style="{StaticResource OrbitCenter}" controls:CircularLayout.Orbit="0" />
+                            <Border Style="{StaticResource OrbitDot}" />
+                            <Border Style="{StaticResource OrbitDot}" />
+                            <Border Style="{StaticResource OrbitDot}" />
+                            <Border Style="{StaticResource OrbitDot}" controls:CircularLayout.Orbit="2" />
+                            <Border Style="{StaticResource OrbitDot}" controls:CircularLayout.Orbit="2" />
+                            <Border Style="{StaticResource OrbitDot}" controls:CircularLayout.Orbit="2" />
+                            <Border Style="{StaticResource OrbitDot}" controls:CircularLayout.Orbit="2" />
+                            <Border Style="{StaticResource OrbitDot}" controls:CircularLayout.Orbit="2" />
+                            <Border Style="{StaticResource OrbitDot}" controls:CircularLayout.Orbit="2" />
+                        </controls:CircularLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
             <controls:InfoCard Title="HoneycombLayout (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Hexagon}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+                               behaviors:AnimationOption.EnterDelay="320">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="列を交互に半セルずらして上から埋める (Columns=3、Spacing=6)。7 個で中央 1 + 周囲 6 の花形。タップで選択 (枠 + バッジ)" />
@@ -355,7 +435,7 @@
             <controls:InfoCard Title="StaggeredGrid (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="320">
+                               behaviors:AnimationOption.EnterDelay="400">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
@@ -392,7 +472,7 @@
             <controls:InfoCard Title="VariableSizeWrapPanel (自作)"
                                Icon="{x:Static fonts:MaterialIcons.View_quilt}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="400">
+                               behaviors:AnimationOption.EnterDelay="480">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="ColumnSpan / RowSpan で占有セル数を指定し、空きセルは先頭から埋め戻す (Columns=3、RowHeight=56)" />
@@ -427,7 +507,7 @@
             <controls:InfoCard Title="OverlapPanel (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Filter_none}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="480">
+                               behaviors:AnimationOption.EnterDelay="560">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="子を OffsetX / OffsetY でずらして重ねる (左)。ReverseZIndex=True で先頭が最前面になる (右=重ねアバターの土台)" />
@@ -464,7 +544,7 @@
             <controls:InfoCard Title="CascadeStackLayout"
                                Icon="{x:Static fonts:MaterialIcons.Layers}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="560">
+                               behaviors:AnimationOption.EnterDelay="640">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource NoteLabel}"
                            Text="Layout 派生クラスの CreateLayoutManager で子要素を左上から右下へ重ねて配置する。ずらす量は Offset プロパティ" />

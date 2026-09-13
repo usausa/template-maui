@@ -43,10 +43,11 @@ public sealed partial class BasicValidationViewModel : AppViewModelBase
         });
         FocusCommand = MakeDelegateCommand(ValidationFocusRequest.FocusRequest);
 
-        // 相関先 (Password) が変わったら入力済みの Confirm を再検証する
+        // 相関検証は入力の度に行う。Confirm の変更と相関先 (Password) の変更のどちらでも再検証する (Confirm 未入力のうちは Password の変更で検証しない)
         PropertyChanged += (_, e) =>
         {
-            if ((e.PropertyName == nameof(Password)) && !String.IsNullOrEmpty(Confirm))
+            if ((e.PropertyName == nameof(Confirm)) ||
+                ((e.PropertyName == nameof(Password)) && !String.IsNullOrEmpty(Confirm)))
             {
                 Errors.ClearErrors(nameof(Confirm));
                 Validate(nameof(Confirm));

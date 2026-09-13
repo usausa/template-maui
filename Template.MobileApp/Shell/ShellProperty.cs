@@ -1,13 +1,13 @@
 namespace Template.MobileApp.Shell;
 
+using CommunityToolkit.Maui.Core;
+
 using Microsoft.Maui.Controls.Shapes;
 
 using Smart.Maui.Interactivity;
 
 public static class ShellProperty
 {
-    // 現在表示中のビュー。遷移で退場するビューのバインディング解除がプロパティ変更を発火させ、
-    // 直後のシェル状態を旧値で上書きするのを防ぐ (現在のビューからの変更のみ反映する)
     private static WeakReference<BindableObject>? currentView;
 
     internal static void SetCurrentView(BindableObject? view)
@@ -140,6 +140,28 @@ public static class ShellProperty
 
     public static void SetFunction4Enabled(BindableObject bindable, bool value) => bindable.SetValue(Function4EnabledProperty, value);
 
+    public static readonly BindableProperty StatusBarColorProperty = BindableProperty.CreateAttached(
+        "StatusBarColor",
+        typeof(Color),
+        typeof(ShellProperty),
+        null,
+        propertyChanged: PropertyChanged);
+
+    public static Color? GetStatusBarColor(BindableObject bindable) => (Color?)bindable.GetValue(StatusBarColorProperty);
+
+    public static void SetStatusBarColor(BindableObject bindable, Color? value) => bindable.SetValue(StatusBarColorProperty, value);
+
+    public static readonly BindableProperty StatusBarStyleProperty = BindableProperty.CreateAttached(
+        "StatusBarStyle",
+        typeof(StatusBarStyle),
+        typeof(ShellProperty),
+        StatusBarStyle.Default,
+        propertyChanged: PropertyChanged);
+
+    public static StatusBarStyle GetStatusBarStyle(BindableObject bindable) => (StatusBarStyle)bindable.GetValue(StatusBarStyleProperty);
+
+    public static void SetStatusBarStyle(BindableObject bindable, StatusBarStyle value) => bindable.SetValue(StatusBarStyleProperty, value);
+
     private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         // 現在のビュー以外 (退場中のビュー等) からの変更は反映しない
@@ -162,6 +184,8 @@ public static class ShellProperty
             shell.Title.Value = string.Empty;
             shell.HeaderVisible.Value = true;
             shell.FunctionVisible.Value = false;
+            shell.StatusBarColor.Value = null;
+            shell.StatusBarStyle.Value = StatusBarStyle.Default;
             foreach (var function in shell.Functions)
             {
                 function.Text.Value = string.Empty;
@@ -173,6 +197,8 @@ public static class ShellProperty
             shell.Title.Value = GetTitle(bindable);
             shell.HeaderVisible.Value = GetHeaderVisible(bindable);
             shell.FunctionVisible.Value = GetFunctionVisible(bindable);
+            shell.StatusBarColor.Value = GetStatusBarColor(bindable);
+            shell.StatusBarStyle.Value = GetStatusBarStyle(bindable);
 
             var functions = shell.Functions;
             functions[0].Text.Value = GetFunction1Text(bindable);

@@ -9,7 +9,10 @@ public sealed partial class SudokuCellViewModel : ObservableObject
     public int Col { get; }
 
     // 3x3 ブロックの区切りを太くするための余白
-    public Thickness Margin { get; }
+    // 盤面 Grid 上の位置 (3x3 ブロックの境界に太線用のスペーサ行・列を挟むため 1 つずつずれる)
+    public int GridRow { get; }
+
+    public int GridColumn { get; }
 
     [ObservableProperty]
     public partial string Text { get; set; } = string.Empty;
@@ -27,11 +30,8 @@ public sealed partial class SudokuCellViewModel : ObservableObject
     {
         Row = row;
         Col = col;
-        Margin = new Thickness(
-            0,
-            0,
-            col is 2 or 5 ? 4 : 1,
-            row is 2 or 5 ? 4 : 1);
+        GridRow = row + (row / 3);
+        GridColumn = col + (col / 3);
     }
 }
 
@@ -56,8 +56,6 @@ public sealed partial class AppGameViewModel : AppViewModelBase
 
     public IObserveCommand EraseCommand { get; }
 
-    public IObserveCommand NewGameCommand { get; }
-
     public AppGameViewModel()
     {
         var cells = new List<SudokuCellViewModel>(SudokuGame.Size * SudokuGame.Size);
@@ -74,7 +72,6 @@ public sealed partial class AppGameViewModel : AppViewModelBase
         SelectCommand = MakeDelegateCommand<SudokuCellViewModel>(Select);
         NumberCommand = MakeDelegateCommand<string>(InputNumber);
         EraseCommand = MakeDelegateCommand(Erase);
-        NewGameCommand = MakeDelegateCommand(NewGame);
 
         NewGame();
     }
@@ -85,6 +82,29 @@ public sealed partial class AppGameViewModel : AppViewModelBase
         selected = null;
         IsCompleted = false;
         RefreshAll();
+    }
+
+    // 空きまたは誤った入力のマスからランダムに 1 つ選び正解を入れる (F3 を押すたびに 1 マス)
+    private void AutoStep()
+    {
+        if (IsCompleted)
+        {
+            return;
+        }
+
+        var candidates = Cells
+            .Where(x => !game.IsGiven(x.Row, x.Col) && (game.GetValue(x.Row, x.Col) != game.GetSolution(x.Row, x.Col)))
+            .ToList();
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var cell = candidates[random.Next(candidates.Count)];
+        game.SetValue(cell.Row, cell.Col, game.GetSolution(cell.Row, cell.Col));
+        selected = cell;
+        RefreshAll();
+        IsCompleted = game.IsCompleted;
     }
 
     private void Select(SudokuCellViewModel cell)
@@ -135,5 +155,17 @@ public sealed partial class AppGameViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.AppMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction3()
+    {
+        AutoStep();
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyFunction4()
+    {
+        NewGame();
+        return Task.CompletedTask;
+    }
 }
 #pragma warning restore CA5394
