@@ -28,6 +28,10 @@ public sealed class ViewLayoutViewModel : AppViewModelBase
 
     public IObserveCommand SelectHexCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewLayoutViewModel()
     {
         SelectHexCommand = MakeDelegateCommand<ViewLayoutHex>(x =>
@@ -38,6 +42,10 @@ public sealed class ViewLayoutViewModel : AppViewModelBase
             }
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 

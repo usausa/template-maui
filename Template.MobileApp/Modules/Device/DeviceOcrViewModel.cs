@@ -4,6 +4,8 @@ using Template.MobileApp.Components;
 
 public sealed partial class DeviceOcrViewModel : AppViewModelBase
 {
+    private readonly IDialog dialog;
+
     private readonly IOcrReader ocrReader;
 
     public CameraController Controller { get; } = new();
@@ -17,13 +19,23 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsCameraEnabled { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceOcrViewModel(
+        IDialog dialog,
         IOcrReader ocrReader)
     {
+        this.dialog = dialog;
         this.ocrReader = ocrReader;
 
         RecognizedText = string.Empty;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -45,9 +57,10 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
         IsProcessing = true;
         try
         {
-            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
+            await using var input = await Controller.CaptureWithTimeoutAsync().ConfigureAwait(true);
             if (input is null)
             {
+                await dialog.InformationAsync("撮影できませんでした。もう一度お試しください。");
                 return;
             }
 

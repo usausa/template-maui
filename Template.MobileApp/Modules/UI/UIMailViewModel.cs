@@ -19,11 +19,15 @@ public sealed partial class UIMailViewModel : AppViewModelBase
 
     public ObservableCollection<MailMessage> Messages { get; } = [];
 
-    public IObserveCommand SelectCommand { get; }
-
     public ICommand ArchiveCommand { get; }
 
     public ICommand DeleteCommand { get; }
+
+    public IObserveCommand SelectCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public UIMailViewModel(IFileSystem fileSystem)
     {
@@ -34,6 +38,10 @@ public sealed partial class UIMailViewModel : AppViewModelBase
         DeleteCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     // ReSharper disable once ArrangeModifiersOrder
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -43,6 +51,10 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     // ReSharper disable StringLiteralTypo
     private async Task LoadMessagesAsync()

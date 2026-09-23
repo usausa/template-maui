@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewDrawingView"
              x:DataType="{x:Type module:ViewDrawingViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewDrawingViewModel}"
@@ -22,10 +22,24 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid"
-                   TargetType="Grid"
-                   BasedOn="{StaticResource FillGrid}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            <Style x:Key="PreviewEmptyStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicEmptyStack}">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="PreviewEmptyIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="PreviewEmptyHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCenterHintLabel}">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
             <Style x:Key="CanvasView"
@@ -177,27 +191,6 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
 
-            <Style x:Key="EmptyStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Spacing" Value="6" />
-            </Style>
-
-            <Style x:Key="EmptyIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="36" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyHintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -208,9 +201,9 @@
         <toolkit:DrawingView Grid.Row="0"
                              Style="{StaticResource CanvasView}"
                              behaviors:DrawingBind.Controller="{Binding Controller}"
+                             IsMultiLineModeEnabled="True"
                              LineColor="{Binding LineColor}"
-                             LineWidth="{Binding LineWidth}"
-                             IsMultiLineModeEnabled="True" />
+                             LineWidth="{Binding LineWidth}" />
 
         <!-- パレット -->
         <Border Grid.Row="1"
@@ -262,9 +255,8 @@
                            Style="{StaticResource WidthIcon}"
                            Text="{x:Static fonts:MaterialIcons.Edit}" />
                     <Slider Grid.Column="1"
-                            Minimum="1"
-                            Maximum="24"
-                            Value="{Binding LineWidth}" />
+                            Value="{Binding LineWidth}"
+                            Minimum="1" Maximum="24" />
                     <Label Grid.Column="2"
                            Style="{StaticResource WidthValueLabel}"
                            Text="{Binding LineWidth, StringFormat='{0:F0}'}" />
@@ -284,13 +276,13 @@
                     Style="{StaticResource PreviewBorder}">
                 <Grid>
                     <Image Source="{Binding Image}"
-                           Aspect="AspectFit"
-                           IsVisible="{Binding HasImage}" />
-                    <VerticalStackLayout Style="{StaticResource EmptyStack}"
+                           IsVisible="{Binding HasImage}"
+                           Aspect="AspectFit" />
+                    <VerticalStackLayout Style="{StaticResource PreviewEmptyStack}"
                                          IsVisible="{Binding HasImage, Converter={StaticResource ReverseConverter}}">
-                        <Label Style="{StaticResource EmptyIconLabel}"
+                        <Label Style="{StaticResource PreviewEmptyIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Format_paint}" />
-                        <Label Style="{StaticResource EmptyHintLabel}"
+                        <Label Style="{StaticResource PreviewEmptyHintLabel}"
                                Text="Draw and press Save to preview" />
                     </VerticalStackLayout>
                 </Grid>

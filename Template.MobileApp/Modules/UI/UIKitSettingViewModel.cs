@@ -27,6 +27,10 @@ public sealed class UIKitSettingViewModel : AppViewModelBase
         new() { Icon = Fonts.MaterialIcons.Dark_mode, Title = "ダークモード", IsSwitch = true, IsOn = false }
     ];
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

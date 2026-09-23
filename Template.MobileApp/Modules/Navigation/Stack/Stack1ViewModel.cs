@@ -2,6 +2,10 @@ namespace Template.MobileApp.Modules.Navigation.Stack;
 
 public sealed class Stack1ViewModel : AppViewModelBase
 {
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NavigationMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

@@ -6,8 +6,8 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceSensorView"
              x:DataType="{x:Type module:DeviceSensorViewModel}"
@@ -20,10 +20,21 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <converters:CenteredRatioConverter x:Key="AccelRatio" Range="2" />
-            <converters:CenteredRatioConverter x:Key="GyroRatio" Range="10" />
-            <converters:CenteredRatioConverter x:Key="MagRatio" Range="100" />
-            <converters:CenteredRatioConverter x:Key="QuatRatio" Range="1" />
+            <Style x:Key="UnitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,0,0,6" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <converters:CenteredRatioConverter x:Key="AccelRatio"
+                                               Range="2" />
+            <converters:CenteredRatioConverter x:Key="GyroRatio"
+                                               Range="10" />
+            <converters:CenteredRatioConverter x:Key="MagRatio"
+                                               Range="100" />
+            <converters:CenteredRatioConverter x:Key="QuatRatio"
+                                               Range="1" />
 
             <Style x:Key="AxisRowGrid"
                    TargetType="Grid">
@@ -38,6 +49,30 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="AxisXBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="AxisYBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="AxisZBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="AxisWBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
             <Style x:Key="AxisBadgeLabel"
                    TargetType="Label">
                 <Setter Property="TextColor" Value="White" />
@@ -49,6 +84,30 @@
             <Style x:Key="AxisBar"
                    TargetType="ProgressBar">
                 <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AxisXBar"
+                   TargetType="ProgressBar"
+                   BasedOn="{StaticResource AxisBar}">
+                <Setter Property="ProgressColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="AxisYBar"
+                   TargetType="ProgressBar"
+                   BasedOn="{StaticResource AxisBar}">
+                <Setter Property="ProgressColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="AxisZBar"
+                   TargetType="ProgressBar"
+                   BasedOn="{StaticResource AxisBar}">
+                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="AxisWBar"
+                   TargetType="ProgressBar"
+                   BasedOn="{StaticResource AxisBar}">
+                <Setter Property="ProgressColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
             <Style x:Key="CenterTick"
@@ -79,31 +138,36 @@
 
             <Style x:Key="SensorRowGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="0,4" />
                 <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
+            <Style x:Key="SensorTextStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicTextGroupStack}">
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Accelerometer (G)"
-                               Icon="{x:Static fonts:MaterialIcons.Speed}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Accelerometer (G)"
+                               Icon="{x:Static fonts:MaterialIcons.Speed}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource RedDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="X" />
+                                Style="{StaticResource AxisXBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource RedDefault}"
+                            <ProgressBar Style="{StaticResource AxisXBar}"
                                          Progress="{Binding AccelerationX, Converter={StaticResource AccelRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -114,13 +178,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource GreenDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Y" />
+                                Style="{StaticResource AxisYBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource GreenDefault}"
+                            <ProgressBar Style="{StaticResource AxisYBar}"
                                          Progress="{Binding AccelerationY, Converter={StaticResource AccelRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -131,13 +194,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource BlueDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Z" />
+                                Style="{StaticResource AxisZBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource BlueDefault}"
+                            <ProgressBar Style="{StaticResource AxisZBar}"
                                          Progress="{Binding AccelerationZ, Converter={StaticResource AccelRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -148,21 +210,20 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Gyroscope (rad/s)"
-                               Icon="{x:Static fonts:MaterialIcons.Screen_rotation}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Gyroscope (rad/s)"
+                               Icon="{x:Static fonts:MaterialIcons.Screen_rotation}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource RedDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="X" />
+                                Style="{StaticResource AxisXBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource RedDefault}"
+                            <ProgressBar Style="{StaticResource AxisXBar}"
                                          Progress="{Binding GyroscopeX, Converter={StaticResource GyroRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -173,13 +234,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource GreenDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Y" />
+                                Style="{StaticResource AxisYBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource GreenDefault}"
+                            <ProgressBar Style="{StaticResource AxisYBar}"
                                          Progress="{Binding GyroscopeY, Converter={StaticResource GyroRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -190,13 +250,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource BlueDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Z" />
+                                Style="{StaticResource AxisZBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource BlueDefault}"
+                            <ProgressBar Style="{StaticResource AxisZBar}"
                                          Progress="{Binding GyroscopeZ, Converter={StaticResource GyroRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -207,21 +266,20 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Magnetometer (µT)"
-                               Icon="{x:Static fonts:MaterialIcons.Sensors}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Magnetometer (µT)"
+                               Icon="{x:Static fonts:MaterialIcons.Sensors}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource RedDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="X" />
+                                Style="{StaticResource AxisXBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource RedDefault}"
+                            <ProgressBar Style="{StaticResource AxisXBar}"
                                          Progress="{Binding MagnetometerX, Converter={StaticResource MagRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -232,13 +290,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource GreenDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Y" />
+                                Style="{StaticResource AxisYBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource GreenDefault}"
+                            <ProgressBar Style="{StaticResource AxisYBar}"
                                          Progress="{Binding MagnetometerY, Converter={StaticResource MagRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -249,13 +306,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource BlueDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Z" />
+                                Style="{StaticResource AxisZBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource BlueDefault}"
+                            <ProgressBar Style="{StaticResource AxisZBar}"
                                          Progress="{Binding MagnetometerZ, Converter={StaticResource MagRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -266,21 +322,20 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Orientation (Quaternion)"
-                               Icon="{x:Static fonts:MaterialIcons.Rotate_right}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Orientation (Quaternion)"
+                               Icon="{x:Static fonts:MaterialIcons.Rotate_right}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource RedDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="X" />
+                                Style="{StaticResource AxisXBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource RedDefault}"
+                            <ProgressBar Style="{StaticResource AxisXBar}"
                                          Progress="{Binding OrientationX, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -291,13 +346,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource GreenDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Y" />
+                                Style="{StaticResource AxisYBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource GreenDefault}"
+                            <ProgressBar Style="{StaticResource AxisYBar}"
                                          Progress="{Binding OrientationY, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -308,13 +362,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource BlueDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="Z" />
+                                Style="{StaticResource AxisZBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource BlueDefault}"
+                            <ProgressBar Style="{StaticResource AxisZBar}"
                                          Progress="{Binding OrientationZ, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -325,13 +378,12 @@
                     <Grid Style="{StaticResource AxisRowGrid}"
                           ColumnDefinitions="28,*,96">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AxisBadgeBorder}"
-                                BackgroundColor="{StaticResource PurpleDefault}">
-                            <Label Style="{StaticResource AxisBadgeLabel}" Text="W" />
+                                Style="{StaticResource AxisWBadgeBorder}">
+                            <Label Style="{StaticResource AxisBadgeLabel}"
+                                   Text="W" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisBar}"
-                                         ProgressColor="{StaticResource PurpleDefault}"
+                            <ProgressBar Style="{StaticResource AxisWBar}"
                                          Progress="{Binding OrientationW, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
@@ -342,20 +394,17 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Compass"
-                               Icon="{x:Static fonts:MaterialIcons.Explore}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="320">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320"
+                               Title="Compass"
+                               Icon="{x:Static fonts:MaterialIcons.Explore}">
                 <Grid Style="{StaticResource SensorRowGrid}"
-                      ColumnDefinitions="Auto,*"
-                      Padding="0,4">
+                      ColumnDefinitions="Auto,*">
                     <drawing:DrawingControl Grid.Column="0"
-                                            WidthRequest="120"
-                                            HeightRequest="120"
+                                            WidthRequest="120" HeightRequest="120"
                                             Drawing="{Binding CompassDial}" />
                     <VerticalStackLayout Grid.Column="1"
-                                         VerticalOptions="Center"
-                                         Spacing="2">
+                                         Style="{StaticResource SensorTextStack}">
                         <Label Style="{StaticResource BigValueLabel}"
                                Text="{Binding MagneticValue, StringFormat='{0:F0}°'}" />
                         <Label Style="{StaticResource ValueLabel}"
@@ -364,40 +413,33 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Level"
-                               Icon="{x:Static fonts:MaterialIcons.Straighten}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="400">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="400"
+                               Title="Level"
+                               Icon="{x:Static fonts:MaterialIcons.Straighten}">
                 <Grid Style="{StaticResource SensorRowGrid}"
-                      ColumnDefinitions="Auto,*"
-                      Padding="0,4">
+                      ColumnDefinitions="Auto,*">
                     <drawing:DrawingControl Grid.Column="0"
-                                            WidthRequest="120"
-                                            HeightRequest="120"
+                                            WidthRequest="120" HeightRequest="120"
                                             Drawing="{Binding Level}" />
                     <VerticalStackLayout Grid.Column="1"
-                                         VerticalOptions="Center"
-                                         Spacing="2">
+                                         Style="{StaticResource SensorTextStack}">
                         <Label Style="{StaticResource ValueLabel}"
                                Text="Bubble level" />
-                        <Label FontSize="14"
-                               TextColor="{StaticResource SecondaryTextColor}"
-                               Text="Tilt the device — green when flat" />
+                        <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                               Text="Tilt the device - green when flat" />
                     </VerticalStackLayout>
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Barometer"
-                               Icon="{x:Static fonts:MaterialIcons.Compress}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="480">
-                <HorizontalStackLayout Spacing="8"
-                                       Padding="0,4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="480"
+                               Title="Barometer"
+                               Icon="{x:Static fonts:MaterialIcons.Compress}">
+                <HorizontalStackLayout Style="{StaticResource CardRowStack}">
                     <Label Style="{StaticResource BigValueLabel}"
                            Text="{Binding BarometerValue, StringFormat='{0:F1}'}" />
-                    <Label Style="{StaticResource NameLabel}"
-                           VerticalOptions="End"
-                           Margin="0,0,0,6"
+                    <Label Style="{StaticResource UnitLabel}"
                            Text="hPa" />
                 </HorizontalStackLayout>
             </controls:InfoCard>

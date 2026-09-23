@@ -11,6 +11,10 @@ public sealed partial class UICharacterViewModel : AppViewModelBase
 
     public ICommand FavoriteCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UICharacterViewModel()
     {
         SelectCommand = MakeDelegateCommand<CharacterItem>(x => SelectedImage = x.Full);
@@ -25,6 +29,10 @@ public sealed partial class UICharacterViewModel : AppViewModelBase
         Characters.Add(new CharacterItem { Name = "Assassin", Color = Color.FromArgb("#B39DDB"), Face = "usa7_face.jpg", Full = "usa7_full.jpg" });
         Characters.Add(new CharacterItem { Name = "Alter Ego", Color = Color.FromArgb("#EEEEEE"), Face = "usa8_face.jpg", Full = "usa8_full.jpg" });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 

@@ -40,6 +40,7 @@ public static partial class EntryOption
         {
             EntryHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Entry)handler.VirtualView));
             EditorHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Editor)handler.VirtualView));
+            PickerHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Picker)handler.VirtualView));
         }
 
         // InputFilter

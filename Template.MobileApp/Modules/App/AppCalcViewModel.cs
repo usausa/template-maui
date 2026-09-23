@@ -29,6 +29,10 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
 
     public IObserveCommand EvaluateCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public AppCalcViewModel()
     {
         InputCommand = MakeDelegateCommand<string>(Input);
@@ -37,9 +41,20 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
         EvaluateCommand = MakeDelegateCommand(Evaluate);
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.AppMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private void Input(string token)
     {
-        // 「=」直後は、演算子なら結果から継続、それ以外は新しい式を開始する
         if (justEvaluated)
         {
             Expression = ContinueOperators.Contains(token, StringComparison.Ordinal)
@@ -92,10 +107,13 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
         }
         else
         {
-            // IsSuccess が false なら Error は非 null (MemberNotNullWhen)
             ErrorMessage = result.Error.Message;
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
 
     // 末尾ゼロを出さない表示 (極端な値は指数表記)
     private static string FormatValue(double value)
@@ -108,8 +126,4 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
 
         return value.ToString("0.##########", CultureInfo.InvariantCulture);
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.AppMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

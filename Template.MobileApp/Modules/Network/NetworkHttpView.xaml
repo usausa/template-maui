@@ -3,16 +3,197 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkHttpView"
              x:DataType="{x:Type module:NetworkHttpViewModel}"
              s:BindingContextResolver.Type="{x:Type module:NetworkHttpViewModel}"
-             shell:ShellProperty.Title="HTTP"
+             shell:ShellProperty.Title="HTTP (Data)"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Reload"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
 
-    <Grid Style="{StaticResource MenuGrid}">
-        <!-- Menu -->
-    </Grid>
+    <!-- Web API。Data の CRUD (匿名)、一覧の追加読み込み、Work テーブルへの保存、テスト API (エラーの再試行 / 遅延 / キャンセル) -->
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ListCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="240" />
+                <Setter Property="SelectionMode" Value="Single" />
+            </Style>
+
+            <Style x:Key="ListRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="RowIdLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="WidthRequest" Value="48" />
+            </Style>
+
+            <Style x:Key="RowNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Data"
+                               Icon="{x:Static fonts:MaterialIcons.Table_rows}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="{Binding Total, StringFormat='全 {0} 件 (20 件ずつ追加読み込み)。行を選ぶと詳細を取得'}" />
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           IsVisible="{Binding IsEmpty}"
+                           Text="データなし (作成で追加)" />
+                    <CollectionView Style="{StaticResource ListCollection}"
+                                    ItemsSource="{Binding Items}"
+                                    SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                    RemainingItemsThreshold="5"
+                                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type module:DataListItem}">
+                                <Grid x:Name="RowGrid"
+                                      Style="{StaticResource ListRowGrid}"
+                                      ColumnDefinitions="Auto,*">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroupList>
+                                            <VisualStateGroup x:Name="CommonStates">
+                                                <VisualState x:Name="Normal" />
+                                                <VisualState x:Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter TargetName="RowGrid" Property="Grid.BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateGroupList>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource RowIdLabel}"
+                                           Text="{Binding Id}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource RowNameLabel}"
+                                           Text="{Binding Name}" />
+                                    <BoxView Grid.Column="0" Grid.ColumnSpan="2"
+                                             Style="{StaticResource CardRowDivider}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="2*,*">
+                        <Entry Grid.Column="0"
+                               Style="{StaticResource BasicEntry}"
+                               Text="{Binding Name}"
+                               Placeholder="名前" />
+                        <Entry Grid.Column="1"
+                               Style="{StaticResource BasicEntry}"
+                               Text="{Binding Value}"
+                               Placeholder="数値"
+                               Keyboard="Numeric" />
+                    </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*,*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding CreateCommand}"
+                                Text="作成" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding UpdateCommand}"
+                                Text="更新" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
+                                Command="{Binding DeleteCommand}"
+                                Text="削除" />
+                        <Button Grid.Column="3"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding ClearCommand}"
+                                Text="クリア" />
+                    </Grid>
+                    <Button Style="{StaticResource BasicOutlinedButton}"
+                            Command="{Binding SaveToWorkCommand}"
+                            Text="全件を Work テーブルへ保存 (Navigation &gt; Edit で表示)" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="テスト API"
+                               Icon="{x:Static fonts:MaterialIcons.Bug_report}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="エラーは再試行の確認 (3 回目は通知のみ)、遅延はインジケーター付き。10 秒待つ API は途中でキャンセルできる" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding TestErrorCommand}"
+                                Text="エラー (500)" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding TestDelayCommand}"
+                                Text="遅延 (5 秒)" />
+                    </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding DelayCommand}"
+                                Text="10 秒待つ API" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
+                                Command="{Binding CancelCommand}"
+                                Text="キャンセル" />
+                    </Grid>
+                    <ActivityIndicator IsRunning="{Binding Delaying}"
+                                       IsVisible="{Binding Delaying}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="ログ"
+                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
+                                     BindableLayout.ItemsSource="{Binding Logs}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Label Style="{StaticResource CardLogLabel}"
+                                   Text="{Binding .}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource BasicCaptionLabel}"
+                               Text="まだ呼び出していません" />
+                    </BindableLayout.EmptyView>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

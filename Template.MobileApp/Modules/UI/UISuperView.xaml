@@ -17,6 +17,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="SuperPageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,12,0,24" />
+            </Style>
+
             <Style x:Key="SearchBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="14,0" />
@@ -59,6 +64,12 @@
                 <Setter Property="TextColor" Value="{StaticResource OrangeDarken3}" />
             </Style>
 
+            <Style x:Key="BannerCarouselView"
+                   TargetType="CarouselView">
+                <Setter Property="Margin" Value="0,16,0,0" />
+                <Setter Property="HeightRequest" Value="140" />
+            </Style>
+
             <Style x:Key="BannerBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16,0" />
@@ -86,12 +97,34 @@
                 <Setter Property="TextColor" Value="#CCFFFFFF" />
             </Style>
 
-            <Style x:Key="SectionLabel"
+            <Style x:Key="BannerIndicatorView"
+                   TargetType="IndicatorView">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="IndicatorSize" Value="8" />
+                <Setter Property="IndicatorColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="SuperSectionLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="20,20,20,8" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="AppFlex"
+                   TargetType="FlexLayout">
+                <Setter Property="Margin" Value="8,0" />
+                <Setter Property="JustifyContent" Value="SpaceEvenly" />
+                <Setter Property="Wrap" Value="Wrap" />
+            </Style>
+
+            <Style x:Key="AppItemStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="FlexLayout.Basis" Value="22%" />
             </Style>
 
             <Style x:Key="AppIconBorder"
@@ -120,6 +153,12 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
+            <Style x:Key="CouponCollection"
+                   TargetType="CollectionView">
+                <Setter Property="Margin" Value="16,0,0,0" />
+                <Setter Property="HeightRequest" Value="128" />
+            </Style>
+
             <Style x:Key="CouponBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="240" />
@@ -128,6 +167,11 @@
                 <Setter Property="Padding" Value="16,12" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CouponTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
             </Style>
 
             <Style x:Key="CouponTitleLabel"
@@ -154,6 +198,7 @@
 
             <Style x:Key="SearchRowGrid"
                    TargetType="Grid">
+                <Setter Property="Margin" Value="16,0" />
                 <Setter Property="ColumnSpacing" Value="10" />
             </Style>
 
@@ -162,11 +207,10 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <ScrollView>
-        <VerticalStackLayout Padding="0,12,0,24">
+        <VerticalStackLayout Style="{StaticResource SuperPageStack}">
 
             <!-- 検索バー+ポイント残高 -->
             <Grid Style="{StaticResource SearchRowGrid}"
-                  Margin="16,0"
                   ColumnDefinitions="*,Auto">
                 <Border Grid.Column="0"
                         Style="{StaticResource SearchBorder}">
@@ -186,11 +230,9 @@
 
             <!-- バナーカルーセル -->
             <CarouselView x:Name="BannerCarousel"
-                          Margin="0,16,0,0"
-                          HeightRequest="140"
-                          Loop="True"
-                          IndicatorView="BannerIndicator"
+                          Style="{StaticResource BannerCarouselView}"
                           ItemsSource="{Binding Banners}"
+                          IndicatorView="BannerIndicator" Loop="True"
                           Position="{Binding BannerPosition, Mode=TwoWay}">
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:SuperBanner}">
@@ -210,23 +252,16 @@
                 </CarouselView.ItemTemplate>
             </CarouselView>
             <IndicatorView x:Name="BannerIndicator"
-                           Margin="0,8,0,0"
-                           HorizontalOptions="Center"
-                           IndicatorColor="{StaticResource GrayLighten2}"
-                           SelectedIndicatorColor="{StaticResource BlueDefault}"
-                           IndicatorSize="8" />
+                           Style="{StaticResource BannerIndicatorView}" />
 
             <!-- ミニアプリ -->
-            <Label Style="{StaticResource SectionLabel}"
+            <Label Style="{StaticResource SuperSectionLabel}"
                    Text="サービス" />
-            <FlexLayout Margin="8,0"
-                        Wrap="Wrap"
-                        JustifyContent="SpaceEvenly"
+            <FlexLayout Style="{StaticResource AppFlex}"
                         BindableLayout.ItemsSource="{Binding Apps}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:SuperApp}">
-                        <VerticalStackLayout Margin="8"
-                                             FlexLayout.Basis="22%">
+                        <VerticalStackLayout Style="{StaticResource AppItemStack}">
                             <Border Style="{StaticResource AppIconBorder}"
                                     BackgroundColor="{Binding Color}">
                                 <Label Style="{StaticResource AppIconLabel}"
@@ -240,22 +275,20 @@
             </FlexLayout>
 
             <!-- クーポン -->
-            <Label Style="{StaticResource SectionLabel}"
+            <Label Style="{StaticResource SuperSectionLabel}"
                    Text="クーポン・キャンペーン" />
-            <CollectionView Margin="16,0,0,0"
-                            HeightRequest="128"
+            <CollectionView Style="{StaticResource CouponCollection}"
                             ItemsSource="{Binding Coupons}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal"
-                                       SnapPointsType="Mandatory"
-                                       SnapPointsAlignment="Start" />
+                                       SnapPointsAlignment="Start" SnapPointsType="Mandatory" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:SuperCoupon}">
                         <Border Style="{StaticResource CouponBorder}"
                                 Background="{Binding Background}">
                             <Grid>
-                                <VerticalStackLayout Spacing="4">
+                                <VerticalStackLayout Style="{StaticResource CouponTextStack}">
                                     <Label Style="{StaticResource CouponTitleLabel}"
                                            Text="{Binding Title}" />
                                     <Label Style="{StaticResource CouponSubLabel}"

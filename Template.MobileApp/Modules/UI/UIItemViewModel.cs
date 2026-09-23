@@ -27,6 +27,10 @@ public sealed partial class UIItemViewModel : AppViewModelBase
 
     public IObserveCommand DecrementCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIItemViewModel()
     {
         BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIShop));
@@ -35,6 +39,10 @@ public sealed partial class UIItemViewModel : AppViewModelBase
         IncrementCommand = MakeDelegateCommand(() => Quantity = Math.Min(99, Quantity + 1));
         DecrementCommand = MakeDelegateCommand(() => Quantity = Math.Max(1, Quantity - 1));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIShop);
 

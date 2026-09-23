@@ -6,8 +6,6 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class SampleCropViewModel : AppViewModelBase
 {
-    private bool loaded;
-
     public CropDrawing Crop { get; } = new();
 
     [ObservableProperty]
@@ -19,6 +17,10 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
     public IObserveCommand ExportCommand { get; }
     public IObserveCommand ResetCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleCropViewModel()
     {
         Disposables.Add(Crop);
@@ -27,15 +29,26 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
         ResetCommand = MakeDelegateCommand(Crop.Reset);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (!loaded)
+        if (!context.Attribute.IsRestore())
         {
-            loaded = true;
             await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Avatar", "mofusand.jpg"));
             Crop.SetImage(PlatformImage.FromStream(stream));
         }
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Export()
     {
@@ -49,8 +62,4 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
         CroppedImage = ImageSource.FromStream(() => new MemoryStream(bytes));
         ResultText = $"{size.Width} x {size.Height} px / {bytes.Length:N0} bytes";
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

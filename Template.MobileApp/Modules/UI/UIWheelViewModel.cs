@@ -33,6 +33,10 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
 
     public IObserveCommand SpinCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIWheelViewModel()
     {
         Drawing.SetItems(MenuItems);
@@ -40,21 +44,9 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
         SpinCommand = MakeDelegateCommand(ExecuteSpin);
     }
 
-    private void ExecuteSpin()
-    {
-        // 3周+ランダム角。減速停止はWheelDrawing側 (実行中の再実行はWheelDrawingが無視する)
-        var extra = 1080f + (random.Next(360 * 4) / 4f);
-        var started = Drawing.Spin(extra, 4200, winner =>
-        {
-            Winner = winner.Label;
-            IsJackpot = winner.Effect == WheelEffect.Confetti;
-            HasResult = true;
-        });
-        if (started)
-        {
-            HasResult = false;
-        }
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
@@ -70,5 +62,25 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     {
         ExecuteSpin();
         return Task.CompletedTask;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void ExecuteSpin()
+    {
+        var extra = 1080f + (random.Next(360 * 4) / 4f);
+        var started = Drawing.Spin(extra, 4200, winner =>
+        {
+            Winner = winner.Label;
+            IsJackpot = winner.Effect == WheelEffect.Confetti;
+            HasResult = true;
+        });
+
+        if (started)
+        {
+            HasResult = false;
+        }
     }
 }

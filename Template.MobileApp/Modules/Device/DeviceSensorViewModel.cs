@@ -46,25 +46,26 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
 
     [ObservableProperty(NotifyAlso = [nameof(GyroscopeX), nameof(GyroscopeY), nameof(GyroscopeZ)])]
     public partial Vector3 GyroscopeValue { get; set; }
-
     public double GyroscopeX => GyroscopeValue.X;
     public double GyroscopeY => GyroscopeValue.Y;
     public double GyroscopeZ => GyroscopeValue.Z;
 
     [ObservableProperty(NotifyAlso = [nameof(MagnetometerX), nameof(MagnetometerY), nameof(MagnetometerZ)])]
     public partial Vector3 MagnetometerValue { get; set; }
-
     public double MagnetometerX => MagnetometerValue.X;
     public double MagnetometerY => MagnetometerValue.Y;
     public double MagnetometerZ => MagnetometerValue.Z;
 
     [ObservableProperty(NotifyAlso = [nameof(OrientationX), nameof(OrientationY), nameof(OrientationZ), nameof(OrientationW)])]
     public partial Quaternion OrientationValue { get; set; }
-
     public double OrientationX => OrientationValue.X;
     public double OrientationY => OrientationValue.Y;
     public double OrientationZ => OrientationValue.Z;
     public double OrientationW => OrientationValue.W;
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public DeviceSensorViewModel(
         IAccelerometer accelerometer,
@@ -99,6 +100,10 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
         Disposables.Add(magnetometer.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => MagnetometerValue = x.Reading.MagneticField));
         Disposables.Add(orientation.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => OrientationValue = x.Reading.Orientation));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {

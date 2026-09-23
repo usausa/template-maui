@@ -14,6 +14,10 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
     public IObserveCommand ZoomOutCommand { get; }
     public IObserveCommand ZoomInCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceCameraViewModel(
         IDialog dialog)
     {
@@ -24,6 +28,10 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -65,10 +73,13 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-        if (input is not null)
+        await using var input = await Controller.CaptureWithTimeoutAsync().ConfigureAwait(true);
+        if (input is null)
         {
-            await dialog.InformationAsync($"Save image success. size={input.Length}");
+            await dialog.InformationAsync("撮影できませんでした。もう一度お試しください。");
+            return;
         }
+
+        await dialog.InformationAsync($"Save image success. size={input.Length}");
     }
 }

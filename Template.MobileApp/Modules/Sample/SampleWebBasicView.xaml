@@ -31,6 +31,11 @@
                 <Setter Property="Padding" Value="12,8" />
             </Style>
 
+            <Style x:Key="StatusContentStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
             <Style x:Key="StatusIconLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
@@ -61,7 +66,7 @@
         <Border x:Name="StatusBorder"
                 Grid.Row="1"
                 Style="{StaticResource StatusBarBorder}">
-            <HorizontalStackLayout Spacing="8">
+            <HorizontalStackLayout Style="{StaticResource StatusContentStack}">
                 <Label Style="{StaticResource StatusIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Info}" />
                 <Label Style="{StaticResource StatusTextLabel}"

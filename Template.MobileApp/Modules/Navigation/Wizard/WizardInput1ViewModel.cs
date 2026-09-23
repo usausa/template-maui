@@ -6,6 +6,10 @@ public sealed partial class WizardInput1ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial WizardContext Context { get; set; } = default!;
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NavigationMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

@@ -16,8 +16,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ProfileBodyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
             <!-- Root -->
-            <Style x:Key="RootScroll"
+            <Style x:Key="ProfileScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
@@ -42,7 +47,9 @@
                 <Setter Property="TranslationY" Value="-55" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.15" Radius="8" />
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="8" />
                 </Setter>
             </Style>
 
@@ -137,7 +144,9 @@
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
-                            Brush="Black" Opacity="0.2" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -173,7 +182,9 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.1" Radius="10" />
+                            Brush="Black"
+                            Opacity="0.1"
+                            Radius="10" />
                 </Setter>
             </Style>
 
@@ -243,7 +254,7 @@
             </Style>
 
             <!-- Root layout -->
-            <Style x:Key="RootStack"
+            <Style x:Key="ProfileStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,0,0,12" />
             </Style>
@@ -252,9 +263,9 @@
     </ContentView.Resources>
 
     <!-- カバーはスクロールでパララックス(旧 Profile から移植) -->
-    <ScrollView Style="{StaticResource RootScroll}"
+    <ScrollView Style="{StaticResource ProfileScroll}"
                 behaviors:Scroll.ParallaxTarget="{x:Reference CoverImage}">
-        <VerticalStackLayout Style="{StaticResource RootStack}">
+        <VerticalStackLayout Style="{StaticResource ProfileStack}">
 
             <!-- Cover -->
             <Grid HeightRequest="140">
@@ -264,7 +275,7 @@
             </Grid>
 
             <!-- カバーより下は不透明ブロック(パララックスしたカバーが透けないように) -->
-            <VerticalStackLayout BackgroundColor="{StaticResource GrayLighten4}">
+            <VerticalStackLayout Style="{StaticResource ProfileBodyStack}">
 
                 <!-- Avatar (overlaps cover) -->
                 <Border Style="{StaticResource AvatarBorder}">
@@ -328,8 +339,8 @@
                         </Button.Triggers>
                     </Button>
                     <Button Style="{StaticResource LikeButton}"
-                            behaviors:ButtonOption.PressEffect="True"
                             behaviors:AnimationOption.BounceTrigger="{Binding IsLiked}"
+                            behaviors:ButtonOption.PressEffect="True"
                             Command="{Binding LikeCommand}"
                             Text="{x:Static fonts:MaterialIcons.Favorite_outline}">
                         <Button.Triggers>
@@ -404,8 +415,8 @@
                                    Text="フォト" />
                         </HorizontalStackLayout>
                         <!-- 件数固定の一覧のため、縦ScrollView内で仮想化が無効になるCollectionViewは使わずBindableLayoutで並べる -->
-                        <FlexLayout Wrap="Wrap"
-                                    BindableLayout.ItemsSource="{Binding Photos}">
+                        <FlexLayout BindableLayout.ItemsSource="{Binding Photos}"
+                                    Wrap="Wrap">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="module:UIProfilePhoto">
                                     <Border Style="{StaticResource PhotoBorder}"

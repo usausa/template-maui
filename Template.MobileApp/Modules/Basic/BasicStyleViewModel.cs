@@ -23,6 +23,10 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
 
     public IObserveCommand ActionCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public BasicStyleViewModel(
         IDialog dialog)
     {
@@ -43,9 +47,17 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
         Value3 = 3;
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async ValueTask<int?> SelectItem(int? current)
     {

@@ -2,6 +2,7 @@ namespace Template.MobileApp;
 
 using System.Net.Http.Headers;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
@@ -88,6 +89,9 @@ public static partial class MauiProgram
         AppContext.SetSwitch("HybridWebView.InvokeJavaScriptThrowsExceptions", true);
         builder.Services.AddHybridWebViewDeveloperTools();
 
+        // Metrics
+        builder.Services.AddMetrics();
+
 #if false
         builder
             .UseDebugRainbows(new DebugRainbowsOptions
@@ -121,6 +125,11 @@ public static partial class MauiProgram
 #if ANDROID
         builder.Logging.AddAndroidLogger(static options => options.ShortCategory = true);
 #endif
+
+        // Diagnostic
+        builder.Services.AddSingleton<DiagnosticLogProvider>();
+        builder.Services.AddSingleton<ILoggerProvider>(static p => p.GetRequiredService<DiagnosticLogProvider>());
+
         // File
         builder.Logging.AddFileLogger(static options =>
             {
@@ -184,6 +193,8 @@ public static partial class MauiProgram
         // Config Rest
         RestConfig.Default.UseJsonSerializer(static config =>
         {
+            config.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            config.PropertyNameCaseInsensitive = true;
             config.Converters.Add(new Template.MobileApp.Helpers.Json.DateTimeConverter());
             config.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -272,6 +283,7 @@ public static partial class MauiProgram
         services.AddComponentsScreen();
         services.AddComponentsLocation();
         services.AddComponentsSpeech();
+        services.AddComponentsWiFi();
 
         // Messenger
         services.AddSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
@@ -282,6 +294,9 @@ public static partial class MauiProgram
             config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
             config.AddPlugin<NavigationFocusPlugin>();
             config.AddPlugin<NavigationFeedbackPlugin>();
+#if DEBUG
+            config.AddPlugin<LeakDetectionPlugin>();
+#endif
             config.AddPlugin(new DialogEffectPlugin(ViewSource()));
             config.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
@@ -290,6 +305,7 @@ public static partial class MauiProgram
         services.AddSingleton<IStorageManager, StorageManager>();
         services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
         services.AddSingleton<INfcReader, NfcReader>();
+        services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<INoiseMonitor, NoiseMonitor>();
         services.AddSingleton<IOcrReader, OcrReader>();
         services.AddSingleton<IActivityRecognizer, ActivityRecognizer>();
@@ -339,20 +355,19 @@ public static partial class MauiProgram
         services.AddSingleton<DataService>();
 
         services.AddSingleton<HttpService>();
+        services.AddSingleton<MonitorConnection>();
+        services.AddSingleton<ChatRoomClient>();
 
-        // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
-        services.AddSingleton<IScheduleEventProvider, ScheduleService>();
-        services.AddSingleton<HolidayService>();
+        services.AddSingleton<ICalendarService, CalendarService>();
 
         // Usecase
-        services.AddSingleton<INetworkInteraction, DialogNetworkInteraction>();
-        services.AddSingleton<NetworkOperator>();
         services.AddSingleton<NetworkUsecase>();
-        services.AddSingleton<CognitiveUsecase>();
+        services.AddSingleton<OnnxVisionUsecase>();
+        services.AddSingleton<AzureVisionUsecase>();
+        services.AddSingleton<ScpUsecase>();
 
         // Models
         services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));
-        services.AddSingleton<ScpService>();
     }
 
     // ------------------------------------------------------------
@@ -429,7 +444,7 @@ public static partial class MauiProgram
         }
 
         var apiContext = services.GetRequiredService<ApiContext>();
-        if (!String.IsNullOrEmpty(settings.ApiEndPoint))
+        if (settings.IsApiConfigured())
         {
             apiContext.BaseAddress = new Uri(settings.ApiEndPoint);
         }

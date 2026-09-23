@@ -7,6 +7,10 @@ public sealed partial class ViewEasingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsRunning { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

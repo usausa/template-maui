@@ -16,6 +16,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="StatusRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Padding" Value="0,0,0,16" />
+                <Setter Property="Spacing" Value="24" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="StatusLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
@@ -36,9 +43,7 @@
 
         <!-- 飾りステータス -->
         <HorizontalStackLayout Grid.Row="1"
-                               HorizontalOptions="Center"
-                               Spacing="24"
-                               Padding="0,0,0,16">
+                               Style="{StaticResource StatusRowStack}">
             <Label Style="{StaticResource StatusLabel}"
                    Text="SWEEP 120°/s" />
             <Label Style="{StaticResource StatusLabel}"

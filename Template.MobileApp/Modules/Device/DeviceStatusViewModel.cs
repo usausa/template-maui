@@ -4,10 +4,18 @@ public sealed class DeviceStatusViewModel : AppViewModelBase
 {
     public DeviceState DeviceState { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceStatusViewModel(DeviceState deviceState)
     {
         DeviceState = deviceState;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 

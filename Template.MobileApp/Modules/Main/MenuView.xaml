@@ -48,12 +48,18 @@
                     CommandParameter="{markup:ViewId NetworkMenu}"
                     Text="Network"
                     ImageSource="{x:Static markup:AppIcons.Cloud}" />
-            <Button Grid.Row="4" Grid.ColumnSpan="2"
+            <Button Grid.Row="4" Grid.Column="0"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId ViewMenu}"
                     Text="View"
                     ImageSource="{x:Static markup:AppIcons.Layers}" />
+            <Button Grid.Row="4" Grid.Column="1"
+                    Style="{StaticResource MenuIconButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId ControlMenu}"
+                    Text="Control"
+                    ImageSource="{x:Static markup:AppIcons.ViewModule}" />
             <Button Grid.Row="5" Grid.Column="0"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
@@ -80,8 +86,10 @@
                     ImageSource="{x:Static markup:AppIcons.Apps}" />
             <Button Grid.Row="7" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
-                    IsEnabled="False"
-                    Text="" />
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId Diagnostics}"
+                    Text="Diagnostics"
+                    ImageSource="{x:Static markup:AppIcons.Troubleshoot}" />
             <Button Grid.Row="8" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"

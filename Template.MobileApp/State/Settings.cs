@@ -31,10 +31,18 @@ public sealed class Settings
         set => preferences.Set(nameof(ApiEndPoint), value);
     }
 
-    public string MonitorEndPoint
+    // gRPC (チャット) の接続先。API と別ポート (h2c) のため別に持つ
+    public string GrpcEndPoint
     {
-        get => preferences.Get<string>(nameof(MonitorEndPoint), default!);
-        set => preferences.Set(nameof(MonitorEndPoint), value);
+        get => preferences.Get<string>(nameof(GrpcEndPoint), default!);
+        set => preferences.Set(nameof(GrpcEndPoint), value);
+    }
+
+    // OpenTelemetry (OTLP) の送信先
+    public string OtelEndPoint
+    {
+        get => preferences.Get<string>(nameof(OtelEndPoint), default!);
+        set => preferences.Set(nameof(OtelEndPoint), value);
     }
 
     // AI Service
@@ -43,6 +51,20 @@ public sealed class Settings
     {
         get => preferences.Get<string>(nameof(AIServiceEndPoint), default!);
         set => preferences.Set(nameof(AIServiceEndPoint), value);
+    }
+
+    // Ollama (Chat)。接続先とモデル名は設定画面の QR で投入する
+
+    public string OllamaEndPoint
+    {
+        get => preferences.Get<string>(nameof(OllamaEndPoint), default!);
+        set => preferences.Set(nameof(OllamaEndPoint), value);
+    }
+
+    public string OllamaModel
+    {
+        get => preferences.Get<string>(nameof(OllamaModel), default!);
+        set => preferences.Set(nameof(OllamaModel), value);
     }
 
     // キー類は平文のPreferencesではなくSecureStorageに保存する
@@ -166,3 +188,33 @@ public sealed class Settings
     }
 }
 #pragma warning restore CA1724
+
+// 通信系の設定が投入済みかの判定 (未設定のときは各機能を実行させない)
+public static class SettingsExtensions
+{
+    // Web API / ストレージ / SignalR
+    public static bool IsApiConfigured(this Settings settings) =>
+        Uri.TryCreate(settings.ApiEndPoint, UriKind.Absolute, out _);
+
+    // gRPC (チャット)
+    public static bool IsGrpcConfigured(this Settings settings) =>
+        Uri.TryCreate(settings.GrpcEndPoint, UriKind.Absolute, out _);
+
+    // OpenTelemetry
+    public static bool IsOtelConfigured(this Settings settings) =>
+        Uri.TryCreate(settings.OtelEndPoint, UriKind.Absolute, out _);
+
+    // Azure AI Vision (キーは SecureStorage)
+    public static async ValueTask<bool> IsAIServiceConfiguredAsync(this Settings settings) =>
+        !String.IsNullOrEmpty(settings.AIServiceEndPoint) &&
+        !String.IsNullOrEmpty(await settings.GetAIServiceKeyAsync().ConfigureAwait(false));
+
+    // Ollama (チャット)
+    public static bool IsOllamaConfigured(this Settings settings) =>
+        !String.IsNullOrEmpty(settings.OllamaModel) &&
+        Uri.TryCreate(settings.OllamaEndPoint, UriKind.Absolute, out _);
+
+    // SCP
+    public static bool IsScpConfigured(this Settings settings) =>
+        !String.IsNullOrEmpty(settings.ScpHost) && !String.IsNullOrEmpty(settings.ScpUser);
+}

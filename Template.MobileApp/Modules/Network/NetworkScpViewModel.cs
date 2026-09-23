@@ -1,12 +1,14 @@
 namespace Template.MobileApp.Modules.Network;
 
-using Template.MobileApp.Services;
+using Template.MobileApp.Usecase;
 
 public sealed partial class NetworkScpViewModel : AppViewModelBase
 {
-    private readonly ScpService scpService;
+    private readonly Settings settings;
 
-    private CancellationTokenSource? cts;
+    private readonly ScpUsecase scpUsecase;
+
+    private Action? cancel;
 
     [ObservableProperty]
     public partial bool Configured { get; set; }
@@ -34,122 +36,112 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
 
     public IObserveCommand CancelCommand { get; }
 
-    public NetworkScpViewModel(ScpService scpService)
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
+    public NetworkScpViewModel(
+        Settings settings,
+        ScpUsecase scpUsecase)
     {
-        this.scpService = scpService;
+        this.settings = settings;
+        this.scpUsecase = scpUsecase;
 
-        UploadCommand = MakeAsyncCommand(ExecuteUploadAsync, () => !Busy && Configured);
-        DownloadCommand = MakeAsyncCommand(ExecuteDownloadAsync, () => !Busy && Configured && !String.IsNullOrEmpty(RemoteFileName));
-        CancelCommand = MakeDelegateCommand(() => cts?.Cancel(), () => Busy);
-
-        PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName is nameof(Busy) or nameof(Configured) or nameof(RemoteFileName))
-            {
-                UploadCommand.RaiseCanExecuteChanged();
-                DownloadCommand.RaiseCanExecuteChanged();
-                CancelCommand.RaiseCanExecuteChanged();
-            }
-        };
+        UploadCommand = MakeDelegateCommand(() => _ = ExecuteUploadAsync(), () => !Busy && Configured);
+        DownloadCommand = MakeDelegateCommand(() => _ = ExecuteDownloadAsync(), () => !Busy && Configured && !String.IsNullOrEmpty(RemoteFileName));
+        CancelCommand = MakeDelegateCommand(() => cancel?.Invoke(), () => Busy);
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        Configured = scpService.IsConfigured;
-        HostDisplay = Configured ? scpService.HostDisplay : "未設定 (設定画面の QR で投入)";
+        Configured = settings.IsScpConfigured();
+        HostDisplay = Configured ? $"{settings.ScpUser}@{settings.ScpHost}:{settings.ScpPort}" : "未設定";
         return Task.CompletedTask;
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
-        if (cts is not null)
-        {
-            return cts.CancelAsync();
-        }
-
+        cancel?.Invoke();
         return Task.CompletedTask;
     }
 
-    // FilePicker (端末のファイル選択) でアップロード対象を選び、ファイル名のままリモートへ転送する
-    private async Task ExecuteUploadAsync()
-    {
-        var file = await FilePicker.Default.PickAsync();
-        if (file is null)
-        {
-            return;
-        }
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
 
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private Task ExecuteUploadAsync() =>
+        ExecuteTransferAsync(async token =>
+        {
+            var result = await scpUsecase.UploadAsync(new Progress<double>(x => Progress = x), token);
+            if (result is null)
+            {
+                return;
+            }
+
+            ApplyResult($"アップロード: {result.FileName} ({result.Size:N0} bytes)", result.Transfer, token);
+            if (result.Transfer.Success)
+            {
+                RemoteFileName = result.FileName;
+            }
+        });
+
+    private Task ExecuteDownloadAsync() =>
+        ExecuteTransferAsync(async token =>
+        {
+            var result = await scpUsecase.DownloadAsync(RemoteFileName, new Progress<double>(x => Progress = x), token);
+            ApplyResult($"ダウンロード: {RemoteFileName} ({result.Size:N0} bytes)", result.Transfer, token);
+            if (result.Transfer.Success)
+            {
+                AddLog($"保存先: {result.Path}");
+            }
+        });
+
+    private async Task ExecuteTransferAsync(Func<CancellationToken, Task> transfer)
+    {
         Busy = true;
         Progress = 0d;
-        var localCts = new CancellationTokenSource();
-        cts = localCts;
+        using var cts = new CancellationTokenSource();
+        cancel = cts.Cancel;
         try
         {
-            await using var stream = await file.OpenReadAsync();
-            AddLog($"アップロード開始: {file.FileName} ({stream.Length:N0} bytes)");
-            var result = await scpService.UploadAsync(
-                stream,
-                file.FileName,
-                new Progress<double>(x => Progress = x),
-                localCts.Token);
-            ApplyResult(result);
-            if (result.Success)
-            {
-                RemoteFileName = file.FileName;
-            }
+            await transfer(cts.Token);
         }
         finally
         {
-            cts = null;
-            localCts.Dispose();
+            cancel = null;
             Busy = false;
         }
     }
 
-    // リモートのファイルをキャッシュディレクトリへ取得する
-    private async Task ExecuteDownloadAsync()
-    {
-        Busy = true;
-        Progress = 0d;
-        var localCts = new CancellationTokenSource();
-        cts = localCts;
-        try
-        {
-            var path = Path.Combine(FileSystem.CacheDirectory, Path.GetFileName(RemoteFileName));
-            AddLog($"ダウンロード開始: {RemoteFileName}");
-            await using var stream = File.Create(path);
-            var result = await scpService.DownloadAsync(
-                RemoteFileName,
-                stream,
-                new Progress<double>(x => Progress = x),
-                localCts.Token);
-            ApplyResult(result);
-            if (result.Success)
-            {
-                AddLog($"保存先: {path}");
-            }
-        }
-        finally
-        {
-            cts = null;
-            localCts.Dispose();
-            Busy = false;
-        }
-    }
-
-    private void ApplyResult(ScpTransferResult result)
+    private void ApplyResult(string subject, ScpTransferResult result, CancellationToken token)
     {
         if (result.Success)
         {
             Progress = 1d;
+            AddLog($"{subject} 完了");
+        }
+        else
+        {
+            AddLog(token.IsCancellationRequested ? $"{subject} キャンセルしました" : $"{subject} 失敗: {result.Error}");
         }
 
-        AddLog(result.Message);
         if (!String.IsNullOrEmpty(result.ServerFingerprint))
         {
             ServerFingerprint = result.ServerFingerprint;
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
 
     private void AddLog(string message)
     {
@@ -159,18 +151,4 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
             Logs.RemoveAt(Logs.Count - 1);
         }
     }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            cts?.Dispose();
-        }
-
-        base.Dispose(disposing);
-    }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

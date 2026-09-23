@@ -26,6 +26,10 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
 
     public IObserveCommand PrintCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceBluetoothViewModel(
         IBluetoothSerialFactory bluetoothSerialFactory)
     {
@@ -35,6 +39,18 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
 
         PrintCommand = MakeAsyncCommand(ExecutePrint, () => !IsBusy);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task ExecutePrint()
     {
@@ -98,8 +114,4 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
             }
         }
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

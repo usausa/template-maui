@@ -14,7 +14,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootList"
+            <Style x:Key="NotifyList"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
@@ -60,7 +60,12 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="TimeLabel"
+            <Style x:Key="NotifyMetaStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="NotifyTimeLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
@@ -75,7 +80,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <CollectionView Style="{StaticResource RootList}"
+    <CollectionView Style="{StaticResource NotifyList}"
                     ItemsSource="{Binding Notifications}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="module:UIKitNotifyItem">
@@ -88,8 +93,8 @@
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                     <Border.Triggers>
                         <DataTrigger TargetType="Border"
-                                     Value="True"
-                                     Binding="{Binding IsUnread}">
+                                     Binding="{Binding IsUnread}"
+                                     Value="True">
                             <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                             <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
                         </DataTrigger>
@@ -112,8 +117,8 @@
                                    Text="{Binding Title}">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
-                                                 Value="False"
-                                                 Binding="{Binding IsUnread}">
+                                                 Binding="{Binding IsUnread}"
+                                                 Value="False">
                                         <Setter Property="FontAttributes" Value="None" />
                                         <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
                                     </DataTrigger>
@@ -123,8 +128,8 @@
                                    Text="{Binding Description}" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="3"
-                                             Spacing="6">
-                            <Label Style="{StaticResource TimeLabel}"
+                                             Style="{StaticResource NotifyMetaStack}">
+                            <Label Style="{StaticResource NotifyTimeLabel}"
                                    Text="{Binding Time}" />
                             <BoxView WidthRequest="8" HeightRequest="8"
                                      HorizontalOptions="End"

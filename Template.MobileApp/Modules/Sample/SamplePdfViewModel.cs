@@ -33,6 +33,10 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
 
     public ICommand NextPageCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SamplePdfViewModel(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
@@ -48,6 +52,10 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
         PrevPageCommand = MakeDelegateCommand(() => PageIndex--);
         NextPageCommand = MakeDelegateCommand(() => PageIndex++);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {

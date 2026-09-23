@@ -19,6 +19,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="MapFabStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="0,16,16,0" />
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
             <Style x:Key="MapFabButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="48" />
@@ -29,7 +37,9 @@
                 <Setter Property="Shadow">
                     <Setter.Value>
                         <Shadow Offset="0,2"
-                                Brush="Black" Opacity="0.3" Radius="6" />
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -53,9 +63,7 @@
         </maps:Map>
 
         <!-- Google Map 標準のズームボタン(右下)と重ならないよう右上に配置する -->
-        <VerticalStackLayout Margin="0,16,16,0"
-                             HorizontalOptions="End" VerticalOptions="Start"
-                             Spacing="12">
+        <VerticalStackLayout Style="{StaticResource MapFabStack}">
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapLayers}"
                          Command="{Binding ToggleMapTypeCommand}" />

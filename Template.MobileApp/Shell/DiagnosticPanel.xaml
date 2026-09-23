@@ -6,7 +6,7 @@
              InputTransparent="True">
 
     <Border Style="{StaticResource DiagnosticBorder}">
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,4,Auto">
 
             <Label Grid.Row="0" Grid.Column="0"
@@ -72,6 +72,28 @@
                    Text="Alloc/sec:" />
             <Label x:Name="AllocLabel"
                    Grid.Row="10" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <GraphicsView x:Name="MemoryChart"
+                          Grid.Row="11" Grid.ColumnSpan="3"
+                          WidthRequest="160" HeightRequest="48"
+                          Margin="0,4,0,0" />
+
+            <BoxView Grid.Row="12" Grid.ColumnSpan="3"
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
+
+            <Label Grid.Row="13" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="Measure:" />
+            <Label x:Name="MeasureLabel"
+                   Grid.Row="13" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <Label Grid.Row="14" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="Arrange:" />
+            <Label x:Name="ArrangeLabel"
+                   Grid.Row="14" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}" />
 
         </Grid>

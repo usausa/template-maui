@@ -19,23 +19,22 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
     public SKBitmapImageSource Image { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UITreeMapViewModel(IDialog dialog)
     {
         this.dialog = dialog;
 
         Disposables.Add(Drawing);
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
+        Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            ImageHelper.ReplaceBitmap(Image, null);
-        }
-
-        base.Dispose(disposing);
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

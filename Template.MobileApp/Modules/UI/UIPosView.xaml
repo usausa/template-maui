@@ -186,10 +186,10 @@
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
-                                Offset="0,-2"
-                                Radius="8"
-                                Opacity="0.25" />
+                        <Shadow Offset="0,-2"
+                                Brush="Black"
+                                Opacity="0.25"
+                                Radius="8" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -214,8 +214,8 @@
             <Label Grid.Column="2"
                    Style="{StaticResource PosValueLabel}"
                    WidthRequest="56"
-                   HorizontalTextAlignment="Center"
                    VerticalOptions="Center"
+                   HorizontalTextAlignment="Center"
                    Text="{Binding Quantity, StringFormat='{0}点'}" />
             <Button Grid.Column="3"
                     Style="{StaticResource QuantityButton}"
@@ -284,16 +284,16 @@
         <Grid Grid.Row="8"
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24"
-              behaviors:AnimationOption.HighlightTrigger="{Binding Total}"
-              behaviors:AnimationOption.HighlightColor="{StaticResource YellowLighten2}">
+              behaviors:AnimationOption.HighlightColor="{StaticResource YellowLighten2}"
+              behaviors:AnimationOption.HighlightTrigger="{Binding Total}">
             <Label Grid.Column="0"
                    Style="{StaticResource PosNameLabel}"
                    Text="合計" />
             <Label Grid.Column="1"
                    Style="{StaticResource PosHugeValueLabel}"
-                   behaviors:LabelOption.CountUpValue="{Binding Total}"
+                   behaviors:LabelOption.CountUpDuration="450"
                    behaviors:LabelOption.CountUpFormat="{}￥ {0:N0}"
-                   behaviors:LabelOption.CountUpDuration="450" />
+                   behaviors:LabelOption.CountUpValue="{Binding Total}" />
         </Grid>
 
         <BoxView Grid.Row="9"

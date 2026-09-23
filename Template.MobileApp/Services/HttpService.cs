@@ -2,14 +2,116 @@ namespace Template.MobileApp.Services;
 
 using Rester;
 
+//--------------------------------------------------------------------------------
+// Models
+//--------------------------------------------------------------------------------
+
+public class AccountLoginRequest
+{
+    public string Id { get; set; } = default!;
+}
+
+public class AccountLoginResponse
+{
+    public string Token { get; set; } = default!;
+}
+
+public sealed class ServerTimeResponse
+{
+    public DateTime DateTime { get; set; }
+}
+
+public class SecretMessageResponse
+{
+    public string Message { get; set; } = default!;
+}
+
+public sealed class DataListEntry
+{
+    public long Id { get; set; }
+
+    public string Name { get; set; } = default!;
+}
+
+#pragma warning disable CA1819
+public sealed class DataListResponse
+{
+    public DataListEntry[] Entries { get; set; } = default!;
+
+    public int Total { get; set; }
+}
+#pragma warning restore CA1819
+
+public sealed class DataResponse
+{
+    public long Id { get; set; }
+
+    public string Name { get; set; } = default!;
+
+    public int Value { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
+
+public sealed class DataCreateRequest
+{
+    public string Name { get; set; } = default!;
+
+    public int Value { get; set; }
+}
+
+public sealed class DataCreateResponse
+{
+    public long Id { get; set; }
+}
+
+public sealed class DataUpdateRequest
+{
+    public string Name { get; set; } = default!;
+
+    public int Value { get; set; }
+}
+
+public sealed class StorageListEntry
+{
+    public string Name { get; set; } = default!;
+
+    public bool Directory { get; set; }
+
+    // ディレクトリは null
+    public long? Size { get; set; }
+
+    public DateTime LastModified { get; set; }
+}
+
+#pragma warning disable CA1819
+public sealed class StorageListResponse
+{
+    public StorageListEntry[] Entries { get; set; } = default!;
+}
+#pragma warning restore CA1819
+
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
+
 public sealed class HttpService
 {
-    // IHttpClientFactoryが返すクライアントはハンドラがプール管理されるためDispose不要
     private readonly IHttpClientFactory httpClientFactory;
 
     public HttpService(IHttpClientFactory httpClientFactory)
     {
         this.httpClientFactory = httpClientFactory;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Account
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<IRestResponse<AccountLoginResponse>> PostAccountLoginAsync(AccountLoginRequest request, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.PostAsync<AccountLoginResponse>("api/account/login", request, cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------
@@ -32,6 +134,36 @@ public sealed class HttpService
         return client.GetAsync<DataListResponse>("api/data/list", cancel: cancellationToken);
     }
 
+    public ValueTask<IRestResponse<DataListResponse>> GetDataListAsync(int offset, int size, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.GetAsync<DataListResponse>($"api/data/list?offset={offset}&size={size}", cancel: cancellationToken);
+    }
+
+    public ValueTask<IRestResponse<DataResponse>> GetDataAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.GetAsync<DataResponse>($"api/data/{id}", cancel: cancellationToken);
+    }
+
+    public ValueTask<IRestResponse<DataCreateResponse>> PostDataAsync(DataCreateRequest request, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.PostAsync<DataCreateResponse>("api/data", request, cancel: cancellationToken);
+    }
+
+    public ValueTask<IRestResponse> PutDataAsync(long id, DataUpdateRequest request, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.PutAsync($"api/data/{id}", request, cancel: cancellationToken);
+    }
+
+    public ValueTask<IRestResponse> DeleteDataAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.SendAsync(HttpMethod.Delete, $"api/data/{id}", cancel: cancellationToken);
+    }
+
     //--------------------------------------------------------------------------------
     // Secret
     //--------------------------------------------------------------------------------
@@ -42,15 +174,21 @@ public sealed class HttpService
         return client.GetAsync<SecretMessageResponse>("api/secret/message", cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<AccountLoginResponse>> PostAccountLoginAsync(AccountLoginRequest request, CancellationToken cancellationToken = default)
-    {
-        var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.PostAsync<AccountLoginResponse>("api/account/login", request, cancel: cancellationToken);
-    }
-
     //--------------------------------------------------------------------------------
     // Storage
     //--------------------------------------------------------------------------------
+
+    public ValueTask<IRestResponse<StorageListResponse>> GetStorageListAsync(string path, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.GetAsync<StorageListResponse>($"api/storage/{path}", cancel: cancellationToken);
+    }
+
+    public ValueTask<IRestResponse> DeleteStorageAsync(string path, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.SendAsync(HttpMethod.Delete, $"api/storage/{path}", cancel: cancellationToken);
+    }
 
     public ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
     {
@@ -83,13 +221,13 @@ public sealed class HttpService
             cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action, bool compress, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
         return client.UploadAsync(
             $"api/storage/{path}",
             stream,
-            compress: CompressOption.Gzip,
+            compress: compress ? CompressOption.Gzip : CompressOption.None,
             progress: CreateProgressCallback(action),
             cancel: cancellationToken);
     }
@@ -99,7 +237,6 @@ public sealed class HttpService
         var progress = -1d;
         return (processed, total) =>
         {
-            // Content-Length不明時は進捗を通知しない
             if (total <= 0)
             {
                 return;
@@ -118,15 +255,15 @@ public sealed class HttpService
     // Test
     //--------------------------------------------------------------------------------
 
-    public ValueTask<IRestResponse<object>> GetTestErrorAsync(int code, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> GetTestErrorAsync(int code, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.GetAsync<object>($"api/test/error/{code}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Get, $"api/test/error/{code}", cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.GetAsync<object>($"api/test/delay/{timeout}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Get, $"api/test/delay/{timeout}", cancel: cancellationToken);
     }
 }

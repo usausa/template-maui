@@ -19,44 +19,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="ActionStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="ActionRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="ActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="ContentLayout" Value="Left,8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <Style x:Key="ListeningGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
+            <Style x:Key="SpeechRateLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="ListeningIcon"
@@ -67,18 +34,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="ListeningLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="RecognizeTextLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -86,150 +41,202 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Screen"
-                               Icon="{x:Static fonts:MaterialIcons.Smartphone}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Style="{StaticResource ActionStack}">
-                    <Grid Style="{StaticResource ActionRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Screen"
+                               Icon="{x:Static fonts:MaterialIcons.Smartphone}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallVisibility}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding KeepScreenOnCommand}"
-                                Text="Keep on" />
+                                Text="Keep on"
+                                ImageSource="{x:Static markup:AppIcons.SmallVisibility}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallVisibilityOff}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding KeepScreenOffCommand}"
-                                Text="Keep off" />
+                                Text="Keep off"
+                                ImageSource="{x:Static markup:AppIcons.SmallVisibilityOff}" />
                     </Grid>
-                    <Grid Style="{StaticResource ActionRowGrid}"
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallStayCurrentPortrait}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding OrientationPortraitCommand}"
-                                Text="Portrait" />
+                                Text="Portrait"
+                                ImageSource="{x:Static markup:AppIcons.SmallStayCurrentPortrait}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallStayCurrentLandscape}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding OrientationLandscapeCommand}"
-                                Text="Landscape" />
+                                Text="Landscape"
+                                ImageSource="{x:Static markup:AppIcons.SmallStayCurrentLandscape}" />
                     </Grid>
-                    <Grid Style="{StaticResource ActionRowGrid}"
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallBrightnessLow}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding BrightnessCommand}"
                                 CommandParameter="{s:Float Value=0.0}"
-                                Text="Bright 0" />
+                                Text="Bright 0"
+                                ImageSource="{x:Static markup:AppIcons.SmallBrightnessLow}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallBrightnessHigh}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding BrightnessCommand}"
                                 CommandParameter="{s:Float Value=1.0}"
-                                Text="Bright 1" />
+                                Text="Bright 1"
+                                ImageSource="{x:Static markup:AppIcons.SmallBrightnessHigh}" />
                     </Grid>
-                    <Button Style="{StaticResource ActionButton}"
-                            ImageSource="{x:Static markup:AppIcons.SmallScreenshot}"
+                    <Button Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding ScreenshotCommand}"
-                            Text="Screenshot" />
+                            Text="Screenshot"
+                            ImageSource="{x:Static markup:AppIcons.SmallScreenshot}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Feedback"
-                               Icon="{x:Static fonts:MaterialIcons.Vibration}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Style="{StaticResource ActionStack}">
-                    <Grid Style="{StaticResource ActionRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Feedback"
+                               Icon="{x:Static fonts:MaterialIcons.Vibration}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallVibration}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding VibrateCommand}"
-                                Text="Vibrate" />
+                                Text="Vibrate"
+                                ImageSource="{x:Static markup:AppIcons.SmallVibration}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding VibrateCancelCommand}"
-                                Text="Cancel" />
+                                Text="Cancel"
+                                ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}" />
                     </Grid>
-                    <Grid Style="{StaticResource ActionRowGrid}"
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallTouchApp}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding FeedbackClickCommand}"
-                                Text="Feed click" />
+                                Text="Feed click"
+                                ImageSource="{x:Static markup:AppIcons.SmallTouchApp}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallTouchApp}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding FeedbackLongPressCommand}"
-                                Text="Feed press" />
+                                Text="Feed press"
+                                ImageSource="{x:Static markup:AppIcons.SmallTouchApp}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Light"
-                               Icon="{x:Static fonts:MaterialIcons.Flashlight_on}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
-                <Grid Style="{StaticResource ActionRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Light"
+                               Icon="{x:Static fonts:MaterialIcons.Flashlight_on}">
+                <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
-                            ImageSource="{x:Static markup:AppIcons.SmallFlashlightOn}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding LightOnCommand}"
-                            Text="Light on" />
+                            Text="Light on"
+                            ImageSource="{x:Static markup:AppIcons.SmallFlashlightOn}" />
                     <Button Grid.Column="1"
-                            Style="{StaticResource ActionButton}"
-                            ImageSource="{x:Static markup:AppIcons.SmallFlashlightOff}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding LightOffCommand}"
-                            Text="Light off" />
+                            Text="Light off"
+                            ImageSource="{x:Static markup:AppIcons.SmallFlashlightOff}" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Speech"
-                               Icon="{x:Static fonts:MaterialIcons.Record_voice_over}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Style="{StaticResource ActionStack}">
-                    <Grid Style="{StaticResource ActionRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Speech"
+                               Icon="{x:Static fonts:MaterialIcons.Record_voice_over}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <!-- SpeechOptions.Rate (0.1〜2.0) -->
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource BasicItemValueLabel}"
+                               Text="Rate" />
+                        <Slider Grid.Column="1"
+                                Value="{Binding SpeechRate}"
+                                Minimum="0.5" Maximum="2.0" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource SpeechRateLabel}"
+                               Text="{Binding SpeechRate, StringFormat='{0:F1}x'}" />
+                    </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallRecordVoiceOver}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding SpeakCommand}"
-                                Text="Speak" />
+                                Text="Speak"
+                                ImageSource="{x:Static markup:AppIcons.SmallRecordVoiceOver}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallVoiceOverOff}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding SpeakCancelCommand}"
-                                Text="Cancel" />
+                                Text="Cancel"
+                                ImageSource="{x:Static markup:AppIcons.SmallVoiceOverOff}" />
                     </Grid>
-                    <Button Style="{StaticResource ActionButton}"
-                            ImageSource="{x:Static markup:AppIcons.SmallMic}"
+                    <Button Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding RecognizeCommand}"
-                            Text="Recognize" />
+                            Text="{Binding IsListening, Converter={s:BoolToText True='Stop', False='Recognize'}}"
+                            ImageSource="{x:Static markup:AppIcons.SmallMic}" />
 
-                    <Grid Style="{StaticResource ListeningGrid}"
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*"
                           IsVisible="{Binding IsListening}">
                         <Label Grid.Column="0"
                                Style="{StaticResource ListeningIcon}"
-                               Text="{x:Static fonts:MaterialIcons.Mic}"
-                               behaviors:AnimationOption.Pulse="True" />
+                               behaviors:AnimationOption.Pulse="True"
+                               Text="{x:Static fonts:MaterialIcons.Mic}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource ListeningLabel}"
+                               Style="{StaticResource BasicItemValueLabel}"
                                Text="Listening..." />
                     </Grid>
 
-                    <Label Style="{StaticResource RecognizeTextLabel}"
+                    <Label Style="{StaticResource CardPrimaryValueLabel}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding RecognizeText}"
                            IsVisible="{Binding RecognizeText, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding RecognizeText}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding RecognizeText}" />
+                           Text="{Binding RecognizeText}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <!-- ローカル通知 (自作 NotificationService)。即時 (アクションボタン付き) / 10 秒後 / 取消 / 正確なアラームの許可設定 -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="400"
+                               Title="Notification"
+                               Icon="{x:Static fonts:MaterialIcons.Notifications}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NotifyCommand}"
+                                Text="Notify"
+                                ImageSource="{x:Static markup:AppIcons.SmallNotifications}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NotifyScheduleCommand}"
+                                Text="Schedule"
+                                ImageSource="{x:Static markup:AppIcons.SmallAlarm}" />
+                    </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NotifyCancelCommand}"
+                                Text="Cancel"
+                                ImageSource="{x:Static markup:AppIcons.SmallNotificationsOff}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NotifyExactSettingCommand}"
+                                Text="Exact alarm"
+                                ImageSource="{x:Static markup:AppIcons.SmallAlarmOn}" />
+                    </Grid>
+                    <Label Style="{StaticResource CardPrimaryValueLabel}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding NotificationText}"
+                           IsVisible="{Binding NotificationText, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding NotificationText}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

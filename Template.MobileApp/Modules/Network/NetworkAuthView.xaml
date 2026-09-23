@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
+             x:Class="Template.MobileApp.Modules.Network.NetworkAuthView"
+             x:DataType="{x:Type module:NetworkAuthViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:NetworkAuthViewModel}"
+             shell:ShellProperty.Title="HTTP (Auth)"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- 認証 API。ID だけでログイン (JWT)、JWT が必要な API の呼び出し、無効なトークンでの再ログイン再送 -->
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="ログイン"
+                               Icon="{x:Static fonts:MaterialIcons.Vpn_key}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="ID だけで JWT を発行する (パスワードなし)。トークンは以降の API 呼び出しに付く" />
+                    <Entry Style="{StaticResource BasicEntry}"
+                           Text="{Binding LoginId}"
+                           Placeholder="ログイン ID" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding LoginCommand}"
+                                Text="ログイン" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
+                                Command="{Binding LogoutCommand}"
+                                Text="ログアウト" />
+                    </Grid>
+                    <Label Style="{StaticResource BasicBodyLabel}"
+                           Text="{Binding LoginState, StringFormat='状態: {0}'}" />
+                    <Label Style="{StaticResource BasicBodyLabel}"
+                           Text="{Binding TokenExpires, StringFormat='トークンの期限: {0}'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="JWT が必要な API"
+                               Icon="{x:Static fonts:MaterialIcons.Verified_user}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="未ログインは 401 の通知。トークンが無効なら保存した ID で再ログインして再送する (無効化で確認)" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding SecureCommand}"
+                                Text="Secure を呼ぶ" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
+                                Command="{Binding InvalidateCommand}"
+                                Text="トークンを無効化" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

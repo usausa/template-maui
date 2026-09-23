@@ -5,25 +5,51 @@
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Modules.View.ViewStatePanelView">
 
-    <Border Padding="16"
-            BackgroundColor="{StaticResource GreenLighten5}"
-            Stroke="{StaticResource GreenLighten2}"
-            StrokeThickness="1"
-            StrokeShape="RoundRectangle 8"
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ReadyPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+                <Setter Property="Stroke" Value="{StaticResource GreenLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="ReadyContentStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ReadyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ReadyTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Border Style="{StaticResource ReadyPanelBorder}"
             behaviors:AnimationOption.EnterAnimation="FadeUp">
-        <HorizontalStackLayout Spacing="12">
-            <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                   FontSize="32"
-                   TextColor="{StaticResource GreenDefault}"
-                   VerticalTextAlignment="Center"
+        <HorizontalStackLayout Style="{StaticResource ReadyContentStack}">
+            <Label Style="{StaticResource ReadyIconLabel}"
                    Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
-            <VerticalStackLayout Spacing="2"
-                                 VerticalOptions="Center">
-                <Label FontSize="14"
-                       TextColor="{StaticResource GrayDarken3}"
+            <VerticalStackLayout Style="{StaticResource ReadyTextStack}">
+                <Label Style="{StaticResource BasicBodyLabel}"
                        Text="遅延生成されたコンテンツ" />
-                <Label FontSize="12"
-                       TextColor="{StaticResource SecondaryTextColor}"
+                <Label Style="{StaticResource BasicCaptionLabel}"
                        Text="LoadViewAsync が呼ばれるまでインスタンス化されない" />
             </VerticalStackLayout>
         </HorizontalStackLayout>

@@ -44,12 +44,6 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsDownloaded { get; set; }
 
-    public IObserveCommand SelectTabCommand { get; }
-
-    public IObserveCommand FavoriteCommand { get; }
-
-    public IObserveCommand DownloadCommand { get; }
-
     public IReadOnlyList<UIStreamDetailTrailer> Trailers { get; } =
     [
         new() { Image = "stream_clip01.jpg", Title = "本予告", Duration = "予告編 · 2m 14s" },
@@ -65,6 +59,16 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
         new() { Image = "poster06.jpg", Title = "浮遊城の魔導士", Duration = "1h 52m" }
     ];
 
+    public IObserveCommand SelectTabCommand { get; }
+
+    public IObserveCommand FavoriteCommand { get; }
+
+    public IObserveCommand DownloadCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIStreamDetailViewModel()
     {
         SelectTabCommand = MakeDelegateCommand<string>(x =>
@@ -75,6 +79,10 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
         FavoriteCommand = MakeDelegateCommand(() => IsFavorite = !IsFavorite);
         DownloadCommand = MakeDelegateCommand(() => IsDownloaded = !IsDownloaded);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIStream);
 

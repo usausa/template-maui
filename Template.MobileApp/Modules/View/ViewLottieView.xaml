@@ -22,12 +22,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid"
-                   TargetType="Grid"
-                   BasedOn="{StaticResource FillGrid}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
             <Style x:Key="FrameBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12" />
@@ -49,18 +43,6 @@
             <Style x:Key="PlayerStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="SeekStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="TimeLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
             <Style x:Key="TransportRow"
@@ -99,12 +81,6 @@
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
-            <Style x:Key="ScrubCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
             <Style x:Key="ScrubTrackBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="900" />
@@ -114,8 +90,8 @@
                 <Setter Property="Background">
                     <Setter.Value>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="{StaticResource BlueDefault}" Offset="0" />
-                            <GradientStop Color="{StaticResource PinkDefault}" Offset="1" />
+                            <GradientStop Offset="0" Color="{StaticResource BlueDefault}" />
+                            <GradientStop Offset="1" Color="{StaticResource PinkDefault}" />
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
@@ -159,28 +135,28 @@
                 Style="{StaticResource PlayerPanelBorder}">
             <VerticalStackLayout Style="{StaticResource PlayerStack}">
 
-                <VerticalStackLayout Style="{StaticResource SeekStack}">
-                    <Slider Minimum="0"
-                            Maximum="{Binding DurationSeconds}"
+                <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
+                    <Slider behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}"
                             Value="{Binding ProgressSeconds, Mode=OneWay}"
-                            behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}" />
+                            Minimum="0"
+                            Maximum="{Binding DurationSeconds}" />
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource TimeLabel}"
+                               Style="{StaticResource BasicMonoLabel}"
                                Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.f}'}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource TimeLabel}"
+                               Style="{StaticResource BasicMonoLabel}"
                                Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.f}'}" />
                     </Grid>
                 </VerticalStackLayout>
 
                 <!-- スクロール連動 / 長押し進行 -->
                 <VerticalStackLayout Style="{StaticResource ScrubStack}">
-                    <Label Style="{StaticResource ScrubCaptionLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="スクロール連動 (横スクロールでシーク) / 長押しで進行" />
-                    <ScrollView Orientation="Horizontal"
-                                HorizontalScrollBarVisibility="Never"
-                                behaviors:Scroll.RatioCommand="{Binding ScrubCommand}">
+                    <ScrollView behaviors:Scroll.RatioCommand="{Binding ScrubCommand}"
+                                Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never">
                         <Border Style="{StaticResource ScrubTrackBorder}">
                             <Label Style="{StaticResource ScrubTrackLabel}"
                                    Text="→ → → スクロールで再生位置が進みます → → →" />

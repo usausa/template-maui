@@ -11,7 +11,6 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
 
     [ObservableProperty(NotifyAlso = [nameof(ProgressSeconds)])]
     public partial TimeSpan Progress { get; set; }
-
     public double ProgressSeconds => Progress.TotalSeconds;
 
     public double DurationSeconds => Math.Max(0.1d, Duration.TotalSeconds);
@@ -21,19 +20,26 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
     public IObserveCommand SeekCommand { get; }
     public IObserveCommand ScrubCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewLottieViewModel()
     {
         PlayPauseCommand = MakeDelegateCommand(() => IsAnimationEnabled = !IsAnimationEnabled);
         ResetCommand = MakeDelegateCommand(() => Progress = TimeSpan.Zero);
         SeekCommand = MakeDelegateCommand<double>(x => Progress = TimeSpan.FromSeconds(x));
 
-        // スクロール連動 / 長押し進行 (B-7): 0-1 の比率で再生位置を進める
         ScrubCommand = MakeDelegateCommand<double>(x =>
         {
             IsAnimationEnabled = false;
             Progress = Duration.Ticks > 0 ? TimeSpan.FromTicks((long)(Duration.Ticks * x)) : TimeSpan.Zero;
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 

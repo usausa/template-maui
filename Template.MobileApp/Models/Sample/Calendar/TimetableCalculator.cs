@@ -53,6 +53,10 @@ public static class TimetableCalculator
         return free;
     }
 
+    // 範囲内でイベントに埋まっている時間の合計 (重複はマージして数える)
+    public static TimeSpan GetBusyTotal(IEnumerable<TimetableEvent> events, TimeSpan start, TimeSpan end) =>
+        TimeSpan.FromTicks(MergeBusy(events, start, end).Sum(static x => (x.End - x.Start).Ticks));
+
     // 所要時間の表示形式 (1h30m / 2h / 45m)
     public static string FormatDuration(TimeSpan value)
     {

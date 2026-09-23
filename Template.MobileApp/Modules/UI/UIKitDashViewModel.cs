@@ -52,6 +52,10 @@ public sealed class UIKitDashViewModel : AppViewModelBase
 
     public IObserveCommand TrackingCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIKitDashViewModel()
     {
         NotifyCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitNotify));
@@ -59,6 +63,10 @@ public sealed class UIKitDashViewModel : AppViewModelBase
         OnboardCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitOnboard));
         TrackingCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitTracking));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 

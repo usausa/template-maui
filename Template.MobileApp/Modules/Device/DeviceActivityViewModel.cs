@@ -13,6 +13,10 @@ public sealed class DeviceActivityViewModel : AppViewModelBase
 
     public ActivityCalculator Calculator { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceActivityViewModel(
         IDialog dialog,
         IActivityRecognizer activityRecognizer,
@@ -29,6 +33,10 @@ public sealed class DeviceActivityViewModel : AppViewModelBase
                 Drawing.Step = Calculator.Step;
             }));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

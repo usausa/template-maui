@@ -216,7 +216,7 @@ public sealed class RadarScreen : GraphicsView, IDrawable
                     break;
                 }
 
-                MainThread.BeginInvokeOnMainThread(() =>
+                await Dispatcher.DispatchAsync(() =>
                 {
                     if (token.IsCancellationRequested)
                     {

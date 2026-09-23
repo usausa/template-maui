@@ -95,6 +95,21 @@ public sealed partial class CameraController : ObservableObject
 
 public static class CameraControllerExtensions
 {
+    private static readonly TimeSpan CaptureTimeout = TimeSpan.FromSeconds(5);
+
+    public static async ValueTask<Stream?> CaptureWithTimeoutAsync(this CameraController controller)
+    {
+        using var cts = new CancellationTokenSource(CaptureTimeout);
+        try
+        {
+            return await controller.CaptureAsync(cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+    }
+
     public static async ValueTask SwitchCameraAsync(this CameraController controller)
     {
         var list = await controller.GetAvailableListAsync();

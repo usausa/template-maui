@@ -12,146 +12,78 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid"
-                   TargetType="Grid">
+            <Style x:Key="EffectRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
                 <Setter Property="BackgroundColor" Value="{StaticResource IndigoLighten5}" />
             </Style>
 
-            <Style x:Key="CenterCardBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="16" />
-                <Setter Property="Padding" Value="24" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-            </Style>
-
-            <Style x:Key="CardStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="16" />
-            </Style>
-
-            <Style x:Key="IconCircleBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="HeightRequest" Value="96" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+            <Style x:Key="EffectIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BasicIconCircleBorder}">
                 <Setter Property="BackgroundColor" Value="{StaticResource IndigoLighten5}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
             </Style>
 
-            <Style x:Key="IconCircleLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="48" />
+            <Style x:Key="EffectIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
                 <Setter Property="TextColor" Value="{StaticResource IndigoDarken2}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="CenterTitleLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="ItemNameLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="ItemValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="CardDivider"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
-            </Style>
-
-            <Style x:Key="BackButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource SecondaryButton}">
-                <Setter Property="HeightRequest" Value="48" />
-            </Style>
-
-            <Style x:Key="ReplayButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource PrimaryButton}">
-                <Setter Property="HeightRequest" Value="48" />
-            </Style>
-
-            <Style x:Key="InfoGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="ColumnSpacing" Value="16" />
-            </Style>
-
-            <Style x:Key="ButtonRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource RootGrid}">
+    <Grid Style="{StaticResource EffectRootGrid}">
 
-        <Border Style="{StaticResource CenterCardBorder}">
+        <Border Style="{StaticResource CardCenterBorder}">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
-                <Border Style="{StaticResource IconCircleBorder}">
-                    <Label Style="{StaticResource IconCircleLabel}"
+                <Border Style="{StaticResource EffectIconBorder}">
+                    <Label Style="{StaticResource EffectIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Auto_awesome}" />
                 </Border>
 
-                <Label Style="{StaticResource CenterTitleLabel}"
+                <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Effect Demo" />
 
-                <Grid Style="{StaticResource InfoGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       RowDefinitions="Auto,Auto,Auto"
-                      ColumnDefinitions="Auto,*">
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource ItemNameLabel}"
+                           Style="{StaticResource BasicItemNameLabel}"
                            Text="Played" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ItemValueLabel}"
+                           Style="{StaticResource BasicItemValueLabel}"
                            Text="{Binding PlayedEffect}" />
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource ItemNameLabel}"
+                           Style="{StaticResource BasicItemNameLabel}"
                            Text="Return" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ItemValueLabel}"
+                           Style="{StaticResource BasicItemValueLabel}"
                            Text="{Binding ReturnEffect}" />
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource ItemNameLabel}"
+                           Style="{StaticResource BasicItemNameLabel}"
                            Text="Navigation" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ItemValueLabel}"
+                           Style="{StaticResource BasicItemValueLabel}"
                            Text="{Binding NavigationMode}" />
                 </Grid>
 
                 <BoxView Style="{StaticResource CardDivider}" />
 
-                <Grid Style="{StaticResource ButtonRowGrid}"
+                <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
-                            Style="{StaticResource BackButton}"
+                            Style="{StaticResource BasicFilledSecondaryButton}"
                             Command="{Binding BackCommand}"
                             Text="Back" />
                     <Button Grid.Column="1"
-                            Style="{StaticResource ReplayButton}"
+                            Style="{StaticResource BasicFilledButton}"
                             Command="{Binding ReplayCommand}"
                             Text="Replay" />
                 </Grid>

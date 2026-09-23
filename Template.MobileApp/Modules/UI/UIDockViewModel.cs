@@ -3,6 +3,26 @@ namespace Template.MobileApp.Modules.UI;
 #pragma warning disable CA5394
 public sealed class UIDockViewModel : AppViewModelBase
 {
+    private static readonly (string Color1, string Color2)[] Colors =
+    [
+        new("#F44336", "#FF8A80"),
+        new("#E91E63", "#FF80AB"),
+        new("#9C27B0", "#EA80FC"),
+        new("#673AB7", "#B388FF"),
+        new("#3F51B5", "#8C9EFF"),
+        new("#2196F3", "#82B1FF"),
+        new("#03A9F4", "#80D8FF"),
+        new("#00BCD4", "#84FFFF"),
+        new("#009688", "#A7FFEB"),
+        new("#4CAF50", "#B9F6CA"),
+        new("#8BC34A", "#CCFF90"),
+        new("#CDDC39", "#F4FF81"),
+        new("#FFEB3B", "#FFFF8D"),
+        new("#FFC107", "#FFE57F"),
+        new("#FF9800", "#FFD180"),
+        new("#FF5722", "#FF9E80")
+    ];
+
     private readonly IDialog dialog;
 
     private readonly IScreen screen;
@@ -19,6 +39,12 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private int memValue = 74;
 
+    public ObservableCollection<DeckButtonInfo> Buttons { get; } = [];
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIDockViewModel(
         IDialog dialog,
         IScreen screen,
@@ -34,7 +60,9 @@ public sealed class UIDockViewModel : AppViewModelBase
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => OnTimerTick()));
     }
 
-    public ObservableCollection<DeckButtonInfo> Buttons { get; } = [];
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -54,23 +82,13 @@ public sealed class UIDockViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    private void OnTimerTick()
-    {
-        if ((cpuButton is null) || (memButton is null))
-        {
-            return;
-        }
-
-        // 表示のみ: 乱数ウォークで数値をゆらぎ更新する
-        cpuValue = Math.Clamp(cpuValue + Random.Shared.Next(-9, 10), 3, 97);
-        memValue = Math.Clamp(memValue + Random.Shared.Next(-5, 6), 20, 95);
-        cpuButton.Text = String.Join(Environment.NewLine, "CPU", $"{cpuValue}%");
-        memButton.Text = String.Join(Environment.NewLine, "MEM", $"{memValue}%");
-    }
-
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private Task InitializeAsync()
     {
@@ -284,24 +302,21 @@ public sealed class UIDockViewModel : AppViewModelBase
         }
     }
 
-    private static readonly (string Color1, string Color2)[] Colors =
-    [
-        new("#F44336", "#FF8A80"),
-        new("#E91E63", "#FF80AB"),
-        new("#9C27B0", "#EA80FC"),
-        new("#673AB7", "#B388FF"),
-        new("#3F51B5", "#8C9EFF"),
-        new("#2196F3", "#82B1FF"),
-        new("#03A9F4", "#80D8FF"),
-        new("#00BCD4", "#84FFFF"),
-        new("#009688", "#A7FFEB"),
-        new("#4CAF50", "#B9F6CA"),
-        new("#8BC34A", "#CCFF90"),
-        new("#CDDC39", "#F4FF81"),
-        new("#FFEB3B", "#FFFF8D"),
-        new("#FFC107", "#FFE57F"),
-        new("#FF9800", "#FFD180"),
-        new("#FF5722", "#FF9E80")
-    ];
+    //--------------------------------------------------------------------------------
+    // Event
+    //--------------------------------------------------------------------------------
+
+    private void OnTimerTick()
+    {
+        if ((cpuButton is null) || (memButton is null))
+        {
+            return;
+        }
+
+        cpuValue = Math.Clamp(cpuValue + Random.Shared.Next(-9, 10), 3, 97);
+        memValue = Math.Clamp(memValue + Random.Shared.Next(-5, 6), 20, 95);
+        cpuButton.Text = String.Join(Environment.NewLine, "CPU", $"{cpuValue}%");
+        memButton.Text = String.Join(Environment.NewLine, "MEM", $"{memValue}%");
+    }
 }
 #pragma warning restore CA5394

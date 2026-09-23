@@ -18,69 +18,55 @@
         <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ServerTimeCommand}"
-                Text="Get server time"
+                Text="Server time"
                 ImageSource="{x:Static markup:AppIcons.Schedule}" />
 
         <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
-                Command="{Binding DataListCommand}"
-                Text="Data list"
-                ImageSource="{x:Static markup:AppIcons.ListAlt}" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NetworkHttp}"
+                Text="HTTP (Data)"
+                ImageSource="{x:Static markup:AppIcons.Http}" />
 
         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
-                Command="{Binding SecureCommand}"
-                Text="Secure"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NetworkAuth}"
+                Text="HTTP (Auth)"
                 ImageSource="{x:Static markup:AppIcons.Lock}" />
 
-        <Button Grid.Row="3" Grid.Column="0"
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
-                Command="{Binding LoginCommand}"
-                Text="Login"
-                ImageSource="{x:Static markup:AppIcons.Login}" />
-        <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding LogoutCommand}"
-                Text="Logout"
-                ImageSource="{x:Static markup:AppIcons.Logout}" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NetworkStorage}"
+                Text="Storage"
+                ImageSource="{x:Static markup:AppIcons.FolderOpen}" />
 
-        <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding DownloadCommand}"
-                Text="Download"
-                ImageSource="{x:Static markup:AppIcons.Download}" />
-        <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding UploadCommand}"
-                Text="Upload"
-                ImageSource="{x:Static markup:AppIcons.Upload}" />
-
-        <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding TestErrorCommand}"
-                CommandParameter="{s:Int32 500}"
-                Text="Error"
-                ImageSource="{x:Static markup:AppIcons.ErrorOutline}" />
-        <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding TestDelayCommand}"
-                CommandParameter="{s:Int32 5000}"
-                Text="Delay"
-                ImageSource="{x:Static markup:AppIcons.HourglassEmpty}" />
-
-        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId NetworkRealtime}"
                 Text="Realtime"
                 ImageSource="{x:Static markup:AppIcons.Sync}" />
 
-        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NetworkGrpc}"
+                Text="gRPC"
+                ImageSource="{x:Static markup:AppIcons.Hub}" />
+
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId NetworkScp}"
                 Text="SCP"
                 ImageSource="{x:Static markup:AppIcons.CloudUpload}" />
+
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
 
         <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"

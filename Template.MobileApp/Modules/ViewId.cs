@@ -4,6 +4,7 @@ public enum ViewId
 {
     Menu,
     Setting,
+    Diagnostics,
 
     // Basic
     BasicMenu,
@@ -76,8 +77,10 @@ public enum ViewId
     NetworkMenu,
 
     NetworkHttp,
-    NetworkGrpc,
+    NetworkAuth,
+    NetworkStorage,
     NetworkRealtime,
+    NetworkGrpc,
     NetworkScp,
 
     // Sample
@@ -89,19 +92,12 @@ public enum ViewId
     SampleMap1,
     SampleMap2,
 
-    SampleChart,
-    SampleSfChart,
     SampleMedia,
 
     SampleMarkdown,
     SamplePdf,
 
-    SampleCvNetMenu,
-    SampleCvNetObject,
-    SampleCvNetTag,
-    SampleCvNetPeople,
-    SampleCvNetOcr,
-    SampleCvNetFace,
+    SampleCvNet,
     SampleCvLocal,
 
     SampleChat,
@@ -110,11 +106,6 @@ public enum ViewId
 
     // View
     ViewMenu,
-
-    ViewCollection,
-
-    ViewCarousel,
-    ViewRefresh,
 
     ViewBorder,
     ViewShadow,
@@ -130,11 +121,26 @@ public enum ViewId
     ViewDrawing,
     ViewLayout,
     ViewState,
-    ViewToolkit,
     ViewDragDrop,
-    ViewCustom,
 
     ViewEffect,
+
+    // Control
+    ControlMenu,
+
+    ControlCollection,
+
+    ControlCarousel,
+    ControlRefresh,
+
+    ControlToolkit,
+    ControlCustom,
+
+    ControlChart,
+    ControlSfChart,
+
+    ControlBottomSheet,
+    ControlDrawer,
 
     // App
     AppMenu,
@@ -164,6 +170,9 @@ public enum ViewId
     UICharacter,
     UIChat,
     UICalendar,
+    UIGrid,
+    UIGridColumn,
+    UIVisit,
 
     UITimeline,
     UIMonster,

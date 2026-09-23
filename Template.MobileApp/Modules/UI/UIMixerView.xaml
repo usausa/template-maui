@@ -49,6 +49,11 @@
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
+            <Style x:Key="ScaleGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,12,0,12" />
+            </Style>
+
             <Style x:Key="ScaleLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
@@ -159,7 +164,7 @@
 
         <!-- dB scale -->
         <Grid Grid.Row="1" Grid.Column="0"
-              Padding="8,12,0,12"
+              Style="{StaticResource ScaleGrid}"
               RowDefinitions="*,*,*,*,*,*,*">
             <Label Grid.Row="0"
                    Style="{StaticResource ScaleLabel}"

@@ -10,7 +10,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
     private readonly IAudioManager audioManager;
 
-    private IDisposable? polling;
+    // 再生状態のポーリング (表示中だけ)。破棄は Disposables に任せる
+    private SerialDisposable Polling { get; } = new();
 
     public IAudioPlayer? AudioPlayer { get; set; }
 
@@ -34,6 +35,10 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     public IObserveCommand StopCommand { get; }
     public IObserveCommand SeekCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceAudioViewModel(
         IFileSystem fileSystem,
         IAudioManager audioManager)
@@ -45,18 +50,13 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
         PauseCommand = new DelegateCommand(Pause);
         StopCommand = new DelegateCommand(Stop);
         SeekCommand = MakeDelegateCommand<double>(Seek);
+
+        Disposables.Add(Polling);
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            polling?.Dispose();
-            polling = null;
-        }
-
-        base.Dispose(disposing);
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -70,9 +70,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     // IAudioPlayer は変更通知を持たないため再生位置・状態をポーリングで反映する (スタック退避中は停止)
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        // 二重呼び出しで前回の購読が解除できなくなるのを防ぐ
-        polling?.Dispose();
-        polling = Observable.Interval(TimeSpan.FromMilliseconds(250))
+        // 二重呼び出しでも前回の購読は SerialDisposable が解除する
+        Polling.Disposable = Observable.Interval(TimeSpan.FromMilliseconds(250))
             .ObserveOnCurrentContext()
             .Subscribe(_ => UpdateState());
         return Task.CompletedTask;
@@ -80,14 +79,17 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
-        polling?.Dispose();
-        polling = null;
+        Polling.Disposable = null;
         return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void UpdateState()
     {

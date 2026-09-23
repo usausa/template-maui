@@ -4,11 +4,19 @@ public sealed class NavigateCancelViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public NavigateCancelViewModel(
         IDialog dialog)
     {
         this.dialog = dialog;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

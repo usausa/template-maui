@@ -35,6 +35,10 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
 
     public IObserveCommand MyListCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIStreamViewModel()
     {
         DetailCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIStreamDetail));
@@ -57,6 +61,10 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
             new() { Title = "アクション & アドベンチャー", Items = posters, Delay = 240 }
         ];
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 

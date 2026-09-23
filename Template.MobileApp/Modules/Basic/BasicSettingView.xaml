@@ -14,69 +14,42 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- 未使用だった標準入力コントロール (Stepper/DatePicker/TimePicker/RadioButton/SearchBar) の網羅デモ。
-         各所の ToolTipProperties.Text は長押しで表示される -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            <Style x:Key="StepperValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowValueLabel}">
+                <Setter Property="WidthRequest" Value="40" />
             </Style>
 
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="FieldGroupStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="6" />
-            </Style>
-
-            <Style x:Key="FieldCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
-            <Style x:Key="FieldBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8,0" />
+            <Style x:Key="RowButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="BorderWidth" Value="1" />
                 <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <Style x:Key="SettingRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="MinimumHeightRequest" Value="44" />
-            </Style>
-
-            <Style x:Key="SettingNameLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
-            <Style x:Key="SettingValueLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="SummaryLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-                <Setter Property="LineHeight" Value="1.4" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                                    <Setter Property="BorderColor" Value="{StaticResource GrayLighten3}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
             </Style>
 
         </ResourceDictionary>
@@ -86,153 +59,180 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Account"
-                               Icon="{x:Static fonts:MaterialIcons.Person}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Account"
+                               Icon="{x:Static fonts:MaterialIcons.Person}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="User name (Entry)" />
-                    <Border Style="{StaticResource FieldBorder}">
-                        <Entry behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
-                               behaviors:Focus.FocusedThickness="2.5"
-                               ToolTipProperties.Text="表示に使う名前を入力します"
-                               Text="{Binding UserName}" />
+                    <Border Style="{StaticResource CardFieldBorder}">
+                        <Entry Style="{StaticResource BasicFieldEntry}"
+                               Text="{Binding UserName}"
+                               ToolTipProperties.Text="表示に使う名前を入力します" />
                     </Border>
 
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Search (SearchBar)" />
-                    <SearchBar Placeholder="設定を検索"
+                    <SearchBar Text="{Binding SearchText}"
+                               Placeholder="設定を検索"
                                ToolTipProperties.Text="検索ボタンで確定します"
+                               ReturnType="Search"
                                SearchCommand="{Binding SearchCommand}"
-                               Text="{Binding SearchText}" />
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+                               SearchIconColor="{StaticResource BlueDefault}" />
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding LastSearch}"
                            IsVisible="{Binding LastSearch, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding LastSearch, StringFormat='検索実行: {0}'}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding LastSearch}" />
+                           Text="{Binding LastSearch, StringFormat='検索実行: {0}'}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Display &amp; Sound"
-                               Icon="{x:Static fonts:MaterialIcons.Tune}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="60">
-                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
-                    <Grid Style="{StaticResource SettingRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60"
+                               Title="Display &amp; Sound"
+                               Icon="{x:Static fonts:MaterialIcons.Tune}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="*,Auto,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource SettingNameLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="キャッシュ上限 (Stepper)" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource SettingValueLabel}"
+                               Style="{StaticResource CardRowValueLabel}"
                                Text="{Binding CacheSize, StringFormat='{0:F0} GB'}" />
                         <Stepper Grid.Column="2"
-                                 Minimum="1"
-                                 Maximum="8"
-                                 Increment="1"
+                                 Value="{Binding CacheSize}"
+                                 Minimum="1" Maximum="8"
                                  ToolTipProperties.Text="ローカルキャッシュの上限サイズ"
-                                 Value="{Binding CacheSize}" />
+                                 Increment="1" />
                     </Grid>
 
-                    <Grid Style="{StaticResource SettingRowGrid}"
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource SettingNameLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="音量 (Slider)" />
                         <Slider Grid.Column="1"
-                                Minimum="0"
-                                Maximum="100"
-                                ToolTipProperties.Text="通知音の音量"
-                                Value="{Binding Volume}" />
+                                Value="{Binding Volume}"
+                                Minimum="0" Maximum="100"
+                                ToolTipProperties.Text="通知音の音量" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource SettingValueLabel}"
-                               WidthRequest="40"
+                               Style="{StaticResource StepperValueLabel}"
                                Text="{Binding Volume, StringFormat='{0:F0}'}" />
                     </Grid>
 
-                    <Grid Style="{StaticResource SettingRowGrid}"
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource SettingNameLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="通知 (Switch)" />
                         <Switch Grid.Column="1"
+                                IsToggled="{Binding NotificationEnabled}"
                                 ToolTipProperties.Text="プッシュ通知の有効/無効"
-                                IsToggled="{Binding NotificationEnabled}" />
+                                OffColor="{StaticResource GrayLighten1}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Backup Schedule"
-                               Icon="{x:Static fonts:MaterialIcons.Event}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="120">
-                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
-                    <Grid Style="{StaticResource SettingRowGrid}"
-                          ColumnDefinitions="*,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120"
+                               Title="Backup Schedule"
+                               Icon="{x:Static fonts:MaterialIcons.Event}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="*,Auto,Auto,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource SettingNameLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="日付 (DatePicker)" />
                         <DatePicker Grid.Column="1"
+                                    IsOpen="{Binding BackupDateOpen}"
                                     ToolTipProperties.Text="次回バックアップ日"
                                     Date="{Binding BackupDate}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource RowButton}"
+                                Command="{Binding OpenBackupDateCommand}"
+                                Text="開く" />
+                        <Button Grid.Column="3"
+                                Style="{StaticResource RowButton}"
+                                Command="{Binding ClearBackupDateCommand}"
+                                Text="クリア" />
                     </Grid>
-                    <Grid Style="{StaticResource SettingRowGrid}"
-                          ColumnDefinitions="*,Auto">
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="*,Auto,Auto,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource SettingNameLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="時刻 (TimePicker)" />
                         <TimePicker Grid.Column="1"
+                                    IsOpen="{Binding BackupTimeOpen}"
                                     ToolTipProperties.Text="次回バックアップ時刻"
                                     Time="{Binding BackupTime}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource RowButton}"
+                                Command="{Binding OpenBackupTimeCommand}"
+                                Text="開く" />
+                        <Button Grid.Column="3"
+                                Style="{StaticResource RowButton}"
+                                Command="{Binding ClearBackupTimeCommand}"
+                                Text="クリア" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Quality &amp; Language"
-                               Icon="{x:Static fonts:MaterialIcons.Language}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="180">
-                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180"
+                               Title="Quality &amp; Language"
+                               Icon="{x:Static fonts:MaterialIcons.Language}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="画質 (RadioButton)" />
-                    <HorizontalStackLayout RadioButtonGroup.GroupName="Quality"
-                                           RadioButtonGroup.SelectedValue="{Binding Quality, Mode=TwoWay}"
-                                           Spacing="8">
-                        <RadioButton Content="低"
-                                     Value="low" />
-                        <RadioButton Content="中"
-                                     Value="middle" />
-                        <RadioButton Content="高"
-                                     Value="high" />
+                    <HorizontalStackLayout Style="{StaticResource CardRowStack}"
+                                           RadioButtonGroup.GroupName="Quality"
+                                           RadioButtonGroup.SelectedValue="{Binding Quality, Mode=TwoWay}">
+                        <RadioButton Value="low"
+                                     Content="低" />
+                        <RadioButton Value="middle"
+                                     Content="中" />
+                        <RadioButton Value="high"
+                                     Content="高" />
                     </HorizontalStackLayout>
 
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="言語 (Picker)" />
-                    <Border Style="{StaticResource FieldBorder}">
-                        <Picker ToolTipProperties.Text="表示言語を選択します"
-                                ItemsSource="{Binding Languages}"
-                                SelectedItem="{Binding Language}" />
-                    </Border>
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource CardFieldBorder}">
+                            <Picker Style="{StaticResource CardFieldPicker}"
+                                    ItemsSource="{Binding Languages}"
+                                    SelectedItem="{Binding Language}"
+                                    IsOpen="{Binding LanguageOpen}"
+                                    ToolTipProperties.Text="表示言語を選択します" />
+                        </Border>
+                        <Button Grid.Column="1"
+                                Style="{StaticResource RowButton}"
+                                Command="{Binding OpenLanguageCommand}"
+                                Text="開く" />
+                    </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Summary"
-                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
-                    <Label Style="{StaticResource SummaryLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Summary"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding UserName, StringFormat='ユーザー: {0}'}" />
-                    <Label Style="{StaticResource SummaryLabel}"
+                    <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding CacheSize, StringFormat='キャッシュ: {0:F0} GB'}" />
-                    <Label Style="{StaticResource SummaryLabel}"
+                    <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding Volume, StringFormat='音量: {0:F0}'}" />
-                    <Label Style="{StaticResource SummaryLabel}"
-                           Text="{Binding BackupDate, StringFormat='バックアップ: {0:yyyy/MM/dd}'}" />
-                    <Label Style="{StaticResource SummaryLabel}"
-                           Text="{Binding BackupTime, StringFormat='時刻: {0:hh\\:mm}'}" />
-                    <Label Style="{StaticResource SummaryLabel}"
+                    <Label Style="{StaticResource BasicBodyLabel}"
+                           Text="{Binding BackupDate, StringFormat='バックアップ: {0:yyyy/MM/dd}', TargetNullValue='バックアップ: 未設定'}" />
+                    <Label Style="{StaticResource BasicBodyLabel}"
+                           Text="{Binding BackupTime, StringFormat='時刻: {0:hh\\:mm}', TargetNullValue='時刻: 未設定'}" />
+                    <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding Quality, StringFormat='画質: {0}'}" />
-                    <Label Style="{StaticResource SummaryLabel}"
+                    <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding Language, StringFormat='言語: {0}'}" />
                 </VerticalStackLayout>
             </controls:InfoCard>

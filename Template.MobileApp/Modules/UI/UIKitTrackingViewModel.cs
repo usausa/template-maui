@@ -26,6 +26,10 @@ public sealed class UIKitTrackingViewModel : AppViewModelBase
         new() { Title = "配達完了", Time = "--:--", Delay = 320 }
     ];
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

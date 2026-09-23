@@ -95,6 +95,10 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     public IObserveCommand BackCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UISocialViewModel()
     {
         BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIMenu2));

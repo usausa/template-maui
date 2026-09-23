@@ -1,46 +1,30 @@
 namespace Template.MobileApp.Modules.UI;
 
 using System.Collections.ObjectModel;
-using System.Globalization;
 
-using Template.MobileApp.Models.Sample.Calendar;
+using ClamCalendar;
+
 using Template.MobileApp.Services;
+
+using CommandBehavior = Smart.Maui.ViewModels.CommandBehavior;
 
 public sealed partial class UICalendarViewModel : AppViewModelBase
 {
     private static readonly DateOnly Today = DateOnly.FromDateTime(DateTime.Today);
 
-    private readonly IDialog dialog;
-
-    private readonly IScheduleEventProvider scheduleService;
-    private readonly HolidayService holidayService;
-
-    private MonthViewBuilder builder = new();
-    private int currentYear;
-    private int currentMonth;
+    private readonly ICalendarService calendarService;
 
     [ObservableProperty]
-    public partial MonthView? MonthView { get; private set; }
+    public partial DateOnly DisplayDate { get; set; } = Today;
 
-#pragma warning disable SA1500
-    public DayOfWeek FirstDayOfWeek
-    {
-        get;
-        set
-        {
-            if (field == value)
-            {
-                return;
-            }
-            field = value;
+    [ObservableProperty]
+    public partial IReadOnlyList<CalendarEvent> Events { get; private set; } = [];
 
-            RaisePropertyChanged(new PropertyChangedEventArgs(nameof(FirstDayOfWeek)));
+    [ObservableProperty]
+    public partial IReadOnlyList<CalendarStamp> Stamps { get; private set; } = [];
 
-            builder = new MonthViewBuilder(value);
-            LoadMonth(currentYear, currentMonth);
-        }
-    } = DayOfWeek.Monday;
-#pragma warning restore SA1500
+    [ObservableProperty]
+    public partial IReadOnlyList<DateOnly> Holidays { get; private set; } = [];
 
     [ObservableProperty]
     public partial CalendarSelectionMode SelectionMode { get; set; } = CalendarSelectionMode.None;
@@ -56,72 +40,47 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     [ObservableProperty]
     public partial DateOnly? SelectedEndDate { get; set; }
 
-    [ObservableProperty]
-    public partial DateOnly? MinDate { get; set; }
-
-    [ObservableProperty]
-    public partial DateOnly? MaxDate { get; set; }
-
-    [ObservableProperty]
-    public partial CultureInfo? Culture { get; set; }
-
-    public IObserveCommand PrevMonthCommand { get; }
-    public IObserveCommand NextMonthCommand { get; }
+    public IObserveCommand DisplayDateChangedCommand { get; }
     public IObserveCommand GoToTodayCommand { get; }
     public IObserveCommand DayTappedCommand { get; }
     public IObserveCommand EventTappedCommand { get; }
     public IObserveCommand SelectModeCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UICalendarViewModel(
         IDialog dialog,
-        IScheduleEventProvider scheduleService,
-        HolidayService holidayService)
+        ICalendarService calendarService)
     {
-        this.dialog = dialog;
-        this.scheduleService = scheduleService;
-        this.holidayService = holidayService;
+        this.calendarService = calendarService;
 
-        PrevMonthCommand = MakeDelegateCommand(OnPrevMonth);
-        NextMonthCommand = MakeDelegateCommand(OnNextMonth);
-        GoToTodayCommand = MakeDelegateCommand(OnGoToToday);
-        DayTappedCommand = MakeAsyncCommand<DayView>(OnDayTappedAsync);
-        EventTappedCommand = MakeAsyncCommand<ScheduleEvent>(OnEventTappedAsync);
+        // 月が変わるたびに表示範囲が通知される (初回はナビゲーション中に来るので Busy でも実行する)
+        DisplayDateChangedCommand = MakeDelegateCommand<CalendarDisplayDateChangedEventArgs>(Load, CommandBehavior.AllowBusyExecution);
+        GoToTodayCommand = MakeDelegateCommand(() => DisplayDate = Today);
+        DayTappedCommand = MakeAsyncCommand<CalendarDayEventArgs>(x => dialog.Toast($"{x.Date:yyyy/MM/dd}").AsTask());
+        EventTappedCommand = MakeAsyncCommand<CalendarEventEventArgs>(x => dialog.Toast(x.Event.Title).AsTask());
         SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(OnSelectMode);
-
-        currentYear = Today.Year;
-        currentMonth = Today.Month;
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
-    {
-        if (MonthView is null)
-        {
-            LoadMonth(currentYear, currentMonth);
-        }
-        return Task.CompletedTask;
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
-    private void OnPrevMonth()
-    {
-        var prev = new DateOnly(currentYear, currentMonth, 1).AddMonths(-1);
-        currentYear = prev.Year;
-        currentMonth = prev.Month;
-        LoadMonth(currentYear, currentMonth);
-    }
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
-    private void OnNextMonth()
-    {
-        var next = new DateOnly(currentYear, currentMonth, 1).AddMonths(1);
-        currentYear = next.Year;
-        currentMonth = next.Month;
-        LoadMonth(currentYear, currentMonth);
-    }
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    private void OnGoToToday()
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void Load(CalendarDisplayDateChangedEventArgs e)
     {
-        currentYear = Today.Year;
-        currentMonth = Today.Month;
-        LoadMonth(currentYear, currentMonth);
+        Events = calendarService.GetEvents(e.FirstDate, e.LastDate);
+        Stamps = calendarService.GetStamps(e.FirstDate, e.LastDate);
+        Holidays = calendarService.GetHolidays(e.FirstDate, e.LastDate);
     }
 
     private void OnSelectMode(CalendarSelectionMode mode)
@@ -134,34 +93,4 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         SelectedStartDate = null;
         SelectedEndDate = null;
     }
-
-    private void LoadMonth(int year, int month)
-    {
-        var (rangeStart, rangeEnd) = builder.GetDisplayRange(year, month);
-        var events = scheduleService.GetEvents(rangeStart, rangeEnd);
-        var stamps = scheduleService.GetStamps(rangeStart, rangeEnd);
-        var holidays = holidayService.GetHolidays(rangeStart, rangeEnd);
-
-        MonthView = builder.Build(year, month, Today, events, stamps, holidays);
-    }
-
-    private async Task OnDayTappedAsync(DayView? day)
-    {
-        if (day is not null)
-        {
-            await dialog.Toast($"{day.Date:yyyy/MM/dd}");
-        }
-    }
-
-    private async Task OnEventTappedAsync(ScheduleEvent? evt)
-    {
-        if (evt is not null)
-        {
-            await dialog.Toast(evt.Title);
-        }
-    }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

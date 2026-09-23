@@ -31,7 +31,6 @@ public sealed partial class UICartViewModel : AppViewModelBase
     [ObservableProperty(NotifyAlso = [nameof(TotalValue)])]
     public partial decimal Total { get; set; }
 
-    // CountUp 演出用(double)
     public double TotalValue => (double)Total;
 
     public string Coupon { get; } = "スプリングセール −10%";
@@ -41,6 +40,10 @@ public sealed partial class UICartViewModel : AppViewModelBase
     public IObserveCommand IncrementCommand { get; }
     public IObserveCommand DecrementCommand { get; }
     public IObserveCommand CheckoutCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public UICartViewModel(IDialog dialog)
     {
@@ -67,6 +70,18 @@ public sealed partial class UICartViewModel : AppViewModelBase
         Recalculate();
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIItem);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private void Recalculate()
     {
         ItemCount = Items.Sum(static x => x.Quantity);
@@ -74,8 +89,4 @@ public sealed partial class UICartViewModel : AppViewModelBase
         Discount = Math.Round(Subtotal * DiscountRate, 0);
         Total = Subtotal - Discount;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIItem);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

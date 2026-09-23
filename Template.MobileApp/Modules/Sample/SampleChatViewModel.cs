@@ -1,127 +1,100 @@
 namespace Template.MobileApp.Modules.Sample;
 
 using System.Collections.ObjectModel;
+using System.Net;
+using System.Text;
+
+using Microsoft.Extensions.AI;
+
+using OllamaSharp;
+using OllamaSharp.Models.Exceptions;
 
 using Template.MobileApp.Models.Sample.Chat;
 
-// 音声フローの抽出プレビュー項目
-public sealed record VoiceExtractItem(string Label, string Value);
+using AiMessage = Microsoft.Extensions.AI.ChatMessage;
 
 public sealed partial class SampleChatViewModel : AppViewModelBase
 {
-    private static readonly (string Text, bool IsCode)[] Replies =
-    [
-        ("なるほど、良い質問ですね。.NET MAUI では XAML でレイアウトを宣言し、データバインディングで ViewModel と接続します。コードビハインドを使わずに Behavior や Trigger で振る舞いを追加するのがおすすめです。", false),
-        ("その場合は BindableProperty を定義してコントロールに公開します。例を書いてみますね。", false),
-        ("public sealed class GreetingService\n{\n    public string CreateMessage(string name)\n    {\n        ArgumentNullException.ThrowIfNull(name);\n        return $\"Hello, {name}! Welcome to .NET MAUI.\";\n    }\n}", true),
-        ("補足すると、リスト表示には CollectionView を使い、ItemsUpdatingScrollMode を KeepLastItemInView にするとチャットのように末尾へ追従します。パフォーマンスが必要な場面では DataTemplateSelector でテンプレートを分けるのが定石です。", false)
-    ];
+    private readonly ISpeechService speech;
 
-    // 音声フロー (C-7)。録音と AI 処理はモックで UI パターンのみ再現する
-    private const string MockTranscript = "明日の15時までにログイン画面の不具合修正をお願いします。再現手順は共有済みのチケットを参照してください。";
+    private readonly IDispatcher dispatcher;
 
-    private readonly IDispatcherTimer recordTimer;
+    private readonly string model;
 
-    private int replyIndex;
+    private readonly List<AiMessage> history = [];
 
-    private bool responding;
+    private Action? cancelResponse;
 
     [ObservableProperty]
     public partial string InputText { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    public partial bool IsListening { get; private set; }
+
+    [ObservableProperty]
+    public partial bool IsResponding { get; private set; }
+
     public ObservableCollection<AiChatMessage> Messages { get; } = [];
+
+    private IChatClient ChatClient { get; }
+
+    public IObserveCommand VoiceCommand { get; }
 
     public IObserveCommand SendCommand { get; }
 
-    // ------------------------------------------------------------------ 音声フロー
+    public IObserveCommand CancelCommand { get; }
 
-    [ObservableProperty]
-    public partial bool VoiceVisible { get; private set; }
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
-    [ObservableProperty(NotifyAlso = [nameof(IsStep1), nameof(IsStep2), nameof(IsStep3), nameof(IsStep4)])]
-    public partial int VoiceStep { get; private set; } = 1;
-
-    public bool IsStep1 => VoiceStep == 1;
-
-    public bool IsStep2 => VoiceStep == 2;
-
-    public bool IsStep3 => VoiceStep == 3;
-
-    public bool IsStep4 => VoiceStep == 4;
-
-    [ObservableProperty]
-    public partial bool IsRecording { get; private set; }
-
-    [ObservableProperty]
-    public partial int RecordSeconds { get; private set; }
-
-    [ObservableProperty]
-    public partial bool Transcribing { get; private set; }
-
-    [ObservableProperty]
-    public partial string TranscribedText { get; private set; } = string.Empty;
-
-    public IReadOnlyList<VoiceExtractItem> ExtractItems { get; } =
-    [
-        new("種別", "依頼"),
-        new("期日", "明日 15:00"),
-        new("対象", "ログイン画面の不具合修正"),
-        new("参照", "共有済みのチケット")
-    ];
-
-    public IObserveCommand OpenVoiceCommand { get; }
-    public IObserveCommand CloseVoiceCommand { get; }
-    public IObserveCommand ToggleRecordCommand { get; }
-    public IObserveCommand GoExtractCommand { get; }
-    public IObserveCommand GoApproveCommand { get; }
-    public IObserveCommand ApplyVoiceCommand { get; }
-    public IObserveCommand RetryVoiceCommand { get; }
-
-    public SampleChatViewModel(IDispatcher dispatcher)
+    public SampleChatViewModel(
+        ISpeechService speech,
+        IDispatcher dispatcher,
+        Settings settings)
     {
-        SendCommand = MakeAsyncCommand(SendAsync, () => !responding && !String.IsNullOrWhiteSpace(InputText));
+        this.speech = speech;
+        this.dispatcher = dispatcher;
 
-        recordTimer = dispatcher.CreateTimer();
-        recordTimer.Interval = TimeSpan.FromSeconds(1);
-        Disposables.Add(recordTimer.TickAsObservable().Subscribe(_ => RecordSeconds++));
+        ChatClient = new OllamaApiClient(new Uri(settings.OllamaEndPoint), settings.OllamaModel);
+        Disposables.Add(ChatClient);
+        model = settings.OllamaModel;
 
-        OpenVoiceCommand = MakeDelegateCommand(() =>
-        {
-            ResetVoice();
-            VoiceVisible = true;
-        });
-        CloseVoiceCommand = MakeDelegateCommand(CloseVoice);
-        ToggleRecordCommand = MakeAsyncCommand(ToggleRecordAsync);
-        GoExtractCommand = MakeDelegateCommand(() => VoiceStep = 3, () => !Transcribing);
-        GoApproveCommand = MakeDelegateCommand(() => VoiceStep = 4);
-        ApplyVoiceCommand = MakeDelegateCommand(() =>
-        {
-            InputText = TranscribedText;
-            CloseVoice();
-        });
-        RetryVoiceCommand = MakeDelegateCommand(ResetVoice);
+        VoiceCommand = MakeAsyncCommand(ToggleVoiceAsync);
+        SendCommand = MakeDelegateCommand(() => _ = SendAsync(), () => !IsResponding && !String.IsNullOrWhiteSpace(InputText));
+        CancelCommand = MakeDelegateCommand(() => cancelResponse?.Invoke(), () => IsResponding);
 
-        PropertyChanged += (_, e) =>
+        Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
         {
-            if (e.PropertyName == nameof(InputText))
+            if (!IsListening)
             {
-                SendCommand.RaiseCanExecuteChanged();
+                return;
             }
-            if (e.PropertyName == nameof(Transcribing))
+
+            if (!String.IsNullOrEmpty(x.Text))
             {
-                GoExtractCommand.RaiseCanExecuteChanged();
+                InputText = x.Text;
             }
-        };
+
+            if (x.Complete)
+            {
+                IsListening = false;
+            }
+        }));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (Messages.Count == 0)
+        if (!context.Attribute.IsRestore())
         {
             Messages.Add(new AiChatMessage
             {
                 Role = AiChatRole.Assistant,
-                Text = "こんにちは!AI アシスタントです。開発に関する質問をどうぞ 🤖"
+                Text = $"こんにちは!AI アシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {model})"
             });
         }
         return Task.CompletedTask;
@@ -129,85 +102,125 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
-        CloseVoice();
-        return Task.CompletedTask;
-    }
-
-    private async Task SendAsync()
-    {
-        var text = InputText.Trim();
-        InputText = string.Empty;
-        Messages.Add(new AiChatMessage { Role = AiChatRole.User, Text = text });
-
-        responding = true;
-        SendCommand.RaiseCanExecuteChanged();
-        try
-        {
-            var (reply, isCode) = Replies[replyIndex % Replies.Length];
-            replyIndex++;
-
-            // タイピングインジケータを表示してから応答をストリーミング風に流し込む
-            var message = new AiChatMessage { Role = AiChatRole.Assistant, IsCode = isCode, IsTyping = true };
-            Messages.Add(message);
-
-            await Task.Delay(1200).ConfigureAwait(true);
-            message.IsTyping = false;
-
-            for (var i = 0; i < reply.Length; i += 3)
-            {
-                message.Text = reply[..Math.Min(i + 3, reply.Length)];
-                await Task.Delay(30).ConfigureAwait(true);
-            }
-        }
-        finally
-        {
-            responding = false;
-            SendCommand.RaiseCanExecuteChanged();
-        }
-    }
-
-    private async Task ToggleRecordAsync()
-    {
-        if (!IsRecording)
-        {
-            IsRecording = true;
-            RecordSeconds = 0;
-            recordTimer.Start();
-            return;
-        }
-
-        IsRecording = false;
-        recordTimer.Stop();
-
-        // 文字起こし (モック)。少し待ってから固定文を表示する
-        VoiceStep = 2;
-        Transcribing = true;
-        TranscribedText = string.Empty;
-        await Task.Delay(1500).ConfigureAwait(true);
-        if (VoiceVisible)
-        {
-            TranscribedText = MockTranscript;
-            Transcribing = false;
-        }
-    }
-
-    private void ResetVoice()
-    {
-        recordTimer.Stop();
-        IsRecording = false;
-        RecordSeconds = 0;
-        Transcribing = false;
-        TranscribedText = string.Empty;
-        VoiceStep = 1;
-    }
-
-    private void CloseVoice()
-    {
-        ResetVoice();
-        VoiceVisible = false;
+        cancelResponse?.Invoke();
+        return CancelVoiceAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private async Task ToggleVoiceAsync()
+    {
+        if (IsListening)
+        {
+            await speech.RecognizeStopAsync();
+            return;
+        }
+
+        if (!await Permissions.RequestMicrophoneAsync())
+        {
+            return;
+        }
+
+        IsListening = true;
+        if (!await speech.RecognizeAsync(CultureInfo.CurrentCulture))
+        {
+            IsListening = false;
+        }
+    }
+
+    private async Task CancelVoiceAsync()
+    {
+        if (IsListening)
+        {
+            IsListening = false;
+            await speech.RecognizeCancelAsync();
+        }
+    }
+
+    private async Task SendAsync()
+    {
+        await CancelVoiceAsync();
+
+        var text = InputText.Trim();
+        InputText = string.Empty;
+        Messages.Add(new AiChatMessage { Role = AiChatRole.User, Text = text });
+
+        IsResponding = true;
+        try
+        {
+            await RespondAsync(text);
+        }
+        finally
+        {
+            IsResponding = false;
+        }
+    }
+
+    private async Task RespondAsync(string text)
+    {
+        var message = new AiChatMessage { Role = AiChatRole.Assistant, IsTyping = true };
+        Messages.Add(message);
+
+        history.Add(new AiMessage(ChatRole.User, text));
+        var builder = new StringBuilder();
+        using var cts = new CancellationTokenSource();
+        var token = cts.Token;
+        cancelResponse = cts.Cancel;
+        try
+        {
+            await Task.Run(async () =>
+            {
+                await foreach (var update in ChatClient.GetStreamingResponseAsync(history, cancellationToken: token).ConfigureAwait(false))
+                {
+                    builder.Append(update.Text);
+                    var current = builder.ToString();
+                    await dispatcher.DispatchAsync(() =>
+                    {
+                        message.IsTyping = false;
+                        message.Text = current;
+                    }).ConfigureAwait(false);
+                }
+            }, token).ConfigureAwait(true);
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore
+        }
+        catch (Exception ex) when (ex is HttpRequestException or OllamaException or WebException or IOException)
+        {
+            if (!cts.IsCancellationRequested)
+            {
+                history.RemoveAt(history.Count - 1);
+                message.IsTyping = false;
+                message.Text = $"応答を取得できませんでした。\n{ex.Message}";
+                return;
+            }
+        }
+        finally
+        {
+            cancelResponse = null;
+        }
+
+        message.IsTyping = false;
+        if (!cts.IsCancellationRequested)
+        {
+            history.Add(new AiMessage(ChatRole.Assistant, builder.ToString()));
+        }
+        else if (builder.Length > 0)
+        {
+            message.Text = $"{builder}\n(中断)";
+            history.Add(new AiMessage(ChatRole.Assistant, builder.ToString()));
+        }
+        else
+        {
+            history.RemoveAt(history.Count - 1);
+            message.Text = "中断しました。";
+        }
+    }
 }

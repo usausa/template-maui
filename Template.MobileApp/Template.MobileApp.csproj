@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0-android</TargetFrameworks>
@@ -13,7 +13,7 @@
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
 
     <!-- XA4301: BarcodeScanning.Native.Maui re-bundles libbarhopper_v3.so already provided by its MLKit dependency. Harmless duplicate, not fixable on the app side -->
-    <NoWarn>$(NoWarn);XA4301</NoWarn>
+    <NoWarn>$(NoWarn);XA1040;XA4301</NoWarn>
 
     <!-- Display name -->
     <ApplicationTitle>Template</ApplicationTitle>
@@ -26,13 +26,21 @@
     <ApplicationVersion>1</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
+
+    <!--
+    <UseMaterial3>true</UseMaterial3>
+    -->
   </PropertyGroup>
 
-  <!--
+  <!-- Shiny requires the Mono runtime to be disabled for Android builds, but this is not yet supported in .NET 10
   <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
     <UseMonoRuntime>false</UseMonoRuntime>
   </PropertyGroup>
   -->
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <MetricsSupport>true</MetricsSupport>
+  </PropertyGroup>
 
   <!--
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -113,7 +121,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.AI.Vision.Face" Version="1.0.0-beta.2" />
     <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
     <PackageReference Include="BarcodeScanning.Native.Maui" Version="3.1.0" />
     <PackageReference Include="BunnyTail.DependencyInjection" Version="0.6.0" />
@@ -123,6 +130,8 @@
     </PackageReference>
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.16.0" />
     <PackageReference Include="BunnyTail.XamlProperty.Maui" Version="1.2.0" />
+    <PackageReference Include="ClamCalendar" Version="1.0.0" />
+    <PackageReference Include="ClamGrid" Version="1.1.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.1.0" />
     <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
@@ -142,11 +151,12 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.101" />
-    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.101" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.101" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
+    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.110" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.110" />
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.30.0" />
+    <PackageReference Include="Mofucat.ReactiveHub" Version="1.0.0" />
     <PackageReference Include="OllamaSharp" Version="5.4.30" />
     <PackageReference Include="SkiaSharp" Version="4.152.1" />
     <PackageReference Include="SkiaSharp.Extended" Version="3.0.0" />
@@ -161,7 +171,7 @@
     <PackageReference Include="QRCoder" Version="1.8.0" />
     <PackageReference Include="Rester" Version="2.17.0" />
     <PackageReference Include="SSH.NET" Version="2026.0.0" />
-    <PackageReference Include="Shiny.BluetoothLE" version="5.5.0" />
+    <PackageReference Include="Shiny.BluetoothLE" version="5.7.2" />
     <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="5.7.2" />
     <PackageReference Include="Shiny.Hosting.Maui" Version="5.7.2" />
     <PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.11" />
@@ -170,7 +180,7 @@
     <PackageReference Include="Usa.Smart.Core" Version="2.20.0" />
     <PackageReference Include="Usa.Smart.Data" Version="2.11.0" />
     <PackageReference Include="Usa.Smart.Data.Accessor" Version="3.0.0-beta11" />
-    <PackageReference Include="Usa.Smart.Mapper" Version="1.0.0-beta8" />
+    <PackageReference Include="Usa.Smart.Mapper" Version="1.0.0-beta9" />
     <PackageReference Include="Usa.Smart.Maui" Version="2.26.0" />
     <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.26.0" />
     <PackageReference Include="Usa.Smart.Mvvm" Version="2.12.0" />
@@ -183,6 +193,10 @@
     <!-- Xamarin.AndroidX.Fragment.Ktx: Shiny.Hosting.Maui and BarcodeScanning.Native.Maui still reference the old ktx package, so pin it to match Xamarin.AndroidX.Fragment 1.9.0 which merged those classes in -->
     <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0" />
     <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Services\Protos\*.proto" GrpcServices="Client" />
   </ItemGroup>
 
   <!-- Trimmer -->

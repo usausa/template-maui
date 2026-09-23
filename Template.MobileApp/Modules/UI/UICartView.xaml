@@ -17,12 +17,12 @@
         <ResourceDictionary>
 
             <!-- Root -->
-            <Style x:Key="RootGrid"
+            <Style x:Key="CartGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <Style x:Key="RootStack"
+            <Style x:Key="CartStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,0,0,16" />
                 <Setter Property="Spacing" Value="12" />
@@ -262,7 +262,9 @@
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,-2"
-                            Brush="Black" Opacity="0.08" Radius="8" />
+                            Brush="Black"
+                            Opacity="0.08"
+                            Radius="8" />
                 </Setter>
             </Style>
 
@@ -276,137 +278,139 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
-                            Brush="Black" Opacity="0.2" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="6" />
                 </Setter>
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource CartGrid}"
           RowDefinitions="*,Auto">
 
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout Style="{StaticResource RootStack}">
+            <VerticalStackLayout Style="{StaticResource CartStack}">
 
-            <!-- Header banner -->
-            <Border Style="{StaticResource BannerBorder}">
-                <VerticalStackLayout>
-                    <Label Style="{StaticResource BannerTitleLabel}"
-                           Text="ショッピングカート" />
-                    <Label Style="{StaticResource BannerCountLabel}"
-                           Text="{Binding ItemCount, StringFormat='カートに {0} 点'}" />
+                <!-- Header banner -->
+                <Border Style="{StaticResource BannerBorder}">
+                    <VerticalStackLayout>
+                        <Label Style="{StaticResource BannerTitleLabel}"
+                               Text="ショッピングカート" />
+                        <Label Style="{StaticResource BannerCountLabel}"
+                               Text="{Binding ItemCount, StringFormat='カートに {0} 点'}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cart items -->
+                <VerticalStackLayout Style="{StaticResource ItemsStack}"
+                                     BindableLayout.ItemsSource="{Binding Items}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="module:UICartItem">
+                            <Border Style="{StaticResource ItemBorder}"
+                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                    behaviors:AnimationOption.EnterDelay="{Binding Delay}">
+                                <Grid Style="{StaticResource ItemGrid}"
+                                      ColumnDefinitions="Auto,*,Auto">
+                                    <Border Grid.Column="0"
+                                            Style="{StaticResource ItemImageBorder}">
+                                        <Image Style="{StaticResource ItemImage}"
+                                               Source="{Binding Image}" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Style="{StaticResource ItemTextStack}">
+                                        <Label Style="{StaticResource ItemTitleLabel}"
+                                               Text="{Binding Title}" />
+                                        <Label Style="{StaticResource ItemPriceLabel}"
+                                               Text="{Binding PriceText}" />
+                                    </VerticalStackLayout>
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                    <HorizontalStackLayout Grid.Column="2"
+                                                           Style="{StaticResource StepperRow}">
+                                        <Button Style="{StaticResource StepperButton}"
+                                                behaviors:ButtonOption.PressEffect="True"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=DecrementCommand, x:DataType={x:Type module:UICartViewModel}}"
+                                                CommandParameter="{Binding .}"
+                                                Text="−" />
+                                        <Label Style="{StaticResource QuantityLabel}"
+                                               Text="{Binding Quantity}" />
+                                        <Button Style="{StaticResource StepperButton}"
+                                                behaviors:ButtonOption.PressEffect="True"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=IncrementCommand, x:DataType={x:Type module:UICartViewModel}}"
+                                                CommandParameter="{Binding .}"
+                                                Text="+" />
+                                    </HorizontalStackLayout>
+                                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
-            </Border>
 
-            <!-- Cart items -->
-            <VerticalStackLayout Style="{StaticResource ItemsStack}"
-                                 BindableLayout.ItemsSource="{Binding Items}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="module:UICartItem">
-                        <Border Style="{StaticResource ItemBorder}"
-                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                behaviors:AnimationOption.EnterDelay="{Binding Delay}">
-                            <Grid Style="{StaticResource ItemGrid}"
-                                  ColumnDefinitions="Auto,*,Auto">
-                                <Border Grid.Column="0"
-                                        Style="{StaticResource ItemImageBorder}">
-                                    <Image Style="{StaticResource ItemImage}"
-                                           Source="{Binding Image}" />
-                                </Border>
-                                <VerticalStackLayout Grid.Column="1"
-                                                     Style="{StaticResource ItemTextStack}">
-                                    <Label Style="{StaticResource ItemTitleLabel}"
-                                           Text="{Binding Title}" />
-                                    <Label Style="{StaticResource ItemPriceLabel}"
-                                           Text="{Binding PriceText}" />
-                                </VerticalStackLayout>
-                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                <HorizontalStackLayout Grid.Column="2"
-                                                       Style="{StaticResource StepperRow}">
-                                    <Button Style="{StaticResource StepperButton}"
-                                            behaviors:ButtonOption.PressEffect="True"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=DecrementCommand, x:DataType={x:Type module:UICartViewModel}}"
-                                            CommandParameter="{Binding .}"
-                                            Text="−" />
-                                    <Label Style="{StaticResource QuantityLabel}"
-                                           Text="{Binding Quantity}" />
-                                    <Button Style="{StaticResource StepperButton}"
-                                            behaviors:ButtonOption.PressEffect="True"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=IncrementCommand, x:DataType={x:Type module:UICartViewModel}}"
-                                            CommandParameter="{Binding .}"
-                                            Text="+" />
-                                </HorizontalStackLayout>
-                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
+                <!-- Coupon / points -->
+                <Border Style="{StaticResource CouponBorder}">
+                    <VerticalStackLayout>
+                        <Grid Style="{StaticResource CouponRowGrid}"
+                              ColumnDefinitions="Auto,*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CouponIcon}"
+                                   Text="{x:Static fonts:MaterialIcons.Local_offer}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource CouponLabel}"
+                                   Text="{Binding Coupon}" />
+                            <Border Grid.Column="2"
+                                    Style="{StaticResource AppliedBadgeBorder}">
+                                <Label Style="{StaticResource AppliedBadgeLabel}"
+                                       Text="適用済み" />
+                            </Border>
+                        </Grid>
+                        <BoxView Style="{StaticResource CouponDivider}" />
+                        <Grid Style="{StaticResource CouponRowGrid}"
+                              ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource PointsIcon}"
+                                   Text="{x:Static fonts:MaterialIcons.Star}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource PointsLabel}"
+                                   Text="{Binding Points}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
-            <!-- Coupon / points -->
-            <Border Style="{StaticResource CouponBorder}">
-                <VerticalStackLayout>
-                    <Grid Style="{StaticResource CouponRowGrid}"
-                          ColumnDefinitions="Auto,*,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource CouponIcon}"
-                               Text="{x:Static fonts:MaterialIcons.Local_offer}" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource CouponLabel}"
-                               Text="{Binding Coupon}" />
-                        <Border Grid.Column="2"
-                                Style="{StaticResource AppliedBadgeBorder}">
-                            <Label Style="{StaticResource AppliedBadgeLabel}"
-                                   Text="適用済み" />
-                        </Border>
-                    </Grid>
-                    <BoxView Style="{StaticResource CouponDivider}" />
-                    <Grid Style="{StaticResource CouponRowGrid}"
-                          ColumnDefinitions="Auto,*">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource PointsIcon}"
-                               Text="{x:Static fonts:MaterialIcons.Star}" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource PointsLabel}"
-                               Text="{Binding Points}" />
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Totals -->
-            <Border Style="{StaticResource TotalsBorder}">
-                <VerticalStackLayout Style="{StaticResource TotalsStack}">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource TotalsCaption}"
-                               Text="小計" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource TotalsValue}"
-                               Text="{Binding Subtotal, StringFormat='¥{0:N0}'}" />
-                    </Grid>
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource TotalsCaption}"
-                               Text="割引" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource DiscountValue}"
-                               Text="{Binding Discount, StringFormat='− ¥{0:N0}'}" />
-                    </Grid>
-                    <BoxView Style="{StaticResource CouponDivider}" />
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource TotalCaption}"
-                               Text="合計" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource TotalValue}"
-                               behaviors:LabelOption.CountUpValue="{Binding TotalValue}"
-                               behaviors:LabelOption.CountUpFormat="¥{0:N0}"
-                               behaviors:LabelOption.CountUpDuration="450"
-                               behaviors:AnimationOption.BounceTrigger="{Binding TotalValue}" />
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
+                <!-- Totals -->
+                <Border Style="{StaticResource TotalsBorder}">
+                    <VerticalStackLayout Style="{StaticResource TotalsStack}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource TotalsCaption}"
+                                   Text="小計" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource TotalsValue}"
+                                   Text="{Binding Subtotal, StringFormat='¥{0:N0}'}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource TotalsCaption}"
+                                   Text="割引" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource DiscountValue}"
+                                   Text="{Binding Discount, StringFormat='− ¥{0:N0}'}" />
+                        </Grid>
+                        <BoxView Style="{StaticResource CouponDivider}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource TotalCaption}"
+                                   Text="合計" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource TotalValue}"
+                                   behaviors:LabelOption.CountUpDuration="450"
+                                   behaviors:LabelOption.CountUpFormat="¥{0:N0}"
+                                   behaviors:LabelOption.CountUpValue="{Binding TotalValue}"
+                                   behaviors:AnimationOption.BounceTrigger="{Binding TotalValue}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
             </VerticalStackLayout>
         </ScrollView>

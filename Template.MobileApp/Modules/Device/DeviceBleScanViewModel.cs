@@ -4,9 +4,13 @@ using Shiny.BluetoothLE;
 
 public sealed class DeviceBleScanViewModel : AppViewModelBase
 {
+    private IDisposable? scanning;
+
     public ObservableCollection<SwitchBotTemperature> Devices { get; } = [];
 
-    private IDisposable? scanning;
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public DeviceBleScanViewModel(
         ILogger<DeviceBleScanViewModel> log,
@@ -34,6 +38,35 @@ public sealed class DeviceBleScanViewModel : AppViewModelBase
         }));
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void UpdateList(SwitchBotTemperature data)
+    {
+        var current = Devices.FirstOrDefault(data, static (x, s) => x.DeviceId == s.DeviceId);
+        if (current == null)
+        {
+            Devices.Add(data);
+        }
+        else
+        {
+            ObjectMapper.Copy(data, current);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
     private static SwitchBotTemperature? ConvertData(ScanResult result)
     {
         if ((result.AdvertisementData.ManufacturerData is not null) &&
@@ -58,21 +91,4 @@ public sealed class DeviceBleScanViewModel : AppViewModelBase
 
         return null;
     }
-
-    private void UpdateList(SwitchBotTemperature data)
-    {
-        var current = Devices.FirstOrDefault(data, static (x, s) => x.DeviceId == s.DeviceId);
-        if (current == null)
-        {
-            Devices.Add(data);
-        }
-        else
-        {
-            ObjectMapper.Copy(data, current);
-        }
-    }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

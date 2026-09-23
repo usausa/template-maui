@@ -13,8 +13,12 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     private const double BrakeVelocity = 96d / 60;
     private const double DefaultVelocity = 32d / 60;
 
+    private readonly IDispatcher dispatcher;
+
     private PeriodicTimer? timer;
+
     private CancellationTokenSource? cancellationTokenSource;
+
     private Task? loopTask;
 
     private readonly AtomicInteger stickX = new();
@@ -67,42 +71,13 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
         set => buttonY.Value = value;
     }
 
-    // スタック退避中もループが回り続けないよう、画面表示中のみ実行する
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
+    public UIMeterViewModel(IDispatcher dispatcher)
     {
-        // 二重呼び出しで前回のループを停止できなくなるのを防ぐ
-        if (loopTask is not null)
-        {
-            return Task.CompletedTask;
-        }
-
-        timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000d / 60));
-        cancellationTokenSource = new CancellationTokenSource();
-        loopTask = StartTimerAsync(timer, cancellationTokenSource.Token);
-        return Task.CompletedTask;
-    }
-
-    public override async Task OnNavigatingFromAsync(INavigationContext context)
-    {
-        if (loopTask is null)
-        {
-            return;
-        }
-
-        await cancellationTokenSource!.CancelAsync();
-        try
-        {
-            await loopTask;
-        }
-        finally
-        {
-            // ループが想定外の例外で落ちても解放を確実に行う
-            cancellationTokenSource.Dispose();
-            cancellationTokenSource = null;
-            timer!.Dispose();
-            timer = null;
-            loopTask = null;
-        }
+        this.dispatcher = dispatcher;
     }
 
     protected override void Dispose(bool disposing)
@@ -117,6 +92,53 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
 
         base.Dispose(disposing);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    // スタック退避中もループが回り続けないよう、画面表示中のみ実行する
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        // 二重呼び出しで前回のループを停止できなくなるのを防ぐ
+        if (loopTask is null)
+        {
+            timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000d / 60));
+            cancellationTokenSource = new CancellationTokenSource();
+            loopTask = StartTimerAsync(timer, cancellationTokenSource.Token);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        if (loopTask is not null)
+        {
+            await cancellationTokenSource!.CancelAsync();
+            try
+            {
+                await loopTask;
+            }
+            finally
+            {
+                // ループが想定外の例外で落ちても解放を確実に行う
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
+                timer!.Dispose();
+                timer = null;
+                loopTask = null;
+            }
+        }
+    }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task StartTimerAsync(PeriodicTimer periodicTimer, CancellationToken token)
     {
@@ -159,7 +181,7 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
                 var currentSpeed = (int)speed;
                 if ((currentSpeed != prevSpeed) || (a != prevAccel) || (b != prevBrake))
                 {
-                    MainThread.BeginInvokeOnMainThread(() => Speed = currentSpeed);
+                    await dispatcher.DispatchAsync(() => Speed = currentSpeed);
 
                     prevSpeed = currentSpeed;
                     prevAccel = a;
@@ -171,7 +193,7 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
                 if (watch.ElapsedMilliseconds > 1000)
                 {
                     var f = fps;
-                    MainThread.BeginInvokeOnMainThread(() => Fps = f);
+                    await dispatcher.DispatchAsync(() => Fps = f);
 
                     fps = 0;
                     watch.Restart();
@@ -183,8 +205,4 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
             // Ignore
         }
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

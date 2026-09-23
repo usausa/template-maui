@@ -20,6 +20,10 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 
     public IObserveCommand DetectCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceQrScanViewModel()
     {
         Controller.TapToFocus = true;
@@ -43,6 +47,10 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
             }
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

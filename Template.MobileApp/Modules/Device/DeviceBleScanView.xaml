@@ -18,45 +18,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="EmptyStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Spacing" Value="16" />
-            </Style>
-
-            <Style x:Key="EmptyIconBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="HeightRequest" Value="96" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
-            </Style>
-
-            <Style x:Key="EmptyIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="48" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyTitleLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyHintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
             <Style x:Key="SensorBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="6,3" />
@@ -127,15 +88,15 @@
 
     <CollectionView ItemsSource="{Binding Devices}">
         <CollectionView.EmptyView>
-            <VerticalStackLayout Style="{StaticResource EmptyStack}">
-                <Border Style="{StaticResource EmptyIconBorder}"
+            <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
+                <Border Style="{StaticResource BasicIconCircleBorder}"
                         behaviors:AnimationOption.Pulse="True">
-                    <Label Style="{StaticResource EmptyIconLabel}"
+                    <Label Style="{StaticResource BasicIconCircleLabel}"
                            Text="{x:Static fonts:MaterialIcons.Bluetooth_searching}" />
                 </Border>
-                <Label Style="{StaticResource EmptyTitleLabel}"
+                <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Scanning..." />
-                <Label Style="{StaticResource EmptyHintLabel}"
+                <Label Style="{StaticResource BasicCenterHintLabel}"
                        Text="Waiting for SwitchBot sensors" />
             </VerticalStackLayout>
         </CollectionView.EmptyView>
@@ -162,8 +123,8 @@
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="🌡" />
                                 <Label Style="{StaticResource BleScanValueLabel}"
-                                       Text="{Binding Temperature, StringFormat='{0:F1}'}"
-                                       behaviors:AnimationOption.BounceTrigger="{Binding Temperature}" />
+                                       behaviors:AnimationOption.BounceTrigger="{Binding Temperature}"
+                                       Text="{Binding Temperature, StringFormat='{0:F1}'}" />
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="°C" />
                             </HorizontalStackLayout>
@@ -173,8 +134,8 @@
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="💧" />
                                 <Label Style="{StaticResource BleScanValueLabel}"
-                                       Text="{Binding Humidity}"
-                                       behaviors:AnimationOption.BounceTrigger="{Binding Humidity}" />
+                                       behaviors:AnimationOption.BounceTrigger="{Binding Humidity}"
+                                       Text="{Binding Humidity}" />
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="%" />
                             </HorizontalStackLayout>
@@ -188,13 +149,13 @@
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
 
                         <HorizontalStackLayout Style="{StaticResource BleScanValueHorizontalStack}"
-                                               IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}"
-                                               HorizontalOptions="Center">
+                                               HorizontalOptions="Center"
+                                               IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}">
                             <Label Style="{StaticResource IconLabel}"
                                    Text="💨" />
                             <Label Style="{StaticResource BleScanValueLabel}"
-                                   Text="{Binding Co2}"
-                                   behaviors:AnimationOption.BounceTrigger="{Binding Co2}" />
+                                   behaviors:AnimationOption.BounceTrigger="{Binding Co2}"
+                                   Text="{Binding Co2}" />
                             <Label Style="{StaticResource UnitLabel}"
                                    Text="ppm" />
                         </HorizontalStackLayout>

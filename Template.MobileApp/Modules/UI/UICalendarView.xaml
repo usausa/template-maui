@@ -3,10 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:calendar="clr-namespace:Template.MobileApp.Models.Sample.Calendar"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:clam="clr-namespace:ClamCalendar;assembly=ClamCalendar"
              x:Class="Template.MobileApp.Modules.UI.UICalendarView"
              x:DataType="{x:Type module:UICalendarViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UICalendarViewModel}"
@@ -46,13 +45,15 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="RootGrid"
+            <Style x:Key="CalendarGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
             <Style x:Key="ModeBarGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
                 <Setter Property="ColumnSpacing" Value="4" />
             </Style>
 
@@ -60,27 +61,24 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource RootGrid}"
-          RowDefinitions="*,Auto,Auto"
-          BackgroundColor="White">
+    <Grid Style="{StaticResource CalendarGrid}"
+          RowDefinitions="*,Auto,Auto">
 
-        <controls:CalendarView Grid.Row="0"
-                               Culture="{Binding Culture}"
+        <!-- ClamCalendar: 表示範囲が変わるたびに DisplayDateChangedCommand で範囲のイベント・スタンプ・祝日を渡す -->
+        <clam:ClamCalendarView Grid.Row="0"
+                               SelectionMode="{Binding SelectionMode}"
                                DayTappedCommand="{Binding DayTappedCommand}"
+                               DisplayDate="{Binding DisplayDate, Mode=TwoWay}"
+                               DisplayDateChangedCommand="{Binding DisplayDateChangedCommand}"
                                EventTappedCommand="{Binding EventTappedCommand}"
-                               FirstDayOfWeek="{Binding FirstDayOfWeek}"
-                               GoToTodayCommand="{Binding GoToTodayCommand}"
-                               MaxDate="{Binding MaxDate}"
-                               MinDate="{Binding MinDate}"
-                               MonthIndicatorEnabled="True"
-                               NextMonthCommand="{Binding NextMonthCommand}"
-                               PrevMonthCommand="{Binding PrevMonthCommand}"
+                               Events="{Binding Events}"
+                               Holidays="{Binding Holidays}"
+                               MonthIndicatorVisible="True"
                                SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
                                SelectedDates="{Binding SelectedDates}"
                                SelectedEndDate="{Binding SelectedEndDate, Mode=TwoWay}"
                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
-                               SelectionMode="{Binding SelectionMode}"
-                               View="{Binding MonthView}" />
+                               Stamps="{Binding Stamps}" />
 
         <BoxView Grid.Row="1"
                  Style="{StaticResource CalendarDivider}" />
@@ -88,17 +86,16 @@
         <!-- 選択モード切替+今日へ -->
         <Grid Grid.Row="2"
               Style="{StaticResource ModeBarGrid}"
-              Padding="12,8"
               ColumnDefinitions="*,*,*,*,8,Auto">
             <Button Grid.Column="0"
                     Style="{StaticResource ModeButton}"
                     Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static calendar:CalendarSelectionMode.None}"
+                    CommandParameter="{x:Static clam:CalendarSelectionMode.None}"
                     Text="None">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding SelectionMode}"
-                                 Value="{x:Static calendar:CalendarSelectionMode.None}">
+                                 Value="{x:Static clam:CalendarSelectionMode.None}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -107,12 +104,12 @@
             <Button Grid.Column="1"
                     Style="{StaticResource ModeButton}"
                     Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static calendar:CalendarSelectionMode.Single}"
+                    CommandParameter="{x:Static clam:CalendarSelectionMode.SingleDate}"
                     Text="Single">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding SelectionMode}"
-                                 Value="{x:Static calendar:CalendarSelectionMode.Single}">
+                                 Value="{x:Static clam:CalendarSelectionMode.SingleDate}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -121,12 +118,12 @@
             <Button Grid.Column="2"
                     Style="{StaticResource ModeButton}"
                     Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static calendar:CalendarSelectionMode.Multiple}"
+                    CommandParameter="{x:Static clam:CalendarSelectionMode.MultipleDates}"
                     Text="Multi">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding SelectionMode}"
-                                 Value="{x:Static calendar:CalendarSelectionMode.Multiple}">
+                                 Value="{x:Static clam:CalendarSelectionMode.MultipleDates}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -135,12 +132,12 @@
             <Button Grid.Column="3"
                     Style="{StaticResource ModeButton}"
                     Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static calendar:CalendarSelectionMode.Range}"
+                    CommandParameter="{x:Static clam:CalendarSelectionMode.DateRange}"
                     Text="Range">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding SelectionMode}"
-                                 Value="{x:Static calendar:CalendarSelectionMode.Range}">
+                                 Value="{x:Static clam:CalendarSelectionMode.DateRange}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>

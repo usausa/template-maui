@@ -16,52 +16,26 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="{Binding Context.Data1, Converter={StaticResource NotEmptyConverter}}">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <ContentView.Resources>
-        <ResourceDictionary>
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <Style x:Key="FieldCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
+            <controls:StepIndicator Style="{StaticResource BasicStepIndicator}"
+                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                    CurrentStep="1" TotalSteps="3" />
 
-            <Style x:Key="FieldBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
-
-            <controls:StepIndicator Margin="0,8,0,0"
-                                    CurrentStep="1"
-                                    TotalSteps="3"
-                                    behaviors:AnimationOption.EnterAnimation="FadeUp" />
-
-            <controls:InfoCard Title="Step 1 — Data1"
-                               Icon="{x:Static fonts:MaterialIcons.Edit}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Step 1 - Data1"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Data1 (required)" />
-                    <Border Style="{StaticResource FieldBorder}">
-                        <Entry Placeholder="Data1"
+                    <Border Style="{StaticResource CardFieldBorder}">
+                        <Entry Style="{StaticResource BasicFieldEntry}"
                                Text="{Binding Context.Data1}"
-                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
-                               behaviors:Focus.FocusedThickness="2.5" />
+                               Placeholder="Data1" />
                     </Border>
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Next (▶️) is enabled once this field is filled" />
                 </VerticalStackLayout>
             </controls:InfoCard>

@@ -27,13 +27,6 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     [ObservableProperty(NotifyAlso = [nameof(Items)])]
     public partial string SearchText { get; set; } = string.Empty;
 
-    public IObserveCommand ItemCommand { get; }
-
-    public UIShopViewModel()
-    {
-        ItemCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIItem));
-    }
-
     public IReadOnlyList<UIShopItem> Popular { get; } =
     [
         new() { Title = "スリムノート PC 14", Price = "¥179,800", Image = "product_device01.jpg" },
@@ -45,6 +38,21 @@ public sealed partial class UIShopViewModel : AppViewModelBase
         String.IsNullOrWhiteSpace(SearchText)
             ? AllItems
             : AllItems.Where(x => x.Title.Contains(SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    public IObserveCommand ItemCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
+    public UIShopViewModel()
+    {
+        ItemCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIItem));
+    }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 

@@ -4,8 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:calendar="clr-namespace:Template.MobileApp.Models.Sample.Calendar"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:calendar="clr-namespace:Template.MobileApp.Models.Sample.Calendar"
              x:Class="Template.MobileApp.Modules.UI.UIScheduleView"
              x:DataType="{x:Type module:UIScheduleViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIScheduleViewModel}"
@@ -34,6 +34,12 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 22" />
             </Style>
 
+            <Style x:Key="DayChipStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="DayChipDowLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -57,6 +63,11 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="SummaryItemStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
             </Style>
 
             <Style x:Key="SummaryCaptionLabel"
@@ -95,7 +106,8 @@
                         SelectedItem="{Binding SelectedDay, Mode=TwoWay}"
                         SelectionMode="Single">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="0" />
+                <LinearItemsLayout Orientation="Horizontal"
+                                   ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type calendar:TimetableDay}">
@@ -121,8 +133,7 @@
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="ChipBorder"
                                 Style="{StaticResource DayChipBorder}">
-                            <VerticalStackLayout VerticalOptions="Center"
-                                                 Spacing="2">
+                            <VerticalStackLayout Style="{StaticResource DayChipStack}">
                                 <Label x:Name="ChipDow"
                                        Style="{StaticResource DayChipDowLabel}"
                                        Text="{Binding DowText}" />
@@ -141,21 +152,21 @@
                 Style="{StaticResource SummaryBorder}">
             <Grid ColumnDefinitions="*,*,*">
                 <VerticalStackLayout Grid.Column="0"
-                                     Spacing="2">
+                                     Style="{StaticResource SummaryItemStack}">
                     <Label Style="{StaticResource SummaryCaptionLabel}"
                            Text="予定" />
                     <Label Style="{StaticResource SummaryValueLabel}"
                            Text="{Binding EventCount, StringFormat='{0} 件'}" />
                 </VerticalStackLayout>
                 <VerticalStackLayout Grid.Column="1"
-                                     Spacing="2">
+                                     Style="{StaticResource SummaryItemStack}">
                     <Label Style="{StaticResource SummaryCaptionLabel}"
                            Text="合計" />
                     <Label Style="{StaticResource SummaryValueLabel}"
                            Text="{Binding TotalTimeText}" />
                 </VerticalStackLayout>
                 <VerticalStackLayout Grid.Column="2"
-                                     Spacing="2">
+                                     Style="{StaticResource SummaryItemStack}">
                     <Label Style="{StaticResource SummaryCaptionLabel}"
                            Text="空き" />
                     <Label Style="{StaticResource SummaryFreeValueLabel}"
@@ -166,8 +177,9 @@
 
         <!-- タイムテーブル -->
         <ScrollView Grid.Row="2">
-            <controls:DayTimetableView Events="{Binding Events}"
-                                       CurrentTime="{Binding CurrentTime}"
+            <controls:DayTimetableView CurrentTime="{Binding CurrentTime}"
+                                       EventTappedCommand="{Binding EventTappedCommand}"
+                                       Events="{Binding Events}"
                                        ShowCurrentTime="{Binding ShowCurrentTime}" />
         </ScrollView>
 

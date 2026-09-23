@@ -25,10 +25,18 @@ public sealed class UIKitNotifyViewModel : AppViewModelBase
     // タップで既読化
     public IObserveCommand ReadCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIKitNotifyViewModel()
     {
         ReadCommand = MakeDelegateCommand<UIKitNotifyItem>(x => x.IsUnread = false);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);
 

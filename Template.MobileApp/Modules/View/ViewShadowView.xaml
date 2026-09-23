@@ -48,6 +48,17 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
             </Style>
 
+            <Style x:Key="NeumorphRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="NeumorphItemStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
             <Style x:Key="NeumorphTile"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="96" />
@@ -62,7 +73,10 @@
                    BasedOn="{StaticResource NeumorphTile}">
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="#A3B1C6" Offset="8,8" Radius="12" Opacity="0.9" />
+                        <Shadow Offset="8,8"
+                                Brush="#A3B1C6"
+                                Opacity="0.9"
+                                Radius="12" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -72,7 +86,10 @@
                    BasedOn="{StaticResource NeumorphTile}">
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="White" Offset="-8,-8" Radius="12" Opacity="1" />
+                        <Shadow Offset="-8,-8"
+                                Brush="White"
+                                Opacity="1"
+                                Radius="12" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -82,7 +99,10 @@
                    BasedOn="{StaticResource NeumorphTile}">
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="White" Offset="8,8" Radius="12" Opacity="1" />
+                        <Shadow Offset="8,8"
+                                Brush="White"
+                                Opacity="1"
+                                Radius="12" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -92,7 +112,10 @@
                    BasedOn="{StaticResource NeumorphTile}">
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="#A3B1C6" Offset="-8,-8" Radius="12" Opacity="0.9" />
+                        <Shadow Offset="-8,-8"
+                                Brush="#A3B1C6"
+                                Opacity="0.9"
+                                Radius="12" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -138,8 +161,8 @@
                    Text="Border" />
             <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
             <Picker ItemsSource="{Binding BorderColors}"
-                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
-                    SelectedItem="{Binding BorderColor, Mode=TwoWay}" />
+                    SelectedItem="{Binding BorderColor, Mode=TwoWay}"
+                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
 
             <BoxView Style="{StaticResource SeparateBoxView}" />
 
@@ -147,8 +170,8 @@
                    Text="Color" />
             <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
             <Picker ItemsSource="{Binding ShadowColors}"
-                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
-                    SelectedItem="{Binding ShadowColor, Mode=TwoWay}" />
+                    SelectedItem="{Binding ShadowColor, Mode=TwoWay}"
+                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
 
             <Label Style="{StaticResource NameLabel}"
                    Text="{Binding ShadowOffsetX, StringFormat='OffsetX: {0:F2}'}" />
@@ -178,9 +201,8 @@
                    Text="Neumorphism (影 2 方向の重ね合わせ)" />
 
             <Border Style="{StaticResource NeumorphPanel}">
-                <HorizontalStackLayout HorizontalOptions="Center"
-                                       Spacing="48">
-                    <VerticalStackLayout Spacing="16">
+                <HorizontalStackLayout Style="{StaticResource NeumorphRowStack}">
+                    <VerticalStackLayout Style="{StaticResource NeumorphItemStack}">
                         <Grid>
                             <Border Style="{StaticResource NeumorphRaisedDark}" />
                             <Border Style="{StaticResource NeumorphRaisedLight}">
@@ -191,7 +213,7 @@
                         <Label Style="{StaticResource NeumorphCaptionLabel}"
                                Text="Raised" />
                     </VerticalStackLayout>
-                    <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Style="{StaticResource NeumorphItemStack}">
                         <Grid>
                             <Border Style="{StaticResource NeumorphPressedLight}" />
                             <Border Style="{StaticResource NeumorphPressedDark}">

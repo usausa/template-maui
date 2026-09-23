@@ -10,8 +10,6 @@ public sealed partial class AiChatMessage : ObservableObject
 {
     public required AiChatRole Role { get; init; }
 
-    public bool IsCode { get; init; }
-
     [ObservableProperty]
     public partial string Text { get; set; } = string.Empty;
 

@@ -32,7 +32,7 @@ public sealed class UITimelineViewModel : AppViewModelBase
         },
         new()
         {
-            Time = "10:30", Title = ".NET on AWS — Lambda & ECS 最新アップデート",
+            Time = "10:30", Title = ".NET on AWS - Lambda & ECS 最新アップデート",
             Description = "NativeAOT Lambda、ARM64 Graviton3、.NET 10 サポートの詳細解説",
             Tag1 = ".NET", Tag2 = "サーバーレス",
             DotColor = Color.FromArgb("#1E88E5"),
@@ -41,7 +41,7 @@ public sealed class UITimelineViewModel : AppViewModelBase
         new()
         {
             Time = "12:00", Title = "ランチセッション · CDK v3 ハンズオン",
-            Description = "C# で書く AWS CDK v3 — Stack 設計パターンとベストプラクティス",
+            Description = "C# で書く AWS CDK v3 - Stack 設計パターンとベストプラクティス",
             Tag1 = "ハンズオン", Tag2 = "IaC",
             DotColor = Color.FromArgb("#43A047"),
             Done = true
@@ -57,7 +57,7 @@ public sealed class UITimelineViewModel : AppViewModelBase
         new()
         {
             Time = "15:00", Title = "DynamoDB 設計パターン深掘り",
-            Description = "シングルテーブル設計と GSI 活用 — C# SDK による実装例",
+            Description = "シングルテーブル設計と GSI 活用 - C# SDK による実装例",
             Tag1 = "データベース", Tag2 = "アーキテクチャ",
             DotColor = Color.FromArgb("#FB8C00")
         },
@@ -76,6 +76,10 @@ public sealed class UITimelineViewModel : AppViewModelBase
             DotColor = Color.FromArgb("#1E88E5")
         }
     ];
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 

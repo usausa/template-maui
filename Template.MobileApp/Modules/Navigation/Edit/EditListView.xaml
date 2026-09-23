@@ -22,49 +22,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="EmptyStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Spacing" Value="16" />
-            </Style>
-
-            <Style x:Key="EmptyIconBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="HeightRequest" Value="96" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
-            </Style>
-
-            <Style x:Key="EmptyIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="48" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyTitleLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyHintLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
             <Style x:Key="WorkRowBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="8,4" />
@@ -160,14 +117,14 @@
                         SelectionMode="{Binding SelectionMode}"
                         SelectedItems="{Binding SelectedItems}">
             <CollectionView.EmptyView>
-                <VerticalStackLayout Style="{StaticResource EmptyStack}">
-                    <Border Style="{StaticResource EmptyIconBorder}">
-                        <Label Style="{StaticResource EmptyIconLabel}"
+                <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
+                    <Border Style="{StaticResource BasicEmptyIconBorder}">
+                        <Label Style="{StaticResource BasicEmptyIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Inbox}" />
                     </Border>
-                    <Label Style="{StaticResource EmptyTitleLabel}"
+                    <Label Style="{StaticResource BasicCenterTitleLabel}"
                            Text="No items" />
-                    <Label Style="{StaticResource EmptyHintLabel}"
+                    <Label Style="{StaticResource BasicCenterHintLabel}"
                            Text="Press New to add a work item" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>

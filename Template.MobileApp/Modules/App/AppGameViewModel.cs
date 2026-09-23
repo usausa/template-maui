@@ -8,8 +8,6 @@ public sealed partial class SudokuCellViewModel : ObservableObject
 
     public int Col { get; }
 
-    // 3x3 ブロックの区切りを太くするための余白
-    // 盤面 Grid 上の位置 (3x3 ブロックの境界に太線用のスペーサ行・列を挟むため 1 つずつずれる)
     public int GridRow { get; }
 
     public int GridColumn { get; }
@@ -40,7 +38,6 @@ public sealed partial class AppGameViewModel : AppViewModelBase
 {
     private readonly Random random = new();
 
-    // 盤面ロジックは純モデル (差し替え可能)。VM は表示状態の同期のみを担う
     private readonly SudokuGame game = new();
 
     private SudokuCellViewModel? selected;
@@ -55,6 +52,10 @@ public sealed partial class AppGameViewModel : AppViewModelBase
     public IObserveCommand NumberCommand { get; }
 
     public IObserveCommand EraseCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public AppGameViewModel()
     {
@@ -76,6 +77,30 @@ public sealed partial class AppGameViewModel : AppViewModelBase
         NewGame();
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.AppMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction3()
+    {
+        AutoStep();
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyFunction4()
+    {
+        NewGame();
+        return Task.CompletedTask;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private void NewGame()
     {
         game.NewGame(random.Next());
@@ -84,7 +109,6 @@ public sealed partial class AppGameViewModel : AppViewModelBase
         RefreshAll();
     }
 
-    // 空きまたは誤った入力のマスからランダムに 1 つ選び正解を入れる (F3 を押すたびに 1 マス)
     private void AutoStep()
     {
         if (IsCompleted)
@@ -150,22 +174,6 @@ public sealed partial class AppGameViewModel : AppViewModelBase
             cell.IsConflict = game.HasConflict(cell.Row, cell.Col);
             cell.IsSelected = ReferenceEquals(cell, selected);
         }
-    }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.AppMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    protected override Task OnNotifyFunction3()
-    {
-        AutoStep();
-        return Task.CompletedTask;
-    }
-
-    protected override Task OnNotifyFunction4()
-    {
-        NewGame();
-        return Task.CompletedTask;
     }
 }
 #pragma warning restore CA5394

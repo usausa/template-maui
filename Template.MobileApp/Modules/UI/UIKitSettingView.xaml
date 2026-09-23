@@ -16,43 +16,50 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll" TargetType="ScrollView">
+            <Style x:Key="KitSettingScroll"
+                   TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
 
-            <Style x:Key="SectionLabel" TargetType="Label">
+            <Style x:Key="KitSettingSectionLabel"
+                   TargetType="Label">
                 <Setter Property="Margin" Value="16,16,16,4" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="GroupBorder" TargetType="Border">
+            <Style x:Key="GroupBorder"
+                   TargetType="Border">
                 <Setter Property="Margin" Value="12,0,12,8" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style x:Key="RowGrid" TargetType="Grid">
+            <Style x:Key="KitSettingRowGrid"
+                   TargetType="Grid">
                 <Setter Property="Padding" Value="14,12" />
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
-            <Style x:Key="RowIcon" TargetType="Label">
+            <Style x:Key="RowIcon"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="RowTitle" TargetType="Label">
+            <Style x:Key="RowTitle"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="RowChevron" TargetType="Label">
+            <Style x:Key="RowChevron"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
@@ -62,42 +69,55 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource RootScroll}">
+    <ScrollView Style="{StaticResource KitSettingScroll}">
         <VerticalStackLayout>
 
-            <Label Style="{StaticResource SectionLabel}" Text="アカウント"
-                   behaviors:AnimationOption.EnterAnimation="FadeUp" />
+            <Label Style="{StaticResource KitSettingSectionLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   Text="アカウント" />
             <Border Style="{StaticResource GroupBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="80">
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding AccountItems}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="module:UIKitSettingItem">
-                            <Grid Style="{StaticResource RowGrid}"
+                            <Grid Style="{StaticResource KitSettingRowGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
-                                <Label Grid.Column="0" Style="{StaticResource RowIcon}" Text="{Binding Icon}" />
-                                <Label Grid.Column="1" Style="{StaticResource RowTitle}" Text="{Binding Title}" />
-                                <Label Grid.Column="2" Style="{StaticResource RowChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource RowIcon}"
+                                       Text="{Binding Icon}" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource RowTitle}"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource RowChevron}"
+                                       Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
             </Border>
 
-            <Label Style="{StaticResource SectionLabel}" Text="環境設定"
+            <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                   behaviors:AnimationOption.EnterDelay="160" />
+                   behaviors:AnimationOption.EnterDelay="160"
+                   Text="環境設定" />
             <Border Style="{StaticResource GroupBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="240">
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreferenceItems}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="module:UIKitSettingItem">
-                            <Grid Style="{StaticResource RowGrid}"
+                            <Grid Style="{StaticResource KitSettingRowGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
-                                <Label Grid.Column="0" Style="{StaticResource RowIcon}" Text="{Binding Icon}" />
-                                <Label Grid.Column="1" Style="{StaticResource RowTitle}" Text="{Binding Title}" />
-                                <Switch Grid.Column="2" IsToggled="{Binding IsOn}" />
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource RowIcon}"
+                                       Text="{Binding Icon}" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource RowTitle}"
+                                       Text="{Binding Title}" />
+                                <Switch Grid.Column="2"
+                                        IsToggled="{Binding IsOn}" />
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

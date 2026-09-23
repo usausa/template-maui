@@ -5,7 +5,6 @@
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -24,8 +23,6 @@
                                        Expression="{x:Static s:CompareExpressions.Equal}"
                                        TrueValue="{StaticResource PinkAccent3}"
                                        FalseValue="{StaticResource GrayDefault}" />
-
-            <converters:BadgeCountConverter x:Key="BadgeCountConverter" />
 
             <!-- Background -->
             <Style x:Key="BackgroundGrid"
@@ -148,7 +145,8 @@
                 <Setter Property="Stroke" Value="{StaticResource RedLighten3}" />
                 <Setter Property="Shadow">
                     <Shadow Brush="{StaticResource RedLighten1}"
-                            Opacity="0.5" Radius="12" />
+                            Opacity="0.5"
+                            Radius="12" />
                 </Setter>
             </Style>
             <Style x:Key="RankEffect"
@@ -471,7 +469,8 @@
                 <!-- Rank -->
                 <Border Grid.Row="1"
                         Style="{StaticResource RankBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100">
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="100">
                     <toolkit:SfEffectsView Style="{StaticResource RankEffect}">
                         <Grid ColumnDefinitions="36,*,36">
                             <Border Grid.Column="0"
@@ -492,7 +491,8 @@
                 <!-- Menu -->
                 <Border Grid.Row="2"
                         Style="{StaticResource MoneyMenuBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200">
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="200">
                     <Grid Style="{StaticResource MoneyMenuGrid}"
                           RowDefinitions="*,*"
                           ColumnDefinitions="*,*,*,*">
@@ -688,8 +688,8 @@
                             behaviors:AnimationOption.EnterTrigger="{Binding NotificationCount}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Value="0"
-                                         Binding="{Binding NotificationCount}">
+                                         Binding="{Binding NotificationCount}"
+                                         Value="0">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Border.Triggers>

@@ -40,6 +40,52 @@ public partial class ChatView
         set => SetValue(SendCommandProperty, value);
     }
 
+    public static readonly BindableProperty CancelCommandProperty = BindableProperty.Create(
+        nameof(CancelCommand),
+        typeof(ICommand),
+        typeof(ChatView));
+
+    public ICommand? CancelCommand
+    {
+        get => (ICommand?)GetValue(CancelCommandProperty);
+        set => SetValue(CancelCommandProperty, value);
+    }
+
+    public static readonly BindableProperty IsRespondingProperty = BindableProperty.Create(
+        nameof(IsResponding),
+        typeof(bool),
+        typeof(ChatView),
+        false);
+
+    public bool IsResponding
+    {
+        get => (bool)GetValue(IsRespondingProperty);
+        set => SetValue(IsRespondingProperty, value);
+    }
+
+    public static readonly BindableProperty VoiceCommandProperty = BindableProperty.Create(
+        nameof(VoiceCommand),
+        typeof(ICommand),
+        typeof(ChatView));
+
+    public ICommand? VoiceCommand
+    {
+        get => (ICommand?)GetValue(VoiceCommandProperty);
+        set => SetValue(VoiceCommandProperty, value);
+    }
+
+    public static readonly BindableProperty IsListeningProperty = BindableProperty.Create(
+        nameof(IsListening),
+        typeof(bool),
+        typeof(ChatView),
+        false);
+
+    public bool IsListening
+    {
+        get => (bool)GetValue(IsListeningProperty);
+        set => SetValue(IsListeningProperty, value);
+    }
+
     public ChatView()
     {
         InitializeComponent();

@@ -6,8 +6,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
-             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui" xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="Template.MobileApp.Modules.Sample.SampleMap2View"
              x:DataType="{x:Type module:SampleMap2ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMap2ViewModel}"
@@ -25,6 +24,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="MapFabStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="0,0,16,16" />
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
             <Style x:Key="MapFabButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="48" />
@@ -35,13 +42,17 @@
                 <Setter Property="Shadow">
                     <Setter.Value>
                         <Shadow Offset="0,2"
-                                Brush="Black" Opacity="0.3" Radius="6" />
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
 
             <Style x:Key="TogglePanelBorder"
                    TargetType="Border">
+                <Setter Property="Margin" Value="16,16,0,0" />
+                <Setter Property="WidthRequest" Value="148" />
                 <Setter Property="Padding" Value="10,8" />
                 <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
                 <Setter Property="StrokeThickness" Value="0" />
@@ -49,9 +60,13 @@
                 <Setter Property="Shadow">
                     <Setter.Value>
                         <Shadow Offset="0,2"
-                                Brush="Black" Opacity="0.3" Radius="6" />
+                                Brush="Black"
+                                Opacity="0.3"
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
             <Style x:Key="ToggleRowGrid"
@@ -86,11 +101,8 @@
                            InputTransparent="True" />
 
         <!-- 機能グループ別マネージャのトグル -->
-        <Border Style="{StaticResource TogglePanelBorder}"
-                Margin="16,16,0,0"
-                HorizontalOptions="Start" VerticalOptions="Start"
-                WidthRequest="148">
-            <VerticalStackLayout Spacing="0">
+        <Border Style="{StaticResource TogglePanelBorder}">
+            <VerticalStackLayout>
                 <Grid Style="{StaticResource ToggleRowGrid}"
                       ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
@@ -148,9 +160,7 @@
             </VerticalStackLayout>
         </Border>
 
-        <VerticalStackLayout Margin="0,0,16,16"
-                             HorizontalOptions="End" VerticalOptions="End"
-                             Spacing="12">
+        <VerticalStackLayout Style="{StaticResource MapFabStack}">
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapAdd}"
                          Command="{Binding ZoomInCommand}" />

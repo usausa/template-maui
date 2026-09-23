@@ -10,6 +10,10 @@ public sealed partial class SharedInputViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string No { get; set; } = default!;
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())

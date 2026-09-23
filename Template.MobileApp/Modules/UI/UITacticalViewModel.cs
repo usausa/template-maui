@@ -6,10 +6,18 @@ public sealed class UITacticalViewModel : AppViewModelBase
 {
     public MechHudScene Scene { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UITacticalViewModel()
     {
         Disposables.Add(Scene);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {

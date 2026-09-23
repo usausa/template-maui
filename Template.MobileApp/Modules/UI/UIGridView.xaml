@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
+             x:Class="Template.MobileApp.Modules.UI.UIGridView"
+             x:DataType="{x:Type module:UIGridViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGridViewModel}"
+             shell:ShellProperty.Title="Grid"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="Clear"
+             shell:ShellProperty.Function3Text="Reset"
+             shell:ShellProperty.Function4Text="Reload"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!--
+        ClamGrid: 列は XAML で宣言し、値は OrderInfo.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
+        状態・目印・ランク・受付の絵文字は列の Converter、セルの色は UIGridStyles
+    -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- 列の文言 (値は列挙や数値のまま渡され、並べ替えも値で行う) -->
+            <s:MapToTextConverter x:Key="StatusTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Open}"
+                                      Value="⏳ 未処理" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Processing}"
+                                      Value="🔄 処理中" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Hold}"
+                                      Value="✋ 保留" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Completed}"
+                                      Value="✅ 完了" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <converters:FlagsToTextConverter x:Key="MarksTextConverter">
+                <converters:FlagsToTextConverter.Entries>
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Overdue}"
+                                               Value="❗" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.DueSoon}"
+                                               Value="🔥" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.LargeAmount}"
+                                               Value="💰" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Bulk}"
+                                               Value="📦" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Recent}"
+                                               Value="🆕" />
+                </converters:FlagsToTextConverter.Entries>
+            </converters:FlagsToTextConverter>
+            <s:MapToTextConverter x:Key="RankTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Int32 1}"
+                                      Value="⭐" />
+                    <s:MapToTextEntry Key="{s:Int32 2}"
+                                      Value="⭐⭐" />
+                    <s:MapToTextEntry Key="{s:Int32 3}"
+                                      Value="⭐⭐⭐" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="ChannelTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Store}"
+                                      Value="🏪 店頭" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Web}"
+                                      Value="🌐 Web" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Phone}"
+                                      Value="📞 電話" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Fax}"
+                                      Value="📠 FAX" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <Style x:Key="SummaryGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SummaryLabel}">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="GridMessageLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="ActionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,*,Auto,Auto">
+
+        <Grid Grid.Row="0"
+              Style="{StaticResource SummaryGrid}"
+              ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="{Binding Rows.Count, StringFormat='{0:N0} 件'}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="{Binding OpenCount, StringFormat='未処理 {0:N0}'}" />
+            <Label Grid.Column="3"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="選択" />
+            <Label Grid.Column="4"
+                   Style="{StaticResource SummaryValueLabel}"
+                   Text="{Binding SelectedCount, StringFormat='{0:N0}'}" />
+        </Grid>
+
+        <!-- グリッドは自前でスクロールするため * 行に置く。先頭 2 列は固定、見出しの長押しで列設定 -->
+        <clam:ClamGridView Grid.Row="1"
+                           ItemsSource="{Binding Rows}"
+                           SelectionMode="MultipleToggle"
+                           CellValueChangedCommand="{Binding CellValueChangedCommand}"
+                           ColumnConfigurationCommand="{Binding ColumnEditCommand}"
+                           ColumnOrders="{Binding ColumnOrders}"
+                           FrozenColumnCount="2"
+                           GridStyle="{x:Static module:UIGridStyles.ListStyle}"
+                           SelectAllCommand="{Binding SelectAllCommand}"
+                           SortCycle="AscendingDescendingNone"
+                           SortOrders="{Binding SortOrders}"
+                           ValueAccessors="{x:Static models:OrderInfo.Accessors}">
+            <clam:GridColumn Key="Status"
+                             Width="100"
+                             Converter="{StaticResource StatusTextConverter}"
+                             Header="状態" />
+            <clam:GridColumn Key="OrderNo"
+                             Width="150"
+                             Header="受注番号" />
+            <clam:GridColumn Key="Marks"
+                             Width="112"
+                             AllowSorting="False"
+                             Converter="{StaticResource MarksTextConverter}"
+                             Header="フラグ" />
+            <clam:GridColumn Key="Customer"
+                             Width="140"
+                             Header="顧客" />
+            <clam:GridColumn Key="Rank"
+                             Width="84"
+                             Alignment="Center"
+                             Converter="{StaticResource RankTextConverter}"
+                             Header="ランク" />
+            <clam:GridColumn Key="Product"
+                             Width="220"
+                             Header="商品" />
+            <clam:GridColumn Key="Quantity"
+                             Width="72"
+                             Alignment="End" Format="N0" Header="数量" />
+            <clam:GridColumn Key="Amount"
+                             Width="120"
+                             Alignment="End" Format="N0" Header="金額" />
+            <clam:GridColumn Key="DueDate"
+                             Width="90"
+                             Alignment="End" Format="MM/dd" Header="納期" />
+            <clam:GridColumn Key="Channel"
+                             Width="88"
+                             Converter="{StaticResource ChannelTextConverter}"
+                             Header="受付" />
+            <clam:GridColumn Key="IsChecked"
+                             Width="64"
+                             AllowSorting="False" Header="確認" IsBoolean="True" IsReadOnly="False" />
+            <clam:GridColumn Key="Staff"
+                             Width="90"
+                             Header="担当" />
+            <clam:GridColumn Key="UpdatedAt"
+                             Width="130"
+                             Format="MM/dd HH:mm" Header="更新" />
+        </clam:ClamGridView>
+
+        <Label Grid.Row="2"
+               Style="{StaticResource GridMessageLabel}"
+               Text="{Binding Message}" />
+
+        <Grid Grid.Row="3"
+              Style="{StaticResource ActionGrid}"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource BasicFilledButton}"
+                    Command="{Binding CommitCommand}"
+                    Text="確定" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource BasicFilledSecondaryButton}"
+                    Command="{Binding AdvanceCommand}"
+                    Text="状態更新" />
+        </Grid>
+    </Grid>
+
+</ContentView>

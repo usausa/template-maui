@@ -3,16 +3,155 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
+             xmlns:services="clr-namespace:Template.MobileApp.Services"
              x:Class="Template.MobileApp.Modules.Network.NetworkGrpcView"
              x:DataType="{x:Type module:NetworkGrpcViewModel}"
              s:BindingContextResolver.Type="{x:Type module:NetworkGrpcViewModel}"
              shell:ShellProperty.Title="gRPC"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Connect"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
 
-    <Grid Style="{StaticResource MenuGrid}">
-        <!-- Menu -->
+    <!-- gRPC チャット (双方向ストリーミング、管理画面 /chat と相互) と単項 RPC -->
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ChatEmptyLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="PageGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="ErrorLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="ChatBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="ChatCollection"
+                   TargetType="CollectionView">
+                <Setter Property="ItemsUpdatingScrollMode" Value="KeepLastItemInView" />
+                <Setter Property="SelectionMode" Value="None" />
+            </Style>
+
+            <Style x:Key="MessageGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="MessageHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource PageGrid}"
+          RowDefinitions="Auto,*,Auto">
+
+        <controls:InfoCard Grid.Row="0"
+                           behaviors:AnimationOption.EnterAnimation="FadeUp"
+                           Title="接続"
+                           Icon="{x:Static fonts:MaterialIcons.Hub}">
+            <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                <Label Style="{StaticResource BasicCaptionLabel}"
+                       Text="{Binding AddressDisplay}" />
+                <Label Style="{StaticResource BasicBodyLabel}"
+                       Text="{Binding StateText, StringFormat='状態: {0}'}" />
+                <Label Style="{StaticResource ErrorLabel}"
+                       IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}"
+                       Text="{Binding LastError}" />
+                <Label Style="{StaticResource BasicCaptionLabel}"
+                       Text="{Binding PendingCount, StringFormat='未配送の送信: {0} 件 (切断中の送信は再接続後に配送)'}" />
+                <Grid Style="{StaticResource BasicButtonGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource BasicOutlinedButton}"
+                            Command="{Binding ServerTimeCommand}"
+                            Text="サーバー時刻 (単項 RPC)" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource CardRowLabel}"
+                           Text="{Binding ServerTime}" />
+                </Grid>
+            </VerticalStackLayout>
+        </controls:InfoCard>
+
+        <Border Grid.Row="1"
+                Style="{StaticResource ChatBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                behaviors:AnimationOption.EnterDelay="80">
+            <Grid>
+                <Label Style="{StaticResource ChatEmptyLabel}"
+                       IsVisible="{Binding IsEmpty}"
+                       Text="接続すると直近 50 件の履歴を受信する。管理画面の /chat と相互に表示" />
+                <CollectionView Style="{StaticResource ChatCollection}"
+                                ItemsSource="{Binding Messages}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type services:ChatMessageEntry}">
+                            <Grid Style="{StaticResource MessageGrid}"
+                                  RowDefinitions="Auto,Auto">
+                                <Label Grid.Row="0"
+                                       Style="{StaticResource MessageHeaderLabel}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1:HH:mm:ss}">
+                                            <Binding Path="User" />
+                                            <Binding Path="Timestamp" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                                <Label Grid.Row="1"
+                                       Style="{StaticResource BasicBodyLabel}"
+                                       Text="{Binding Text}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2"
+              Style="{StaticResource BasicButtonGrid}"
+              ColumnDefinitions="*,Auto">
+            <Entry Grid.Column="0"
+                   Style="{StaticResource BasicEntry}"
+                   Text="{Binding Input}"
+                   Placeholder="メッセージ"
+                   ReturnCommand="{Binding SendCommand}"
+                   ReturnType="Send" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource BasicOutlinedButton}"
+                    Command="{Binding SendCommand}"
+                    Text="送信" />
+        </Grid>
+
     </Grid>
 
 </ContentView>

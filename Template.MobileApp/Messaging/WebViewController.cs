@@ -14,12 +14,18 @@ public abstract class WebViewControllerBase : IWebViewController
 {
     public event EventHandler<HybridWebViewRawMessageReceivedEventArgs>? RawMessageReceived;
 
+    public event EventHandler<WebViewWebResourceRequestedEventArgs>? WebResourceRequested;
+
+    public event EventHandler<WebViewInitializedEventArgs>? WebViewInitialized;
+
     private HybridWebView? webView;
 
     void IWebViewController.Attach(HybridWebView view)
     {
         webView = view;
         webView.RawMessageReceived += RaiseRawMessageReceived;
+        webView.WebResourceRequested += RaiseWebResourceRequested;
+        webView.WebViewInitialized += RaiseWebViewInitialized;
         Attached(view);
     }
 
@@ -30,6 +36,8 @@ public abstract class WebViewControllerBase : IWebViewController
         if (webView is not null)
         {
             webView.RawMessageReceived -= RaiseRawMessageReceived;
+            webView.WebResourceRequested -= RaiseWebResourceRequested;
+            webView.WebViewInitialized -= RaiseWebViewInitialized;
         }
         webView = null;
     }
@@ -37,6 +45,16 @@ public abstract class WebViewControllerBase : IWebViewController
     private void RaiseRawMessageReceived(object? sender, HybridWebViewRawMessageReceivedEventArgs e)
     {
         RawMessageReceived?.Invoke(sender, e);
+    }
+
+    private void RaiseWebResourceRequested(object? sender, WebViewWebResourceRequestedEventArgs e)
+    {
+        WebResourceRequested?.Invoke(sender, e);
+    }
+
+    private void RaiseWebViewInitialized(object? sender, WebViewInitializedEventArgs e)
+    {
+        WebViewInitialized?.Invoke(sender, e);
     }
 
     public void SendRawMessage(string rawMessage)
@@ -57,6 +75,12 @@ public abstract class WebViewControllerBase : IWebViewController
 
         return default;
     }
+
+    public Task InvokeJavaScriptAsync(
+        string methodName,
+        object?[]? paramValues = null,
+        JsonTypeInfo?[]? paramJsonTypeInfos = null) =>
+        webView?.InvokeJavaScriptAsync(methodName, paramValues, paramJsonTypeInfos) ?? Task.CompletedTask;
 
     public async Task<string?> EvaluateJavaScriptAsync(string script)
     {

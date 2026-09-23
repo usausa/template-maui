@@ -4,9 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
-             xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters" xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
              x:Class="Template.MobileApp.Modules.UI.UIGraphView"
              x:DataType="{x:Type module:UIGraphViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGraphViewModel}"
@@ -17,8 +16,10 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-            <conv:RefKindBrushConverter x:Key="RefBackgroundConverter" Foreground="False" />
-            <conv:RefKindBrushConverter x:Key="RefForegroundConverter" Foreground="True" />
+            <conv:RefKindBrushConverter x:Key="RefBackgroundConverter"
+                                        Foreground="False" />
+            <conv:RefKindBrushConverter x:Key="RefForegroundConverter"
+                                        Foreground="True" />
             <conv:AlternateRowBackgroundConverter x:Key="RowBackgroundConverter"
                                                   EvenColor="Transparent"
                                                   OddColor="{StaticResource GrayLighten4}" />
@@ -90,8 +91,8 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid RowDefinitions="Auto,*"
-          Style="{StaticResource FillGrid}">
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,*">
         <Border Grid.Row="0"
                 Style="{StaticResource GraphHeaderBarBorder}">
             <Label Style="{StaticResource GraphHeaderLabel}"
@@ -100,17 +101,17 @@
 
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Rows}"
-                        HorizontalScrollBarVisibility="Always"
-                        VerticalScrollBarVisibility="Always"
-                        SelectionMode="Single">
+                        SelectionMode="Single"
+                        HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Always">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type graph:GraphRow}">
                     <Grid Style="{StaticResource GraphRowGrid}"
-                          HeightRequest="26"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                          HeightRequest="26"
                           BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroupList>
@@ -126,8 +127,8 @@
                         </VisualStateManager.VisualStateGroups>
 
                         <controls:GraphRowSurface Grid.Column="0"
-                                                  RowData="{Binding .}"
-                                                  VerticalOptions="Fill" />
+                                                  VerticalOptions="Fill"
+                                                  RowData="{Binding .}" />
 
                         <HorizontalStackLayout Grid.Column="1"
                                                Style="{StaticResource RefListStack}"
@@ -144,8 +145,8 @@
                                                 <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
                                             </DataTrigger>
                                         </Border.Triggers>
-                                        <Label Text="{Binding Name}"
-                                               Style="{StaticResource RefBadgeLabel}"
+                                        <Label Style="{StaticResource RefBadgeLabel}"
+                                               Text="{Binding Name}"
                                                TextColor="{Binding Kind, Converter={StaticResource RefForegroundConverter}}" />
                                     </Border>
                                 </DataTemplate>

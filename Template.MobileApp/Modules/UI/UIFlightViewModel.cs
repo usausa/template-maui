@@ -6,10 +6,18 @@ public sealed class UIFlightViewModel : AppViewModelBase
 {
     public FlightHudScene Scene { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIFlightViewModel()
     {
         Disposables.Add(Scene);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {

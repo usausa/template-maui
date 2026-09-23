@@ -24,10 +24,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <s:NullToBoolConverter x:Key="EmptyConverter"
-                                   HandleEmptyString="True"
-                                   NullValue="True"
-                                   NonNullValue="False" />
+            <Style x:Key="ScanPlaceholderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ResultLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
@@ -41,21 +42,20 @@
                             OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
         <drawing:DrawingControl Grid.Row="0"
-                                  Drawing="{Binding Drawing}" />
+                                Drawing="{Binding Drawing}" />
 
         <!-- 検出時のフラッシュ -->
         <BoxView Grid.Row="0"
-                 Color="White"
-                 Opacity="0"
+                 behaviors:AnimationOption.FlashTrigger="{Binding Barcode}"
                  InputTransparent="True"
-                 behaviors:AnimationOption.FlashTrigger="{Binding Barcode}" />
+                 Color="White"
+                 Opacity="0" />
 
         <Grid Grid.Row="1">
             <Label Style="{StaticResource ResultLabel}"
                    IsVisible="{Binding Barcode, Converter={StaticResource NotEmptyConverter}}"
                    Text="{Binding Barcode}" />
-            <Label Style="{StaticResource ResultLabel}"
-                   TextColor="{StaticResource GrayLighten1}"
+            <Label Style="{StaticResource ScanPlaceholderLabel}"
                    IsVisible="{Binding Barcode, Converter={StaticResource EmptyConverter}}"
                    Text="Scan a code..." />
         </Grid>

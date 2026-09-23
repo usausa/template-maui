@@ -34,6 +34,10 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int[] Values { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIMixerViewModel(IDispatcher dispatcher)
     {
         currentValues = new int[RangeCount];
@@ -44,6 +48,10 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
         timer.Interval = TimeSpan.FromMilliseconds(50);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => OnTimerTick()));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -57,6 +65,14 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Event
+    //--------------------------------------------------------------------------------
+
     private void OnTimerTick()
     {
         (currentValues, previousValues) = (previousValues, currentValues);
@@ -68,10 +84,6 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
 
         Values = currentValues;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }
 #pragma warning restore CA5394
 #pragma warning restore CA1819

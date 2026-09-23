@@ -19,10 +19,18 @@ public sealed class UIKitOnboardViewModel : AppViewModelBase
     // スキップ / 始める はどちらもダッシュボードへ
     public IObserveCommand CompleteCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIKitOnboardViewModel()
     {
         CompleteCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitDash));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);
 

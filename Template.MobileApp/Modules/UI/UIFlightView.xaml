@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:scene="clr-namespace:Template.MobileApp.Graphics.Scene"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:scene="clr-namespace:Template.MobileApp.Graphics.Scene"
              x:Class="Template.MobileApp.Modules.UI.UIFlightView"
              x:DataType="{x:Type module:UIFlightViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIFlightViewModel}"
@@ -14,7 +14,8 @@
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
-        <scene:SceneControl Grid.Row="0" Scene="{Binding Scene}" />
+        <scene:SceneControl Grid.Row="0"
+                            Scene="{Binding Scene}" />
     </Grid>
 
 </ContentView>

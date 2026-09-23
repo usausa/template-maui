@@ -19,16 +19,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ChatPageGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
             <converters:ChatTimeConverter x:Key="ChatTimeConverter" />
             <converters:CollectionNotEmptyConverter x:Key="CollectionNotEmptyConverter" />
-            <s:NullToBoolConverter x:Key="NullToBoolConverter"
-                                   HandleEmptyString="True" />
-            <s:ChainConverter x:Key="NullToReverseBoolConverter">
-                <s:NullToBoolConverter HandleEmptyString="True" />
-                <s:ReverseConverter />
-            </s:ChainConverter>
-            <s:AllConverter x:Key="AllConverter" />
-
             <Color x:Key="BubbleSend">#4CAF50</Color>
             <Color x:Key="BubbleSendText">#FFFFFF</Color>
             <Color x:Key="BubbleReceive">#F0F0F0</Color>
@@ -235,6 +232,7 @@
             </Style>
             <Style x:Key="MessageInputEditor"
                    TargetType="Editor">
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
                 <Setter Property="Margin" Value="14,0,0,0" />
                 <Setter Property="AutoSize" Value="TextChanges" />
                 <Setter Property="MaximumHeightRequest" Value="100" />
@@ -310,9 +308,9 @@
                                     Style="{StaticResource SendBubbleBorder}">
                                 <Border.IsVisible>
                                     <MultiBinding Converter="{StaticResource AllConverter}">
-                                        <Binding Converter="{StaticResource NullToReverseBoolConverter}"
+                                        <Binding Converter="{StaticResource EmptyConverter}"
                                                  Path="StampSource" />
-                                        <Binding Converter="{StaticResource NullToBoolConverter}"
+                                        <Binding Converter="{StaticResource NotEmptyConverter}"
                                                  Path="TextContent" />
                                     </MultiBinding>
                                 </Border.IsVisible>
@@ -322,12 +320,12 @@
                             <Image Grid.Column="1"
                                    Style="{StaticResource StampImage}"
                                    Source="{Binding StampSource}"
-                                   IsVisible="{Binding StampSource, Converter={StaticResource NullToBoolConverter}}" />
+                                   IsVisible="{Binding StampSource, Converter={StaticResource NotEmptyConverter}}" />
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource SendReactionList}"
-                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                               BindableLayout.ItemsSource="{Binding Reactions}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
-                                               BindableLayout.ItemsSource="{Binding Reactions}" />
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}" />
                     </VerticalStackLayout>
                 </Grid>
             </DataTemplate>
@@ -352,9 +350,9 @@
                                     Style="{StaticResource ReceiveBubbleBorder}">
                                 <Border.IsVisible>
                                     <MultiBinding Converter="{StaticResource AllConverter}">
-                                        <Binding Converter="{StaticResource NullToReverseBoolConverter}"
+                                        <Binding Converter="{StaticResource EmptyConverter}"
                                                  Path="StampSource" />
-                                        <Binding Converter="{StaticResource NullToBoolConverter}"
+                                        <Binding Converter="{StaticResource NotEmptyConverter}"
                                                  Path="TextContent" />
                                     </MultiBinding>
                                 </Border.IsVisible>
@@ -364,15 +362,15 @@
                             <Image Grid.Column="0"
                                    Style="{StaticResource StampImage}"
                                    Source="{Binding StampSource}"
-                                   IsVisible="{Binding StampSource, Converter={StaticResource NullToBoolConverter}}" />
+                                   IsVisible="{Binding StampSource, Converter={StaticResource NotEmptyConverter}}" />
                             <Label Grid.Column="1"
                                    Style="{StaticResource ReceiveTimeLabel}"
                                    Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource ReceiveReactionList}"
-                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                               BindableLayout.ItemsSource="{Binding Reactions}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
-                                               BindableLayout.ItemsSource="{Binding Reactions}" />
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}" />
                     </VerticalStackLayout>
                 </Grid>
             </DataTemplate>
@@ -401,14 +399,15 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="*,1,Auto,Auto"
-          BackgroundColor="White">
+    <Grid Style="{StaticResource ChatPageGrid}"
+          RowDefinitions="*,1,Auto,Auto">
 
         <CollectionView Grid.Row="0"
                         behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default">
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}">
             <CollectionView.Behaviors>
                 <s:CollectionControlBehavior Controller="{Binding Controller}" />
             </CollectionView.Behaviors>
@@ -452,8 +451,8 @@
                          Command="{Binding SendCommand}">
                 <ImageButton.Triggers>
                     <DataTrigger TargetType="ImageButton"
-                                 Value="False"
-                                 Binding="{Binding InputText, Converter={StaticResource NullToBoolConverter}}">
+                                 Binding="{Binding InputText, Converter={StaticResource NotEmptyConverter}}"
+                                 Value="False">
                         <Setter Property="Opacity" Value="0.3" />
                     </DataTrigger>
                 </ImageButton.Triggers>

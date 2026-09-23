@@ -16,6 +16,10 @@ public sealed class BasicDialogViewModel : AppViewModelBase
     public IObserveCommand SnackbarCommand { get; }
     public IObserveCommand ToastCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public BasicDialogViewModel(
         IDialog dialog)
     {
@@ -83,6 +87,10 @@ public sealed class BasicDialogViewModel : AppViewModelBase
             await dialog.Toast($"Count={count}");
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 

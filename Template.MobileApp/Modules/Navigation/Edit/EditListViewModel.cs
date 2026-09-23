@@ -23,6 +23,10 @@ public sealed partial class EditListViewModel : AppViewModelBase
     public IObserveCommand SelectAllCommand { get; }
     public IObserveCommand BulkDeleteCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public EditListViewModel(
         IDialog dialog,
         DataService dataService)
@@ -36,10 +40,14 @@ public sealed partial class EditListViewModel : AppViewModelBase
         SelectAllCommand = MakeDelegateCommand(SelectAll);
         BulkDeleteCommand = MakeAsyncCommand(BulkDeleteAsync, () => SelectedItems.Count > 0);
 
-        SelectedItems.CollectionChanged += (_, _) => BulkDeleteCommand.RaiseCanExecuteChanged();
+        Observe(SelectedItems.AsObservable(nameof(SelectedItems.Count)), BulkDeleteCommand);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {
@@ -62,6 +70,10 @@ public sealed partial class EditListViewModel : AppViewModelBase
     }
 
     protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(ViewId.NavigationEditDetailNew);
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task DeleteAsync(WorkEntity entity)
     {

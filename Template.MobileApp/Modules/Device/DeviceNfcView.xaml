@@ -21,6 +21,30 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="NfcIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BasicIconCircleBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+            </Style>
+
+            <Style x:Key="NfcIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
+            </Style>
+
+            <Style x:Key="NfcTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCenterTitleLabel}">
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="NfcHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCenterHintLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
             <!-- Converter -->
 
             <converters:SuicaProcessColorConverter x:Key="ProcessColorConverter">
@@ -167,47 +191,6 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
             </Style>
 
-            <Style x:Key="EmptyStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Spacing" Value="16" />
-            </Style>
-
-            <Style x:Key="EmptyIconBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="HeightRequest" Value="96" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
-            </Style>
-
-            <Style x:Key="EmptyIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="48" />
-                <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyTitleLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyHintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -229,9 +212,9 @@
                        Text="￥" />
                 <Label Grid.Column="1"
                        Style="{StaticResource BalanceLabel}"
-                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}"
+                       behaviors:LabelOption.CountUpDuration="600"
                        behaviors:LabelOption.CountUpFormat="{}{0:#,0}"
-                       behaviors:LabelOption.CountUpDuration="600" />
+                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}" />
             </Grid>
         </Grid>
 
@@ -239,15 +222,15 @@
                         Style="{StaticResource LogCollectionView}"
                         ItemsSource="{Binding Logs}">
             <CollectionView.EmptyView>
-                <VerticalStackLayout Style="{StaticResource EmptyStack}">
-                    <Border Style="{StaticResource EmptyIconBorder}"
+                <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
+                    <Border Style="{StaticResource NfcIconBorder}"
                             behaviors:AnimationOption.Pulse="True">
-                        <Label Style="{StaticResource EmptyIconLabel}"
+                        <Label Style="{StaticResource NfcIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Contactless}" />
                     </Border>
-                    <Label Style="{StaticResource EmptyTitleLabel}"
+                    <Label Style="{StaticResource NfcTitleLabel}"
                            Text="Suica をかざしてください" />
-                    <Label Style="{StaticResource EmptyHintLabel}"
+                    <Label Style="{StaticResource NfcHintLabel}"
                            Text="読み取ると残高と利用履歴を表示します" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>

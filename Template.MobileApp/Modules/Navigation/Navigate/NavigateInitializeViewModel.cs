@@ -7,11 +7,19 @@ public sealed partial class NavigateInitializeViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Initialized { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public NavigateInitializeViewModel(
         IDialog dialog)
     {
         this.dialog = dialog;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -24,6 +32,10 @@ public sealed partial class NavigateInitializeViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NavigationMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private Task InitializeAsync()
     {

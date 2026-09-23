@@ -12,6 +12,10 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
 
     public int TargetCount => Targets.Count;
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIRadarViewModel(IDispatcher dispatcher)
     {
         Targets = GenerateTargets();
@@ -22,19 +26,9 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => Targets = GenerateTargets()));
     }
 
-    private RadarTarget[] GenerateTargets()
-    {
-        var targets = new RadarTarget[random.Next(4, 8)];
-        for (var i = 0; i < targets.Length; i++)
-        {
-            targets[i] = new RadarTarget
-            {
-                Angle = (float)(random.NextDouble() * 360d),
-                Distance = (float)((random.NextDouble() * 0.85d) + 0.1d)
-            };
-        }
-        return targets;
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -51,5 +45,23 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private RadarTarget[] GenerateTargets()
+    {
+        var targets = new RadarTarget[random.Next(4, 8)];
+        for (var i = 0; i < targets.Length; i++)
+        {
+            targets[i] = new RadarTarget
+            {
+                Angle = (float)(random.NextDouble() * 360d),
+                Distance = (float)((random.NextDouble() * 0.85d) + 0.1d)
+            };
+        }
+        return targets;
+    }
 }
 #pragma warning restore CA5394

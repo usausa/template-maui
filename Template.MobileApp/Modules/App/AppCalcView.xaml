@@ -12,11 +12,31 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- 科学電卓 (MauiScientificCalculator の UI 構成を参考)。
-         式評価は純モデル Models/App/ExpressionCalculator (トークナイザ→操車場→RPN)。表示は DSEG7 -->
+    <!--
+        科学電卓 (MauiScientificCalculator の UI 構成を参考)。
+        式評価は純モデル Models/App/ExpressionCalculator (トークナイザ→操車場→RPN)。表示は DSEG7
+    -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <Style x:Key="CalcRootGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BackgroundColor" Value="#1B222C" />
+            </Style>
+
+            <Style x:Key="CalcDisplayGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="6" />
+            </Style>
+
+            <Style x:Key="ExpressionLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="4,0" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+            </Style>
 
             <Style x:Key="ExpressionSpan"
                    TargetType="Span">
@@ -30,7 +50,12 @@
                 <Setter Property="TextColor" Value="#4FC3F7" />
             </Style>
 
-            <Style x:Key="ResultLabel"
+            <Style x:Key="CalcResultGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="4,8,4,0" />
+            </Style>
+
+            <Style x:Key="CalcResultLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="36" />
@@ -49,6 +74,7 @@
 
             <Style x:Key="ErrorLabel"
                    TargetType="Label">
+                <Setter Property="Margin" Value="4,4,4,0" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="#FF7043" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
@@ -107,22 +133,19 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid RowDefinitions="*,56,56,76,76,76,76,76"
-          ColumnDefinitions="*,*,*,*,*"
-          Padding="6"
-          BackgroundColor="#1B222C">
+    <Grid Style="{StaticResource CalcRootGrid}"
+          RowDefinitions="*,56,56,76,76,76,76,76"
+          ColumnDefinitions="*,*,*,*,*">
 
         <!-- Display -->
         <Grid Grid.Row="0" Grid.ColumnSpan="5"
-              Margin="6"
+              Style="{StaticResource CalcDisplayGrid}"
               RowDefinitions="*,Auto,Auto">
             <ScrollView Grid.Row="0"
                         Orientation="Horizontal"
-                        HorizontalScrollBarVisibility="Never"
-                        VerticalOptions="End">
-                <Label Padding="4,0"
-                      LineBreakMode="NoWrap"
-                      HorizontalOptions="End">
+                        VerticalOptions="End"
+                        HorizontalScrollBarVisibility="Never">
+                <Label Style="{StaticResource ExpressionLabel}">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Style="{StaticResource ExpressionSpan}"
@@ -134,67 +157,203 @@
                 </Label>
             </ScrollView>
             <Grid Grid.Row="1"
-                  ColumnDefinitions="Auto,*"
-                  Margin="4,8,4,0">
+                  Style="{StaticResource CalcResultGrid}"
+                  ColumnDefinitions="Auto,*">
                 <Label Grid.Column="0"
                        Style="{StaticResource EqualsSignLabel}"
                        Text="=" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource ResultLabel}"
+                       Style="{StaticResource CalcResultLabel}"
                        Text="{Binding Result}" />
             </Grid>
             <Label Grid.Row="2"
                    Style="{StaticResource ErrorLabel}"
-                   Margin="4,4,4,0"
+                   behaviors:AnimationOption.FadeInTrigger="{Binding ErrorMessage}"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmptyConverter}}"
-                   Text="{Binding ErrorMessage}"
-                   behaviors:AnimationOption.FadeInTrigger="{Binding ErrorMessage}" />
+                   Text="{Binding ErrorMessage}" />
         </Grid>
 
         <!-- Scientific row 1 -->
-        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="sin(" Text="sin" />
-        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="cos(" Text="cos" />
-        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="tan(" Text="tan" />
-        <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="log(" Text="log" />
-        <Button Grid.Row="1" Grid.Column="4" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="ln(" Text="ln" />
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="sin("
+                Text="sin" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="cos("
+                Text="cos" />
+        <Button Grid.Row="1" Grid.Column="2"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="tan("
+                Text="tan" />
+        <Button Grid.Row="1" Grid.Column="3"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="log("
+                Text="log" />
+        <Button Grid.Row="1" Grid.Column="4"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="ln("
+                Text="ln" />
 
         <!-- Scientific row 2 -->
-        <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="asin(" Text="asin" />
-        <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="acos(" Text="acos" />
-        <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="atan(" Text="atan" />
-        <Button Grid.Row="2" Grid.Column="3" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="exp(" Text="exp" />
-        <Button Grid.Row="2" Grid.Column="4" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="√(" Text="√" />
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="asin("
+                Text="asin" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="acos("
+                Text="acos" />
+        <Button Grid.Row="2" Grid.Column="2"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="atan("
+                Text="atan" />
+        <Button Grid.Row="2" Grid.Column="3"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="exp("
+                Text="exp" />
+        <Button Grid.Row="2" Grid.Column="4"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="√("
+                Text="√" />
 
         <!-- Keys -->
-        <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource ClearButton}" Command="{Binding ClearCommand}" Text="C" />
-        <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="(" Text="(" />
-        <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter=")" Text=")" />
-        <Button Grid.Row="3" Grid.Column="3" Style="{StaticResource ClearButton}" Command="{Binding BackspaceCommand}" Text="⌫" />
-        <Button Grid.Row="3" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="÷" Text="÷" />
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource ClearButton}"
+                Command="{Binding ClearCommand}"
+                Text="C" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="("
+                Text="(" />
+        <Button Grid.Row="3" Grid.Column="2"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter=")"
+                Text=")" />
+        <Button Grid.Row="3" Grid.Column="3"
+                Style="{StaticResource ClearButton}"
+                Command="{Binding BackspaceCommand}"
+                Text="⌫" />
+        <Button Grid.Row="3" Grid.Column="4"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="÷"
+                Text="÷" />
 
-        <Button Grid.Row="4" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="7" Text="7" />
-        <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="8" Text="8" />
-        <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="9" Text="9" />
-        <Button Grid.Row="4" Grid.Column="3" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="%" Text="%" />
-        <Button Grid.Row="4" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="×" Text="×" />
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="7"
+                Text="7" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="8"
+                Text="8" />
+        <Button Grid.Row="4" Grid.Column="2"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="9"
+                Text="9" />
+        <Button Grid.Row="4" Grid.Column="3"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="%"
+                Text="%" />
+        <Button Grid.Row="4" Grid.Column="4"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="×"
+                Text="×" />
 
-        <Button Grid.Row="5" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="4" Text="4" />
-        <Button Grid.Row="5" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="5" Text="5" />
-        <Button Grid.Row="5" Grid.Column="2" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="6" Text="6" />
-        <Button Grid.Row="5" Grid.Column="3" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="!" Text="!" />
-        <Button Grid.Row="5" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="−" Text="−" />
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="4"
+                Text="4" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="5"
+                Text="5" />
+        <Button Grid.Row="5" Grid.Column="2"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="6"
+                Text="6" />
+        <Button Grid.Row="5" Grid.Column="3"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="!"
+                Text="!" />
+        <Button Grid.Row="5" Grid.Column="4"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="−"
+                Text="−" />
 
-        <Button Grid.Row="6" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="1" Text="1" />
-        <Button Grid.Row="6" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="2" Text="2" />
-        <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="3" Text="3" />
-        <Button Grid.Row="6" Grid.Column="3" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="^" Text="xʸ" />
-        <Button Grid.Row="6" Grid.Column="4" Style="{StaticResource OpButton}" Command="{Binding InputCommand}" CommandParameter="+" Text="+" />
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="1"
+                Text="1" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="2"
+                Text="2" />
+        <Button Grid.Row="6" Grid.Column="2"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="3"
+                Text="3" />
+        <Button Grid.Row="6" Grid.Column="3"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="^"
+                Text="xʸ" />
+        <Button Grid.Row="6" Grid.Column="4"
+                Style="{StaticResource OpButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="+"
+                Text="+" />
 
-        <Button Grid.Row="7" Grid.Column="0" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="0" Text="0" />
-        <Button Grid.Row="7" Grid.Column="1" Style="{StaticResource KeyButton}" Command="{Binding InputCommand}" CommandParameter="." Text="." />
-        <Button Grid.Row="7" Grid.Column="2" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="π" Text="π" />
-        <Button Grid.Row="7" Grid.Column="3" Style="{StaticResource SciButton}" Command="{Binding InputCommand}" CommandParameter="e" Text="e" />
-        <Button Grid.Row="7" Grid.Column="4" Style="{StaticResource EqualsButton}" Command="{Binding EvaluateCommand}" Text="=" />
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="0"
+                Text="0" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource KeyButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="."
+                Text="." />
+        <Button Grid.Row="7" Grid.Column="2"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="π"
+                Text="π" />
+        <Button Grid.Row="7" Grid.Column="3"
+                Style="{StaticResource SciButton}"
+                Command="{Binding InputCommand}"
+                CommandParameter="e"
+                Text="e" />
+        <Button Grid.Row="7" Grid.Column="4"
+                Style="{StaticResource EqualsButton}"
+                Command="{Binding EvaluateCommand}"
+                Text="=" />
 
     </Grid>
 

@@ -14,113 +14,85 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <ContentView.Resources>
-        <ResourceDictionary>
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <Style x:Key="ActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <Style x:Key="ActionRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
-
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
-
-            <controls:InfoCard Title="Notification"
-                               Icon="{x:Static fonts:MaterialIcons.Info}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid Style="{StaticResource ActionRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Notification"
+                               Icon="{x:Static fonts:MaterialIcons.Info}">
+                <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding InformationCommand}"
                             Text="Information" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Confirm / Select / Input"
-                               Icon="{x:Static fonts:MaterialIcons.Question_answer}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <Grid Style="{StaticResource ActionRowGrid}"
-                      ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Confirm / Select / Input"
+                               Icon="{x:Static fonts:MaterialIcons.Question_answer}">
+                <Grid Style="{StaticResource BasicButtonGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding ConfirmCommand}"
                             Text="Confirm" />
                     <Button Grid.Row="0" Grid.Column="1"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding Confirm3Command}"
                             Text="Confirm3" />
                     <Button Grid.Row="1" Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding SelectCommand}"
                             Text="Select" />
                     <Button Grid.Row="1" Grid.Column="1"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding InputCommand}"
                             Text="Input" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Progress"
-                               Icon="{x:Static fonts:MaterialIcons.Schedule}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
-                <Grid Style="{StaticResource ActionRowGrid}"
-                      ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Progress"
+                               Icon="{x:Static fonts:MaterialIcons.Schedule}">
+                <Grid Style="{StaticResource BasicButtonGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding IndicatorCommand}"
                             Text="Indicator" />
                     <Button Grid.Row="0" Grid.Column="1"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding LockCommand}"
                             Text="Lock" />
                     <Button Grid.Row="1" Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding LoadingCommand}"
                             Text="Loading" />
                     <Button Grid.Row="1" Grid.Column="1"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding ProgressCommand}"
                             Text="Progress" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Feedback"
-                               Icon="{x:Static fonts:MaterialIcons.Speaker_notes}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <Grid Style="{StaticResource ActionRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Feedback"
+                               Icon="{x:Static fonts:MaterialIcons.Speaker_notes}">
+                <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding SnackbarCommand}"
                             Text="Snackbar" />
                     <Button Grid.Column="1"
-                            Style="{StaticResource ActionButton}"
+                            Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding ToastCommand}"
                             Text="Toast" />
                 </Grid>

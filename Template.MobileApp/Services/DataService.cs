@@ -4,6 +4,14 @@ using Microsoft.Data.Sqlite;
 
 using Smart.Data;
 
+public sealed record DatabaseInfo(
+    string Path,
+    long Size,
+    DateTime? Modified,
+    int DataCount,
+    int WorkCount,
+    int BulkDataCount);
+
 #pragma warning disable CA1002
 public sealed class DataService
 {
@@ -19,13 +27,32 @@ public sealed class DataService
         this.accessor = accessor;
     }
 
+    public string DatabasePath
+    {
+        get
+        {
+            using var con = provider.CreateConnection();
+            return con.DataSource;
+        }
+    }
+
+    public async ValueTask<DatabaseInfo> GetDatabaseInfoAsync()
+    {
+        var path = DatabasePath;
+        var file = new FileInfo(path);
+        var wal = new FileInfo($"{path}-wal");
+        return new DatabaseInfo(
+            path,
+            (file.Exists ? file.Length : 0) + (wal.Exists ? wal.Length : 0),
+            file.Exists ? file.LastWriteTime : null,
+            (int)await accessor.CountDataAsync(),
+            (int)await accessor.CountWorkAsync(),
+            (int)await accessor.CountBulkDataAsync());
+    }
+
     public async ValueTask RebuildAsync()
     {
-        string dbPath;
-        await using (var con = provider.CreateConnection())
-        {
-            dbPath = con.DataSource;
-        }
+        var dbPath = DatabasePath;
 
         // WAL有効時は-wal/-shmも消さないと、異常終了後に旧WALが新しいDBへ適用される
         foreach (var path in new[] { dbPath, $"{dbPath}-wal", $"{dbPath}-shm" })

@@ -16,18 +16,21 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid" TargetType="Grid">
+            <Style x:Key="TimelineGrid"
+                   TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="RowSpacing" Value="12" />
             </Style>
 
             <!-- Header -->
-            <Style x:Key="TimelineHeaderGrid" TargetType="Grid">
+            <Style x:Key="TimelineHeaderGrid"
+                   TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
-            <Style x:Key="CalendarIconBorder" TargetType="Border">
+            <Style x:Key="CalendarIconBorder"
+                   TargetType="Border">
                 <Setter Property="WidthRequest" Value="44" />
                 <Setter Property="HeightRequest" Value="44" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
@@ -35,11 +38,14 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.15" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="6" />
                 </Setter>
             </Style>
 
-            <Style x:Key="CalendarIconLabel" TargetType="Label">
+            <Style x:Key="CalendarIconLabel"
+                   TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
@@ -47,27 +53,32 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <Style x:Key="DateCaptionLabel" TargetType="Label">
+            <Style x:Key="DateCaptionLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="DateLabel" TargetType="Label">
+            <Style x:Key="DateLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
             <!-- Timeline items -->
-            <Style x:Key="TimelineCollection" TargetType="CollectionView">
+            <Style x:Key="TimelineCollection"
+                   TargetType="CollectionView">
                 <Setter Property="VerticalScrollBarVisibility" Value="Never" />
             </Style>
 
-            <Style x:Key="EventRowGrid" TargetType="Grid">
+            <Style x:Key="EventRowGrid"
+                   TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="10" />
             </Style>
 
-            <Style x:Key="TimeLabel" TargetType="Label">
+            <Style x:Key="EventTimeLabel"
+                   TargetType="Label">
                 <Setter Property="WidthRequest" Value="50" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
@@ -76,14 +87,16 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="TimelineLine" TargetType="BoxView">
+            <Style x:Key="TimelineLine"
+                   TargetType="BoxView">
                 <Setter Property="WidthRequest" Value="2" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
             <!-- Dot fill/stroke are set per-item via bindings (status-driven) -->
-            <Style x:Key="TimelineDot" TargetType="Ellipse">
+            <Style x:Key="TimelineDot"
+                   TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="16" />
                 <Setter Property="HeightRequest" Value="16" />
                 <Setter Property="StrokeThickness" Value="2" />
@@ -91,7 +104,8 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="TimelineDotHalo" TargetType="Ellipse">
+            <Style x:Key="TimelineDotHalo"
+                   TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="22" />
                 <Setter Property="HeightRequest" Value="22" />
                 <Setter Property="Opacity" Value="0.25" />
@@ -99,7 +113,8 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="DotCheckLabel" TargetType="Label">
+            <Style x:Key="DotCheckLabel"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="9" />
                 <Setter Property="TextColor" Value="White" />
@@ -107,7 +122,8 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="EventCardBorder" TargetType="Border">
+            <Style x:Key="EventCardBorder"
+                   TargetType="Border">
                 <Setter Property="Padding" Value="14" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="StrokeThickness" Value="0" />
@@ -115,64 +131,76 @@
                 <Setter Property="Margin" Value="0,4,0,8" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.1" Radius="10" />
+                            Brush="Black"
+                            Opacity="0.1"
+                            Radius="10" />
                 </Setter>
             </Style>
 
-            <Style x:Key="EventTitleRow" TargetType="Grid">
+            <Style x:Key="EventTitleRow"
+                   TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
-            <Style x:Key="EventTitleLabel" TargetType="Label">
+            <Style x:Key="EventTitleLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
             <!-- Badge background is set per-item via DotColor binding -->
-            <Style x:Key="NowBadgeBorder" TargetType="Border">
+            <Style x:Key="NowBadgeBorder"
+                   TargetType="Border">
                 <Setter Property="Padding" Value="7,2" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 9" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="NowBadgeLabel" TargetType="Label">
+            <Style x:Key="NowBadgeLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="9" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <Style x:Key="EventDescLabel" TargetType="Label">
+            <Style x:Key="EventDescLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
                 <Setter Property="Margin" Value="0,2,0,0" />
             </Style>
 
-            <Style x:Key="TagRow" TargetType="HorizontalStackLayout">
+            <Style x:Key="TagRow"
+                   TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="6" />
                 <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
 
-            <Style x:Key="TagBorder" TargetType="Border">
+            <Style x:Key="TagBorder"
+                   TargetType="Border">
                 <Setter Property="Padding" Value="8,3" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 10" />
             </Style>
 
-            <Style x:Key="TagContentRow" TargetType="HorizontalStackLayout">
+            <Style x:Key="TagContentRow"
+                   TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="3" />
             </Style>
 
-            <Style x:Key="TagIcon" TargetType="Label">
+            <Style x:Key="TagIcon"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="10" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="TagLabel" TargetType="Label">
+            <Style x:Key="TagLabel"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="10" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -181,7 +209,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource TimelineGrid}"
           RowDefinitions="Auto,*">
 
         <!-- Header -->
@@ -189,42 +217,46 @@
               Style="{StaticResource TimelineHeaderGrid}"
               ColumnDefinitions="Auto,*"
               behaviors:AnimationOption.EnterAnimation="FadeUp">
-            <Border Grid.Column="0" Style="{StaticResource CalendarIconBorder}">
+            <Border Grid.Column="0"
+                    Style="{StaticResource CalendarIconBorder}">
                 <Label Style="{StaticResource CalendarIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Calendar_today}" />
             </Border>
-            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                <Label Style="{StaticResource DateCaptionLabel}" Text="本日のスケジュール" />
-                <Label Style="{StaticResource DateLabel}" Text="{Binding DateLabel}" />
+            <VerticalStackLayout Grid.Column="1"
+                                 VerticalOptions="Center">
+                <Label Style="{StaticResource DateCaptionLabel}"
+                       Text="本日のスケジュール" />
+                <Label Style="{StaticResource DateLabel}"
+                       Text="{Binding DateLabel}" />
             </VerticalStackLayout>
         </Grid>
 
         <!-- Timeline list -->
         <CollectionView Grid.Row="1"
                         Style="{StaticResource TimelineCollection}"
-                        ItemsSource="{Binding Events}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="80">
+                        behaviors:AnimationOption.EnterDelay="80"
+                        ItemsSource="{Binding Events}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="module:UITimelineEvent">
                     <Grid Style="{StaticResource EventRowGrid}"
-                          Opacity="{Binding RowOpacity}"
-                          ColumnDefinitions="Auto,Auto,*">
+                          ColumnDefinitions="Auto,Auto,*"
+                          Opacity="{Binding RowOpacity}">
 
                         <!-- Time -->
                         <Label Grid.Column="0"
-                               Style="{StaticResource TimeLabel}"
+                               Style="{StaticResource EventTimeLabel}"
                                Text="{Binding Time}" />
 
                         <!-- Dot + line (done: check / current: halo / upcoming: hollow) -->
                         <Grid Grid.Column="1"
-                              WidthRequest="22"
-                              RowDefinitions="*">
+                              RowDefinitions="*"
+                              WidthRequest="22">
                             <BoxView Style="{StaticResource TimelineLine}" />
                             <Ellipse Style="{StaticResource TimelineDotHalo}"
+                                     behaviors:AnimationOption.Pulse="{Binding Current}"
                                      IsVisible="{Binding Current}"
-                                     Fill="{Binding DotColor}"
-                                     behaviors:AnimationOption.Pulse="{Binding Current}" />
+                                     Fill="{Binding DotColor}" />
                             <Ellipse Style="{StaticResource TimelineDot}"
                                      Fill="{Binding DotFill}"
                                      Stroke="{Binding DotStroke}" />
@@ -234,7 +266,8 @@
                         </Grid>
 
                         <!-- Card with title, status badge, description, tags -->
-                        <Border Grid.Column="2" Style="{StaticResource EventCardBorder}">
+                        <Border Grid.Column="2"
+                                Style="{StaticResource EventCardBorder}">
                             <VerticalStackLayout>
                                 <Grid Style="{StaticResource EventTitleRow}"
                                       ColumnDefinitions="*,Auto">
@@ -249,20 +282,23 @@
                                                Text="進行中" />
                                     </Border>
                                 </Grid>
-                                <Label Style="{StaticResource EventDescLabel}" Text="{Binding Description}" />
+                                <Label Style="{StaticResource EventDescLabel}"
+                                       Text="{Binding Description}" />
                                 <HorizontalStackLayout Style="{StaticResource TagRow}">
                                     <Border Style="{StaticResource TagBorder}">
                                         <HorizontalStackLayout Style="{StaticResource TagContentRow}">
                                             <Label Style="{StaticResource TagIcon}"
                                                    Text="{x:Static fonts:MaterialIcons.Tag}" />
-                                            <Label Style="{StaticResource TagLabel}" Text="{Binding Tag1}" />
+                                            <Label Style="{StaticResource TagLabel}"
+                                                   Text="{Binding Tag1}" />
                                         </HorizontalStackLayout>
                                     </Border>
                                     <Border Style="{StaticResource TagBorder}">
                                         <HorizontalStackLayout Style="{StaticResource TagContentRow}">
                                             <Label Style="{StaticResource TagIcon}"
                                                    Text="{x:Static fonts:MaterialIcons.Tag}" />
-                                            <Label Style="{StaticResource TagLabel}" Text="{Binding Tag2}" />
+                                            <Label Style="{StaticResource TagLabel}"
+                                                   Text="{Binding Tag2}" />
                                         </HorizontalStackLayout>
                                     </Border>
                                 </HorizontalStackLayout>

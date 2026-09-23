@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewStateView"
              x:DataType="{x:Type module:ViewStateViewModel}"
@@ -19,17 +19,6 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
 
             <Style x:Key="StateButton"
                    TargetType="Button">
@@ -49,6 +38,24 @@
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
                 <Setter Property="FontSize" Value="48" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyStateIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource StateIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="ErrorStateIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource StateIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="SuccessStateIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource StateIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
             <Style x:Key="StateTextLabel"
@@ -76,10 +83,10 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="StateContainer"
-                               Icon="{x:Static fonts:MaterialIcons.Swap_horiz}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="StateContainer"
+                               Icon="{x:Static fonts:MaterialIcons.Swap_horiz}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource StateButtonGrid}"
                           ColumnDefinitions="*,*,*,*">
                         <Button Grid.Column="0"
@@ -108,27 +115,25 @@
                                          mct:StateContainer.CurrentState="{Binding CurrentState}">
                         <mct:StateContainer.StateViews>
                             <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                                 mct:StateView.StateKey="Loading"
-                                                 HeightRequest="180">
+                                                 HeightRequest="180"
+                                                 mct:StateView.StateKey="Loading">
                                 <ActivityIndicator IsRunning="True"
                                                    Color="{StaticResource BlueDefault}" />
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="読み込み中..." />
                             </VerticalStackLayout>
                             <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                                 mct:StateView.StateKey="Empty"
-                                                 HeightRequest="180">
-                                <Label Style="{StaticResource StateIconLabel}"
-                                       TextColor="{StaticResource GrayLighten1}"
+                                                 HeightRequest="180"
+                                                 mct:StateView.StateKey="Empty">
+                                <Label Style="{StaticResource EmptyStateIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Inbox}" />
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="データがありません" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                                 mct:StateView.StateKey="Error"
-                                                 HeightRequest="180">
-                                <Label Style="{StaticResource StateIconLabel}"
-                                       TextColor="{StaticResource RedDefault}"
+                                                 HeightRequest="180"
+                                                 mct:StateView.StateKey="Error">
+                                <Label Style="{StaticResource ErrorStateIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Error}" />
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="読み込みに失敗しました" />
@@ -138,8 +143,7 @@
                         <!-- 既定コンテンツ (CurrentState が空のとき表示) -->
                         <VerticalStackLayout Style="{StaticResource StatePanelStack}"
                                              HeightRequest="180">
-                            <Label Style="{StaticResource StateIconLabel}"
-                                   TextColor="{StaticResource GreenDefault}"
+                            <Label Style="{StaticResource SuccessStateIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Check_circle}" />
                             <Label Style="{StaticResource StateTextLabel}"
                                    Text="読み込み完了 (既定コンテンツ)" />
@@ -148,13 +152,12 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="LazyView"
-                               Icon="{x:Static fonts:MaterialIcons.Hourglass_empty}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="8">
-                    <Label FontSize="12"
-                           TextColor="{StaticResource SecondaryTextColor}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="LazyView"
+                               Icon="{x:Static fonts:MaterialIcons.Hourglass_empty}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="ボタンを押すまで下のコンテンツは生成されない" />
                     <Button Style="{StaticResource StateButton}"
                             Command="{Binding LoadPanelCommand}"

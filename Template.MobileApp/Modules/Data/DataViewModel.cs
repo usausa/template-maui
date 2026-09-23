@@ -24,6 +24,10 @@ public sealed partial class DataViewModel : AppViewModelBase
     public IObserveCommand DeleteAllCommand { get; }
     public IObserveCommand QueryAllCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DataViewModel(
         IDialog dialog,
         DataService dataService)
@@ -41,14 +45,22 @@ public sealed partial class DataViewModel : AppViewModelBase
         QueryAllCommand = MakeAsyncCommand(QueryAll);
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
         BulkDataCount = await dataService.CountBulkDataAsync();
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task Insert()
     {

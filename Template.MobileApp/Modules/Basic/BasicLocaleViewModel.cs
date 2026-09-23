@@ -5,11 +5,19 @@ using System.Resources;
 
 using Template.MobileApp.Resources.Strings;
 
-// .resx の参照結果 (ニュートラル / ja / 現在カルチャ)
-public sealed record ResourceEntry(string Key, string NeutralValue, string JapaneseValue, string CurrentValue);
+public sealed record ResourceEntry(
+    string Key,
+    string NeutralValue,
+    string JapaneseValue,
+    string CurrentValue);
 
-// カルチャ別の書式差 (数値 / 通貨 / 日付 / 時刻)
-public sealed record CultureFormatEntry(string Name, bool IsCurrent, string Number, string Currency, string Date, string Time);
+public sealed record CultureFormatEntry(
+    string Name,
+    bool IsCurrent,
+    string Number,
+    string Currency,
+    string Date,
+    string Time);
 
 public sealed class BasicLocaleViewModel : AppViewModelBase
 {
@@ -21,6 +29,10 @@ public sealed class BasicLocaleViewModel : AppViewModelBase
 
     public IReadOnlyList<CultureFormatEntry> FormatEntries { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public BasicLocaleViewModel()
     {
         ResourceEntries =
@@ -29,16 +41,26 @@ public sealed class BasicLocaleViewModel : AppViewModelBase
             .. EnumerateResources("Messages", Messages.ResourceManager)
         ];
 
-        // 同じ値をカルチャ毎に整形して書式差を見せる (切替機構は作らない)
         FormatEntries = new[] { CultureInfo.CurrentCulture, new CultureInfo("en-US"), new CultureInfo("de-DE"), new CultureInfo("ja-JP") }
             .DistinctBy(static x => x.Name)
             .Select(x => CreateFormatEntry(x, x.Name == CultureInfo.CurrentCulture.Name))
             .ToList();
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
     private static IEnumerable<ResourceEntry> EnumerateResources(string source, ResourceManager manager)
     {
-        // ニュートラルのセットからキーを列挙し、ja と現在カルチャの参照結果を並べる
         var neutral = manager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
         if (neutral is null)
         {
@@ -69,8 +91,4 @@ public sealed class BasicLocaleViewModel : AppViewModelBase
             now.ToString("D", culture),
             now.ToString("t", culture));
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

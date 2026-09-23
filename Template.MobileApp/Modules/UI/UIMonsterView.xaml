@@ -177,7 +177,9 @@
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
-                            Brush="Black" Opacity="0.2" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -191,7 +193,9 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
-                            Brush="Black" Opacity="0.2" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -248,12 +252,12 @@
                                Text="HP" />
                         <ProgressBar Grid.Column="1"
                                      Style="{StaticResource StatBar}"
-                                     ProgressColor="{StaticResource GreenDefault}"
-                                     behaviors:AnimationOption.ProgressTo="{Binding HpProgress}" />
+                                     behaviors:AnimationOption.ProgressTo="{Binding HpProgress}"
+                                     ProgressColor="{StaticResource GreenDefault}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               behaviors:LabelOption.CountUpValue="{Binding Hp}"
-                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}"
+                               behaviors:LabelOption.CountUpValue="{Binding Hp}" />
                     </Grid>
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
@@ -262,12 +266,12 @@
                                Text="Attack" />
                         <ProgressBar Grid.Column="1"
                                      Style="{StaticResource StatBar}"
-                                     ProgressColor="{StaticResource OrangeDefault}"
-                                     behaviors:AnimationOption.ProgressTo="0.78" />
+                                     behaviors:AnimationOption.ProgressTo="0.78"
+                                     ProgressColor="{StaticResource OrangeDefault}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               behaviors:LabelOption.CountUpValue="78"
-                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}"
+                               behaviors:LabelOption.CountUpValue="78" />
                     </Grid>
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
@@ -276,12 +280,12 @@
                                Text="Defense" />
                         <ProgressBar Grid.Column="1"
                                      Style="{StaticResource StatBar}"
-                                     ProgressColor="{StaticResource BlueDefault}"
-                                     behaviors:AnimationOption.ProgressTo="0.64" />
+                                     behaviors:AnimationOption.ProgressTo="0.64"
+                                     ProgressColor="{StaticResource BlueDefault}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               behaviors:LabelOption.CountUpValue="64"
-                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}"
+                               behaviors:LabelOption.CountUpValue="64" />
                     </Grid>
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
@@ -290,12 +294,12 @@
                                Text="Speed" />
                         <ProgressBar Grid.Column="1"
                                      Style="{StaticResource StatBar}"
-                                     ProgressColor="{StaticResource AmberDefault}"
-                                     behaviors:AnimationOption.ProgressTo="0.92" />
+                                     behaviors:AnimationOption.ProgressTo="0.92"
+                                     ProgressColor="{StaticResource AmberDefault}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               behaviors:LabelOption.CountUpValue="92"
-                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}"
+                               behaviors:LabelOption.CountUpValue="92" />
                     </Grid>
                 </VerticalStackLayout>
 
@@ -317,8 +321,8 @@
                       ColumnDefinitions="Auto,*">
                     <Button Grid.Column="0"
                             Style="{StaticResource HeartButton}"
-                            behaviors:ButtonOption.PressEffect="True"
                             behaviors:AnimationOption.BounceTrigger="{Binding Hp}"
+                            behaviors:ButtonOption.PressEffect="True"
                             Command="{Binding HeartCommand}"
                             Text="{x:Static fonts:MaterialIcons.Favorite}" />
                     <Button Grid.Column="1"

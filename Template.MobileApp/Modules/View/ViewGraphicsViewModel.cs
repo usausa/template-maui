@@ -42,6 +42,10 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
     public IObserveCommand ExportSketchCommand { get; }
     public IObserveCommand StartCountdownCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewGraphicsViewModel()
     {
         Drawing.Size = new SizeF(100, 100);
@@ -104,6 +108,10 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
         });
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
         Pulse.Start();
@@ -118,6 +126,14 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private void AddShape(IShape shape)
     {
         Drawing.Shapes.Add(shape);
@@ -128,8 +144,4 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
     private PointF RandomPoint() => new((float)(random.NextDouble() * 100), (float)(random.NextDouble() * 100));
 
     private Color RandomColor() => Color.FromHsla(random.NextDouble(), 0.7d, 0.5d);
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

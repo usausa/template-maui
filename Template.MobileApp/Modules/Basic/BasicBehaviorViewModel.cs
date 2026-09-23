@@ -2,10 +2,6 @@ namespace Template.MobileApp.Modules.Basic;
 
 public sealed partial class BasicBehaviorViewModel : AppViewModelBase
 {
-    public IObserveCommand FocusedCommand { get; }
-
-    public IObserveCommand UnfocusedCommand { get; }
-
     [ObservableProperty]
     public partial string Focused { get; set; } = string.Empty;
 
@@ -24,9 +20,17 @@ public sealed partial class BasicBehaviorViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int SwitchCount { get; set; }
 
+    public IObserveCommand FocusedCommand { get; }
+
+    public IObserveCommand UnfocusedCommand { get; }
+
     public IObserveCommand TypingStoppedCommand { get; }
 
     public IObserveCommand SwitchToggledCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public BasicBehaviorViewModel()
     {
@@ -36,6 +40,10 @@ public sealed partial class BasicBehaviorViewModel : AppViewModelBase
         TypingStoppedCommand = MakeDelegateCommand(() => LastStopped = TypingText);
         SwitchToggledCommand = MakeDelegateCommand(() => SwitchCount++);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 

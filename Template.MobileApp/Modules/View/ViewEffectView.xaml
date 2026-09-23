@@ -2,14 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
-             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              x:Class="Template.MobileApp.Modules.View.ViewEffectView"
              x:DataType="{x:Type module:ViewEffectViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewEffectViewModel}"
@@ -21,7 +20,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <converters:BadgeCountConverter x:Key="BadgeCountConverter" />
+            <Style x:Key="GreenFocusEntry"
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BasicFieldEntry}">
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource GreenDefault}" />
+            </Style>
 
             <Style x:Key="SectionLabel"
                    TargetType="Label">
@@ -39,10 +42,10 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
+                        <Shadow Offset="0,2"
+                                Brush="Black"
                                 Opacity="0.12"
-                                Radius="6"
-                                Offset="0,2" />
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -146,12 +149,195 @@
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
+            <Style x:Key="EffectPageScroll"
+                   TargetType="ScrollView"
+                   BasedOn="{StaticResource RootScroll}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="EffectPageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,0,16,24" />
+            </Style>
+
+            <Style x:Key="SectionActionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SmallActionButton}">
+                <Setter Property="Margin" Value="0,12,0,0" />
+            </Style>
+
+            <Style x:Key="BadgeHostGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="4,0,12,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="BellIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="EffectValueLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <Style x:Key="PressEffectButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SmallActionButton}">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="RippleButtonBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+            </Style>
+
+            <Style x:Key="RippleButtonLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="WaveDotStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="WaveDot"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="14" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="7" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="PulseDot"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="16,0,0,0" />
+                <Setter Property="WidthRequest" Value="16" />
+                <Setter Property="HeightRequest" Value="16" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Color" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="RowSwitch"
+                   TargetType="Switch">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EffectCardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="HeartIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="FeedbackTextLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource EffectValueLabel}">
+                <Setter Property="Padding" Value="8,4" />
+            </Style>
+
+            <Style x:Key="FlashPreviewGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="60" />
+            </Style>
+
+            <Style x:Key="DarkPreviewBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="PreviewCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="FlashOverlay"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="White" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="ConfettiGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="150" />
+            </Style>
+
+            <Style x:Key="CelebrateButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SmallActionButton}">
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="TouchCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="TouchHintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
+            <Style x:Key="TintSampleStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="20" />
+            </Style>
+
+            <Style x:Key="TintSampleImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="EffectNoteLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten4}">
-        <VerticalStackLayout Padding="16,0,16,24">
+    <ScrollView Style="{StaticResource EffectPageScroll}">
+        <VerticalStackLayout Style="{StaticResource EffectPageStack}">
 
             <!-- エントランス(FadeUp 時間差) -->
             <Grid ColumnDefinitions="*,Auto">
@@ -159,8 +345,7 @@
                        Style="{StaticResource SectionLabel}"
                        Text="エントランス(FadeUp 時間差)" />
                 <Button Grid.Column="1"
-                        Style="{StaticResource SmallActionButton}"
-                        Margin="0,12,0,0"
+                        Style="{StaticResource SectionActionButton}"
                         Command="{Binding ReplayCommand}"
                         Text="Replay" />
             </Grid>
@@ -204,11 +389,8 @@
                 <Grid Style="{StaticResource EffectRowGrid}"
                       ColumnDefinitions="Auto,*,Auto,Auto">
                     <Grid Grid.Column="0"
-                          Margin="4,0,12,0"
-                          VerticalOptions="Center">
-                        <Label FontFamily="MaterialIcons"
-                               FontSize="36"
-                               TextColor="{StaticResource GrayDarken1}"
+                          Style="{StaticResource BadgeHostGrid}">
+                        <Label Style="{StaticResource BellIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Notifications}" />
                         <Border Style="{StaticResource BadgeBorder}"
                                 behaviors:AnimationOption.EnterAnimation="Pop"
@@ -225,9 +407,7 @@
                         </Border>
                     </Grid>
                     <Label Grid.Column="1"
-                           VerticalOptions="Center"
-                           FontSize="14"
-                           TextColor="{StaticResource GrayDarken2}"
+                           Style="{StaticResource EffectValueLabel}"
                            Text="{Binding BadgeCount, StringFormat='Count = {0}'}" />
                     <Button Grid.Column="2"
                             Style="{StaticResource StepButton}"
@@ -247,8 +427,8 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Style="{StaticResource AmountLabel}"
-                           behaviors:LabelOption.CountUpValue="{Binding Amount}"
-                           behaviors:LabelOption.CountUpFormat="{}¥{0:N0}" />
+                           behaviors:LabelOption.CountUpFormat="{}¥{0:N0}"
+                           behaviors:LabelOption.CountUpValue="{Binding Amount}" />
                     <Button Grid.Column="1"
                             Style="{StaticResource SmallActionButton}"
                             Command="{Binding AmountCommand}"
@@ -260,14 +440,12 @@
             <Label Style="{StaticResource SectionLabel}"
                    Text="フォーカス枠(Focus)" />
             <Border Style="{StaticResource FocusEntryBorder}">
-                <Entry Placeholder="ユーザー名(フォーカスで青枠)"
-                       behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
-                       behaviors:Focus.FocusedThickness="2.5" />
+                <Entry Style="{StaticResource BasicFieldEntry}"
+                       Placeholder="ユーザー名(フォーカスで青枠)" />
             </Border>
             <Border Style="{StaticResource FocusEntryBorder}">
-                <Entry Placeholder="メールアドレス(フォーカスで緑枠)"
-                       behaviors:Focus.FocusedStroke="{StaticResource GreenDefault}"
-                       behaviors:Focus.FocusedThickness="2.5" />
+                <Entry Style="{StaticResource GreenFocusEntry}"
+                       Placeholder="メールアドレス(フォーカスで緑枠)" />
             </Border>
 
             <!-- 押下フィードバック比較 -->
@@ -276,24 +454,15 @@
             <Grid Style="{StaticResource EffectRowGrid}"
                   ColumnDefinitions="*,*">
                 <VerticalStackLayout Grid.Column="0">
-                    <Button Style="{StaticResource SmallActionButton}"
-                            behaviors:ButtonOption.PressEffect="True"
-                            HeightRequest="44"
+                    <Button Style="{StaticResource PressEffectButton}"
                             Text="Press Effect" />
                     <Label Style="{StaticResource PressCompareLabel}"
                            Text="ButtonOption.PressEffect" />
                 </VerticalStackLayout>
                 <VerticalStackLayout Grid.Column="1">
-                    <Border Padding="0"
-                            BackgroundColor="{StaticResource GreenDefault}"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 18"
-                            HeightRequest="44">
+                    <Border Style="{StaticResource RippleButtonBorder}">
                         <toolkit:SfEffectsView Style="{StaticResource RippleEffect}">
-                            <Label HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   FontSize="14"
-                                   TextColor="White"
+                            <Label Style="{StaticResource RippleButtonLabel}"
                                    Text="Ripple" />
                         </toolkit:SfEffectsView>
                     </Border>
@@ -309,34 +478,20 @@
                 <Grid Style="{StaticResource EffectRowGrid}"
                       ColumnDefinitions="*,Auto">
                     <HorizontalStackLayout Grid.Column="0"
-                                           Spacing="16"
-                                           VerticalOptions="Center">
-                        <BoxView WidthRequest="14"
-                                 HeightRequest="14"
-                                 CornerRadius="7"
-                                 Color="{StaticResource BlueDefault}"
+                                           Style="{StaticResource WaveDotStack}">
+                        <BoxView Style="{StaticResource WaveDot}"
                                  behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}" />
-                        <BoxView WidthRequest="14"
-                                 HeightRequest="14"
-                                 CornerRadius="7"
-                                 Color="{StaticResource BlueDefault}"
+                        <BoxView Style="{StaticResource WaveDot}"
                                  behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}"
                                  behaviors:AnimationOption.WaveDelay="120" />
-                        <BoxView WidthRequest="14"
-                                 HeightRequest="14"
-                                 CornerRadius="7"
-                                 Color="{StaticResource BlueDefault}"
+                        <BoxView Style="{StaticResource WaveDot}"
                                  behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}"
                                  behaviors:AnimationOption.WaveDelay="240" />
-                        <BoxView Margin="16,0,0,0"
-                                 WidthRequest="16"
-                                 HeightRequest="16"
-                                 CornerRadius="8"
-                                 Color="{StaticResource RedDefault}"
+                        <BoxView Style="{StaticResource PulseDot}"
                                  behaviors:AnimationOption.Pulse="{Binding WavePulseEnabled}" />
                     </HorizontalStackLayout>
                     <Switch Grid.Column="1"
-                            VerticalOptions="Center"
+                            Style="{StaticResource RowSwitch}"
                             IsToggled="{Binding WavePulseEnabled}" />
                 </Grid>
             </Border>
@@ -345,44 +500,29 @@
             <Label Style="{StaticResource SectionLabel}"
                    Text="変化フィードバック(Bounce / Flash / Highlight)" />
             <Border Style="{StaticResource EffectCard}">
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Style="{StaticResource EffectCardStack}">
                     <Grid Style="{StaticResource EffectRowGrid}"
                           ColumnDefinitions="Auto,*,Auto">
                         <Label Grid.Column="0"
-                               FontFamily="MaterialIcons"
-                               FontSize="28"
-                               TextColor="{StaticResource RedDefault}"
-                               VerticalOptions="Center"
-                               Text="{x:Static fonts:MaterialIcons.Favorite}"
-                               behaviors:AnimationOption.BounceTrigger="{Binding FeedbackCount}" />
+                               Style="{StaticResource HeartIconLabel}"
+                               behaviors:AnimationOption.BounceTrigger="{Binding FeedbackCount}"
+                               Text="{x:Static fonts:MaterialIcons.Favorite}" />
                         <Label Grid.Column="1"
-                               Padding="8,4"
-                               FontSize="14"
-                               TextColor="{StaticResource GrayDarken2}"
-                               VerticalOptions="Center"
-                               Text="Bounce / Highlight / Flash を同時に発火"
+                               Style="{StaticResource FeedbackTextLabel}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding FeedbackCount}"
-                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                               Text="Bounce / Highlight / Flash を同時に発火" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource SmallActionButton}"
                                 Command="{Binding FeedbackCommand}"
                                 Text="Fire" />
                     </Grid>
-                    <Grid HeightRequest="60">
-                        <Border Padding="0"
-                                BackgroundColor="{StaticResource BlueGrayDarken4}"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8">
-                            <Label HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   FontSize="12"
-                                   TextColor="White"
+                    <Grid Style="{StaticResource FlashPreviewGrid}">
+                        <Border Style="{StaticResource DarkPreviewBorder}">
+                            <Label Style="{StaticResource PreviewCaptionLabel}"
                                    Text="撮影プレビュー(FlashTrigger でシャッター発光)" />
                         </Border>
-                        <BoxView Color="White"
-                                 Opacity="0"
-                                 CornerRadius="8"
-                                 InputTransparent="True"
+                        <BoxView Style="{StaticResource FlashOverlay}"
                                  behaviors:AnimationOption.FlashTrigger="{Binding FeedbackCount}" />
                     </Grid>
                 </VerticalStackLayout>
@@ -392,12 +532,9 @@
             <Label Style="{StaticResource SectionLabel}"
                    Text="Toolkit 演出(Confetti / Touch / IconTint)" />
             <Border Style="{StaticResource EffectCard}">
-                <VerticalStackLayout Spacing="12">
-                    <Grid HeightRequest="150">
-                        <Border Padding="0"
-                                BackgroundColor="{StaticResource BlueGrayDarken4}"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 8" />
+                <VerticalStackLayout Style="{StaticResource EffectCardStack}">
+                    <Grid Style="{StaticResource ConfettiGrid}">
+                        <Border Style="{StaticResource DarkPreviewBorder}" />
                         <extended:SKConfettiView IsAnimationEnabled="{Binding ConfettiEnabled}">
                             <extended:SKConfettiView.Systems>
                                 <extended:SKConfettiSystemCollection>
@@ -405,58 +542,42 @@
                                 </extended:SKConfettiSystemCollection>
                             </extended:SKConfettiView.Systems>
                         </extended:SKConfettiView>
-                        <Button Style="{StaticResource SmallActionButton}"
-                                HorizontalOptions="Center"
-                                VerticalOptions="End"
-                                Margin="0,0,0,8"
+                        <Button Style="{StaticResource CelebrateButton}"
                                 Command="{Binding CelebrateCommand}"
                                 Text="Celebrate" />
                     </Grid>
                     <Grid Style="{StaticResource EffectRowGrid}"
                           ColumnDefinitions="*,Auto">
                         <Border Grid.Column="0"
-                                Padding="12"
-                                BackgroundColor="{StaticResource BlueLighten5}"
-                                Stroke="{StaticResource BlueLighten3}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8">
+                                Style="{StaticResource TouchCardBorder}">
                             <Border.Behaviors>
-                                <mct:TouchBehavior PressedScale="0.95"
-                                                   PressedOpacity="0.6"
-                                                   LongPressCommand="{Binding LongPressCommand}" />
+                                <mct:TouchBehavior LongPressCommand="{Binding LongPressCommand}"
+                                                   PressedOpacity="0.6" PressedScale="0.95" />
                             </Border.Behaviors>
-                            <Label FontSize="12"
-                                   TextColor="{StaticResource BlueGrayDarken2}"
+                            <Label Style="{StaticResource TouchHintLabel}"
                                    Text="TouchBehavior: 押すと縮む / 長押しでカウント" />
                         </Border>
                         <Label Grid.Column="1"
-                               FontSize="14"
-                               VerticalOptions="Center"
-                               TextColor="{StaticResource GrayDarken2}"
-                               Text="{Binding LongPressCount, StringFormat='長押し {0}'}"
-                               behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}" />
+                               Style="{StaticResource EffectValueLabel}"
+                               behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}"
+                               Text="{Binding LongPressCount, StringFormat='長押し {0}'}" />
                     </Grid>
-                    <HorizontalStackLayout Spacing="20">
-                        <Image Source="account.png"
-                               WidthRequest="40"
-                               HeightRequest="40" />
-                        <Image Source="account.png"
-                               WidthRequest="40"
-                               HeightRequest="40">
+                    <HorizontalStackLayout Style="{StaticResource TintSampleStack}">
+                        <Image Style="{StaticResource TintSampleImage}"
+                               Source="account.png" />
+                        <Image Style="{StaticResource TintSampleImage}"
+                               Source="account.png">
                             <Image.Behaviors>
                                 <mct:IconTintColorBehavior TintColor="{StaticResource BlueDefault}" />
                             </Image.Behaviors>
                         </Image>
-                        <Image Source="account.png"
-                               WidthRequest="40"
-                               HeightRequest="40">
+                        <Image Style="{StaticResource TintSampleImage}"
+                               Source="account.png">
                             <Image.Behaviors>
                                 <mct:IconTintColorBehavior TintColor="{StaticResource RedDefault}" />
                             </Image.Behaviors>
                         </Image>
-                        <Label FontSize="12"
-                               VerticalOptions="Center"
-                               TextColor="{StaticResource GrayDarken2}"
+                        <Label Style="{StaticResource EffectNoteLabel}"
                                Text="IconTintColorBehavior" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>

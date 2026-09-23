@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:font="clr-namespace:Fonts"
+             x:Class="Template.MobileApp.Modules.UI.UIVisitView"
+             x:DataType="{x:Type module:UIVisitViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIVisitViewModel}"
+             shell:ShellProperty.Title="Visit"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="並替"
+             shell:ShellProperty.Function3Text="未訪問"
+             shell:ShellProperty.Function4Text="確定"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:BoolToColorConverter x:Key="PrimaryTextColorConverter"
+                                    TrueValue="White"
+                                    FalseValue="{StaticResource GrayDarken3}" />
+            <s:BoolToColorConverter x:Key="SecondaryTextColorConverter"
+                                    TrueValue="{StaticResource BlueLighten5}"
+                                    FalseValue="{StaticResource GrayDarken1}" />
+            <s:BoolToTextConverter x:Key="DirectionGlyphConverter"
+                                   TrueValue="{x:Static font:MaterialIcons.Arrow_downward}"
+                                   FalseValue="{x:Static font:MaterialIcons.Arrow_upward}" />
+            <s:BoolToTextConverter x:Key="DirectionMarkConverter"
+                                   TrueValue="↓"
+                                   FalseValue="↑" />
+            <converters:InitialConverter x:Key="InitialConverter" />
+
+            <!-- 状態の文言と色 (バッジ / 左端の帯 / 行の背景) -->
+            <s:MapToTextConverter x:Key="StatusTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Planned}"
+                                      Value="⏳ 未訪問" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Visited}"
+                                      Value="✅ 訪問済" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                      Value="🔁 再訪問" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Absent}"
+                                      Value="🚫 不在" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToColorConverter x:Key="StatusChipColorConverter"
+                                   DefaultValue="{StaticResource BlueGrayDefault}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                                       Value="{StaticResource GreenDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                       Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                                       Value="{StaticResource RedDefault}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+            <s:MapToColorConverter x:Key="StatusStripColorConverter"
+                                   DefaultValue="{StaticResource BlueGrayLighten2}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                                       Value="{StaticResource GreenDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                       Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                                       Value="{StaticResource RedDefault}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+            <s:MapToColorConverter x:Key="StatusRowColorConverter"
+                                   DefaultValue="White">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                                       Value="{StaticResource GreenLighten5}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                       Value="{StaticResource AmberLighten5}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                                       Value="{StaticResource RedLighten5}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <!-- 区分の文言と色 (バッジの背景 / 文字) -->
+            <s:MapToTextConverter x:Key="CategoryTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Regular}"
+                                      Value="🗓 定期" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.New}"
+                                      Value="✨ 新規" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Inspection}"
+                                      Value="🔧 点検" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Collection}"
+                                      Value="💰 集金" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToColorConverter x:Key="CategoryChipColorConverter"
+                                   DefaultValue="{StaticResource LightBlueLighten4}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}"
+                                       Value="{StaticResource PurpleLighten4}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}"
+                                       Value="{StaticResource TealLighten4}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}"
+                                       Value="{StaticResource AmberLighten4}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+            <s:MapToColorConverter x:Key="CategoryTextColorConverter"
+                                   DefaultValue="{StaticResource LightBlueDarken2}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}"
+                                       Value="{StaticResource PurpleDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}"
+                                       Value="{StaticResource TealDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}"
+                                       Value="{StaticResource AmberDarken2}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <!-- 担当者のアバターの色 -->
+            <s:MapToColorConverter x:Key="StaffColorConverter"
+                                   DefaultValue="{StaticResource BlueGrayDefault}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="佐藤"
+                                       Value="{StaticResource IndigoDefault}" />
+                    <s:MapToColorEntry Key="鈴木"
+                                       Value="{StaticResource TealDefault}" />
+                    <s:MapToColorEntry Key="高橋"
+                                       Value="{StaticResource DeepPurpleDefault}" />
+                    <s:MapToColorEntry Key="田中"
+                                       Value="{StaticResource CyanDarken1}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <Style x:Key="SummaryGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SummaryLabel}">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <!-- 件数のバッジ (状態ごとの色) -->
+            <Style x:Key="CountChip"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <Style x:Key="VisitedCountChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CountChip}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="RevisitCountChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CountChip}">
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+            <Style x:Key="AbsentCountChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CountChip}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="ChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- ツールバー -->
+            <Style x:Key="ToolbarGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,0,12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SortButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="ToolButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <!-- 並替パネル -->
+            <Style x:Key="SortPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,0,12,8" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="SortPanelGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SortPanelLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="Margin" Value="0,0,0,6" />
+            </Style>
+
+            <Style x:Key="SortClearButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="SortKeyFlex"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="JustifyContent" Value="Start" />
+                <Setter Property="AlignItems" Value="Center" />
+            </Style>
+
+            <Style x:Key="SortKeyChip"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,8,8" />
+                <Setter Property="Padding" Value="10,6" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Style.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding IsActive, x:DataType={x:Type module:VisitSortKey}}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="SortKeyStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="SortKeyBadge"
+                   TargetType="Label">
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SortKeyLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Style.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding IsActive, x:DataType={x:Type module:VisitSortKey}}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="White" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- 行 (角丸のカードにせず、区切り線で並べる。状態で背景色、選択でブルー) -->
+            <Style x:Key="CardCollection"
+                   TargetType="CollectionView">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="SelectionMode" Value="None" />
+            </Style>
+
+            <Style x:Key="CardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Rectangle" />
+                <Setter Property="BackgroundColor" Value="{Binding Status, x:DataType={x:Type module:VisitCard}, Converter={StaticResource StatusRowColorConverter}}" />
+                <Style.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding IsSelected, x:DataType={x:Type module:VisitCard}}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="StatusStrip"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="6" />
+                <Setter Property="Color" Value="{Binding Status, x:DataType={x:Type module:VisitCard}, Converter={StaticResource StatusStripColorConverter}}" />
+            </Style>
+
+            <Style x:Key="CardBody"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="10,8" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="CardRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ChipRow"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="AlignItems" Value="Center" />
+            </Style>
+
+            <Style x:Key="InfoRow"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="AlignItems" Value="Center" />
+            </Style>
+
+            <!-- 担当者のアバター (担当ごとの色) -->
+            <Style x:Key="StaffAvatar"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="22" />
+                <Setter Property="HeightRequest" Value="22" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 11" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{Binding Staff, x:DataType={x:Type module:VisitCard}, Converter={StaticResource StaffColorConverter}}" />
+            </Style>
+
+            <Style x:Key="StaffAvatarLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="CodeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CardNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- 絵文字付きの情報 (📍 住所 / 👤 担当 / 🕒 予定 など) -->
+            <Style x:Key="DetailLabel"
+                   TargetType="Label">
+                <Setter Property="FlexLayout.Shrink" Value="0" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Margin" Value="0,0,10,2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- バッジ (状態は色、種別は絵文字で示す) -->
+            <Style x:Key="Chip"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,6,4" />
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource Chip}">
+                <Setter Property="BackgroundColor" Value="{Binding Status, x:DataType={x:Type module:VisitCard}, Converter={StaticResource StatusChipColorConverter}}" />
+            </Style>
+
+            <Style x:Key="PriorityChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource Chip}">
+                <Setter Property="BackgroundColor" Value="{StaticResource DeepOrangeDefault}" />
+            </Style>
+
+            <Style x:Key="TodayChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource Chip}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
+            </Style>
+
+            <Style x:Key="FirstChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource Chip}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="CategoryChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource Chip}">
+                <Setter Property="BackgroundColor" Value="{Binding Category, x:DataType={x:Type module:VisitCard}, Converter={StaticResource CategoryChipColorConverter}}" />
+            </Style>
+
+            <Style x:Key="CategoryChipLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ChipLabel}">
+                <Setter Property="TextColor" Value="{Binding Category, x:DataType={x:Type module:VisitCard}, Converter={StaticResource CategoryTextColorConverter}}" />
+            </Style>
+
+            <Style x:Key="ExpandButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Margin" Value="0,2,2,0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Style.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding IsSelected, x:DataType={x:Type module:VisitCard}}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="RowSeparator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="DetailSeparator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Margin" Value="0,4" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- 件数: 状態ごとのバッジ (⏳ 未訪問 / ✅ 訪問済 / 🔁 再訪問 / 🚫 不在) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource SummaryGrid}"
+              ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="{Binding Cards.Count, StringFormat='訪問先 {0}'}" />
+            <Border Grid.Column="1"
+                    Style="{StaticResource CountChip}">
+                <Label Style="{StaticResource ChipLabel}"
+                       Text="{Binding PlannedCount, StringFormat='⏳ {0}'}" />
+            </Border>
+            <Border Grid.Column="2"
+                    Style="{StaticResource VisitedCountChip}">
+                <Label Style="{StaticResource ChipLabel}"
+                       Text="{Binding VisitedCount, StringFormat='✅ {0}'}" />
+            </Border>
+            <Border Grid.Column="3"
+                    Style="{StaticResource RevisitCountChip}">
+                <Label Style="{StaticResource ChipLabel}"
+                       Text="{Binding RevisitCount, StringFormat='🔁 {0}'}" />
+            </Border>
+            <Border Grid.Column="4"
+                    Style="{StaticResource AbsentCountChip}">
+                <Label Style="{StaticResource ChipLabel}"
+                       Text="{Binding AbsentCount, StringFormat='🚫 {0}'}" />
+            </Border>
+            <Label Grid.Column="6"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="選択" />
+            <Label Grid.Column="7"
+                   Style="{StaticResource SummaryValueLabel}"
+                   Text="{Binding SelectedCount}" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Style="{StaticResource ToolbarGrid}"
+              ColumnDefinitions="*,Auto,Auto,Auto">
+            <Button Grid.Column="0"
+                    Style="{StaticResource SortButton}"
+                    Command="{Binding ToggleSortPanelCommand}"
+                    Text="{Binding SortText, StringFormat='並替: {0}'}" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding ToggleDirectionCommand}"
+                    Text="{Binding IsDescending, Converter={StaticResource DirectionGlyphConverter}}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding ToggleExpandAllCommand}"
+                    Text="{Binding IsAllExpanded, Converter={StaticResource ExpandAllGlyphConverter}}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding ReloadCommand}"
+                    Text="{x:Static font:MaterialIcons.Refresh}" />
+        </Grid>
+
+        <!-- 並替パネル: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
+        <Border Grid.Row="2"
+                Style="{StaticResource SortPanelBorder}"
+                IsVisible="{Binding IsSortPanelOpen}">
+            <VerticalStackLayout>
+                <Grid Style="{StaticResource SortPanelGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SortPanelLabel}"
+                           Text="タップで第 1 キーに。同じキーをもう一度タップすると昇順 / 降順が切り替わる (最大 3 キー)" />
+                    <Button Grid.Column="1"
+                            Style="{StaticResource SortClearButton}"
+                            Command="{Binding ClearSortCommand}"
+                            Text="クリア" />
+                </Grid>
+                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                <FlexLayout Style="{StaticResource SortKeyFlex}"
+                            BindableLayout.ItemsSource="{Binding SortKeys}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
+                            <Border Style="{StaticResource SortKeyChip}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
+                                    <Border VerticalOptions="Center"
+                                            IsVisible="{Binding IsActive}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 9">
+                                        <Label Style="{StaticResource SortKeyBadge}"
+                                               Text="{Binding Priority}" />
+                                    </Border>
+                                    <Label Style="{StaticResource SortKeyLabel}"
+                                           Text="{Binding Name}" />
+                                    <Label Style="{StaticResource SortKeyLabel}"
+                                           IsVisible="{Binding IsActive}"
+                                           Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
+                                </HorizontalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+        <CollectionView Grid.Row="3"
+                        Style="{StaticResource CardCollection}"
+                        ItemsSource="{Binding Cards}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type module:VisitCard}">
+                    <Border Style="{StaticResource CardBorder}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleSelectCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                                  CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid RowDefinitions="*,Auto"
+                              ColumnDefinitions="Auto,*,Auto">
+                            <BoxView Grid.Row="0" Grid.Column="0"
+                                     Style="{StaticResource StatusStrip}" />
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                                 Style="{StaticResource CardBody}">
+                                <HorizontalStackLayout Style="{StaticResource CardRow}">
+                                    <Border Style="{StaticResource StaffAvatar}">
+                                        <Label Style="{StaticResource StaffAvatarLabel}"
+                                               Text="{Binding Staff, Converter={StaticResource InitialConverter}}" />
+                                    </Border>
+                                    <Label Style="{StaticResource CodeLabel}"
+                                           Text="{Binding Code}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                    <Label Style="{StaticResource CardNameLabel}"
+                                           Text="{Binding Name}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                </HorizontalStackLayout>
+
+                                <FlexLayout Style="{StaticResource ChipRow}">
+                                    <Border Style="{StaticResource StatusChip}">
+                                        <Label Style="{StaticResource ChipLabel}"
+                                               Text="{Binding Status, Converter={StaticResource StatusTextConverter}}" />
+                                    </Border>
+                                    <Border Style="{StaticResource PriorityChip}"
+                                            IsVisible="{Binding IsPriority}">
+                                        <Label Style="{StaticResource ChipLabel}"
+                                               Text="🔥 重点" />
+                                    </Border>
+                                    <Border Style="{StaticResource TodayChip}"
+                                            IsVisible="{Binding IsToday}">
+                                        <Label Style="{StaticResource ChipLabel}"
+                                               Text="📌 今日" />
+                                    </Border>
+                                    <Border Style="{StaticResource FirstChip}"
+                                            IsVisible="{Binding IsFirstVisit}">
+                                        <Label Style="{StaticResource ChipLabel}"
+                                               Text="🆕 初回" />
+                                    </Border>
+                                    <Border Style="{StaticResource CategoryChip}">
+                                        <Label Style="{StaticResource CategoryChipLabel}"
+                                               Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}" />
+                                    </Border>
+                                </FlexLayout>
+
+                                <FlexLayout Style="{StaticResource InfoRow}">
+                                    <Label Style="{StaticResource DetailLabel}"
+                                           Text="{Binding Address, StringFormat='📍 {0}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                    <Label Style="{StaticResource DetailLabel}"
+                                           Text="{Binding Staff, StringFormat='👤 {0}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                    <Label Style="{StaticResource DetailLabel}"
+                                           Text="{Binding ScheduledAt, StringFormat='🕒 {0:MM/dd (ddd) HH:mm}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                </FlexLayout>
+
+                                <!-- 展開部分 -->
+                                <VerticalStackLayout Style="{StaticResource DetailStack}"
+                                                     IsVisible="{Binding IsExpanded}">
+                                    <BoxView Style="{StaticResource DetailSeparator}" />
+                                    <FlexLayout Style="{StaticResource InfoRow}">
+                                        <Label Style="{StaticResource DetailLabel}"
+                                               Text="{Binding Phone, StringFormat='📞 {0}'}"
+                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                        <Label Style="{StaticResource DetailLabel}"
+                                               Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
+                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                    </FlexLayout>
+                                    <Label Style="{StaticResource DetailLabel}"
+                                           IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
+                                           Text="{Binding Note, StringFormat='📝 {0}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
+                                           LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+
+                            <Button Grid.Row="0" Grid.Column="2"
+                                    Style="{StaticResource ExpandButton}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleExpandCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                    CommandParameter="{Binding .}"
+                                    Text="{Binding IsExpanded, Converter={StaticResource ExpandGlyphConverter}}" />
+                            <BoxView Grid.Row="1" Grid.ColumnSpan="3"
+                                     Style="{StaticResource RowSeparator}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+    </Grid>
+
+</ContentView>

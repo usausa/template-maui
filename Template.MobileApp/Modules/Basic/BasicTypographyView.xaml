@@ -17,17 +17,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
             <Style x:Key="SampleStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="4" />
@@ -39,9 +28,9 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Semantic"
-                               Icon="{x:Static fonts:MaterialIcons.Format_size}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Semantic"
+                               Icon="{x:Static fonts:MaterialIcons.Format_size}">
                 <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label Style="{StaticResource TitleLabel}"
                            Text="Title" />
@@ -54,10 +43,10 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Left / Size / Color"
-                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Left / Size / Color"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}">
                 <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label StyleClass="LabelLeft, LabelMicro, LabelPrimary"
                            Text="Micro Primary" />
@@ -74,10 +63,10 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Center / Size / Color"
-                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Center / Size / Color"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}">
                 <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label StyleClass="LabelCenter, LabelMicro, LabelError"
                            Text="Micro Error" />
@@ -94,10 +83,10 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Right / Size / Color"
-                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Right / Size / Color"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}">
                 <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label StyleClass="LabelRight, LabelMicro, LabelWarning"
                            Text="Micro Warning" />

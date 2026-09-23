@@ -6,10 +6,18 @@ public sealed class UITelemetryViewModel : AppViewModelBase
 {
     public TelemetryScene Scene { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UITelemetryViewModel()
     {
         Disposables.Add(Scene);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {

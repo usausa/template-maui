@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             x:Class="Template.MobileApp.Modules.Control.ControlToolkitView"
+             x:DataType="{x:Type module:ControlToolkitViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ControlToolkitViewModel}"
+             shell:ShellProperty.Title="Toolkit"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ExpanderHeaderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowLabel}">
+                <Setter Property="Padding" Value="0,8" />
+            </Style>
+
+            <Style x:Key="ExpanderContentLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="Padding" Value="0,4,0,8" />
+            </Style>
+
+            <Style x:Key="AccordionHeaderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowLabel}">
+                <Setter Property="Padding" Value="4,10" />
+            </Style>
+
+            <Style x:Key="AccordionContentLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="Padding" Value="4,4,4,10" />
+            </Style>
+
+            <Style x:Key="AvatarRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <!--
+        導入済み Toolkit の未使用部品デモ。
+        Syncfusion = SfTabView / SfOtpInput / SfSegmentedControl / SfChipGroup / SfAccordion (SfBottomSheet は Control > Bottom Sheet)
+        CommunityToolkit = AvatarView / Expander / RatingView
+    -->
+    <sf:SfTabView IndicatorBackground="{StaticResource BlueDefault}"
+                  TabBarBackground="White">
+        <sf:SfTabItem Header="入力">
+            <ScrollView Style="{StaticResource RootScroll}">
+                <VerticalStackLayout Style="{StaticResource PageStack}">
+
+                    <controls:InfoCard Title="SfOtpInput"
+                                       Icon="{x:Static fonts:MaterialIcons.Pin}">
+                        <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                            <sf:SfOtpInput Value="{Binding OtpValue}"
+                                           Length="4" Type="Number" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding OtpValue, StringFormat='入力: {0}'}" />
+                        </VerticalStackLayout>
+                    </controls:InfoCard>
+
+                    <controls:InfoCard Title="SfSegmentedControl"
+                                       Icon="{x:Static fonts:MaterialIcons.View_week}">
+                        <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                            <sf:SfSegmentedControl ItemsSource="{Binding Segments}"
+                                                   SegmentHeight="40"
+                                                   SelectedIndex="{Binding SegmentIndex, Mode=TwoWay}" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding SegmentIndex, StringFormat='選択インデックス: {0}'}" />
+                        </VerticalStackLayout>
+                    </controls:InfoCard>
+
+                    <controls:InfoCard Title="SfChipGroup"
+                                       Icon="{x:Static fonts:MaterialIcons.Sell}">
+                        <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                            <sf:SfChipGroup ItemsSource="{Binding Chips}"
+                                            SelectedItem="{Binding SelectedChip}"
+                                            ChipType="Choice"
+                                            SelectedChipBackground="{StaticResource BlueDefault}"
+                                            SelectedChipTextColor="White" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding SelectedChip, StringFormat='選択: {0}'}" />
+                        </VerticalStackLayout>
+                    </controls:InfoCard>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </sf:SfTabItem>
+
+        <sf:SfTabItem Header="表示">
+            <ScrollView Style="{StaticResource RootScroll}">
+                <VerticalStackLayout Style="{StaticResource PageStack}">
+
+                    <controls:InfoCard Title="AvatarView / RatingView"
+                                       Icon="{x:Static fonts:MaterialIcons.Person}">
+                        <VerticalStackLayout Style="{StaticResource CardLargeContentStack}">
+                            <HorizontalStackLayout Style="{StaticResource AvatarRowStack}">
+                                <mct:AvatarView WidthRequest="48" HeightRequest="48"
+                                                Text="US"
+                                                TextColor="White"
+                                                BackgroundColor="{StaticResource BlueDefault}"
+                                                BorderWidth="0" CornerRadius="24" />
+                                <mct:AvatarView WidthRequest="48" HeightRequest="48"
+                                                Text="MK"
+                                                TextColor="White"
+                                                BackgroundColor="{StaticResource GreenDefault}"
+                                                BorderWidth="0" CornerRadius="24" />
+                                <mct:AvatarView WidthRequest="48" HeightRequest="48"
+                                                Text="+3"
+                                                TextColor="{StaticResource GrayDarken3}"
+                                                BackgroundColor="{StaticResource GrayLighten2}"
+                                                BorderWidth="0" CornerRadius="24" />
+                            </HorizontalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
+                                <mct:RatingView EmptyShapeColor="{StaticResource GrayLighten2}"
+                                                FillColor="{StaticResource AmberDefault}"
+                                                MaximumRating="5"
+                                                Rating="{Binding Rating}"
+                                                ShapeBorderColor="{StaticResource AmberDefault}"
+                                                ShapeDiameter="32" />
+                                <Label Style="{StaticResource CardAccentLabel}"
+                                       Text="{Binding Rating, StringFormat='評価: {0:F1}'}" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </controls:InfoCard>
+
+                    <controls:InfoCard Title="Expander (CommunityToolkit)"
+                                       Icon="{x:Static fonts:MaterialIcons.Unfold_more}">
+                        <mct:Expander>
+                            <mct:Expander.Header>
+                                <Label Style="{StaticResource ExpanderHeaderLabel}"
+                                       Text="タップして展開 ▼" />
+                            </mct:Expander.Header>
+                            <Label Style="{StaticResource ExpanderContentLabel}"
+                                   Text="Expander は Header タップで Content の表示/非表示を切り替える。折りたたみ FAQ やフィルタパネルに使える" />
+                        </mct:Expander>
+                    </controls:InfoCard>
+
+                    <controls:InfoCard Title="SfAccordion"
+                                       Icon="{x:Static fonts:MaterialIcons.List}">
+                        <sf:SfAccordion>
+                            <sf:AccordionItem>
+                                <sf:AccordionItem.Header>
+                                    <Label Style="{StaticResource AccordionHeaderLabel}"
+                                           Text="アカウントとは" />
+                                </sf:AccordionItem.Header>
+                                <sf:AccordionItem.Content>
+                                    <Label Style="{StaticResource AccordionContentLabel}"
+                                           Text="アプリの利用に必要なユーザー識別情報です" />
+                                </sf:AccordionItem.Content>
+                            </sf:AccordionItem>
+                            <sf:AccordionItem>
+                                <sf:AccordionItem.Header>
+                                    <Label Style="{StaticResource AccordionHeaderLabel}"
+                                           Text="同期の仕組み" />
+                                </sf:AccordionItem.Header>
+                                <sf:AccordionItem.Content>
+                                    <Label Style="{StaticResource AccordionContentLabel}"
+                                           Text="ネットワーク接続時にバックグラウンドで差分同期します" />
+                                </sf:AccordionItem.Content>
+                            </sf:AccordionItem>
+                            <sf:AccordionItem>
+                                <sf:AccordionItem.Header>
+                                    <Label Style="{StaticResource AccordionHeaderLabel}"
+                                           Text="データの削除" />
+                                </sf:AccordionItem.Header>
+                                <sf:AccordionItem.Content>
+                                    <Label Style="{StaticResource AccordionContentLabel}"
+                                           Text="設定画面からローカルデータを削除できます" />
+                                </sf:AccordionItem.Content>
+                            </sf:AccordionItem>
+                        </sf:SfAccordion>
+                    </controls:InfoCard>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </sf:SfTabItem>
+    </sf:SfTabView>
+
+</ContentView>

@@ -16,6 +16,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="MeterGauge"
+                   TargetType="controls:SpeedGauge">
+                <Setter Property="Margin" Value="0,20,0,-20" />
+                <Setter Property="GaugeColor" Value="#484D5F" />
+                <Setter Property="ValueColor" Value="Turquoise" />
+                <Setter Property="MidColor" Value="Yellow" />
+                <Setter Property="HighColor" Value="Red" />
+            </Style>
+
             <Style x:Key="JoyStick"
                    TargetType="controls:JoyStickView">
                 <Setter Property="WidthRequest" Value="160" />
@@ -116,11 +125,7 @@
           BackgroundColor="#2E2F45">
 
         <controls:SpeedGauge Grid.Row="0" Grid.ColumnSpan="2"
-                             Margin="0,20,0,-20"
-                             GaugeColor="#484D5F"
-                             ValueColor="Turquoise"
-                             MidColor="Yellow"
-                             HighColor="Red"
+                             Style="{StaticResource MeterGauge}"
                              MaxSpeed="255"
                              Speed="{Binding Speed}" />
         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2"
@@ -130,10 +135,10 @@
                    FontFamily="Gkktt" FontSize="96"
                    TextColor="White">
                 <Label.Shadow>
-                    <Shadow Brush="Turquoise"
-                            Offset="0,0"
-                            Radius="16"
-                            Opacity="0.8" />
+                    <Shadow Offset="0,0"
+                            Brush="Turquoise"
+                            Opacity="0.8"
+                            Radius="16" />
                 </Label.Shadow>
             </Label>
             <Label HorizontalTextAlignment="Center"
@@ -173,8 +178,7 @@
                 InputTransparent="True"
                 StrokeThickness="0">
             <Border.Background>
-                <RadialGradientBrush Center="0.5,0.4"
-                                     Radius="0.9">
+                <RadialGradientBrush Radius="0.9" Center="0.5,0.4">
                     <GradientStop Offset="0.55" Color="#00000000" />
                     <GradientStop Offset="1.0" Color="#59000000" />
                 </RadialGradientBrush>

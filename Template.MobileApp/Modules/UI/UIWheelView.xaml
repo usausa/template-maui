@@ -18,6 +18,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="WheelDrawing"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+
             <Style x:Key="ResultCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -53,7 +58,7 @@
 
         <!-- ホイール (F4 のほかタップでも回転) -->
         <drawing:DrawingControl Grid.Row="0"
-                                Margin="8"
+                                Style="{StaticResource WheelDrawing}"
                                 Drawing="{Binding Drawing}">
             <drawing:DrawingControl.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding SpinCommand}" />

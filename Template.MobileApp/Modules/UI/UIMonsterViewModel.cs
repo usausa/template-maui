@@ -38,11 +38,19 @@ public sealed partial class UIMonsterViewModel : AppViewModelBase
 
     public IObserveCommand PartyCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIMonsterViewModel()
     {
         HeartCommand = MakeDelegateCommand(() => Hp = Math.Min(400, Hp + 5));
         PartyCommand = MakeDelegateCommand(() => InParty = !InParty);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 

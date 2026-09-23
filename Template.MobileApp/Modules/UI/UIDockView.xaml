@@ -4,19 +4,19 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              x:Class="Template.MobileApp.Modules.UI.UIDockView"
              x:DataType="{x:Type module:UIDockViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIDockViewModel}"
              shell:ShellProperty.Title="Dock"
              shell:ShellProperty.HeaderVisible="False"
-             shell:ShellProperty.StatusBarColor="{StaticResource GrayDarken4}"
-             shell:ShellProperty.FunctionVisible="False">
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="{StaticResource GrayDarken4}">
 
     <ContentView.Background>
-        <RadialGradientBrush Center="0.5,0.4" Radius="0.75">
+        <RadialGradientBrush Radius="0.75" Center="0.5,0.4">
             <GradientStop Offset="0.0" Color="{StaticResource GrayDarken3}" />
             <GradientStop Offset="1.0" Color="{StaticResource GrayDarken4}" />
         </RadialGradientBrush>
@@ -102,8 +102,8 @@
             </DataTemplate>
 
             <controls:DeckButtonTemplateSelector x:Key="DeckButtonTemplateSelector"
-                                               ImageTemplate="{StaticResource ImageTemplate}"
-                                               TextTemplate="{StaticResource TextTemplate}" />
+                                                 ImageTemplate="{StaticResource ImageTemplate}"
+                                                 TextTemplate="{StaticResource TextTemplate}" />
 
         </ResourceDictionary>
     </ContentView.Resources>
@@ -112,7 +112,7 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*,*,*"
-          BindableLayout.ItemTemplateSelector="{StaticResource DeckButtonTemplateSelector}"
-          BindableLayout.ItemsSource="{Binding Buttons}" />
+          BindableLayout.ItemsSource="{Binding Buttons}"
+          BindableLayout.ItemTemplateSelector="{StaticResource DeckButtonTemplateSelector}" />
 
 </ContentView>

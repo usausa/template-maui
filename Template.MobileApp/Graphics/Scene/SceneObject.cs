@@ -53,6 +53,9 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     public void Invalidate() => control?.InvalidateSurface();
 
+    // UI スレッドへ依頼して待たない (Stop は UI スレッドで loopTask を待つため、待つとデッドロックになる)
+    private void Post(Action action) => control?.Dispatcher.Dispatch(action);
+
     //--------------------------------------------------------------------------------
     // Render / Touch
     //--------------------------------------------------------------------------------
@@ -201,7 +204,7 @@ public abstract class SceneObject : ISceneObject, IDisposable
                     Time = t;
                     Update(t, dt);
                     RenderToBuffer(lastWidth, lastHeight);
-                    MainThread.BeginInvokeOnMainThread(() =>
+                    Post(() =>
                     {
                         if (!token.IsCancellationRequested)
                         {
@@ -211,7 +214,7 @@ public abstract class SceneObject : ISceneObject, IDisposable
                 }
                 else
                 {
-                    MainThread.BeginInvokeOnMainThread(() =>
+                    Post(() =>
                     {
                         if (token.IsCancellationRequested)
                         {

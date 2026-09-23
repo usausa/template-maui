@@ -39,7 +39,7 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
-            <Style x:Key="TimeLabel"
+            <Style x:Key="ControlBarTimeLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="12" />
@@ -63,8 +63,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource FillGrid}"
-          BackgroundColor="Black">
+    <Grid Style="{StaticResource MediaRootGrid}">
 
         <toolkit:MediaElement x:Name="Player"
                               behaviors:MediaBind.Controller="{Binding Controller}"
@@ -81,10 +80,10 @@
         <!-- 再生開始・バッファリング中のローディング表示 -->
         <ActivityIndicator WidthRequest="48" HeightRequest="48"
                            HorizontalOptions="Center" VerticalOptions="Center"
+                           IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}"
-                           Color="White"
                            InputTransparent="True"
-                           IsRunning="{Binding IsLoading}" />
+                           Color="White" />
 
         <Border Style="{StaticResource ControlBarBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
@@ -98,15 +97,15 @@
                              Command="{Binding TogglePlayCommand}">
                     <ImageButton.Triggers>
                         <DataTrigger TargetType="ImageButton"
-                                     Value="True"
-                                     Binding="{Binding IsPlaying}">
+                                     Binding="{Binding IsPlaying}"
+                                     Value="True">
                             <Setter Property="Source" Value="{x:Static markup:AppIcons.MoneyPause}" />
                         </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>
 
                 <Label Grid.Column="1"
-                       Style="{StaticResource TimeLabel}"
+                       Style="{StaticResource ControlBarTimeLabel}"
                        Text="{Binding Source={x:Reference Player}, Path=Position, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
 
                 <Slider Grid.Column="2"
@@ -116,7 +115,7 @@
                         Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type toolkit:MediaElement}}" />
 
                 <Label Grid.Column="3"
-                       Style="{StaticResource TimeLabel}"
+                       Style="{StaticResource ControlBarTimeLabel}"
                        Text="{Binding Source={x:Reference Player}, Path=Duration, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
             </Grid>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->

@@ -20,6 +20,20 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RunStateStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="PlayIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="EasingCardBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="6" />
@@ -57,20 +71,20 @@
                 <Setter Property="Color" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="RootGrid"
+            <Style x:Key="EasingBoardGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
                 <Setter Property="RowSpacing" Value="8" />
                 <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource EasingBoardGrid}"
           RowDefinitions="*,*,*,*"
-          ColumnDefinitions="*,*,*"
-          Padding="12"
-          BackgroundColor="{StaticResource GrayLighten5}">
+          ColumnDefinitions="*,*,*">
 
         <Border Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource EasingCardBorder}">
@@ -339,12 +353,8 @@
         <!-- 実行状態 -->
         <Border Grid.Row="3" Grid.Column="2"
                 Style="{StaticResource EasingCardBorder}">
-            <VerticalStackLayout VerticalOptions="Center"
-                                 Spacing="4">
-                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                       FontSize="24"
-                       TextColor="{StaticResource BlueGrayDarken1}"
-                       HorizontalOptions="Center"
+            <VerticalStackLayout Style="{StaticResource RunStateStack}">
+                <Label Style="{StaticResource PlayIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Play_arrow}">
                     <Label.Triggers>
                         <DataTrigger TargetType="Label"

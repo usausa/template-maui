@@ -53,7 +53,8 @@ public sealed class DetectDrawing : DrawingObject
             canvas.StrokeColor = new Color((byte)255, c, (byte)0, (byte)255);
             canvas.DrawRectangle(x, y, w, h);
 
-            canvas.DrawString($"{result.Score:F2}", x, y, w, h, HorizontalAlignment.Right, VerticalAlignment.Bottom);
+            var text = String.IsNullOrEmpty(result.Label) ? $"{result.Score:F2}" : $"{result.Label} {result.Score:F2}";
+            canvas.DrawString(text, x, y, w, h, HorizontalAlignment.Right, VerticalAlignment.Bottom);
         }
     }
 }

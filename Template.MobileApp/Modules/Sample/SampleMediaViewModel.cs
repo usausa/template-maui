@@ -21,6 +21,10 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
 
     public ICommand ToggleControlBarCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleMediaViewModel(IDispatcher dispatcher)
     {
         // 再生が始まるまではローディング表示にする
@@ -55,14 +59,9 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
         }));
     }
 
-    private void RestartHideTimer()
-    {
-        timer.Stop();
-        if (IsControlBarVisible)
-        {
-            timer.Start();
-        }
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
@@ -73,4 +72,17 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void RestartHideTimer()
+    {
+        timer.Stop();
+        if (IsControlBarVisible)
+        {
+            timer.Start();
+        }
+    }
 }

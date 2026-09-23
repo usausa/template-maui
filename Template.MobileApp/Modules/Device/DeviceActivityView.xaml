@@ -106,14 +106,14 @@
           BackgroundColor="White">
 
         <drawing:DrawingControl Grid.Row="1"
-                                  Drawing="{Binding Drawing}" />
+                                Drawing="{Binding Drawing}" />
 
         <VerticalStackLayout Grid.Row="1"
                              Style="{StaticResource ActivityVerticalStack}">
             <Label Style="{StaticResource ActivityValueLabel}"
-                   behaviors:LabelOption.CountUpValue="{Binding Calculator.Step}"
+                   behaviors:LabelOption.CountUpDuration="600"
                    behaviors:LabelOption.CountUpFormat="{}{0:N0}"
-                   behaviors:LabelOption.CountUpDuration="600" />
+                   behaviors:LabelOption.CountUpValue="{Binding Calculator.Step}" />
             <Label Style="{StaticResource ActivityUnitLabel}"
                    Text="歩" />
         </VerticalStackLayout>

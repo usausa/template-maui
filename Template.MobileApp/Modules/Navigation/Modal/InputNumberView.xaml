@@ -4,40 +4,13 @@
            xmlns:s="http://smart/maui"
            xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
            xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+           xmlns:fonts="clr-namespace:Fonts"
            xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Modal"
            xmlns:modules="clr-namespace:Template.MobileApp.Modules"
-           xmlns:fonts="clr-namespace:Fonts"
            x:Class="Template.MobileApp.Modules.Navigation.Modal.InputNumberView"
            x:DataType="{x:Type module:InputNumberViewModel}"
            s:BindingContextResolver.Type="{x:Type module:InputNumberViewModel}"
            WidthRequest="{x:Static modules:ScreenSize.LargeDialogWidth}">
-
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <mct:Popup.Resources>
-        <ResourceDictionary>
-
-            <Style x:Key="PadTextButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource InputTextButton}">
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <Style x:Key="PadCommandButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource InputCommandButton}">
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <Style x:Key="PadFunctionButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource InputFunctionButton}">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-        </ResourceDictionary>
-    </mct:Popup.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
         <!-- title -->
@@ -53,64 +26,64 @@
               RowDefinitions="*,*,*,*"
               ColumnDefinitions="*,*,*">
             <Button Grid.Row="0" Grid.Column="0"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="1"
                     Text="1" />
             <Button Grid.Row="0" Grid.Column="1"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="2"
                     Text="2" />
             <Button Grid.Row="0" Grid.Column="2"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="3"
                     Text="3" />
 
             <Button Grid.Row="1" Grid.Column="0"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="4"
                     Text="4" />
             <Button Grid.Row="1" Grid.Column="1"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="5"
                     Text="5" />
             <Button Grid.Row="1" Grid.Column="2"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="6"
                     Text="6" />
 
             <Button Grid.Row="2" Grid.Column="0"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="7"
                     Text="7" />
             <Button Grid.Row="2" Grid.Column="1"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="8"
                     Text="8" />
             <Button Grid.Row="2" Grid.Column="2"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="9"
                     Text="9" />
 
             <Button Grid.Row="3" Grid.Column="0"
-                    Style="{StaticResource PadCommandButton}"
+                    Style="{StaticResource InputCommandButton}"
                     Command="{Binding ClearCommand}"
                     Text="AC" />
             <Button Grid.Row="3" Grid.Column="1"
-                    Style="{StaticResource PadTextButton}"
+                    Style="{StaticResource InputTextButton}"
                     Command="{Binding PushCommand}"
                     CommandParameter="0"
                     Text="0" />
             <Button Grid.Row="3" Grid.Column="2"
-                    Style="{StaticResource PadCommandButton}"
+                    Style="{StaticResource InputCommandButton}"
                     Command="{Binding PopCommand}"
                     Text="C" />
         </Grid>
@@ -119,11 +92,11 @@
         <Grid Style="{StaticResource FunctionGrid}"
               ColumnDefinitions="*,*">
             <Button Grid.Column="0"
-                    Style="{StaticResource PadFunctionButton}"
+                    Style="{StaticResource InputIconButton}"
                     Command="{Binding CloseCommand}"
                     Text="{x:Static fonts:MaterialIcons.Close}" />
             <Button Grid.Column="1"
-                    Style="{StaticResource PadFunctionButton}"
+                    Style="{StaticResource InputIconButton}"
                     behaviors:Focus.Default="True"
                     Command="{Binding CommitCommand}"
                     Text="{x:Static fonts:MaterialIcons.Check}" />

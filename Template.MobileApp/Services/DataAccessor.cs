@@ -21,6 +21,10 @@ public sealed partial class DataAccessor
     // Data
     //--------------------------------------------------------------------------------
 
+    [ExecuteScalar]
+    [Count(typeof(DataEntity))]
+    public partial ValueTask<long> CountDataAsync();
+
     [Execute]
     [Insert(typeof(DataEntity))]
     public partial ValueTask<int> InsertDataAsync(DataEntity entity);
@@ -58,6 +62,10 @@ public sealed partial class DataAccessor
     //--------------------------------------------------------------------------------
     // Work
     //--------------------------------------------------------------------------------
+
+    [ExecuteScalar]
+    [Count(typeof(WorkEntity))]
+    public partial ValueTask<long> CountWorkAsync();
 
     [Query]
     public partial ValueTask<List<WorkEntity>> QueryWorkListAsync();

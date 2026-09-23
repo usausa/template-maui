@@ -6,10 +6,18 @@ public sealed class UIEnergyViewModel : AppViewModelBase
 {
     public EnergyFlowScene Scene { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIEnergyViewModel()
     {
         Disposables.Add(Scene);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {

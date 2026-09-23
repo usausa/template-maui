@@ -12,13 +12,28 @@ public sealed partial class UILoginViewModel : AppViewModelBase
 
     public ICommand LoginCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UILoginViewModel()
     {
         TogglePasswordCommand = MakeDelegateCommand(() => PasswordVisible = !PasswordVisible);
         LoginCommand = MakeAsyncCommand(ExecuteLoginAsync);
     }
 
-    // 見た目のみのローディング演出
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private async Task ExecuteLoginAsync()
     {
         LoggingIn = true;
@@ -31,8 +46,4 @@ public sealed partial class UILoginViewModel : AppViewModelBase
             LoggingIn = false;
         }
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

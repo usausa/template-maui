@@ -22,11 +22,19 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
     public IObserveCommand BackCommand { get; }
     public IObserveCommand ReplayCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public EffectDemoViewModel()
     {
         BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
         ReplayCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.NavigationEffectDemo, MakeParameter(effect)));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -49,6 +57,10 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
     }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
 
     private static NavigationParameter MakeParameter(string? effect)
     {

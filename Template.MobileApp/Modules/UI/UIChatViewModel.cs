@@ -18,8 +18,6 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         "stamp05.png", "stamp06.png", "stamp07.png", "stamp08.png"
     ];
 
-    private static string GetStamp(int index) => Stamps[index % Stamps.Length];
-
     private readonly IDispatcher dispatcher;
 
     public CollectionController Controller { get; } = new();
@@ -42,6 +40,10 @@ public sealed partial class UIChatViewModel : AppViewModelBase
     public IObserveCommand PickStickerCommand { get; }
     public IObserveCommand ScrollToLatestCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIChatViewModel(IDispatcher dispatcher)
     {
         this.dispatcher = dispatcher;
@@ -51,14 +53,34 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         PickImageCommand = MakeDelegateCommand(static () => { });
         PickStickerCommand = MakeDelegateCommand(() => IsStampTrayVisible = !IsStampTrayVisible);
         ScrollToLatestCommand = MakeDelegateCommand(() => ScrollToLast());
-        PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(InputText))
-            {
-                SendCommand.RaiseCanExecuteChanged();
-            }
-        };
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    public override Task OnNavigatingToAsync(INavigationContext context)
+    {
+        if (!context.Attribute.IsRestore())
+        {
+            LoadSampleMessages();
+        }
+        return Task.CompletedTask;
+    }
+
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        ScrollToLast(animate: false);
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void ScrollToLast(bool animate = true)
     {
@@ -69,16 +91,6 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
         // 追加直後はレイアウト前のため次のループでスクロールする
         dispatcher.Dispatch(() => Controller.ScrollRequest(Messages.Count - 1, position: ScrollToPosition.End, animate: animate));
-    }
-
-    public override Task OnNavigatedToAsync(INavigationContext context)
-    {
-        if (Messages.Count == 0)
-        {
-            LoadSampleMessages();
-        }
-        ScrollToLast(animate: false);
-        return Task.CompletedTask;
     }
 
     private void ExecuteSend()
@@ -111,10 +123,6 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         ScrollToLast();
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
     private void LoadSampleMessages()
     {
         var today = DateTime.Today;
@@ -124,27 +132,21 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
         AddReceive(yesterday.AddHours(9).AddMinutes(5), "M･I･O", AvatarAlice, "おはようございます。");
         AddSend(yesterday.AddHours(9).AddMinutes(18), "おはようございます。", isRead: true);
-        AddReceive(yesterday.AddHours(9).AddMinutes(30), "日本酒飲郎", AvatarBob,
-            "昨日の PR レビューしました。CI が通っていないようなのでテストの修正をお願いできますか？コメントもいくつか書いてあります。");
+        AddReceive(yesterday.AddHours(9).AddMinutes(30), "日本酒飲郎", AvatarBob, "昨日の PR レビューしました。CI が通っていないようなのでテストの修正をお願いできますか？コメントもいくつか書いてあります。");
         AddSend(yesterday.AddHours(9).AddMinutes(32), "ありがとうございます！\n午前中に対応します。", isRead: true);
-        AddReceive(yesterday.AddHours(12).AddMinutes(30), "日本酒飲郎", AvatarBob, "お昼ご飯食べてきます〜",
-            reactions: [new MessageReaction { Emoji = "🍱", Count = 3 }]);
+        AddReceive(yesterday.AddHours(12).AddMinutes(30), "日本酒飲郎", AvatarBob, "お昼ご飯食べてきます〜", reactions: [new MessageReaction { Emoji = "🍱", Count = 3 }]);
         AddReceive(yesterday.AddHours(14), "悪いスライム", AvatarCarol, "定例始めます。");
         AddSend(yesterday.AddHours(14).AddMinutes(1), "入ります。", isRead: true);
         AddReceive(yesterday.AddHours(16), "M･I･O", AvatarAlice, "資料 PDF 共有しますね。");
-        AddSend(yesterday.AddHours(16).AddMinutes(5), "確認しました！", isRead: true,
-            reactions: [new MessageReaction { Emoji = "🙏", Count = 1 }]);
+        AddSend(yesterday.AddHours(16).AddMinutes(5), "確認しました！", isRead: true, reactions: [new MessageReaction { Emoji = "🙏", Count = 1 }]);
         AddReceive(yesterday.AddHours(18).AddMinutes(30), "†聖天使†", AvatarDave, "お疲れさまでした！");
 
         AddSystem(today);
 
-        AddReceive(today.AddHours(10).AddMinutes(5), "M･I･O", AvatarAlice,
-            "資料できましたー！来週の会議で使うものなので、月曜日までに確認をお願いします🙏");
-        AddSend(today.AddHours(10).AddMinutes(7),
-            "了解しました！\n以下の点を確認します。\n・議事録\n・来週の資料\n・レビュー", isRead: true);
+        AddReceive(today.AddHours(10).AddMinutes(5), "M･I･O", AvatarAlice, "資料できましたー！来週の会議で使うものなので、月曜日までに確認をお願いします🙏");
+        AddSend(today.AddHours(10).AddMinutes(7), "了解しました！\n以下の点を確認します。\n・議事録\n・来週の資料\n・レビュー", isRead: true);
         AddReceiveStamp(today.AddHours(10).AddMinutes(10), "日本酒飲郎", AvatarBob, GetStamp(0));
-        AddSend(today.AddHours(10).AddMinutes(12), "👀 確認中…", isRead: true,
-            reactions: [new MessageReaction { Emoji = "👀", Count = 1 }]);
+        AddSend(today.AddHours(10).AddMinutes(12), "👀 確認中…", isRead: true, reactions: [new MessageReaction { Emoji = "👀", Count = 1 }]);
         AddSendStamp(today.AddHours(10).AddMinutes(15), GetStamp(1), isRead: true);
         AddReceive(today.AddHours(10).AddMinutes(30), "悪いスライム", AvatarCarol, "今日は 15:00 から会議です。");
         AddReceiveStamp(today.AddHours(10).AddMinutes(35), "悪いスライム", AvatarCarol, GetStamp(2));
@@ -152,12 +154,9 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         AddSendStamp(today.AddHours(10).AddMinutes(40), GetStamp(3), isRead: true);
         AddReceive(today.AddHours(11), "M･I･O", AvatarAlice, "ランチ何にします？");
         AddReceiveStamp(today.AddHours(11).AddMinutes(1), "M･I･O", AvatarAlice, GetStamp(4));
-        AddReceive(today.AddHours(11).AddMinutes(2), "日本酒飲郎", AvatarBob, "寿司でどうでしょう。",
-            reactions: [new MessageReaction { Emoji = "🍣", Count = 2 }]);
+        AddReceive(today.AddHours(11).AddMinutes(2), "日本酒飲郎", AvatarBob, "寿司でどうでしょう。", reactions: [new MessageReaction { Emoji = "🍣", Count = 2 }]);
         AddReceiveStamp(today.AddHours(11).AddMinutes(3), "日本酒飲郎", AvatarBob, GetStamp(5));
-        AddSend(today.AddHours(11).AddMinutes(5),
-            "いいですね！ちなみに本日のミーティングお疲れさまでした。共有いただいた資料についていくつか質問があるので、後ほど別途連絡いたします。",
-            isRead: false);
+        AddSend(today.AddHours(11).AddMinutes(5), "いいですね！ちなみに本日のミーティングお疲れさまでした。共有いただいた資料についていくつか質問があるので、後ほど別途連絡いたします。", isRead: false);
         AddSendStamp(today.AddHours(11).AddMinutes(6), GetStamp(6), isRead: false);
     }
 
@@ -218,4 +217,10 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             IsRead = isRead,
             Reactions = reactions ?? []
         });
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private static string GetStamp(int index) => Stamps[index % Stamps.Length];
 }

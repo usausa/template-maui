@@ -15,69 +15,22 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <ContentView.Resources>
-        <ResourceDictionary>
-
-            <s:ToUpperConverter x:Key="ToUpperConverter" />
-
-            <s:ToLowerConverter x:Key="ToLowerConverter" />
-
-            <s:AllConverter x:Key="AllConverter" />
-
-            <s:AnyConverter x:Key="AnyConverter" />
-
-            <Style x:Key="CheckRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="4" />
-            </Style>
-
-            <Style x:Key="CheckCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="ResultRowGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="ActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Icon="{x:Static fonts:MaterialIcons.Rule}"
-                               Title="Boolean">
-                <VerticalStackLayout Spacing="8">
-                    <Grid Style="{StaticResource CheckRowGrid}"
+                               Title="Boolean"
+                               Icon="{x:Static fonts:MaterialIcons.Rule}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding ReverseChecked}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource CheckCaptionLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="ReverseChecked" />
                     </Grid>
-                    <Grid Style="{StaticResource ResultRowGrid}"
+                    <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
@@ -100,27 +53,28 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100"
-                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               Title="Multi">
-                <VerticalStackLayout Spacing="8">
-                    <Grid Style="{StaticResource CheckRowGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Multi"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding MultiChecked1}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource CheckCaptionLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="Checked1" />
                     </Grid>
-                    <Grid Style="{StaticResource CheckRowGrid}"
+                    <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding MultiChecked2}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource CheckCaptionLabel}"
+                               Style="{StaticResource CardRowLabel}"
                                Text="Checked2" />
                     </Grid>
-                    <Grid Style="{StaticResource ResultRowGrid}"
+                    <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
@@ -152,15 +106,16 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200"
-                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               Title="Text">
-                <VerticalStackLayout Spacing="8">
-                    <Button Style="{StaticResource ActionButton}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200"
+                               Title="Text"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Button Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding SwitchTextCommand}"
                             Text="Switch Text"
                             ImageSource="{x:Static markup:AppIcons.SmallTextFormat}" />
-                    <Grid Style="{StaticResource ResultRowGrid}"
+                    <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto,Auto"
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"

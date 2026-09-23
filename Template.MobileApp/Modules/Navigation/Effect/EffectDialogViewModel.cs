@@ -7,10 +7,18 @@ public sealed partial class EffectDialogViewModel : AppViewModelBase
 
     public IObserveCommand CloseCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public EffectDialogViewModel()
     {
         CloseCommand = MakeAsyncCommand(OnNotifyBackAsync);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {

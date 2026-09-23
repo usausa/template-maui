@@ -17,7 +17,7 @@
         <ResourceDictionary>
 
             <!-- Backdrop -->
-            <Style x:Key="RootGrid"
+            <Style x:Key="ItemDetailGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
@@ -41,7 +41,9 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 100" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,4"
-                            Brush="Black" Opacity="0.15" Radius="12" />
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="12" />
                 </Setter>
             </Style>
 
@@ -66,7 +68,9 @@
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.15" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -94,7 +98,9 @@
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.15" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -244,7 +250,9 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
-                            Brush="Black" Opacity="0.2" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -252,7 +260,7 @@
     </ContentView.Resources>
 
     <!-- Rows 0-1: product backdrop / rows 1-2: bottom sheet. The shared 40px row makes the sheet overlap the backdrop -->
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource ItemDetailGrid}"
           RowDefinitions="*,40,Auto">
 
         <Grid Grid.Row="0" Grid.RowSpan="2">
@@ -272,7 +280,8 @@
                         Command="{Binding CartCommand}"
                         Text="{x:Static fonts:MaterialIcons.Shopping_cart}" />
                 <Border Style="{StaticResource CartBadgeBorder}">
-                    <Label Style="{StaticResource CartBadgeLabel}" Text="3" />
+                    <Label Style="{StaticResource CartBadgeLabel}"
+                           Text="3" />
                 </Border>
             </Grid>
         </Grid>
@@ -310,7 +319,8 @@
                                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Label Style="{StaticResource VariantTagLabel}" Text="赤軸">
+                        <Label Style="{StaticResource VariantTagLabel}"
+                               Text="赤軸">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
                                              Binding="{Binding SelectedSwitch}"
@@ -333,7 +343,8 @@
                                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Label Style="{StaticResource VariantTagLabel}" Text="茶軸">
+                        <Label Style="{StaticResource VariantTagLabel}"
+                               Text="茶軸">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
                                              Binding="{Binding SelectedSwitch}"
@@ -356,7 +367,8 @@
                                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                             </DataTrigger>
                         </Border.Triggers>
-                        <Label Style="{StaticResource VariantTagLabel}" Text="青軸">
+                        <Label Style="{StaticResource VariantTagLabel}"
+                               Text="青軸">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
                                              Binding="{Binding SelectedSwitch}"

@@ -14,8 +14,8 @@
              s:BindingContextResolver.Type="{x:Type module:UISocialViewModel}"
              shell:ShellProperty.Title="Social"
              shell:ShellProperty.HeaderVisible="False"
-             shell:ShellProperty.StatusBarColor="Black"
-             shell:ShellProperty.FunctionVisible="False">
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="Black">
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
@@ -183,16 +183,16 @@
               ColumnDefinitions="*,*,*">
             <controls:SocialCounter Grid.Column="0"
                                     Style="{StaticResource Counter}"
-                                    Counter="{Binding CountParts}"
-                                    Icon="wrench" />
+                                    Icon="wrench"
+                                    Counter="{Binding CountParts}" />
             <controls:SocialCounter Grid.Column="1"
                                     Style="{StaticResource Counter}"
-                                    Counter="{Binding CountGem}"
-                                    Icon="gem" />
+                                    Icon="gem"
+                                    Counter="{Binding CountGem}" />
             <controls:SocialCounter Grid.Column="2"
                                     Style="{StaticResource Counter}"
-                                    Counter="{Binding CountMoney}"
-                                    Icon="money" />
+                                    Icon="money"
+                                    Counter="{Binding CountMoney}" />
         </Grid>
 
         <Grid Grid.Row="2"
@@ -201,8 +201,8 @@
             <VerticalStackLayout Grid.Column="0"
                                  Style="{StaticResource LayoutVerticalStack}">
                 <controls:SocialAlert Style="{StaticResource Alert}"
-                                      Text="{Binding AlertMessage}"
-                                      Title="{Binding AlertTitle}" />
+                                      Title="{Binding AlertTitle}"
+                                      Text="{Binding AlertMessage}" />
             </VerticalStackLayout>
         </Grid>
 
@@ -217,10 +217,10 @@
                         <controls:SocialNotification Style="{StaticResource Notification}"
                                                      behaviors:AnimationOption.EnterAnimation="FadeUp"
                                                      behaviors:AnimationOption.EnterDelay="{Binding Delay}"
-                                                     Percent="{Binding Percent}"
                                                      Text1="{Binding Category}"
                                                      Text2="{Binding Name}"
-                                                     Text3="{Binding Code}" />
+                                                     Text3="{Binding Code}"
+                                                     Percent="{Binding Percent}" />
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
@@ -272,7 +272,8 @@
                                    Style="{StaticResource ButtonEffect}">
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
-                                         FontSize1="20" Text1="法術支援要請" Text2="ART" />
+                                         Text1="法術支援要請" Text2="ART"
+                                         FontSize1="20" />
                     <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
                                                       IsVisible="{Binding HasMenuNotificationArt}" />
                 </Grid>

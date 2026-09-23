@@ -14,11 +14,19 @@ public sealed partial class EditDetailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string Name { get; set; } = default!;
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public EditDetailViewModel(
         DataService dataService)
     {
         this.dataService = dataService;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {

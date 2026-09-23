@@ -19,6 +19,10 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Running { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceBleHostViewModel(
         IDialog dialog,
         IBleHostingManager hostingManager,
@@ -31,6 +35,10 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 
         UserId = settings.UniqueId;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -65,6 +73,10 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
     {
         await SwitchAdvertising(!Running);
     }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async ValueTask SwitchAdvertising(bool enable)
     {

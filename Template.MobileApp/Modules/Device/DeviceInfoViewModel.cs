@@ -25,6 +25,10 @@ public sealed partial class DeviceInfoViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double DisplayDensity { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceInfoViewModel(
         IDeviceInfo deviceInfo,
         IAppInfo appInfo,
@@ -43,6 +47,10 @@ public sealed partial class DeviceInfoViewModel : AppViewModelBase
         DisplayHeight = display.MainDisplayInfo.Height;
         DisplayDensity = display.MainDisplayInfo.Density;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 

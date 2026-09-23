@@ -16,11 +16,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll" TargetType="ScrollView">
+            <Style x:Key="KitTrackingScroll"
+                   TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="HeaderBorder" TargetType="Border">
+            <Style x:Key="HeaderBorder"
+                   TargetType="Border">
                 <Setter Property="Margin" Value="16" />
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
@@ -28,29 +30,34 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 14" />
             </Style>
 
-            <Style x:Key="OrderCaption" TargetType="Label">
+            <Style x:Key="OrderCaption"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="OrderValue" TargetType="Label">
+            <Style x:Key="OrderValue"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
             </Style>
 
-            <Style x:Key="EtaLabel" TargetType="Label">
+            <Style x:Key="EtaLabel"
+                   TargetType="Label">
                 <Setter Property="Margin" Value="0,4,0,0" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
-            <Style x:Key="StepRow" TargetType="Grid">
+            <Style x:Key="StepRow"
+                   TargetType="Grid">
                 <Setter Property="Margin" Value="24,0" />
                 <Setter Property="HeightRequest" Value="80" />
             </Style>
 
-            <Style x:Key="DotComplete" TargetType="Ellipse">
+            <Style x:Key="DotComplete"
+                   TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="18" />
                 <Setter Property="HeightRequest" Value="18" />
                 <Setter Property="Fill" Value="{StaticResource GreenDefault}" />
@@ -58,7 +65,8 @@
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="DotPending" TargetType="Ellipse">
+            <Style x:Key="DotPending"
+                   TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="18" />
                 <Setter Property="HeightRequest" Value="18" />
                 <Setter Property="Fill" Value="{StaticResource GrayLighten2}" />
@@ -66,7 +74,8 @@
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="DotCurrent" TargetType="Ellipse">
+            <Style x:Key="DotCurrent"
+                   TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="18" />
                 <Setter Property="HeightRequest" Value="18" />
                 <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
@@ -74,7 +83,8 @@
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="DotCheckLabel" TargetType="Label">
+            <Style x:Key="DotCheckLabel"
+                   TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="White" />
@@ -84,20 +94,28 @@
                 <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
             </Style>
 
-            <Style x:Key="TimelineLine" TargetType="BoxView">
+            <Style x:Key="TimelineLine"
+                   TargetType="BoxView">
                 <Setter Property="WidthRequest" Value="2" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="Margin" Value="0,18,0,0" />
             </Style>
 
-            <Style x:Key="StepTitle" TargetType="Label">
+            <Style x:Key="StepTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="StepTitle"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
-            <Style x:Key="StepTime" TargetType="Label">
+            <Style x:Key="StepTime"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
@@ -105,13 +123,16 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource RootScroll}">
+    <ScrollView Style="{StaticResource KitTrackingScroll}">
         <VerticalStackLayout>
             <Border Style="{StaticResource HeaderBorder}">
                 <VerticalStackLayout>
-                    <Label Style="{StaticResource OrderCaption}" Text="注文番号" />
-                    <Label Style="{StaticResource OrderValue}" Text="{Binding OrderNumber}" />
-                    <Label Style="{StaticResource EtaLabel}" Text="{Binding Eta}" />
+                    <Label Style="{StaticResource OrderCaption}"
+                           Text="注文番号" />
+                    <Label Style="{StaticResource OrderValue}"
+                           Text="{Binding OrderNumber}" />
+                    <Label Style="{StaticResource EtaLabel}"
+                           Text="{Binding Eta}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -137,13 +158,15 @@
                                 <Label Style="{StaticResource DotCheckLabel}"
                                        IsVisible="{Binding IsComplete}" />
                                 <Ellipse Style="{StaticResource DotCurrent}"
-                                         IsVisible="{Binding IsCurrent}"
-                                         behaviors:AnimationOption.Pulse="True" />
+                                         behaviors:AnimationOption.Pulse="True"
+                                         IsVisible="{Binding IsCurrent}" />
                                 <Ellipse Style="{StaticResource DotPending}"
                                          IsVisible="{Binding IsPending}" />
                             </Grid>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                <Label Style="{StaticResource StepTitle}" Text="{Binding Title}">
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Style="{StaticResource StepTextStack}">
+                                <Label Style="{StaticResource StepTitle}"
+                                       Text="{Binding Title}">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label"
                                                      Binding="{Binding IsCurrent}"
@@ -152,7 +175,8 @@
                                         </DataTrigger>
                                     </Label.Triggers>
                                 </Label>
-                                <Label Style="{StaticResource StepTime}" Text="{Binding Time}" />
+                                <Label Style="{StaticResource StepTime}"
+                                       Text="{Binding Time}" />
                             </VerticalStackLayout>
                         </Grid>
                     </DataTemplate>

@@ -4,6 +4,7 @@
                     xmlns:s="http://smart/maui"
                     xmlns:shell="clr-namespace:Template.MobileApp.Shell"
                     xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+                    xmlns:controls="clr-namespace:Template.MobileApp.Controls"
                     xmlns:converters="clr-namespace:Template.MobileApp.Converters"
                     xmlns:fonts="clr-namespace:Fonts">
 
@@ -42,6 +43,19 @@
                               Expression="{x:Static s:CompareExpressions.GreaterThan}" />
 
     <s:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+
+    <s:NullToBoolConverter x:Key="EmptyConverter"
+                           HandleEmptyString="True"
+                           NullValue="True"
+                           NonNullValue="False" />
+
+    <s:AllConverter x:Key="AllConverter" />
+
+    <s:AnyConverter x:Key="AnyConverter" />
+
+    <s:ToUpperConverter x:Key="ToUpperConverter" />
+
+    <s:ToLowerConverter x:Key="ToLowerConverter" />
 
     <!-- Application -->
 
@@ -88,6 +102,16 @@
             <x:Static Member="fonts:MaterialIcons.Battery_0_bar" />
         </converters:BatteryIconConverter.Level0>
     </converters:BatteryIconConverter>
+
+    <converters:BadgeCountConverter x:Key="BadgeCountConverter" />
+
+    <s:BoolToTextConverter x:Key="ExpandGlyphConverter"
+                           TrueValue="{x:Static fonts:MaterialIcons.Expand_less}"
+                           FalseValue="{x:Static fonts:MaterialIcons.Expand_more}" />
+
+    <s:BoolToTextConverter x:Key="ExpandAllGlyphConverter"
+                           TrueValue="{x:Static fonts:MaterialIcons.Unfold_less}"
+                           FalseValue="{x:Static fonts:MaterialIcons.Unfold_more}" />
 
     <!-- ================================================================================ -->
     <!-- Main -->
@@ -194,7 +218,9 @@
         <Setter Property="Stroke" Value="LightGray" />
         <Setter Property="Shadow">
             <Shadow Offset="4,4"
-                    Brush="Black" Opacity="0.25" Radius="4" />
+                    Brush="Black"
+                    Opacity="0.25"
+                    Radius="4" />
         </Setter>
     </Style>
 
@@ -428,6 +454,39 @@
         <Setter Property="JustifyContent" Value="SpaceBetween" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="RootGrid"
+           TargetType="Grid">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+    </Style>
+
+    <Style x:Key="MediaRootGrid"
+           TargetType="Grid"
+           BasedOn="{StaticResource RootGrid}">
+        <Setter Property="BackgroundColor" Value="Black" />
+    </Style>
+
+    <Style x:Key="RootScroll"
+           TargetType="ScrollView">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+    </Style>
+
+    <Style x:Key="PageStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Spacing" Value="12" />
     </Style>
 
     <!-- ================================================================================ -->
@@ -711,12 +770,14 @@
     <Style x:Key="CenterSelectButton"
            TargetType="Button"
            BasedOn="{StaticResource SelectButtonBase}">
+        <Setter Property="Margin" Value="-1,0,0,0" />
         <!-- TODO -->
     </Style>
 
     <Style x:Key="RightSelectButton"
            TargetType="Button"
            BasedOn="{StaticResource SelectButtonBase}">
+        <Setter Property="Margin" Value="-1,0,0,0" />
         <!-- TODO -->
     </Style>
 
@@ -1012,6 +1073,7 @@
         <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="FontSize" Value="36" />
+        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
     </Style>
 
     <Style x:Key="InputCommandButton"
@@ -1022,11 +1084,13 @@
         <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken2}" />
         <Setter Property="TextColor" Value="White" />
         <Setter Property="FontSize" Value="36" />
+        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
     </Style>
 
     <Style x:Key="InputFunctionButton"
            TargetType="Button"
            BasedOn="{StaticResource FunctionButtonBase}">
+        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -1048,6 +1112,401 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+    </Style>
+
+    <Style x:Key="InputIconButton"
+           TargetType="Button"
+           BasedOn="{StaticResource InputFunctionButton}">
+        <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+    </Style>
+
+    <!-- ================================================================================ -->
+    <!-- Basic -->
+    <!-- ================================================================================ -->
+
+    <!-- Icon -->
+
+    <Style x:Key="BasicEmptyStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicIconCircleBorder"
+           TargetType="Border">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="WidthRequest" Value="96" />
+        <Setter Property="HeightRequest" Value="96" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+    </Style>
+
+    <Style x:Key="BasicIconCircleLabel"
+           TargetType="Label">
+        <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+        <Setter Property="FontSize" Value="48" />
+        <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicEmptyIconBorder"
+           TargetType="Border"
+           BasedOn="{StaticResource BasicIconCircleBorder}">
+        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+    </Style>
+
+    <Style x:Key="BasicEmptyIconLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource BasicIconCircleLabel}">
+        <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+    </Style>
+
+    <Style x:Key="BasicWarningIconBorder"
+           TargetType="Border"
+           BasedOn="{StaticResource BasicIconCircleBorder}">
+        <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+    </Style>
+
+    <Style x:Key="BasicWarningIconLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource BasicIconCircleLabel}">
+        <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+    </Style>
+
+    <Style x:Key="BasicSuccessIconBorder"
+           TargetType="Border"
+           BasedOn="{StaticResource BasicIconCircleBorder}">
+        <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+    </Style>
+
+    <Style x:Key="BasicSuccessIconLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource BasicIconCircleLabel}">
+        <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+    </Style>
+
+    <!-- Field -->
+
+    <Style x:Key="BasicTextGroupStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="2" />
+    </Style>
+
+    <Style x:Key="BasicEntry"
+           TargetType="Entry">
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="BasicFieldEntry"
+           TargetType="Entry"
+           BasedOn="{StaticResource BasicEntry}">
+        <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+        <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+        <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
+    </Style>
+
+    <!-- Action -->
+
+    <Style x:Key="BasicButtonGrid"
+           TargetType="Grid">
+        <Setter Property="ColumnSpacing" Value="8" />
+        <Setter Property="RowSpacing" Value="8" />
+    </Style>
+
+    <!-- Step -->
+
+    <Style x:Key="BasicStepIndicator"
+           TargetType="controls:StepIndicator">
+        <Setter Property="Margin" Value="0,8,0,0" />
+    </Style>
+
+    <!-- Text -->
+
+    <Style x:Key="BasicCaptionLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style x:Key="BasicCenterCaptionLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource BasicCaptionLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicHeaderCaptionLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource BasicCenterCaptionLabel}">
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="BasicFieldCaptionLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="BasicCenterFieldCaptionLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource BasicFieldCaptionLabel}">
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicBodyLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <Style x:Key="BasicItemNameLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource NameLabel}">
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicItemValueLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource ValueLabel}">
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicMonoLabel"
+           TargetType="Label">
+        <Setter Property="FontFamily" Value="JetBrainsMono" />
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="BasicSubtitleLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicCenterTitleLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicCenterHintLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- Button -->
+
+    <Style x:Key="BasicOutlinedButton"
+           TargetType="Button">
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                            <Setter Property="BorderColor" Value="{StaticResource GrayLighten3}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BasicOutlinedCancelButton"
+           TargetType="Button"
+           BasedOn="{StaticResource BasicOutlinedButton}">
+        <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+    </Style>
+
+    <Style x:Key="BasicIconOutlinedButton"
+           TargetType="Button"
+           BasedOn="{StaticResource BasicOutlinedButton}">
+        <Setter Property="ContentLayout" Value="Left,8" />
+    </Style>
+
+    <Style x:Key="BasicFilledButton"
+           TargetType="Button"
+           BasedOn="{StaticResource PrimaryButton}">
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+    </Style>
+
+    <Style x:Key="BasicFilledSecondaryButton"
+           TargetType="Button"
+           BasedOn="{StaticResource SecondaryButton}">
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+    </Style>
+
+    <!-- ================================================================================ -->
+    <!-- Card -->
+    <!-- ================================================================================ -->
+
+    <!-- Frame -->
+
+    <Style x:Key="CardCenterBorder"
+           TargetType="Border">
+        <Setter Property="Margin" Value="16" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="CardStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="16" />
+    </Style>
+
+    <Style x:Key="CardSmallContentStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4" />
+    </Style>
+
+    <Style x:Key="CardContentStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="8" />
+    </Style>
+
+    <Style x:Key="CardLargeContentStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="12" />
+    </Style>
+
+    <Style x:Key="CardDivider"
+           TargetType="BoxView">
+        <Setter Property="HeightRequest" Value="1" />
+        <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+    </Style>
+
+    <Style x:Key="CardRowDivider"
+           TargetType="BoxView"
+           BasedOn="{StaticResource CardDivider}">
+        <Setter Property="VerticalOptions" Value="End" />
+    </Style>
+
+    <!-- Field -->
+
+    <Style x:Key="CardFieldGroupStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="6" />
+    </Style>
+
+    <Style x:Key="CardFieldBorder"
+           TargetType="Border">
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <Style x:Key="CardFieldPicker"
+           TargetType="Picker">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+        <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+        <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
+    </Style>
+
+    <!-- Action -->
+
+    <Style x:Key="CardActionStack"
+           TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="8" />
+    </Style>
+
+    <!-- Row -->
+
+    <Style x:Key="CardRowGrid"
+           TargetType="Grid">
+        <Setter Property="ColumnSpacing" Value="8" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+    </Style>
+
+    <Style x:Key="CardRowStack"
+           TargetType="HorizontalStackLayout">
+        <Setter Property="Padding" Value="0,4" />
+        <Setter Property="Spacing" Value="8" />
+    </Style>
+
+    <Style x:Key="CardInfoGrid"
+           TargetType="Grid">
+        <Setter Property="Padding" Value="0,4" />
+        <Setter Property="RowSpacing" Value="8" />
+    </Style>
+
+    <!-- Text -->
+
+    <Style x:Key="CardRowLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="CardAccentLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="CardRowAccentLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource CardAccentLabel}">
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="CardRowValueLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource CardRowAccentLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="End" />
+    </Style>
+
+    <Style x:Key="CardPrimaryValueLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource ValueLabel}">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+    </Style>
+
+    <Style x:Key="CardStrongValueLabel"
+           TargetType="Label"
+           BasedOn="{StaticResource ValueLabel}">
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="CardLogLabel"
+           TargetType="Label">
+        <Setter Property="FontFamily" Value="JetBrainsMono" />
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+        <Setter Property="FontSize" Value="12" />
     </Style>
 
 </ResourceDictionary>

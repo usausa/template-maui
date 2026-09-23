@@ -31,7 +31,6 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
     public IObserveCommand ReplayCommand { get; }
 
     public IObserveCommand BadgePrevCommand { get; }
-
     public IObserveCommand BadgeNextCommand { get; }
 
     public IObserveCommand AmountCommand { get; }
@@ -41,6 +40,10 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
     public IObserveCommand CelebrateCommand { get; }
 
     public IObserveCommand LongPressCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public ViewEffectViewModel()
     {
@@ -53,14 +56,26 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
         LongPressCommand = MakeDelegateCommand(() => LongPressCount++);
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (Amount <= 0)
+        if (!context.Attribute.IsRestore())
         {
             Amount = 24800;
         }
         return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void UpdateBadge(int direction)
     {
@@ -74,8 +89,4 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
         Amount = Random.Shared.Next(1, 100) * 1000d;
     }
 #pragma warning restore CA5394
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

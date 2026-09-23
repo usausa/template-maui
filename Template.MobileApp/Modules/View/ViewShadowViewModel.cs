@@ -26,6 +26,10 @@ public sealed partial class ViewShadowViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double ShadowOpacity { get; set; } = 0.5;
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewShadowViewModel(ResourceDictionary resources)
     {
 #pragma warning disable IDE0028
@@ -36,6 +40,10 @@ public sealed partial class ViewShadowViewModel : AppViewModelBase
         BorderColor = BorderColors[0];
         ShadowColor = ShadowColors[0];
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 

@@ -18,6 +18,10 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
 
     public ObservableCollection<SuicaLogData> Logs { get; } = [];
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceNfcViewModel(
         ILogger<DeviceNfcViewModel> log,
         IDialog dialog,
@@ -38,6 +42,10 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
             },
             log.WarnNfcReadError));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -69,6 +77,10 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ConvertResult(NfcEventArgs args)
     {
         // 破損データの解析失敗は外部入力として予期されるため、nullを返して読み取りを継続する
@@ -83,6 +95,10 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
             return null;
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
 
     private static (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ParseTag(INfc nfcF)
     {

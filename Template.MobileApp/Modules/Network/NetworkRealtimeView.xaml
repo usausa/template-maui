@@ -5,27 +5,27 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkRealtimeView"
              x:DataType="{x:Type module:NetworkRealtimeViewModel}"
              s:BindingContextResolver.Type="{x:Type module:NetworkRealtimeViewModel}"
              shell:ShellProperty.Title="Realtime"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Connect"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
+
+    <!-- SignalR (MonitorHub) の常時接続。サーバーの状態を 1 秒ごとに受信し、端末の状態を 10 秒ごとに報告する -->
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
+            <Style x:Key="ErrorLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
             <Style x:Key="StatBorder"
@@ -49,31 +49,80 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding CpuLoadSet}"
-                                      GraphColor="{StaticResource BlueDefault}"
-                                      Label="CPU used" />
-            </Border>
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="接続"
+                               Icon="{x:Static fonts:MaterialIcons.Sync}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicBodyLabel}"
+                           Text="{Binding StateText, StringFormat='状態: {0}'}" />
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="{Binding ConnectionId, StringFormat='接続 ID: {0}'}" />
+                    <Label Style="{StaticResource ErrorLabel}"
+                           IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding LastError}" />
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="{Binding ServerTime, StringFormat='サーバー時刻: {0}'}" />
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="{Binding ReportCount, StringFormat='端末の状態を送信: {0} 回 (10 秒ごと)'}" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding ReconnectCommand}"
+                                Text="再接続" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding ReportCommand}"
+                                Text="状態を送信" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
             <Border Style="{StaticResource StatBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="80">
                 <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding MemoryLoadSet}"
-                                      GraphColor="{StaticResource GreenDefault}"
-                                      Label="Memory used" />
+                                      DataSet="{Binding CpuLoadSet}"
+                                      GraphColor="{StaticResource BlueDefault}"
+                                      Label="Server CPU" />
             </Border>
 
             <Border Style="{StaticResource StatBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="160">
                 <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding NetworkLoadSet}"
-                                      GraphColor="{StaticResource OrangeDefault}"
-                                      Label="Network I/O" />
+                                      DataSet="{Binding MemoryLoadSet}"
+                                      GraphColor="{StaticResource GreenDefault}"
+                                      Label="Server memory" MaxValue="512" Unit="MB" />
             </Border>
+
+            <Border Style="{StaticResource StatBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="240">
+                <controls:StatControl Style="{StaticResource StatGraph}"
+                                      DataSet="{Binding ConnectionSet}"
+                                      GraphColor="{StaticResource OrangeDefault}"
+                                      Label="Connections" MaxValue="10" Unit="" />
+            </Border>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320"
+                               Title="通知"
+                               Icon="{x:Static fonts:MaterialIcons.Notifications}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
+                                     BindableLayout.ItemsSource="{Binding Notifications}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Label Style="{StaticResource CardLogLabel}"
+                                   Text="{Binding .}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource BasicCaptionLabel}"
+                               Text="管理画面の Devices から送った通知がここに出る (前面ならトースト、バックグラウンドならローカル通知)" />
+                    </BindableLayout.EmptyView>
+                </VerticalStackLayout>
+            </controls:InfoCard>
 
         </VerticalStackLayout>
     </ScrollView>

@@ -32,15 +32,15 @@
                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                BackgroundColor="Black" />
         <drawing:DrawingControl Grid.Row="1"
-                                  IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-                                  Drawing="{Binding Drawing}" />
+                                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
+                                Drawing="{Binding Drawing}" />
 
         <!-- 撮影瞬間のシャッターフラッシュ -->
         <BoxView Grid.Row="0" Grid.RowSpan="2"
-                 Color="White"
-                 Opacity="0"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}"
                  InputTransparent="True"
-                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
+                 Color="White"
+                 Opacity="0" />
 
     </Grid>
 

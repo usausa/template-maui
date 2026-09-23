@@ -29,7 +29,14 @@ public sealed partial class App
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(serviceProvider.GetRequiredService<MainPage>());
+        var window = new Window(serviceProvider.GetRequiredService<MainPage>());
+
+        // 前面かどうかを Session に持つ
+        var session = serviceProvider.GetRequiredService<Session>();
+        window.Resumed += (_, _) => session.IsForeground = true;
+        window.Stopped += (_, _) => session.IsForeground = false;
+
+        return window;
     }
 
     // ReSharper disable once AsyncVoidMethod

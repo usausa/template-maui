@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
+             xmlns:components="clr-namespace:Template.MobileApp.Components" xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
+             x:Class="Template.MobileApp.Modules.Main.DiagnosticsView"
+             x:DataType="{x:Type module:DiagnosticsViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:DiagnosticsViewModel}"
+             shell:ShellProperty.Title="Diagnostics"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="Refresh"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SectionNameLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
+            <Style x:Key="PathLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="EmptyNoteLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicFieldCaptionLabel}">
+                <Setter Property="Margin" Value="0,4" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource BasicButtonGrid}">
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
+            <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
+            <converters:DurationConverter x:Key="DurationConverter" />
+
+            <!-- 設定済み / ログイン済み -->
+            <s:BoolToTextConverter x:Key="ConfiguredTextConverter"
+                                   TrueValue="Configured"
+                                   FalseValue="Not configured" />
+            <s:BoolToColorConverter x:Key="ConfiguredColorConverter"
+                                    TrueValue="{StaticResource GreenDarken1}"
+                                    FalseValue="{StaticResource GrayDefault}" />
+
+            <!-- ログレベル -->
+            <s:MapToColorConverter x:Key="LogLevelColorConverter"
+                                   DefaultValue="{StaticResource RedDefault}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static logging:LogLevel.Warning}"
+                                       Value="{StaticResource OrangeDefault}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <!-- 無効時は文字と枠を薄くする -->
+            <Style x:Key="EntryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <!-- ログファイル / 直近のログの行 -->
+            <Style x:Key="EntryGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="Padding" Value="0,2" />
+            </Style>
+
+            <Style x:Key="EntryNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EntryValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="LogLevelLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="LogMessageLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <Style x:Key="ReportLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <!-- Runtime -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Runtime"
+                               Icon="{x:Static fonts:MaterialIcons.Memory}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Working set" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding WorkingSet, Converter={StaticResource ByteSizeConverter}}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Managed heap" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ManagedMemory, Converter={StaticResource ByteSizeConverter}}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Threads" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ThreadCount}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="GC" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Gc0Count, StringFormat='Gen0 {0}'}" />
+                                <Span Text=" / " />
+                                <Span Text="{Binding Gc1Count, StringFormat='Gen1 {0}'}" />
+                                <Span Text=" / " />
+                                <Span Text="{Binding Gc2Count, StringFormat='Gen2 {0}'}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Processors" />
+                    <Label Grid.Row="4" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ProcessorCount}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Application -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60"
+                               Title="Application"
+                               Icon="{x:Static fonts:MaterialIcons.Apps}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Name" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationName}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Version" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationVersion}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Build" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationBuild}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Package" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ApplicationPackageName}" />
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Flavor" />
+                    <Label Grid.Row="4" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Flavor}" />
+                    <Label Grid.Row="5" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Device" />
+                    <Label Grid.Row="5" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceName}" />
+                    <Label Grid.Row="6" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="OS" />
+                    <Label Grid.Row="6" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceVersion}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Startup -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120"
+                               Title="Startup"
+                               Icon="{x:Static fonts:MaterialIcons.Rocket_launch}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Started" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding StartedAt, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Uptime" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Uptime, Converter={StaticResource DurationConverter}}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Initialize" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding InitializationTime, Converter={StaticResource DurationConverter}}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Connection -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180"
+                               Title="Connection"
+                               Icon="{x:Static fonts:MaterialIcons.Lan}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="API" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding ApiConfigured, Converter={StaticResource ConfiguredTextConverter}}"
+                           TextColor="{Binding ApiConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="gRPC" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding GrpcConfigured, Converter={StaticResource ConfiguredTextConverter}}"
+                           TextColor="{Binding GrpcConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="OTEL" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding OtelConfigured, Converter={StaticResource ConfiguredTextConverter}}"
+                           TextColor="{Binding OtelConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="AI Service" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding AIServiceConfigured, Converter={StaticResource ConfiguredTextConverter}}"
+                           TextColor="{Binding AIServiceConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Ollama" />
+                    <Label Grid.Row="4" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding OllamaConfigured, Converter={StaticResource ConfiguredTextConverter}}"
+                           TextColor="{Binding OllamaConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
+                    <Label Grid.Row="5" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="SCP" />
+                    <Label Grid.Row="5" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding ScpConfigured, Converter={StaticResource ConfiguredTextConverter}}"
+                           TextColor="{Binding ScpConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
+                    <Label Grid.Row="6" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Login" />
+                    <Label Grid.Row="6" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           IsVisible="{Binding IsAuthenticated}"
+                           Text="{Binding LoginId}" />
+                    <Label Grid.Row="6" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           IsVisible="{Binding IsAuthenticated, Converter={StaticResource ReverseConverter}}"
+                           Text="Not logged in" />
+                    <Label Grid.Row="7" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Token expires" />
+                    <Label Grid.Row="7" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding TokenExpires, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <Label Grid.Row="8" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Network" />
+                    <Label Grid.Row="8" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceState.NetworkAccess}" />
+                    <Label Grid.Row="9" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Profile" />
+                    <Label Grid.Row="9" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceState.NetworkProfile}" />
+                    <Label Grid.Row="10" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Battery" />
+                    <Label Grid.Row="10" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='{0:P0}'}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Database -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Database"
+                               Icon="{x:Static fonts:MaterialIcons.Storage}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Path" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource PathLabel}"
+                           Text="{Binding Database.Path}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Size" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Database.Size, Converter={StaticResource ByteSizeConverter}}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Modified" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Database.Modified, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Data" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Database.DataCount, StringFormat='{0:N0} rows'}" />
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Work" />
+                    <Label Grid.Row="4" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Database.WorkCount, StringFormat='{0:N0} rows'}" />
+                    <Label Grid.Row="5" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="BulkData" />
+                    <Label Grid.Row="5" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Database.BulkDataCount, StringFormat='{0:N0} rows'}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Log -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="300"
+                               Title="Log"
+                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
+                <VerticalStackLayout Style="{StaticResource EntryStack}">
+                    <Label Style="{StaticResource NameLabel}"
+                           Text="Files" />
+                    <Label Style="{StaticResource EmptyNoteLabel}"
+                           IsVisible="{Binding LogFiles.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}"
+                           Text="None" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding LogFiles}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type module:LogFileInfo}">
+                                <Grid Style="{StaticResource EntryGrid}"
+                                      ColumnDefinitions="*,Auto,Auto">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource EntryNameLabel}"
+                                           Text="{Binding Name}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource EntryValueLabel}"
+                                           Text="{Binding Size, Converter={StaticResource ByteSizeConverter}}" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource EntryValueLabel}"
+                                           Text="{Binding Modified, StringFormat='{0:MM/dd HH:mm}'}" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Label Style="{StaticResource SectionNameLabel}"
+                           Text="Recent" />
+                    <Label Style="{StaticResource EmptyNoteLabel}"
+                           IsVisible="{Binding RecentLogs.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}"
+                           Text="No warnings or errors" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentLogs}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type components:DiagnosticLogEntry}">
+                                <Grid Style="{StaticResource EntryGrid}"
+                                      RowDefinitions="Auto,Auto"
+                                      ColumnDefinitions="Auto,*">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Style="{StaticResource LogLevelLabel}"
+                                           Text="{Binding Level}"
+                                           TextColor="{Binding Level, Converter={StaticResource LogLevelColorConverter}}" />
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                           Style="{StaticResource EntryValueLabel}"
+                                           HorizontalTextAlignment="Start"
+                                           Text="{Binding Time, StringFormat='{0:MM/dd HH:mm:ss}'}" />
+                                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                           Style="{StaticResource LogMessageLabel}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Category}"
+                                                      FontAttributes="Bold" />
+                                                <Span Text=": " />
+                                                <Span Text="{Binding Message}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding ShareLogsCommand}"
+                                Text="Share files"
+                                ImageSource="{x:Static markup:AppIcons.SmallShare}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding ClearLogsCommand}"
+                                Text="Clear recent"
+                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <!-- Crash -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="360"
+                               Title="Crash report"
+                               Icon="{x:Static fonts:MaterialIcons.Bug_report}">
+                <VerticalStackLayout Style="{StaticResource EntryStack}">
+                    <Label Style="{StaticResource EmptyNoteLabel}"
+                           IsVisible="{Binding LastCrashReport, Converter={StaticResource EmptyConverter}}"
+                           Text="None" />
+                    <Label Style="{StaticResource ReportLabel}"
+                           IsVisible="{Binding LastCrashReport, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding LastCrashReport}" />
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*">
+                        <Button Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding ClearCrashReportCommand}"
+                                Text="Clear"
+                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

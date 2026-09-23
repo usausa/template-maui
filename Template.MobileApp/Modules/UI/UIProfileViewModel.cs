@@ -68,12 +68,20 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
 
     public IObserveCommand StarCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIProfileViewModel()
     {
         FollowCommand = MakeDelegateCommand(() => IsFollowed = !IsFollowed);
         LikeCommand = MakeDelegateCommand(() => IsLiked = !IsLiked);
         StarCommand = MakeDelegateCommand(() => IsStarred = !IsStarred);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 

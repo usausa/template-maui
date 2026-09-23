@@ -6,7 +6,7 @@ using Template.MobileApp.Usecase;
 
 public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 {
-    private readonly CognitiveUsecase cognitiveUsecase;
+    private readonly OnnxVisionUsecase onnxVisionUsecase;
 
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
@@ -20,22 +20,21 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     public SKBitmapImageSource Image { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleCvLocalViewModel(
-        CognitiveUsecase cognitiveUsecase)
+        OnnxVisionUsecase onnxVisionUsecase)
     {
-        this.cognitiveUsecase = cognitiveUsecase;
+        this.onnxVisionUsecase = onnxVisionUsecase;
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
+        Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            ImageHelper.ReplaceBitmap(Image, null);
-        }
-
-        base.Dispose(disposing);
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -96,7 +95,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
                 ImageHelper.ReplaceBitmap(Image, bitmap);
 
                 // Detect
-                var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
+                var results = await onnxVisionUsecase.DetectAsync(bitmap).ConfigureAwait(true);
 
                 // Update
 #pragma warning disable IDE0028

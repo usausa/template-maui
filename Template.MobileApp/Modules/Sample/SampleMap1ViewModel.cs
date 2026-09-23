@@ -8,6 +8,16 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     private const double InitialLatitude = 35.681167;
     private const double InitialLongitude = 139.767052;
 
+    // 皇居周辺の範囲 (Polygon)
+    private static readonly Location[] AreaPoints =
+    [
+        new(35.693040, 139.746205),
+        new(35.689457, 139.756673),
+        new(35.678895, 139.754146),
+        new(35.679670, 139.742630),
+        new(35.687168, 139.740683)
+    ];
+
     public MapController Controller { get; } = new(InitialLatitude, InitialLongitude, 3);
 
     [ObservableProperty]
@@ -19,16 +29,6 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
         new() { Name = "東京タワー", Description = "港区芝公園", Location = new Location(35.658581, 139.745433) },
         new() { Name = "東京スカイツリー", Description = "墨田区押上", Location = new Location(35.710063, 139.810700) },
         new() { Name = "浅草寺", Description = "台東区浅草", Location = new Location(35.714765, 139.796655) }
-    ];
-
-    // 皇居周辺の範囲 (Polygon)
-    private static readonly Location[] AreaPoints =
-    [
-        new(35.693040, 139.746205),
-        new(35.689457, 139.756673),
-        new(35.678895, 139.754146),
-        new(35.679670, 139.742630),
-        new(35.687168, 139.740683)
     ];
 
     [ObservableProperty]
@@ -43,19 +43,19 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     public ICommand HomeCommand { get; }
 
     public ICommand ToggleMapTypeCommand { get; }
-
     public ICommand ToggleRouteCommand { get; }
-
     public ICommand ToggleAreaCommand { get; }
-
     public ICommand ToggleCircleCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public SampleMap1ViewModel()
     {
         HomeCommand = MakeDelegateCommand(Controller.MoveToHome);
         ToggleMapTypeCommand = MakeDelegateCommand(() => CurrentMapType = CurrentMapType == MapType.Street ? MapType.Hybrid : MapType.Street);
 
-        // MapElements のデモ: 経路 (スポット巡回) / 範囲 (皇居周辺) / 半径円 (東京駅 1.5km)
         ToggleRouteCommand = MakeDelegateCommand(() =>
         {
             RouteVisible = !RouteVisible;
@@ -72,6 +72,10 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
             Controller.SetCircle(CircleVisible ? new Location(InitialLatitude, InitialLongitude) : null, 1.5);
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 

@@ -31,9 +31,13 @@ public sealed partial class DragTask : ObservableObject
 public sealed partial class ViewDragDropViewModel : AppViewModelBase
 {
     private static readonly Color Blue = Color.FromArgb("#42A5F5");
+
     private static readonly Color Green = Color.FromArgb("#66BB6A");
+
     private static readonly Color Orange = Color.FromArgb("#FF7043");
+
     private static readonly Color Purple = Color.FromArgb("#AB47BC");
+
     private static readonly Color Cyan = Color.FromArgb("#26C6DA");
 
     private DragTask? dragging;
@@ -77,22 +81,21 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
     public IObserveCommand DropCompletedCommand { get; }
 
     public IObserveCommand ItemOverCommand { get; }
-
     public IObserveCommand ItemLeaveCommand { get; }
 
     public IObserveCommand ListOverCommand { get; }
-
     public IObserveCommand ListLeaveCommand { get; }
 
     public IObserveCommand DropOnItemCommand { get; }
-
     public IObserveCommand DropOnListCommand { get; }
-
     public IObserveCommand DropOnTrashCommand { get; }
 
     public IObserveCommand TrashOverCommand { get; }
-
     public IObserveCommand TrashLeaveCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public ViewDragDropViewModel()
     {
@@ -108,6 +111,18 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         TrashOverCommand = MakeDelegateCommand(() => TrashActive = true);
         TrashLeaveCommand = MakeDelegateCommand(() => TrashActive = false);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void BeginDrag(DragTask item)
     {
@@ -237,8 +252,4 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
 
         return null;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

@@ -24,6 +24,10 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     public ICommand PageCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIMoneyViewModel()
     {
         Selected = MoneyPage.Home;
@@ -34,6 +38,10 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         HasAccountAlert = true;
         Balance = 20000;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 

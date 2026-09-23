@@ -16,6 +16,10 @@ public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopu
     public IObserveCommand CloseCommand { get; }
     public IObserveCommand CommitCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public InputNumberViewModel(IPopupNavigator popupNavigator)
     {
         ClearCommand = MakeDelegateCommand(Input.Clear);
@@ -25,6 +29,10 @@ public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopu
         CloseCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync());
         CommitCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync(Input.Text));
     }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     public void Initialize(NumberInputParameter parameter)
     {

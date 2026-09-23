@@ -4,9 +4,9 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
              x:DataType="{x:Type module:UILoadViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UILoadViewModel}"
@@ -89,8 +89,8 @@
             <Label.FormattedText>
                 <FormattedString>
                     <Span Style="{StaticResource LoadValueSpan}"
-                          TextColor="{Binding Current, Converter={StaticResource DecibelToColorConverter}}"
-                          Text="{Binding Current, StringFormat='{0:F1}'}" />
+                          Text="{Binding Current, StringFormat='{0:F1}'}"
+                          TextColor="{Binding Current, Converter={StaticResource DecibelToColorConverter}}" />
                     <Span Style="{StaticResource LoadUnitSpan}"
                           Text=" dB" />
                 </FormattedString>
@@ -146,7 +146,7 @@
         </Grid>
 
         <drawing:DrawingControl Grid.Row="2"
-                                  Drawing="{Binding Drawing}" />
+                                Drawing="{Binding Drawing}" />
 
     </Grid>
 

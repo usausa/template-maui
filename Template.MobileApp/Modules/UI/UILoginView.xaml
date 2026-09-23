@@ -51,14 +51,14 @@
             </Style>
 
             <!-- Message -->
-            <Style x:Key="MessageLabel"
+            <Style x:Key="WelcomeLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="28" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="SubMessageLabel"
+            <Style x:Key="WelcomeSubLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="18" />
@@ -127,7 +127,8 @@
                 <Setter Property="Shadow">
                     <Shadow Offset="0,4"
                             Brush="{StaticResource BlueDarken2}"
-                            Opacity="0.4" Radius="10" />
+                            Opacity="0.4"
+                            Radius="10" />
                 </Setter>
             </Style>
 
@@ -176,7 +177,8 @@
 
         <Path Grid.Row="0"
               Style="{StaticResource TitlePath}"
-              Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" Opacity="0.4" TranslationY="10" />
+              Opacity="0.4"
+              Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" TranslationY="10" />
 
         <Path Grid.Row="0"
               Style="{StaticResource TitlePath}"
@@ -194,18 +196,21 @@
               RowDefinitions="2*,Auto,8,Auto,40,Auto,16,Auto,40,Auto,40,Auto,40,Auto,3*">
 
             <Label Grid.Row="1"
-                   Style="{StaticResource MessageLabel}"
-                   behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="80"
+                   Style="{StaticResource WelcomeLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="80"
                    Text="ようこそ" />
 
             <Label Grid.Row="3"
-                   Style="{StaticResource SubMessageLabel}"
-                   behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="160"
+                   Style="{StaticResource WelcomeSubLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="160"
                    Text="ログインして続けてください" />
 
             <Border Grid.Row="5"
                     Style="{StaticResource InputBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="240">
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="240">
                 <Grid ColumnDefinitions="Auto,*,16">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
@@ -221,7 +226,8 @@
 
             <Border Grid.Row="7"
                     Style="{StaticResource InputBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="320">
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="320">
                 <Grid ColumnDefinitions="Auto,*,Auto,8">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
@@ -239,8 +245,8 @@
                                  Command="{Binding TogglePasswordCommand}">
                         <ImageButton.Triggers>
                             <DataTrigger TargetType="ImageButton"
-                                         Value="True"
-                                         Binding="{Binding PasswordVisible}">
+                                         Binding="{Binding PasswordVisible}"
+                                         Value="True">
                                 <Setter Property="Source" Value="{x:Static markup:AppIcons.LoginVisibilityOff}" />
                             </DataTrigger>
                         </ImageButton.Triggers>
@@ -250,7 +256,8 @@
 
             <HorizontalStackLayout Grid.Row="9"
                                    Style="{StaticResource KeepLoginLayout}"
-                                   behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="400">
+                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                   behaviors:AnimationOption.EnterDelay="400">
                 <CheckBox Style="{StaticResource KeepLoginCheckBox}" />
                 <Label Style="{StaticResource KeepLoginLabel}"
                        Text="ログイン状態を保持" />
@@ -258,13 +265,14 @@
 
             <Button Grid.Row="11"
                     Style="{StaticResource LoginButton}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="480"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="480"
                     Command="{Binding LoginCommand}"
                     Text="ログイン">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
-                                 Value="True"
-                                 Binding="{Binding LoggingIn}">
+                                 Binding="{Binding LoggingIn}"
+                                 Value="True">
                         <Setter Property="Text" Value="" />
                     </DataTrigger>
                 </Button.Triggers>
@@ -272,12 +280,13 @@
 
             <ActivityIndicator Grid.Row="11"
                                Style="{StaticResource LoginIndicator}"
-                               IsVisible="{Binding LoggingIn}"
-                               IsRunning="{Binding LoggingIn}" />
+                               IsRunning="{Binding LoggingIn}"
+                               IsVisible="{Binding LoggingIn}" />
 
             <effectsView:SfEffectsView Grid.Row="13"
                                        Style="{StaticResource ForgetPasswordEffect}"
-                                       behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="560">
+                                       behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                       behaviors:AnimationOption.EnterDelay="560">
                 <Label Style="{StaticResource ForgetPasswordLabel}"
                        Text="パスワードを忘れた場合" />
             </effectsView:SfEffectsView>

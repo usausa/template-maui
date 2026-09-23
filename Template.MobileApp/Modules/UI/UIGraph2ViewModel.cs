@@ -13,18 +13,34 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
 
     public ICommand ToggleCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIGraph2ViewModel()
     {
         ToggleCommand = MakeDelegateCommand<TimelineRow>(static x => x.IsExpanded = !x.IsExpanded);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (Rows.Count == 0)
+        if (!context.Attribute.IsRestore())
         {
             await LoadAsync().ConfigureAwait(true);
         }
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task LoadAsync()
     {
@@ -45,16 +61,16 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
         }
     }
 
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
     private static async Task<(IReadOnlyList<GraphCommit> Commits, IReadOnlyList<GraphRefData> Refs)> LoadRepositoryAsync()
     {
         await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Graph", "repository.json")).ConfigureAwait(false);
         var data = await JsonSerializer.DeserializeAsync<RepositoryData>(stream, JsonOptions).ConfigureAwait(false) ?? RepositoryData.Empty;
         return (data.Commits, data.Refs);
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     private sealed class RepositoryData
     {

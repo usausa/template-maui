@@ -15,10 +15,18 @@ public sealed partial class BasicConverterViewModel : AppViewModelBase
 
     public IObserveCommand SwitchTextCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public BasicConverterViewModel()
     {
         SwitchTextCommand = MakeDelegateCommand(() => Text = String.IsNullOrEmpty(Text) ? "Hello World" : string.Empty);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 

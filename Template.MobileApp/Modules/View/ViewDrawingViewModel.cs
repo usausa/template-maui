@@ -19,20 +19,19 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
 
     public IObserveCommand SelectColorCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewDrawingViewModel()
     {
         SelectColorCommand = MakeDelegateCommand<Color>(x => LineColor = x);
+        Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            ImageHelper.ReplaceBitmap(Image, null);
-        }
-
-        base.Dispose(disposing);
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 

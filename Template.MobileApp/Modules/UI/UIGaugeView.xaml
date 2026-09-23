@@ -4,8 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UIGaugeView"
              x:DataType="{x:Type module:UIGaugeViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGaugeViewModel}"
@@ -33,10 +33,10 @@
             <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             <Setter Property="Padding" Value="4,8,4,0" />
             <Setter Property="Shadow">
-                <Shadow Brush="Black"
+                <Shadow Offset="0,2"
+                        Brush="Black"
                         Opacity="0.15"
-                        Radius="6"
-                        Offset="0,2" />
+                        Radius="6" />
             </Setter>
         </Style>
         <Style x:Key="GaugePanelTitle"

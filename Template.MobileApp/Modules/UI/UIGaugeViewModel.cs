@@ -20,6 +20,10 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double Rpm { get; set; } = 3.5;
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

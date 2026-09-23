@@ -9,6 +9,10 @@ public sealed partial class SampleMarkdownViewModel : AppViewModelBase
 
     public IObserveCommand EmailCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleMarkdownViewModel(IDialog dialog)
     {
         LinkCommand = MakeAsyncCommand<string>(async url =>
@@ -80,6 +84,10 @@ public sealed partial class SampleMarkdownViewModel : AppViewModelBase
 
                """;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 

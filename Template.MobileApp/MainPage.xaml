@@ -11,6 +11,41 @@
              s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
              SafeAreaEdges="Default">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="StartupGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="StartupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="32,0" />
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StartupIndicator"
+                   TargetType="ActivityIndicator">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="StartupLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <ContentPage.Behaviors>
         <s:AppLifecycleBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
@@ -22,7 +57,7 @@
     <Grid Style="{StaticResource MainGrid}"
           RowDefinitions="Auto,*,Auto">
         <!-- overlay -->
-        <Rectangle Grid.RowSpan="3"
+        <Rectangle Grid.Row="0" Grid.RowSpan="3"
                    shell:ShellProperty.BusyOverlay="True"
                    IsVisible="{Binding BusyState.IsBusy}" />
 
@@ -76,6 +111,18 @@
                     Style="{StaticResource FunctionButton4}"
                     Command="{Binding Function4Command}"
                     Text="{Binding Function4.Text.Value}" />
+        </Grid>
+
+        <!-- startup -->
+        <Grid Grid.Row="0" Grid.RowSpan="3"
+              Style="{StaticResource StartupGrid}"
+              IsVisible="{Binding Startup.IsCompleted, Converter={StaticResource ReverseConverter}}">
+            <VerticalStackLayout Style="{StaticResource StartupStack}">
+                <ActivityIndicator Style="{StaticResource StartupIndicator}"
+                                   IsRunning="True" />
+                <Label Style="{StaticResource StartupLabel}"
+                       Text="Loading" />
+            </VerticalStackLayout>
         </Grid>
     </Grid>
 

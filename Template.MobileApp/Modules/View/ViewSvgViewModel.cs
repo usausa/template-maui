@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewSvgViewModel : AppViewModelBase
 {
-    // SvgView.Source にパスを渡すだけでロード/キャッシュはコントロール側が行う
     [ObservableProperty]
     public partial string SvgSource { get; set; } = Path.Combine("Svg", "dotnet_bot.svg");
 
@@ -11,10 +10,26 @@ public sealed partial class ViewSvgViewModel : AppViewModelBase
 
     public IObserveCommand SelectCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewSvgViewModel()
     {
         SelectCommand = MakeDelegateCommand<string>(Select);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Select(string name)
     {
@@ -26,8 +41,4 @@ public sealed partial class ViewSvgViewModel : AppViewModelBase
         };
         Selected = name;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

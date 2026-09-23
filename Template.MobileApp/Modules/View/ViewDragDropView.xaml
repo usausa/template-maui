@@ -19,21 +19,10 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="NoteLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            <Style x:Key="TaskLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowLabel}">
+                <Setter Property="Padding" Value="10,12" />
             </Style>
 
             <Style x:Key="TaskBorder"
@@ -54,14 +43,6 @@
                 <Setter Property="IsVisible" Value="False" />
             </Style>
 
-            <Style x:Key="TaskLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="Padding" Value="10,12" />
-            </Style>
-
             <Style x:Key="ColumnBorder"
                    TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
@@ -70,14 +51,6 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 10" />
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="MinimumHeightRequest" Value="200" />
-            </Style>
-
-            <Style x:Key="ColumnHeaderLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="TrashBorder"
@@ -129,12 +102,12 @@
                                                DragStartingCommandParameter="{Binding .}"
                                                DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:ViewDragDropViewModel}}" />
                         <DropGestureRecognizer AllowDrop="True"
-                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DropCommandParameter="{Binding .}"
+                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemLeaveCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragLeaveCommandParameter="{Binding .}"
                                                DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemOverCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
                                                DragOverCommandParameter="{Binding .}"
-                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemLeaveCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DragLeaveCommandParameter="{Binding .}" />
+                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DropCommandParameter="{Binding .}" />
                     </Border.GestureRecognizers>
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                     <Grid RowDefinitions="Auto,*,Auto"
@@ -166,23 +139,23 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="並べ替え"
-                               Icon="{x:Static fonts:MaterialIcons.Swap_vert}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="4">
-                    <Label Style="{StaticResource NoteLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="並べ替え"
+                               Icon="{x:Static fonts:MaterialIcons.Swap_vert}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="行を長押しでドラッグし、別の行に重ねて離すとその位置へ移動する (ドラッグ中は受け入れ先が破線、重ねた行に挿入位置の線)" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
                                          BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="リスト間移動とゴミ箱"
-                               Icon="{x:Static fonts:MaterialIcons.Move_up}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="8">
-                    <Label Style="{StaticResource NoteLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="リスト間移動とゴミ箱"
+                               Icon="{x:Static fonts:MaterialIcons.Move_up}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除 (重ねている先が濃く光る)" />
                     <Grid Style="{StaticResource BoardGrid}"
                           ColumnDefinitions="*,*">
@@ -207,15 +180,15 @@
                             </Border.Triggers>
                             <Border.GestureRecognizers>
                                 <DropGestureRecognizer AllowDrop="True"
-                                                       DropCommand="{Binding DropOnListCommand}"
-                                                       DropCommandParameter="Todo"
+                                                       DragLeaveCommand="{Binding ListLeaveCommand}"
+                                                       DragLeaveCommandParameter="Todo"
                                                        DragOverCommand="{Binding ListOverCommand}"
                                                        DragOverCommandParameter="Todo"
-                                                       DragLeaveCommand="{Binding ListLeaveCommand}"
-                                                       DragLeaveCommandParameter="Todo" />
+                                                       DropCommand="{Binding DropOnListCommand}"
+                                                       DropCommandParameter="Todo" />
                             </Border.GestureRecognizers>
-                            <VerticalStackLayout Spacing="4">
-                                <Label Style="{StaticResource ColumnHeaderLabel}"
+                            <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
+                                <Label Style="{StaticResource BasicHeaderCaptionLabel}"
                                        Text="TODO" />
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding TodoList}"
                                                      BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
@@ -242,15 +215,15 @@
                             </Border.Triggers>
                             <Border.GestureRecognizers>
                                 <DropGestureRecognizer AllowDrop="True"
-                                                       DropCommand="{Binding DropOnListCommand}"
-                                                       DropCommandParameter="Done"
+                                                       DragLeaveCommand="{Binding ListLeaveCommand}"
+                                                       DragLeaveCommandParameter="Done"
                                                        DragOverCommand="{Binding ListOverCommand}"
                                                        DragOverCommandParameter="Done"
-                                                       DragLeaveCommand="{Binding ListLeaveCommand}"
-                                                       DragLeaveCommandParameter="Done" />
+                                                       DropCommand="{Binding DropOnListCommand}"
+                                                       DropCommandParameter="Done" />
                             </Border.GestureRecognizers>
-                            <VerticalStackLayout Spacing="4">
-                                <Label Style="{StaticResource ColumnHeaderLabel}"
+                            <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
+                                <Label Style="{StaticResource BasicHeaderCaptionLabel}"
                                        Text="DONE" />
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding DoneList}"
                                                      BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
@@ -275,9 +248,9 @@
                         </Border.Triggers>
                         <Border.GestureRecognizers>
                             <DropGestureRecognizer AllowDrop="True"
-                                                   DropCommand="{Binding DropOnTrashCommand}"
+                                                   DragLeaveCommand="{Binding TrashLeaveCommand}"
                                                    DragOverCommand="{Binding TrashOverCommand}"
-                                                   DragLeaveCommand="{Binding TrashLeaveCommand}" />
+                                                   DropCommand="{Binding DropOnTrashCommand}" />
                         </Border.GestureRecognizers>
                         <Label Style="{StaticResource TrashLabel}"
                                Text="{x:Static fonts:MaterialIcons.Delete}" />

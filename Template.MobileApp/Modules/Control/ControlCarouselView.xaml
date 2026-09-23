@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             x:Class="Template.MobileApp.Modules.Control.ControlCarouselView"
+             x:DataType="{x:Type module:ControlCarouselViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ControlCarouselViewModel}"
+             shell:ShellProperty.Title="Carousel"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CarouselView"
+                   TargetType="CarouselView">
+                <Setter Property="PeekAreaInsets" Value="64" />
+                <Setter Property="Loop" Value="True" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+            </Style>
+
+            <Style x:Key="CarouselBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,3"
+                                Brush="Black"
+                                Opacity="0.15"
+                                Radius="8" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CarouselImageBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CarouselImage"
+                   TargetType="Image">
+                <Setter Property="HeightRequest" Value="240" />
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="CarouselTitleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="CarouselDescriptionLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="CarouselIndicator"
+                   TargetType="IndicatorView">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="IndicatorsShape" Value="Circle" />
+                <Setter Property="IndicatorColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="CarouselCardGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="6" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto,64,*"
+          BackgroundColor="{StaticResource GrayLighten5}">
+
+        <CarouselView x:Name="PhotoCarousel"
+                      Grid.Row="1"
+                      Style="{StaticResource CarouselView}"
+                      ItemsSource="{Binding Items}"
+                      CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
+                      CurrentItemChangedCommandParameter="{Binding Source={x:Reference PhotoCarousel}, Path=CurrentItem, x:DataType=CarouselView}"
+                      IndicatorView="{x:Reference Indicator}">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type models:PhotoItem}">
+                    <Border Style="{StaticResource CarouselBorder}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding IsCurrent}"
+                                         Value="False">
+                                <Setter Property="Scale" Value="0.92" />
+                                <Setter Property="Opacity" Value="0.55" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid Style="{StaticResource CarouselCardGrid}"
+                              RowDefinitions="*,Auto,Auto">
+                            <Border Grid.Row="0"
+                                    Style="{StaticResource CarouselImageBorder}">
+                                <Image Style="{StaticResource CarouselImage}"
+                                       Source="{Binding ImageUrl}" />
+                            </Border>
+                            <Label Grid.Row="1"
+                                   Style="{StaticResource CarouselTitleLabel}"
+                                   Text="{Binding Title}" />
+                            <Label Grid.Row="2"
+                                   Style="{StaticResource CarouselDescriptionLabel}"
+                                   Text="{Binding Description}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+        <IndicatorView x:Name="Indicator"
+                       Grid.Row="2"
+                       Style="{StaticResource CarouselIndicator}" />
+
+    </Grid>
+
+</ContentView>

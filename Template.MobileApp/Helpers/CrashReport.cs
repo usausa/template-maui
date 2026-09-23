@@ -50,9 +50,19 @@ public static partial class CrashReport
         File.Move(path, oldPath, true);
     }
 
-    public static string? GetReport()
+    public static string? GetLastReport()
     {
-        var path = ResolveCrashLogPath();
+        var path = ResolveOldCrashLogPath();
+        if (!File.Exists(path))
+        {
+            path = ResolveCrashLogPath();
+        }
         return !File.Exists(path) ? null : File.ReadAllText(path);
+    }
+
+    public static void ClearReport()
+    {
+        File.Delete(ResolveCrashLogPath());
+        File.Delete(ResolveOldCrashLogPath());
     }
 }

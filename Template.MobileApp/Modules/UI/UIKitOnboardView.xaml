@@ -15,17 +15,20 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid" TargetType="Grid">
+            <Style x:Key="OnboardGrid"
+                   TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="Padding" Value="0,32,0,16" />
             </Style>
 
-            <Style x:Key="PageImage" TargetType="Image">
+            <Style x:Key="PageImage"
+                   TargetType="Image">
                 <Setter Property="Aspect" Value="AspectFit" />
                 <Setter Property="HeightRequest" Value="240" />
             </Style>
 
-            <Style x:Key="PageTitle" TargetType="Label">
+            <Style x:Key="PageTitle"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -33,24 +36,36 @@
                 <Setter Property="Margin" Value="24,16,24,8" />
             </Style>
 
-            <Style x:Key="PageDescription" TargetType="Label">
+            <Style x:Key="PageDescription"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="Margin" Value="32,0" />
             </Style>
 
-            <Style x:Key="BottomBar" TargetType="Grid">
+            <Style x:Key="OnboardIndicator"
+                   TargetType="IndicatorView">
+                <Setter Property="Margin" Value="0,8,0,16" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="IndicatorColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="BottomBar"
+                   TargetType="Grid">
                 <Setter Property="Margin" Value="24,24" />
             </Style>
 
-            <Style x:Key="SkipButton" TargetType="Button">
+            <Style x:Key="SkipButton"
+                   TargetType="Button">
                 <Setter Property="Text" Value="スキップ" />
                 <Setter Property="BackgroundColor" Value="Transparent" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="StartButton" TargetType="Button">
+            <Style x:Key="StartButton"
+                   TargetType="Button">
                 <Setter Property="Text" Value="始める" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
@@ -63,7 +78,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource OnboardGrid}"
           RowDefinitions="*,Auto,Auto">
 
         <CarouselView x:Name="OnboardCarousel"
@@ -74,31 +89,34 @@
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="module:UIKitOnboardPage">
                     <VerticalStackLayout VerticalOptions="Center">
-                        <Image Style="{StaticResource PageImage}" Source="{Binding Image}" />
+                        <Image Style="{StaticResource PageImage}"
+                               Source="{Binding Image}" />
                         <!-- ページ切替でテキストをフェードイン -->
                         <VerticalStackLayout behaviors:AnimationOption.FadeInTrigger="{Binding Source={x:Reference OnboardCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
-                            <Label Style="{StaticResource PageTitle}" Text="{Binding Title}" />
-                            <Label Style="{StaticResource PageDescription}" Text="{Binding Description}" />
+                            <Label Style="{StaticResource PageTitle}"
+                                   Text="{Binding Title}" />
+                            <Label Style="{StaticResource PageDescription}"
+                                   Text="{Binding Description}" />
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <IndicatorView Grid.Row="1"
-                       x:Name="Indicators"
-                       IndicatorColor="{StaticResource GrayLighten2}"
-                       SelectedIndicatorColor="{StaticResource BlueDefault}"
-                       HorizontalOptions="Center"
-                       Margin="0,8,0,16" />
+        <IndicatorView x:Name="Indicators"
+                       Grid.Row="1"
+                       Style="{StaticResource OnboardIndicator}" />
 
         <Grid Grid.Row="2"
               Style="{StaticResource BottomBar}"
               ColumnDefinitions="*,Auto">
-            <Button Grid.Column="0" Style="{StaticResource SkipButton}" HorizontalOptions="Start"
+            <Button Grid.Column="0"
+                    Style="{StaticResource SkipButton}"
                     behaviors:ButtonOption.PressEffect="True"
+                    HorizontalOptions="Start"
                     Command="{Binding CompleteCommand}" />
-            <Button Grid.Column="1" Style="{StaticResource StartButton}"
+            <Button Grid.Column="1"
+                    Style="{StaticResource StartButton}"
                     behaviors:ButtonOption.PressEffect="True"
                     Command="{Binding CompleteCommand}" />
         </Grid>

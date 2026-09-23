@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             x:Class="Template.MobileApp.Modules.Sample.SampleCvNetView"
+             x:DataType="{x:Type module:SampleCvNetViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SampleCvNetViewModel}"
+             shell:ShellProperty.Title="CV Net"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="{Binding State, Converter={s:CompareToText True='', False='Out'}, ConverterParameter={x:Static module:CaptureState.Result}}"
+             shell:ShellProperty.Function3Text="{Binding State, Converter={s:CompareToText True='', False='In'}, ConverterParameter={x:Static module:CaptureState.Result}}"
+             shell:ShellProperty.Function4Text="{Binding State, Converter={s:CompareToText True='Retry', False='Detect'}, ConverterParameter={x:Static module:CaptureState.Result}}"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="{Binding State, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function3Enabled="{Binding State, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function4Enabled="{Binding State, Converter={StaticResource ActionEnabledConverter}}">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- 状態 → 表示 -->
+            <s:MapToBoolConverter x:Key="PreviewVisibleConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Capturing}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="ImageVisibleConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Analyzing}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="ActionEnabledConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <!-- 選択中の種類 → 色 -->
+            <s:CompareToColorConverter x:Key="FeatureBackgroundConverter"
+                                       TrueValue="{StaticResource BlueDefault}"
+                                       FalseValue="White" />
+
+            <s:CompareToColorConverter x:Key="FeatureTextColorConverter"
+                                       TrueValue="White"
+                                       FalseValue="{StaticResource BlueGrayDarken2}" />
+
+            <Style x:Key="TagPanelBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="BackgroundColor" Value="#B3000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="TagPanelLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineHeight" Value="1.3" />
+            </Style>
+
+            <Style x:Key="RetryHintBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,24" />
+                <Setter Property="Padding" Value="20,8" />
+                <Setter Property="BackgroundColor" Value="#B3000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+            </Style>
+
+            <Style x:Key="RetryHintLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="FeatureGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="FeatureButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto">
+
+        <mct:CameraView Grid.Row="0"
+                        behaviors:CameraBind.Controller="{Binding Controller}"
+                        IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
+        <Image Grid.Row="0"
+               Source="{Binding Image}"
+               IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
+               BackgroundColor="Black" />
+        <drawing:DrawingControl Grid.Row="0"
+                                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
+                                Drawing="{Binding Drawing}" />
+
+        <!-- 解析結果 (タグと信頼度) -->
+        <Border Grid.Row="0"
+                Style="{StaticResource TagPanelBorder}"
+                IsVisible="{Binding TagsText, Converter={StaticResource NotEmptyConverter}}">
+            <Label Style="{StaticResource TagPanelLabel}"
+                   Text="{Binding TagsText}" />
+        </Border>
+
+        <!-- 撮影ガイドオーバーレイ -->
+        <controls:CameraOverlayView Grid.Row="0"
+                                    IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
+
+        <!-- 撮影後の再開ヒント -->
+        <Border Grid.Row="0"
+                Style="{StaticResource RetryHintBorder}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding State}"
+                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}">
+            <Label Style="{StaticResource RetryHintLabel}"
+                   Text="Retry でプレビューを再開" />
+        </Border>
+
+        <!-- 撮影瞬間のシャッターフラッシュ -->
+        <BoxView Grid.Row="0"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}"
+                 InputTransparent="True"
+                 Color="White"
+                 Opacity="0" />
+
+        <!-- 解析の種類 -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource FeatureGrid}"
+              ColumnDefinitions="*,*,*,*"
+              IsEnabled="{Binding State, Converter={StaticResource ActionEnabledConverter}}">
+            <Button Grid.Column="0"
+                    Style="{StaticResource FeatureButton}"
+                    Command="{Binding SelectFeatureCommand}"
+                    CommandParameter="{x:Static module:VisionFeature.Objects}"
+                    Text="Object"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Objects}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Objects}}" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource FeatureButton}"
+                    Command="{Binding SelectFeatureCommand}"
+                    CommandParameter="{x:Static module:VisionFeature.Tags}"
+                    Text="Tag"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Tags}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Tags}}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource FeatureButton}"
+                    Command="{Binding SelectFeatureCommand}"
+                    CommandParameter="{x:Static module:VisionFeature.People}"
+                    Text="People"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.People}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.People}}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource FeatureButton}"
+                    Command="{Binding SelectFeatureCommand}"
+                    CommandParameter="{x:Static module:VisionFeature.Ocr}"
+                    Text="OCR"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Ocr}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Ocr}}" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

@@ -28,6 +28,10 @@ public sealed partial class UILoadViewModel : AppViewModelBase
 
     public LoadDrawing Drawing { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UILoadViewModel(INoiseMonitor noiseMonitor)
     {
         this.noiseMonitor = noiseMonitor;
@@ -44,28 +48,9 @@ public sealed partial class UILoadViewModel : AppViewModelBase
         }));
     }
 
-    // 直近 3 秒間の最大値を保持する
-    private double CalcPeak(double value)
-    {
-        var now = DateTime.Now;
-        peakHistory.Enqueue((now, value));
-
-        var limit = now - PeakWindow;
-        while ((peakHistory.Count > 0) && (peakHistory.Peek().Timestamp < limit))
-        {
-            peakHistory.Dequeue();
-        }
-
-        var peak = 0d;
-        foreach (var (_, entryValue) in peakHistory)
-        {
-            if (entryValue > peak)
-            {
-                peak = entryValue;
-            }
-        }
-        return peak;
-    }
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -94,5 +79,32 @@ public sealed partial class UILoadViewModel : AppViewModelBase
         Max = 0;
         Peak = 0;
         return Task.CompletedTask;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    // 直近 3 秒間の最大値を保持する
+    private double CalcPeak(double value)
+    {
+        var now = DateTime.Now;
+        peakHistory.Enqueue((now, value));
+
+        var limit = now - PeakWindow;
+        while ((peakHistory.Count > 0) && (peakHistory.Peek().Timestamp < limit))
+        {
+            peakHistory.Dequeue();
+        }
+
+        var peak = 0d;
+        foreach (var (_, entryValue) in peakHistory)
+        {
+            if (entryValue > peak)
+            {
+                peak = entryValue;
+            }
+        }
+        return peak;
     }
 }

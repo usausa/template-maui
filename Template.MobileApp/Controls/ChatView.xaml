@@ -12,6 +12,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ChatRootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
             <Style x:Key="MessageCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12,6" />
@@ -22,7 +27,9 @@
                 <Setter Property="Shadow">
                     <Setter.Value>
                         <Shadow Offset="0,2"
-                                Brush="Black" Opacity="0.08" Radius="6" />
+                                Brush="Black"
+                                Opacity="0.08"
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -32,6 +39,11 @@
                    BasedOn="{StaticResource MessageCardBorder}">
                 <Setter Property="Margin" Value="48,6,12,6" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="RoleHeaderStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
             </Style>
 
             <Style x:Key="RoleIconBorder"
@@ -69,32 +81,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
-            <Style x:Key="CodeBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="0,6,0,0" />
-                <Setter Property="Padding" Value="12,10" />
-                <Setter Property="BackgroundColor" Value="#FF1E1E28" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <Style x:Key="CodeTextLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="LineBreakMode" Value="WordWrap" />
-                <Setter Property="TextColor" Value="#FFD4EFDF" />
-            </Style>
-
-            <Style x:Key="CopyIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="TextColor" Value="#80FFFFFF" />
-            </Style>
-
             <Style x:Key="TypingDot"
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="8" />
@@ -123,7 +109,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 22" />
             </Style>
 
-            <Style x:Key="SendButton"
+            <Style x:Key="InputBarButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="WidthRequest" Value="44" />
@@ -131,16 +117,52 @@
                 <Setter Property="CornerRadius" Value="22" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="20" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- 送信 (無効時は灰色) -->
+            <Style x:Key="SendButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource InputBarButton}">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten2}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <!-- 応答の中断 -->
+            <Style x:Key="CancelButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource InputBarButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="VoiceButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource InputBarButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
             </Style>
 
             <!-- Assistant -->
             <DataTemplate x:Key="AssistantTemplate"
                           x:DataType="{x:Type models:AiChatMessage}">
                 <Border Style="{StaticResource MessageCardBorder}">
-                    <VerticalStackLayout Spacing="0">
-                        <HorizontalStackLayout Spacing="8">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource RoleHeaderStack}">
                             <Border Style="{StaticResource RoleIconBorder}">
                                 <Label Style="{StaticResource RoleIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
@@ -154,9 +176,11 @@
                             <Ellipse Style="{StaticResource TypingDot}"
                                      behaviors:AnimationOption.Wave="True" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="180" />
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="180" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="360" />
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="360" />
                         </HorizontalStackLayout>
                         <Label Style="{StaticResource MessageTextLabel}"
                                IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}"
@@ -165,47 +189,11 @@
                 </Border>
             </DataTemplate>
 
-            <!-- Assistant (code) -->
-            <DataTemplate x:Key="CodeTemplate"
-                          x:DataType="{x:Type models:AiChatMessage}">
-                <Border Style="{StaticResource MessageCardBorder}">
-                    <VerticalStackLayout Spacing="0">
-                        <HorizontalStackLayout Spacing="8">
-                            <Border Style="{StaticResource RoleIconBorder}">
-                                <Label Style="{StaticResource RoleIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
-                            </Border>
-                            <Label Style="{StaticResource RoleNameLabel}"
-                                   Text="Assistant" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Style="{StaticResource TypingStack}"
-                                               IsVisible="{Binding IsTyping}">
-                            <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" />
-                            <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="180" />
-                            <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="360" />
-                        </HorizontalStackLayout>
-                        <!-- コード片(モノスペース+コピー風アイコン) -->
-                        <Border Style="{StaticResource CodeBorder}"
-                                IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}">
-                            <Grid>
-                                <Label Style="{StaticResource CodeTextLabel}"
-                                       Text="{Binding Text}" />
-                                <Label Style="{StaticResource CopyIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Content_copy}" />
-                            </Grid>
-                        </Border>
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-
             <!-- User -->
             <DataTemplate x:Key="UserTemplate"
                           x:DataType="{x:Type models:AiChatMessage}">
                 <Border Style="{StaticResource UserCardBorder}">
-                    <VerticalStackLayout Spacing="0">
+                    <VerticalStackLayout>
                         <Label Style="{StaticResource RoleNameLabel}"
                                Text="You" />
                         <Label Style="{StaticResource MessageTextLabel}"
@@ -216,7 +204,6 @@
 
             <controls:AiChatTemplateSelector x:Key="MessageTemplateSelector"
                                              AssistantTemplate="{StaticResource AssistantTemplate}"
-                                             CodeTemplate="{StaticResource CodeTemplate}"
                                              UserTemplate="{StaticResource UserTemplate}" />
 
         </ResourceDictionary>
@@ -224,26 +211,60 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-    <Grid RowDefinitions="*,Auto"
-          BackgroundColor="{StaticResource GrayLighten4}">
+    <Grid Style="{StaticResource ChatRootGrid}"
+          RowDefinitions="*,Auto">
 
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default" />
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}" />
 
         <Grid Grid.Row="1"
               Style="{StaticResource InputBarGrid}"
-              ColumnDefinitions="*,Auto">
+              ColumnDefinitions="*,Auto,Auto">
             <Border Grid.Column="0"
                     Style="{StaticResource InputBorder}">
-                <Entry Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}"
-                       Placeholder="メッセージを入力" />
+                <Entry Style="{StaticResource BasicFieldEntry}"
+                       Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}"
+                       Placeholder="メッセージを入力">
+                    <Entry.Triggers>
+                        <DataTrigger TargetType="Entry"
+                                     Binding="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
+                                     Value="True">
+                            <Setter Property="Placeholder" Value="話しかけてください" />
+                        </DataTrigger>
+                    </Entry.Triggers>
+                </Entry>
             </Border>
+            <!-- 音声入力 (VoiceCommand が設定されたときだけ表示。認識中は停止ボタン) -->
             <Button Grid.Column="1"
+                    Style="{StaticResource VoiceButton}"
+                    behaviors:AnimationOption.Pulse="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
+                    Command="{Binding Source={x:Reference Root}, Path=VoiceCommand, x:DataType={x:Type controls:ChatView}}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=VoiceCommand, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type controls:ChatView}}"
+                    Text="{x:Static fonts:MaterialIcons.Mic}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
+                                 Value="True">
+                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Stop}" />
+                        <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <!-- 送信 (応答中は中断ボタンに入れ替わる) -->
+            <Button Grid.Column="2"
                     Style="{StaticResource SendButton}"
                     Command="{Binding Source={x:Reference Root}, Path=SendCommand, x:DataType={x:Type controls:ChatView}}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, Converter={StaticResource ReverseConverter}, x:DataType={x:Type controls:ChatView}}"
                     Text="{x:Static fonts:MaterialIcons.Send}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource CancelButton}"
+                    Command="{Binding Source={x:Reference Root}, Path=CancelCommand, x:DataType={x:Type controls:ChatView}}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, x:DataType={x:Type controls:ChatView}}"
+                    Text="{x:Static fonts:MaterialIcons.Stop}" />
         </Grid>
 
     </Grid>

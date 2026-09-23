@@ -18,39 +18,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="CardContentStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="ButtonRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="LastActionGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="0,4" />
-            </Style>
-
-            <Style x:Key="SegmentCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
             <Style x:Key="SegmentRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="0" />
@@ -63,13 +30,13 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Action button"
-                               Icon="{x:Static fonts:MaterialIcons.Touch_app}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Grid Style="{StaticResource ButtonRowGrid}"
-                          ColumnDefinitions="*,*"
-                          RowDefinitions="Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Action button"
+                               Icon="{x:Static fonts:MaterialIcons.Touch_app}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Row="0" Grid.Column="0"
                                 Style="{StaticResource PrimaryButton}"
                                 behaviors:ButtonOption.PressEffect="True"
@@ -92,13 +59,13 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Information button"
-                               Icon="{x:Static fonts:MaterialIcons.Info}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
-                <Grid Style="{StaticResource ButtonRowGrid}"
-                      ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Information button"
+                               Icon="{x:Static fonts:MaterialIcons.Info}">
+                <Grid Style="{StaticResource BasicButtonGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource InformationButton}"
                             behaviors:ButtonOption.PressEffect="True"
@@ -126,29 +93,29 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Last action"
-                               Icon="{x:Static fonts:MaterialIcons.Bolt}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
-                <Grid Style="{StaticResource LastActionGrid}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Last action"
+                               Icon="{x:Static fonts:MaterialIcons.Bolt}">
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Clicked" />
                     <Label Grid.Column="1"
                            Style="{StaticResource ValueLabel}"
-                           Text="{Binding LastAction}"
+                           behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding LastAction}"
-                           behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                           Text="{Binding LastAction}" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Input button"
-                               Icon="{x:Static fonts:MaterialIcons.Keyboard}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource SegmentCaptionLabel}"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Input button"
+                               Icon="{x:Static fonts:MaterialIcons.Keyboard}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Segmented select (tap to choose a value)" />
                     <Grid Style="{StaticResource SegmentRowGrid}"
                           ColumnDefinitions="*,*,*">
@@ -160,14 +127,12 @@
                                 Command="{Binding Select1Command}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource CenterSelectButton}"
-                                Margin="-1,0,0,0"
                                 behaviors:Select.EmptyString="-"
                                 behaviors:Select.List="{Binding Items}"
                                 behaviors:Select.Value="{Binding Value3}"
                                 Command="{Binding Select3Command}" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource RightSelectButton}"
-                                Margin="-1,0,0,0"
                                 behaviors:Select.EmptyString="-"
                                 behaviors:Select.List="{Binding Items}"
                                 behaviors:Select.Value="{Binding Value2}"

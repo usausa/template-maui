@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             x:Class="Template.MobileApp.Modules.Control.ControlCustomView"
+             x:DataType="{x:Type module:ControlCustomViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ControlCustomViewModel}"
+             shell:ShellProperty.Title="Custom"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!--
+        既存パッケージ (標準 / CommunityToolkit / Syncfusion) では埋まらなかった自作コントロール群。
+        MarqueeLabel / TreeView / ColorPicker / DurationPicker / AvatarGroup (実装は Controls/)
+    -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="MarqueeTextLabel"
+                   TargetType="controls:MarqueeLabel">
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="#7DF36B" />
+            </Style>
+
+            <Style x:Key="NoticeMarqueeLabel"
+                   TargetType="controls:MarqueeLabel"
+                   BasedOn="{StaticResource MarqueeTextLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <Style x:Key="MarqueeBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="Padding" Value="8,6" />
+            </Style>
+
+            <Style x:Key="NoticeMarqueeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource MarqueeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+            </Style>
+
+            <Style x:Key="SmallButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="MarqueeLabel"
+                               Icon="{x:Static fonts:MaterialIcons.Campaign}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="テキストが右から左へ無限スクロールする (Speed = px/秒)" />
+                    <Border Style="{StaticResource MarqueeBorder}">
+                        <controls:MarqueeLabel Style="{StaticResource MarqueeTextLabel}"
+                                               Text="【お知らせ】本日 21:00 よりメンテナンスを実施します ／ 新商品「うさうさまんじゅう」販売開始 ／ ポイント 2 倍キャンペーン実施中"
+                                               Speed="60" />
+                    </Border>
+                    <Border Style="{StaticResource NoticeMarqueeBorder}">
+                        <controls:MarqueeLabel Style="{StaticResource NoticeMarqueeLabel}"
+                                               Text="Speed=120 の高速版 ★ MarqueeLabel は Loaded で開始し Unloaded で停止する ★"
+                                               Speed="120" />
+                    </Border>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="TreeView"
+                               Icon="{x:Static fonts:MaterialIcons.Account_tree}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="▸ タップで展開/折りたたみ。行タップで選択" />
+                    <controls:TreeView ItemsSource="{Binding Nodes}"
+                                       SelectedNode="{Binding SelectedNode}" />
+                    <Label Style="{StaticResource CardAccentLabel}"
+                           IsVisible="{Binding SelectedNode, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding SelectedNode.Text, StringFormat='選択: {0}', FallbackValue='-'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="ColorPicker"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <controls:ColorPicker SelectedColor="{Binding PickedColor}" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <BoxView Grid.Column="0"
+                                 WidthRequest="24" HeightRequest="24"
+                                 Color="{Binding PickedColor}"
+                                 CornerRadius="12" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardRowAccentLabel}"
+                               Text="VM の Color プロパティと双方向バインド" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="DurationPicker"
+                               Icon="{x:Static fonts:MaterialIcons.Timer}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <controls:DurationPicker Duration="{Binding Duration}" />
+                    <Label Style="{StaticResource CardAccentLabel}"
+                           Text="{Binding Duration, StringFormat='TimeSpan: {0}'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320"
+                               Title="AvatarGroup"
+                               Icon="{x:Static fonts:MaterialIcons.Group}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="OverlapPanel で重ねたアバター。MaxDisplayed (4) を超えた分は「+N」になり、件数の増減に追従する" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,Auto,Auto">
+                        <controls:AvatarGroup Grid.Column="0"
+                                              HorizontalOptions="Start" VerticalOptions="Center"
+                                              ItemsSource="{Binding Avatars}"
+                                              AvatarSize="40" MaxDisplayed="4" Overlap="12" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource SmallButton}"
+                                Command="{Binding RemoveAvatarCommand}"
+                                Text="Remove" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource SmallButton}"
+                                Command="{Binding AddAvatarCommand}"
+                                Text="Add" />
+                    </Grid>
+                    <Label Style="{StaticResource CardAccentLabel}"
+                           Text="{Binding Avatars.Count, StringFormat='{0} 人'}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

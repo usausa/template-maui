@@ -14,30 +14,15 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <ContentView.Resources>
-        <ResourceDictionary>
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <Style x:Key="InfoRowGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="Padding" Value="0,4" />
-            </Style>
-
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
-
-            <controls:InfoCard Title="Device"
-                               Icon="{x:Static fonts:MaterialIcons.Smartphone}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid Style="{StaticResource InfoRowGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Device"
+                               Icon="{x:Static fonts:MaterialIcons.Smartphone}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Version" />
@@ -61,13 +46,13 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Application"
-                               Icon="{x:Static fonts:MaterialIcons.Apps}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="100">
-                <Grid Style="{StaticResource InfoRowGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Application"
+                               Icon="{x:Static fonts:MaterialIcons.Apps}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Name" />
@@ -98,13 +83,13 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Display"
-                               Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="200">
-                <Grid Style="{StaticResource InfoRowGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200"
+                               Title="Display"
+                               Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Width" />

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Index</title>
-    <script src="scripts/HybridWebView.js"></script>
+    <script src="_framework/hybridwebview.js"></script>
     <script>
         function UpdateStatus(msg) {
             var status = document.getElementById("status");
@@ -34,6 +34,20 @@
             const result = await window.HybridWebView.InvokeDotNet('ExecuteAsync', [123, 'Mofusand']);
             UpdateStatus("Invoked InvokeAsyncMethod, return value: id=" + result.Id + ", name=" + result.Name);
         }
+
+        // Answered by C# (WebResourceRequested)
+
+        async function FetchLocal() {
+            UpdateStatus("Fetching local/info.json");
+            const response = await fetch('local/info.json');
+            UpdateStatus("Fetched local/info.json: " + await response.text());
+        }
+
+        // Thrown to C# (HybridWebViewInvokeJavaScriptException)
+
+        function ThrowError() {
+            throw new Error("Error from JS");
+        }
     </script>
 </head>
 <body>
@@ -46,6 +60,9 @@
     <div>
         <button onclick="InvokeMethod()">Call C# method</button>
         <button onclick="InvokeAsyncMethod()">Call C# async method</button>
+    </div>
+    <div>
+        <button onclick="FetchLocal()">Fetch local resource</button>
     </div>
     <div>
         <div>Log:</div>

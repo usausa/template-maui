@@ -8,6 +8,10 @@ public sealed class DeviceCommunicationViewModel : AppViewModelBase
 
     public IObserveCommand EmailCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     // ReSharper disable CommentTypo
     public DeviceCommunicationViewModel(
         IPhoneDialer dialer,
@@ -59,8 +63,12 @@ public sealed class DeviceCommunicationViewModel : AppViewModelBase
             return Email.Default.ComposeAsync(message);
         }
     }
-    // ReSharper restore CommentTypo
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    // ReSharper restore CommentTypo
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

@@ -8,6 +8,7 @@ public static class ImageHelper
         source.Bitmap = bitmap!;
         if (!ReferenceEquals(old, bitmap))
         {
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             old?.Dispose();
         }
     }

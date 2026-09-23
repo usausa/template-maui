@@ -93,15 +93,15 @@
                Text="Color" />
         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
         <Picker ItemsSource="{Binding BorderColors}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
-                SelectedItem="{Binding BorderColor, Mode=TwoWay}" />
+                SelectedItem="{Binding BorderColor, Mode=TwoWay}"
+                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="StrokeColor" />
         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
         <Picker ItemsSource="{Binding StrokeColors}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}"
-                SelectedItem="{Binding StrokeColor, Mode=TwoWay}" />
+                SelectedItem="{Binding StrokeColor, Mode=TwoWay}"
+                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding StrokeThickness, StringFormat='StrokeThickness: {0:F2}'}" />

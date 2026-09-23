@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             xmlns:drawer="clr-namespace:Syncfusion.Maui.Toolkit.NavigationDrawer;assembly=Syncfusion.Maui.Toolkit" xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             x:Class="Template.MobileApp.Modules.Control.ControlDrawerView"
+             x:DataType="{x:Type module:ControlDrawerViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ControlDrawerViewModel}"
+             shell:ShellProperty.Title="Drawer"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="Open"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
+
+    <!--
+        Syncfusion の SfNavigationDrawer (ページを包む) と自作の SideDrawer (最前面のオーバーレイ) をセグメントで切り替えて比べる。
+        端のスワイプは有効な側だけに効く
+    -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="DrawerFooterLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="SelectedLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <!-- ドロワーの中身 (両方で共通の見た目) -->
+            <Style x:Key="DrawerGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DrawerHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,20" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="DrawerAvatar"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DrawerAvatarIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DrawerNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DrawerMailLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="DrawerItemGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
+            <Style x:Key="DrawerItemIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DrawerItemLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <DataTemplate x:Key="DrawerItemTemplate"
+                          x:DataType="{x:Type module:DrawerMenuItem}">
+                <Grid Style="{StaticResource DrawerItemGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:ControlDrawerViewModel}}, Path=SelectCommand, x:DataType={x:Type module:ControlDrawerViewModel}}"
+                                              CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                    <Label Grid.Column="0"
+                           Style="{StaticResource DrawerItemIcon}"
+                           Text="{Binding Icon}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource DrawerItemLabel}"
+                           Text="{Binding Text}" />
+                </Grid>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid>
+
+        <drawer:SfNavigationDrawer IsOpen="{Binding IsSfDrawerOpen}">
+            <drawer:SfNavigationDrawer.DrawerSettings>
+                <drawer:DrawerSettings DrawerFooterHeight="44" DrawerHeaderHeight="96" DrawerWidth="280"
+                                       EnableSwipeGesture="{Binding IsSfMode}"
+                                       Position="Left" Transition="SlideOnTop">
+                    <drawer:DrawerSettings.DrawerHeaderView>
+                        <Grid Style="{StaticResource DrawerHeaderGrid}"
+                              ColumnDefinitions="Auto,*">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource DrawerAvatar}">
+                                <Label Style="{StaticResource DrawerAvatarIcon}"
+                                       Text="{x:Static fonts:MaterialIcons.Account_circle}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1"
+                                                 VerticalOptions="Center">
+                                <Label Style="{StaticResource DrawerNameLabel}"
+                                       Text="うさうさうさん" />
+                                <Label Style="{StaticResource DrawerMailLabel}"
+                                       Text="usausa@example.com" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </drawer:DrawerSettings.DrawerHeaderView>
+                    <drawer:DrawerSettings.DrawerContentView>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MenuItems}"
+                                             BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
+                    </drawer:DrawerSettings.DrawerContentView>
+                    <drawer:DrawerSettings.DrawerFooterView>
+                        <Label Style="{StaticResource DrawerFooterLabel}"
+                               Text="SfNavigationDrawer" />
+                    </drawer:DrawerSettings.DrawerFooterView>
+                </drawer:DrawerSettings>
+            </drawer:SfNavigationDrawer.DrawerSettings>
+
+            <drawer:SfNavigationDrawer.ContentView>
+                <ScrollView Style="{StaticResource RootScroll}">
+                    <VerticalStackLayout Style="{StaticResource PageStack}">
+
+                        <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                           Title="実装"
+                                           Icon="{x:Static fonts:MaterialIcons.Menu_open}">
+                            <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                                <sf:SfSegmentedControl ItemsSource="{Binding Modes}"
+                                                       SegmentHeight="40"
+                                                       SelectedIndex="{Binding ModeIndex, Mode=TwoWay}"
+                                                       VisibleSegmentsCount="2" />
+                                <Label Style="{StaticResource BasicCaptionLabel}"
+                                       Text="SfNavigationDrawer = Syncfusion.Maui.Toolkit (ページを包む。Position / Transition / 幅と、端のスワイプ) / 自作 = Controls/SideDrawer.cs (Grid 派生、依存なし。最前面に重ね、左端のスワイプとパネルのドラッグ、背景のタップ)" />
+                                <Button Style="{StaticResource BasicFilledButton}"
+                                        Command="{Binding OpenCommand}"
+                                        Text="ドロワーを開く (F2)" />
+                            </VerticalStackLayout>
+                        </controls:InfoCard>
+
+                        <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                           behaviors:AnimationOption.EnterDelay="100"
+                                           Title="選択中"
+                                           Icon="{x:Static fonts:MaterialIcons.Check_circle}">
+                            <Label Style="{StaticResource SelectedLabel}"
+                                   Text="{Binding Selected}" />
+                        </controls:InfoCard>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </drawer:SfNavigationDrawer.ContentView>
+        </drawer:SfNavigationDrawer>
+
+        <controls:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
+                             DrawerWidth="280"
+                             EdgeSwipeEnabled="{Binding IsCustomMode}">
+            <controls:SideDrawer.DrawerContent>
+                <Grid Style="{StaticResource DrawerGrid}"
+                      RowDefinitions="Auto,*,Auto">
+                    <Grid Grid.Row="0"
+                          Style="{StaticResource DrawerHeaderGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource DrawerAvatar}">
+                            <Label Style="{StaticResource DrawerAvatarIcon}"
+                                   Text="{x:Static fonts:MaterialIcons.Account_circle}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1"
+                                             VerticalOptions="Center">
+                            <Label Style="{StaticResource DrawerNameLabel}"
+                                   Text="うさうさうさん" />
+                            <Label Style="{StaticResource DrawerMailLabel}"
+                                   Text="usausa@example.com" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <VerticalStackLayout Grid.Row="1"
+                                         BindableLayout.ItemsSource="{Binding MenuItems}"
+                                         BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
+                    <Label Grid.Row="2"
+                           Style="{StaticResource DrawerFooterLabel}"
+                           Text="SideDrawer (自作)" />
+                </Grid>
+            </controls:SideDrawer.DrawerContent>
+        </controls:SideDrawer>
+
+    </Grid>
+
+</ContentView>
