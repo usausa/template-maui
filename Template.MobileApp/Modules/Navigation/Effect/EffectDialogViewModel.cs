@@ -22,7 +22,11 @@ public sealed partial class EffectDialogViewModel : AppViewModelBase
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        AppliedEffect = context.Parameter.Effect ?? "(none)";
+        if (!context.Attribute.IsRestore())
+        {
+            AppliedEffect = context.Parameter.Effect ?? "(none)";
+        }
+
         return Task.CompletedTask;
     }
 

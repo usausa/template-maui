@@ -27,6 +27,8 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     private readonly INotificationService notification;
 
+    private readonly DeviceInformation deviceInformation;
+
     private readonly Settings settings;
 
     private readonly Session session;
@@ -78,6 +80,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         MonitorConnection connection,
         ApiContext apiContext,
         INotificationService notification,
+        DeviceInformation deviceInformation,
         Settings settings,
         Session session,
         DeviceState deviceState)
@@ -88,6 +91,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         this.connection = connection;
         this.apiContext = apiContext;
         this.notification = notification;
+        this.deviceInformation = deviceInformation;
         this.settings = settings;
         this.session = session;
         this.deviceState = deviceState;
@@ -247,7 +251,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
         await connection.ReportDeviceStatusAsync(new DeviceStatusMessage
         {
-            DeviceId = settings.UniqueId,
+            DeviceId = deviceInformation.DeviceId,
             Model = $"{deviceInfo.Manufacturer} {deviceInfo.Model}",
             Platform = $"{deviceInfo.Platform} {deviceInfo.VersionString}",
             Battery = deviceState.BatteryChargeLevel,

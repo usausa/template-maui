@@ -1,5 +1,7 @@
 namespace Template.MobileApp.State;
 
+using Template.MobileApp.Components;
+
 #pragma warning disable CA1008
 [Flags]
 public enum NetworkProfile
@@ -43,7 +45,7 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
     public partial double BatteryChargeLevel { get; private set; }
 
     [ObservableProperty]
-    public partial Microsoft.Maui.Devices.BatteryState BatteryState { get; private set; }
+    public partial BatteryState BatteryState { get; private set; }
 
     [ObservableProperty]
     public partial BatteryPowerSource BatteryPowerSource { get; private set; }
@@ -59,21 +61,43 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
     [ObservableProperty]
     public partial NetworkState NetworkState { get; private set; }
 
+    [ObservableProperty]
+    public partial int? WiFiSignalStrength { get; private set; }
+
     public DeviceState(
         ILogger<DeviceState> log,
-        IBattery battery,
-        IConnectivity connectivity)
+        DeviceInformation deviceInformation)
     {
         this.log = log;
 
         // Battery
-        UpdateBattery(battery.ChargeLevel, battery.State, battery.PowerSource);
-        disposables.Add(battery.BatteryInfoChangedAsObservable().ObserveOnCurrentContext().Subscribe(
-            x => UpdateBattery(x.ChargeLevel, x.State, x.PowerSource)));
+        if (deviceInformation.Battery is { } battery)
+        {
+            UpdateBattery(battery);
+        }
+
+        disposables.Add(deviceInformation.BatteryChangedAsObservable()
+            .Select(_ => deviceInformation.Battery!)
+            .ObserveOnCurrentContext()
+            .Subscribe(UpdateBattery));
+
         // Connectivity
-        UpdateConnectivity(connectivity.ConnectionProfiles, connectivity.NetworkAccess);
-        disposables.Add(connectivity.ConnectivityChangedAsObservable().ObserveOnCurrentContext().Subscribe(
-            x => UpdateConnectivity(x.ConnectionProfiles, x.NetworkAccess)));
+        if (deviceInformation.Network is { } network)
+        {
+            UpdateConnectivity(network);
+        }
+
+        disposables.Add(deviceInformation.NetworkChangedAsObservable()
+            .Select(_ => deviceInformation.Network!)
+            .ObserveOnCurrentContext()
+            .Subscribe(UpdateConnectivity));
+
+        UpdateWiFi(deviceInformation.WiFi);
+
+        disposables.Add(deviceInformation.WiFiChangedAsObservable()
+            .Select(_ => deviceInformation.WiFi)
+            .ObserveOnCurrentContext()
+            .Subscribe(UpdateWiFi));
     }
 
     public void Dispose()
@@ -90,23 +114,24 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
     // Battery
     // ------------------------------------------------------------
 
-    private void UpdateBattery(double chargeLevel, Microsoft.Maui.Devices.BatteryState state, BatteryPowerSource powerSource)
+    private void UpdateBattery(BatteryStatus status)
     {
-        log.DebugBatteryState(chargeLevel, state, powerSource);
+        log.DebugBatteryState(status.Level, status.State, status.PowerSource);
 
-        BatteryChargeLevel = chargeLevel;
-        BatteryState = state;
-        BatteryPowerSource = powerSource;
+        BatteryChargeLevel = status.Level;
+        BatteryState = status.State;
+        BatteryPowerSource = status.PowerSource;
     }
 
     // ------------------------------------------------------------
     // Connectivity
     // ------------------------------------------------------------
 
-    private void UpdateConnectivity(IEnumerable<ConnectionProfile> profiles, NetworkAccess access)
+    private void UpdateConnectivity(NetworkStatus status)
     {
+        var access = status.Access;
         var profile = NetworkProfile.Unknown;
-        foreach (var value in profiles)
+        foreach (var value in status.Profiles)
         {
             switch (value)
             {
@@ -132,5 +157,10 @@ public sealed partial class DeviceState : ObservableObject, IDisposable
         NetworkState = access.IsConnected()
             ? (profile.IsHighSpeed() ? NetworkState.ConnectedHighSpeed : NetworkState.Connected)
             : NetworkState.Disconnected;
+    }
+
+    private void UpdateWiFi(WiFiStatus? status)
+    {
+        WiFiSignalStrength = status?.SignalStrength;
     }
 }

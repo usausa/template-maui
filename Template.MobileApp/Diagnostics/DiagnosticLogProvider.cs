@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components;
+namespace Template.MobileApp.Diagnostics;
 
 public sealed record DiagnosticLogEntry(
     DateTime Time,

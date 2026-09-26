@@ -24,6 +24,38 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Debug, Message = "Connectivity changed. profile=[{profile}], access=[{access}]")]
     public static partial void DebugConnectivityState(this ILogger logger, NetworkProfile profile, NetworkAccess access);
 
+    // Diagnostics
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Telemetry endpoint changed. endpoint=[{endpoint}]")]
+    public static partial void InfoTelemetryEndPointChanged(this ILogger logger, Uri? endpoint);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Diagnostic sampler changed. running=[{running}]")]
+    public static partial void DebugSamplerChanged(this ILogger logger, bool running);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Telemetry operation failed.")]
+    public static partial void WarnTelemetryOperationFailed(this ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Telemetry SDK event. source=[{source}], level=[{level}], message=[{message}]")]
+    public static partial void WarnTelemetrySdkEvent(this ILogger logger, string source, System.Diagnostics.Tracing.EventLevel level, string message);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Telemetry send failed. reason=[{reason}]")]
+    public static partial void WarnTelemetrySendFailed(this ILogger logger, string? reason);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Telemetry send recovered.")]
+    public static partial void InfoTelemetrySendRecovered(this ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Critical, EventName = "exception", Message = "Application crashed. time=[{time}]")]
+    public static partial void CriticalApplicationCrashed(this ILogger logger, DateTimeOffset time);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Telemetry test warning.")]
+    public static partial void WarnTelemetryTest(this ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Telemetry test error.")]
+    public static partial void ErrorTelemetryTest(this ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Telemetry test span completed. elapsed=[{elapsed}]")]
+    public static partial void WarnTelemetryTestSpan(this ILogger logger, long elapsed);
+
     // Navigation
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Unhandled navigation error.")]

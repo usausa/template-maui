@@ -59,14 +59,16 @@
         <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId NetworkScp}"
-                Text="SCP"
+                CommandParameter="{markup:ViewId NetworkSftp}"
+                Text="SFTP"
                 ImageSource="{x:Static markup:AppIcons.CloudUpload}" />
 
         <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NetworkTelemetry}"
+                Text="Telemetry"
+                ImageSource="{x:Static markup:AppIcons.Insights}" />
 
         <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"

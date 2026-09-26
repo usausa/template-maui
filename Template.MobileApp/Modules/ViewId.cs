@@ -81,7 +81,8 @@ public enum ViewId
     NetworkStorage,
     NetworkRealtime,
     NetworkGrpc,
-    NetworkScp,
+    NetworkSftp,
+    NetworkTelemetry,
 
     // Sample
     SampleMenu,

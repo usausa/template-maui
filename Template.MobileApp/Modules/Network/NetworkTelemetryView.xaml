@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
+             x:Class="Template.MobileApp.Modules.Network.NetworkTelemetryView"
+             x:DataType="{x:Type module:NetworkTelemetryViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:NetworkTelemetryViewModel}"
+             shell:ShellProperty.Title="Telemetry"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <!-- Send -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Send"
+                               Icon="{x:Static fonts:MaterialIcons.Send}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding WarningCommand}"
+                                Text="Warning"
+                                ImageSource="{x:Static markup:AppIcons.SmallWarning}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding ErrorCommand}"
+                                Text="Error"
+                                ImageSource="{x:Static markup:AppIcons.SmallError}" />
+                    </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding SpanCommand}"
+                                Text="Span"
+                                ImageSource="{x:Static markup:AppIcons.SmallTimeline}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NetworkCommand}"
+                                Text="Network"
+                                ImageSource="{x:Static markup:AppIcons.SmallCloudSync}" />
+                    </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding FlushCommand}"
+                                Text="Flush"
+                                ImageSource="{x:Static markup:AppIcons.SmallSend}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding CrashCommand}"
+                                Text="Crash"
+                                ImageSource="{x:Static markup:AppIcons.SmallBugReport}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

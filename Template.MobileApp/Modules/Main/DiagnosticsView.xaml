@@ -9,15 +9,13 @@
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
-             xmlns:components="clr-namespace:Template.MobileApp.Components" xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
+             xmlns:diagnostics="clr-namespace:Template.MobileApp.Diagnostics" xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
              x:Class="Template.MobileApp.Modules.Main.DiagnosticsView"
              x:DataType="{x:Type module:DiagnosticsViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DiagnosticsViewModel}"
              shell:ShellProperty.Title="Diagnostics"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function2Text="Refresh"
-             shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function2Enabled="True">
+             shell:ShellProperty.Function1Enabled="True">
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
@@ -32,6 +30,12 @@
             <Style x:Key="PathLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="WrapValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
                 <Setter Property="LineBreakMode" Value="CharacterWrap" />
             </Style>
 
@@ -50,13 +54,27 @@
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
 
-            <!-- 設定済み / ログイン済み -->
-            <s:BoolToTextConverter x:Key="ConfiguredTextConverter"
-                                   TrueValue="Configured"
-                                   FalseValue="Not configured" />
-            <s:BoolToColorConverter x:Key="ConfiguredColorConverter"
+            <!-- テレメトリの送信中 / 未送信のクラッシュ -->
+            <s:BoolToTextConverter x:Key="TelemetryTextConverter"
+                                   TrueValue="Sending"
+                                   FalseValue="Stopped" />
+            <s:BoolToColorConverter x:Key="TelemetryColorConverter"
                                     TrueValue="{StaticResource GreenDarken1}"
                                     FalseValue="{StaticResource GrayDefault}" />
+            <s:BoolToTextConverter x:Key="CrashPendingTextConverter"
+                                   TrueValue="Not sent"
+                                   FalseValue="None" />
+            <s:BoolToColorConverter x:Key="CrashPendingColorConverter"
+                                    TrueValue="{StaticResource OrangeDefault}"
+                                    FalseValue="{StaticResource GrayDefault}" />
+
+            <!-- 直近の送信の成否 -->
+            <s:BoolToTextConverter x:Key="SendResultTextConverter"
+                                   TrueValue="Succeeded"
+                                   FalseValue="Failed" />
+            <s:BoolToColorConverter x:Key="SendResultColorConverter"
+                                    TrueValue="{StaticResource GreenDarken1}"
+                                    FalseValue="{StaticResource OrangeDefault}" />
 
             <!-- ログレベル -->
             <s:MapToColorConverter x:Key="LogLevelColorConverter"
@@ -124,52 +142,37 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <!-- Runtime -->
+            <!-- Device -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="Runtime"
-                               Icon="{x:Static fonts:MaterialIcons.Memory}">
+                               Title="Device"
+                               Icon="{x:Static fonts:MaterialIcons.Smartphone}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                      RowDefinitions="Auto,Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
-                           Text="Working set" />
+                           Text="Name" />
                     <Label Grid.Row="0" Grid.Column="1"
                            Style="{StaticResource ValueLabel}"
-                           Text="{Binding WorkingSet, Converter={StaticResource ByteSizeConverter}}" />
+                           Text="{Binding DeviceName}" />
                     <Label Grid.Row="1" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
-                           Text="Managed heap" />
+                           Text="OS" />
                     <Label Grid.Row="1" Grid.Column="1"
                            Style="{StaticResource ValueLabel}"
-                           Text="{Binding ManagedMemory, Converter={StaticResource ByteSizeConverter}}" />
+                           Text="{Binding DeviceVersion}" />
                     <Label Grid.Row="2" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
-                           Text="Threads" />
+                           Text="Processors" />
                     <Label Grid.Row="2" Grid.Column="1"
                            Style="{StaticResource ValueLabel}"
-                           Text="{Binding ThreadCount}" />
+                           Text="{Binding ProcessorCount}" />
                     <Label Grid.Row="3" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
-                           Text="GC" />
+                           Text="Device ID" />
                     <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{Binding Gc0Count, StringFormat='Gen0 {0}'}" />
-                                <Span Text=" / " />
-                                <Span Text="{Binding Gc1Count, StringFormat='Gen1 {0}'}" />
-                                <Span Text=" / " />
-                                <Span Text="{Binding Gc2Count, StringFormat='Gen2 {0}'}" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Processors" />
-                    <Label Grid.Row="4" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding ProcessorCount}" />
+                           Style="{StaticResource WrapValueLabel}"
+                           Text="{Binding DeviceId}" />
                 </Grid>
             </controls:InfoCard>
 
@@ -179,50 +182,14 @@
                                Title="Application"
                                Icon="{x:Static fonts:MaterialIcons.Apps}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      RowDefinitions="Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
-                           Text="Name" />
+                           Text="Installation" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding ApplicationName}" />
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Version" />
-                    <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding ApplicationVersion}" />
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Build" />
-                    <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding ApplicationBuild}" />
-                    <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Package" />
-                    <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding ApplicationPackageName}" />
-                    <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Flavor" />
-                    <Label Grid.Row="4" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding Flavor}" />
-                    <Label Grid.Row="5" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Device" />
-                    <Label Grid.Row="5" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding DeviceName}" />
-                    <Label Grid.Row="6" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="OS" />
-                    <Label Grid.Row="6" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding DeviceVersion}" />
+                           Style="{StaticResource WrapValueLabel}"
+                           Text="{Binding InstallationId}" />
                 </Grid>
             </controls:InfoCard>
 
@@ -255,97 +222,9 @@
                 </Grid>
             </controls:InfoCard>
 
-            <!-- Connection -->
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="180"
-                               Title="Connection"
-                               Icon="{x:Static fonts:MaterialIcons.Lan}">
-                <Grid Style="{StaticResource CardInfoGrid}"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-                      ColumnDefinitions="2*,3*">
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="API" />
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding ApiConfigured, Converter={StaticResource ConfiguredTextConverter}}"
-                           TextColor="{Binding ApiConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="gRPC" />
-                    <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding GrpcConfigured, Converter={StaticResource ConfiguredTextConverter}}"
-                           TextColor="{Binding GrpcConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="OTEL" />
-                    <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding OtelConfigured, Converter={StaticResource ConfiguredTextConverter}}"
-                           TextColor="{Binding OtelConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
-                    <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="AI Service" />
-                    <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding AIServiceConfigured, Converter={StaticResource ConfiguredTextConverter}}"
-                           TextColor="{Binding AIServiceConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
-                    <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Ollama" />
-                    <Label Grid.Row="4" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding OllamaConfigured, Converter={StaticResource ConfiguredTextConverter}}"
-                           TextColor="{Binding OllamaConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
-                    <Label Grid.Row="5" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="SCP" />
-                    <Label Grid.Row="5" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding ScpConfigured, Converter={StaticResource ConfiguredTextConverter}}"
-                           TextColor="{Binding ScpConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
-                    <Label Grid.Row="6" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Login" />
-                    <Label Grid.Row="6" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           IsVisible="{Binding IsAuthenticated}"
-                           Text="{Binding LoginId}" />
-                    <Label Grid.Row="6" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           IsVisible="{Binding IsAuthenticated, Converter={StaticResource ReverseConverter}}"
-                           Text="Not logged in" />
-                    <Label Grid.Row="7" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Token expires" />
-                    <Label Grid.Row="7" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding TokenExpires, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
-                    <Label Grid.Row="8" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Network" />
-                    <Label Grid.Row="8" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding DeviceState.NetworkAccess}" />
-                    <Label Grid.Row="9" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Profile" />
-                    <Label Grid.Row="9" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding DeviceState.NetworkProfile}" />
-                    <Label Grid.Row="10" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Battery" />
-                    <Label Grid.Row="10" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='{0:P0}'}" />
-                </Grid>
-            </controls:InfoCard>
-
             <!-- Database -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240"
+                               behaviors:AnimationOption.EnterDelay="180"
                                Title="Database"
                                Icon="{x:Static fonts:MaterialIcons.Storage}">
                 <Grid Style="{StaticResource CardInfoGrid}"
@@ -390,9 +269,102 @@
                 </Grid>
             </controls:InfoCard>
 
-            <!-- Log -->
+            <!-- Connection -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Connection"
+                               Icon="{x:Static fonts:MaterialIcons.Lan}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Login" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           IsVisible="{Binding IsAuthenticated}"
+                           Text="{Binding LoginId}" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           IsVisible="{Binding IsAuthenticated, Converter={StaticResource ReverseConverter}}"
+                           Text="Not logged in" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Token expires" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding TokenExpires, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Network" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceState.NetworkAccess}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Profile" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding DeviceState.NetworkProfile}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Telemetry -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="300"
+                               Title="Telemetry"
+                               Icon="{x:Static fonts:MaterialIcons.Insights}">
+                <Grid Style="{StaticResource CardInfoGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Status" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding TelemetryActive, Converter={StaticResource TelemetryTextConverter}}"
+                           TextColor="{Binding TelemetryActive, Converter={StaticResource TelemetryColorConverter}}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Last send" />
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="1"
+                                         Style="{StaticResource CardSmallContentStack}">
+                        <Label Style="{StaticResource ValueLabel}"
+                               IsVisible="{Binding LastSend, Converter={StaticResource EmptyConverter}}"
+                               Text="-" />
+                        <Label Style="{StaticResource ValueLabel}"
+                               IsVisible="{Binding LastSend, Converter={StaticResource NotEmptyConverter}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding LastSend.Succeeded, Converter={StaticResource SendResultTextConverter}, FallbackValue=''}"
+                                          TextColor="{Binding LastSend.Succeeded, Converter={StaticResource SendResultColorConverter}, FallbackValue={x:Null}}" />
+                                    <Span Text="{Binding LastSend.Time, StringFormat=' {0:HH:mm:ss}', FallbackValue=''}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Style="{StaticResource WrapValueLabel}"
+                               IsVisible="{Binding LastSend.Reason, Converter={StaticResource NotEmptyConverter}, FallbackValue=False}"
+                               Text="{Binding LastSend.Reason, FallbackValue=''}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Resend" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding ResendWaitingCount, StringFormat='{0} waiting'}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Crash" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource CardStrongValueLabel}"
+                           Text="{Binding CrashPending, Converter={StaticResource CrashPendingTextConverter}}"
+                           TextColor="{Binding CrashPending, Converter={StaticResource CrashPendingColorConverter}}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- Log -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="360"
                                Title="Log"
                                Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
                 <VerticalStackLayout Style="{StaticResource EntryStack}">
@@ -426,7 +398,7 @@
                            Text="No warnings or errors" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentLogs}">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type components:DiagnosticLogEntry}">
+                            <DataTemplate x:DataType="{x:Type diagnostics:DiagnosticLogEntry}">
                                 <Grid Style="{StaticResource EntryGrid}"
                                       RowDefinitions="Auto,Auto"
                                       ColumnDefinitions="Auto,*">
@@ -462,8 +434,8 @@
                                 ImageSource="{x:Static markup:AppIcons.SmallShare}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding ClearLogsCommand}"
-                                Text="Clear recent"
+                                Command="{Binding DeleteLogsCommand}"
+                                Text="Delete files"
                                 ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
                     </Grid>
                 </VerticalStackLayout>
@@ -471,7 +443,7 @@
 
             <!-- Crash -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="360"
+                               behaviors:AnimationOption.EnterDelay="420"
                                Title="Crash report"
                                Icon="{x:Static fonts:MaterialIcons.Bug_report}">
                 <VerticalStackLayout Style="{StaticResource EntryStack}">

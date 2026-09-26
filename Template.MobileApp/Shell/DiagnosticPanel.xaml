@@ -6,7 +6,7 @@
              InputTransparent="True">
 
     <Border Style="{StaticResource DiagnosticBorder}">
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,4,Auto">
 
             <Label Grid.Row="0" Grid.Column="0"
@@ -94,6 +94,23 @@
                    Text="Arrange:" />
             <Label x:Name="ArrangeLabel"
                    Grid.Row="14" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <BoxView Grid.Row="15" Grid.ColumnSpan="3"
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
+
+            <Label Grid.Row="16" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="Battery:" />
+            <Label x:Name="BatteryLabel"
+                   Grid.Row="16" Grid.Column="2"
+                   Style="{StaticResource DiagnosticValueLabel}" />
+
+            <Label Grid.Row="17" Grid.Column="0"
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="WiFi:" />
+            <Label x:Name="WiFiLabel"
+                   Grid.Row="17" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}" />
 
         </Grid>

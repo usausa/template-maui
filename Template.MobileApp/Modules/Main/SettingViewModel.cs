@@ -2,6 +2,7 @@ namespace Template.MobileApp.Modules.Main;
 
 using BarcodeScanning;
 
+using Template.MobileApp.Diagnostics;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Services;
 
@@ -23,6 +24,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public partial string? OtelEndPoint { get; set; }
 
     [ObservableProperty]
+    public partial bool TelemetryEnabled { get; set; }
+
+    [ObservableProperty]
     public partial string? AIServiceEndPoint { get; set; }
 
     [ObservableProperty]
@@ -35,13 +39,13 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public partial string? OllamaModel { get; set; }
 
     [ObservableProperty]
-    public partial string? ScpHost { get; set; }
+    public partial string? SshHost { get; set; }
 
     [ObservableProperty]
-    public partial string? ScpUser { get; set; }
+    public partial string? SshUser { get; set; }
 
     [ObservableProperty]
-    public partial string? ScpPassword { get; set; }
+    public partial string? SshPassword { get; set; }
 
     public IObserveCommand DetectCommand { get; }
 
@@ -51,6 +55,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     public SettingViewModel(
         ApiContext apiContext,
+        ITelemetryControl telemetryControl,
         Settings settings)
     {
         this.settings = settings;
@@ -58,6 +63,12 @@ public sealed partial class SettingViewModel : AppViewModelBase
         Controller.AimMode = true;
         Controller.VibrationOnDetect = true;
         Controller.CaptureNextFrame = false;
+
+        SubscribeTelemetryEnabled(x =>
+        {
+            settings.TelemetryEnabled = x;
+            telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
+        });
 
         DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {
@@ -84,6 +95,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
                     {
                         settings.OtelEndPoint = otelEndPoint;
                         OtelEndPoint = otelEndPoint;
+                        telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
                     }
                     if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
                     {
@@ -106,26 +118,26 @@ public sealed partial class SettingViewModel : AppViewModelBase
                         OllamaModel = ollamaModel;
                     }
 
-                    if (parser.TryGetString(nameof(ScpHost), out var scpHost))
+                    if (parser.TryGetString(nameof(SshHost), out var sshHost))
                     {
-                        settings.ScpHost = scpHost;
+                        settings.SshHost = sshHost;
                     }
-                    if (parser.TryGetInt(nameof(Settings.ScpPort), out var scpPort))
+                    if (parser.TryGetInt(nameof(Settings.SshPort), out var sshPort))
                     {
-                        settings.ScpPort = scpPort;
+                        settings.SshPort = sshPort;
                     }
-                    if (parser.TryGetString(nameof(ScpUser), out var scpUser))
+                    if (parser.TryGetString(nameof(SshUser), out var sshUser))
                     {
-                        settings.ScpUser = scpUser;
-                        ScpUser = scpUser;
+                        settings.SshUser = sshUser;
+                        SshUser = sshUser;
                     }
-                    if (parser.TryGetString(nameof(ScpPassword), out var scpPassword))
+                    if (parser.TryGetString(nameof(SshPassword), out var sshPassword))
                     {
-                        await settings.SetScpPasswordAsync(scpPassword);
-                        ScpPassword = scpPassword;
+                        await settings.SetSshPasswordAsync(sshPassword);
+                        SshPassword = sshPassword;
                     }
 
-                    ScpHost = FormatScpHost(settings);
+                    SshHost = FormatSshHost(settings);
                 }
                 catch (UriFormatException)
                 {
@@ -144,16 +156,20 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        ApiEndPoint = settings.ApiEndPoint;
-        GrpcEndPoint = settings.GrpcEndPoint;
-        OtelEndPoint = settings.OtelEndPoint;
-        AIServiceEndPoint = settings.AIServiceEndPoint;
-        AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
-        OllamaEndPoint = settings.OllamaEndPoint;
-        OllamaModel = settings.OllamaModel;
-        ScpHost = FormatScpHost(settings);
-        ScpUser = settings.ScpUser;
-        ScpPassword = await settings.GetScpPasswordAsync() ?? string.Empty;
+        if (!context.Attribute.IsRestore())
+        {
+            ApiEndPoint = settings.ApiEndPoint;
+            GrpcEndPoint = settings.GrpcEndPoint;
+            OtelEndPoint = settings.OtelEndPoint;
+            TelemetryEnabled = settings.TelemetryEnabled;
+            AIServiceEndPoint = settings.AIServiceEndPoint;
+            AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
+            OllamaEndPoint = settings.OllamaEndPoint;
+            OllamaModel = settings.OllamaModel;
+            SshHost = FormatSshHost(settings);
+            SshUser = settings.SshUser;
+            SshPassword = await settings.GetSshPasswordAsync() ?? string.Empty;
+        }
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
@@ -179,6 +195,6 @@ public sealed partial class SettingViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static string FormatScpHost(Settings settings) =>
-        String.IsNullOrEmpty(settings.ScpHost) ? string.Empty : $"{settings.ScpHost}:{settings.ScpPort}";
+    private static string FormatSshHost(Settings settings) =>
+        String.IsNullOrEmpty(settings.SshHost) ? string.Empty : $"{settings.SshHost}:{settings.SshPort}";
 }

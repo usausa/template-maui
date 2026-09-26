@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0-android</TargetFrameworks>
@@ -38,8 +38,9 @@
   </PropertyGroup>
   -->
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  <PropertyGroup>
     <MetricsSupport>true</MetricsSupport>
+    <EventSourceSupport>true</EventSourceSupport>
   </PropertyGroup>
 
   <!--
@@ -158,6 +159,8 @@
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.30.0" />
     <PackageReference Include="Mofucat.ReactiveHub" Version="1.0.0" />
     <PackageReference Include="OllamaSharp" Version="5.4.30" />
+    <PackageReference Include="OpenTelemetry" Version="1.19.1" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.19.1" />
     <PackageReference Include="SkiaSharp" Version="4.152.1" />
     <PackageReference Include="SkiaSharp.Extended" Version="3.0.0" />
     <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0" />

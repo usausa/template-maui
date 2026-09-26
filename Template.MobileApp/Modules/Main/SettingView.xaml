@@ -115,6 +115,13 @@
                 <Setter Property="Text" Value="(not set)" />
             </Style>
 
+            <Style x:Key="SettingSwitch"
+                   TargetType="Switch">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="OffColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -197,6 +204,16 @@
                            IsVisible="{Binding OtelEndPoint, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Telemetry" />
+                    <Switch Grid.Column="1"
+                            Style="{StaticResource SettingSwitch}"
+                            IsToggled="{Binding TelemetryEnabled}" />
+                </Grid>
+
                 <BoxView Style="{StaticResource PanelDivider}" />
 
                 <Grid Style="{StaticResource SectionHeaderGrid}"
@@ -274,7 +291,7 @@
                            Text="{x:Static fonts:MaterialIcons.Sync_alt}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource BasicSubtitleLabel}"
-                           Text="SCP" />
+                           Text="SSH" />
                 </Grid>
 
                 <Grid Style="{StaticResource SettingRowGrid}"
@@ -284,12 +301,12 @@
                            Text="Host" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpHost}"
-                           IsVisible="{Binding ScpHost, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding ScpHost}" />
+                           behaviors:AnimationOption.HighlightTrigger="{Binding SshHost}"
+                           IsVisible="{Binding SshHost, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding SshHost}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
-                           IsVisible="{Binding ScpHost, Converter={StaticResource EmptyConverter}}" />
+                           IsVisible="{Binding SshHost, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
                 <Grid Style="{StaticResource SettingRowGrid}"
@@ -299,12 +316,12 @@
                            Text="User" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpUser}"
-                           IsVisible="{Binding ScpUser, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding ScpUser}" />
+                           behaviors:AnimationOption.HighlightTrigger="{Binding SshUser}"
+                           IsVisible="{Binding SshUser, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding SshUser}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
-                           IsVisible="{Binding ScpUser, Converter={StaticResource EmptyConverter}}" />
+                           IsVisible="{Binding SshUser, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
                 <Grid Style="{StaticResource SettingRowGrid}"
@@ -314,8 +331,8 @@
                            Text="Password" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpPassword}"
-                           Text="{Binding ScpPassword, Converter={StaticResource MaskTextConverter}}" />
+                           behaviors:AnimationOption.HighlightTrigger="{Binding SshPassword}"
+                           Text="{Binding SshPassword, Converter={StaticResource MaskTextConverter}}" />
                 </Grid>
 
             </VerticalStackLayout>

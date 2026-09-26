@@ -38,12 +38,15 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        effect = context.Parameter.Effect;
-        stacked = context.Attribute.IsStacked() || (Navigator.StackedCount > 1);
+        if (!context.Attribute.IsRestore())
+        {
+            effect = context.Parameter.Effect;
+            stacked = context.Attribute.IsStacked() || (Navigator.StackedCount > 1);
 
-        PlayedEffect = effect ?? NoEffect;
-        ReturnEffect = effect is null ? NoEffect : AppEffect.Reverse(effect);
-        NavigationMode = stacked ? "Push (stacked)" : "Forward";
+            PlayedEffect = effect ?? NoEffect;
+            ReturnEffect = effect is null ? NoEffect : AppEffect.Reverse(effect);
+            NavigationMode = stacked ? "Push (stacked)" : "Forward";
+        }
 
         return Task.CompletedTask;
     }

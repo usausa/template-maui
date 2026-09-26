@@ -41,12 +41,13 @@ using Syncfusion.Maui.Toolkit.Hosting;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components;
+using Template.MobileApp.Diagnostics;
 using Template.MobileApp.Extender;
 using Template.MobileApp.Extender.Effects;
-using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
+using Template.MobileApp.Shell;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
@@ -61,6 +62,7 @@ public static partial class MauiProgram
             .ConfigureFonts(ConfigureFonts)
             .ConfigureLifecycleEvents(ConfigureLifecycleEvents)
             .ConfigureEssentials(ConfigureEssentials)
+            .ConfigureDiagnostics()
             .ConfigureLogging()
             .ConfigureGlobalSettings()
             .ConfigureSyncfusionToolkit()
@@ -89,9 +91,6 @@ public static partial class MauiProgram
         AppContext.SetSwitch("HybridWebView.InvokeJavaScriptThrowsExceptions", true);
         builder.Services.AddHybridWebViewDeveloperTools();
 
-        // Metrics
-        builder.Services.AddMetrics();
-
 #if false
         builder
             .UseDebugRainbows(new DebugRainbowsOptions
@@ -107,6 +106,33 @@ public static partial class MauiProgram
             });
 #endif
 #endif
+        return builder;
+    }
+
+    // ------------------------------------------------------------
+    // Diagnostics
+    // ------------------------------------------------------------
+
+    private static MauiAppBuilder ConfigureDiagnostics(this MauiAppBuilder builder)
+    {
+        // Metrics
+        builder.Services.AddMetrics();
+#if !DEBUG
+        var layoutDiagnostics = builder.Services.FirstOrDefault(static x => x.ServiceType.FullName == "Microsoft.Maui.Diagnostics.IDiagnosticsManager");
+        if (layoutDiagnostics is not null)
+        {
+            builder.Services.Remove(layoutDiagnostics);
+        }
+#endif
+
+        // Measurement
+        builder.Services.AddSingleton<DiagnosticsInstrumentation>();
+
+        // Telemetry
+        builder.Services.AddSingleton<TelemetryService>();
+        builder.Services.AddSingleton<ITelemetryControl>(static p => p.GetRequiredService<TelemetryService>());
+        builder.Services.AddSingleton<ITelemetryStatus>(static p => p.GetRequiredService<TelemetryService>());
+
         return builder;
     }
 
@@ -130,6 +156,10 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<DiagnosticLogProvider>();
         builder.Services.AddSingleton<ILoggerProvider>(static p => p.GetRequiredService<DiagnosticLogProvider>());
 
+        // Telemetry
+        builder.Services.AddSingleton<TelemetryLoggerProvider>();
+        builder.Services.AddSingleton<ILoggerProvider>(static p => p.GetRequiredService<TelemetryLoggerProvider>());
+
         // File
         builder.Logging.AddFileLogger(static options =>
             {
@@ -149,8 +179,6 @@ public static partial class MauiProgram
 
     private static void ConfigureLifecycleEvents(ILifecycleBuilder effects)
     {
-        // プラットフォーム固有ライフサイクルのフック例。挙動は変えずログ出力のみ行う
-        // (確認は adb logcat -s AppLifecycle)
 #if ANDROID
         effects.AddAndroid(static android => android
             .OnCreate(static (activity, _) => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnCreate)))
@@ -271,6 +299,9 @@ public static partial class MauiProgram
         services.AddViewModels();
         services.AddContexts();
 
+        // Shell
+        services.AddSingleton<DiagnosticSampler>();
+
         // MauiComponents
         services.AddComponentsDialog(static c =>
         {
@@ -292,6 +323,7 @@ public static partial class MauiProgram
         services.AddNavigator(static (_, config) =>
         {
             config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
+            config.AddPlugin<NavigationTelemetryPlugin>();
             config.AddPlugin<NavigationFocusPlugin>();
             config.AddPlugin<NavigationFeedbackPlugin>();
 #if DEBUG
@@ -302,6 +334,7 @@ public static partial class MauiProgram
         });
 
         // Components
+        services.AddSingleton<DeviceInformation>();
         services.AddSingleton<IStorageManager, StorageManager>();
         services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
         services.AddSingleton<INfcReader, NfcReader>();
@@ -364,7 +397,7 @@ public static partial class MauiProgram
         services.AddSingleton<NetworkUsecase>();
         services.AddSingleton<OnnxVisionUsecase>();
         services.AddSingleton<AzureVisionUsecase>();
-        services.AddSingleton<ScpUsecase>();
+        services.AddSingleton<SshUsecase>();
 
         // Models
         services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));
@@ -448,6 +481,17 @@ public static partial class MauiProgram
         {
             apiContext.BaseAddress = new Uri(settings.ApiEndPoint);
         }
+
+        // Start device information
+        services.GetRequiredService<DeviceInformation>().Start();
+
+        // Prepare instrument
+        services.GetRequiredService<DiagnosticsInstrumentation>();
+
+        // Prepare telemetry
+        var telemetryControl = services.GetRequiredService<ITelemetryControl>();
+        telemetryControl.InstallationId = settings.UniqueId;
+        telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
 
         return app;
     }

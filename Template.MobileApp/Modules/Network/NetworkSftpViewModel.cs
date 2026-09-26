@@ -2,11 +2,11 @@ namespace Template.MobileApp.Modules.Network;
 
 using Template.MobileApp.Usecase;
 
-public sealed partial class NetworkScpViewModel : AppViewModelBase
+public sealed partial class NetworkSftpViewModel : AppViewModelBase
 {
     private readonly Settings settings;
 
-    private readonly ScpUsecase scpUsecase;
+    private readonly SshUsecase sshUsecase;
 
     private Action? cancel;
 
@@ -40,12 +40,12 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public NetworkScpViewModel(
+    public NetworkSftpViewModel(
         Settings settings,
-        ScpUsecase scpUsecase)
+        SshUsecase sshUsecase)
     {
         this.settings = settings;
-        this.scpUsecase = scpUsecase;
+        this.sshUsecase = sshUsecase;
 
         UploadCommand = MakeDelegateCommand(() => _ = ExecuteUploadAsync(), () => !Busy && Configured);
         DownloadCommand = MakeDelegateCommand(() => _ = ExecuteDownloadAsync(), () => !Busy && Configured && !String.IsNullOrEmpty(RemoteFileName));
@@ -58,8 +58,8 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        Configured = settings.IsScpConfigured();
-        HostDisplay = Configured ? $"{settings.ScpUser}@{settings.ScpHost}:{settings.ScpPort}" : "未設定";
+        Configured = settings.IsSshConfigured();
+        HostDisplay = Configured ? $"{settings.SshUser}@{settings.SshHost}:{settings.SshPort}" : "未設定";
         return Task.CompletedTask;
     }
 
@@ -80,7 +80,7 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
     private Task ExecuteUploadAsync() =>
         ExecuteTransferAsync(async token =>
         {
-            var result = await scpUsecase.UploadAsync(new Progress<double>(x => Progress = x), token);
+            var result = await sshUsecase.UploadAsync(new Progress<double>(x => Progress = x), token);
             if (result is null)
             {
                 return;
@@ -96,7 +96,7 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
     private Task ExecuteDownloadAsync() =>
         ExecuteTransferAsync(async token =>
         {
-            var result = await scpUsecase.DownloadAsync(RemoteFileName, new Progress<double>(x => Progress = x), token);
+            var result = await sshUsecase.DownloadAsync(RemoteFileName, new Progress<double>(x => Progress = x), token);
             ApplyResult($"ダウンロード: {RemoteFileName} ({result.Size:N0} bytes)", result.Transfer, token);
             if (result.Transfer.Success)
             {
@@ -121,7 +121,7 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
         }
     }
 
-    private void ApplyResult(string subject, ScpTransferResult result, CancellationToken token)
+    private void ApplyResult(string subject, SftpTransferResult result, CancellationToken token)
     {
         if (result.Success)
         {

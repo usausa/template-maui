@@ -19,7 +19,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
         new() { Title = "USB-C ドック", Price = "¥27,800", Image = "product_gear06.jpg" }
     ];
 
-    public string Greeting { get; } = "こんにちは、アンナさん";
+    public string Greeting { get; } = "こんにちは、うさうささん";
 
     public string SubGreeting { get; } = "デスク周りをアップグレード";
 

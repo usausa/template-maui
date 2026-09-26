@@ -99,7 +99,7 @@ public sealed class NetworkUsecase
 
     public async ValueTask GetServerTimeAsync(CancellationToken cancellationToken = default)
     {
-        var result = await ExecuteVerboseAsync(static (h, t) => h.GetServerTimeAsync(t), cancellationToken);
+        var result = await ExecuteVerboseAsync(static (h, t) => h.GetServerTimeAsync(t), cancellationToken: cancellationToken);
         if (result.IsSuccess)
         {
             await dialog.InformationAsync($"Get success.\r\ntime=[{result.Value.DateTime.ToLocalTime():yyyy/MM/dd HH:mm:ss}]");
@@ -112,7 +112,7 @@ public sealed class NetworkUsecase
 
     public async ValueTask GetDataListAsync(CancellationToken cancellationToken = default)
     {
-        var result = await ExecuteVerboseAsync(static (h, t) => h.GetDataListAsync(t), cancellationToken);
+        var result = await ExecuteVerboseAsync(static (h, t) => h.GetDataListAsync(t), cancellationToken: cancellationToken);
         if (result.IsSuccess)
         {
             await dataService.ReplaceWorkEnumerableAsync(result.Value.Entries.Select(static x => x.ToWorkEntity()));
@@ -122,25 +122,25 @@ public sealed class NetworkUsecase
     }
 
     public ValueTask<NetworkResult<DataListResponse>> GetDataRangeAsync(int offset, int size, CancellationToken cancellationToken = default) =>
-        ExecuteVerboseAsync((h, t) => h.GetDataListAsync(offset, size, t), cancellationToken);
+        ExecuteVerboseAsync((h, t) => h.GetDataListAsync(offset, size, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult<DataResponse>> GetDataAsync(long id, CancellationToken cancellationToken = default) =>
-        ExecuteAsync((h, t) => h.GetDataAsync(id, t), cancellationToken);
+        ExecuteAsync((h, t) => h.GetDataAsync(id, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult<DataCreateResponse>> CreateDataAsync(string name, int value, CancellationToken cancellationToken = default)
     {
         var request = new DataCreateRequest { Name = name, Value = value };
-        return ExecuteAsync((h, t) => h.PostDataAsync(request, t), cancellationToken);
+        return ExecuteAsync((h, t) => h.PostDataAsync(request, t), cancellationToken: cancellationToken);
     }
 
     public ValueTask<NetworkResult> UpdateDataAsync(long id, string name, int value, CancellationToken cancellationToken = default)
     {
         var request = new DataUpdateRequest { Name = name, Value = value };
-        return ExecuteAsync((h, t) => h.PutDataAsync(id, request, t), cancellationToken);
+        return ExecuteAsync((h, t) => h.PutDataAsync(id, request, t), cancellationToken: cancellationToken);
     }
 
     public ValueTask<NetworkResult> DeleteDataAsync(long id, CancellationToken cancellationToken = default) =>
-        ExecuteAsync((h, t) => h.DeleteDataAsync(id, t), cancellationToken);
+        ExecuteAsync((h, t) => h.DeleteDataAsync(id, t), cancellationToken: cancellationToken);
 
     //--------------------------------------------------------------------------------
     // Secret
@@ -148,7 +148,7 @@ public sealed class NetworkUsecase
 
     public async ValueTask GetSecretMessageAsync(CancellationToken cancellationToken = default)
     {
-        var result = await ExecuteVerboseAsync(static (h, t) => h.GetSecretMessageAsync(t), cancellationToken, authenticated: true);
+        var result = await ExecuteVerboseAsync(static (h, t) => h.GetSecretMessageAsync(t), authenticated: true, cancellationToken: cancellationToken);
         if (result.IsSuccess)
         {
             await dialog.InformationAsync($"Get success.\r\nmessage=[{result.Value.Message}]");
@@ -162,7 +162,7 @@ public sealed class NetworkUsecase
     public async ValueTask PostAccountLoginAsync(string id, CancellationToken cancellationToken = default)
     {
         var request = new AccountLoginRequest { Id = id };
-        var result = await ExecuteVerboseAsync((h, t) => h.PostAccountLoginAsync(request, t), cancellationToken);
+        var result = await ExecuteVerboseAsync((h, t) => h.PostAccountLoginAsync(request, t), cancellationToken: cancellationToken);
         if (result.IsSuccess)
         {
             apiContext.LoginId = id;
@@ -206,45 +206,45 @@ public sealed class NetworkUsecase
     //--------------------------------------------------------------------------------
 
     public ValueTask<NetworkResult<StorageListResponse>> GetStorageListAsync(string path, CancellationToken cancellationToken = default) =>
-        ExecuteVerboseAsync((h, t) => h.GetStorageListAsync(path, t), cancellationToken);
+        ExecuteVerboseAsync((h, t) => h.GetStorageListAsync(path, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult> DeleteStorageAsync(string path, CancellationToken cancellationToken = default) =>
-        ExecuteAsync((h, t) => h.DeleteStorageAsync(path, t), cancellationToken);
+        ExecuteAsync((h, t) => h.DeleteStorageAsync(path, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult> UploadStorageAsync(string path, Stream stream, Action<double> progress, CancellationToken cancellationToken = default) =>
-        ExecuteTransferAsync((h, t) => h.UploadAsync(path, stream, progress, false, t), cancellationToken);
+        ExecuteTransferAsync((h, t) => h.UploadAsync(path, stream, progress, false, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult> DownloadStorageAsync(string path, string filename, Action<double> progress, CancellationToken cancellationToken = default) =>
-        ExecuteTransferAsync((h, t) => h.DownloadAsync(path, filename, progress, t), cancellationToken);
+        ExecuteTransferAsync((h, t) => h.DownloadAsync(path, filename, progress, t), cancellationToken: cancellationToken);
 
     //--------------------------------------------------------------------------------
     // Test
     //--------------------------------------------------------------------------------
 
     public ValueTask<NetworkResult> GetTestErrorAsync(int code, CancellationToken cancellationToken = default) =>
-        ExecuteVerboseAsync((h, t) => h.GetTestErrorAsync(code, t), cancellationToken);
+        ExecuteVerboseAsync((h, t) => h.GetTestErrorAsync(code, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default) =>
-        ExecuteVerboseAsync((h, t) => h.GetTestDelayAsync(timeout, t), cancellationToken);
+        ExecuteVerboseAsync((h, t) => h.GetTestDelayAsync(timeout, t), cancellationToken: cancellationToken);
 
     // Cancelable from the screen (no indicator)
     public ValueTask<NetworkResult> RunTestDelayAsync(int timeout, CancellationToken cancellationToken = default) =>
-        ExecuteTransferAsync((h, t) => h.GetTestDelayAsync(timeout, t), cancellationToken);
+        ExecuteTransferAsync((h, t) => h.GetTestDelayAsync(timeout, t), cancellationToken: cancellationToken);
 
     //--------------------------------------------------------------------------------
     // Execute
     //--------------------------------------------------------------------------------
 
-    private ValueTask<NetworkResult<T>> ExecuteVerboseAsync<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, CancellationToken cancellationToken, bool authenticated = false) =>
+    private ValueTask<NetworkResult<T>> ExecuteVerboseAsync<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, bool authenticated = false, CancellationToken cancellationToken = default) =>
         ExecuteAsync(func, true, authenticated, cancellationToken);
 
-    private ValueTask<NetworkResult> ExecuteVerboseAsync(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken, bool authenticated = false) =>
+    private ValueTask<NetworkResult> ExecuteVerboseAsync(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, bool authenticated = false, CancellationToken cancellationToken = default) =>
         ExecuteAsync(func, true, authenticated, cancellationToken);
 
-    private ValueTask<NetworkResult<T>> ExecuteAsync<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, CancellationToken cancellationToken, bool authenticated = false) =>
+    private ValueTask<NetworkResult<T>> ExecuteAsync<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, bool authenticated = false, CancellationToken cancellationToken = default) =>
         ExecuteAsync(func, false, authenticated, cancellationToken);
 
-    private ValueTask<NetworkResult> ExecuteAsync(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken, bool authenticated = false) =>
+    private ValueTask<NetworkResult> ExecuteAsync(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, bool authenticated = false, CancellationToken cancellationToken = default) =>
         ExecuteAsync(func, false, authenticated, cancellationToken);
 
     private async ValueTask<NetworkResult<T>> ExecuteAsync<T>(Func<HttpService, CancellationToken, ValueTask<IRestResponse<T>>> func, bool verbose, bool authenticated, CancellationToken cancellationToken)
@@ -277,7 +277,7 @@ public sealed class NetworkUsecase
             authenticated,
             cancellationToken);
 
-    private ValueTask<NetworkResult> ExecuteTransferAsync(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, CancellationToken cancellationToken, bool authenticated = false) =>
+    private ValueTask<NetworkResult> ExecuteTransferAsync(Func<HttpService, CancellationToken, ValueTask<IRestResponse>> func, bool authenticated = false, CancellationToken cancellationToken = default) =>
         ExecuteCoreAsync(t => func(httpService, t), false, authenticated, cancellationToken);
 
     private async ValueTask<NetworkResult> ExecuteCoreAsync(Func<CancellationToken, ValueTask<IRestResponse>> func, bool verbose, bool authenticated, CancellationToken cancellationToken)

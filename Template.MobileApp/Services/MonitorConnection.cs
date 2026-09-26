@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.SignalR;
 
 using Mofucat.ReactiveHub;
 
+using Template.MobileApp.Components;
+
 //--------------------------------------------------------------------------------
 // Models
 //--------------------------------------------------------------------------------
@@ -58,7 +60,7 @@ public sealed class MonitorConnection : IDisposable
 
     private readonly ILogger<MonitorConnection> log;
 
-    private readonly IConnectivity connectivity;
+    private readonly DeviceInformation deviceInformation;
 
     private readonly ReactiveHubConnection hub = new(serverTimeout: TimeSpan.FromSeconds(30), keepAliveInterval: TimeSpan.FromSeconds(15));
 
@@ -70,10 +72,10 @@ public sealed class MonitorConnection : IDisposable
 
     public MonitorConnection(
         ILogger<MonitorConnection> log,
-        IConnectivity connectivity)
+        DeviceInformation deviceInformation)
     {
         this.log = log;
-        this.connectivity = connectivity;
+        this.deviceInformation = deviceInformation;
     }
 
     public void Dispose()
@@ -83,8 +85,8 @@ public sealed class MonitorConnection : IDisposable
 
     public IObservable<HubStatus> Connect(Uri baseAddress)
     {
-        var resume = connectivity.ConnectivityChangedAsObservable()
-            .Where(static x => x.NetworkAccess == NetworkAccess.Internet)
+        var resume = deviceInformation.NetworkChangedAsObservable()
+            .Where(_ => deviceInformation.Network?.Access == NetworkAccess.Internet)
             .Select(static _ => Unit.Default);
 
         return hub.Connect(new Uri(baseAddress, HubPath), resume: resume)

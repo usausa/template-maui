@@ -15,7 +15,7 @@ public sealed class UIKitSettingViewModel : AppViewModelBase
 {
     public IReadOnlyList<UIKitSettingItem> AccountItems { get; } =
     [
-        new() { Icon = Fonts.MaterialIcons.Person, Title = "プロフィール", Detail = "うさうさうさん" },
+        new() { Icon = Fonts.MaterialIcons.Person, Title = "プロフィール", Detail = "うさうささん" },
         new() { Icon = Fonts.MaterialIcons.Lock, Title = "パスワード", Detail = "変更" },
         new() { Icon = Fonts.MaterialIcons.Email, Title = "メールアドレス", Detail = "usausa@example.com" }
     ];

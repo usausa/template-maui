@@ -1,22 +1,28 @@
 namespace Template.MobileApp.Modules.Main;
 
-using System.Diagnostics;
+using System.Globalization;
 
 using Microsoft.Extensions.Options;
 
 using Template.MobileApp.Components;
-using Template.MobileApp.Helpers;
+using Template.MobileApp.Diagnostics;
 using Template.MobileApp.Services;
 
 public sealed record LogFileInfo(string Name, long Size, DateTime Modified);
 
 public sealed partial class DiagnosticsViewModel : AppViewModelBase
 {
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(1);
+
     private readonly IDialog dialog;
 
     private readonly IShare share;
 
+    private readonly IDispatcherTimer refreshTimer;
+
     private readonly DiagnosticLogProvider logProvider;
+
+    private readonly ITelemetryStatus telemetryStatus;
 
     private readonly ApiContext apiContext;
 
@@ -24,51 +30,27 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     private readonly StartupState startup;
 
-    private readonly Settings settings;
-
     private readonly string logDirectory;
 
-    // Runtime
-    [ObservableProperty]
-    public partial long WorkingSet { get; private set; }
+    private readonly string logPrefix;
 
-    [ObservableProperty]
-    public partial long ManagedMemory { get; private set; }
-
-    [ObservableProperty]
-    public partial int ThreadCount { get; private set; }
-
-    [ObservableProperty]
-    public partial int Gc0Count { get; private set; }
-
-    [ObservableProperty]
-    public partial int Gc1Count { get; private set; }
-
-    [ObservableProperty]
-    public partial int Gc2Count { get; private set; }
-
-    public int ProcessorCount { get; } = Environment.ProcessorCount;
-
-    // Application
-
-    public string ApplicationName { get; }
-
-    public Version ApplicationVersion { get; }
-
-    public string ApplicationBuild { get; }
-
-    public string ApplicationPackageName { get; }
-
-    public string Flavor { get; }
+    // Device
 
     public string DeviceName { get; }
 
     public Version DeviceVersion { get; }
 
+    public int ProcessorCount { get; } = Environment.ProcessorCount;
+
+    public string DeviceId { get; }
+
+    // Application
+
+    public string InstallationId { get; }
+
     // Startup
 
-    [ObservableProperty]
-    public partial DateTime StartedAt { get; private set; }
+    public DateTime StartedAt { get; }
 
     [ObservableProperty]
     public partial TimeSpan Uptime { get; private set; }
@@ -76,25 +58,12 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
     [ObservableProperty]
     public partial TimeSpan? InitializationTime { get; private set; }
 
+    // Database
+
+    [ObservableProperty]
+    public partial DatabaseInfo Database { get; private set; } = new(string.Empty, 0, null, 0, 0, 0);
+
     // Connection
-
-    [ObservableProperty]
-    public partial bool ApiConfigured { get; private set; }
-
-    [ObservableProperty]
-    public partial bool GrpcConfigured { get; private set; }
-
-    [ObservableProperty]
-    public partial bool OtelConfigured { get; private set; }
-
-    [ObservableProperty]
-    public partial bool AIServiceConfigured { get; private set; }
-
-    [ObservableProperty]
-    public partial bool OllamaConfigured { get; private set; }
-
-    [ObservableProperty]
-    public partial bool ScpConfigured { get; private set; }
 
     [ObservableProperty]
     public partial bool IsAuthenticated { get; private set; }
@@ -107,10 +76,19 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     public DeviceState DeviceState { get; }
 
-    // Database
+    // Telemetry
 
     [ObservableProperty]
-    public partial DatabaseInfo Database { get; private set; } = new(string.Empty, 0, null, 0, 0, 0);
+    public partial bool TelemetryActive { get; private set; }
+
+    [ObservableProperty]
+    public partial TelemetrySendResult? LastSend { get; private set; }
+
+    [ObservableProperty]
+    public partial int ResendWaitingCount { get; private set; }
+
+    [ObservableProperty]
+    public partial bool CrashPending { get; private set; }
 
     // Log
 
@@ -121,12 +99,15 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
     public partial IReadOnlyList<DiagnosticLogEntry> RecentLogs { get; private set; } = [];
 
     // Crash
+
     [ObservableProperty]
     public partial string? LastCrashReport { get; private set; }
 
+    // Command
+
     public IObserveCommand ShareLogsCommand { get; }
 
-    public IObserveCommand ClearLogsCommand { get; }
+    public IObserveCommand DeleteLogsCommand { get; }
 
     public IObserveCommand ClearCrashReportCommand { get; }
 
@@ -137,37 +118,42 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
     public DiagnosticsViewModel(
         IDialog dialog,
         IShare share,
-        IAppInfo appInfo,
         IDeviceInfo deviceInfo,
+        IDispatcher dispatcher,
         IOptions<FileLoggerOptions> loggerOptions,
         DiagnosticLogProvider logProvider,
+        ITelemetryStatus telemetryStatus,
         ApiContext apiContext,
         DataService dataService,
+        DeviceInformation deviceInformation,
         StartupState startup,
-        Settings settings,
         DeviceState deviceState)
     {
         this.dialog = dialog;
         this.share = share;
         this.logProvider = logProvider;
+        this.telemetryStatus = telemetryStatus;
         this.apiContext = apiContext;
         this.dataService = dataService;
         this.startup = startup;
-        this.settings = settings;
         logDirectory = loggerOptions.Value.Directory ?? string.Empty;
+        logPrefix = loggerOptions.Value.Prefix ?? string.Empty;
 
-        ApplicationName = appInfo.Name;
-        ApplicationVersion = appInfo.Version;
-        ApplicationBuild = appInfo.BuildString;
-        ApplicationPackageName = appInfo.PackageName;
-        Flavor = !String.IsNullOrEmpty(EmbeddedProperty.Flavor) ? EmbeddedProperty.Flavor : "Unknown";
         DeviceName = deviceInfo.Name;
         DeviceVersion = deviceInfo.Version;
+        DeviceId = deviceInformation.DeviceId;
+        InstallationId = telemetryStatus.InstallationId;
+        StartedAt = deviceInformation.StartTime;
         DeviceState = deviceState;
 
         ShareLogsCommand = MakeAsyncCommand(ShareLogsAsync, () => LogFiles.Count > 0);
-        ClearLogsCommand = MakeDelegateCommand(ClearLogs, () => RecentLogs.Count > 0);
+        DeleteLogsCommand = MakeAsyncCommand(DeleteLogsAsync, () => (RecentLogs.Count > 0) || EnumerateOldLogFiles().Any());
         ClearCrashReportCommand = MakeAsyncCommand(ClearCrashReportAsync, () => LastCrashReport is not null);
+
+        refreshTimer = dispatcher.CreateTimer();
+        refreshTimer.Interval = RefreshInterval;
+        Disposables.Add(refreshTimer.TickAsObservable().Subscribe(_ => UpdateStatus()));
+        Disposables.Add(new DelegateDisposable(refreshTimer.Stop));
     }
 
     //--------------------------------------------------------------------------------
@@ -176,11 +162,21 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     public override Task OnNavigatingToAsync(INavigationContext context) => LoadAsync();
 
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        refreshTimer.Start();
+        return Task.CompletedTask;
+    }
+
+    public override Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        refreshTimer.Stop();
+        return Task.CompletedTask;
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    protected override Task OnNotifyFunction2() => LoadAsync();
 
     //--------------------------------------------------------------------------------
     // Operation
@@ -188,38 +184,30 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     private async Task LoadAsync()
     {
-        LoadRuntime();
+        InitializationTime = startup.CompletedAt - StartedAt;
+        UpdateStatus();
 
-        ApiConfigured = settings.IsApiConfigured();
-        GrpcConfigured = settings.IsGrpcConfigured();
-        OtelConfigured = settings.IsOtelConfigured();
-        AIServiceConfigured = await settings.IsAIServiceConfiguredAsync();
-        OllamaConfigured = settings.IsOllamaConfigured();
-        ScpConfigured = settings.IsScpConfigured();
+        Database = await dataService.GetDatabaseInfoAsync();
+
         IsAuthenticated = apiContext.IsAuthenticated;
         LoginId = apiContext.LoginId;
         TokenExpires = apiContext.TokenExpires;
 
-        Database = await dataService.GetDatabaseInfoAsync();
+        CrashPending = telemetryStatus.IsCrashPending();
+
         LogFiles = LoadLogFiles();
         RecentLogs = logProvider.GetEntries();
-        LastCrashReport = CrashReport.GetLastReport();
+
+        var crash = CrashReport.GetLastReport();
+        LastCrashReport = crash?.ToReport();
     }
 
-    private void LoadRuntime()
+    private void UpdateStatus()
     {
-        using var process = Process.GetCurrentProcess();
-        var now = DateTime.Now;
-
-        StartedAt = process.StartTime;
-        Uptime = now - StartedAt;
-        InitializationTime = startup.CompletedAt - StartedAt;
-        WorkingSet = process.WorkingSet64;
-        ManagedMemory = GC.GetTotalMemory(false);
-        ThreadCount = process.Threads.Count;
-        Gc0Count = GC.CollectionCount(0);
-        Gc1Count = GC.CollectionCount(1);
-        Gc2Count = GC.CollectionCount(2);
+        Uptime = DateTime.Now - StartedAt;
+        TelemetryActive = telemetryStatus.IsActive;
+        LastSend = telemetryStatus.LastSend;
+        ResendWaitingCount = telemetryStatus.ResendWaitingCount;
     }
 
     private List<LogFileInfo> LoadLogFiles()
@@ -242,9 +230,27 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
             Files = LogFiles.Select(x => new ShareFile(Path.Combine(logDirectory, x.Name))).ToList()
         });
 
-    private void ClearLogs()
+    private async Task DeleteLogsAsync()
     {
+        if (!await dialog.ConfirmAsync("Delete old log files ?"))
+        {
+            return;
+        }
+
+        foreach (var file in EnumerateOldLogFiles())
+        {
+            try
+            {
+                File.Delete(Path.Combine(logDirectory, file.Name));
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Left in the list
+            }
+        }
+
         logProvider.Clear();
+        LogFiles = LoadLogFiles();
         RecentLogs = [];
     }
 
@@ -257,5 +263,16 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
         CrashReport.ClearReport();
         LastCrashReport = null;
+        CrashPending = false;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private IEnumerable<LogFileInfo> EnumerateOldLogFiles()
+    {
+        var current = String.Concat(logPrefix, DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture), ".log");
+        return LogFiles.Where(x => x.Name != current);
     }
 }

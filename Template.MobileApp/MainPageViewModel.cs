@@ -3,19 +3,26 @@ namespace Template.MobileApp;
 using CommunityToolkit.Maui.Core;
 
 using Template.MobileApp.Components;
+using Template.MobileApp.Diagnostics;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
 {
+    private readonly ILogger<MainPageViewModel> log;
+
     private readonly IScreen screen;
 
     private readonly IDialog dialog;
 
     private readonly INotificationService notification;
 
+    private readonly ITelemetryControl telemetryControl;
+
     private bool destroying;
+
+    private bool foreground;
 
     public StartupState Startup { get; }
 
@@ -23,7 +30,6 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public NotificationValue<string> Title { get; } = new(string.Empty);
 
-    // 初回ナビゲーションでShellPropertyから反映されるまでは空ヘッダーを出さない
     public NotificationValue<bool> HeaderVisible { get; } = new();
 
     public NotificationValue<bool> FunctionVisible { get; } = new();
@@ -34,7 +40,6 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public IReadOnlyList<FunctionState> Functions { get; } = [new(), new(), new(), new()];
 
-    // XAML用エイリアス (compiled bindingでのインデクサ利用を避ける)
     public FunctionState Function1 => Functions[0];
     public FunctionState Function2 => Functions[1];
     public FunctionState Function3 => Functions[2];
@@ -50,6 +55,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     [ObservableProperty]
     public partial bool DiagnosticVisible { get; set; }
 
+    public DiagnosticSampler DiagnosticSampler { get; }
+
     public IObserveCommand DiagnosticCommand { get; }
 
     //--------------------------------------------------------------------------------
@@ -62,13 +69,18 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         INavigator navigator,
         IScreen screen,
         IDialog dialog,
-        INotificationService notification)
+        INotificationService notification,
+        ITelemetryControl telemetryControl,
+        DiagnosticSampler diagnosticSampler)
     {
+        this.log = log;
         Startup = startup;
         Navigator = navigator;
         this.screen = screen;
         this.dialog = dialog;
         this.notification = notification;
+        this.telemetryControl = telemetryControl;
+        DiagnosticSampler = diagnosticSampler;
 
         Function1Command = CreateFunctionCommand(Functions[0], ShellEvent.Function1);
         Function2Command = CreateFunctionCommand(Functions[1], ShellEvent.Function2);
@@ -78,7 +90,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 #if DEBUG
         DiagnosticEnabled = true;
 #endif
-        DiagnosticCommand = MakeDelegateCommand(() => DiagnosticVisible = !DiagnosticVisible);
+        DiagnosticCommand = MakeDelegateCommand(ToggleDiagnostic);
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda
@@ -107,6 +119,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public async void OnCreated()
     {
         screen.EnableDetectScreenState(true);
+        telemetryControl.Suspend = false;
+        foreground = true;
 
         await Startup.Completed;
 
@@ -142,14 +156,53 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public void OnStopped()
     {
+        telemetryControl.Suspend = true;
+        foreground = false;
+        UpdateSampler();
     }
 
     public void OnResumed()
     {
+        telemetryControl.Suspend = false;
+        foreground = true;
+        UpdateSampler();
     }
 
     public void OnDestroying()
     {
+        // The next window starts with the panel hidden
+        foreground = false;
+        UpdateSampler();
+        telemetryControl.Suspend = true;
+
         destroying = true;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Diagnostic
+    //--------------------------------------------------------------------------------
+
+    private void ToggleDiagnostic()
+    {
+        DiagnosticVisible = !DiagnosticVisible;
+        UpdateSampler();
+    }
+
+    private void UpdateSampler()
+    {
+        var running = DiagnosticSampler.IsRunning;
+        if (DiagnosticVisible && foreground)
+        {
+            DiagnosticSampler.Start();
+        }
+        else
+        {
+            DiagnosticSampler.Stop();
+        }
+
+        if (running != DiagnosticSampler.IsRunning)
+        {
+            log.DebugSamplerChanged(DiagnosticSampler.IsRunning);
+        }
     }
 }

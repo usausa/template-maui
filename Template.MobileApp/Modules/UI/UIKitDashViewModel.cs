@@ -32,7 +32,7 @@ public sealed class UIKitDashTileTemplateSelector : DataTemplateSelector
 public sealed class UIKitDashViewModel : AppViewModelBase
 {
     public string Greeting { get; } = "おはようございます";
-    public string UserName { get; } = "うさうさうさん";
+    public string UserName { get; } = "うさうささん";
 
     // 先頭のハートカード + メトリクス 4 件を 1 つのタイルパネルへ流し込む (件数は可変)
     public IReadOnlyList<object> Tiles { get; } =

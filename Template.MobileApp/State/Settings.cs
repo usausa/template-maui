@@ -45,6 +45,13 @@ public sealed class Settings
         set => preferences.Set(nameof(OtelEndPoint), value);
     }
 
+    // テレメトリの送信 (設定画面で切り替える)
+    public bool TelemetryEnabled
+    {
+        get => preferences.Get(nameof(TelemetryEnabled), false);
+        set => preferences.Set(nameof(TelemetryEnabled), value);
+    }
+
     // AI Service
 
     public string AIServiceEndPoint
@@ -94,39 +101,39 @@ public sealed class Settings
         return SetSecureValueAsync(AIServiceKeyName, value);
     }
 
-    // SCP (接続情報は設定画面のQRで投入する。パスワードはSecureStorageに保存する)
+    // SSH (接続情報は設定画面のQRで投入する。パスワードはSecureStorageに保存する)
 
-    private const string ScpPasswordName = "ScpPassword";
+    private const string SshPasswordName = "SshPassword";
 
-    public string ScpHost
+    public string SshHost
     {
-        get => preferences.Get<string>(nameof(ScpHost), default!);
-        set => preferences.Set(nameof(ScpHost), value);
+        get => preferences.Get<string>(nameof(SshHost), default!);
+        set => preferences.Set(nameof(SshHost), value);
     }
 
-    public int ScpPort
+    public int SshPort
     {
-        get => preferences.Get(nameof(ScpPort), 22);
-        set => preferences.Set(nameof(ScpPort), value);
+        get => preferences.Get(nameof(SshPort), 22);
+        set => preferences.Set(nameof(SshPort), value);
     }
 
-    public string ScpUser
+    public string SshUser
     {
-        get => preferences.Get<string>(nameof(ScpUser), default!);
-        set => preferences.Set(nameof(ScpUser), value);
+        get => preferences.Get<string>(nameof(SshUser), default!);
+        set => preferences.Set(nameof(SshUser), value);
     }
 
-    public ValueTask<string?> GetScpPasswordAsync() => GetSecureValueAsync(ScpPasswordName);
+    public ValueTask<string?> GetSshPasswordAsync() => GetSecureValueAsync(SshPasswordName);
 
-    public ValueTask SetScpPasswordAsync(string value)
+    public ValueTask SetSshPasswordAsync(string value)
     {
         if (String.IsNullOrEmpty(value))
         {
-            RemoveSecureValue(ScpPasswordName);
+            RemoveSecureValue(SshPasswordName);
             return ValueTask.CompletedTask;
         }
 
-        return SetSecureValueAsync(ScpPasswordName, value);
+        return SetSecureValueAsync(SshPasswordName, value);
     }
 
     // ------------------------------------------------------------
@@ -204,6 +211,10 @@ public static class SettingsExtensions
     public static bool IsOtelConfigured(this Settings settings) =>
         Uri.TryCreate(settings.OtelEndPoint, UriKind.Absolute, out _);
 
+    // テレメトリの送信先 (有効、かつ送信先が設定済みのときだけ)
+    public static Uri? GetTelemetryEndPoint(this Settings settings) =>
+        settings.TelemetryEnabled && Uri.TryCreate(settings.OtelEndPoint, UriKind.Absolute, out var uri) ? uri : null;
+
     // Azure AI Vision (キーは SecureStorage)
     public static async ValueTask<bool> IsAIServiceConfiguredAsync(this Settings settings) =>
         !String.IsNullOrEmpty(settings.AIServiceEndPoint) &&
@@ -214,7 +225,7 @@ public static class SettingsExtensions
         !String.IsNullOrEmpty(settings.OllamaModel) &&
         Uri.TryCreate(settings.OllamaEndPoint, UriKind.Absolute, out _);
 
-    // SCP
-    public static bool IsScpConfigured(this Settings settings) =>
-        !String.IsNullOrEmpty(settings.ScpHost) && !String.IsNullOrEmpty(settings.ScpUser);
+    // SSH
+    public static bool IsSshConfigured(this Settings settings) =>
+        !String.IsNullOrEmpty(settings.SshHost) && !String.IsNullOrEmpty(settings.SshUser);
 }

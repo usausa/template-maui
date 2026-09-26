@@ -66,14 +66,12 @@ Template project for MAUI.
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
 | Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
-| Network | Web API(Data CRUD / JWT 認証) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
+| Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / gRPC(Chat) / SFTP / Telemetry(OpenTelemetry) |
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
 | Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Sudoku |
-| Diagnostics | Application, Startup, Connection, Database, Log(recent warnings, share files), Crash report, Runtime |
-| UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
-| UI 2 | Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |
+| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap / Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |
 
 # TODO
 
