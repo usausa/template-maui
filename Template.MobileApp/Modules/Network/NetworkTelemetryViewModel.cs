@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Template.MobileApp.Diagnostics;
 using Template.MobileApp.Usecase;
 
-public sealed class NetworkTelemetryViewModel : AppViewModelBase
+public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
 {
     private readonly ILogger<NetworkTelemetryViewModel> log;
 
@@ -14,6 +14,20 @@ public sealed class NetworkTelemetryViewModel : AppViewModelBase
     private readonly IDispatcher dispatcher;
 
     private readonly DiagnosticsInstrumentation instrumentation;
+
+    private readonly ApplicationMetrics applicationMetrics;
+
+    [ObservableProperty]
+    public partial double Value1 { get; set; }
+
+    [ObservableProperty]
+    public partial double Value2 { get; set; }
+
+    [ObservableProperty]
+    public partial double Value3 { get; set; }
+
+    [ObservableProperty]
+    public partial double Value4 { get; set; }
 
     public IObserveCommand WarningCommand { get; }
     public IObserveCommand ErrorCommand { get; }
@@ -32,12 +46,19 @@ public sealed class NetworkTelemetryViewModel : AppViewModelBase
         IDispatcher dispatcher,
         ITelemetryControl telemetryControl,
         DiagnosticsInstrumentation instrumentation,
+        ApplicationMetrics applicationMetrics,
         NetworkUsecase networkUsecase)
     {
         this.log = log;
         this.dialog = dialog;
         this.dispatcher = dispatcher;
         this.instrumentation = instrumentation;
+        this.applicationMetrics = applicationMetrics;
+
+        SubscribeValue1(x => applicationMetrics.Value1 = x);
+        SubscribeValue2(x => applicationMetrics.Value2 = x);
+        SubscribeValue3(x => applicationMetrics.Value3 = x);
+        SubscribeValue4(x => applicationMetrics.Value4 = x);
 
         WarningCommand = MakeDelegateCommand(log.WarnTelemetryTest);
         ErrorCommand = MakeDelegateCommand(LogError);
@@ -50,6 +71,15 @@ public sealed class NetworkTelemetryViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
+
+    public override Task OnNavigatingToAsync(INavigationContext context)
+    {
+        Value1 = applicationMetrics.Value1;
+        Value2 = applicationMetrics.Value2;
+        Value3 = applicationMetrics.Value3;
+        Value4 = applicationMetrics.Value4;
+        return Task.CompletedTask;
+    }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
 

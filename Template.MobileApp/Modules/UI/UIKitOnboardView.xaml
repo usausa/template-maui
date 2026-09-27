@@ -21,6 +21,11 @@
                 <Setter Property="Padding" Value="0,32,0,16" />
             </Style>
 
+            <Style x:Key="OnboardPageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="PageImage"
                    TargetType="Image">
                 <Setter Property="Aspect" Value="AspectFit" />
@@ -60,6 +65,7 @@
             <Style x:Key="SkipButton"
                    TargetType="Button">
                 <Setter Property="Text" Value="スキップ" />
+                <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="BackgroundColor" Value="Transparent" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
@@ -88,7 +94,7 @@
                       Loop="False">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="module:UIKitOnboardPage">
-                    <VerticalStackLayout VerticalOptions="Center">
+                    <VerticalStackLayout Style="{StaticResource OnboardPageStack}">
                         <Image Style="{StaticResource PageImage}"
                                Source="{Binding Image}" />
                         <!-- ページ切替でテキストをフェードイン -->
@@ -113,7 +119,6 @@
             <Button Grid.Column="0"
                     Style="{StaticResource SkipButton}"
                     behaviors:ButtonOption.PressEffect="True"
-                    HorizontalOptions="Start"
                     Command="{Binding CompleteCommand}" />
             <Button Grid.Column="1"
                     Style="{StaticResource StartButton}"

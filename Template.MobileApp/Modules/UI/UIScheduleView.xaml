@@ -17,6 +17,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="DayChipCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="84" />
+            </Style>
+
             <Style x:Key="DayChipGrid"
                    TargetType="Grid">
                 <Setter Property="WidthRequest" Value="56" />
@@ -96,12 +101,11 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,Auto,*"
-          BackgroundColor="White">
+          RowDefinitions="Auto,Auto,*">
 
         <!-- 7 日チップ -->
         <CollectionView Grid.Row="0"
-                        HeightRequest="84"
+                        Style="{StaticResource DayChipCollection}"
                         ItemsSource="{Binding Days}"
                         SelectedItem="{Binding SelectedDay, Mode=TwoWay}"
                         SelectionMode="Single">

@@ -23,15 +23,45 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ColumnChart"
+                   TargetType="charts:SfCartesianChart">
+                <Setter Property="HeightRequest" Value="220" />
+            </Style>
+
+            <Style x:Key="DoughnutChart"
+                   TargetType="charts:SfCircularChart">
+                <Setter Property="HeightRequest" Value="240" />
+            </Style>
+
+            <Style x:Key="PolarChart"
+                   TargetType="charts:SfPolarChart">
+                <Setter Property="HeightRequest" Value="260" />
+            </Style>
+
             <Style x:Key="FunnelGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="FunnelChart"
+                   TargetType="charts:SfFunnelChart">
+                <Setter Property="HeightRequest" Value="200" />
+            </Style>
+
+            <Style x:Key="PyramidChart"
+                   TargetType="charts:SfPyramidChart">
+                <Setter Property="HeightRequest" Value="200" />
             </Style>
 
             <Style x:Key="SparkGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="4" />
                 <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SunburstChart"
+                   TargetType="sunburst:SfSunburstChart">
+                <Setter Property="HeightRequest" Value="260" />
             </Style>
 
         </ResourceDictionary>
@@ -44,7 +74,7 @@
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Column (SfCartesianChart)"
                                Icon="{x:Static fonts:MaterialIcons.Insert_chart}">
-                <charts:SfCartesianChart HeightRequest="220">
+                <charts:SfCartesianChart Style="{StaticResource ColumnChart}">
                     <charts:SfCartesianChart.XAxes>
                         <charts:CategoryAxis />
                     </charts:SfCartesianChart.XAxes>
@@ -52,7 +82,7 @@
                         <charts:NumericalAxis />
                     </charts:SfCartesianChart.YAxes>
                     <charts:ColumnSeries ItemsSource="{Binding Monthly}"
-                                         Fill="#2196F3"
+                                         Fill="{StaticResource BlueDefault}"
                                          XBindingPath="Label" YBindingPath="Value"
                                          EnableAnimation="True" />
                 </charts:SfCartesianChart>
@@ -62,7 +92,7 @@
                                behaviors:AnimationOption.EnterDelay="60"
                                Title="Doughnut (SfCircularChart)"
                                Icon="{x:Static fonts:MaterialIcons.Donut_large}">
-                <charts:SfCircularChart HeightRequest="240">
+                <charts:SfCircularChart Style="{StaticResource DoughnutChart}">
                     <charts:DoughnutSeries ItemsSource="{Binding Share}"
                                            XBindingPath="Label" YBindingPath="Value"
                                            EnableAnimation="True" ShowDataLabels="True" />
@@ -73,7 +103,7 @@
                                behaviors:AnimationOption.EnterDelay="120"
                                Title="Polar (SfPolarChart)"
                                Icon="{x:Static fonts:MaterialIcons.Radar}">
-                <charts:SfPolarChart HeightRequest="260">
+                <charts:SfPolarChart Style="{StaticResource PolarChart}">
                     <charts:SfPolarChart.PrimaryAxis>
                         <charts:CategoryAxis />
                     </charts:SfPolarChart.PrimaryAxis>
@@ -82,7 +112,7 @@
                     </charts:SfPolarChart.SecondaryAxis>
                     <charts:PolarAreaSeries ItemsSource="{Binding Skills}"
                                             Fill="#802196F3"
-                                            Stroke="#2196F3"
+                                            Stroke="{StaticResource BlueDefault}"
                                             XBindingPath="Label" YBindingPath="Value"
                                             StrokeWidth="2" />
                 </charts:SfPolarChart>
@@ -95,11 +125,11 @@
                 <Grid Style="{StaticResource FunnelGrid}"
                       ColumnDefinitions="*,*">
                     <charts:SfFunnelChart Grid.Column="0"
-                                          HeightRequest="200"
+                                          Style="{StaticResource FunnelChart}"
                                           ItemsSource="{Binding Funnel}"
                                           XBindingPath="Label" YBindingPath="Value" />
                     <charts:SfPyramidChart Grid.Column="1"
-                                           HeightRequest="200"
+                                           Style="{StaticResource PyramidChart}"
                                            ItemsSource="{Binding Funnel}"
                                            XBindingPath="Label" YBindingPath="Value" />
                 </Grid>
@@ -114,10 +144,10 @@
                       ColumnDefinitions="*,*,*">
                     <spark:SfSparkLineChart Grid.Row="0" Grid.Column="0"
                                             ItemsSource="{Binding Trend}"
-                                            Stroke="#2196F3" />
+                                            Stroke="{StaticResource BlueDefault}" />
                     <spark:SfSparkColumnChart Grid.Row="0" Grid.Column="1"
                                               ItemsSource="{Binding Trend}"
-                                              Fill="#4CAF50" />
+                                              Fill="{StaticResource GreenDefault}" />
                     <spark:SfSparkWinLossChart Grid.Row="0" Grid.Column="2"
                                                ItemsSource="{Binding WinLoss}" />
                     <Label Grid.Row="1" Grid.Column="0"
@@ -139,7 +169,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="地域 → 都市の 2 階層構成比" />
-                    <sunburst:SfSunburstChart HeightRequest="260"
+                    <sunburst:SfSunburstChart Style="{StaticResource SunburstChart}"
                                               ItemsSource="{Binding Regions}"
                                               ShowLabels="True" ValueMemberPath="Value">
                         <sunburst:SfSunburstChart.Levels>

@@ -65,13 +65,15 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
     private const string RuntimeMeterName = "System.Runtime";
     private const string HttpMeterName = "System.Net.Http";
 
+    private const string TracePath = "v1/traces";
+    private const string MetricPath = "v1/metrics";
+    private const string LogPath = "v1/logs";
+
     private const int ExportTimeout = 10_000;
     private const int MetricExportInterval = 30_000;
     private const int FlushTimeout = 3000;
     private const int CrashExportTimeout = 2000;
     private const int CrashFlushTimeout = 1000;
-
-    private const int ResendCapacity = 60;
 
     // ------------------------------------------------------------
     // Field
@@ -117,6 +119,8 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
 
     private readonly IDeviceInfo deviceInfo;
 
+    private readonly TelemetryOptions options;
+
     private readonly DeviceInformation deviceInformation;
 
     private readonly SdkEventListener sdkListener = new();
@@ -140,6 +144,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
         IAppInfo appInfo,
         IDeviceInfo deviceInfo,
         IFileSystem fileSystem,
+        TelemetryOptions options,
         DeviceInformation deviceInformation,
         TelemetryLoggerProvider loggerProvider)
     {
@@ -147,6 +152,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
         sdkLog = loggerFactory.CreateLogger(SdkCategory);
         this.appInfo = appInfo;
         this.deviceInfo = deviceInfo;
+        this.options = options;
         this.deviceInformation = deviceInformation;
         sentCrashPath = Path.Combine(fileSystem.AppDataDirectory, "telemetry-crash-sent.txt");
 
@@ -297,7 +303,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
     {
         StopProviders();
 
-        providers = new Providers(CreateResource(), endPoint, OnSent);
+        providers = new Providers(CreateResource(), endPoint, options, OnSent);
     }
 
     private void StopProviders()
@@ -429,13 +435,21 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
 
         public int ResendWaitingCount => Volatile.Read(ref sendHandler)?.WaitingCount ?? 0;
 
-        public Providers(ResourceBuilder resource, Uri endPoint, Action<bool, string?> sent)
+        public Providers(ResourceBuilder resource, Uri endPoint, TelemetryOptions telemetryOptions, Action<bool, string?> sent)
         {
+            // Payloads kept for each signal while sending fails
+            KeyValuePair<string, int>[] capacities =
+            [
+                new(TracePath, telemetryOptions.TraceResendCapacity),
+                new(MetricPath, telemetryOptions.MetricResendCapacity),
+                new(LogPath, telemetryOptions.LogResendCapacity)
+            ];
+
             // Trace
             tracerProvider = Sdk.CreateTracerProviderBuilder()
                 .SetResourceBuilder(resource)
                 .AddSource(DiagnosticsInstrumentation.Name)
-                .AddOtlpExporter(x => ConfigureExporter(x, endPoint, "v1/traces", CreateHttpClient))
+                .AddOtlpExporter(x => ConfigureExporter(x, endPoint, TracePath, CreateHttpClient))
                 .Build();
 
             // Metrics
@@ -445,7 +459,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
                 .AddView(SelectInstrument)
                 .AddOtlpExporter((exporter, reader) =>
                 {
-                    ConfigureExporter(exporter, endPoint, "v1/metrics", CreateHttpClient);
+                    ConfigureExporter(exporter, endPoint, MetricPath, CreateHttpClient);
                     reader.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = MetricExportInterval;
                     reader.TemporalityPreference = MetricReaderTemporalityPreference.Delta;
                 })
@@ -460,7 +474,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
                     options.SetResourceBuilder(resource);
                     options.IncludeFormattedMessage = true;
                     options.IncludeScopes = true;
-                    options.AddOtlpExporter(x => ConfigureExporter(x, endPoint, "v1/logs", CreateHttpClient));
+                    options.AddOtlpExporter(x => ConfigureExporter(x, endPoint, LogPath, CreateHttpClient));
                 }));
             logServices = services.BuildServiceProvider();
 
@@ -474,15 +488,15 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
                     options.AddProcessor(_ => new SimpleLogRecordExportProcessor(new OtlpLogExporter(new OtlpExporterOptions
                     {
                         Protocol = OtlpExportProtocol.HttpProtobuf,
-                        Endpoint = new Uri(endPoint, "v1/logs"),
+                        Endpoint = new Uri(endPoint, LogPath),
                         TimeoutMilliseconds = CrashExportTimeout,
-                        HttpClientFactory = () => new HttpClient(crashSendHandler = new TelemetrySendHandler(CreateExportHandler(), 0, null)) { Timeout = TimeSpan.FromMilliseconds(CrashExportTimeout) }
+                        HttpClientFactory = () => new HttpClient(crashSendHandler = new TelemetrySendHandler(CreateExportHandler(), [], TimeSpan.FromMilliseconds(CrashExportTimeout), null)) { Timeout = TimeSpan.FromMilliseconds(CrashExportTimeout) }
                     })));
                 }));
 
             return;
 
-            HttpClient CreateHttpClient() => new(sendHandler ??= new TelemetrySendHandler(CreateExportHandler(), ResendCapacity, sent), false) { Timeout = TimeSpan.FromMilliseconds(ExportTimeout) };
+            HttpClient CreateHttpClient() => new(sendHandler ??= new TelemetrySendHandler(CreateExportHandler(), capacities, TimeSpan.FromMilliseconds(ExportTimeout), sent), false) { Timeout = TimeSpan.FromMilliseconds(ExportTimeout) };
         }
 
         public void Dispose()

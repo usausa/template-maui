@@ -16,12 +16,25 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ReturnChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <!-- 呼び出し元の系統バッジ -->
-            <controls:StatusChip behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                 HorizontalOptions="Center"
+            <controls:StatusChip Style="{StaticResource ReturnChip}"
+                                 behaviors:AnimationOption.EnterAnimation="FadeUp"
                                  Icon="{x:Static fonts:MaterialIcons.Input}"
                                  Text="{Binding NextName, StringFormat='Return to {0}'}">
                 <controls:StatusChip.Triggers>

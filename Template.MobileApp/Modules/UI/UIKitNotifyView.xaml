@@ -29,6 +29,13 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
+            <Style x:Key="UnreadBarBoxView"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="4" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="CornerRadius" Value="2" />
+            </Style>
+
             <Style x:Key="IconBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="42" />
@@ -45,6 +52,11 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="NotifyTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="KitNotifyTitleLabel"
@@ -70,6 +82,15 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="UnreadDotBoxView"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="8" />
+                <Setter Property="HeightRequest" Value="8" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="CornerRadius" Value="4" />
             </Style>
 
             <Style x:Key="NotifyRowGrid"
@@ -102,17 +123,15 @@
                     <Grid Style="{StaticResource NotifyRowGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto">
                         <BoxView Grid.Column="0"
-                                 WidthRequest="4"
-                                 IsVisible="{Binding IsUnread}"
-                                 Color="{StaticResource BlueDefault}"
-                                 CornerRadius="2" />
+                                 Style="{StaticResource UnreadBarBoxView}"
+                                 IsVisible="{Binding IsUnread}" />
                         <Border Grid.Column="1"
                                 Style="{StaticResource IconBorder}">
                             <Label Style="{StaticResource IconLabel}"
                                    Text="{Binding Icon}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="2"
-                                             VerticalOptions="Center">
+                                             Style="{StaticResource NotifyTextStack}">
                             <Label Style="{StaticResource KitNotifyTitleLabel}"
                                    Text="{Binding Title}">
                                 <Label.Triggers>
@@ -131,11 +150,8 @@
                                              Style="{StaticResource NotifyMetaStack}">
                             <Label Style="{StaticResource NotifyTimeLabel}"
                                    Text="{Binding Time}" />
-                            <BoxView WidthRequest="8" HeightRequest="8"
-                                     HorizontalOptions="End"
-                                     IsVisible="{Binding IsUnread}"
-                                     Color="{StaticResource BlueDefault}"
-                                     CornerRadius="4" />
+                            <BoxView Style="{StaticResource UnreadDotBoxView}"
+                                     IsVisible="{Binding IsUnread}" />
                         </VerticalStackLayout>
                     </Grid>
                 </Border>

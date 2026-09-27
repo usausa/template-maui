@@ -65,9 +65,15 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
+            <Style x:Key="StateContainerStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HeightRequest" Value="180" />
+            </Style>
+
             <Style x:Key="StatePanelStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="8" />
+                <Setter Property="HeightRequest" Value="180" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
@@ -111,19 +117,17 @@
                                 Text="Success" />
                     </Grid>
 
-                    <VerticalStackLayout HeightRequest="180"
+                    <VerticalStackLayout Style="{StaticResource StateContainerStack}"
                                          mct:StateContainer.CurrentState="{Binding CurrentState}">
                         <mct:StateContainer.StateViews>
                             <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                                 HeightRequest="180"
                                                  mct:StateView.StateKey="Loading">
-                                <ActivityIndicator IsRunning="True"
-                                                   Color="{StaticResource BlueDefault}" />
+                                <ActivityIndicator Style="{StaticResource BasicLoadingIndicator}"
+                                                   IsRunning="True" />
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="読み込み中..." />
                             </VerticalStackLayout>
                             <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                                 HeightRequest="180"
                                                  mct:StateView.StateKey="Empty">
                                 <Label Style="{StaticResource EmptyStateIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Inbox}" />
@@ -131,7 +135,6 @@
                                        Text="データがありません" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                                 HeightRequest="180"
                                                  mct:StateView.StateKey="Error">
                                 <Label Style="{StaticResource ErrorStateIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Error}" />
@@ -141,8 +144,7 @@
                         </mct:StateContainer.StateViews>
 
                         <!-- 既定コンテンツ (CurrentState が空のとき表示) -->
-                        <VerticalStackLayout Style="{StaticResource StatePanelStack}"
-                                             HeightRequest="180">
+                        <VerticalStackLayout Style="{StaticResource StatePanelStack}">
                             <Label Style="{StaticResource SuccessStateIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Check_circle}" />
                             <Label Style="{StaticResource StateTextLabel}"

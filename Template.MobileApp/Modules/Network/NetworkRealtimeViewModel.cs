@@ -29,17 +29,12 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     private readonly DeviceInformation deviceInformation;
 
-    private readonly Settings settings;
-
     private readonly Session session;
 
     private readonly DeviceState deviceState;
 
     private SerialDisposable Receiving { get; } = new();
     private SerialDisposable Connecting { get; } = new();
-
-    [ObservableProperty]
-    public partial bool Configured { get; set; }
 
     [ObservableProperty]
     public partial string StateText { get; set; } = "停止";
@@ -81,7 +76,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         ApiContext apiContext,
         INotificationService notification,
         DeviceInformation deviceInformation,
-        Settings settings,
         Session session,
         DeviceState deviceState)
     {
@@ -92,12 +86,11 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         this.apiContext = apiContext;
         this.notification = notification;
         this.deviceInformation = deviceInformation;
-        this.settings = settings;
         this.session = session;
         this.deviceState = deviceState;
 
-        ReconnectCommand = MakeDelegateCommand(Connect, () => Configured);
-        ReportCommand = MakeAsyncCommand(ReportAsync, () => Configured);
+        ReconnectCommand = MakeDelegateCommand(Connect);
+        ReportCommand = MakeAsyncCommand(ReportAsync);
 
         reportTimer = Application.Current?.Dispatcher.CreateTimer()!;
         reportTimer.Interval = ReportInterval;
@@ -111,28 +104,14 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    public override Task OnNavigatingToAsync(INavigationContext context)
-    {
-        Configured = settings.IsApiConfigured();
-        if (!Configured)
-        {
-            StateText = "未設定";
-        }
-
-        return Task.CompletedTask;
-    }
-
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (Configured)
-        {
-            // 受信はバックグラウンドスレッドから来る。Rx の未処理 OnError はアプリを落とすため必ず処理する
-            Receiving.Disposable = new CompositeDisposable(
-                connection.ServerStatus.ObserveOnCurrentContext().Subscribe(OnServerStatus, OnError),
-                connection.Notifications.ObserveOnCurrentContext().Subscribe(OnNotification, OnError));
-            Connect();
-            reportTimer.Start();
-        }
+        // 受信はバックグラウンドスレッドから来る。Rx の未処理 OnError はアプリを落とすため必ず処理する
+        Receiving.Disposable = new CompositeDisposable(
+            connection.ServerStatus.ObserveOnCurrentContext().Subscribe(OnServerStatus, OnError),
+            connection.Notifications.ObserveOnCurrentContext().Subscribe(OnNotification, OnError));
+        Connect();
+        reportTimer.Start();
 
         return Task.CompletedTask;
     }
@@ -155,11 +134,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction2()
     {
-        if (Configured)
-        {
-            Connect();
-        }
-
+        Connect();
         return Task.CompletedTask;
     }
 

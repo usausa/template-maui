@@ -63,7 +63,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource MediaRootGrid}">
+    <Grid Style="{StaticResource DarkRootGrid}">
 
         <toolkit:MediaElement x:Name="Player"
                               behaviors:MediaBind.Controller="{Binding Controller}"
@@ -78,12 +78,9 @@
         </BoxView>
 
         <!-- 再生開始・バッファリング中のローディング表示 -->
-        <ActivityIndicator WidthRequest="48" HeightRequest="48"
-                           HorizontalOptions="Center" VerticalOptions="Center"
+        <ActivityIndicator Style="{StaticResource BasicLightLoadingIndicator}"
                            IsRunning="{Binding IsLoading}"
-                           IsVisible="{Binding IsLoading}"
-                           InputTransparent="True"
-                           Color="White" />
+                           IsVisible="{Binding IsLoading}" />
 
         <Border Style="{StaticResource ControlBarBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"

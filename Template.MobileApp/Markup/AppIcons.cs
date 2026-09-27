@@ -2,12 +2,8 @@ namespace Template.MobileApp.Markup;
 
 using Fonts;
 
-using Microsoft.Extensions.DependencyInjection;
-
 // XAML から x:Static で参照するアイコン。FontImageSource をここで生成して共有し、
-// 起動時の温めも同じ定義を対象にする。全て MaterialIcons のグリフ。
-// グリフのビットマップはサイズと色を含むキーでキャッシュされるため、
-// 同じ指定の組み合わせは 1 つにまとめる
+// 同じ指定の組み合わせは 1 つにまとめる。全て MaterialIcons のグリフ
 public static class AppIcons
 {
     private const double SmallSize = 18d;
@@ -18,11 +14,6 @@ public static class AppIcons
 
     private const double LargeSize = 36d;
 
-    // 一度に投げる要求数。初期表示の後ろで動かす分が UI スレッドを長く占有しないように区切る
-    private const int BatchSize = 16;
-
-    private static readonly List<FontImageSource> Sources = [];
-
     //--------------------------------------------------------------------------------
     // Menu (Material / 24 / White)
     //--------------------------------------------------------------------------------
@@ -31,6 +22,7 @@ public static class AppIcons
     public static readonly FontImageSource AccountCircle = Create(MaterialIcons.Account_circle, MenuSize, Colors.White);
     public static readonly FontImageSource AccountTree = Create(MaterialIcons.Account_tree, MenuSize, Colors.White);
     public static readonly FontImageSource Animation = Create(MaterialIcons.Animation, MenuSize, Colors.White);
+    public static readonly FontImageSource AppRegistration = Create(MaterialIcons.App_registration, MenuSize, Colors.White);
     public static readonly FontImageSource Apps = Create(MaterialIcons.Apps, MenuSize, Colors.White);
     public static readonly FontImageSource Archive = Create(MaterialIcons.Archive, MenuSize, Colors.White);
     public static readonly FontImageSource ArrowBack = Create(MaterialIcons.Arrow_back, MenuSize, Colors.White);
@@ -225,89 +217,19 @@ public static class AppIcons
     public static readonly FontImageSource MapRoute = Create(MaterialIcons.Route, MenuSize, ResourceColor("BlueDefault"));
     public static readonly FontImageSource ValidationCheck = Create(MaterialIcons.Check_circle, SmallSize, ResourceColor("GreenDefault"));
     public static readonly FontImageSource ValidationError = Create(MaterialIcons.Error, SmallSize, ResourceColor("RedDefault"));
-    //--------------------------------------------------------------------------------
-    // Warmup
-    //--------------------------------------------------------------------------------
-
-    // 最初に表示する画面 (MenuView) の分
-    public static readonly FontImageSource[] Startup =
-    [
-        Widgets,
-        Navigation,
-        Devices,
-        Storage,
-        Cloud,
-        Layers,
-        ViewModule,
-        Palette,
-        Insights,
-        Science,
-        Apps,
-        Troubleshoot,
-        Settings
-    ];
-
-    // Typeface はフォント毎に FontManager がキャッシュする。
-    // FluentUI は Label.Text で使うため、こちらも生成しておく
-    public static void WarmTypefaces(IServiceProvider provider)
-    {
-        var fontManager = provider.GetRequiredService<IFontManager>();
-        fontManager.GetTypeface(Microsoft.Maui.Font.OfSize(MaterialIcons.FontFamily, MenuSize));
-        fontManager.GetTypeface(Microsoft.Maui.Font.OfSize(FluentUI.FontFamily, MenuSize));
-    }
-
-    // 最初の画面を表示する前に必要な分
-    public static ValueTask WarmStartupAsync(IServiceProvider provider) => WarmAsync(provider, Startup);
-
-    // 全て。初期表示を待たせないよう後から呼ぶ
-    public static ValueTask WarmAllAsync(IServiceProvider provider) => WarmAsync(provider, Sources);
-
-    private static async ValueTask WarmAsync(IServiceProvider provider, IEnumerable<FontImageSource> sources)
-    {
-#if ANDROID
-        var imageSourceServiceProvider = provider.GetService<IImageSourceServiceProvider>();
-        if (imageSourceServiceProvider is null)
-        {
-            return;
-        }
-
-        var context = Android.App.Application.Context;
-        var pending = new List<Task>(BatchSize);
-        foreach (var source in sources)
-        {
-            var service = imageSourceServiceProvider.GetRequiredImageSourceService(source);
-            pending.Add(service.GetDrawableAsync(source, context));
-
-            if (pending.Count == BatchSize)
-            {
-                await Task.WhenAll(pending).ConfigureAwait(true);
-                pending.Clear();
-            }
-        }
-
-        if (pending.Count > 0)
-        {
-            await Task.WhenAll(pending).ConfigureAwait(true);
-        }
-#endif
-    }
 
     //--------------------------------------------------------------------------------
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static FontImageSource Create(string glyph, double size, Color color)
-    {
-        var source = new FontImageSource
+    private static FontImageSource Create(string glyph, double size, Color color) =>
+        new()
         {
             FontFamily = MaterialIcons.FontFamily,
             Glyph = glyph,
             Size = size,
             Color = color
         };
-        Sources.Add(source);
-        return source;
-    }
 
     private static Color ResourceColor(string key)
     {

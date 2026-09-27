@@ -34,6 +34,12 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <Style x:Key="GroupRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource ValueRowGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
             <Style x:Key="SeparatorBoxView"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
@@ -93,6 +99,14 @@
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="QuantityValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource PosValueLabel}">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="PosSubValueLabel"
@@ -212,10 +226,7 @@
                     Command="{Binding QuantityDownCommand}"
                     Text="{x:Static fonts:MaterialIcons.Remove}" />
             <Label Grid.Column="2"
-                   Style="{StaticResource PosValueLabel}"
-                   WidthRequest="56"
-                   VerticalOptions="Center"
-                   HorizontalTextAlignment="Center"
+                   Style="{StaticResource QuantityValueLabel}"
                    Text="{Binding Quantity, StringFormat='{0}点'}" />
             <Button Grid.Column="3"
                     Style="{StaticResource QuantityButton}"
@@ -319,9 +330,8 @@
                  Style="{StaticResource SeparatorBoxView}" />
 
         <Grid Grid.Row="13"
-              Style="{StaticResource ValueRowGrid}"
-              ColumnDefinitions="*"
-              BackgroundColor="{StaticResource GrayLighten3}">
+              Style="{StaticResource GroupRowGrid}"
+              ColumnDefinitions="*">
             <Label Style="{StaticResource PosNameLabel}"
                    Text="預かり" />
         </Grid>

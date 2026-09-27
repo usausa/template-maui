@@ -224,6 +224,11 @@
                 <Setter Property="Color" Value="{StaticResource DividerLine}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
+            <Style x:Key="InputDividerBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="{StaticResource InputBorder}" />
+            </Style>
+
             <Style x:Key="InputBar"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8" />
@@ -420,7 +425,7 @@
                 Text="↓ 最新へ" />
 
         <BoxView Grid.Row="1"
-                 Color="{StaticResource InputBorder}" />
+                 Style="{StaticResource InputDividerBoxView}" />
 
         <Grid Grid.Row="2"
               Style="{StaticResource InputBar}"
@@ -464,7 +469,7 @@
               behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}"
               IsVisible="{Binding IsStampTrayVisible}">
             <BoxView Grid.Row="0"
-                     Color="{StaticResource InputBorder}" />
+                     Style="{StaticResource InputDividerBoxView}" />
             <FlexLayout Grid.Row="1"
                         Style="{StaticResource StampTray}"
                         BindableLayout.ItemsSource="{Binding StampList}">

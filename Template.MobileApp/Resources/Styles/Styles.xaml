@@ -467,7 +467,7 @@
         <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
     </Style>
 
-    <Style x:Key="MediaRootGrid"
+    <Style x:Key="DarkRootGrid"
            TargetType="Grid"
            BasedOn="{StaticResource RootGrid}">
         <Setter Property="BackgroundColor" Value="Black" />
@@ -1223,6 +1223,24 @@
         <Setter Property="Margin" Value="0,8,0,0" />
     </Style>
 
+    <!-- Loading -->
+
+    <Style x:Key="BasicLoadingIndicator"
+           TargetType="ActivityIndicator">
+        <Setter Property="WidthRequest" Value="48" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+        <Setter Property="InputTransparent" Value="True" />
+    </Style>
+
+    <Style x:Key="BasicLightLoadingIndicator"
+           TargetType="ActivityIndicator"
+           BasedOn="{StaticResource BasicLoadingIndicator}">
+        <Setter Property="Color" Value="White" />
+    </Style>
+
     <!-- Text -->
 
     <Style x:Key="BasicCaptionLabel"
@@ -1260,6 +1278,12 @@
         <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <Style x:Key="BasicStatusLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+        <Setter Property="FontSize" Value="14" />
     </Style>
 
     <Style x:Key="BasicItemNameLabel"

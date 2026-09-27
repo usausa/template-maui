@@ -24,6 +24,18 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="SfSheet"
+                   TargetType="sf:SfBottomSheet">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HalfExpandedRatio" Value="0.45" />
+            </Style>
+
+            <Style x:Key="CustomSheet"
+                   TargetType="controls:BottomSheetView">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HalfExpandedRatio" Value="0.45" />
+            </Style>
+
             <Style x:Key="SheetCloseButton"
                    TargetType="Button"
                    BasedOn="{StaticResource BasicFilledSecondaryButton}">
@@ -78,9 +90,9 @@
 
     <Grid>
 
-        <sf:SfBottomSheet IsOpen="{Binding IsSfSheetOpen}"
-                          CornerRadius="16"
-                          HalfExpandedRatio="0.45" IsModal="True">
+        <sf:SfBottomSheet Style="{StaticResource SfSheet}"
+                          IsOpen="{Binding IsSfSheetOpen}"
+                          IsModal="True">
 
             <sf:SfBottomSheet.BottomSheetContent>
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
@@ -154,9 +166,8 @@
 
         </sf:SfBottomSheet>
 
-        <controls:BottomSheetView IsOpen="{Binding IsCustomSheetOpen}"
-                                  CornerRadius="16"
-                                  HalfExpandedRatio="0.45">
+        <controls:BottomSheetView Style="{StaticResource CustomSheet}"
+                                  IsOpen="{Binding IsCustomSheetOpen}">
             <controls:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
                     <Label Style="{StaticResource SheetTitleLabel}"

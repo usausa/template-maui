@@ -113,6 +113,12 @@
                 <Setter Property="HorizontalTextAlignment" Value="End" />
             </Style>
 
+            <Style x:Key="LogTimeLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource EntryValueLabel}">
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+            </Style>
+
             <Style x:Key="LogLevelLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -125,6 +131,11 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <Style x:Key="LogCategorySpan"
+                   TargetType="Span">
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
             <Style x:Key="ReportLabel"
@@ -407,15 +418,14 @@
                                            Text="{Binding Level}"
                                            TextColor="{Binding Level, Converter={StaticResource LogLevelColorConverter}}" />
                                     <Label Grid.Row="0" Grid.Column="1"
-                                           Style="{StaticResource EntryValueLabel}"
-                                           HorizontalTextAlignment="Start"
+                                           Style="{StaticResource LogTimeLabel}"
                                            Text="{Binding Time, StringFormat='{0:MM/dd HH:mm:ss}'}" />
                                     <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                            Style="{StaticResource LogMessageLabel}">
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding Category}"
-                                                      FontAttributes="Bold" />
+                                                <Span Style="{StaticResource LogCategorySpan}"
+                                                      Text="{Binding Category}" />
                                                 <Span Text=": " />
                                                 <Span Text="{Binding Message}" />
                                             </FormattedString>

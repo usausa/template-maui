@@ -62,6 +62,11 @@
                                        TrueValue="White"
                                        FalseValue="{StaticResource BlueGrayDarken2}" />
 
+            <Style x:Key="CaptureImage"
+                   TargetType="Image">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
             <Style x:Key="TagPanelBorder"
                    TargetType="Border">
                 <Setter Property="HorizontalOptions" Value="Start" />
@@ -97,6 +102,13 @@
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
+            <Style x:Key="ShutterFlashBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="White" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
             <Style x:Key="FeatureGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8" />
@@ -126,9 +138,9 @@
                         behaviors:CameraBind.Controller="{Binding Controller}"
                         IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
         <Image Grid.Row="0"
+               Style="{StaticResource CaptureImage}"
                Source="{Binding Image}"
-               IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
-               BackgroundColor="Black" />
+               IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}" />
         <drawing:DrawingControl Grid.Row="0"
                                 IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
                                 Drawing="{Binding Drawing}" />
@@ -156,10 +168,8 @@
 
         <!-- 撮影瞬間のシャッターフラッシュ -->
         <BoxView Grid.Row="0"
-                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}"
-                 InputTransparent="True"
-                 Color="White"
-                 Opacity="0" />
+                 Style="{StaticResource ShutterFlashBoxView}"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
 
         <!-- 解析の種類 -->
         <Grid Grid.Row="1"

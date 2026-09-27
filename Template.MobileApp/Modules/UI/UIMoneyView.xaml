@@ -90,19 +90,21 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="MoneyHeaderAmountLabel"
-                   TargetType="Label">
+            <Style x:Key="MoneyHeaderAmountStack"
+                   TargetType="HorizontalStackLayout">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="MoneyHeaderAmountValueSpan"
-                   TargetType="Span">
+            <Style x:Key="MoneyHeaderAmountValueLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="36" />
             </Style>
 
-            <Style x:Key="MoneyHeaderAmountUnitSpan"
-                   TargetType="Span">
+            <Style x:Key="MoneyHeaderAmountUnitLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
@@ -439,14 +441,12 @@
                                 Style="{StaticResource MoneyHeaderInformationButton}"
                                 Text="詳細" />
                         <HorizontalStackLayout Grid.Row="1" Grid.Column="0"
-                                               HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label behaviors:LabelOption.CountUpFormat="{}{0:N0}"
-                                   behaviors:LabelOption.CountUpValue="{Binding Balance}"
-                                   VerticalOptions="Center"
-                                   FontSize="36" />
-                            <Label VerticalOptions="Center"
-                                   Text=" 円"
-                                   FontSize="18" />
+                                               Style="{StaticResource MoneyHeaderAmountStack}">
+                            <Label Style="{StaticResource MoneyHeaderAmountValueLabel}"
+                                   behaviors:LabelOption.CountUpFormat="{}{0:N0}"
+                                   behaviors:LabelOption.CountUpValue="{Binding Balance}" />
+                            <Label Style="{StaticResource MoneyHeaderAmountUnitLabel}"
+                                   Text=" 円" />
                         </HorizontalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1"
                                              Style="{StaticResource MoneyHeaderPointLayout}">

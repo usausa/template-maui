@@ -11,9 +11,6 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
     private Action? cancel;
 
     [ObservableProperty]
-    public partial bool Configured { get; set; }
-
-    [ObservableProperty]
     public partial string HostDisplay { get; set; } = string.Empty;
 
     [ObservableProperty]
@@ -47,8 +44,8 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
         this.settings = settings;
         this.sshUsecase = sshUsecase;
 
-        UploadCommand = MakeDelegateCommand(() => _ = ExecuteUploadAsync(), () => !Busy && Configured);
-        DownloadCommand = MakeDelegateCommand(() => _ = ExecuteDownloadAsync(), () => !Busy && Configured && !String.IsNullOrEmpty(RemoteFileName));
+        UploadCommand = MakeDelegateCommand(() => _ = ExecuteUploadAsync(), () => !Busy);
+        DownloadCommand = MakeDelegateCommand(() => _ = ExecuteDownloadAsync(), () => !Busy && !String.IsNullOrEmpty(RemoteFileName));
         CancelCommand = MakeDelegateCommand(() => cancel?.Invoke(), () => Busy);
     }
 
@@ -58,8 +55,7 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        Configured = settings.IsSshConfigured();
-        HostDisplay = Configured ? $"{settings.SshUser}@{settings.SshHost}:{settings.SshPort}" : "未設定";
+        HostDisplay = $"{settings.SshUser}@{settings.SshHost}:{settings.SshPort}";
         return Task.CompletedTask;
     }
 

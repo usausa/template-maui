@@ -105,6 +105,16 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <Style x:Key="DeleteSwipeItem"
+                   TargetType="SwipeItem">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="ArchiveSwipeItem"
+                   TargetType="SwipeItem">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
             <Style x:Key="MessageGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="6,3" />
@@ -287,19 +297,19 @@
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <SwipeView.LeftItems>
                             <SwipeItems Mode="Reveal">
-                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:UIMailViewModel}}"
+                                <SwipeItem Style="{StaticResource DeleteSwipeItem}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:UIMailViewModel}}"
                                            CommandParameter="{Binding .}"
                                            Text="削除"
-                                           BackgroundColor="{StaticResource RedDefault}"
                                            IconImageSource="{x:Static markup:AppIcons.Delete}" />
                             </SwipeItems>
                         </SwipeView.LeftItems>
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Reveal">
-                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand, x:DataType={x:Type module:UIMailViewModel}}"
+                                <SwipeItem Style="{StaticResource ArchiveSwipeItem}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand, x:DataType={x:Type module:UIMailViewModel}}"
                                            CommandParameter="{Binding .}"
                                            Text="アーカイブ"
-                                           BackgroundColor="{StaticResource GreenDefault}"
                                            IconImageSource="{x:Static markup:AppIcons.Archive}" />
                             </SwipeItems>
                         </SwipeView.RightItems>

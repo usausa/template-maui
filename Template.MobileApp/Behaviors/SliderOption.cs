@@ -45,4 +45,47 @@ public static class SliderOption
             command.Execute(slider.Value);
         }
     }
+
+    // ------------------------------------------------------------------ Step
+
+    // 値を刻みの倍数にそろえる (0 はそろえない)
+    public static readonly BindableProperty StepProperty = BindableProperty.CreateAttached(
+        "Step",
+        typeof(double),
+        typeof(SliderOption),
+        0d,
+        propertyChanged: OnStepChanged);
+
+    public static double GetStep(BindableObject bindable) => (double)bindable.GetValue(StepProperty);
+
+    public static void SetStep(BindableObject bindable, double value) => bindable.SetValue(StepProperty, value);
+
+    private static void OnStepChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not Slider slider)
+        {
+            return;
+        }
+
+        if (oldValue is > 0d)
+        {
+            slider.ValueChanged -= OnValueChanged;
+        }
+        if (newValue is > 0d)
+        {
+            slider.ValueChanged += OnValueChanged;
+        }
+    }
+
+    private static void OnValueChanged(object? sender, ValueChangedEventArgs e)
+    {
+        if (sender is not Slider slider)
+        {
+            return;
+        }
+
+        // Setting the same value does not raise the event again
+        var step = GetStep(slider);
+        slider.Value = Math.Round(e.NewValue / step) * step;
+    }
 }

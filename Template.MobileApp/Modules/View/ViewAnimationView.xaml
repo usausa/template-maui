@@ -76,6 +76,8 @@
                    TargetType="Border"
                    BasedOn="{StaticResource AnimationBorder}">
                 <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
             <Style x:Key="PinkTile"
@@ -210,8 +212,7 @@
                     </Grid>
 
                     <Grid Style="{StaticResource SequenceAreaGrid}">
-                        <Border Style="{StaticResource PurpleTile}"
-                                HorizontalOptions="Start" VerticalOptions="End">
+                        <Border Style="{StaticResource PurpleTile}">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
                                     <s:BeginAnimationAction>

@@ -49,6 +49,21 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
             </Style>
 
+            <Style x:Key="ColorSwatchBoxView"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="CornerRadius" Value="12" />
+            </Style>
+
+            <Style x:Key="MemberAvatarGroup"
+                   TargetType="controls:AvatarGroup">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="AvatarSize" Value="40" />
+                <Setter Property="Overlap" Value="12" />
+            </Style>
+
             <Style x:Key="SmallButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="12,0" />
@@ -110,9 +125,8 @@
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="Auto,*">
                         <BoxView Grid.Column="0"
-                                 WidthRequest="24" HeightRequest="24"
-                                 Color="{Binding PickedColor}"
-                                 CornerRadius="12" />
+                                 Style="{StaticResource ColorSwatchBoxView}"
+                                 Color="{Binding PickedColor}" />
                         <Label Grid.Column="1"
                                Style="{StaticResource CardRowAccentLabel}"
                                Text="VM の Color プロパティと双方向バインド" />
@@ -141,9 +155,9 @@
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,Auto,Auto">
                         <controls:AvatarGroup Grid.Column="0"
-                                              HorizontalOptions="Start" VerticalOptions="Center"
+                                              Style="{StaticResource MemberAvatarGroup}"
                                               ItemsSource="{Binding Avatars}"
-                                              AvatarSize="40" MaxDisplayed="4" Overlap="12" />
+                                              MaxDisplayed="4" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource SmallButton}"
                                 Command="{Binding RemoveAvatarCommand}"

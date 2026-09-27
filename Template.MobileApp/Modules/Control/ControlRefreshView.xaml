@@ -82,6 +82,11 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
 
+            <Style x:Key="SkeletonShimmer"
+                   TargetType="sf:SfShimmer">
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
             <Style x:Key="SkeletonCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="8,4" />
@@ -201,7 +206,7 @@
                     <s:CollectionControlBehavior Controller="{Binding Controller}" />
                 </CollectionView.Behaviors>
                 <CollectionView.EmptyView>
-                    <sf:SfShimmer VerticalOptions="Start"
+                    <sf:SfShimmer Style="{StaticResource SkeletonShimmer}"
                                   IsActive="True">
                         <sf:SfShimmer.CustomView>
                             <VerticalStackLayout>

@@ -6,17 +6,21 @@ using Template.MobileApp.Helpers;
 
 internal sealed class TelemetrySendHandler : DelegatingHandler
 {
-    private const int ResendPerSend = 5;
-
     private readonly Lock sync = new();
 
-    private readonly RingBuffer<Payload>? payloads;
+    private readonly Store[] stores;
+
+    private readonly TimeSpan resendTimeout;
 
     private readonly Action<bool, string?>? sent;
 
     private long succeededCount;
 
+    private long sequence;
+
     private int resending;
+
+    private volatile bool disposed;
 
     public long SucceededCount => Interlocked.Read(ref succeededCount);
 
@@ -26,16 +30,26 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
         {
             lock (sync)
             {
-                return payloads?.Count ?? 0;
+                return stores.Sum(static x => x.Payloads.Count);
             }
         }
     }
 
-    public TelemetrySendHandler(HttpMessageHandler innerHandler, int capacity, Action<bool, string?>? sent)
+    public TelemetrySendHandler(HttpMessageHandler innerHandler, IEnumerable<KeyValuePair<string, int>> capacities, TimeSpan resendTimeout, Action<bool, string?>? sent)
         : base(innerHandler)
     {
-        payloads = capacity > 0 ? new RingBuffer<Payload>(capacity) : null;
+        stores = capacities
+            .Where(static x => x.Value > 0)
+            .Select(static x => new Store(x.Key, new RingBuffer<Payload>(x.Value)))
+            .ToArray();
+        this.resendTimeout = resendTimeout;
         this.sent = sent;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        disposed = true;
+        base.Dispose(disposing);
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -56,7 +70,7 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
         {
             Interlocked.Increment(ref succeededCount);
             sent?.Invoke(true, null);
-            await ResendAsync(cancellationToken).ConfigureAwait(false);
+            StartResend();
         }
         else
         {
@@ -73,7 +87,7 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
 
     private async Task KeepAsync(HttpRequestMessage request)
     {
-        if ((payloads is null) || (request.Content is null) || (request.RequestUri is null))
+        if ((request.Content is null) || (request.RequestUri is null) || (FindStore(request.RequestUri) is not { } store))
         {
             return;
         }
@@ -84,20 +98,54 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
             .ToArray();
         lock (sync)
         {
-            payloads.Add(new Payload(request.RequestUri, headers, body));
+            sequence++;
+            store.Payloads.Add(new Payload(sequence, request.RequestUri, headers, body));
         }
     }
 
-    private async Task ResendAsync(CancellationToken cancellationToken)
+    private Store? FindStore(Uri uri)
     {
-        if ((payloads is null) || (Interlocked.Exchange(ref resending, 1) == 1))
+        foreach (var store in stores)
+        {
+            if (uri.AbsolutePath.EndsWith(store.Path, StringComparison.Ordinal))
+            {
+                return store;
+            }
+        }
+
+        return null;
+    }
+
+    private void StartResend()
+    {
+        if ((WaitingCount == 0) || (Interlocked.Exchange(ref resending, 1) == 1))
         {
             return;
         }
 
+        _ = Task.Run(ResendAllAsync);
+    }
+
+    private async Task ResendAllAsync()
+    {
         try
         {
-            await ResendCoreAsync(payloads, cancellationToken).ConfigureAwait(false);
+            while (!disposed && (PeekOldest() is { } oldest))
+            {
+                if (!await ResendAsync(oldest.Payload).ConfigureAwait(false))
+                {
+                    return;
+                }
+
+                lock (sync)
+                {
+                    var payloads = oldest.Store.Payloads;
+                    if ((payloads.Count > 0) && ReferenceEquals(payloads[0], oldest.Payload))
+                    {
+                        payloads.RemoveFirst();
+                    }
+                }
+            }
         }
         finally
         {
@@ -105,47 +153,42 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
         }
     }
 
-    private async Task ResendCoreAsync(RingBuffer<Payload> buffer, CancellationToken cancellationToken)
+    private (Store Store, Payload Payload)? PeekOldest()
     {
-        for (var i = 0; i < ResendPerSend; i++)
+        lock (sync)
         {
-            Payload payload;
-            lock (sync)
+            Store? oldest = null;
+            foreach (var store in stores)
             {
-                if (buffer.Count == 0)
+                if ((store.Payloads.Count > 0) && ((oldest is null) || (store.Payloads[0].Sequence < oldest.Payloads[0].Sequence)))
                 {
-                    return;
-                }
-
-                payload = buffer[0];
-            }
-
-            try
-            {
-                using var request = payload.CreateRequest();
-                using var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                if (!response.IsSuccessStatusCode && IsRetryable(response.StatusCode))
-                {
-                    return;
+                    oldest = store;
                 }
             }
-            catch (Exception ex) when (ex is HttpRequestException or WebException or IOException or OperationCanceledException)
-            {
-                return;
-            }
 
-            lock (sync)
-            {
-                if ((buffer.Count > 0) && ReferenceEquals(buffer[0], payload))
-                {
-                    buffer.RemoveFirst();
-                }
-            }
+            return oldest is null ? null : (oldest, oldest.Payloads[0]);
+        }
+    }
+
+    private async Task<bool> ResendAsync(Payload payload)
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(resendTimeout);
+            using var request = payload.CreateRequest();
+            using var response = await base.SendAsync(request, timeout.Token).ConfigureAwait(false);
+            return response.IsSuccessStatusCode || !IsRetryable(response.StatusCode);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or WebException or IOException or OperationCanceledException or ObjectDisposedException)
+        {
+            return false;
         }
     }
 
     private static bool IsRetryable(HttpStatusCode code) =>
         code is HttpStatusCode.TooManyRequests or HttpStatusCode.BadGateway or HttpStatusCode.ServiceUnavailable or HttpStatusCode.GatewayTimeout;
+
+    private sealed record Store(string Path, RingBuffer<Payload> Payloads);
 
     private sealed class Payload
     {
@@ -155,8 +198,11 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
 
         private readonly byte[] body;
 
-        public Payload(Uri uri, KeyValuePair<string, IEnumerable<string>>[] headers, byte[] body)
+        public long Sequence { get; }
+
+        public Payload(long sequence, Uri uri, KeyValuePair<string, IEnumerable<string>>[] headers, byte[] body)
         {
+            Sequence = sequence;
             this.uri = uri;
             this.headers = headers;
             this.body = body;

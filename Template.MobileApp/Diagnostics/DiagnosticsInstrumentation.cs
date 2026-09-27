@@ -52,6 +52,14 @@ public sealed class DiagnosticsInstrumentation : IDisposable
         meter.Dispose();
     }
 
+    public void AddCustomMetrics(params ReadOnlySpan<(string Name, Func<double> Observe)> metrics)
+    {
+        foreach (var (name, observe) in metrics)
+        {
+            meter.CreateObservableGauge(name, observe);
+        }
+    }
+
     private (ProcessStatistics Statistics, long HeapSize) Read()
     {
         lock (sync)

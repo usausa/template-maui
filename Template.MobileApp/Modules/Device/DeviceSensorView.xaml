@@ -142,6 +142,12 @@
                 <Setter Property="ColumnSpacing" Value="16" />
             </Style>
 
+            <Style x:Key="SensorDialDrawing"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="120" />
+            </Style>
+
             <Style x:Key="SensorTextStack"
                    TargetType="VerticalStackLayout"
                    BasedOn="{StaticResource BasicTextGroupStack}">
@@ -401,7 +407,7 @@
                 <Grid Style="{StaticResource SensorRowGrid}"
                       ColumnDefinitions="Auto,*">
                     <drawing:DrawingControl Grid.Column="0"
-                                            WidthRequest="120" HeightRequest="120"
+                                            Style="{StaticResource SensorDialDrawing}"
                                             Drawing="{Binding CompassDial}" />
                     <VerticalStackLayout Grid.Column="1"
                                          Style="{StaticResource SensorTextStack}">
@@ -420,7 +426,7 @@
                 <Grid Style="{StaticResource SensorRowGrid}"
                       ColumnDefinitions="Auto,*">
                     <drawing:DrawingControl Grid.Column="0"
-                                            WidthRequest="120" HeightRequest="120"
+                                            Style="{StaticResource SensorDialDrawing}"
                                             Drawing="{Binding Level}" />
                     <VerticalStackLayout Grid.Column="1"
                                          Style="{StaticResource SensorTextStack}">

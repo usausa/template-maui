@@ -86,6 +86,7 @@
             <Style x:Key="GraphRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="HeightRequest" Value="26" />
             </Style>
         </ResourceDictionary>
     </ContentView.Resources>
@@ -111,7 +112,6 @@
                 <DataTemplate x:DataType="{x:Type graph:GraphRow}">
                     <Grid Style="{StaticResource GraphRowGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto"
-                          HeightRequest="26"
                           BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroupList>
@@ -127,7 +127,6 @@
                         </VisualStateManager.VisualStateGroups>
 
                         <controls:GraphRowSurface Grid.Column="0"
-                                                  VerticalOptions="Fill"
                                                   RowData="{Binding .}" />
 
                         <HorizontalStackLayout Grid.Column="1"

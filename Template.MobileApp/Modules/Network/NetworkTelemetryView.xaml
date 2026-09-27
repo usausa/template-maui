@@ -15,6 +15,20 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CustomValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowValueLabel}">
+                <Setter Property="WidthRequest" Value="40" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
@@ -61,6 +75,67 @@
                                 Command="{Binding CrashCommand}"
                                 Text="Crash"
                                 ImageSource="{x:Static markup:AppIcons.SmallBugReport}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <!-- Custom value -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Custom value"
+                               Icon="{x:Static fonts:MaterialIcons.Tune}">
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardRowLabel}"
+                               Text="Value 1" />
+                        <Slider Grid.Column="1"
+                                behaviors:SliderOption.Step="1"
+                                Value="{Binding Value1}"
+                                Minimum="0" Maximum="100" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource CustomValueLabel}"
+                               Text="{Binding Value1, StringFormat='{0:F0}'}" />
+                    </Grid>
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardRowLabel}"
+                               Text="Value 2" />
+                        <Slider Grid.Column="1"
+                                behaviors:SliderOption.Step="1"
+                                Value="{Binding Value2}"
+                                Minimum="0" Maximum="100" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource CustomValueLabel}"
+                               Text="{Binding Value2, StringFormat='{0:F0}'}" />
+                    </Grid>
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardRowLabel}"
+                               Text="Value 3" />
+                        <Slider Grid.Column="1"
+                                behaviors:SliderOption.Step="1"
+                                Value="{Binding Value3}"
+                                Minimum="0" Maximum="100" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource CustomValueLabel}"
+                               Text="{Binding Value3, StringFormat='{0:F0}'}" />
+                    </Grid>
+                    <Grid Style="{StaticResource CardRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardRowLabel}"
+                               Text="Value 4" />
+                        <Slider Grid.Column="1"
+                                behaviors:SliderOption.Step="1"
+                                Value="{Binding Value4}"
+                                Minimum="0" Maximum="100" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource CustomValueLabel}"
+                               Text="{Binding Value4, StringFormat='{0:F0}'}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

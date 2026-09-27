@@ -16,6 +16,12 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="MeterRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource FillGrid}">
+                <Setter Property="BackgroundColor" Value="#2E2F45" />
+            </Style>
+
             <Style x:Key="MeterGauge"
                    TargetType="controls:SpeedGauge">
                 <Setter Property="Margin" Value="0,20,0,-20" />
@@ -23,6 +29,35 @@
                 <Setter Property="ValueColor" Value="Turquoise" />
                 <Setter Property="MidColor" Value="Yellow" />
                 <Setter Property="HighColor" Value="Red" />
+            </Style>
+
+            <Style x:Key="SpeedStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SpeedValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="Gkktt" />
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SpeedUnitLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="Gkktt" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="FpsLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Start" />
+                <Setter Property="TextColor" Value="White" />
             </Style>
 
             <Style x:Key="JoyStick"
@@ -116,24 +151,28 @@
                     </LinearGradientBrush>
                 </Setter>
             </Style>
+
+            <Style x:Key="VignetteBorder"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource FillGrid}"
+    <Grid Style="{StaticResource MeterRootGrid}"
           RowDefinitions="*,Auto,80"
-          ColumnDefinitions="*,*"
-          BackgroundColor="#2E2F45">
+          ColumnDefinitions="*,*">
 
         <controls:SpeedGauge Grid.Row="0" Grid.ColumnSpan="2"
                              Style="{StaticResource MeterGauge}"
                              MaxSpeed="255"
                              Speed="{Binding Speed}" />
         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2"
-                             VerticalOptions="Center">
-            <Label HorizontalTextAlignment="Center"
-                   Text="{Binding Speed}"
-                   FontFamily="Gkktt" FontSize="96"
-                   TextColor="White">
+                             Style="{StaticResource SpeedStack}">
+            <Label Style="{StaticResource SpeedValueLabel}"
+                   Text="{Binding Speed}">
                 <Label.Shadow>
                     <Shadow Offset="0,0"
                             Brush="Turquoise"
@@ -141,17 +180,13 @@
                             Radius="16" />
                 </Label.Shadow>
             </Label>
-            <Label HorizontalTextAlignment="Center"
-                   Text="km/h"
-                   FontFamily="Gkktt" FontSize="24"
-                   TextColor="White" />
+            <Label Style="{StaticResource SpeedUnitLabel}"
+                   Text="km/h" />
         </VerticalStackLayout>
 
         <Label Grid.Row="0" Grid.Column="1"
-               HorizontalTextAlignment="End" VerticalTextAlignment="Start"
-               Text="{Binding Fps, StringFormat='{0} fps'}"
-               FontSize="12"
-               TextColor="White" />
+               Style="{StaticResource FpsLabel}"
+               Text="{Binding Fps, StringFormat='{0} fps'}" />
 
         <controls:JoyStickView Grid.Row="1" Grid.Column="0"
                                Style="{StaticResource JoyStick}"
@@ -175,8 +210,7 @@
 
         <!-- 四隅を暗くするビネット(最前面・タッチ透過) -->
         <Border Grid.RowSpan="3" Grid.ColumnSpan="2"
-                InputTransparent="True"
-                StrokeThickness="0">
+                Style="{StaticResource VignetteBorder}">
             <Border.Background>
                 <RadialGradientBrush Radius="0.9" Center="0.5,0.4">
                     <GradientStop Offset="0.55" Color="#00000000" />

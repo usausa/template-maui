@@ -10,9 +10,6 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
     public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Font warmup completed. target=[{target}], elapsed=[{elapsed}]")]
-    public static partial void DebugFontWarmup(this ILogger logger, string target, long elapsed);
-
     // State
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Screen state changed. state=[{on}]")]
@@ -28,9 +25,6 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Telemetry endpoint changed. endpoint=[{endpoint}]")]
     public static partial void InfoTelemetryEndPointChanged(this ILogger logger, Uri? endpoint);
-
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Diagnostic sampler changed. running=[{running}]")]
-    public static partial void DebugSamplerChanged(this ILogger logger, bool running);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Telemetry operation failed.")]
     public static partial void WarnTelemetryOperationFailed(this ILogger logger, Exception exception);

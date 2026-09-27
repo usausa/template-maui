@@ -160,6 +160,7 @@
                 <Setter Property="TranslationY" Value="-32" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
@@ -234,8 +235,7 @@
                                         behaviors:AnimationOption.BounceTrigger="{Binding IsFavorite}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICharacterViewModel}}, Path=FavoriteCommand, x:DataType={x:Type module:UICharacterViewModel}}"
                                         CommandParameter="{Binding .}"
-                                        Text="☆"
-                                        TextColor="White">
+                                        Text="☆">
                                     <Button.Triggers>
                                         <DataTrigger TargetType="Button"
                                                      Binding="{Binding IsFavorite}"

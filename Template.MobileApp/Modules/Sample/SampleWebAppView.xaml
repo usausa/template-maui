@@ -11,6 +11,19 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="LoadingOverlayGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="#CCFFFFFF" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
 
@@ -19,11 +32,9 @@
 
         <Grid x:Name="LoadingOverlay"
               Grid.Row="0"
-              BackgroundColor="#CCFFFFFF">
-            <ActivityIndicator WidthRequest="48" HeightRequest="48"
-                               HorizontalOptions="Center" VerticalOptions="Center"
-                               IsRunning="True"
-                               Color="{StaticResource BlueAccent2}" />
+              Style="{StaticResource LoadingOverlayGrid}">
+            <ActivityIndicator Style="{StaticResource BasicLoadingIndicator}"
+                               IsRunning="True" />
         </Grid>
 
     </Grid>

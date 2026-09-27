@@ -91,6 +91,7 @@
             <Style x:Key="CommitInfoGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
@@ -123,8 +124,7 @@
                         <Grid Grid.Row="0" Grid.Column="1"
                               Style="{StaticResource CommitInfoGrid}"
                               RowDefinitions="Auto,Auto"
-                              ColumnDefinitions="Auto,Auto,*,Auto"
-                              VerticalOptions="Center">
+                              ColumnDefinitions="Auto,Auto,*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource ShaLabel}"
                                    Text="{Binding Row.ShortSha}" />

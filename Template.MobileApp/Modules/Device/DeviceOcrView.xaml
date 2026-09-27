@@ -86,7 +86,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource MediaRootGrid}"
+    <Grid Style="{StaticResource DarkRootGrid}"
           RowDefinitions="*,Auto">
 
         <mct:CameraView Grid.Row="0"
@@ -100,8 +100,8 @@
               Style="{StaticResource ProcessingOverlayGrid}"
               IsVisible="{Binding IsProcessing}">
             <VerticalStackLayout Style="{StaticResource ProcessingStack}">
-                <ActivityIndicator IsRunning="{Binding IsProcessing}"
-                                   Color="White" />
+                <ActivityIndicator Style="{StaticResource BasicLightLoadingIndicator}"
+                                   IsRunning="{Binding IsProcessing}" />
                 <Label Style="{StaticResource ProcessingLabel}"
                        Text="Recognizing..." />
             </VerticalStackLayout>

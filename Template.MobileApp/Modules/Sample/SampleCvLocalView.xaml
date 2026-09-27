@@ -21,6 +21,19 @@
              shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CaptureImage"
+                   TargetType="Image">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
 
@@ -28,9 +41,9 @@
                         behaviors:CameraBind.Controller="{Binding Controller}"
                         IsVisible="{Binding IsPreview}" />
         <Image Grid.Row="0"
+               Style="{StaticResource CaptureImage}"
                Source="{Binding Image}"
-               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-               BackgroundColor="Black" />
+               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}" />
         <drawing:DrawingControl Grid.Row="0"
                                 IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                                 Drawing="{Binding Drawing}" />

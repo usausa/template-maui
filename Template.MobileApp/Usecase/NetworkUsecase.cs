@@ -143,6 +143,23 @@ public sealed class NetworkUsecase
         ExecuteAsync((h, t) => h.DeleteDataAsync(id, t), cancellationToken: cancellationToken);
 
     //--------------------------------------------------------------------------------
+    // Device
+    //--------------------------------------------------------------------------------
+
+    public async ValueTask RegisterDeviceAsync(string deviceId, string name, CancellationToken cancellationToken = default)
+    {
+        var request = new DeviceRegisterRequest { Name = name };
+        var result = await ExecuteVerboseAsync((h, t) => h.PutDeviceAsync(deviceId, request, t), cancellationToken: cancellationToken);
+        if (result.IsSuccess)
+        {
+            var device = result.Value;
+            var action = result.StatusCode == HttpStatusCode.Created ? "Register" : "Update";
+            var status = device.IsEnabled ? "Enabled" : "Disabled";
+            await dialog.InformationAsync($"{action} success.\r\nname=[{device.Name}]\r\ngroup=[{device.GroupName}]\r\nstatus=[{status}]");
+        }
+    }
+
+    //--------------------------------------------------------------------------------
     // Secret
     //--------------------------------------------------------------------------------
 

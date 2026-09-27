@@ -27,14 +27,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="StartupIndicator"
-                   TargetType="ActivityIndicator">
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HeightRequest" Value="48" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
-            </Style>
-
             <Style x:Key="StartupLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -119,7 +111,7 @@
               Style="{StaticResource StartupGrid}"
               IsVisible="{Binding Startup.IsCompleted, Converter={StaticResource ReverseConverter}}">
             <VerticalStackLayout Style="{StaticResource StartupStack}">
-                <ActivityIndicator Style="{StaticResource StartupIndicator}"
+                <ActivityIndicator Style="{StaticResource BasicLoadingIndicator}"
                                    IsRunning="True" />
                 <Label Style="{StaticResource StartupLabel}"
                        Text="Loading" />

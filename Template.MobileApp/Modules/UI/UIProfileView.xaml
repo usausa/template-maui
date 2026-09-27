@@ -28,6 +28,11 @@
             </Style>
 
             <!-- Cover -->
+            <Style x:Key="CoverGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="140" />
+            </Style>
+
             <Style x:Key="CoverImage"
                    TargetType="Image">
                 <Setter Property="HeightRequest" Value="140" />
@@ -268,7 +273,7 @@
         <VerticalStackLayout Style="{StaticResource ProfileStack}">
 
             <!-- Cover -->
-            <Grid HeightRequest="140">
+            <Grid Style="{StaticResource CoverGrid}">
                 <Image x:Name="CoverImage"
                        Style="{StaticResource CoverImage}"
                        Source="profile_cover.jpg" />

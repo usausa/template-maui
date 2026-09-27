@@ -72,6 +72,24 @@ public sealed class DataUpdateRequest
     public int Value { get; set; }
 }
 
+public sealed class DeviceRegisterRequest
+{
+    public string Name { get; set; } = default!;
+}
+
+public sealed class DeviceRegisterResponse
+{
+    public string DeviceId { get; set; } = default!;
+
+    public string Name { get; set; } = default!;
+
+    public string? GroupName { get; set; }
+
+    public bool IsEnabled { get; set; }
+
+    public DateTime RegisteredAt { get; set; }
+}
+
 public sealed class StorageListEntry
 {
     public string Name { get; set; } = default!;
@@ -162,6 +180,16 @@ public sealed class HttpService
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
         return client.SendAsync(HttpMethod.Delete, $"api/data/{id}", cancel: cancellationToken);
+    }
+
+    //--------------------------------------------------------------------------------
+    // Device
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<IRestResponse<DeviceRegisterResponse>> PutDeviceAsync(string deviceId, DeviceRegisterRequest request, CancellationToken cancellationToken = default)
+    {
+        var client = httpClientFactory.CreateClient(ApiNames.Default);
+        return client.PutAsync<DeviceRegisterResponse>($"api/device/{deviceId}", request, cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------

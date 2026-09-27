@@ -70,6 +70,11 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="DrawerProfileStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="DrawerNameLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
@@ -142,7 +147,7 @@
                                        Text="{x:Static fonts:MaterialIcons.Account_circle}" />
                             </Border>
                             <VerticalStackLayout Grid.Column="1"
-                                                 VerticalOptions="Center">
+                                                 Style="{StaticResource DrawerProfileStack}">
                                 <Label Style="{StaticResource DrawerNameLabel}"
                                        Text="うさうささん" />
                                 <Label Style="{StaticResource DrawerMailLabel}"
@@ -209,7 +214,7 @@
                                    Text="{x:Static fonts:MaterialIcons.Account_circle}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1"
-                                             VerticalOptions="Center">
+                                             Style="{StaticResource DrawerProfileStack}">
                             <Label Style="{StaticResource DrawerNameLabel}"
                                    Text="うさうささん" />
                             <Label Style="{StaticResource DrawerMailLabel}"

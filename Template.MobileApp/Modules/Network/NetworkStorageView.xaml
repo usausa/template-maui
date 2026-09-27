@@ -66,6 +66,12 @@
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
+            <Style x:Key="RowSizeLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource RowInfoLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="TransferProgressBar"
                    TargetType="ProgressBar">
                 <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
@@ -126,8 +132,7 @@
                                            Style="{StaticResource RowInfoLabel}"
                                            Text="{Binding LastModifiedText}" />
                                     <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
-                                           Style="{StaticResource RowInfoLabel}"
-                                           VerticalOptions="Center"
+                                           Style="{StaticResource RowSizeLabel}"
                                            Text="{Binding SizeText}" />
                                     <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                                              Style="{StaticResource CardRowDivider}" />

@@ -12,17 +12,12 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
 
     private readonly ChatRoomClient chatClient;
 
-    private readonly Settings settings;
-
-    private Uri? address;
+    private readonly Uri address;
 
     private bool active;
 
     [ObservableProperty]
-    public partial bool Configured { get; set; }
-
-    [ObservableProperty]
-    public partial string AddressDisplay { get; set; } = string.Empty;
+    public partial string AddressDisplay { get; set; }
 
     [ObservableProperty]
     public partial string StateText { get; set; } = "切断";
@@ -61,43 +56,24 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
         this.deviceInfo = deviceInfo;
         this.dispatcher = dispatcher;
         this.chatClient = chatClient;
-        this.settings = settings;
 
-        SendCommand = MakeAsyncCommand(SendAsync, () => Configured && !String.IsNullOrWhiteSpace(Input));
-        ServerTimeCommand = MakeAsyncCommand(GetServerTimeAsync, () => Configured);
+        address = new Uri(settings.GrpcEndPoint);
+        AddressDisplay = address.ToString();
+
+        SendCommand = MakeAsyncCommand(SendAsync, () => !String.IsNullOrWhiteSpace(Input));
+        ServerTimeCommand = MakeAsyncCommand(GetServerTimeAsync);
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
-    public override Task OnNavigatingToAsync(INavigationContext context)
-    {
-        Configured = settings.IsGrpcConfigured();
-        if (Configured)
-        {
-            address = new Uri(settings.GrpcEndPoint);
-            AddressDisplay = address.ToString();
-        }
-        else
-        {
-            AddressDisplay = "未設定";
-        }
-
-        return Task.CompletedTask;
-    }
-
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (address is not null)
-        {
-            active = true;
-            chatClient.StateChanged += OnStateChanged;
-            chatClient.MessageReceived += OnMessageReceived;
-            return chatClient.ConnectAsync(address, deviceInfo.Name);
-        }
-
-        return Task.CompletedTask;
+        active = true;
+        chatClient.StateChanged += OnStateChanged;
+        chatClient.MessageReceived += OnMessageReceived;
+        return chatClient.ConnectAsync(address, deviceInfo.Name);
     }
 
     public override async Task OnNavigatingFromAsync(INavigationContext context)
@@ -117,7 +93,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    protected override Task OnNotifyFunction2() => Configured ? chatClient.ConnectAsync(address!, deviceInfo.Name) : Task.CompletedTask;
+    protected override Task OnNotifyFunction2() => chatClient.ConnectAsync(address, deviceInfo.Name);
 
     //--------------------------------------------------------------------------------
     // Chat
@@ -171,7 +147,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
     {
         try
         {
-            var time = await ChatRoomClient.GetServerTimeAsync(address!);
+            var time = await ChatRoomClient.GetServerTimeAsync(address);
             ServerTime = time.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
         catch (RpcException ex)

@@ -20,6 +20,19 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="CountdownGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="130" />
+            </Style>
+
+            <Style x:Key="CountdownDrawing"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="WidthRequest" Value="112" />
+                <Setter Property="HeightRequest" Value="112" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="CountdownButton"
                    TargetType="Button">
                 <Setter Property="WidthRequest" Value="84" />
@@ -49,6 +62,18 @@
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="LargeCanvasBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CanvasBorder}">
+                <Setter Property="HeightRequest" Value="240" />
+            </Style>
+
+            <Style x:Key="SmallCanvasBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CanvasBorder}">
+                <Setter Property="HeightRequest" Value="160" />
             </Style>
 
             <Style x:Key="CountChip"
@@ -110,8 +135,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Draw}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
 
-                    <Border Style="{StaticResource CanvasBorder}"
-                            HeightRequest="240">
+                    <Border Style="{StaticResource LargeCanvasBorder}">
                         <drawing:DrawingControl Drawing="{Binding Sketch}" />
                     </Border>
 
@@ -135,8 +159,7 @@
                                 Text="PNG出力" />
                     </Grid>
 
-                    <Border Style="{StaticResource CanvasBorder}"
-                            HeightRequest="160"
+                    <Border Style="{StaticResource SmallCanvasBorder}"
                             IsVisible="{Binding HasExport}">
                         <Image behaviors:AnimationOption.FadeInTrigger="{Binding ExportedImage}"
                                Source="{Binding ExportedImage}"
@@ -155,8 +178,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Sensors}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
 
-                    <Border Style="{StaticResource CanvasBorder}"
-                            HeightRequest="160">
+                    <Border Style="{StaticResource SmallCanvasBorder}">
                         <drawing:DrawingControl Drawing="{Binding Pulse}" />
                     </Border>
 
@@ -172,9 +194,8 @@
                                Icon="{x:Static fonts:MaterialIcons.Timer}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
 
-                    <Grid HeightRequest="130">
-                        <drawing:DrawingControl WidthRequest="112" HeightRequest="112"
-                                                HorizontalOptions="Center" VerticalOptions="Center"
+                    <Grid Style="{StaticResource CountdownGrid}">
+                        <drawing:DrawingControl Style="{StaticResource CountdownDrawing}"
                                                 Drawing="{Binding Countdown}" />
                         <Button Style="{StaticResource CountdownButton}"
                                 Command="{Binding StartCountdownCommand}"

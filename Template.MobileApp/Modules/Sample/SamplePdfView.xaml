@@ -30,6 +30,18 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
+            <Style x:Key="PrevPageEdgeButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PageEdgeButton}">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="NextPageEdgeButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PageEdgeButton}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
             <Style x:Key="PageSlider"
                    TargetType="Slider">
                 <Setter Property="Margin" Value="16,0" />
@@ -53,13 +65,11 @@
 
         <!-- 画面端タップで前後ページ -->
         <Button Grid.Row="0"
-                Style="{StaticResource PageEdgeButton}"
-                HorizontalOptions="Start"
+                Style="{StaticResource PrevPageEdgeButton}"
                 Command="{Binding PrevPageCommand}"
                 IsEnabled="{Binding CanMovePrev}" />
         <Button Grid.Row="0"
-                Style="{StaticResource PageEdgeButton}"
-                HorizontalOptions="End"
+                Style="{StaticResource NextPageEdgeButton}"
                 Command="{Binding NextPageCommand}"
                 IsEnabled="{Binding CanMoveNext}" />
 

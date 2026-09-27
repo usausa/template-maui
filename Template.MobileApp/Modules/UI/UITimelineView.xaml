@@ -53,6 +53,11 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <Style x:Key="DateStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="DateCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -85,6 +90,11 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="TimelineDotGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="22" />
             </Style>
 
             <Style x:Key="TimelineLine"
@@ -223,7 +233,7 @@
                        Text="{x:Static fonts:MaterialIcons.Calendar_today}" />
             </Border>
             <VerticalStackLayout Grid.Column="1"
-                                 VerticalOptions="Center">
+                                 Style="{StaticResource DateStack}">
                 <Label Style="{StaticResource DateCaptionLabel}"
                        Text="本日のスケジュール" />
                 <Label Style="{StaticResource DateLabel}"
@@ -250,8 +260,8 @@
 
                         <!-- Dot + line (done: check / current: halo / upcoming: hollow) -->
                         <Grid Grid.Column="1"
-                              RowDefinitions="*"
-                              WidthRequest="22">
+                              Style="{StaticResource TimelineDotGrid}"
+                              RowDefinitions="*">
                             <BoxView Style="{StaticResource TimelineLine}" />
                             <Ellipse Style="{StaticResource TimelineDotHalo}"
                                      behaviors:AnimationOption.Pulse="{Binding Current}"

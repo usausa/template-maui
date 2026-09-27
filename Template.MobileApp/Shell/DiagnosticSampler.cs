@@ -136,7 +136,21 @@ public sealed class DiagnosticSampler : IDisposable
 
     public bool IsRunning { get; private set; }
 
-    // 同じインスタンスを書き換える
+    public bool Visible
+    {
+        get;
+        set
+        {
+            if (value == field)
+            {
+                return;
+            }
+
+            field = value;
+            UpdateMonitor();
+        }
+    }
+
     public DiagnosticSnapshot Snapshot { get; }
 
     // ------------------------------------------------------------
@@ -177,17 +191,11 @@ public sealed class DiagnosticSampler : IDisposable
 
         // Read initial statistics to set the baseline
         previous = deviceInformation.ReadProcessStatistics();
-        emaFps = 0;
         memoryHistory.Clear();
-        measureCount = 0;
-        arrangeCount = 0;
-        layoutSuppressUntil = 0;
-        layoutListener = StartLayoutListener();
-
-        display.StartMonitor();
         timer.Start();
 
         IsRunning = true;
+        UpdateMonitor();
     }
 
     private MeterListener StartLayoutListener()
@@ -215,11 +223,31 @@ public sealed class DiagnosticSampler : IDisposable
         }
 
         timer.Stop();
-        display.StopMonitor();
-        layoutListener?.Dispose();
-        layoutListener = null;
 
         IsRunning = false;
+        UpdateMonitor();
+    }
+
+    private void UpdateMonitor()
+    {
+        if (IsRunning && Visible)
+        {
+            if (layoutListener is null)
+            {
+                emaFps = 0;
+                measureCount = 0;
+                arrangeCount = 0;
+                layoutSuppressUntil = 0;
+                layoutListener = StartLayoutListener();
+                display.StartMonitor();
+            }
+        }
+        else if (layoutListener is not null)
+        {
+            display.StopMonitor();
+            layoutListener.Dispose();
+            layoutListener = null;
+        }
     }
 
     public void ExcludeLayout(Element element)
@@ -251,11 +279,17 @@ public sealed class DiagnosticSampler : IDisposable
             return;
         }
 
-        // CPU
-        var cpuUsage = (statistics.CpuTime - previous.CpuTime).TotalSeconds / elapsed * 100 / processorCount;
-
         // Memory
         memoryHistory.Add(statistics.WorkingSet / MegaByte);
+
+        if (!Visible)
+        {
+            previous = statistics;
+            return;
+        }
+
+        // CPU
+        var cpuUsage = (statistics.CpuTime - previous.CpuTime).TotalSeconds / elapsed * 100 / processorCount;
 
         // Allocation
         var allocationRate = (statistics.AllocatedBytes - previous.AllocatedBytes) / elapsed;

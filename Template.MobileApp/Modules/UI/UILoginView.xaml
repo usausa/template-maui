@@ -30,6 +30,13 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="TitleShadowPath"
+                   TargetType="Path"
+                   BasedOn="{StaticResource TitlePath}">
+                <Setter Property="Opacity" Value="0.4" />
+                <Setter Property="TranslationY" Value="10" />
+            </Style>
+
             <Style x:Key="TitleBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="96" />
@@ -176,9 +183,8 @@
           RowDefinitions="160,*">
 
         <Path Grid.Row="0"
-              Style="{StaticResource TitlePath}"
-              Opacity="0.4"
-              Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" TranslationY="10" />
+              Style="{StaticResource TitleShadowPath}"
+              Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" />
 
         <Path Grid.Row="0"
               Style="{StaticResource TitlePath}"

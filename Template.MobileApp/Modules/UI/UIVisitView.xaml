@@ -287,6 +287,13 @@
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
+            <Style x:Key="SortKeyBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+            </Style>
+
             <Style x:Key="SortKeyBadge"
                    TargetType="Label">
                 <Setter Property="WidthRequest" Value="18" />
@@ -408,6 +415,12 @@
                 <Setter Property="Margin" Value="0,0,10,2" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="DetailNoteLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource DetailLabel}">
+                <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
             <!-- バッジ (状態は色、種別は絵文字で示す) -->
@@ -585,9 +598,8 @@
                                                           CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
                                 <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
-                                    <Border VerticalOptions="Center"
-                                            IsVisible="{Binding IsActive}"
-                                            StrokeThickness="0" StrokeShape="RoundRectangle 9">
+                                    <Border Style="{StaticResource SortKeyBadgeBorder}"
+                                            IsVisible="{Binding IsActive}">
                                         <Label Style="{StaticResource SortKeyBadge}"
                                                Text="{Binding Priority}" />
                                     </Border>
@@ -686,11 +698,10 @@
                                                Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
                                                TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
                                     </FlexLayout>
-                                    <Label Style="{StaticResource DetailLabel}"
+                                    <Label Style="{StaticResource DetailNoteLabel}"
                                            IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
                                            Text="{Binding Note, StringFormat='📝 {0}'}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
-                                           LineBreakMode="WordWrap" />
+                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
 

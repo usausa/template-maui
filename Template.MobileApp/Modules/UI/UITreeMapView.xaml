@@ -20,6 +20,26 @@
              shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CaptureImage"
+                   TargetType="Image">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="ShutterFlashBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="White" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,*">
 
@@ -28,19 +48,17 @@
                         IsVisible="{Binding IsPreview}" />
 
         <Image Grid.Row="0"
+               Style="{StaticResource CaptureImage}"
                Source="{Binding Image}"
-               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-               BackgroundColor="Black" />
+               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}" />
         <drawing:DrawingControl Grid.Row="1"
                                 IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                                 Drawing="{Binding Drawing}" />
 
         <!-- 撮影瞬間のシャッターフラッシュ -->
         <BoxView Grid.Row="0" Grid.RowSpan="2"
-                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}"
-                 InputTransparent="True"
-                 Color="White"
-                 Opacity="0" />
+                 Style="{StaticResource ShutterFlashBoxView}"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
 
     </Grid>
 

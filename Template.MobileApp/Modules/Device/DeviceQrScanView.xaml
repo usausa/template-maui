@@ -24,6 +24,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="DetectFlashBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="White" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
             <Style x:Key="ScanPlaceholderLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource ResultLabel}">
@@ -46,10 +53,8 @@
 
         <!-- 検出時のフラッシュ -->
         <BoxView Grid.Row="0"
-                 behaviors:AnimationOption.FlashTrigger="{Binding Barcode}"
-                 InputTransparent="True"
-                 Color="White"
-                 Opacity="0" />
+                 Style="{StaticResource DetectFlashBoxView}"
+                 behaviors:AnimationOption.FlashTrigger="{Binding Barcode}" />
 
         <Grid Grid.Row="1">
             <Label Style="{StaticResource ResultLabel}"
@@ -65,17 +70,17 @@
               RowDefinitions="*,*"
               ColumnDefinitions="*,*">
             <Label Grid.Row="0" Grid.Column="0"
-                   Text="{Binding Controller.CameraFace, StringFormat='Camera: {0}'}"
-                   FontSize="14" />
+                   Style="{StaticResource BasicStatusLabel}"
+                   Text="{Binding Controller.CameraFace, StringFormat='Camera: {0}'}" />
             <Label Grid.Row="0" Grid.Column="1"
-                   Text="{Binding Controller.CurrentZoomFactor, StringFormat='Zoom: x{0}'}"
-                   FontSize="14" />
+                   Style="{StaticResource BasicStatusLabel}"
+                   Text="{Binding Controller.CurrentZoomFactor, StringFormat='Zoom: x{0}'}" />
             <Label Grid.Row="1" Grid.Column="0"
-                   Text="{Binding Controller.ForceInvert, StringFormat='Invert: {0}'}"
-                   FontSize="14" />
+                   Style="{StaticResource BasicStatusLabel}"
+                   Text="{Binding Controller.ForceInvert, StringFormat='Invert: {0}'}" />
             <Label Grid.Row="1" Grid.Column="1"
-                   Text="{Binding Controller.VibrationOnDetect, StringFormat='Vibe: {0}'}"
-                   FontSize="14" />
+                   Style="{StaticResource BasicStatusLabel}"
+                   Text="{Binding Controller.VibrationOnDetect, StringFormat='Vibe: {0}'}" />
         </Grid>
 
         <Grid Grid.Row="3"
