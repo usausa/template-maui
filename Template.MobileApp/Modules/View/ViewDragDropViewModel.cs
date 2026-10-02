@@ -78,20 +78,19 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
 
     public IObserveCommand DragStartingCommand { get; }
 
-    public IObserveCommand DropCompletedCommand { get; }
-
     public IObserveCommand ItemOverCommand { get; }
     public IObserveCommand ItemLeaveCommand { get; }
+    public IObserveCommand DropOnItemCommand { get; }
 
     public IObserveCommand ListOverCommand { get; }
     public IObserveCommand ListLeaveCommand { get; }
-
-    public IObserveCommand DropOnItemCommand { get; }
     public IObserveCommand DropOnListCommand { get; }
-    public IObserveCommand DropOnTrashCommand { get; }
 
     public IObserveCommand TrashOverCommand { get; }
     public IObserveCommand TrashLeaveCommand { get; }
+    public IObserveCommand DropOnTrashCommand { get; }
+
+    public IObserveCommand DropCompletedCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -99,17 +98,17 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
 
     public ViewDragDropViewModel()
     {
-        DragStartingCommand = MakeDelegateCommand<DragTask>(BeginDrag);
-        DropCompletedCommand = MakeDelegateCommand(EndDrag);
-        ItemOverCommand = MakeDelegateCommand<DragTask>(x => SetItemOver(x, true));
-        ItemLeaveCommand = MakeDelegateCommand<DragTask>(x => SetItemOver(x, false));
-        ListOverCommand = MakeDelegateCommand<string>(x => SetListOver(x, true));
-        ListLeaveCommand = MakeDelegateCommand<string>(x => SetListOver(x, false));
-        DropOnItemCommand = MakeDelegateCommand<DragTask>(DropOnItem);
-        DropOnListCommand = MakeDelegateCommand<string>(DropOnList);
-        DropOnTrashCommand = MakeDelegateCommand(DropOnTrash);
-        TrashOverCommand = MakeDelegateCommand(() => TrashActive = true);
-        TrashLeaveCommand = MakeDelegateCommand(() => TrashActive = false);
+        DragStartingCommand = MakeDelegateCommand<DragTask>(CommandMode.Simple, BeginDrag);
+        ItemOverCommand = MakeDelegateCommand<DragTask>(CommandMode.Simple, x => SetItemOver(x, true));
+        ItemLeaveCommand = MakeDelegateCommand<DragTask>(CommandMode.Simple, x => SetItemOver(x, false));
+        DropOnItemCommand = MakeDelegateCommand<DragTask>(CommandMode.Simple, DropOnItem);
+        ListOverCommand = MakeDelegateCommand<string>(CommandMode.Simple, x => SetListOver(x, true));
+        ListLeaveCommand = MakeDelegateCommand<string>(CommandMode.Simple, x => SetListOver(x, false));
+        DropOnListCommand = MakeDelegateCommand<string>(CommandMode.Simple, DropOnList);
+        TrashOverCommand = MakeDelegateCommand(CommandMode.Simple, () => TrashActive = true);
+        TrashLeaveCommand = MakeDelegateCommand(CommandMode.Simple, () => TrashActive = false);
+        DropOnTrashCommand = MakeDelegateCommand(CommandMode.Simple, DropOnTrash);
+        DropCompletedCommand = MakeDelegateCommand(CommandMode.Simple, EndDrag);
     }
 
     //--------------------------------------------------------------------------------

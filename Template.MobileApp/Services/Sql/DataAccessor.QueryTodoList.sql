@@ -1,0 +1,1 @@
+SELECT * FROM Todo ORDER BY Id

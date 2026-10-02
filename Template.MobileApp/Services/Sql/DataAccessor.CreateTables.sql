@@ -21,4 +21,16 @@ CREATE TABLE Work (
     Id INTEGER NOT NULL,
     Name TEXT NOT NULL,
     PRIMARY KEY (Id)
+);
+
+CREATE TABLE Todo (
+    Id INTEGER NOT NULL,
+    Title TEXT NOT NULL,
+    Note TEXT NOT NULL,
+    DueDate TEXT,
+    IsImportant INTEGER NOT NULL,
+    IsDone INTEGER NOT NULL,
+    CreatedAt TEXT NOT NULL,
+    UpdatedAt TEXT NOT NULL,
+    PRIMARY KEY (Id AUTOINCREMENT)
 )

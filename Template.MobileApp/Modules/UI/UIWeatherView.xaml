@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             x:Class="Template.MobileApp.Modules.UI.UIWeatherView"
+             x:DataType="{x:Type module:UIWeatherViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIWeatherViewModel}"
+             shell:ShellProperty.Title="Weather"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- 天気と昼夜の空 -->
+            <LinearGradientBrush x:Key="ClearSkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#0D5BB8" />
+                <GradientStop Offset="0.5" Color="#2383DE" />
+                <GradientStop Offset="1" Color="#6CB8F2" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="PartlyCloudySkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#2A5D99" />
+                <GradientStop Offset="0.5" Color="#4A7EBC" />
+                <GradientStop Offset="1" Color="#93B8DC" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="CloudySkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#465668" />
+                <GradientStop Offset="0.5" Color="#627589" />
+                <GradientStop Offset="1" Color="#9CAAB9" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="RainSkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#26323F" />
+                <GradientStop Offset="0.5" Color="#3B4E62" />
+                <GradientStop Offset="1" Color="#6A7E93" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="ThunderSkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#16172A" />
+                <GradientStop Offset="0.5" Color="#2C2C4D" />
+                <GradientStop Offset="1" Color="#57557F" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="SnowSkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#56759A" />
+                <GradientStop Offset="0.5" Color="#7B99B8" />
+                <GradientStop Offset="1" Color="#B9CBDC" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="NightSkyBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#050B20" />
+                <GradientStop Offset="0.5" Color="#122248" />
+                <GradientStop Offset="1" Color="#2B4478" />
+            </LinearGradientBrush>
+
+            <!-- 空の光 (昼は日差し、夜は月明かり) -->
+            <RadialGradientBrush x:Key="DayGlowBrush">
+                <GradientStop Offset="0" Color="#99FFF3C2" />
+                <GradientStop Offset="0.45" Color="#33FFF3C2" />
+                <GradientStop Offset="1" Color="#00FFF3C2" />
+            </RadialGradientBrush>
+            <RadialGradientBrush x:Key="NightGlowBrush">
+                <GradientStop Offset="0" Color="#66BFD0FF" />
+                <GradientStop Offset="0.45" Color="#1FBFD0FF" />
+                <GradientStop Offset="1" Color="#00BFD0FF" />
+            </RadialGradientBrush>
+
+            <!-- 注意報は橙、警報は赤 -->
+            <LinearGradientBrush x:Key="AdvisoryBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="#F59E0B" />
+                <GradientStop Offset="1" Color="#EA580C" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="WarningBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="#EF4444" />
+                <GradientStop Offset="1" Color="#B91C1C" />
+            </LinearGradientBrush>
+
+            <!-- ゲージの色 (円弧の始まりから終わり) -->
+            <LinearGradientBrush x:Key="UvBrush">
+                <GradientStop Offset="0" Color="#4ADE80" />
+                <GradientStop Offset="0.3" Color="#FACC15" />
+                <GradientStop Offset="0.55" Color="#FB923C" />
+                <GradientStop Offset="0.8" Color="#EF4444" />
+                <GradientStop Offset="1" Color="#C084FC" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="HumidityBrush">
+                <GradientStop Offset="0" Color="#A5F3FC" />
+                <GradientStop Offset="1" Color="#3B82F6" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="PressureBrush">
+                <GradientStop Offset="0" Color="#818CF8" />
+                <GradientStop Offset="0.5" Color="#38BDF8" />
+                <GradientStop Offset="1" Color="#34D399" />
+            </LinearGradientBrush>
+
+            <Color x:Key="WeatherDimColor">#CCFFFFFF</Color>
+            <Color x:Key="WeatherRainColor">#9FD8FF</Color>
+            <Color x:Key="WeatherCardColor">#26FFFFFF</Color>
+            <Color x:Key="WeatherCardLineColor">#38FFFFFF</Color>
+            <Color x:Key="WeatherLineColor">#33FFFFFF</Color>
+            <Color x:Key="WeatherSaturdayColor">#A5CCFF</Color>
+            <Color x:Key="WeatherSundayColor">#FFABAB</Color>
+
+            <!-- 天気の絵文字 (夜は月と雲) と名前 -->
+            <s:MapToTextConverter x:Key="DayIconConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Clear}"
+                                      Value="☀️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.PartlyCloudy}"
+                                      Value="⛅" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Cloudy}"
+                                      Value="☁️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Rain}"
+                                      Value="🌧️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Thunder}"
+                                      Value="⛈️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Snow}"
+                                      Value="❄️" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="NightIconConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Clear}"
+                                      Value="🌙" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.PartlyCloudy}"
+                                      Value="☁️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Cloudy}"
+                                      Value="☁️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Rain}"
+                                      Value="🌧️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Thunder}"
+                                      Value="⛈️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Snow}"
+                                      Value="❄️" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="ConditionTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Clear}"
+                                      Value="晴れ" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.PartlyCloudy}"
+                                      Value="晴れ時々くもり" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Cloudy}"
+                                      Value="くもり" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Rain}"
+                                      Value="雨" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Thunder}"
+                                      Value="雷雨" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Snow}"
+                                      Value="雪" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- UV の段階の名前と色 -->
+            <s:MapToTextConverter x:Key="UvLevelTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.Low}"
+                                      Value="弱い" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.Moderate}"
+                                      Value="中程度" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.High}"
+                                      Value="強い" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.VeryHigh}"
+                                      Value="非常に強い" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.Extreme}"
+                                      Value="極端に強い" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToColorConverter x:Key="UvLevelColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.Low}"
+                                       Value="#8BD17C" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.Moderate}"
+                                       Value="#F5D547" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.High}"
+                                       Value="#F59E42" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.VeryHigh}"
+                                       Value="#EF5B5B" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.Extreme}"
+                                       Value="#B865D6" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <!-- 生活指数の名前・絵文字・色と、段階の文言 -->
+            <s:MapToTextConverter x:Key="IndexNameConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Laundry}"
+                                      Value="洗濯" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Umbrella}"
+                                      Value="傘" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Clothing}"
+                                      Value="服装" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Heatstroke}"
+                                      Value="熱中症" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Ultraviolet}"
+                                      Value="紫外線" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Pollen}"
+                                      Value="花粉" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="IndexIconConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Laundry}"
+                                      Value="👕" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Umbrella}"
+                                      Value="☂️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Clothing}"
+                                      Value="🧥" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Heatstroke}"
+                                      Value="🥵" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Ultraviolet}"
+                                      Value="🕶️" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Pollen}"
+                                      Value="🌲" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToColorConverter x:Key="IndexColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Laundry}"
+                                       Value="#7DD3FC" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Umbrella}"
+                                       Value="#A5B4FC" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Clothing}"
+                                       Value="#FCD34D" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Heatstroke}"
+                                       Value="#FCA5A5" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Ultraviolet}"
+                                       Value="#D8B4FE" />
+                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Pollen}"
+                                       Value="#86EFAC" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+            <converters:WeatherIndexTextConverter x:Key="IndexTextConverter" />
+
+            <!-- 注意報・警報の名前と説明 -->
+            <s:MapToTextConverter x:Key="AlertKindConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavyRain}"
+                                      Value="大雨" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Thunder}"
+                                      Value="雷" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.StrongWind}"
+                                      Value="強風" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Dry}"
+                                      Value="乾燥" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavySnow}"
+                                      Value="大雪" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="AlertLevelConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertLevel.Advisory}"
+                                      Value="注意報" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertLevel.Warning}"
+                                      Value="警報" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="AlertDescriptionConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavyRain}"
+                                      Value="低い土地の浸水や土砂災害に注意してください" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Thunder}"
+                                      Value="落雷や突風、急な強い雨に注意してください" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.StrongWind}"
+                                      Value="強い風による飛来物に注意してください" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Dry}"
+                                      Value="火の取り扱いに注意してください" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavySnow}"
+                                      Value="積雪や路面の凍結に注意してください" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- 気圧の傾向と月の名前 -->
+            <s:MapToTextConverter x:Key="PressureTrendConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherPressureTrend.Falling}"
+                                      Value="↘ 下がる" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherPressureTrend.Steady}"
+                                      Value="→ 横ばい" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherPressureTrend.Rising}"
+                                      Value="↗ 上がる" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="MoonPhaseConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.New}"
+                                      Value="新月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaxingCrescent}"
+                                      Value="三日月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.FirstQuarter}"
+                                      Value="上弦の月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaxingGibbous}"
+                                      Value="十三夜月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.Full}"
+                                      Value="満月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaningGibbous}"
+                                      Value="寝待月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.LastQuarter}"
+                                      Value="下弦の月" />
+                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaningCrescent}"
+                                      Value="有明月" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:CompassPointConverter x:Key="CompassPointConverter" />
+
+            <!-- 全体 -->
+            <Style x:Key="WeatherRootGrid"
+                   TargetType="Grid">
+                <Setter Property="Background" Value="{StaticResource ClearSkyBrush}" />
+            </Style>
+
+            <Style x:Key="SkyGlowEllipse"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="440" />
+                <Setter Property="HeightRequest" Value="440" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TranslationX" Value="170" />
+                <Setter Property="TranslationY" Value="-190" />
+                <Setter Property="InputTransparent" Value="True" />
+                <Setter Property="Fill" Value="{StaticResource DayGlowBrush}" />
+            </Style>
+
+            <Style x:Key="WeatherRefresh"
+                   TargetType="RefreshView">
+                <Setter Property="RefreshColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="WeatherStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,8,16,24" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <!-- 現在 -->
+            <Style x:Key="CurrentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,8,0,4" />
+            </Style>
+
+            <Style x:Key="LocationLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="UpdatedLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="CurrentRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="CurrentIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="48" />
+            </Style>
+
+            <Style x:Key="CurrentTemperatureLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ConditionBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Padding" Value="14,4" />
+                <Setter Property="BackgroundColor" Value="#2EFFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="CurrentConditionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CurrentRangeLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <!-- 上に残る小さな見出し -->
+            <Style x:Key="CompactBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="Padding" Value="16,6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="#8C0B1A33" />
+                <Setter Property="Stroke" Value="{StaticResource WeatherCardLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="CompactRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CompactLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CompactTemperatureLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CompactLabel}">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- 注意報・警報 -->
+            <Style x:Key="AlertBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="Background" Value="{StaticResource AdvisoryBrush}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+            </Style>
+
+            <Style x:Key="AlertStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="AlertHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="AlertIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Warning}" />
+            </Style>
+
+            <Style x:Key="AlertTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#E6FFFFFF" />
+            </Style>
+
+            <Style x:Key="AlertChipRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="AlertChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,3" />
+                <Setter Property="BackgroundColor" Value="#40FFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="AlertChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="AlertChevronLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
+            </Style>
+
+            <Style x:Key="AlertDetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="AlertDetailLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- カード -->
+            <Style x:Key="WeatherCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource WeatherCardColor}" />
+                <Setter Property="Stroke" Value="{StaticResource WeatherCardLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CardTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="CardLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource WeatherLineColor}" />
+            </Style>
+
+            <!-- 時間ごと -->
+            <Style x:Key="HourCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="160" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+            </Style>
+
+            <Style x:Key="HourBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="HourGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="HourTimeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="HourIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+
+            <Style x:Key="HourSeries"
+                   TargetType="controls:SeriesSegmentView">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="LineColor" Value="#FFE08A" />
+                <Setter Property="FillColor" Value="#59FFD166" />
+            </Style>
+
+            <Style x:Key="HourRainLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherRainColor}" />
+            </Style>
+
+            <!-- 週間 -->
+            <Style x:Key="DayGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="DayNameStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DayNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DayDateLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="DayIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+
+            <Style x:Key="DayRainLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherRainColor}" />
+            </Style>
+
+            <Style x:Key="DayLowLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="DayHighLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DayRangeBar"
+                   TargetType="controls:RangeBar">
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TrackColor" Value="#33000000" />
+                <Setter Property="StartColor" Value="#7DD3FC" />
+                <Setter Property="EndColor" Value="#FDBA74" />
+            </Style>
+
+            <!-- 生活指数 -->
+            <Style x:Key="IndexGrid"
+                   TargetType="controls:StaggeredGrid">
+                <Setter Property="Columns" Value="3" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="IndexTileBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="4,10" />
+                <Setter Property="BackgroundColor" Value="#1AFFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="IndexTileStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="IndexIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="26" />
+            </Style>
+
+            <Style x:Key="IndexNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="IndexTextLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="MaxLines" Value="1" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="IndexSegmentBar"
+                   TargetType="controls:SegmentBar">
+                <Setter Property="Margin" Value="4,4,4,0" />
+                <Setter Property="HeightRequest" Value="6" />
+            </Style>
+
+            <!-- 詳細 -->
+            <Style x:Key="DetailGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="GaugeGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="112" />
+            </Style>
+
+            <Style x:Key="GaugeCenterStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="GaugeBottomStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource GaugeCenterStack}">
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="GaugeValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="GaugeUnitLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="DetailNoteLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="UvMeter"
+                   TargetType="controls:ArcMeter">
+                <Setter Property="StartAngle" Value="180" />
+                <Setter Property="SweepAngle" Value="180" />
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="11" />
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="Fill" Value="False" />
+                <Setter Property="Brush" Value="{StaticResource UvBrush}" />
+            </Style>
+
+            <Style x:Key="HumidityMeter"
+                   TargetType="controls:ArcMeter">
+                <Setter Property="StartAngle" Value="-90" />
+                <Setter Property="SweepAngle" Value="360" />
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="100" />
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="Brush" Value="{StaticResource HumidityBrush}" />
+            </Style>
+
+            <Style x:Key="PressureMeter"
+                   TargetType="controls:ArcMeter">
+                <Setter Property="StartAngle" Value="150" />
+                <Setter Property="SweepAngle" Value="240" />
+                <Setter Property="Minimum" Value="960" />
+                <Setter Property="Maximum" Value="1040" />
+                <Setter Property="Thickness" Value="6" />
+                <Setter Property="Fill" Value="False" />
+                <Setter Property="ShowNeedle" Value="True" />
+                <Setter Property="TickCount" Value="9" />
+                <Setter Property="Brush" Value="{StaticResource PressureBrush}" />
+            </Style>
+
+            <Style x:Key="UvBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Padding" Value="10,2" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="UvBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#1F2937" />
+            </Style>
+
+            <Style x:Key="SunTimeGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="SunTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="MoonNameLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SunTimeLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SunsetTimeLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SunTimeLabel}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource WeatherRootGrid}">
+        <!-- 背景は天気で変え、夜は天気によらず夜の空にする (後の方が優先) -->
+        <Grid.Triggers>
+            <DataTrigger TargetType="Grid"
+                         Binding="{Binding Forecast.Condition}"
+                         Value="{x:Static models:WeatherCondition.PartlyCloudy}">
+                <Setter Property="Background" Value="{StaticResource PartlyCloudySkyBrush}" />
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"
+                         Binding="{Binding Forecast.Condition}"
+                         Value="{x:Static models:WeatherCondition.Cloudy}">
+                <Setter Property="Background" Value="{StaticResource CloudySkyBrush}" />
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"
+                         Binding="{Binding Forecast.Condition}"
+                         Value="{x:Static models:WeatherCondition.Rain}">
+                <Setter Property="Background" Value="{StaticResource RainSkyBrush}" />
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"
+                         Binding="{Binding Forecast.Condition}"
+                         Value="{x:Static models:WeatherCondition.Thunder}">
+                <Setter Property="Background" Value="{StaticResource ThunderSkyBrush}" />
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"
+                         Binding="{Binding Forecast.Condition}"
+                         Value="{x:Static models:WeatherCondition.Snow}">
+                <Setter Property="Background" Value="{StaticResource SnowSkyBrush}" />
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"
+                         Binding="{Binding Forecast.IsNight}"
+                         Value="True">
+                <Setter Property="Background" Value="{StaticResource NightSkyBrush}" />
+            </DataTrigger>
+        </Grid.Triggers>
+
+        <!-- 空の光 -->
+        <Ellipse Style="{StaticResource SkyGlowEllipse}">
+            <Ellipse.Triggers>
+                <DataTrigger TargetType="Ellipse"
+                             Binding="{Binding Forecast.IsNight}"
+                             Value="True">
+                    <Setter Property="Fill" Value="{StaticResource NightGlowBrush}" />
+                </DataTrigger>
+            </Ellipse.Triggers>
+        </Ellipse>
+
+        <RefreshView Style="{StaticResource WeatherRefresh}"
+                     Command="{Binding RefreshCommand}"
+                     IsRefreshing="{Binding IsRefreshing}">
+            <!-- スクロールすると大きな見出しが小さく薄くなり、上に小さな見出しが残る -->
+            <ScrollView behaviors:Scroll.CollapseTarget="{x:Reference CurrentHeader}"
+                        behaviors:Scroll.CollapsedTarget="{x:Reference CompactHeader}">
+                <VerticalStackLayout Style="{StaticResource WeatherStack}">
+
+                    <!-- 現在 -->
+                    <VerticalStackLayout x:Name="CurrentHeader"
+                                         Style="{StaticResource CurrentStack}">
+                        <Label Style="{StaticResource LocationLabel}"
+                               Text="{Binding Forecast.Location, StringFormat='📍 {0}'}" />
+                        <Label Style="{StaticResource UpdatedLabel}"
+                               Text="{Binding Forecast.UpdatedAt, StringFormat='{0:H:mm} 更新'}" />
+                        <HorizontalStackLayout Style="{StaticResource CurrentRow}">
+                            <Label Style="{StaticResource CurrentIconLabel}"
+                                   Text="{Binding Forecast.Condition, Converter={StaticResource DayIconConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Forecast.IsNight}"
+                                                 Value="True">
+                                        <Setter Property="Text" Value="{Binding Forecast.Condition, Converter={StaticResource NightIconConverter}}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Style="{StaticResource CurrentTemperatureLabel}"
+                                   Text="{Binding Forecast.Temperature, StringFormat='{0}°'}" />
+                        </HorizontalStackLayout>
+                        <Border Style="{StaticResource ConditionBorder}">
+                            <Label Style="{StaticResource CurrentConditionLabel}"
+                                   Text="{Binding Forecast.Condition, Converter={StaticResource ConditionTextConverter}}" />
+                        </Border>
+                        <Label Style="{StaticResource CurrentRangeLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding Forecast.High, StringFormat='↑ {0}°'}" />
+                                    <Span Text="   " />
+                                    <Span Text="{Binding Forecast.Low, StringFormat='↓ {0}°'}" />
+                                    <Span Text="   " />
+                                    <Span Text="{Binding Forecast.FeelsLike, StringFormat='体感 {0}°'}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+
+                    <!-- 注意報・警報 (タップで説明を開く) -->
+                    <Border Style="{StaticResource AlertBorder}"
+                            IsVisible="{Binding Forecast.HasAlerts}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding Forecast.HasWarning}"
+                                         Value="True">
+                                <Setter Property="Background" Value="{StaticResource WarningBrush}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AlertCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Style="{StaticResource AlertStack}">
+                            <Grid Style="{StaticResource AlertHeaderGrid}"
+                                  ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource AlertIconLabel}" />
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Style="{StaticResource AlertDetailStack}">
+                                    <Label Style="{StaticResource AlertTitleLabel}"
+                                           Text="{Binding Forecast.AlertIssuedAt, StringFormat='注意報・警報　{0:H:mm} 発表'}" />
+                                    <HorizontalStackLayout Style="{StaticResource AlertChipRow}"
+                                                           BindableLayout.ItemsSource="{Binding Forecast.Alerts}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="{x:Type models:WeatherAlert}">
+                                                <Border Style="{StaticResource AlertChipBorder}">
+                                                    <Border.Triggers>
+                                                        <DataTrigger TargetType="Border"
+                                                                     Binding="{Binding Level}"
+                                                                     Value="{x:Static models:WeatherAlertLevel.Warning}">
+                                                            <Setter Property="BackgroundColor" Value="#7A000000" />
+                                                        </DataTrigger>
+                                                    </Border.Triggers>
+                                                    <Label Style="{StaticResource AlertChipLabel}">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding Kind, Converter={StaticResource AlertKindConverter}}" />
+                                                                <Span Text="{Binding Level, Converter={StaticResource AlertLevelConverter}}" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </Border>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource AlertChevronLabel}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsAlertExpanded}"
+                                                     Value="True">
+                                            <Setter Property="Rotation" Value="180" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Grid>
+                            <VerticalStackLayout Style="{StaticResource AlertDetailStack}"
+                                                 BindableLayout.ItemsSource="{Binding Forecast.Alerts}"
+                                                 IsVisible="{Binding IsAlertExpanded}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type models:WeatherAlert}">
+                                        <Label Style="{StaticResource AlertDetailLabel}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Kind, Converter={StaticResource AlertKindConverter}, StringFormat='・{0}: '}" />
+                                                    <Span Text="{Binding Kind, Converter={StaticResource AlertDescriptionConverter}}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 時間ごと (線は項目の間を空けずに並べてつなぐ) -->
+                    <Border Style="{StaticResource WeatherCardBorder}">
+                        <VerticalStackLayout Style="{StaticResource CardStack}">
+                            <Label Style="{StaticResource CardTitleLabel}"
+                                   Text="🕒 24 時間の予報" />
+                            <BoxView Style="{StaticResource CardLine}" />
+                            <CollectionView Style="{StaticResource HourCollection}"
+                                            ItemsSource="{Binding Hours}">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal"
+                                                       ItemSpacing="0" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type module:UIWeatherHour}">
+                                        <Border Style="{StaticResource HourBorder}">
+                                            <Border.Triggers>
+                                                <DataTrigger TargetType="Border"
+                                                             Binding="{Binding IsCurrent}"
+                                                             Value="True">
+                                                    <Setter Property="BackgroundColor" Value="#24FFFFFF" />
+                                                </DataTrigger>
+                                            </Border.Triggers>
+                                            <Grid Style="{StaticResource HourGrid}"
+                                                  RowDefinitions="Auto,Auto,*,Auto">
+                                                <Label Grid.Row="0"
+                                                       Style="{StaticResource HourTimeLabel}"
+                                                       Text="{Binding Hour.Time, StringFormat='{0:%H}時'}">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                                     Binding="{Binding IsCurrent}"
+                                                                     Value="True">
+                                                            <Setter Property="Text" Value="今" />
+                                                            <Setter Property="TextColor" Value="White" />
+                                                            <Setter Property="FontAttributes" Value="Bold" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                                <Label Grid.Row="1"
+                                                       Style="{StaticResource HourIconLabel}"
+                                                       Text="{Binding Hour.Condition, Converter={StaticResource DayIconConverter}}">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                                     Binding="{Binding Hour.IsNight}"
+                                                                     Value="True">
+                                                            <Setter Property="Text" Value="{Binding Hour.Condition, Converter={StaticResource NightIconConverter}}" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                                <controls:SeriesSegmentView Grid.Row="2"
+                                                                            Style="{StaticResource HourSeries}"
+                                                                            Value="{Binding Hour.Temperature}"
+                                                                            Minimum="{Binding Minimum}"
+                                                                            Maximum="{Binding Maximum}"
+                                                                            Text="{Binding Hour.Temperature, StringFormat='{0}°'}"
+                                                                            IsHighlighted="{Binding IsCurrent}"
+                                                                            Next="{Binding Next}"
+                                                                            Previous="{Binding Previous}" />
+                                                <Label Grid.Row="3"
+                                                       Style="{StaticResource HourRainLabel}"
+                                                       Text="{Binding Hour.PrecipitationChance, StringFormat='{0}%'}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 週間 (バーの位置と幅は週全体の範囲に合わせる) -->
+                    <Border Style="{StaticResource WeatherCardBorder}">
+                        <VerticalStackLayout Style="{StaticResource CardStack}">
+                            <Label Style="{StaticResource CardTitleLabel}"
+                                   Text="📅 週間予報" />
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Days}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type module:UIWeatherDay}">
+                                        <VerticalStackLayout>
+                                            <BoxView Style="{StaticResource CardLine}" />
+                                            <Grid Style="{StaticResource DayGrid}"
+                                                  ColumnDefinitions="40,32,40,32,*,32">
+                                                <VerticalStackLayout Grid.Column="0"
+                                                                     Style="{StaticResource DayNameStack}">
+                                                    <Label Style="{StaticResource DayNameLabel}"
+                                                           Text="{Binding Day.Date, StringFormat='{0:ddd}'}">
+                                                        <Label.Triggers>
+                                                            <DataTrigger TargetType="Label"
+                                                                         Binding="{Binding Day.Date.DayOfWeek}"
+                                                                         Value="{x:Static sys:DayOfWeek.Saturday}">
+                                                                <Setter Property="TextColor" Value="{StaticResource WeatherSaturdayColor}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Label"
+                                                                         Binding="{Binding Day.Date.DayOfWeek}"
+                                                                         Value="{x:Static sys:DayOfWeek.Sunday}">
+                                                                <Setter Property="TextColor" Value="{StaticResource WeatherSundayColor}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Label"
+                                                                         Binding="{Binding IsToday}"
+                                                                         Value="True">
+                                                                <Setter Property="Text" Value="今日" />
+                                                            </DataTrigger>
+                                                        </Label.Triggers>
+                                                    </Label>
+                                                    <Label Style="{StaticResource DayDateLabel}"
+                                                           Text="{Binding Day.Date, StringFormat='{0:M/d}'}" />
+                                                </VerticalStackLayout>
+                                                <Label Grid.Column="1"
+                                                       Style="{StaticResource DayIconLabel}"
+                                                       Text="{Binding Day.Condition, Converter={StaticResource DayIconConverter}}" />
+                                                <Label Grid.Column="2"
+                                                       Style="{StaticResource DayRainLabel}"
+                                                       Text="{Binding Day.PrecipitationChance, StringFormat='{0}%'}" />
+                                                <Label Grid.Column="3"
+                                                       Style="{StaticResource DayLowLabel}"
+                                                       Text="{Binding Day.Low, StringFormat='{0}°'}" />
+                                                <controls:RangeBar Grid.Column="4"
+                                                                   Style="{StaticResource DayRangeBar}"
+                                                                   Minimum="{Binding Minimum}"
+                                                                   Maximum="{Binding Maximum}"
+                                                                   High="{Binding Day.High}"
+                                                                   Low="{Binding Day.Low}"
+                                                                   Marker="{Binding Current}" />
+                                                <Label Grid.Column="5"
+                                                       Style="{StaticResource DayHighLabel}"
+                                                       Text="{Binding Day.High, StringFormat='{0}°'}" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 生活指数 (5 段階) -->
+                    <Border Style="{StaticResource WeatherCardBorder}">
+                        <VerticalStackLayout Style="{StaticResource CardStack}">
+                            <Label Style="{StaticResource CardTitleLabel}"
+                                   Text="🧭 生活指数" />
+                            <controls:StaggeredGrid Style="{StaticResource IndexGrid}"
+                                                    BindableLayout.ItemsSource="{Binding Forecast.Indices}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type models:WeatherIndex}">
+                                        <Border Style="{StaticResource IndexTileBorder}">
+                                            <VerticalStackLayout Style="{StaticResource IndexTileStack}">
+                                                <Label Style="{StaticResource IndexIconLabel}"
+                                                       Text="{Binding Kind, Converter={StaticResource IndexIconConverter}}" />
+                                                <Label Style="{StaticResource IndexNameLabel}"
+                                                       Text="{Binding Kind, Converter={StaticResource IndexNameConverter}}" />
+                                                <Label Style="{StaticResource IndexTextLabel}"
+                                                       Text="{Binding ., Converter={StaticResource IndexTextConverter}}" />
+                                                <controls:SegmentBar Style="{StaticResource IndexSegmentBar}"
+                                                                     Value="{Binding Level}"
+                                                                     ActiveColor="{Binding Kind, Converter={StaticResource IndexColorConverter}}" />
+                                            </VerticalStackLayout>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </controls:StaggeredGrid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 詳細 -->
+                    <Grid Style="{StaticResource DetailGrid}"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="*,*">
+
+                        <!-- 風 (矢印は風下を向く) -->
+                        <Border Grid.Row="0" Grid.Column="0"
+                                Style="{StaticResource WeatherCardBorder}">
+                            <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                <Label Style="{StaticResource CardTitleLabel}"
+                                       Text="🌬️ 風" />
+                                <Grid Style="{StaticResource GaugeGrid}">
+                                    <controls:WeatherCompassDial Direction="{Binding Forecast.WindDirection}" />
+                                    <VerticalStackLayout Style="{StaticResource GaugeCenterStack}">
+                                        <Label Style="{StaticResource GaugeValueLabel}"
+                                               Text="{Binding Forecast.WindSpeed, StringFormat='{0:F1}'}" />
+                                        <Label Style="{StaticResource GaugeUnitLabel}"
+                                               Text="m/s" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Label Style="{StaticResource DetailNoteLabel}"
+                                       Text="{Binding Forecast.WindDirection, Converter={StaticResource CompassPointConverter}, StringFormat='{0}の風'}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- UV (段階の色の円弧に今の値の印) -->
+                        <Border Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource WeatherCardBorder}">
+                            <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                <Label Style="{StaticResource CardTitleLabel}"
+                                       Text="🕶️ UV 指数" />
+                                <Grid Style="{StaticResource GaugeGrid}">
+                                    <controls:ArcMeter Style="{StaticResource UvMeter}"
+                                                       Value="{Binding Forecast.UvIndex}" />
+                                    <VerticalStackLayout Style="{StaticResource GaugeBottomStack}">
+                                        <Label Style="{StaticResource GaugeValueLabel}"
+                                               Text="{Binding Forecast.UvIndex, StringFormat='{0}'}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Border Style="{StaticResource UvBadgeBorder}"
+                                        BackgroundColor="{Binding Forecast.UvLevel, Converter={StaticResource UvLevelColorConverter}}">
+                                    <Label Style="{StaticResource UvBadgeLabel}"
+                                           Text="{Binding Forecast.UvLevel, Converter={StaticResource UvLevelTextConverter}}" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 湿度 -->
+                        <Border Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource WeatherCardBorder}">
+                            <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                <Label Style="{StaticResource CardTitleLabel}"
+                                       Text="💧 湿度" />
+                                <Grid Style="{StaticResource GaugeGrid}">
+                                    <controls:ArcMeter Style="{StaticResource HumidityMeter}"
+                                                       Value="{Binding Forecast.Humidity}" />
+                                    <VerticalStackLayout Style="{StaticResource GaugeCenterStack}">
+                                        <Label Style="{StaticResource GaugeValueLabel}"
+                                               Text="{Binding Forecast.Humidity, StringFormat='{0}'}" />
+                                        <Label Style="{StaticResource GaugeUnitLabel}"
+                                               Text="%" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Label Style="{StaticResource DetailNoteLabel}"
+                                       Text="{Binding Forecast.DewPoint, StringFormat='露点 {0}°'}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 気圧 (針は今の値、目盛りは 10 hPa ごと) -->
+                        <Border Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource WeatherCardBorder}">
+                            <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                <Label Style="{StaticResource CardTitleLabel}"
+                                       Text="🧭 気圧" />
+                                <Grid Style="{StaticResource GaugeGrid}">
+                                    <controls:ArcMeter Style="{StaticResource PressureMeter}"
+                                                       Value="{Binding Forecast.Pressure}" />
+                                    <VerticalStackLayout Style="{StaticResource GaugeBottomStack}">
+                                        <Label Style="{StaticResource GaugeValueLabel}"
+                                               Text="{Binding Forecast.Pressure, StringFormat='{0}'}" />
+                                        <Label Style="{StaticResource GaugeUnitLabel}"
+                                               Text="hPa" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Label Style="{StaticResource DetailNoteLabel}"
+                                       Text="{Binding Forecast.PressureTrend, Converter={StaticResource PressureTrendConverter}}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 日の出・日の入り (太陽は今の位置) -->
+                        <Border Grid.Row="2" Grid.Column="0"
+                                Style="{StaticResource WeatherCardBorder}">
+                            <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                <Label Style="{StaticResource CardTitleLabel}"
+                                       Text="🌅 日の出・日の入り" />
+                                <Grid Style="{StaticResource GaugeGrid}">
+                                    <controls:WeatherSunArcView Now="{Binding Forecast.UpdatedAt}"
+                                                                Sunrise="{Binding Forecast.Sunrise}"
+                                                                Sunset="{Binding Forecast.Sunset}" />
+                                </Grid>
+                                <Grid Style="{StaticResource SunTimeGrid}"
+                                      ColumnDefinitions="*,*">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource SunTimeLabel}"
+                                           Text="{Binding Forecast.Sunrise, StringFormat='↑ {0:H:mm}'}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource SunsetTimeLabel}"
+                                           Text="{Binding Forecast.Sunset, StringFormat='↓ {0:H:mm}'}" />
+                                </Grid>
+                                <Label Style="{StaticResource DetailNoteLabel}"
+                                       Text="{Binding Forecast.DayLength, StringFormat='昼の長さ {0:h\\:mm}'}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 月の満ち欠け -->
+                        <Border Grid.Row="2" Grid.Column="1"
+                                Style="{StaticResource WeatherCardBorder}">
+                            <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                <Label Style="{StaticResource CardTitleLabel}"
+                                       Text="🌙 月" />
+                                <Grid Style="{StaticResource GaugeGrid}">
+                                    <controls:WeatherMoonPhaseView Age="{Binding Forecast.MoonAge}" />
+                                </Grid>
+                                <Label Style="{StaticResource MoonNameLabel}"
+                                       Text="{Binding Forecast.MoonPhase, Converter={StaticResource MoonPhaseConverter}}" />
+                                <Label Style="{StaticResource DetailNoteLabel}"
+                                       Text="{Binding Forecast.MoonAge, StringFormat='月齢 {0:F1}'}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <!-- 上に残る小さな見出し -->
+        <Border x:Name="CompactHeader"
+                Style="{StaticResource CompactBorder}">
+            <HorizontalStackLayout Style="{StaticResource CompactRow}">
+                <Label Style="{StaticResource CompactLabel}"
+                       Text="{Binding Forecast.Location}" />
+                <Label Style="{StaticResource CompactTemperatureLabel}"
+                       Text="{Binding Forecast.Temperature, StringFormat='{0}°'}" />
+                <Label Style="{StaticResource CompactLabel}"
+                       Text="{Binding Forecast.Condition, Converter={StaticResource ConditionTextConverter}}" />
+            </HorizontalStackLayout>
+        </Border>
+    </Grid>
+
+</ContentView>

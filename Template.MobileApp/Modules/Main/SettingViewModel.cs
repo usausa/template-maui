@@ -10,7 +10,13 @@ public sealed partial class SettingViewModel : AppViewModelBase
 {
     private static readonly TimeSpan DetectInterval = TimeSpan.FromSeconds(3);
 
+    private readonly ApiContext apiContext;
+
+    private readonly ITelemetryControl telemetryControl;
+
     private readonly Settings settings;
+
+    private readonly PushService pushService;
 
     public BarcodeController Controller { get; } = new();
 
@@ -25,6 +31,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool TelemetryEnabled { get; set; }
+
+    [ObservableProperty]
+    public partial bool PushEnabled { get; set; }
 
     [ObservableProperty]
     public partial string? AIServiceEndPoint { get; set; }
@@ -56,9 +65,13 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public SettingViewModel(
         ApiContext apiContext,
         ITelemetryControl telemetryControl,
-        Settings settings)
+        Settings settings,
+        PushService pushService)
     {
+        this.apiContext = apiContext;
+        this.telemetryControl = telemetryControl;
         this.settings = settings;
+        this.pushService = pushService;
 
         Controller.AimMode = true;
         Controller.VibrationOnDetect = true;
@@ -69,85 +82,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
             settings.TelemetryEnabled = x;
             telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
         });
+        SubscribePushEnabled(ChangePush);
 
-        DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
-        {
-            if ((x.Count > 0) && !Controller.PauseScanning)
-            {
-                Controller.PauseScanning = true;
-
-                var barcode = x.First().DisplayValue;
-                try
-                {
-                    var parser = new SettingParser(barcode);
-                    if (parser.TryGetString(nameof(ApiEndPoint), out var apiEndPoint))
-                    {
-                        settings.ApiEndPoint = apiEndPoint;
-                        apiContext.BaseAddress = new Uri(apiEndPoint);
-                        ApiEndPoint = apiEndPoint;
-                    }
-                    if (parser.TryGetString(nameof(GrpcEndPoint), out var grpcEndPoint))
-                    {
-                        settings.GrpcEndPoint = grpcEndPoint;
-                        GrpcEndPoint = grpcEndPoint;
-                    }
-                    if (parser.TryGetString(nameof(OtelEndPoint), out var otelEndPoint))
-                    {
-                        settings.OtelEndPoint = otelEndPoint;
-                        OtelEndPoint = otelEndPoint;
-                        telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
-                    }
-                    if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
-                    {
-                        settings.AIServiceEndPoint = aiServiceEndPoint;
-                        AIServiceEndPoint = aiServiceEndPoint;
-                    }
-                    if (parser.TryGetString(nameof(AIServiceKey), out var aiServiceKey))
-                    {
-                        await settings.SetAIServiceKeyAsync(aiServiceKey);
-                        AIServiceKey = aiServiceKey;
-                    }
-                    if (parser.TryGetString(nameof(OllamaEndPoint), out var ollamaEndPoint))
-                    {
-                        settings.OllamaEndPoint = ollamaEndPoint;
-                        OllamaEndPoint = ollamaEndPoint;
-                    }
-                    if (parser.TryGetString(nameof(OllamaModel), out var ollamaModel))
-                    {
-                        settings.OllamaModel = ollamaModel;
-                        OllamaModel = ollamaModel;
-                    }
-
-                    if (parser.TryGetString(nameof(SshHost), out var sshHost))
-                    {
-                        settings.SshHost = sshHost;
-                    }
-                    if (parser.TryGetInt(nameof(Settings.SshPort), out var sshPort))
-                    {
-                        settings.SshPort = sshPort;
-                    }
-                    if (parser.TryGetString(nameof(SshUser), out var sshUser))
-                    {
-                        settings.SshUser = sshUser;
-                        SshUser = sshUser;
-                    }
-                    if (parser.TryGetString(nameof(SshPassword), out var sshPassword))
-                    {
-                        await settings.SetSshPasswordAsync(sshPassword);
-                        SshPassword = sshPassword;
-                    }
-
-                    SshHost = FormatSshHost(settings);
-                }
-                catch (UriFormatException)
-                {
-                    // Do nothing
-                }
-
-                await Task.Delay(DetectInterval);
-                Controller.PauseScanning = false;
-            }
-        });
+        DetectCommand = MakeDelegateCommand<IReadOnlySet<BarcodeResult>>(CommandMode.Simple, x => _ = DetectAsync(x));
     }
 
     //--------------------------------------------------------------------------------
@@ -162,6 +99,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
             GrpcEndPoint = settings.GrpcEndPoint;
             OtelEndPoint = settings.OtelEndPoint;
             TelemetryEnabled = settings.TelemetryEnabled;
+            PushEnabled = settings.PushEnabled;
             AIServiceEndPoint = settings.AIServiceEndPoint;
             AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
             OllamaEndPoint = settings.OllamaEndPoint;
@@ -190,6 +128,111 @@ public sealed partial class SettingViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    // 受け取りの切り替え (表示で設定の値を入れたときは何もしない)
+    private void ChangePush(bool enabled)
+    {
+        if (settings.PushEnabled != enabled)
+        {
+            settings.PushEnabled = enabled;
+            if (enabled)
+            {
+                pushService.Connect();
+            }
+            else
+            {
+                pushService.Disconnect();
+            }
+        }
+    }
+
+    private async Task DetectAsync(IReadOnlySet<BarcodeResult> barcodes)
+    {
+        if ((barcodes.Count > 0) && !Controller.PauseScanning)
+        {
+            Controller.PauseScanning = true;
+
+            var barcode = barcodes.First().DisplayValue;
+            try
+            {
+                var parser = new SettingParser(barcode);
+                if (parser.TryGetString(nameof(ApiEndPoint), out var apiEndPoint))
+                {
+                    settings.ApiEndPoint = apiEndPoint;
+                    apiContext.BaseAddress = new Uri(apiEndPoint);
+                    ApiEndPoint = apiEndPoint;
+                    // 受け取り中なら新しい接続先へ繋ぎ直す
+                    if (settings.PushEnabled)
+                    {
+                        pushService.Connect();
+                    }
+                }
+                if (parser.TryGetString(nameof(GrpcEndPoint), out var grpcEndPoint))
+                {
+                    settings.GrpcEndPoint = grpcEndPoint;
+                    GrpcEndPoint = grpcEndPoint;
+                }
+                if (parser.TryGetString(nameof(OtelEndPoint), out var otelEndPoint))
+                {
+                    settings.OtelEndPoint = otelEndPoint;
+                    OtelEndPoint = otelEndPoint;
+                    telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
+                }
+                if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
+                {
+                    settings.AIServiceEndPoint = aiServiceEndPoint;
+                    AIServiceEndPoint = aiServiceEndPoint;
+                }
+                if (parser.TryGetString(nameof(AIServiceKey), out var aiServiceKey))
+                {
+                    await settings.SetAIServiceKeyAsync(aiServiceKey);
+                    AIServiceKey = aiServiceKey;
+                }
+                if (parser.TryGetString(nameof(OllamaEndPoint), out var ollamaEndPoint))
+                {
+                    settings.OllamaEndPoint = ollamaEndPoint;
+                    OllamaEndPoint = ollamaEndPoint;
+                }
+                if (parser.TryGetString(nameof(OllamaModel), out var ollamaModel))
+                {
+                    settings.OllamaModel = ollamaModel;
+                    OllamaModel = ollamaModel;
+                }
+
+                if (parser.TryGetString(nameof(SshHost), out var sshHost))
+                {
+                    settings.SshHost = sshHost;
+                }
+                if (parser.TryGetInt(nameof(Settings.SshPort), out var sshPort))
+                {
+                    settings.SshPort = sshPort;
+                }
+                if (parser.TryGetString(nameof(SshUser), out var sshUser))
+                {
+                    settings.SshUser = sshUser;
+                    SshUser = sshUser;
+                }
+                if (parser.TryGetString(nameof(SshPassword), out var sshPassword))
+                {
+                    await settings.SetSshPasswordAsync(sshPassword);
+                    SshPassword = sshPassword;
+                }
+
+                SshHost = FormatSshHost(settings);
+            }
+            catch (UriFormatException)
+            {
+                // Do nothing
+            }
+
+            await Task.Delay(DetectInterval);
+            Controller.PauseScanning = false;
+        }
+    }
 
     //--------------------------------------------------------------------------------
     // Helper

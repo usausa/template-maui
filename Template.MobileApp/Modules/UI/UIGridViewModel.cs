@@ -69,7 +69,7 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 
         SelectAllCommand = MakeDelegateCommand<bool>(x => Rows.UpdateSelection(row => x && (row.Status == OrderStatus.Open)));
         ColumnEditCommand = MakeAsyncCommand<GridColumnConfigurationEventArgs>(x =>
-            Navigator.PushAsync(ViewId.UIGridColumn, Parameters.MakeColumnEditSession(x.CreateEditSession())));
+            Navigator.PushAsync(ViewId.UIGridColumn, Parameters.MakeModel(x.CreateEditSession())));
         CellValueChangedCommand = MakeDelegateCommand<GridCellValueEventArgs>(x =>
             Message = $"確認: {((OrderInfo)x.Item).OrderNo} = {(x.NewValue ? "済" : "未")}");
         CommitCommand = MakeAsyncCommand(CommitAsync, () => SelectedCount > 0);
@@ -91,7 +91,7 @@ public sealed partial class UIGridViewModel : AppViewModelBase
         {
             Load();
         }
-        else if (context.Parameter.TryGetColumnOrders(out var orders))
+        else if (context.Parameter.TryGetModel<GridColumnOrder[]>(out var orders))
         {
             ColumnOrders = orders;
             Message = $"列設定を反映: 表示 {orders.Count(static x => x.IsVisible)} / {orders.Length} 列";

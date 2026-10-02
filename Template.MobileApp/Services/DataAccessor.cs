@@ -92,4 +92,26 @@ public sealed partial class DataAccessor
     [Execute]
     [Delete(typeof(WorkEntity))]
     public partial ValueTask<int> DeleteWorkAsync(long id);
+
+    //--------------------------------------------------------------------------------
+    // Todo
+    //--------------------------------------------------------------------------------
+
+    [Query]
+    public partial ValueTask<List<TodoEntity>> QueryTodoListAsync();
+
+    [ExecuteScalar]
+    public partial ValueTask<long> InsertTodoAsync(string title, string note, DateTime? dueDate, bool isImportant, bool isDone, DateTime createdAt, DateTime updatedAt);
+
+    [Execute]
+    [Insert(typeof(TodoEntity))]
+    public partial ValueTask<int> InsertTodoEntityAsync(DbTransaction tx, TodoEntity entity);
+
+    [Execute]
+    [Update(typeof(TodoEntity))]
+    public partial ValueTask<int> UpdateTodoAsync(TodoEntity entity);
+
+    [Execute]
+    [Delete(typeof(TodoEntity))]
+    public partial ValueTask<int> DeleteTodoAsync(long id);
 }

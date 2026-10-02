@@ -39,6 +39,41 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Warning, Message = "Monitor report failed.")]
     public static partial void WarnMonitorReportFailed(this ILogger logger, Exception exception);
 
+    // Push (SignalR)
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Push connected. id=[{connectionId}]")]
+    public static partial void InfoPushConnected(this ILogger logger, string? connectionId);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Push connect failed. retrying.")]
+    public static partial void WarnPushConnectFailed(this ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Push reconnecting.")]
+    public static partial void WarnPushReconnecting(this ILogger logger, Exception? exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Push stopped.")]
+    public static partial void InfoPushStopped(this ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Push connection error.")]
+    public static partial void WarnPushConnectionError(this ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Push received. id=[{id}], title=[{title}]")]
+    public static partial void InfoPushReceived(this ILogger logger, long id, string title);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Push acknowledge failed.")]
+    public static partial void WarnPushAcknowledgeFailed(this ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Push service started. address=[{address}]")]
+    public static partial void InfoPushServiceStarted(this ILogger logger, Uri address);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Push service stopped.")]
+    public static partial void InfoPushServiceStopped(this ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Push shown. id=[{id}]")]
+    public static partial void InfoPushShown(this ILogger logger, long id);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Push service not started. api endpoint is not configured.")]
+    public static partial void WarnPushNotConfigured(this ILogger logger);
+
     // Chat (gRPC)
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Chat connected. address=[{address}]")]

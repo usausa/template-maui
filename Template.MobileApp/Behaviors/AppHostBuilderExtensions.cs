@@ -19,6 +19,8 @@ internal static class AppHostBuilderExtensions
         ButtonOption.UseCustomMapper(options);
         EntryOption.UseCustomMapper(options);
 
+        CarouselOption.UseCustomMapper(options);
+
         return builder;
     }
 }

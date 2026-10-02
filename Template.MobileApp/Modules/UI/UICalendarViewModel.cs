@@ -6,8 +6,6 @@ using ClamCalendar;
 
 using Template.MobileApp.Services;
 
-using CommandBehavior = Smart.Maui.ViewModels.CommandBehavior;
-
 public sealed partial class UICalendarViewModel : AppViewModelBase
 {
     private static readonly DateOnly Today = DateOnly.FromDateTime(DateTime.Today);
@@ -56,8 +54,8 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     {
         this.calendarService = calendarService;
 
-        // 月が変わるたびに表示範囲が通知される (初回はナビゲーション中に来るので Busy でも実行する)
-        DisplayDateChangedCommand = MakeDelegateCommand<CalendarDisplayDateChangedEventArgs>(Load, CommandBehavior.AllowBusyExecution);
+        // 月が変わるたびにコントロールから表示範囲が通知される (初回は遷移の途中に来る)
+        DisplayDateChangedCommand = MakeDelegateCommand<CalendarDisplayDateChangedEventArgs>(CommandMode.Simple, Load);
         GoToTodayCommand = MakeDelegateCommand(() => DisplayDate = Today);
         DayTappedCommand = MakeAsyncCommand<CalendarDayEventArgs>(x => dialog.Toast($"{x.Date:yyyy/MM/dd}").AsTask());
         EventTappedCommand = MakeAsyncCommand<CalendarEventEventArgs>(x => dialog.Toast(x.Event.Title).AsTask());

@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppSudokuView"
+             x:DataType="{x:Type module:AppSudokuViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppSudokuViewModel}"
+             shell:ShellProperty.Title="Sudoku"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#EEF2FF" shell:ShellProperty.StatusBarStyle="DarkContent">
+
+    <!-- 数独。ゲームは Models/App/SudokuGame (答えが 1 つの問題を作る)、盤面は Controls/SudokuBoard (塗り分けと、入れた数字・そろった列の動き) -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="SudokuTopColor">#EEF2FF</Color>
+            <Color x:Key="SudokuBottomColor">#DDE3FF</Color>
+            <Color x:Key="SudokuTextColor">#1E1B4B</Color>
+            <Color x:Key="SudokuSubTextColor">#6B6F9E</Color>
+            <Color x:Key="SudokuIconBackColor">#1F312E81</Color>
+            <Color x:Key="SudokuAccentColor">#4F46E5</Color>
+            <Color x:Key="SudokuLineColor">#C7D2FE</Color>
+            <Color x:Key="SudokuRedColor">#E11D48</Color>
+            <Color x:Key="SudokuGoldColor">#F59E0B</Color>
+
+            <!-- Converter -->
+            <converters:ClockTextConverter x:Key="ClockConverter"
+                                           Part="Main" />
+
+            <!-- Page -->
+            <Style x:Key="SudokuRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="Padding" Value="12,8,12,20" />
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{StaticResource SudokuTopColor}" />
+                        <GradientStop Offset="1" Color="{StaticResource SudokuBottomColor}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TopBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SudokuIconBackColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="TopTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Level (選んでいる難易度を塗る) -->
+            <Style x:Key="PillBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="4" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Stroke" Value="{StaticResource SudokuLineColor}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 26" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="PillButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <!-- Status (ミス・残り・タイム) -->
+            <Style x:Key="StatusBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,8" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,2"
+                                Brush="{StaticResource SudokuTextColor}"
+                                Opacity="0.12"
+                                Radius="8" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="StatusStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuSubTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusDivider"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="Margin" Value="0,6" />
+                <Setter Property="Color" Value="{StaticResource SudokuLineColor}" />
+            </Style>
+
+            <!-- Board -->
+            <Style x:Key="Board"
+                   TargetType="controls:SudokuBoard">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Tool (取り消し・消す・メモ・ヒント) -->
+            <Style x:Key="ToolStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ToolButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuAccentColor}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,2"
+                                Brush="{StaticResource SudokuTextColor}"
+                                Opacity="0.15"
+                                Radius="6" />
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.4" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ToolBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TranslationX" Value="8" />
+                <Setter Property="TranslationY" Value="-4" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="NoteBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ToolBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
+            </Style>
+
+            <Style x:Key="HintBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ToolBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource SudokuGoldColor}" />
+            </Style>
+
+            <Style x:Key="ToolBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ToolLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuSubTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Digit (残りの数) -->
+            <Style x:Key="DigitGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="DigitStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="DigitButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="60" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuAccentColor}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,2"
+                                Brush="{StaticResource SudokuTextColor}"
+                                Opacity="0.15"
+                                Radius="6" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="DigitCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuSubTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Result -->
+            <Style x:Key="ResultBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,3"
+                                Brush="{StaticResource SudokuTextColor}"
+                                Opacity="0.18"
+                                Radius="10" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ResultGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ResultTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuTextColor}" />
+            </Style>
+
+            <Style x:Key="ResultTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuSubTextColor}" />
+            </Style>
+
+            <Style x:Key="NewBestLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SudokuGoldColor}" />
+            </Style>
+
+            <Style x:Key="RetryButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="20,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource SudokuRootGrid}"
+          RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+
+        <!-- 上の帯 (戻る・名前・新しいゲーム) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource TopBarGrid}"
+              ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding BackCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource TopTitleLabel}"
+                   Text="Sudoku" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding NewGameCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Refresh}" />
+        </Grid>
+
+        <!-- 難易度 (選ぶと新しいゲーム) -->
+        <Border Grid.Row="1"
+                Style="{StaticResource PillBorder}">
+            <Grid ColumnDefinitions="*,*,*">
+                <Button Grid.Column="0"
+                        Style="{StaticResource PillButton}"
+                        Command="{Binding LevelCommand}"
+                        CommandParameter="{x:Static models:SudokuLevel.Easy}"
+                        Text="😊 やさしい">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Level}"
+                                     Value="{x:Static models:SudokuLevel.Easy}">
+                            <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="1"
+                        Style="{StaticResource PillButton}"
+                        Command="{Binding LevelCommand}"
+                        CommandParameter="{x:Static models:SudokuLevel.Normal}"
+                        Text="🤔 ふつう">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Level}"
+                                     Value="{x:Static models:SudokuLevel.Normal}">
+                            <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="2"
+                        Style="{StaticResource PillButton}"
+                        Command="{Binding LevelCommand}"
+                        CommandParameter="{x:Static models:SudokuLevel.Hard}"
+                        Text="🔥 むずかしい">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Level}"
+                                     Value="{x:Static models:SudokuLevel.Hard}">
+                            <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- ミス (増えると弾む)・残りのマス・タイム -->
+        <Border Grid.Row="2"
+                Style="{StaticResource StatusBorder}">
+            <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource StatusStack}">
+                    <Label Style="{StaticResource StatusCaptionLabel}"
+                           Text="ミス" />
+                    <Label Style="{StaticResource StatusValueLabel}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding Mistakes}"
+                           Text="{Binding Mistakes}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding Mistakes, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                                         Value="True">
+                                <Setter Property="TextColor" Value="{StaticResource SudokuRedColor}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </VerticalStackLayout>
+                <BoxView Grid.Column="1"
+                         Style="{StaticResource StatusDivider}" />
+                <VerticalStackLayout Grid.Column="2"
+                                     Style="{StaticResource StatusStack}">
+                    <Label Style="{StaticResource StatusCaptionLabel}"
+                           Text="のこり" />
+                    <Label Style="{StaticResource StatusValueLabel}"
+                           Text="{Binding Remaining}" />
+                </VerticalStackLayout>
+                <BoxView Grid.Column="3"
+                         Style="{StaticResource StatusDivider}" />
+                <VerticalStackLayout Grid.Column="4"
+                                     Style="{StaticResource StatusStack}">
+                    <Label Style="{StaticResource StatusCaptionLabel}"
+                           Text="タイム" />
+                    <Label Style="{StaticResource StatusValueLabel}"
+                           Text="{Binding Elapsed, Converter={StaticResource ClockConverter}}" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- 盤面 (触れたマスを選ぶ。なぞると選び直す) -->
+        <controls:SudokuBoard Grid.Row="3"
+                              Style="{StaticResource Board}"
+                              Board="{Binding Board}"
+                              TapCommand="{Binding SelectCommand}" />
+
+        <!-- 道具 (メモは入れている間 ON、ヒントは残りの回数)。完成したら場所を残して隠す -->
+        <Grid Grid.Row="4"
+              ColumnDefinitions="*,*,*,*">
+            <Grid.Triggers>
+                <DataTrigger TargetType="Grid"
+                             Binding="{Binding IsCompleted}"
+                             Value="True">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="InputTransparent" Value="True" />
+                </DataTrigger>
+            </Grid.Triggers>
+            <VerticalStackLayout Grid.Column="0"
+                                 Style="{StaticResource ToolStack}">
+                <Button Style="{StaticResource ToolButton}"
+                        Command="{Binding UndoCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Undo}" />
+                <Label Style="{StaticResource ToolLabel}"
+                       Text="取り消し" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1"
+                                 Style="{StaticResource ToolStack}">
+                <Button Style="{StaticResource ToolButton}"
+                        Command="{Binding EraseCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Backspace}" />
+                <Label Style="{StaticResource ToolLabel}"
+                       Text="消す" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="2"
+                                 Style="{StaticResource ToolStack}">
+                <Grid>
+                    <Button Style="{StaticResource ToolButton}"
+                            Command="{Binding NoteCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Edit}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsNoteMode}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Border Style="{StaticResource NoteBadgeBorder}"
+                            IsVisible="{Binding IsNoteMode}">
+                        <Label Style="{StaticResource ToolBadgeLabel}"
+                               Text="ON" />
+                    </Border>
+                </Grid>
+                <Label Style="{StaticResource ToolLabel}"
+                       Text="メモ" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="3"
+                                 Style="{StaticResource ToolStack}">
+                <Grid>
+                    <Button Style="{StaticResource ToolButton}"
+                            Command="{Binding HintCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Lightbulb}" />
+                    <Border Style="{StaticResource HintBadgeBorder}">
+                        <Label Style="{StaticResource ToolBadgeLabel}"
+                               Text="{Binding HintsLeft}" />
+                    </Border>
+                </Grid>
+                <Label Style="{StaticResource ToolLabel}"
+                       Text="ヒント" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- 数字 (下は残りの数。置き終えた数字と、完成したら場所を残して隠す) -->
+        <Grid Grid.Row="5"
+              Style="{StaticResource DigitGrid}"
+              ColumnDefinitions="*,*,*,*,*,*,*,*,*"
+              BindableLayout.ItemsSource="{Binding Digits}">
+            <Grid.Triggers>
+                <DataTrigger TargetType="Grid"
+                             Binding="{Binding IsCompleted}"
+                             Value="True">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="InputTransparent" Value="True" />
+                </DataTrigger>
+            </Grid.Triggers>
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type models:SudokuDigit}">
+                    <VerticalStackLayout Grid.Column="{Binding Column}"
+                                         Style="{StaticResource DigitStack}">
+                        <VerticalStackLayout.Triggers>
+                            <DataTrigger TargetType="VerticalStackLayout"
+                                         Binding="{Binding Remaining}"
+                                         Value="{s:Int32 0}">
+                                <Setter Property="Opacity" Value="0" />
+                                <Setter Property="InputTransparent" Value="True" />
+                            </DataTrigger>
+                        </VerticalStackLayout.Triggers>
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <Button Style="{StaticResource DigitButton}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppSudokuViewModel}}, Path=NumberCommand, x:DataType={x:Type module:AppSudokuViewModel}}"
+                                CommandParameter="{Binding Value}"
+                                Text="{Binding Value}" />
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                        <Label Style="{StaticResource DigitCountLabel}"
+                               Text="{Binding Remaining}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+
+        <!-- 完成したら結果 (盤面は見えたまま) -->
+        <Border Grid.Row="4" Grid.RowSpan="2"
+                Style="{StaticResource ResultBorder}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding IsCompleted}"
+                IsVisible="{Binding IsCompleted}">
+            <Grid Style="{StaticResource ResultGrid}"
+                  ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource ResultTextStack}">
+                    <Label Style="{StaticResource ResultTitleLabel}"
+                           Text="🎉 クリア!" />
+                    <Label Style="{StaticResource ResultTextLabel}"
+                           Text="{Binding Elapsed, Converter={StaticResource ClockConverter}, StringFormat='タイム {0}'}" />
+                    <Label Style="{StaticResource ResultTextLabel}"
+                           Text="{Binding Mistakes, StringFormat='ミス {0} 回'}" />
+                    <Label Style="{StaticResource NewBestLabel}"
+                           IsVisible="{Binding IsNewBest}"
+                           Text="🏆 ベストタイム更新!" />
+                    <Label Style="{StaticResource ResultTextLabel}"
+                           IsVisible="{Binding BestTime, Converter={s:NullToBool Invert=True}}"
+                           Text="{Binding BestTime, Converter={StaticResource ClockConverter}, StringFormat='🏆 ベスト {0}'}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Style="{StaticResource RetryButton}"
+                        Command="{Binding NewGameCommand}"
+                        Text="新しいゲーム" />
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</ContentView>

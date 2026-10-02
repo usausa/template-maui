@@ -345,6 +345,8 @@ public static partial class MauiProgram
         });
 
         // Components
+        services.AddSingleton(TimeProvider.System);
+
         services.AddSingleton<DeviceInformation>();
         services.AddSingleton<IStorageManager, StorageManager>();
         services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
@@ -353,6 +355,7 @@ public static partial class MauiProgram
         services.AddSingleton<INoiseMonitor, NoiseMonitor>();
         services.AddSingleton<IOcrReader, OcrReader>();
         services.AddSingleton<IActivityRecognizer, ActivityRecognizer>();
+        services.AddSingleton<IBiometricAuthenticator, BiometricAuthenticator>();
 
         services.AddSingleton(AudioManager.Current);
 
@@ -385,6 +388,8 @@ public static partial class MauiProgram
         services.AddSingleton<ApiContext>();
 
         // Service
+        services.AddSingleton<JsonStore>();
+
         services.AddSingleton<IDbProvider>(static p =>
         {
             var storage = p.GetRequiredService<IStorageManager>();
@@ -402,6 +407,8 @@ public static partial class MauiProgram
         services.AddSingleton<HttpService>();
         services.AddSingleton<MonitorConnection>();
         services.AddSingleton<ChatRoomClient>();
+        services.AddSingleton<PushConnection>();
+        services.AddSingleton<PushService>();
 
         services.AddSingleton<ICalendarService, CalendarService>();
 

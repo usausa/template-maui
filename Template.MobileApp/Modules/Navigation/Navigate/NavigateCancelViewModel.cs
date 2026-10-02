@@ -22,7 +22,7 @@ public sealed class NavigateCancelViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            await Navigator.PostActionAsync(() => BusyState.Using(async () =>
+            await Navigator.PostActionAsync(() => BusyState.UsingAsync(async () =>
             {
                 if (await dialog.ConfirmAsync("Cancel ?", ok: "Yes", cancel: "No"))
                 {

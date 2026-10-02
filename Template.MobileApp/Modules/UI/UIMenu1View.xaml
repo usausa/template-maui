@@ -100,39 +100,41 @@
         <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIWeather}"
+                Text="Weather"
+                ImageSource="{x:Static markup:AppIcons.WbSunny}" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UINews}"
+                Text="News"
+                ImageSource="{x:Static markup:AppIcons.Newspaper}" />
+
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UITimeline}"
                 Text="Timeline"
                 ImageSource="{x:Static markup:AppIcons.ViewTimeline}" />
-        <Button Grid.Row="6" Grid.Column="1"
+        <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIKitDash}"
                 Text="Kit"
                 ImageSource="{x:Static markup:AppIcons.GridView}" />
 
-        <Button Grid.Row="7" Grid.Column="0"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIGraph}"
-                Text="Graph"
-                ImageSource="{x:Static markup:AppIcons.AccountTree}" />
-        <Button Grid.Row="7" Grid.Column="1"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UIGraph2}"
-                Text="Graph2"
-                ImageSource="{x:Static markup:AppIcons.Timeline}" />
-
         <Button Grid.Row="8" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UITreeMap}"
-                Text="TreeMap"
-                ImageSource="{x:Static markup:AppIcons.Dashboard}" />
+                CommandParameter="{markup:ViewId UIStream}"
+                Text="Stream"
+                ImageSource="{x:Static markup:AppIcons.LiveTv}" />
         <Button Grid.Row="8" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIDock}"
+                Text="Dock"
+                ImageSource="{x:Static markup:AppIcons.Apps}" />
 
     </Grid>
 

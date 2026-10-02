@@ -2,8 +2,6 @@ namespace Template.MobileApp.Modules.Device;
 
 using Plugin.Maui.Audio;
 
-using Smart.Maui.Input;
-
 public sealed partial class DeviceAudioViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
@@ -12,6 +10,10 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
     // 再生状態のポーリング (表示中だけ)。破棄は Disposables に任せる
     private SerialDisposable Polling { get; } = new();
+
+    // 再生していない MediaPlayer にシークを重ねると後のシークが効かずに前の位置から鳴ることがあるので、
+    // 再生していないときのシークは位置だけ覚え、再生を始めた直後にシークする
+    private double? pendingPosition;
 
     public IAudioPlayer? AudioPlayer { get; set; }
 
@@ -47,8 +49,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
         this.audioManager = audioManager;
 
         PlayCommand = MakeDelegateCommand(Play);
-        PauseCommand = new DelegateCommand(Pause);
-        StopCommand = new DelegateCommand(Stop);
+        PauseCommand = MakeDelegateCommand(Pause);
+        StopCommand = MakeDelegateCommand(Stop);
         SeekCommand = MakeDelegateCommand<double>(Seek);
 
         Disposables.Add(Polling);
@@ -100,7 +102,7 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
         IsPlaying = AudioPlayer.IsPlaying;
         Duration = AudioPlayer.Duration;
-        Position = AudioPlayer.CurrentPosition;
+        Position = pendingPosition ?? AudioPlayer.CurrentPosition;
     }
 
     private void Play()
@@ -110,6 +112,7 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
             return;
         }
 
+        pendingPosition = null;
         AudioPlayer.Stop();
         AudioPlayer.Play();
         UpdateState();
@@ -129,6 +132,11 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
         else
         {
             AudioPlayer.Play();
+            if (pendingPosition is { } position)
+            {
+                AudioPlayer.Seek(position);
+                pendingPosition = null;
+            }
         }
 
         UpdateState();
@@ -136,6 +144,7 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
     private void Stop()
     {
+        pendingPosition = null;
         AudioPlayer?.Stop();
         UpdateState();
     }
@@ -147,7 +156,14 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
             return;
         }
 
-        AudioPlayer.Seek(ratio * Duration);
+        if (AudioPlayer.IsPlaying)
+        {
+            AudioPlayer.Seek(ratio * Duration);
+        }
+        else
+        {
+            pendingPosition = ratio * Duration;
+        }
         UpdateState();
     }
 }

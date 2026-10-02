@@ -1,50 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- usesCleartextTraffic: 平文の HTTP の接続先 (template-maui-server の API・SignalR・gRPC、テレメトリの OTLP、Sample > Chat の Ollama) -->
 	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" android:label="Template" android:usesCleartextTraffic="true"></application>
+	<!-- 通信の状態 (DeviceInformation。Diagnostics の画面、診断パネル、テレメトリ、Network > Realtime、SignalR の繋ぎ直し) -->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<!-- 通信 (Network の各画面、Sample の Web view・Map・CV Net・Chat、テレメトリの送信、サーバーからの通知) -->
 	<uses-permission android:name="android.permission.INTERNET" />
-	<!-- WiFi manager (接続情報とスキャン。SSID は位置情報の権限が必要、Android 13 以降のスキャンは NEARBY_WIFI_DEVICES) -->
+	<!-- Device > WiFi (接続情報とスキャン。SSID は位置情報の権限が必要、Android 13 以降のスキャンは NEARBY_WIFI_DEVICES) -->
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
-	<!-- ローカル通知 (Android 13 以降の表示許可) と正確な時刻のアラーム (Android 12 以降。14 以降は既定で不許可) -->
+	<!-- ローカル通知 (Device > Misc の Notification。Android 13 以降の表示許可) と正確な時刻のアラーム (Device > Misc の通知の予約。Android 12 以降。14 以降は既定で不許可) -->
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+	<!-- カメラ (Device > Camera / QR Scan / OCR、Setting の QR、Sample > CV Local / CV Net、UI > TreeMap の撮影、Device > Misc の LED) -->
 	<uses-permission android:name="android.permission.CAMERA" />
+	<!-- LED (Device > Misc の Light。MAUI の Flashlight は CAMERA とあわせて宣言を確かめる) -->
+	<uses-permission android:name="android.permission.FLASHLIGHT" />
+	<!-- マイク (Device > Misc の音声認識、Sample > Chat の音声入力、UI > Load の騒音の計測) -->
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<!-- 振動 (Device > Misc の Vibrate、QR の読み取り、ボタンの触覚フィードバック) -->
 	<uses-permission android:name="android.permission.VIBRATE" />
+	<!-- 位置情報 (Device > Location、Device > WiFi の SSID、Android 11 の Bluetooth のスキャン) -->
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<!-- Device > NFC -->
 	<uses-permission android:name="android.permission.NFC" />
+	<!-- Device > Activity (行動の認識) -->
 	<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-	<!-- 付与はされないが、IBattery が Permissions.EnsureDeclared で宣言の有無を見るため必須 -->
-	<uses-permission android:name="android.permission.BATTERY_STATS" />
-	<!-- Android 11 (minSdk 30) 向けレガシーBluetooth -->
+	<!-- Device > Biometric (生体認証・画面ロックでの本人確認) -->
+	<uses-permission android:name="android.permission.USE_BIOMETRIC" />
+	<!-- Bluetooth の旧権限 (Android 11 = minSdk 30 向け。Device > Bluetooth / BLE Scan / BLE Host) -->
 	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+	<!-- BLE Host の広告 -->
 	<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+	<!-- 接続と機器の名前 (Device > Bluetooth / BLE Scan / BLE Host) -->
 	<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+	<!-- 機器の検索 (Device > Bluetooth / BLE Scan。位置の推定には使わない) -->
 	<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+	<!-- 端末の機能は必須にしない (無い端末にも入れられる。使う画面で有無を確かめる) -->
+	<!-- 位置情報 (Device > Location) -->
 	<uses-feature android:name="android.hardware.location" android:required="false" />
 	<uses-feature android:name="android.hardware.location.gps" android:required="false" />
 	<uses-feature android:name="android.hardware.location.network" android:required="false" />
+	<!-- Device > NFC -->
 	<uses-feature android:name="android.hardware.nfc" android:required="false" />
+	<!-- カメラ (Device > Camera など、カメラの権限と同じ画面) -->
 	<uses-feature android:name="android.hardware.camera" android:required="false" />
+	<!-- Device > Bluetooth / BLE Scan / BLE Host -->
 	<uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+	<!-- マイク (音声認識・音声入力・騒音の計測) -->
 	<uses-feature android:name="android.hardware.microphone" android:required="false" />
 
+	<!-- 開く先のアプリの宣言 (Android 11 以降のパッケージの可視性)。Device > Communication の電話 -->
 	<queries>
 		<intent>
 			<action android:name="android.intent.action.DIAL" />
 			<data android:scheme="tel"/>
 		</intent>
 	</queries>
+	<!-- Device > Communication の SMS -->
 	<queries>
 		<intent>
 			<action android:name="android.intent.action.VIEW" />
 			<data android:scheme="smsto"/>
 		</intent>
 	</queries>
+	<!-- Device > Communication のメール -->
 	<queries>
 		<intent>
 			<action android:name="android.intent.action.SENDTO" />

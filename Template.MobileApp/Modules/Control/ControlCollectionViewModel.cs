@@ -23,7 +23,7 @@ public sealed class ControlCollectionViewModel : AppViewModelBase
         IDialog dialog)
     {
         ToggleCommand = MakeDelegateCommand<AddressGroup>(g => g.IsExpanded = !g.IsExpanded);
-        LoadMoreCommand = MakeDelegateCommand(LoadMore);
+        LoadMoreCommand = MakeDelegateCommand(CommandMode.Simple, LoadMore);
 
         PhoneCommand = MakeAsyncCommand<AddressRow>(async x =>
         {

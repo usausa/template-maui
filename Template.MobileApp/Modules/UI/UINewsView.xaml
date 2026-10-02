@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             x:Class="Template.MobileApp.Modules.UI.UINewsView"
+             x:DataType="{x:Type module:UINewsViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UINewsViewModel}"
+             shell:ShellProperty.Title="News"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Color x:Key="NewsAccentColor">#E53935</Color>
+            <Color x:Key="NewsTextColor">#212121</Color>
+            <Color x:Key="NewsSubTextColor">#9E9E9E</Color>
+            <Color x:Key="NewsLineColor">#EEEEEE</Color>
+            <Color x:Key="NewsSkeletonColor">#ECEFF1</Color>
+
+            <!-- カテゴリの名前・色・アイコン (カテゴリの無いページは保存した記事) -->
+            <s:MapToTextConverter x:Key="CategoryTextConverter"
+                                  DefaultValue="🔖 保存">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Top}"
+                                      Value="総合" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Economy}"
+                                      Value="経済" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Technology}"
+                                      Value="テクノロジー" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Sports}"
+                                      Value="スポーツ" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Entertainment}"
+                                      Value="エンタメ" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Life}"
+                                      Value="暮らし" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToColorConverter x:Key="CategoryColorConverter"
+                                   DefaultValue="#F59E0B">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Top}"
+                                       Value="#E53935" />
+                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Economy}"
+                                       Value="#1E88E5" />
+                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Technology}"
+                                       Value="#8E24AA" />
+                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Sports}"
+                                       Value="#43A047" />
+                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Entertainment}"
+                                       Value="#F4511E" />
+                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Life}"
+                                       Value="#00897B" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+            <s:MapToTextConverter x:Key="CategoryGlyphConverter"
+                                  DefaultValue="{x:Static fonts:MaterialIcons.Bookmark}">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Top}"
+                                      Value="{x:Static fonts:MaterialIcons.Newspaper}" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Economy}"
+                                      Value="{x:Static fonts:MaterialIcons.Trending_up}" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Technology}"
+                                      Value="{x:Static fonts:MaterialIcons.Memory}" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Sports}"
+                                      Value="{x:Static fonts:MaterialIcons.Sports_soccer}" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Entertainment}"
+                                      Value="{x:Static fonts:MaterialIcons.Theaters}" />
+                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Life}"
+                                      Value="{x:Static fonts:MaterialIcons.Local_florist}" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:BoolToTextConverter x:Key="BreakingPrefixConverter"
+                                   TrueValue="速報　"
+                                   FalseValue="" />
+
+            <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
+
+            <!-- タブ (選んだ見出しはカテゴリの色) -->
+            <Style x:Key="NewsTabStrip"
+                   TargetType="controls:TabStrip">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="IndicatorHeight" Value="3" />
+                <Setter Property="IndicatorInset" Value="12" />
+            </Style>
+
+            <Style x:Key="TabLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
+            </Style>
+
+            <Style x:Key="TabLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
+            </Style>
+
+            <!-- 速報の帯 -->
+            <Style x:Key="BreakingGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="ColumnSpacing" Value="10" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Offset="0" Color="#B71C1C" />
+                        <GradientStop Offset="1" Color="#E53935" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="BreakingBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="BreakingBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#C62828" />
+            </Style>
+
+            <Style x:Key="BreakingMarquee"
+                   TargetType="controls:MarqueeLabel">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="Speed" Value="70" />
+            </Style>
+
+            <!--
+                ページ。Loop は既定で有効なので止め、タブのタップでは間のページを流さずに移る。
+                スワイプが途中で止まったときはいちばん近いページに合わせ、一度作ったページは作り直さずに残す
+            -->
+            <Style x:Key="NewsCarousel"
+                   TargetType="CarouselView">
+                <Setter Property="BackgroundColor" Value="#F5F6F8" />
+                <Setter Property="Loop" Value="False" />
+                <Setter Property="IsScrollAnimated" Value="False" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+                <Setter Property="behaviors:CarouselOption.PageSnap" Value="True" />
+                <Setter Property="behaviors:CarouselOption.CacheSize" Value="7" />
+            </Style>
+
+            <Style x:Key="NewsRefresh"
+                   TargetType="RefreshView">
+                <Setter Property="RefreshColor" Value="{StaticResource NewsAccentColor}" />
+            </Style>
+
+            <Style x:Key="NewsCollection"
+                   TargetType="CollectionView">
+                <Setter Property="RemainingItemsThreshold" Value="3" />
+            </Style>
+
+            <!-- 新着の件数 (引っ張って更新の後に少しの間だけ出す) -->
+            <Style x:Key="NewArrivalsBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="Padding" Value="14,6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource NewsAccentColor}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="InputTransparent" Value="True" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black"
+                            Opacity="0.25"
+                            Radius="8" />
+                </Setter>
+                <Setter Property="behaviors:AnimationOption.EnterAnimation" Value="Pop" />
+            </Style>
+
+            <Style x:Key="NewArrivalsLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- トップの記事 (カテゴリの色の面に模様とアイコン) -->
+            <!--
+                一覧の見出しは最初に測った高さのまま変わらないので、どのページも同じ高さにし、
+                読み込み中は形だけ、保存のページは件数の面を出す
+            -->
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="12,12,12,6" />
+                <Setter Property="HeightRequest" Value="220" />
+            </Style>
+
+            <Style x:Key="HeaderPlaceholder"
+                   TargetType="BoxView">
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="Color" Value="{StaticResource NewsSkeletonColor}" />
+            </Style>
+
+            <Style x:Key="HeroBorder"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+            </Style>
+
+            <Style x:Key="SavedBorder"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#FBBF24" />
+                        <GradientStop Offset="1" Color="#F97316" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SavedIconLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,16,20,0" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="TextColor" Value="#59FFFFFF" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Bookmarks}" />
+            </Style>
+
+            <Style x:Key="SavedCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HeroLargeEllipse"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="260" />
+                <Setter Property="HeightRequest" Value="260" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TranslationX" Value="80" />
+                <Setter Property="TranslationY" Value="-110" />
+                <Setter Property="Fill" Value="#26FFFFFF" />
+            </Style>
+
+            <Style x:Key="HeroSmallEllipse"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TranslationX" Value="-40" />
+                <Setter Property="TranslationY" Value="-30" />
+                <Setter Property="Fill" Value="#1AFFFFFF" />
+            </Style>
+
+            <Style x:Key="HeroIconLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,16,20,0" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="TextColor" Value="#59FFFFFF" />
+            </Style>
+
+            <Style x:Key="HeroShade"
+                   TargetType="BoxView">
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0.3" Color="#00000000" />
+                        <GradientStop Offset="1" Color="#B3000000" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="HeroStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,0,16,14" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="HeroBadgeRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="HeroChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="BackgroundColor" Value="#40FFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="BreakingChipBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource HeroChipBorder}">
+                <Setter Property="BackgroundColor" Value="#E53935" />
+            </Style>
+
+            <Style x:Key="NewChipBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource HeroChipBorder}">
+                <Setter Property="BackgroundColor" Value="#FB8C00" />
+            </Style>
+
+            <Style x:Key="HeroChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HeroTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="HeroMetaLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#DDFFFFFF" />
+            </Style>
+
+            <!-- 記事の行 (既読は薄く) -->
+            <Style x:Key="ArticleRow"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ArticleGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ArticleTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
+                <Setter Property="MaxLines" Value="3" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="BreakingSpan"
+                   TargetType="Span">
+                <Setter Property="TextColor" Value="#E53935" />
+            </Style>
+
+            <Style x:Key="ArticleMetaGrid"
+                   TargetType="Grid">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ArticleMetaLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
+                <Setter Property="MaxLines" Value="1" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="ArticleCategorySpan"
+                   TargetType="Span">
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="CommentLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ArticleMetaLabel}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+            <!-- サムネイル (カテゴリの色の面にアイコン、新しい記事は NEW) -->
+            <Style x:Key="ThumbnailBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="ThumbnailShade"
+                   TargetType="BoxView">
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#40FFFFFF" />
+                        <GradientStop Offset="1" Color="#33000000" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ThumbnailIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ThumbnailNewBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="5,1" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="#FB8C00" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+            </Style>
+
+            <Style x:Key="ThumbnailNewLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="9" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ArticleLine"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
+            </Style>
+
+            <!-- 読み込み中のスケルトン -->
+            <Style x:Key="SkeletonShimmer"
+                   TargetType="sf:SfShimmer">
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="IsActive" Value="True" />
+            </Style>
+
+            <Style x:Key="SkeletonStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="14" />
+            </Style>
+
+            <Style x:Key="SkeletonRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="4,0" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SkeletonBar"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="7" />
+                <Setter Property="Color" Value="{StaticResource NewsSkeletonColor}" />
+            </Style>
+
+            <Style x:Key="SkeletonShortBar"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource SkeletonBar}">
+                <Setter Property="Margin" Value="0,0,60,0" />
+            </Style>
+
+            <Style x:Key="SkeletonThumbnail"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Color" Value="{StaticResource NewsSkeletonColor}" />
+            </Style>
+
+            <!-- 保存した記事が無いとき -->
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="24,32,24,0" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="72" />
+                <Setter Property="TextColor" Value="#FFCC80" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Bookmarks}" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
+            </Style>
+
+            <Style x:Key="EmptyNoteLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
+            </Style>
+
+            <!-- 一覧の最後 -->
+            <Style x:Key="FooterGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="64" />
+            </Style>
+
+            <Style x:Key="FooterIndicator"
+                   TargetType="ActivityIndicator"
+                   BasedOn="{StaticResource BasicLoadingIndicator}">
+                <Setter Property="WidthRequest" Value="28" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="Color" Value="{StaticResource NewsAccentColor}" />
+            </Style>
+
+            <Style x:Key="FooterLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
+            </Style>
+
+            <!-- 記事の行 -->
+            <DataTemplate x:Key="ArticleRowTemplate"
+                          x:DataType="{x:Type module:UINewsItem}">
+                <VerticalStackLayout Style="{StaticResource ArticleRow}">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsViewModel}}, Path=ArticleCommand, x:DataType={x:Type module:UINewsViewModel}}"
+                                              CommandParameter="{Binding .}" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Grid Style="{StaticResource ArticleGrid}"
+                          RowDefinitions="*,Auto"
+                          ColumnDefinitions="*,Auto">
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid"
+                                         Binding="{Binding IsRead}"
+                                         Value="True">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </DataTrigger>
+                        </Grid.Triggers>
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource ArticleTitleLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Style="{StaticResource BreakingSpan}"
+                                          Text="{Binding Article.IsBreaking, Converter={StaticResource BreakingPrefixConverter}}" />
+                                    <Span Text="{Binding Article.Title}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Grid Grid.Row="1" Grid.Column="0"
+                              Style="{StaticResource ArticleMetaGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource ArticleMetaLabel}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Style="{StaticResource ArticleCategorySpan}"
+                                              Text="{Binding Article.Category, Converter={StaticResource CategoryTextConverter}}"
+                                              TextColor="{Binding Article.Category, Converter={StaticResource CategoryColorConverter}}" />
+                                        <Span Text="  " />
+                                        <Span Text="{Binding Article.Source}" />
+                                        <Span Text="  " />
+                                        <Span Text="{Binding Article.PublishedAt, Converter={StaticResource ElapsedTimeConverter}}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource CommentLabel}"
+                                   Text="{Binding Article.CommentCount, StringFormat='💬 {0}'}" />
+                        </Grid>
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                Style="{StaticResource ThumbnailBorder}"
+                                BackgroundColor="{Binding Article.Category, Converter={StaticResource CategoryColorConverter}}">
+                            <Grid>
+                                <BoxView Style="{StaticResource ThumbnailShade}" />
+                                <Label Style="{StaticResource ThumbnailIconLabel}"
+                                       Text="{Binding Article.Category, Converter={StaticResource CategoryGlyphConverter}}" />
+                                <Border Style="{StaticResource ThumbnailNewBorder}"
+                                        IsVisible="{Binding IsNew}">
+                                    <Label Style="{StaticResource ThumbnailNewLabel}"
+                                           Text="NEW" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <BoxView Style="{StaticResource ArticleLine}" />
+                </VerticalStackLayout>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- タブ (見出しのタップと、ページのスワイプの両方で SelectedIndex が変わる。下線はスワイプに合わせて動く) -->
+        <controls:TabStrip Grid.Row="0"
+                           Style="{StaticResource NewsTabStrip}"
+                           ItemsSource="{Binding Context.Pages}"
+                           IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
+                           PagePosition="{Binding PagePosition}"
+                           SelectedIndex="{Binding SelectedIndex}">
+            <controls:TabStrip.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type module:UINewsPage}">
+                    <Label Style="{StaticResource TabLabel}"
+                           Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="TabStates">
+                                    <VisualState x:Name="Unselected" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="TextColor" Value="{Binding Category, Converter={StaticResource CategoryColorConverter}}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Label>
+                </DataTemplate>
+            </controls:TabStrip.ItemTemplate>
+        </controls:TabStrip>
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource TabLine}" />
+
+        <!-- 速報 (タップで記事を開く) -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource BreakingGrid}"
+              ColumnDefinitions="Auto,*">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding BreakingCommand}" />
+            </Grid.GestureRecognizers>
+            <Border Grid.Column="0"
+                    Style="{StaticResource BreakingBadgeBorder}">
+                <Label Style="{StaticResource BreakingBadgeLabel}"
+                       Text="速報" />
+            </Border>
+            <controls:MarqueeLabel Grid.Column="1"
+                                   Style="{StaticResource BreakingMarquee}"
+                                   Text="{Binding Context.Breaking.Title}" />
+        </Grid>
+
+        <!-- カテゴリごとのページと、保存した記事のページ -->
+        <CarouselView Grid.Row="3"
+                      Style="{StaticResource NewsCarousel}"
+                      behaviors:CarouselOption.PagePosition="{Binding PagePosition}"
+                      ItemsSource="{Binding Context.Pages}"
+                      Position="{Binding SelectedIndex}">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type module:UINewsPage}">
+                    <Grid>
+                        <RefreshView Style="{StaticResource NewsRefresh}"
+                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsViewModel}}, Path=RefreshCommand, x:DataType={x:Type module:UINewsViewModel}}"
+                                     CommandParameter="{Binding .}"
+                                     IsRefreshEnabled="{Binding IsSaved, Converter={StaticResource ReverseConverter}}"
+                                     IsRefreshing="{Binding IsRefreshing}">
+                            <CollectionView Style="{StaticResource NewsCollection}"
+                                            ItemsSource="{Binding Items}"
+                                            ItemTemplate="{StaticResource ArticleRowTemplate}"
+                                            RemainingItemsThresholdReachedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsViewModel}}, Path=MoreCommand, x:DataType={x:Type module:UINewsViewModel}}"
+                                            RemainingItemsThresholdReachedCommandParameter="{Binding .}">
+                                <CollectionView.Header>
+                                    <Grid Style="{StaticResource HeaderGrid}">
+                                        <!-- 読み込み中 -->
+                                        <BoxView Style="{StaticResource HeaderPlaceholder}"
+                                                 IsVisible="{Binding IsLoading}" />
+                                        <!-- 保存した記事の数 -->
+                                        <Border Style="{StaticResource SavedBorder}"
+                                                IsVisible="{Binding IsSaved}">
+                                            <Grid>
+                                                <Ellipse Style="{StaticResource HeroLargeEllipse}" />
+                                                <Label Style="{StaticResource SavedIconLabel}" />
+                                                <VerticalStackLayout Style="{StaticResource HeroStack}">
+                                                    <HorizontalStackLayout Style="{StaticResource HeroBadgeRow}">
+                                                        <Border Style="{StaticResource HeroChipBorder}">
+                                                            <Label Style="{StaticResource HeroChipLabel}"
+                                                                   Text="保存した記事" />
+                                                        </Border>
+                                                    </HorizontalStackLayout>
+                                                    <Label Style="{StaticResource SavedCountLabel}"
+                                                           Text="{Binding Items.Count, StringFormat='{0} 件'}" />
+                                                    <Label Style="{StaticResource HeroMetaLabel}"
+                                                           Text="あとで読みたい記事をまとめています" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                        <!-- トップの記事 -->
+                                        <ContentView BindingContext="{Binding Top}"
+                                                     IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsPage}}, Path=Top, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type module:UINewsPage}}">
+                                            <Border x:DataType="{x:Type module:UINewsItem}"
+                                                    Style="{StaticResource HeroBorder}"
+                                                    BackgroundColor="{Binding Article.Category, Converter={StaticResource CategoryColorConverter}}">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsViewModel}}, Path=ArticleCommand, x:DataType={x:Type module:UINewsViewModel}}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                                <Grid>
+                                                    <Ellipse Style="{StaticResource HeroLargeEllipse}" />
+                                                    <Ellipse Style="{StaticResource HeroSmallEllipse}" />
+                                                    <Label Style="{StaticResource HeroIconLabel}"
+                                                           Text="{Binding Article.Category, Converter={StaticResource CategoryGlyphConverter}}" />
+                                                    <BoxView Style="{StaticResource HeroShade}" />
+                                                    <VerticalStackLayout Style="{StaticResource HeroStack}">
+                                                        <HorizontalStackLayout Style="{StaticResource HeroBadgeRow}">
+                                                            <Border Style="{StaticResource HeroChipBorder}">
+                                                                <Label Style="{StaticResource HeroChipLabel}"
+                                                                       Text="{Binding Article.Category, Converter={StaticResource CategoryTextConverter}}" />
+                                                            </Border>
+                                                            <Border Style="{StaticResource BreakingChipBorder}"
+                                                                    IsVisible="{Binding Article.IsBreaking}">
+                                                                <Label Style="{StaticResource HeroChipLabel}"
+                                                                       Text="速報" />
+                                                            </Border>
+                                                            <Border Style="{StaticResource NewChipBorder}"
+                                                                    IsVisible="{Binding IsNew}">
+                                                                <Label Style="{StaticResource HeroChipLabel}"
+                                                                       Text="NEW" />
+                                                            </Border>
+                                                        </HorizontalStackLayout>
+                                                        <Label Style="{StaticResource HeroTitleLabel}"
+                                                               Text="{Binding Article.Title}" />
+                                                        <Label Style="{StaticResource HeroMetaLabel}">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="{Binding Article.Source}" />
+                                                                    <Span Text="  " />
+                                                                    <Span Text="{Binding Article.PublishedAt, Converter={StaticResource ElapsedTimeConverter}}" />
+                                                                    <Span Text="  " />
+                                                                    <Span Text="{Binding Article.CommentCount, StringFormat='💬 {0}'}" />
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </VerticalStackLayout>
+                                                </Grid>
+                                            </Border>
+                                        </ContentView>
+                                    </Grid>
+                                </CollectionView.Header>
+                                <CollectionView.EmptyView>
+                                    <Grid>
+                                        <!-- 読み込み中 -->
+                                        <sf:SfShimmer Style="{StaticResource SkeletonShimmer}"
+                                                      IsVisible="{Binding IsLoading}">
+                                            <sf:SfShimmer.CustomView>
+                                                <VerticalStackLayout Style="{StaticResource SkeletonStack}">
+                                                    <Grid Style="{StaticResource SkeletonRowGrid}"
+                                                          RowDefinitions="Auto,Auto,Auto"
+                                                          ColumnDefinitions="*,Auto">
+                                                        <BoxView Grid.Row="0" Grid.Column="0"
+                                                                 Style="{StaticResource SkeletonBar}" />
+                                                        <BoxView Grid.Row="1" Grid.Column="0"
+                                                                 Style="{StaticResource SkeletonShortBar}" />
+                                                        <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                                                 Style="{StaticResource SkeletonThumbnail}" />
+                                                    </Grid>
+                                                    <Grid Style="{StaticResource SkeletonRowGrid}"
+                                                          RowDefinitions="Auto,Auto,Auto"
+                                                          ColumnDefinitions="*,Auto">
+                                                        <BoxView Grid.Row="0" Grid.Column="0"
+                                                                 Style="{StaticResource SkeletonBar}" />
+                                                        <BoxView Grid.Row="1" Grid.Column="0"
+                                                                 Style="{StaticResource SkeletonShortBar}" />
+                                                        <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                                                 Style="{StaticResource SkeletonThumbnail}" />
+                                                    </Grid>
+                                                </VerticalStackLayout>
+                                            </sf:SfShimmer.CustomView>
+                                            <sf:SfShimmer.Content>
+                                                <BoxView HeightRequest="0"
+                                                         Color="Transparent" />
+                                            </sf:SfShimmer.Content>
+                                        </sf:SfShimmer>
+                                        <!-- 保存した記事が無い -->
+                                        <VerticalStackLayout Style="{StaticResource EmptyStack}"
+                                                             IsVisible="{Binding IsSaved}">
+                                            <Label Style="{StaticResource EmptyIconLabel}" />
+                                            <Label Style="{StaticResource EmptyTitleLabel}"
+                                                   Text="保存した記事はありません" />
+                                            <Label Style="{StaticResource EmptyNoteLabel}"
+                                                   Text="記事を開いて「保存」を押してください" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </CollectionView.EmptyView>
+                                <CollectionView.Footer>
+                                    <Grid Style="{StaticResource FooterGrid}">
+                                        <ActivityIndicator Style="{StaticResource FooterIndicator}"
+                                                           IsRunning="{Binding IsLoadingMore}"
+                                                           IsVisible="{Binding IsLoadingMore}" />
+                                        <Label Style="{StaticResource FooterLabel}"
+                                               IsVisible="{Binding IsEnd}"
+                                               Text="これ以上の記事はありません" />
+                                    </Grid>
+                                </CollectionView.Footer>
+                            </CollectionView>
+                        </RefreshView>
+                        <!-- 新着の件数 -->
+                        <Border Style="{StaticResource NewArrivalsBorder}"
+                                behaviors:AnimationOption.EnterTrigger="{Binding NewArrivals}"
+                                IsVisible="{Binding HasNewArrivals}">
+                            <Label Style="{StaticResource NewArrivalsLabel}"
+                                   Text="{Binding NewArrivals, StringFormat='↑ 新着 {0} 件'}" />
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+    </Grid>
+    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+</ContentView>

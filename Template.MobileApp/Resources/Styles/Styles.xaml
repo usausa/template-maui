@@ -173,6 +173,16 @@
         <Setter Property="FontSize" Value="28" />
     </Style>
 
+    <Style x:Key="HeaderIconLabel"
+           TargetType="Label">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
     <!-- ================================================================================ -->
     <!-- Footer -->
     <!-- ================================================================================ -->
@@ -1073,7 +1083,6 @@
         <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="FontSize" Value="36" />
-        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
     </Style>
 
     <Style x:Key="InputCommandButton"
@@ -1084,13 +1093,11 @@
         <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken2}" />
         <Setter Property="TextColor" Value="White" />
         <Setter Property="FontSize" Value="36" />
-        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
     </Style>
 
     <Style x:Key="InputFunctionButton"
            TargetType="Button"
            BasedOn="{StaticResource FunctionButtonBase}">
-        <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">

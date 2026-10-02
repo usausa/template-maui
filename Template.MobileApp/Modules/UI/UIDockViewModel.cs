@@ -82,7 +82,7 @@ public sealed class UIDockViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -294,7 +294,7 @@ public sealed class UIDockViewModel : AppViewModelBase
     {
         if (parameter == "Exit")
         {
-            await Navigator.ForwardAsync(ViewId.UIMenu2);
+            await Navigator.ForwardAsync(ViewId.UIMenu1);
         }
         else
         {

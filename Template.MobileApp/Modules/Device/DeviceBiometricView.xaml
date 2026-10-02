@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
+             xmlns:components="clr-namespace:Template.MobileApp.Components"
              x:Class="Template.MobileApp.Modules.Device.DeviceBiometricView"
              x:DataType="{x:Type module:DeviceBiometricViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceBiometricViewModel}"
@@ -12,16 +17,330 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:MapToTextConverter x:Key="AvailabilityTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Available}"
+                                      Value="✅ 使える" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoHardware}"
+                                      Value="🚫 センサー無し" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoneEnrolled}"
+                                      Value="⚠️ 未登録" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Unavailable}"
+                                      Value="⏳ 一時的に使えない" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="ResultTextConverter"
+                                  DefaultValue="—">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:BiometricResult.Succeeded}"
+                                      Value="✅ 成功" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricResult.Canceled}"
+                                      Value="↩️ キャンセル" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricResult.Lockout}"
+                                      Value="🔒 失敗回数の超過" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricResult.Failed}"
+                                      Value="❌ エラー" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="AuthenticationTypeTextConverter"
+                                  DefaultValue="">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:BiometricAuthenticationType.Biometric}"
+                                      Value="(生体)" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricAuthenticationType.DeviceCredential}"
+                                      Value="(画面ロック)" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="KeyStateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.None}"
+                                      Value="— 無し" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.Available}"
+                                      Value="🔑 あり" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.Invalidated}"
+                                      Value="⚠️ 使えない" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="KeyLocationTextConverter"
+                                  DefaultValue="—">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.StrongBox}"
+                                      Value="🛡️ StrongBox" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.TrustedEnvironment}"
+                                      Value="🔒 TEE" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.Software}"
+                                      Value="⚠️ Software" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.Unknown}"
+                                      Value="❓ 不明" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="SignStatusTextConverter"
+                                  DefaultValue="—">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Succeeded}"
+                                      Value="✅ 署名した" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Canceled}"
+                                      Value="↩️ キャンセル" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Lockout}"
+                                      Value="🔒 失敗回数の超過" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Failed}"
+                                      Value="❌ エラー" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.NoKey}"
+                                      Value="— 鍵が無い" />
+                    <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.KeyInvalidated}"
+                                      Value="⚠️ 鍵が使えない" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- サーバーの検証。署名は受け付け、1 バイト変えたチャレンジと同じチャレンジの 2 回目は断るのが正しい -->
+            <s:MapToTextConverter x:Key="AcceptTextConverter"
+                                  DefaultValue="—">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Bool Value=True}"
+                                      Value="✅ 一致" />
+                    <s:MapToTextEntry Key="{s:Bool Value=False}"
+                                      Value="❌ 不一致" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="RejectTextConverter"
+                                  DefaultValue="—">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Bool Value=False}"
+                                      Value="🛡️ 拒否" />
+                    <s:MapToTextEntry Key="{s:Bool Value=True}"
+                                      Value="⚠️ 受け付けた" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:HexTextConverter x:Key="HexTextConverter"
+                                         Length="6" />
+
+            <converters:DurationConverter x:Key="DurationConverter" />
+
+            <!-- 見出しと値を縦に並べたタイルを 2 列か 3 列に置き、スクロールしない高さに収める -->
+            <Style x:Key="TileGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TileStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="HexValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicMonoLabel}">
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="ResultRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource RootGrid}">
-        <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
-            <Border Style="{StaticResource BasicEmptyIconBorder}">
-                <Label Style="{StaticResource BasicEmptyIconLabel}"
-                       Text="{x:Static fonts:MaterialIcons.Fingerprint}" />
-            </Border>
-            <Label Style="{StaticResource BasicCenterTitleLabel}"
-                   Text="Not implemented" />
-            <Label Style="{StaticResource BasicCenterHintLabel}"
-                   Text="Biometric sample is not available yet" />
+        <VerticalStackLayout Style="{StaticResource PageStack}">
+
+            <!-- 使えるかどうか (強い生体認証・弱い生体認証・画面ロック)、最後の本人確認からの時間、未登録のときは設定の登録の画面へ -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Availability"
+                               Icon="{x:Static fonts:MaterialIcons.Verified_user}">
+                <Grid Style="{StaticResource TileGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*,*">
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                                         Style="{StaticResource TileStack}">
+                        <Label Style="{StaticResource BasicCaptionLabel}"
+                               Text="Biometric" />
+                        <Label Style="{StaticResource CardAccentLabel}"
+                               Text="{Binding BiometricStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource TileStack}">
+                        <Label Style="{StaticResource BasicCaptionLabel}"
+                               Text="Weak" />
+                        <Label Style="{StaticResource CardAccentLabel}"
+                               Text="{Binding WeakStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="2"
+                                         Style="{StaticResource TileStack}">
+                        <Label Style="{StaticResource BasicCaptionLabel}"
+                               Text="Screen lock" />
+                        <Label Style="{StaticResource CardAccentLabel}"
+                               Text="{Binding CredentialStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="0"
+                                         Style="{StaticResource TileStack}">
+                        <Label Style="{StaticResource BasicCaptionLabel}"
+                               Text="Last used" />
+                        <Label Style="{StaticResource CardAccentLabel}"
+                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} 前', TargetNullValue='—'}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                            Style="{StaticResource BasicIconOutlinedButton}"
+                            Command="{Binding EnrollCommand}"
+                            Text="Enroll"
+                            ImageSource="{x:Static markup:AppIcons.SmallHowToReg}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <!-- 本人確認 (強い生体認証だけ / 弱い生体認証 / 強い生体認証か画面ロック)。結果には使われた方式を添える -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Authenticate"
+                               Icon="{x:Static fonts:MaterialIcons.Fingerprint}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding AuthenticateCommand}"
+                                CommandParameter="{x:Static components:BiometricMethod.Biometric}"
+                                Text="Strong"
+                                ImageSource="{x:Static markup:AppIcons.SmallFingerprint}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding AuthenticateCommand}"
+                                CommandParameter="{x:Static components:BiometricMethod.WeakBiometric}"
+                                Text="Weak"
+                                ImageSource="{x:Static markup:AppIcons.SmallFace}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding AuthenticateCommand}"
+                                CommandParameter="{x:Static components:BiometricMethod.BiometricOrDeviceCredential}"
+                                Text="PIN"
+                                ImageSource="{x:Static markup:AppIcons.SmallPassword}" />
+                    </Grid>
+                    <Grid Style="{StaticResource ResultRowGrid}"
+                          ColumnDefinitions="*,Auto,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardRowLabel}"
+                               Text="Result" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardRowValueLabel}"
+                               Text="{Binding Result, Converter={StaticResource ResultTextConverter}}" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource CardRowValueLabel}"
+                               Text="{Binding AuthenticationType, Converter={StaticResource AuthenticationTypeTextConverter}}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <!-- 鍵でのログイン (サーバーの役は端末の中。登録 = 鍵を作って公開鍵を登録、ログイン = チャレンジに生体認証付きで署名して検証) -->
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Key sign in"
+                               Icon="{x:Static fonts:MaterialIcons.Key}">
+                <VerticalStackLayout Style="{StaticResource CardActionStack}">
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="サーバーの役 (登録・チャレンジ・検証) は端末の中で行う" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding RegisterCommand}"
+                                Text="Register"
+                                ImageSource="{x:Static markup:AppIcons.SmallKey}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding SignInCommand}"
+                                Text="Sign in"
+                                ImageSource="{x:Static markup:AppIcons.SmallLogin}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding DeleteKeyCommand}"
+                                Text="Delete"
+                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                    </Grid>
+                    <Grid Style="{StaticResource TileGrid}"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Key" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding KeyState, Converter={StaticResource KeyStateTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Location" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding KeyLocation, Converter={StaticResource KeyLocationTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Public key" />
+                            <Label Style="{StaticResource HexValueLabel}"
+                                   Text="{Binding KeyFingerprint, Converter={StaticResource HexTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Challenge" />
+                            <Label Style="{StaticResource HexValueLabel}"
+                                   Text="{Binding Challenge, Converter={StaticResource HexTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="0"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Signature" />
+                            <Label Style="{StaticResource HexValueLabel}"
+                                   Text="{Binding Signature, Converter={StaticResource HexTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="1"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Result" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding SignStatus, Converter={StaticResource SignStatusTextConverter}}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid Style="{StaticResource TileGrid}"
+                          ColumnDefinitions="*,*,*">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Verify" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding Verified, Converter={StaticResource AcceptTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Tampered" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding TamperedVerified, Converter={StaticResource RejectTextConverter}}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="2"
+                                             Style="{StaticResource TileStack}">
+                            <Label Style="{StaticResource BasicCaptionLabel}"
+                                   Text="Replay" />
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding ReplayVerified, Converter={StaticResource RejectTextConverter}}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
         </VerticalStackLayout>
     </Grid>
 

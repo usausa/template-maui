@@ -299,19 +299,16 @@
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
-            <Style x:Key="TouchCardBorder"
-                   TargetType="Border">
+            <Style x:Key="TouchCardButton"
+                   TargetType="Button">
                 <Setter Property="Padding" Value="12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
-                <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <Style x:Key="TouchHintLabel"
-                   TargetType="Label">
+                <Setter Property="BorderColor" Value="{StaticResource BlueLighten3}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
             <Style x:Key="TintSampleStack"
@@ -528,9 +525,9 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Toolkit 演出(Confetti / TouchBehavior / IconTint) -->
+            <!-- 演出(Confetti / 長押し / IconTint) -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="Toolkit 演出(Confetti / Touch / IconTint)" />
+                   Text="演出(Confetti / 長押し / IconTint)" />
             <Border Style="{StaticResource EffectCard}">
                 <VerticalStackLayout Style="{StaticResource EffectCardStack}">
                     <Grid Style="{StaticResource ConfettiGrid}">
@@ -548,15 +545,10 @@
                     </Grid>
                     <Grid Style="{StaticResource EffectRowGrid}"
                           ColumnDefinitions="*,Auto">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource TouchCardBorder}">
-                            <Border.Behaviors>
-                                <mct:TouchBehavior LongPressCommand="{Binding LongPressCommand}"
-                                                   PressedOpacity="0.6" PressedScale="0.95" />
-                            </Border.Behaviors>
-                            <Label Style="{StaticResource TouchHintLabel}"
-                                   Text="TouchBehavior: 押すと縮む / 長押しでカウント" />
-                        </Border>
+                        <Button Grid.Column="0"
+                                Style="{StaticResource TouchCardButton}"
+                                behaviors:ButtonOption.LongPressCommand="{Binding LongPressCommand}"
+                                Text="ButtonOption: 押すと縮む / 長押しでカウント" />
                         <Label Grid.Column="1"
                                Style="{StaticResource EffectValueLabel}"
                                behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}"

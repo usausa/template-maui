@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppTodoView"
+             x:DataType="{x:Type module:AppTodoViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppTodoViewModel}"
+             shell:ShellProperty.Title="ToDo"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#059669">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="TodoAccentColor">#059669</Color>
+            <Color x:Key="TodoAccentEndColor">#0D9488</Color>
+            <Color x:Key="TodoHeaderSubColor">#D1FAE5</Color>
+            <Color x:Key="TodoHeaderButtonColor">#26FFFFFF</Color>
+            <Color x:Key="TodoTextColor">#0F172A</Color>
+            <Color x:Key="TodoSubTextColor">#64748B</Color>
+            <Color x:Key="TodoMutedColor">#94A3B8</Color>
+            <Color x:Key="TodoLineColor">#EEF2F6</Color>
+            <Color x:Key="TodoCheckColor">#CBD5E1</Color>
+            <Color x:Key="TodoDoneColor">#10B981</Color>
+            <Color x:Key="TodoStarColor">#F59E0B</Color>
+            <Color x:Key="TodoDangerColor">#EF4444</Color>
+            <Color x:Key="TodoSnackColor">#1E293B</Color>
+            <Color x:Key="TodoSnackActionColor">#6EE7B7</Color>
+            <Color x:Key="TodoOverdueColor">#DC2626</Color>
+            <Color x:Key="TodoOverdueSoftColor">#FEE2E2</Color>
+            <Color x:Key="TodoTodayColor">#059669</Color>
+            <Color x:Key="TodoTodaySoftColor">#D1FAE5</Color>
+            <Color x:Key="TodoTomorrowColor">#0284C7</Color>
+            <Color x:Key="TodoTomorrowSoftColor">#E0F2FE</Color>
+            <Color x:Key="TodoLaterColor">#7C3AED</Color>
+            <Color x:Key="TodoLaterSoftColor">#EDE9FE</Color>
+            <Color x:Key="TodoNoDueColor">#64748B</Color>
+            <Color x:Key="TodoNoDueSoftColor">#F1F5F9</Color>
+            <Color x:Key="TodoDoneGroupColor">#0D9488</Color>
+            <Color x:Key="TodoDoneGroupSoftColor">#CCFBF1</Color>
+
+            <!-- Converter -->
+            <s:MapToTextConverter x:Key="GroupTitleConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Overdue}"
+                                      Value="⚠️ 期限切れ" />
+                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Today}"
+                                      Value="📅 今日" />
+                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Tomorrow}"
+                                      Value="🌤️ 明日" />
+                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Later}"
+                                      Value="🗓️ 今後" />
+                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.NoDue}"
+                                      Value="📝 期限なし" />
+                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Done}"
+                                      Value="✅ 完了" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="GroupColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Overdue}"
+                                       Value="{StaticResource TodoOverdueColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Today}"
+                                       Value="{StaticResource TodoTodayColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Tomorrow}"
+                                       Value="{StaticResource TodoTomorrowColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Later}"
+                                       Value="{StaticResource TodoLaterColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.NoDue}"
+                                       Value="{StaticResource TodoNoDueColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Done}"
+                                       Value="{StaticResource TodoDoneGroupColor}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToColorConverter x:Key="GroupSoftColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Overdue}"
+                                       Value="{StaticResource TodoOverdueSoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Today}"
+                                       Value="{StaticResource TodoTodaySoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Tomorrow}"
+                                       Value="{StaticResource TodoTomorrowSoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Later}"
+                                       Value="{StaticResource TodoLaterSoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.NoDue}"
+                                       Value="{StaticResource TodoNoDueSoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Done}"
+                                       Value="{StaticResource TodoDoneGroupSoftColor}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToColorConverter x:Key="DueColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Overdue}"
+                                       Value="{StaticResource TodoOverdueColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Today}"
+                                       Value="{StaticResource TodoTodayColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Tomorrow}"
+                                       Value="{StaticResource TodoTomorrowColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Later}"
+                                       Value="{StaticResource TodoLaterColor}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToColorConverter x:Key="DueSoftColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Overdue}"
+                                       Value="{StaticResource TodoOverdueSoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Today}"
+                                       Value="{StaticResource TodoTodaySoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Tomorrow}"
+                                       Value="{StaticResource TodoTomorrowSoftColor}" />
+                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Later}"
+                                       Value="{StaticResource TodoLaterSoftColor}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <converters:TodoDueTextConverter x:Key="DueTextConverter" />
+
+            <s:BoolToTextConverter x:Key="ShowDoneIconConverter"
+                                   TrueValue="{x:Static fonts:MaterialIcons.Visibility}"
+                                   FalseValue="{x:Static fonts:MaterialIcons.Visibility_off}" />
+
+            <s:BoolToTextConverter x:Key="StarIconConverter"
+                                   TrueValue="{x:Static fonts:MaterialIcons.Star}"
+                                   FalseValue="{x:Static fonts:MaterialIcons.Star_border}" />
+
+            <!-- Page -->
+            <Style x:Key="TodoRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <!-- Header -->
+            <Style x:Key="HeaderBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,8,16,20" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 0,0,28,28" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource TodoAccentColor}" />
+                        <GradientStop Offset="1" Color="{StaticResource TodoAccentEndColor}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="HeaderStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HeaderBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HeaderIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoHeaderButtonColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="HeaderTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderDateLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="4,8,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TodoHeaderSubColor}" />
+            </Style>
+
+            <Style x:Key="HeaderSummaryGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="4,0" />
+            </Style>
+
+            <Style x:Key="HeaderCountLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="HeaderCountSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="HeaderUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+            <Style x:Key="HeaderDoneLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TodoHeaderSubColor}" />
+                <Setter Property="VerticalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="HeaderProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="Margin" Value="4,0" />
+                <Setter Property="HeightRequest" Value="6" />
+                <Setter Property="ProgressColor" Value="White" />
+            </Style>
+
+            <!-- Group -->
+            <Style x:Key="GroupHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="20,20,20,6" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="GroupTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="GroupCountBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,1" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="GroupCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Row -->
+            <Style x:Key="TodoRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,2,8,0" />
+                <Setter Property="ColumnSpacing" Value="4" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TapAreaGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="56" />
+            </Style>
+
+            <Style x:Key="CheckBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="26" />
+                <Setter Property="HeightRequest" Value="26" />
+                <Setter Property="Stroke" Value="{StaticResource TodoCheckColor}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 13" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CheckLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="TodoTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,10" />
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TodoTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="TodoBadgeStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="DueBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="DueBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="NoteBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TodoSubTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StarLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource TodoCheckColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="RowDividerBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource TodoLineColor}" />
+            </Style>
+
+            <!-- Swipe -->
+            <Style x:Key="DeleteSwipeItem"
+                   TargetType="SwipeItemView">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoDangerColor}" />
+            </Style>
+
+            <Style x:Key="SwipeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SwipeIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SwipeTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Empty -->
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="32,72,32,0" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="EmptyEmojiLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="72" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TodoSubTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- 一覧の最後の行が ＋ のボタンに隠れない余白 -->
+            <Style x:Key="ListFooterBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="104" />
+                <Setter Property="Color" Value="Transparent" />
+            </Style>
+
+            <!-- Undo -->
+            <Style x:Key="UndoBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,96,30" />
+                <Setter Property="Padding" Value="16,0,4,0" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoSnackColor}" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,4"
+                                Brush="Black"
+                                Opacity="0.25"
+                                Radius="12" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="UndoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="UndoButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TodoSnackActionColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Add -->
+            <Style x:Key="AddFabButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="0,0,20,24" />
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="32" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentColor}" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,6"
+                                Brush="{StaticResource TodoAccentColor}"
+                                Opacity="0.45"
+                                Radius="16" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource TodoRootGrid}"
+          RowDefinitions="Auto,*">
+
+        <!-- 見出し (戻る・名前・完了の表示の切り替え、今日の日付、残りの件数、完了の割合) -->
+        <Border Grid.Row="0"
+                Style="{StaticResource HeaderBorder}">
+            <VerticalStackLayout Style="{StaticResource HeaderStack}">
+                <Grid Style="{StaticResource HeaderBarGrid}"
+                      ColumnDefinitions="Auto,*,Auto">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource HeaderIconButton}"
+                            Command="{Binding BackCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource HeaderTitleLabel}"
+                           Text="ToDo" />
+                    <Button Grid.Column="2"
+                            Style="{StaticResource HeaderIconButton}"
+                            Command="{Binding ShowDoneCommand}"
+                            Text="{Binding Context.List.ShowDone, Converter={StaticResource ShowDoneIconConverter}}" />
+                </Grid>
+                <Label Style="{StaticResource HeaderDateLabel}"
+                       Text="{Binding Context.Today, StringFormat='{0:M月d日 dddd}'}" />
+                <Grid Style="{StaticResource HeaderSummaryGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource HeaderCountLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource HeaderCountSpan}"
+                                      Text="{Binding Context.List.RemainingCount}" />
+                                <Span Style="{StaticResource HeaderUnitSpan}"
+                                      Text="件のタスク" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Column="1"
+                           Style="{StaticResource HeaderDoneLabel}">
+                        <Label.Text>
+                            <MultiBinding StringFormat="✅ 完了 {0} / {1}">
+                                <Binding Path="Context.List.DoneCount" />
+                                <Binding Path="Context.List.TotalCount" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+                <ProgressBar Style="{StaticResource HeaderProgressBar}"
+                             Progress="{Binding Context.List.Progress}" />
+            </VerticalStackLayout>
+        </Border>
+
+        <Grid Grid.Row="1">
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <CollectionView ItemsSource="{Binding Context.List.Sections}"
+                            IsGrouped="True">
+
+                <!-- グループの見出しと件数 -->
+                <CollectionView.GroupHeaderTemplate>
+                    <DataTemplate x:DataType="{x:Type models:TodoSection}">
+                        <Grid Style="{StaticResource GroupHeaderGrid}"
+                              ColumnDefinitions="Auto,Auto,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource GroupTitleLabel}"
+                                   Text="{Binding Group, Converter={StaticResource GroupTitleConverter}}"
+                                   TextColor="{Binding Group, Converter={StaticResource GroupColorConverter}}" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource GroupCountBorder}"
+                                    BackgroundColor="{Binding Group, Converter={StaticResource GroupSoftColorConverter}}">
+                                <Label Style="{StaticResource GroupCountLabel}"
+                                       Text="{Binding Count}"
+                                       TextColor="{Binding Group, Converter={StaticResource GroupColorConverter}}" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.GroupHeaderTemplate>
+
+                <!-- 行 (丸いチェック・件名・期限とメモのバッジ・重要)。タップで編集、左へのスワイプで削除 -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:TodoItem}">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItemView Style="{StaticResource DeleteSwipeItem}"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppTodoViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:AppTodoViewModel}}"
+                                                   CommandParameter="{Binding .}">
+                                        <VerticalStackLayout Style="{StaticResource SwipeStack}">
+                                            <Label Style="{StaticResource SwipeIconLabel}"
+                                                   Text="{x:Static fonts:MaterialIcons.Delete}" />
+                                            <Label Style="{StaticResource SwipeTextLabel}"
+                                                   Text="削除" />
+                                        </VerticalStackLayout>
+                                    </SwipeItemView>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Grid Style="{StaticResource TodoRowGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="Auto,*,Auto">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppTodoViewModel}}, Path=EditCommand, x:DataType={x:Type module:AppTodoViewModel}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <!-- 完了のチェック (完了で塗って弾む) -->
+                                <Grid Grid.Row="0" Grid.Column="0"
+                                      Style="{StaticResource TapAreaGrid}">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppTodoViewModel}}, Path=DoneCommand, x:DataType={x:Type module:AppTodoViewModel}}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <Border Style="{StaticResource CheckBorder}"
+                                            behaviors:AnimationOption.BounceTrigger="{Binding IsDone}"
+                                            behaviors:AnimationOption.BounceValue="{s:Bool Value=True}">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsDone}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource TodoDoneColor}" />
+                                                <Setter Property="Stroke" Value="{StaticResource TodoDoneColor}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Style="{StaticResource CheckLabel}"
+                                               IsVisible="{Binding IsDone}"
+                                               Text="{x:Static fonts:MaterialIcons.Check}" />
+                                    </Border>
+                                </Grid>
+
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                                     Style="{StaticResource TodoTextStack}">
+                                    <Label Style="{StaticResource TodoTitleLabel}"
+                                           Text="{Binding Title}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
+                                                         Binding="{Binding IsDone}"
+                                                         Value="True">
+                                                <Setter Property="TextColor" Value="{StaticResource TodoMutedColor}" />
+                                                <Setter Property="TextDecorations" Value="Strikethrough" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <HorizontalStackLayout Style="{StaticResource TodoBadgeStack}">
+                                        <HorizontalStackLayout.Triggers>
+                                            <DataTrigger TargetType="HorizontalStackLayout"
+                                                         Binding="{Binding IsDone}"
+                                                         Value="True">
+                                                <Setter Property="Opacity" Value="0.5" />
+                                            </DataTrigger>
+                                        </HorizontalStackLayout.Triggers>
+                                        <Border Style="{StaticResource DueBadgeBorder}"
+                                                IsVisible="{Binding Due, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TodoDue.None}}"
+                                                BackgroundColor="{Binding Due, Converter={StaticResource DueSoftColorConverter}}">
+                                            <Label Style="{StaticResource DueBadgeLabel}"
+                                                   TextColor="{Binding Due, Converter={StaticResource DueColorConverter}}">
+                                                <Label.Text>
+                                                    <MultiBinding Converter="{StaticResource DueTextConverter}">
+                                                        <Binding Path="Due" />
+                                                        <Binding Path="DueDate" />
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                        </Border>
+                                        <Label Style="{StaticResource NoteBadgeLabel}"
+                                               IsVisible="{Binding HasNote}"
+                                               Text="📝 メモ" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <!-- 重要 -->
+                                <Grid Grid.Row="0" Grid.Column="2"
+                                      Style="{StaticResource TapAreaGrid}">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppTodoViewModel}}, Path=ImportantCommand, x:DataType={x:Type module:AppTodoViewModel}}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <Label Style="{StaticResource StarLabel}"
+                                           behaviors:AnimationOption.BounceTrigger="{Binding IsImportant}"
+                                           behaviors:AnimationOption.BounceValue="{s:Bool Value=True}"
+                                           Text="{Binding IsImportant, Converter={StaticResource StarIconConverter}}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
+                                                         Binding="{Binding IsImportant}"
+                                                         Value="True">
+                                                <Setter Property="TextColor" Value="{StaticResource TodoStarColor}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+
+                                <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                         Style="{StaticResource RowDividerBoxView}" />
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <BoxView Style="{StaticResource ListFooterBoxView}" />
+                </CollectionView.Footer>
+            </CollectionView>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <!-- 表示するグループが無いとき (すべて完了して完了を隠しているときと、行が無いとき) -->
+            <VerticalStackLayout Style="{StaticResource EmptyStack}"
+                                 IsVisible="{Binding Context.List.Sections.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}">
+                <Label Style="{StaticResource EmptyEmojiLabel}"
+                       IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                       Text="🎉" />
+                <Label Style="{StaticResource EmptyEmojiLabel}"
+                       IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}"
+                       Text="📝" />
+                <Label Style="{StaticResource EmptyTitleLabel}"
+                       IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                       Text="すべて完了しました" />
+                <Label Style="{StaticResource EmptyTitleLabel}"
+                       IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}"
+                       Text="タスクはありません" />
+                <Label Style="{StaticResource EmptyHintLabel}"
+                       Text="右下の ＋ から追加できます" />
+            </VerticalStackLayout>
+
+            <!-- 元に戻すの帯 (消してから 4 秒) -->
+            <Border Style="{StaticResource UndoBorder}"
+                    IsVisible="{Binding Context.DeletedItem, Converter={s:NullToBool Invert=True}}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource UndoLabel}"
+                           Text="{Binding Context.DeletedItem.Title, StringFormat='🗑️ 「{0}」を削除しました', FallbackValue=''}" />
+                    <Button Grid.Column="1"
+                            Style="{StaticResource UndoButton}"
+                            Command="{Binding UndoCommand}"
+                            Text="元に戻す" />
+                </Grid>
+            </Border>
+
+            <!-- 新規 -->
+            <Button Style="{StaticResource AddFabButton}"
+                    Command="{Binding AddCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Add}" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

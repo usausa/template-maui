@@ -1,16 +1,10 @@
 namespace Template.MobileApp.Modules.App;
 
-using System.Globalization;
-
 using Template.MobileApp.Models.App;
 
 public sealed partial class AppCalcViewModel : AppViewModelBase
 {
-    private const string ContinueOperators = "+−×÷^%!";
-
-    private double lastValue;
-
-    private bool justEvaluated;
+    private readonly CalcInput input = new();
 
     [ObservableProperty]
     public partial string Expression { get; set; } = string.Empty;
@@ -55,59 +49,41 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
 
     private void Input(string token)
     {
-        if (justEvaluated)
-        {
-            Expression = ContinueOperators.Contains(token, StringComparison.Ordinal)
-                ? FormatValue(lastValue)
-                : string.Empty;
-            justEvaluated = false;
-        }
-
-        Expression += token;
+        input.Input(token);
+        Expression = input.Expression;
         ErrorMessage = string.Empty;
     }
 
     private void Clear()
     {
-        Expression = string.Empty;
+        input.Clear();
+        Expression = input.Expression;
         Result = "0";
         ErrorMessage = string.Empty;
-        justEvaluated = false;
     }
 
     private void Backspace()
     {
-        if (justEvaluated)
-        {
-            justEvaluated = false;
-        }
-
-        if (Expression.Length > 0)
-        {
-            Expression = Expression[..^1];
-        }
-
+        input.Backspace();
+        Expression = input.Expression;
         ErrorMessage = string.Empty;
     }
 
+    // 式が空のときは何もしない
     private void Evaluate()
     {
-        if (Expression.Length == 0)
+        if (!input.IsEmpty)
         {
-            return;
-        }
-
-        var result = ExpressionCalculator.Evaluate(Expression);
-        if (result.IsSuccess)
-        {
-            lastValue = result.Value;
-            Result = FormatValue(result.Value);
-            ErrorMessage = string.Empty;
-            justEvaluated = true;
-        }
-        else
-        {
-            ErrorMessage = result.Error.Message;
+            var result = input.Evaluate();
+            if (result.TryGetValue(out var value))
+            {
+                Result = CalcInput.Format(value);
+                ErrorMessage = string.Empty;
+            }
+            else if (result.Error is CalcError error)
+            {
+                ErrorMessage = FormatError(error);
+            }
         }
     }
 
@@ -115,15 +91,21 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    // 末尾ゼロを出さない表示 (極端な値は指数表記)
-    private static string FormatValue(double value)
-    {
-        var abs = Math.Abs(value);
-        if ((abs >= 1e12) || ((abs > 0d) && (abs < 1e-9)))
+    private static string FormatError(CalcError error) =>
+        error.Type switch
         {
-            return value.ToString("0.######E+0", CultureInfo.InvariantCulture);
-        }
-
-        return value.ToString("0.##########", CultureInfo.InvariantCulture);
-    }
+            CalcErrorType.Empty => "式が空です",
+            CalcErrorType.InvalidNumber => $"数値が不正です: {error.Text}",
+            CalcErrorType.UnknownName => $"未知の名前です: {error.Text}",
+            CalcErrorType.UnknownCharacter => $"未知の文字です: {error.Text}",
+            CalcErrorType.UnbalancedParenthesis => "括弧が対応していません",
+            CalcErrorType.Incomplete => "式が不完全です",
+            CalcErrorType.DivideByZero => "0 では割れません",
+            CalcErrorType.NegativeSquareRoot => "負数の平方根は計算できません",
+            CalcErrorType.FactorialRange => $"階乗は 0〜{CalcEngine.MaxFactorial} の整数のみです",
+            CalcErrorType.UnknownOperator => $"未知の演算子です: {error.Text}",
+            CalcErrorType.UnknownFunction => $"未知の関数です: {error.Text}",
+            CalcErrorType.NotComputable => "計算できません",
+            _ => "式が不正です"
+        };
 }

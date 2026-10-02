@@ -1,7 +1,9 @@
 namespace Template.MobileApp.Modules;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
-public abstract class AppDialogViewModelBase : ExtendViewModelBase, IValidatable
+public abstract class AppDialogViewModelBase :
+    ExtendViewModelBase,
+    IValidatable
 {
     protected AppDialogViewModelBase()
         : base(new ExtendViewModelOptions { BusyState = new BusyState() })

@@ -227,4 +227,91 @@ public static partial class Scroll
             _ = target.ScaleToAsync(0, 200, Easing.CubicIn);
         }
     }
+
+    // ------------------------------------------------------------------ CollapseTarget
+
+    // 見出し (CollapseTarget) をスクロールに合わせて小さく薄くし、見出しが消える前から上に残す小さな見出し (CollapsedTarget) を出す。
+    // 見出しの高さのぶんスクロールすると畳み終わる
+    public static readonly BindableProperty CollapseTargetProperty = BindableProperty.CreateAttached(
+        "CollapseTarget",
+        typeof(VisualElement),
+        typeof(Scroll),
+        null,
+        propertyChanged: OnCollapseTargetChanged);
+
+    public static VisualElement? GetCollapseTarget(BindableObject bindable) => (VisualElement?)bindable.GetValue(CollapseTargetProperty);
+
+    public static void SetCollapseTarget(BindableObject bindable, VisualElement? value) => bindable.SetValue(CollapseTargetProperty, value);
+
+    public static readonly BindableProperty CollapsedTargetProperty = BindableProperty.CreateAttached(
+        "CollapsedTarget",
+        typeof(VisualElement),
+        typeof(Scroll),
+        null);
+
+    public static VisualElement? GetCollapsedTarget(BindableObject bindable) => (VisualElement?)bindable.GetValue(CollapsedTargetProperty);
+
+    public static void SetCollapsedTarget(BindableObject bindable, VisualElement? value) => bindable.SetValue(CollapsedTargetProperty, value);
+
+    private static void OnCollapseTargetChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            scrollView.Scrolled -= OnCollapseScrolled;
+        }
+        if (newValue is not null)
+        {
+            scrollView.Scrolled += OnCollapseScrolled;
+        }
+    }
+
+    private static void OnCollapseScrolled(object? sender, ScrolledEventArgs e)
+    {
+        if ((sender is not ScrollView scrollView) || (GetCollapseTarget(scrollView) is not { Height: > 0 } target))
+        {
+            return;
+        }
+
+        // 見出しは流れる量の 4 割だけ遅らせて残り、小さく薄くなる
+        var scrollY = Math.Max(0, e.ScrollY);
+        var progress = Math.Clamp(scrollY / target.Height, 0, 1);
+        target.TranslationY = scrollY * 0.4;
+        target.Scale = 1 - (0.3 * progress);
+        target.Opacity = 1 - progress;
+
+        var collapsed = GetCollapsedTarget(scrollView);
+        if (collapsed is not null)
+        {
+            var visible = Math.Clamp((progress - 0.5) * 2, 0, 1);
+            collapsed.Opacity = visible;
+            collapsed.TranslationY = (visible - 1) * 12;
+        }
+    }
+
+    // ------------------------------------------------------------------ TopTrigger
+
+    // 値が変わったら先頭まで戻す (最初の設定では動かさない)
+    public static readonly BindableProperty TopTriggerProperty = BindableProperty.CreateAttached(
+        "TopTrigger",
+        typeof(object),
+        typeof(Scroll),
+        null,
+        propertyChanged: OnTopTriggerChanged);
+
+    public static object? GetTopTrigger(BindableObject bindable) => bindable.GetValue(TopTriggerProperty);
+
+    public static void SetTopTrigger(BindableObject bindable, object? value) => bindable.SetValue(TopTriggerProperty, value);
+
+    private static void OnTopTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if ((bindable is ScrollView scrollView) && (oldValue is not null) && (newValue is not null))
+        {
+            _ = scrollView.ScrollToAsync(0, 0, false);
+        }
+    }
 }

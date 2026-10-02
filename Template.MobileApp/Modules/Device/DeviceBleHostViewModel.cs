@@ -42,7 +42,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Navigator.PostActionAsync(() => BusyState.Using(async () =>
+        await Navigator.PostActionAsync(() => BusyState.UsingAsync(async () =>
         {
             var access = await hostingManager.RequestAccess();
             if (access == AccessState.Available)

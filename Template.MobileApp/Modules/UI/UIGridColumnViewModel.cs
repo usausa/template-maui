@@ -37,7 +37,7 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        session = context.Parameter.GetColumnEditSession();
+        session = context.Parameter.GetModel<GridColumnEditSession>();
 
         var rows = new GridDataView<GridColumnOption>(session.Columns, static x => x.Key) { SelectionMode = GridSelectionMode.None };
         Disposables.Add(rows);
@@ -52,7 +52,7 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    protected override Task OnNotifyFunction4() => Navigator.PopAsync(Parameters.MakeColumnOrders(session.Export()));
+    protected override Task OnNotifyFunction4() => Navigator.PopAsync(Parameters.MakeModel(session.Export()));
 
     //--------------------------------------------------------------------------------
     // Operation

@@ -48,6 +48,7 @@ public static class AppIcons
     public static readonly FontImageSource Category = Create(MaterialIcons.Category, MenuSize, Colors.White);
     public static readonly FontImageSource CellTower = Create(MaterialIcons.Cell_tower, MenuSize, Colors.White);
     public static readonly FontImageSource Chat = Create(MaterialIcons.Chat, MenuSize, Colors.White);
+    public static readonly FontImageSource Checklist = Create(MaterialIcons.Checklist, MenuSize, Colors.White);
     public static readonly FontImageSource Cloud = Create(MaterialIcons.Cloud, MenuSize, Colors.White);
     public static readonly FontImageSource CloudUpload = Create(MaterialIcons.Cloud_upload, MenuSize, Colors.White);
     public static readonly FontImageSource Crop = Create(MaterialIcons.Crop, MenuSize, Colors.White);
@@ -65,12 +66,14 @@ public static class AppIcons
     public static readonly FontImageSource FactCheck = Create(MaterialIcons.Fact_check, MenuSize, Colors.White);
     public static readonly FontImageSource FilterList = Create(MaterialIcons.Filter_list, MenuSize, Colors.White);
     public static readonly FontImageSource Fingerprint = Create(MaterialIcons.Fingerprint, MenuSize, Colors.White);
+    public static readonly FontImageSource Flag = Create(MaterialIcons.Flag, MenuSize, Colors.White);
     public static readonly FontImageSource FlightTakeoff = Create(MaterialIcons.Flight_takeoff, MenuSize, Colors.White);
     public static readonly FontImageSource Flip = Create(MaterialIcons.Flip, MenuSize, Colors.White);
     public static readonly FontImageSource FontDownload = Create(MaterialIcons.Font_download, MenuSize, Colors.White);
     public static readonly FontImageSource FormatPaint = Create(MaterialIcons.Format_paint, MenuSize, Colors.White);
     public static readonly FontImageSource FolderOpen = Create(MaterialIcons.Folder_open, MenuSize, Colors.White);
     public static readonly FontImageSource Forum = Create(MaterialIcons.Forum, MenuSize, Colors.White);
+    public static readonly FontImageSource Grid4X4 = Create(MaterialIcons.Grid_4x4, MenuSize, Colors.White);
     public static readonly FontImageSource GridOn = Create(MaterialIcons.Grid_on, MenuSize, Colors.White);
     public static readonly FontImageSource GridView = Create(MaterialIcons.Grid_view, MenuSize, Colors.White);
     public static readonly FontImageSource Handyman = Create(MaterialIcons.Handyman, MenuSize, Colors.White);
@@ -96,6 +99,7 @@ public static class AppIcons
     public static readonly FontImageSource MenuOpen = Create(MaterialIcons.Menu_open, MenuSize, Colors.White);
     public static readonly FontImageSource MovieFilter = Create(MaterialIcons.Movie_filter, MenuSize, Colors.White);
     public static readonly FontImageSource Navigation = Create(MaterialIcons.Navigation, MenuSize, Colors.White);
+    public static readonly FontImageSource Newspaper = Create(MaterialIcons.Newspaper, MenuSize, Colors.White);
     public static readonly FontImageSource Nfc = Create(MaterialIcons.Nfc, MenuSize, Colors.White);
     public static readonly FontImageSource Opacity = Create(MaterialIcons.Opacity, MenuSize, Colors.White);
     public static readonly FontImageSource Palette = Create(MaterialIcons.Palette, MenuSize, Colors.White);
@@ -124,6 +128,7 @@ public static class AppIcons
     public static readonly FontImageSource Sync = Create(MaterialIcons.Sync, MenuSize, Colors.White);
     public static readonly FontImageSource TextFields = Create(MaterialIcons.Text_fields, MenuSize, Colors.White);
     public static readonly FontImageSource Timeline = Create(MaterialIcons.Timeline, MenuSize, Colors.White);
+    public static readonly FontImageSource Timer = Create(MaterialIcons.Timer, MenuSize, Colors.White);
     public static readonly FontImageSource ToggleOn = Create(MaterialIcons.Toggle_on, MenuSize, Colors.White);
     public static readonly FontImageSource TouchApp = Create(MaterialIcons.Touch_app, MenuSize, Colors.White);
     public static readonly FontImageSource Translate = Create(MaterialIcons.Translate, MenuSize, Colors.White);
@@ -139,6 +144,7 @@ public static class AppIcons
     public static readonly FontImageSource ViewQuilt = Create(MaterialIcons.View_quilt, MenuSize, Colors.White);
     public static readonly FontImageSource ViewTimeline = Create(MaterialIcons.View_timeline, MenuSize, Colors.White);
     public static readonly FontImageSource VolumeUp = Create(MaterialIcons.Volume_up, MenuSize, Colors.White);
+    public static readonly FontImageSource WbSunny = Create(MaterialIcons.Wb_sunny, MenuSize, Colors.White);
     public static readonly FontImageSource Web = Create(MaterialIcons.Web, MenuSize, Colors.White);
     public static readonly FontImageSource Widgets = Create(MaterialIcons.Widgets, MenuSize, Colors.White);
     public static readonly FontImageSource Wifi = Create(MaterialIcons.Wifi, MenuSize, Colors.White);
@@ -172,10 +178,16 @@ public static class AppIcons
     public static readonly FontImageSource SmallDelete = Create(MaterialIcons.Delete, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallDoNotDisturb = Create(MaterialIcons.Do_not_disturb, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallError = Create(MaterialIcons.Error, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallFace = Create(MaterialIcons.Face, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallFingerprint = Create(MaterialIcons.Fingerprint, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFlashlightOff = Create(MaterialIcons.Flashlight_off, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFlashlightOn = Create(MaterialIcons.Flashlight_on, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallHowToReg = Create(MaterialIcons.How_to_reg, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallInput = Create(MaterialIcons.Input, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallKey = Create(MaterialIcons.Key, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallLogin = Create(MaterialIcons.Login, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallMic = Create(MaterialIcons.Mic, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallPassword = Create(MaterialIcons.Password, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallRecordVoiceOver = Create(MaterialIcons.Record_voice_over, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallScreenshot = Create(MaterialIcons.Screenshot, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallSend = Create(MaterialIcons.Send, SmallSize, ResourceColor("BlueGrayDarken1"));

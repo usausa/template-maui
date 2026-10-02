@@ -37,8 +37,8 @@ public enum ViewId
     NavigationSharedMain1,
     NavigationSharedMain2,
 
-    NavigationNavigateCancel,
     NavigationNavigateInitialize,
+    NavigationNavigateCancel,
 
     NavigationEffectMenu,
     NavigationEffectDemo,
@@ -84,6 +84,111 @@ public enum ViewId
     NetworkSftp,
     NetworkTelemetry,
 
+    // View
+    ViewMenu,
+
+    ViewLayout,
+
+    ViewBorder,
+    ViewShadow,
+
+    ViewAnimation,
+    ViewEasing,
+
+    ViewLottie,
+    ViewSvg,
+
+    ViewGraphics,
+
+    ViewDrawing,
+    ViewDragDrop,
+
+    ViewEffect,
+    ViewState,
+
+    // Control
+    ControlMenu,
+
+    ControlCollection,
+
+    ControlCarousel,
+    ControlRefresh,
+
+    ControlToolkit,
+    ControlCustom,
+
+    ControlChart,
+    ControlSfChart,
+
+    ControlBottomSheet,
+    ControlDrawer,
+
+    // UI
+    UIMenu1,
+    UIMenu2,
+
+    UIProfile,
+    UILogin,
+
+    UIMoney,
+    UISuper,
+
+    UIPos,
+    UIShop,
+    UIItem,
+    UICart,
+
+    UIGrid,
+    UIGridColumn,
+
+    UIVisit,
+
+    UICalendar,
+    UISchedule,
+
+    UIMail,
+    UIChat,
+
+    UIWeather,
+    UINews,
+    UINewsDetail,
+
+    UITimeline,
+
+    UIKitDash,
+    UIKitNotify,
+    UIKitSetting,
+    UIKitOnboard,
+    UIKitTracking,
+
+    UIStream,
+    UIStreamDetail,
+
+    UIDock,
+
+    UIGraph,
+    UIGraph2,
+
+    UILoad,
+    UIGauge,
+
+    UIMeter,
+    UIMixer,
+
+    UITreeMap,
+
+    UIRadar,
+    UIWheel,
+
+    UIMonster,
+    UICharacter,
+    UISocial,
+
+    UIFlight,
+    UITactical,
+    UITelemetry,
+    UIEnergy,
+
     // Sample
     SampleMenu,
 
@@ -105,93 +210,15 @@ public enum ViewId
 
     SampleCrop,
 
-    // View
-    ViewMenu,
-
-    ViewBorder,
-    ViewShadow,
-
-    ViewAnimation,
-    ViewEasing,
-
-    ViewLottie,
-    ViewSvg,
-
-    ViewGraphics,
-
-    ViewDrawing,
-    ViewLayout,
-    ViewState,
-    ViewDragDrop,
-
-    ViewEffect,
-
-    // Control
-    ControlMenu,
-
-    ControlCollection,
-
-    ControlCarousel,
-    ControlRefresh,
-
-    ControlToolkit,
-    ControlCustom,
-
-    ControlChart,
-    ControlSfChart,
-
-    ControlBottomSheet,
-    ControlDrawer,
-
     // App
     AppMenu,
+
     AppCalc,
-    AppGame,
+    AppTimer,
+    AppTodo,
 
-    // UI
-    UIMenu1,
-    UIMenu2,
-    UILogin,
-    UIProfile,
-    UIMoney,
-    UIDock,
-    UIPos,
-    UISuper,
-    UISchedule,
-    UIMail,
-    UIMeter,
-    UIGauge,
-    UILoad,
-    UIMixer,
-    UIGraph,
-    UIGraph2,
-    UITreeMap,
-    UIRadar,
-    UISocial,
-    UICharacter,
-    UIChat,
-    UICalendar,
-    UIGrid,
-    UIGridColumn,
-    UIVisit,
-
-    UITimeline,
-    UIMonster,
-    UIStream,
-    UIStreamDetail,
-    UIShop,
-    UIItem,
-    UICart,
-    UIKitDash,
-    UIKitNotify,
-    UIKitSetting,
-    UIKitOnboard,
-    UIKitTracking,
-    UIWheel,
-
-    // UI (SkiaSharp)
-    UIFlight,
-    UITactical,
-    UIEnergy,
-    UITelemetry
+    AppTodoEdit,
+    AppSudoku,
+    AppPuzzle2048,
+    AppMinesweeper
 }

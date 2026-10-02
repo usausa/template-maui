@@ -106,12 +106,12 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="200"
-                               Title="Toolkit Behaviors"
+                               Title="Behaviors"
                                Icon="{x:Static fonts:MaterialIcons.Extension}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="MaskedBehavior (電話番号 000-0000-0000)" />
+                               Text="mct:MaskedBehavior (電話番号 000-0000-0000)" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    Text="{Binding Phone}"
@@ -125,15 +125,12 @@
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="UserStoppedTypingBehavior (入力停止 800ms で確定)" />
+                               Text="EntryOption.TypingStoppedCommand (入力停止 800ms で確定)" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
-                                   Text="{Binding TypingText}">
-                                <Entry.Behaviors>
-                                    <mct:UserStoppedTypingBehavior Command="{Binding TypingStoppedCommand}"
-                                                                   StoppedTypingTimeThreshold="800" />
-                                </Entry.Behaviors>
-                            </Entry>
+                                   behaviors:EntryOption.TypingStoppedCommand="{Binding TypingStoppedCommand}"
+                                   behaviors:EntryOption.TypingStoppedDelay="800"
+                                   Text="{Binding TypingText}" />
                         </Border>
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
@@ -144,13 +141,13 @@
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="EventToCommandBehavior (Toggled イベント → Command)" />
+                               Text="s:EventToCommandBehavior (Toggled イベント → Command)" />
                         <Grid Style="{StaticResource CardRowGrid}"
                               ColumnDefinitions="Auto,*">
                             <Switch Grid.Column="0">
                                 <Switch.Behaviors>
-                                    <mct:EventToCommandBehavior Command="{Binding SwitchToggledCommand}"
-                                                                EventName="Toggled" />
+                                    <s:EventToCommandBehavior Command="{Binding SwitchToggledCommand}"
+                                                              EventName="Toggled" />
                                 </Switch.Behaviors>
                             </Switch>
                             <Label Grid.Column="1"

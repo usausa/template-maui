@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppTimerView"
+             x:DataType="{x:Type module:AppTimerViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppTimerViewModel}"
+             shell:ShellProperty.Title="Timer"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#0F172A">
+
+    <!-- ストップウォッチとカウントダウン。時間の計算はモデル (Models/App/TimerApplication)、文字盤は Controls/TimerDial、書式は ClockTextConverter、数字は 7 セグメントのフォント (DSEG7) -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="TimerTextColor">#F1F5F9</Color>
+            <Color x:Key="TimerDimColor">#94A3B8</Color>
+            <Color x:Key="TimerSurfaceColor">#14FFFFFF</Color>
+            <Color x:Key="TimerBorderColor">#2EFFFFFF</Color>
+            <Color x:Key="TimerCyanColor">#22D3EE</Color>
+            <Color x:Key="TimerBlueColor">#3B82F6</Color>
+            <Color x:Key="TimerVioletColor">#A78BFA</Color>
+            <Color x:Key="TimerPinkColor">#F472B6</Color>
+            <Color x:Key="TimerAmberColor">#F59E0B</Color>
+            <Color x:Key="TimerRedColor">#EF4444</Color>
+            <Color x:Key="TimerGreenColor">#22C55E</Color>
+            <Color x:Key="TimerAlertColor">#F97316</Color>
+            <Color x:Key="TimerUnlitColor">#1AFFFFFF</Color>
+
+            <!-- Converter -->
+            <converters:ClockTextConverter x:Key="MainClockConverter"
+                                           Part="Main" />
+            <converters:ClockTextConverter x:Key="FractionClockConverter"
+                                           Part="Fraction" />
+            <converters:ClockTextConverter x:Key="LapClockConverter"
+                                           Part="All" />
+            <converters:ClockTextConverter x:Key="RemainingClockConverter"
+                                           Part="Main" RoundUp="True" />
+            <converters:ClockTextConverter x:Key="MainUnlitConverter"
+                                           Part="Main" Unlit="True" />
+            <converters:ClockTextConverter x:Key="FractionUnlitConverter"
+                                           Part="Fraction" Unlit="True" />
+            <converters:ClockTextConverter x:Key="RemainingUnlitConverter"
+                                           Part="Main" RoundUp="True" Unlit="True" />
+
+            <!-- Page -->
+            <Style x:Key="TimerRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="Padding" Value="16,8,16,24" />
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="#0F172A" />
+                        <GradientStop Offset="1" Color="#020617" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TopBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="TopTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ModeContentGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="16" />
+            </Style>
+
+            <!-- Mode -->
+            <Style x:Key="ModePillBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="4" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 26" />
+                <Setter Property="Stroke" Value="{StaticResource TimerBorderColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
+            </Style>
+
+            <Style x:Key="ModeButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <!-- Dial -->
+            <Style x:Key="DialGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="300" />
+                <Setter Property="HeightRequest" Value="300" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StopwatchDial"
+                   TargetType="controls:TimerDial">
+                <Setter Property="ArcStartColor" Value="{StaticResource TimerCyanColor}" />
+                <Setter Property="ArcEndColor" Value="{StaticResource TimerBlueColor}" />
+            </Style>
+
+            <Style x:Key="CountdownDial"
+                   TargetType="controls:TimerDial">
+                <Setter Property="ArcStartColor" Value="{StaticResource TimerVioletColor}" />
+                <Setter Property="ArcEndColor" Value="{StaticResource TimerPinkColor}" />
+                <Setter Property="AlertColor" Value="{StaticResource TimerAlertColor}" />
+            </Style>
+
+            <Style x:Key="DialCenterStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DialTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- 消えているセグメント (DSEG7 の 8) -->
+            <Style x:Key="DialUnlitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource DialTimeLabel}">
+                <Setter Property="TextColor" Value="{StaticResource TimerUnlitColor}" />
+            </Style>
+
+            <Style x:Key="StopwatchFractionSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource TimerCyanColor}" />
+            </Style>
+
+            <Style x:Key="StopwatchFractionUnlitSpan"
+                   TargetType="Span"
+                   BasedOn="{StaticResource StopwatchFractionSpan}">
+                <Setter Property="TextColor" Value="{StaticResource TimerUnlitColor}" />
+            </Style>
+
+            <Style x:Key="DialLapTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DialSubLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DialLapStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DialAlertLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TimerAlertColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Action -->
+            <Style x:Key="ActionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="24,0" />
+            </Style>
+
+            <Style x:Key="ActionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RoundButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.35" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="StartRoundButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RoundButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerGreenColor}" />
+            </Style>
+
+            <Style x:Key="StopRoundButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RoundButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerRedColor}" />
+            </Style>
+
+            <Style x:Key="SubRoundButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RoundButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
+                <Setter Property="BorderColor" Value="{StaticResource TimerBorderColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+            </Style>
+
+            <Style x:Key="ActionCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Lap -->
+            <Style x:Key="LapCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="200" />
+                <Setter Property="ItemsUpdatingScrollMode" Value="KeepScrollOffset" />
+            </Style>
+
+            <Style x:Key="LapRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="4,8" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="6" />
+            </Style>
+
+            <Style x:Key="LapNoBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapNoLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+            </Style>
+
+            <Style x:Key="LapTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapSplitLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapTimeStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LapBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapRatioBar"
+                   TargetType="ProgressBar">
+                <Setter Property="HeightRequest" Value="4" />
+                <Setter Property="ProgressColor" Value="{StaticResource TimerCyanColor}" />
+            </Style>
+
+            <!-- Chip -->
+            <Style x:Key="ChipFlex"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="JustifyContent" Value="Center" />
+            </Style>
+
+            <Style x:Key="ChipButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
+                <Setter Property="BorderColor" Value="{StaticResource TimerBorderColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.35" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource TimerRootGrid}"
+          RowDefinitions="Auto,Auto,*">
+
+        <!-- 上の帯 (戻る・名前) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource TopBarGrid}"
+              ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding BackCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource TopTitleLabel}"
+                   Text="Timer" />
+        </Grid>
+
+        <!-- モードの切り替え (選んでいる方を塗る) -->
+        <Border Grid.Row="1"
+                Style="{StaticResource ModePillBorder}">
+            <Grid ColumnDefinitions="*,*">
+                <Button Grid.Column="0"
+                        Style="{StaticResource ModeButton}"
+                        Command="{Binding ModeCommand}"
+                        CommandParameter="{x:Static models:TimerMode.Stopwatch}"
+                        Text="⏱ ストップウォッチ">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Mode}"
+                                     Value="Stopwatch">
+                            <Setter Property="BackgroundColor" Value="{StaticResource TimerCyanColor}" />
+                            <Setter Property="TextColor" Value="#0F172A" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="1"
+                        Style="{StaticResource ModeButton}"
+                        Command="{Binding ModeCommand}"
+                        CommandParameter="{x:Static models:TimerMode.Countdown}"
+                        Text="⏳ タイマー">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Mode}"
+                                     Value="Countdown">
+                            <Setter Property="BackgroundColor" Value="{StaticResource TimerVioletColor}" />
+                            <Setter Property="TextColor" Value="#0F172A" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Stopwatch -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource ModeContentGrid}"
+              RowDefinitions="*,Auto,Auto"
+              IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Stopwatch}}">
+
+            <!-- 文字盤 (1 分で 1 周)。中央に経過時間と今のラップ -->
+            <Grid Grid.Row="0"
+                  Style="{StaticResource DialGrid}">
+                <controls:TimerDial Style="{StaticResource StopwatchDial}"
+                                    Progress="{Binding StopwatchProgress}" />
+                <VerticalStackLayout Style="{StaticResource DialCenterStack}">
+                    <!-- 消えているセグメントを後ろに薄く重ねる -->
+                    <Grid>
+                        <Label Style="{StaticResource DialUnlitLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding Elapsed, Converter={StaticResource MainUnlitConverter}}" />
+                                    <Span Style="{StaticResource StopwatchFractionUnlitSpan}"
+                                          Text="{Binding Elapsed, Converter={StaticResource FractionUnlitConverter}}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Style="{StaticResource DialTimeLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding Elapsed, Converter={StaticResource MainClockConverter}}" />
+                                    <Span Style="{StaticResource StopwatchFractionSpan}"
+                                          Text="{Binding Elapsed, Converter={StaticResource FractionClockConverter}}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                    <HorizontalStackLayout Style="{StaticResource DialLapStack}">
+                        <Border Style="{StaticResource LapNoBorder}">
+                            <Label Style="{StaticResource LapNoLabel}"
+                                   Text="{Binding LapNo, StringFormat='LAP {0}'}" />
+                        </Border>
+                        <Label Style="{StaticResource DialLapTimeLabel}"
+                               Text="{Binding CurrentLap, Converter={StaticResource LapClockConverter}}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- ラップ (取ると文字盤とボタンの間に出す。新しい順。長さの比のバー、最速 🐇 / 最遅 🐢) -->
+            <CollectionView Grid.Row="1"
+                            Style="{StaticResource LapCollection}"
+                            ItemsSource="{Binding Laps}"
+                            IsVisible="{Binding Laps.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:TimerLapItem}">
+                        <Grid Style="{StaticResource LapRowGrid}"
+                              RowDefinitions="Auto,Auto"
+                              ColumnDefinitions="Auto,*,Auto">
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    Style="{StaticResource LapNoBorder}">
+                                <Label Style="{StaticResource LapNoLabel}"
+                                       Text="{Binding No, StringFormat='#{0}'}" />
+                            </Border>
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1"
+                                                   Style="{StaticResource LapTimeStack}">
+                                <Label Style="{StaticResource LapTimeLabel}"
+                                       Text="{Binding Lap, Converter={StaticResource LapClockConverter}}" />
+                                <Label Style="{StaticResource LapBadgeLabel}"
+                                       IsVisible="{Binding IsFastest}"
+                                       Text="🐇" />
+                                <Label Style="{StaticResource LapBadgeLabel}"
+                                       IsVisible="{Binding IsSlowest}"
+                                       Text="🐢" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="2"
+                                   Style="{StaticResource LapSplitLabel}"
+                                   Text="{Binding Split, Converter={StaticResource LapClockConverter}}" />
+                            <ProgressBar Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                         Style="{StaticResource LapRatioBar}"
+                                         Progress="{Binding Ratio}">
+                                <ProgressBar.Triggers>
+                                    <DataTrigger TargetType="ProgressBar"
+                                                 Binding="{Binding IsFastest}"
+                                                 Value="True">
+                                        <Setter Property="ProgressColor" Value="{StaticResource TimerGreenColor}" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="ProgressBar"
+                                                 Binding="{Binding IsSlowest}"
+                                                 Value="True">
+                                        <Setter Property="ProgressColor" Value="{StaticResource TimerRedColor}" />
+                                    </DataTrigger>
+                                </ProgressBar.Triggers>
+                            </ProgressBar>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- 計測中は ラップ / ストップ、止まっている間は リセット / スタート -->
+            <Grid Grid.Row="2"
+                  Style="{StaticResource ActionGrid}"
+                  ColumnDefinitions="*,*">
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource ActionStack}"
+                                     IsVisible="{Binding StopwatchState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                    <Button Style="{StaticResource SubRoundButton}"
+                            Command="{Binding LapCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Flag}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="ラップ" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource ActionStack}"
+                                     IsVisible="{Binding StopwatchState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                    <Button Style="{StaticResource SubRoundButton}"
+                            Command="{Binding ResetCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Replay}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="リセット" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource ActionStack}"
+                                     IsVisible="{Binding StopwatchState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                    <Button Style="{StaticResource StartRoundButton}"
+                            Command="{Binding StartCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Play_arrow}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="スタート" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource ActionStack}"
+                                     IsVisible="{Binding StopwatchState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                    <Button Style="{StaticResource StopRoundButton}"
+                            Command="{Binding PauseCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Pause}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="ストップ" />
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+
+        <!-- Countdown -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource ModeContentGrid}"
+              RowDefinitions="*,Auto,Auto"
+              IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Countdown}}">
+
+            <!-- 文字盤 (残りの割合)。残り 10 秒で警告の色、終わったら脈打つ -->
+            <Grid Grid.Row="0"
+                  Style="{StaticResource DialGrid}">
+                <controls:TimerDial Style="{StaticResource CountdownDial}"
+                                    Progress="{Binding CountdownProgress}"
+                                    IsAlert="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}">
+                    <controls:TimerDial.Triggers>
+                        <DataTrigger TargetType="controls:TimerDial"
+                                     Binding="{Binding IsWarning}"
+                                     Value="True">
+                            <Setter Property="ArcStartColor" Value="{StaticResource TimerAmberColor}" />
+                            <Setter Property="ArcEndColor" Value="{StaticResource TimerRedColor}" />
+                        </DataTrigger>
+                    </controls:TimerDial.Triggers>
+                </controls:TimerDial>
+                <VerticalStackLayout Style="{StaticResource DialCenterStack}">
+                    <!-- 消えているセグメントを後ろに薄く重ねる -->
+                    <Grid>
+                        <Label Style="{StaticResource DialUnlitLabel}"
+                               Text="{Binding Remaining, Converter={StaticResource RemainingUnlitConverter}}" />
+                        <Label Style="{StaticResource DialTimeLabel}"
+                               Text="{Binding Remaining, Converter={StaticResource RemainingClockConverter}}" />
+                    </Grid>
+                    <Label Style="{StaticResource DialSubLabel}"
+                           IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Running}}"
+                           Text="{Binding EndTime, StringFormat='🔔 {0:HH:mm} に終了'}" />
+                    <Label Style="{StaticResource DialSubLabel}"
+                           IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Paused}}"
+                           Text="⏸ 一時停止中" />
+                    <Label Style="{StaticResource DialSubLabel}"
+                           IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Stopped}}"
+                           Text="{Binding DurationMinutes, StringFormat='⏳ {0} 分'}" />
+                    <Label Style="{StaticResource DialAlertLabel}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}"
+                           IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}"
+                           Text="⏰ 時間です" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- よく使う時間 (選んでいる時間を縁取る) と任意の分。計測中は変えられない -->
+            <FlexLayout Grid.Row="1"
+                        Style="{StaticResource ChipFlex}">
+                <Button Style="{StaticResource ChipButton}"
+                        Command="{Binding PresetCommand}"
+                        CommandParameter="1"
+                        Text="🍳 1分">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding DurationMinutes}"
+                                     Value="1">
+                            <Setter Property="BorderColor" Value="{StaticResource TimerVioletColor}" />
+                            <Setter Property="TextColor" Value="{StaticResource TimerVioletColor}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource ChipButton}"
+                        Command="{Binding PresetCommand}"
+                        CommandParameter="3"
+                        Text="🍜 3分">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding DurationMinutes}"
+                                     Value="3">
+                            <Setter Property="BorderColor" Value="{StaticResource TimerVioletColor}" />
+                            <Setter Property="TextColor" Value="{StaticResource TimerVioletColor}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource ChipButton}"
+                        Command="{Binding PresetCommand}"
+                        CommandParameter="5"
+                        Text="☕ 5分">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding DurationMinutes}"
+                                     Value="5">
+                            <Setter Property="BorderColor" Value="{StaticResource TimerVioletColor}" />
+                            <Setter Property="TextColor" Value="{StaticResource TimerVioletColor}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource ChipButton}"
+                        Command="{Binding PresetCommand}"
+                        CommandParameter="10"
+                        Text="🧘 10分">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding DurationMinutes}"
+                                     Value="10">
+                            <Setter Property="BorderColor" Value="{StaticResource TimerVioletColor}" />
+                            <Setter Property="TextColor" Value="{StaticResource TimerVioletColor}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource ChipButton}"
+                        Command="{Binding InputCommand}"
+                        Text="✏️ 入力" />
+            </FlexLayout>
+
+            <!-- リセット / スタート (計測中は ストップ) -->
+            <Grid Grid.Row="2"
+                  Style="{StaticResource ActionGrid}"
+                  ColumnDefinitions="*,*">
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource ActionStack}">
+                    <Button Style="{StaticResource SubRoundButton}"
+                            Command="{Binding CountdownResetCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Replay}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="リセット" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource ActionStack}"
+                                     IsVisible="{Binding CountdownState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TimerCountdownState.Running}}">
+                    <Button Style="{StaticResource StartRoundButton}"
+                            Command="{Binding CountdownStartCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Play_arrow}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="スタート" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource ActionStack}"
+                                     IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Running}}">
+                    <Button Style="{StaticResource StopRoundButton}"
+                            Command="{Binding CountdownPauseCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Pause}" />
+                    <Label Style="{StaticResource ActionCaptionLabel}"
+                           Text="ストップ" />
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+
+    </Grid>
+
+</ContentView>

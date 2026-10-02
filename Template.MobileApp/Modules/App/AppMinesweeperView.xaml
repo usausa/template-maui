@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppMinesweeperView"
+             x:DataType="{x:Type module:AppMinesweeperViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppMinesweeperViewModel}"
+             shell:ShellProperty.Title="Minesweeper"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#F1F8E9" shell:ShellProperty.StatusBarStyle="DarkContent">
+
+    <!-- マインスイーパー。ゲームは Models/App/MinesweeperGame、盤面は Controls/MinesweeperBoard (タップ・長押しの判定と覆いを消す動き) -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="MineTopColor">#F1F8E9</Color>
+            <Color x:Key="MineBottomColor">#DCEDC8</Color>
+            <Color x:Key="MineTextColor">#33691E</Color>
+            <Color x:Key="MineSubTextColor">#689F38</Color>
+            <Color x:Key="MineIconBackColor">#1F33691E</Color>
+            <Color x:Key="MineBarColor">#4A752C</Color>
+            <Color x:Key="MineBarButtonColor">#33FFFFFF</Color>
+            <Color x:Key="MinePillColor">#FFFFFF</Color>
+            <Color x:Key="MineLineColor">#C5E1A5</Color>
+            <Color x:Key="MineAccentColor">#558B2F</Color>
+            <Color x:Key="MineGoldColor">#F9A825</Color>
+            <Color x:Key="MineRedColor">#D32F2F</Color>
+
+            <!-- Converter -->
+            <s:MapToTextConverter x:Key="FaceConverter"
+                                  DefaultValue="🙂">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:MinesweeperState.Won}"
+                                      Value="😎" />
+                    <s:MapToTextEntry Key="{x:Static models:MinesweeperState.Lost}"
+                                      Value="😵" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- Page -->
+            <Style x:Key="MineRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="Padding" Value="16,8,16,24" />
+                <Setter Property="RowSpacing" Value="14" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{StaticResource MineTopColor}" />
+                        <GradientStop Offset="1" Color="{StaticResource MineBottomColor}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TopBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource MineTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MineIconBackColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="TopTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource MineTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Pill (難易度と操作の切り替え。選んでいる方を塗る) -->
+            <Style x:Key="PillBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="4" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Stroke" Value="{StaticResource MineLineColor}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 26" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MinePillColor}" />
+            </Style>
+
+            <Style x:Key="PillButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource MineSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <!-- Status (残りの地雷・顔・経過時間) -->
+            <Style x:Key="StatusBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,3"
+                                Brush="Black"
+                                Opacity="0.25"
+                                Radius="8" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="StatusStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusEndStack"
+                   TargetType="HorizontalStackLayout"
+                   BasedOn="{StaticResource StatusStack}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="StatusIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatusValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="FaceButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MineBarButtonColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Board -->
+            <Style x:Key="Board"
+                   TargetType="controls:MinesweeperBoard">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Bottom -->
+            <Style x:Key="BottomStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource MineSubTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,3"
+                                Brush="Black"
+                                Opacity="0.18"
+                                Radius="10" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ResultGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ResultTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource MineTextColor}" />
+            </Style>
+
+            <Style x:Key="LostTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ResultTitleLabel}">
+                <Setter Property="TextColor" Value="{StaticResource MineRedColor}" />
+            </Style>
+
+            <Style x:Key="ResultTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource MineSubTextColor}" />
+            </Style>
+
+            <Style x:Key="NewBestLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource MineGoldColor}" />
+            </Style>
+
+            <Style x:Key="RetryButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="20,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MineAccentColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource MineRootGrid}"
+          RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+        <!-- 上の帯 (戻る・名前) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource TopBarGrid}"
+              ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding BackCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource TopTitleLabel}"
+                   Text="Minesweeper" />
+        </Grid>
+
+        <!-- 難易度 -->
+        <Border Grid.Row="1"
+                Style="{StaticResource PillBorder}">
+            <Grid ColumnDefinitions="*,*">
+                <Button Grid.Column="0"
+                        Style="{StaticResource PillButton}"
+                        Command="{Binding LevelCommand}"
+                        CommandParameter="{x:Static models:MinesweeperLevel.Beginner}"
+                        Text="🌱 初級 9×9">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Level}"
+                                     Value="{x:Static models:MinesweeperLevel.Beginner}">
+                            <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="1"
+                        Style="{StaticResource PillButton}"
+                        Command="{Binding LevelCommand}"
+                        CommandParameter="{x:Static models:MinesweeperLevel.Intermediate}"
+                        Text="🌳 中級 16×16">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Level}"
+                                     Value="{x:Static models:MinesweeperLevel.Intermediate}">
+                            <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- 残りの地雷・顔 (新しいゲーム)・経過時間 -->
+        <Border Grid.Row="2"
+                Style="{StaticResource StatusBorder}">
+            <Grid ColumnDefinitions="*,Auto,*">
+                <HorizontalStackLayout Grid.Column="0"
+                                       Style="{StaticResource StatusStack}">
+                    <Label Style="{StaticResource StatusIconLabel}"
+                           Text="🚩" />
+                    <Label Style="{StaticResource StatusValueLabel}"
+                           Text="{Binding RemainingMines, StringFormat='{0:D2}'}" />
+                </HorizontalStackLayout>
+                <Button Grid.Column="1"
+                        Style="{StaticResource FaceButton}"
+                        behaviors:AnimationOption.BounceTrigger="{Binding State}"
+                        Command="{Binding NewGameCommand}"
+                        Text="{Binding State, Converter={StaticResource FaceConverter}}" />
+                <HorizontalStackLayout Grid.Column="2"
+                                       Style="{StaticResource StatusEndStack}">
+                    <Label Style="{StaticResource StatusIconLabel}"
+                           Text="⏱" />
+                    <Label Style="{StaticResource StatusValueLabel}"
+                           Text="{Binding ElapsedSeconds, StringFormat='{0:D3}'}" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- 盤面 (タップで開く、長押しで旗、開いた数字のタップで周りを開く) -->
+        <controls:MinesweeperBoard Grid.Row="3"
+                            Style="{StaticResource Board}"
+                            Board="{Binding Board}"
+                            LongPressCommand="{Binding LongPressCommand}"
+                            TapCommand="{Binding TapCommand}" />
+
+        <!-- 遊んでいる間は操作の切り替え (タップで開く / 旗) -->
+        <VerticalStackLayout Grid.Row="4"
+                             Style="{StaticResource BottomStack}"
+                             IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.LessThan}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
+            <Border Style="{StaticResource PillBorder}">
+                <Grid ColumnDefinitions="*,*">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource PillButton}"
+                            Command="{Binding FlagModeCommand}"
+                            CommandParameter="{s:Bool Value=False}"
+                            Text="⛏ 開く">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsFlagMode}"
+                                         Value="False">
+                                <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Grid.Column="1"
+                            Style="{StaticResource PillButton}"
+                            Command="{Binding FlagModeCommand}"
+                            CommandParameter="{s:Bool Value=True}"
+                            Text="🚩 旗">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsFlagMode}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Border>
+            <Label Style="{StaticResource HintLabel}"
+                   Text="長押しでも旗を立てられる ・ 数字のタップで周りを開く" />
+        </VerticalStackLayout>
+
+        <!-- 終わったら結果 (盤面は見えたまま) -->
+        <Border Grid.Row="4"
+                Style="{StaticResource ResultBorder}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding State}"
+                IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.GreaterThanOrEqual}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
+            <Grid Style="{StaticResource ResultGrid}"
+                  ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource ResultTextStack}">
+                    <Label Style="{StaticResource ResultTitleLabel}"
+                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
+                           Text="🎉 クリア!" />
+                    <Label Style="{StaticResource LostTitleLabel}"
+                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
+                           Text="💥 ゲームオーバー" />
+                    <Label Style="{StaticResource ResultTextLabel}"
+                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
+                           Text="{Binding ElapsedSeconds, StringFormat='タイム {0} 秒'}" />
+                    <Label Style="{StaticResource ResultTextLabel}"
+                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
+                           Text="地雷を踏みました" />
+                    <Label Style="{StaticResource NewBestLabel}"
+                           IsVisible="{Binding IsNewBest}"
+                           Text="🏆 ベストタイム更新!" />
+                    <Label Style="{StaticResource ResultTextLabel}"
+                           IsVisible="{Binding BestSeconds, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                           Text="{Binding BestSeconds, StringFormat='🏆 ベスト {0} 秒'}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Style="{StaticResource RetryButton}"
+                        Command="{Binding NewGameCommand}"
+                        Text="もう一度" />
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</ContentView>

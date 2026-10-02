@@ -1,9 +1,9 @@
 namespace Template.MobileApp.Modules.App;
 
-[View(ViewId.AppGame)]
-public sealed partial class AppGameView
+[View(ViewId.AppTodo)]
+public sealed partial class AppTodoView
 {
-    public AppGameView()
+    public AppTodoView()
     {
         InitializeComponent();
     }

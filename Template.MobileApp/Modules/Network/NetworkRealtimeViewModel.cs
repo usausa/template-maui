@@ -17,8 +17,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     private readonly IDeviceInfo deviceInfo;
 
-    private readonly IDialog dialog;
-
     private readonly IDispatcherTimer reportTimer;
 
     private readonly MonitorConnection connection;
@@ -28,8 +26,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     private readonly INotificationService notification;
 
     private readonly DeviceInformation deviceInformation;
-
-    private readonly Session session;
 
     private readonly DeviceState deviceState;
 
@@ -71,22 +67,18 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     public NetworkRealtimeViewModel(
         ILogger<NetworkRealtimeViewModel> log,
         IDeviceInfo deviceInfo,
-        IDialog dialog,
         MonitorConnection connection,
         ApiContext apiContext,
         INotificationService notification,
         DeviceInformation deviceInformation,
-        Session session,
         DeviceState deviceState)
     {
         this.log = log;
         this.deviceInfo = deviceInfo;
-        this.dialog = dialog;
         this.connection = connection;
         this.apiContext = apiContext;
         this.notification = notification;
         this.deviceInformation = deviceInformation;
-        this.session = session;
         this.deviceState = deviceState;
 
         ReconnectCommand = MakeDelegateCommand(Connect);
@@ -194,7 +186,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         ConnectionSet.Add(status.Connections);
     }
 
-    // 前面ならトースト、バックグラウンドならローカル通知
     private void OnNotification(NotificationMessage item)
     {
         Notifications.Insert(0, $"{item.SentAt.LocalDateTime:HH:mm:ss} {item.Title}: {item.Body}");
@@ -203,14 +194,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
             Notifications.RemoveAt(Notifications.Count - 1);
         }
 
-        if (session.IsForeground)
-        {
-            _ = dialog.Toast($"{item.Title}: {item.Body}").AsTask();
-        }
-        else
-        {
-            notification.Show(NotificationId, item.Title, item.Body);
-        }
+        notification.Show(NotificationId, item.Title, item.Body);
     }
 
     //--------------------------------------------------------------------------------

@@ -30,7 +30,7 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
         ResetCommand = MakeDelegateCommand(() => Progress = TimeSpan.Zero);
         SeekCommand = MakeDelegateCommand<double>(x => Progress = TimeSpan.FromSeconds(x));
 
-        ScrubCommand = MakeDelegateCommand<double>(x =>
+        ScrubCommand = MakeDelegateCommand<double>(CommandMode.Simple, x =>
         {
             IsAnimationEnabled = false;
             Progress = Duration.Ticks > 0 ? TimeSpan.FromTicks((long)(Duration.Ticks * x)) : TimeSpan.Zero;

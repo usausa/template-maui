@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Behaviors;
 
+using Smart.Maui.Interactivity;
+
 public static class SliderOption
 {
     // ------------------------------------------------------------------ DragCompletedCommand
@@ -22,33 +24,26 @@ public static class SliderOption
             return;
         }
 
-        if (oldValue is not null)
+        var behavior = slider.Behaviors.OfType<SliderSeekBehavior>().FirstOrDefault();
+        if (newValue is ICommand command)
         {
-            slider.DragCompleted -= OnDragCompleted;
-        }
-        if (newValue is not null)
-        {
-            slider.DragCompleted += OnDragCompleted;
-        }
-    }
+            if (behavior is null)
+            {
+                behavior = new SliderSeekBehavior();
+                slider.Behaviors.Add(behavior);
+            }
 
-    private static void OnDragCompleted(object? sender, EventArgs e)
-    {
-        if (sender is not Slider slider)
-        {
-            return;
+            behavior.Command = command;
         }
-
-        var command = GetDragCompletedCommand(slider);
-        if (command?.CanExecute(slider.Value) ?? false)
+        else if (behavior is not null)
         {
-            command.Execute(slider.Value);
+            slider.Behaviors.Remove(behavior);
         }
     }
 
     // ------------------------------------------------------------------ Step
 
-    // 値を刻みの倍数にそろえる (0 はそろえない)
+    // 値を Minimum からの刻みにそろえる (0 はそろえない)
     public static readonly BindableProperty StepProperty = BindableProperty.CreateAttached(
         "Step",
         typeof(double),
@@ -67,25 +62,20 @@ public static class SliderOption
             return;
         }
 
-        if (oldValue is > 0d)
+        var behavior = slider.Behaviors.OfType<SliderStepBehavior>().FirstOrDefault();
+        if (newValue is double step and > 0d)
         {
-            slider.ValueChanged -= OnValueChanged;
-        }
-        if (newValue is > 0d)
-        {
-            slider.ValueChanged += OnValueChanged;
-        }
-    }
+            if (behavior is null)
+            {
+                behavior = new SliderStepBehavior();
+                slider.Behaviors.Add(behavior);
+            }
 
-    private static void OnValueChanged(object? sender, ValueChangedEventArgs e)
-    {
-        if (sender is not Slider slider)
-        {
-            return;
+            behavior.Step = step;
         }
-
-        // Setting the same value does not raise the event again
-        var step = GetStep(slider);
-        slider.Value = Math.Round(e.NewValue / step) * step;
+        else if (behavior is not null)
+        {
+            slider.Behaviors.Remove(behavior);
+        }
     }
 }

@@ -50,11 +50,11 @@ public sealed class DataService
             (int)await accessor.CountBulkDataAsync());
     }
 
-    public async ValueTask RebuildAsync()
+    public ValueTask RebuildAsync()
     {
         var dbPath = DatabasePath;
 
-        // WAL有効時は-wal/-shmも消さないと、異常終了後に旧WALが新しいDBへ適用される
+        // Delete with WAL and SHM files
         foreach (var path in new[] { dbPath, $"{dbPath}-wal", $"{dbPath}-shm" })
         {
             if (File.Exists(path))
@@ -63,20 +63,11 @@ public sealed class DataService
             }
         }
 
-        await provider.UsingAsync(async con =>
+        return provider.UsingAsync(async con =>
         {
-            // WALはDBファイルに永続化され以後の全接続に適用される。busy_timeoutは複数スレッド同時アクセス時のSQLITE_BUSY対策
             await accessor.ExecutePragmaAsync(con);
             await accessor.CreateTablesAsync(con);
         });
-
-        await InsertWorkEnumerableAsync(
-        [
-            new WorkEntity { Id = 1, Name = "Sample-1" },
-            new WorkEntity { Id = 2, Name = "Sample-2" },
-            new WorkEntity { Id = 3, Name = "Sample-3" },
-            new WorkEntity { Id = 4, Name = "Sample-4" }
-        ]);
     }
 
     //--------------------------------------------------------------------------------
@@ -149,7 +140,6 @@ public sealed class DataService
             await tx.CommitAsync();
         });
 
-    // 洗い替え (既存データを全て削除してから追加する)
     public ValueTask ReplaceWorkEnumerableAsync(IEnumerable<WorkEntity> source) =>
         provider.UsingTxAsync(async (_, tx) =>
         {
@@ -163,7 +153,6 @@ public sealed class DataService
             await tx.CommitAsync();
         });
 
-    // 採番をINSERT単文内で行い、SELECT MAX→INSERTの非アトミック競合を解消
     public async ValueTask InsertWorkAsync(string name) =>
         await accessor.InsertWorkWithNextIdAsync(name);
 
@@ -172,5 +161,32 @@ public sealed class DataService
 
     public ValueTask<int> DeleteWorkAsync(long id) =>
         accessor.DeleteWorkAsync(id);
+
+    //--------------------------------------------------------------------------------
+    // Application
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<List<TodoEntity>> QueryTodoListAsync() =>
+        accessor.QueryTodoListAsync();
+
+    public ValueTask<long> InsertTodoAsync(TodoEntity entity) =>
+        accessor.InsertTodoAsync(entity.Title, entity.Note, entity.DueDate, entity.IsImportant, entity.IsDone, entity.CreatedAt, entity.UpdatedAt);
+
+    public ValueTask InsertTodoEnumerableAsync(IEnumerable<TodoEntity> source) =>
+        provider.UsingTxAsync(async (_, tx) =>
+        {
+            foreach (var entity in source)
+            {
+                await accessor.InsertTodoEntityAsync(tx, entity);
+            }
+
+            await tx.CommitAsync();
+        });
+
+    public ValueTask<int> UpdateTodoAsync(TodoEntity entity) =>
+        accessor.UpdateTodoAsync(entity);
+
+    public ValueTask<int> DeleteTodoAsync(long id) =>
+        accessor.DeleteTodoAsync(id);
 }
 #pragma warning restore CA1002

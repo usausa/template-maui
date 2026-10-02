@@ -152,118 +152,83 @@ public static partial class ButtonOption
 
     private static void OnPressEffectChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // Button と ImageButton のどちらにも適用できるようにする
-        switch (bindable)
+        if (bindable is not (Button or ImageButton))
         {
-            case Button button:
-                {
-                    var behavior = button.Behaviors.FirstOrDefault(static x => x is PressEffectBehavior);
-                    if (behavior is not null)
-                    {
-                        button.Behaviors.Remove(behavior);
-                    }
-                    if (newValue is true)
-                    {
-                        button.Behaviors.Add(new PressEffectBehavior());
-                    }
-                    break;
-                }
+            return;
+        }
 
-            case ImageButton imageButton:
-                {
-                    var behavior = imageButton.Behaviors.FirstOrDefault(static x => x is ImagePressEffectBehavior);
-                    if (behavior is not null)
-                    {
-                        imageButton.Behaviors.Remove(behavior);
-                    }
-                    if (newValue is true)
-                    {
-                        imageButton.Behaviors.Add(new ImagePressEffectBehavior());
-                    }
-                    break;
-                }
+        var view = (View)bindable;
+        var behavior = view.Behaviors.FirstOrDefault(static x => x is PressEffectBehavior);
+        if (behavior is not null)
+        {
+            view.Behaviors.Remove(behavior);
+        }
+        if (newValue is true)
+        {
+            view.Behaviors.Add(new PressEffectBehavior());
         }
     }
 
-    private static void ApplyPressed(VisualElement element)
+    // ------------------------------------------------------------
+    // LongPress (押したまま LongPressDuration ミリ秒でコマンドを実行)
+    // ------------------------------------------------------------
+
+    public static readonly BindableProperty LongPressCommandProperty = BindableProperty.CreateAttached(
+        "LongPressCommand",
+        typeof(ICommand),
+        typeof(ButtonOption),
+        null,
+        propertyChanged: OnLongPressCommandChanged);
+
+    public static ICommand? GetLongPressCommand(BindableObject obj) =>
+        (ICommand?)obj.GetValue(LongPressCommandProperty);
+
+    public static void SetLongPressCommand(BindableObject obj, ICommand? value) =>
+        obj.SetValue(LongPressCommandProperty, value);
+
+    public static readonly BindableProperty LongPressDurationProperty = BindableProperty.CreateAttached(
+        "LongPressDuration",
+        typeof(int),
+        typeof(ButtonOption),
+        500,
+        propertyChanged: OnLongPressDurationChanged);
+
+    public static int GetLongPressDuration(BindableObject obj) =>
+        (int)obj.GetValue(LongPressDurationProperty);
+
+    public static void SetLongPressDuration(BindableObject obj, int value) =>
+        obj.SetValue(LongPressDurationProperty, value);
+
+    private static void OnLongPressCommandChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        element.ScaleToAsync(0.9, 50, Easing.CubicOut);
-        element.FadeToAsync(0.8, 50, Easing.CubicOut);
+        if (bindable is not (Button or ImageButton))
+        {
+            return;
+        }
+
+        var view = (View)bindable;
+        var behavior = view.Behaviors.OfType<LongPressBehavior>().FirstOrDefault();
+        if (newValue is ICommand command)
+        {
+            if (behavior is null)
+            {
+                behavior = new LongPressBehavior { Duration = TimeSpan.FromMilliseconds(GetLongPressDuration(view)) };
+                view.Behaviors.Add(behavior);
+            }
+
+            behavior.Command = command;
+        }
+        else if (behavior is not null)
+        {
+            view.Behaviors.Remove(behavior);
+        }
     }
 
-    private static void ApplyReleased(VisualElement element)
+    private static void OnLongPressDurationChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        element.ScaleToAsync(1.0, 100, Easing.CubicOut);
-        element.FadeToAsync(1.0, 100, Easing.CubicOut);
-    }
-
-    private sealed class PressEffectBehavior : BehaviorBase<Button>
-    {
-        protected override void OnAttachedTo(Button bindable)
+        if ((bindable is View view) && (view.Behaviors.OfType<LongPressBehavior>().FirstOrDefault() is { } behavior))
         {
-            base.OnAttachedTo(bindable);
-
-            bindable.Pressed += OnButtonPressed;
-            bindable.Released += OnButtonReleased;
-        }
-
-        protected override void OnDetachingFrom(Button bindable)
-        {
-            base.OnDetachingFrom(bindable);
-
-            bindable.Pressed -= OnButtonPressed;
-            bindable.Released -= OnButtonReleased;
-        }
-
-        private static void OnButtonPressed(object? sender, EventArgs e)
-        {
-            if (sender is Button button)
-            {
-                ApplyPressed(button);
-            }
-        }
-
-        private static void OnButtonReleased(object? sender, EventArgs e)
-        {
-            if (sender is Button button)
-            {
-                ApplyReleased(button);
-            }
-        }
-    }
-
-    private sealed class ImagePressEffectBehavior : BehaviorBase<ImageButton>
-    {
-        protected override void OnAttachedTo(ImageButton bindable)
-        {
-            base.OnAttachedTo(bindable);
-
-            bindable.Pressed += OnButtonPressed;
-            bindable.Released += OnButtonReleased;
-        }
-
-        protected override void OnDetachingFrom(ImageButton bindable)
-        {
-            base.OnDetachingFrom(bindable);
-
-            bindable.Pressed -= OnButtonPressed;
-            bindable.Released -= OnButtonReleased;
-        }
-
-        private static void OnButtonPressed(object? sender, EventArgs e)
-        {
-            if (sender is ImageButton button)
-            {
-                ApplyPressed(button);
-            }
-        }
-
-        private static void OnButtonReleased(object? sender, EventArgs e)
-        {
-            if (sender is ImageButton button)
-            {
-                ApplyReleased(button);
-            }
+            behavior.Duration = TimeSpan.FromMilliseconds((int)newValue!);
         }
     }
 
@@ -286,86 +251,20 @@ public static partial class ButtonOption
 
     private static void OnHapticFeedbackChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // Button と ImageButton のどちらにも適用できるようにする
-        switch (bindable)
+        if (bindable is not (Button or ImageButton))
         {
-            case Button button:
-                {
-                    var behavior = button.Behaviors.FirstOrDefault(static x => x is HapticFeedbackBehavior);
-                    if (behavior is not null)
-                    {
-                        button.Behaviors.Remove(behavior);
-                    }
-                    if (newValue is true)
-                    {
-                        button.Behaviors.Add(new HapticFeedbackBehavior());
-                    }
-                    break;
-                }
-
-            case ImageButton imageButton:
-                {
-                    var behavior = imageButton.Behaviors.FirstOrDefault(static x => x is ImageHapticFeedbackBehavior);
-                    if (behavior is not null)
-                    {
-                        imageButton.Behaviors.Remove(behavior);
-                    }
-                    if (newValue is true)
-                    {
-                        imageButton.Behaviors.Add(new ImageHapticFeedbackBehavior());
-                    }
-                    break;
-                }
-        }
-    }
-
-    private static void PerformClickFeedback()
-    {
-        try
-        {
-            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        }
-        catch (FeatureNotSupportedException)
-        {
-            // Ignore
-        }
-    }
-
-    private sealed class HapticFeedbackBehavior : BehaviorBase<Button>
-    {
-        protected override void OnAttachedTo(Button bindable)
-        {
-            base.OnAttachedTo(bindable);
-
-            bindable.Pressed += OnButtonPressed;
+            return;
         }
 
-        protected override void OnDetachingFrom(Button bindable)
+        var view = (View)bindable;
+        var behavior = view.Behaviors.FirstOrDefault(static x => x is HapticFeedbackBehavior);
+        if (behavior is not null)
         {
-            base.OnDetachingFrom(bindable);
-
-            bindable.Pressed -= OnButtonPressed;
+            view.Behaviors.Remove(behavior);
         }
-
-        private static void OnButtonPressed(object? sender, EventArgs e) => PerformClickFeedback();
-    }
-
-    private sealed class ImageHapticFeedbackBehavior : BehaviorBase<ImageButton>
-    {
-        protected override void OnAttachedTo(ImageButton bindable)
+        if (newValue is true)
         {
-            base.OnAttachedTo(bindable);
-
-            bindable.Pressed += OnButtonPressed;
+            view.Behaviors.Add(new HapticFeedbackBehavior());
         }
-
-        protected override void OnDetachingFrom(ImageButton bindable)
-        {
-            base.OnDetachingFrom(bindable);
-
-            bindable.Pressed -= OnButtonPressed;
-        }
-
-        private static void OnButtonPressed(object? sender, EventArgs e) => PerformClickFeedback();
     }
 }

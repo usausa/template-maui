@@ -67,7 +67,12 @@ public sealed partial class App
     {
         try
         {
-            await serviceProvider.GetRequiredService<DataService>().RebuildAsync();
+            var dataService = serviceProvider.GetRequiredService<DataService>();
+            await dataService.RebuildAsync();
+
+            // Dummy data
+            await PrepareDummyDataAsync(dataService);
+
             return null;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SqliteException)
@@ -75,6 +80,32 @@ public sealed partial class App
             log.ErrorDatabaseInitializeFailed(ex);
             return ex;
         }
+    }
+
+    private static async ValueTask PrepareDummyDataAsync(DataService dataService)
+    {
+        await dataService.InsertWorkEnumerableAsync(
+        [
+            new WorkEntity { Id = 1, Name = "Sample-1" },
+            new WorkEntity { Id = 2, Name = "Sample-2" },
+            new WorkEntity { Id = 3, Name = "Sample-3" },
+            new WorkEntity { Id = 4, Name = "Sample-4" }
+        ]);
+
+        var now = DateTime.Now;
+        var today = now.Date;
+        await dataService.InsertTodoEnumerableAsync(
+        [
+            new TodoEntity { Id = 1, Title = "請求書を送る", Note = "経理の担当へ PDF で送る", DueDate = today.AddDays(-2), IsImportant = true, CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 2, Title = "家賃の振り込み", Note = string.Empty, DueDate = today.AddDays(-1), CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 3, Title = "企画書のレビュー", Note = "3 章の図を差し替える", DueDate = today, IsImportant = true, CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 4, Title = "牛乳とパンを買う", Note = string.Empty, DueDate = today, CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 5, Title = "歯医者の予約", Note = "午前中に電話する", DueDate = today.AddDays(1), CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 6, Title = "週次レポートを書く", Note = string.Empty, DueDate = today.AddDays(4), CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 7, Title = "読みたい本をリストにする", Note = string.Empty, CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 8, Title = "部屋の掃除", Note = string.Empty, DueDate = today.AddDays(-1), IsDone = true, CreatedAt = now, UpdatedAt = now },
+            new TodoEntity { Id = 9, Title = "ジムに行く", Note = "30 分のラン", DueDate = today, IsDone = true, CreatedAt = now, UpdatedAt = now }
+        ]);
     }
 }
 #pragma warning restore CA1724

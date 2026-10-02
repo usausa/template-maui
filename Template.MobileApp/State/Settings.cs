@@ -52,6 +52,13 @@ public sealed class Settings
         set => preferences.Set(nameof(TelemetryEnabled), value);
     }
 
+    // サーバーからの通知の受け取り (設定画面で切り替える。アプリを開いている間だけ接続する)
+    public bool PushEnabled
+    {
+        get => preferences.Get(nameof(PushEnabled), false);
+        set => preferences.Set(nameof(PushEnabled), value);
+    }
+
     // AI Service
 
     public string AIServiceEndPoint

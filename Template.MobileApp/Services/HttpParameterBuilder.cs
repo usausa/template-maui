@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Services;
 
-public sealed class ParameterBuilder
+public sealed class HttpParameterBuilder
 {
     private readonly StringBuilder parameterString = new();
 

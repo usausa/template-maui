@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppPuzzle2048View"
+             x:DataType="{x:Type module:AppPuzzle2048ViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppPuzzle2048ViewModel}"
+             shell:ShellProperty.Title="2048"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#FBF6EC" shell:ShellProperty.StatusBarStyle="DarkContent">
+
+    <!-- 2048。ゲームは Models/App/Puzzle2048Game、盤面は Controls/Puzzle2048Board (1 手の結果から動かす) -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="Puzzle2048TopColor">#FBF6EC</Color>
+            <Color x:Key="Puzzle2048BottomColor">#F3E3C3</Color>
+            <Color x:Key="Puzzle2048TextColor">#776E65</Color>
+            <Color x:Key="Puzzle2048SubTextColor">#A39485</Color>
+            <Color x:Key="Puzzle2048IconBackColor">#1F776E65</Color>
+            <Color x:Key="Puzzle2048CardColor">#BBADA0</Color>
+            <Color x:Key="Puzzle2048CardTextColor">#EEE4DA</Color>
+            <Color x:Key="Puzzle2048ButtonColor">#8F7A66</Color>
+            <Color x:Key="Puzzle2048GoldColor">#EDC22E</Color>
+            <Color x:Key="Puzzle2048GoldDeepColor">#E0A51B</Color>
+            <Color x:Key="Puzzle2048WinOverlayColor">#D9EDC22E</Color>
+            <Color x:Key="Puzzle2048OverOverlayColor">#D9EEE4DA</Color>
+
+            <!-- Page -->
+            <Style x:Key="Puzzle2048RootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="Padding" Value="16,8,16,24" />
+                <Setter Property="RowSpacing" Value="16" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{StaticResource Puzzle2048TopColor}" />
+                        <GradientStop Offset="1" Color="{StaticResource Puzzle2048BottomColor}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TopBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource Puzzle2048TextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048IconBackColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="TopTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource Puzzle2048TextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Header -->
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LogoBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource Puzzle2048GoldColor}" />
+                        <GradientStop Offset="1" Color="{StaticResource Puzzle2048GoldDeepColor}" />
+                    </LinearGradientBrush>
+                </Setter>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,4"
+                                Brush="{StaticResource Puzzle2048GoldDeepColor}"
+                                Opacity="0.5"
+                                Radius="12" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="LogoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ScoreCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="MinimumWidthRequest" Value="88" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048CardColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ScoreCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource Puzzle2048CardTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ScoreValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="GuideGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="GuideLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource Puzzle2048TextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="PillButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="18,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048ButtonColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Board -->
+            <Style x:Key="SwipeAreaGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="BoardGrid"
+                   TargetType="Grid">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="OverlayBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="WinOverlayBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource OverlayBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048WinOverlayColor}" />
+            </Style>
+
+            <Style x:Key="OverOverlayBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource OverlayBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048OverOverlayColor}" />
+            </Style>
+
+            <Style x:Key="OverlayStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="OverlayButtonStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="WinTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="OverTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource Puzzle2048TextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="OverScoreLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource Puzzle2048TextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Pad -->
+            <Style x:Key="PadGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="4" />
+                <Setter Property="ColumnSpacing" Value="4" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="PadButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="60" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048ButtonColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,3"
+                                Brush="Black"
+                                Opacity="0.25"
+                                Radius="6" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="PadHubBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="60" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048CardColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource Puzzle2048RootGrid}"
+          RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+        <!-- 上の帯 (戻る・名前) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource TopBarGrid}"
+              ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding BackCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource TopTitleLabel}"
+                   Text="2048" />
+        </Grid>
+
+        <!-- ロゴとスコア (スコアは増えると弾む) -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource HeaderGrid}"
+              ColumnDefinitions="Auto,*,Auto,Auto">
+            <Border Grid.Column="0"
+                    Style="{StaticResource LogoBorder}">
+                <Label Style="{StaticResource LogoLabel}"
+                       Text="2048" />
+            </Border>
+            <Border Grid.Column="2"
+                    Style="{StaticResource ScoreCardBorder}">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource ScoreCaptionLabel}"
+                           Text="SCORE" />
+                    <Label Style="{StaticResource ScoreValueLabel}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding Score}"
+                           Text="{Binding Score}" />
+                </VerticalStackLayout>
+            </Border>
+            <Border Grid.Column="3"
+                    Style="{StaticResource ScoreCardBorder}">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource ScoreCaptionLabel}"
+                           Text="BEST" />
+                    <Label Style="{StaticResource ScoreValueLabel}"
+                           Text="{Binding BestScore}" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <!-- 説明と新しいゲーム -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource GuideGrid}"
+              ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource GuideLabel}"
+                   Text="スワイプか十字キーで動かし、同じ数字を合わせて 2048 を作ろう" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource PillButton}"
+                    Command="{Binding NewGameCommand}"
+                    Text="↻ 新しいゲーム" />
+        </Grid>
+
+        <!-- 盤面 (上下左右のスワイプか、下の十字キーで動かす)。2048 の到達とゲームオーバーは盤面に重ねる -->
+        <Grid Grid.Row="3"
+              Style="{StaticResource SwipeAreaGrid}">
+            <Grid.GestureRecognizers>
+                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static models:Puzzle2048Direction.Up}"
+                                        Direction="Up" Threshold="30" />
+                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static models:Puzzle2048Direction.Down}"
+                                        Direction="Down" Threshold="30" />
+                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static models:Puzzle2048Direction.Left}"
+                                        Direction="Left" Threshold="30" />
+                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static models:Puzzle2048Direction.Right}"
+                                        Direction="Right" Threshold="30" />
+            </Grid.GestureRecognizers>
+
+            <Grid Style="{StaticResource BoardGrid}">
+                <controls:Puzzle2048Board Board="{Binding Board}" />
+
+                <Border Style="{StaticResource WinOverlayBorder}"
+                        behaviors:AnimationOption.FadeInTrigger="{Binding IsWon}"
+                        IsVisible="{Binding IsWon}">
+                    <VerticalStackLayout Style="{StaticResource OverlayStack}">
+                        <Label Style="{StaticResource WinTitleLabel}"
+                               Text="🎉 2048 達成!" />
+                        <HorizontalStackLayout Style="{StaticResource OverlayButtonStack}">
+                            <Button Style="{StaticResource PillButton}"
+                                    Command="{Binding ContinueCommand}"
+                                    Text="続ける" />
+                            <Button Style="{StaticResource PillButton}"
+                                    Command="{Binding NewGameCommand}"
+                                    Text="新しいゲーム" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource OverOverlayBorder}"
+                        behaviors:AnimationOption.FadeInTrigger="{Binding IsOver}"
+                        IsVisible="{Binding IsOver}">
+                    <VerticalStackLayout Style="{StaticResource OverlayStack}">
+                        <Label Style="{StaticResource OverTitleLabel}"
+                               Text="ゲームオーバー" />
+                        <Label Style="{StaticResource OverScoreLabel}"
+                               Text="{Binding Score, StringFormat='スコア {0}'}" />
+                        <Button Style="{StaticResource PillButton}"
+                                Command="{Binding NewGameCommand}"
+                                Text="もう一度" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- 十字キー (スワイプと同じ動き) -->
+        <Grid Grid.Row="4"
+              Style="{StaticResource PadGrid}"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnDefinitions="Auto,Auto,Auto">
+            <Button Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource PadButton}"
+                    Command="{Binding SwipeCommand}"
+                    CommandParameter="{x:Static models:Puzzle2048Direction.Up}"
+                    Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_up}" />
+            <Button Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource PadButton}"
+                    Command="{Binding SwipeCommand}"
+                    CommandParameter="{x:Static models:Puzzle2048Direction.Left}"
+                    Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_left}" />
+            <Border Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource PadHubBorder}" />
+            <Button Grid.Row="1" Grid.Column="2"
+                    Style="{StaticResource PadButton}"
+                    Command="{Binding SwipeCommand}"
+                    CommandParameter="{x:Static models:Puzzle2048Direction.Right}"
+                    Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_right}" />
+            <Button Grid.Row="2" Grid.Column="1"
+                    Style="{StaticResource PadButton}"
+                    Command="{Binding SwipeCommand}"
+                    CommandParameter="{x:Static models:Puzzle2048Direction.Down}"
+                    Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_down}" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

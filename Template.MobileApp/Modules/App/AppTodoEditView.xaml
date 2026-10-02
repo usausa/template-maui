@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppTodoEditView"
+             x:DataType="{x:Type module:AppTodoEditViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppTodoEditViewModel}"
+             shell:ShellProperty.Title="ToDo"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#FFFFFF" shell:ShellProperty.StatusBarStyle="DarkContent">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="TodoAccentColor">#059669</Color>
+            <Color x:Key="TodoAccentSoftColor">#D1FAE5</Color>
+            <Color x:Key="TodoBackgroundColor">#F4F5FA</Color>
+            <Color x:Key="TodoTextColor">#0F172A</Color>
+            <Color x:Key="TodoSubTextColor">#64748B</Color>
+            <Color x:Key="TodoMutedColor">#94A3B8</Color>
+            <Color x:Key="TodoLineColor">#EEF2F6</Color>
+            <Color x:Key="TodoChipLineColor">#E2E8F0</Color>
+            <Color x:Key="TodoDangerColor">#DC2626</Color>
+            <Color x:Key="TodoDangerLineColor">#FCA5A5</Color>
+
+            <!-- Converter -->
+            <s:BoolToTextConverter x:Key="TitleConverter"
+                                   TrueValue="新しいタスク"
+                                   FalseValue="タスクを編集" />
+
+            <!-- Page -->
+            <Style x:Key="EditRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoBackgroundColor}" />
+            </Style>
+
+            <!-- Bar -->
+            <Style x:Key="EditBarGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,8,16,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="EditIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="EditTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SaveButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="20,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentColor}" />
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.4" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="BarDividerBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource TodoChipLineColor}" />
+            </Style>
+
+            <!-- Content -->
+            <Style x:Key="EditContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,16,16,32" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="EditCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="EditCardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="TitleEntry"
+                   TargetType="Entry">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource TodoMutedColor}" />
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+            </Style>
+
+            <Style x:Key="CounterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TodoMutedColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="CardDividerBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource TodoLineColor}" />
+            </Style>
+
+            <Style x:Key="NoteEditor"
+                   TargetType="Editor">
+                <Setter Property="MinimumHeightRequest" Value="96" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource TodoMutedColor}" />
+                <Setter Property="AutoSize" Value="TextChanges" />
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="4,8,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TodoSubTextColor}" />
+            </Style>
+
+            <!-- Due -->
+            <Style x:Key="ChipGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ChipButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource TodoChipLineColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+            </Style>
+
+            <!-- 日付を選ぶチップの後ろに置き、IsOpen で開く -->
+            <Style x:Key="HiddenDatePicker"
+                   TargetType="DatePicker">
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="DueValueLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="0,4,0,4" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TodoSubTextColor}" />
+            </Style>
+
+            <!-- Switch -->
+            <Style x:Key="SwitchRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,6" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="RowEmojiLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="RowTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="AccentSwitch"
+                   TargetType="Switch">
+                <Setter Property="OnColor" Value="{StaticResource TodoAccentColor}" />
+                <Setter Property="ThumbColor" Value="White" />
+            </Style>
+
+            <!-- Footer -->
+            <Style x:Key="InfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TodoMutedColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DeleteButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TodoDangerColor}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource TodoDangerLineColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource EditRootGrid}"
+          RowDefinitions="Auto,Auto,*">
+
+        <!-- 上の帯 (閉じる・名前・保存。件名が空なら保存できない) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource EditBarGrid}"
+              ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0"
+                    Style="{StaticResource EditIconButton}"
+                    Command="{Binding CloseCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Close}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource EditTitleLabel}"
+                   Text="{Binding Context.Draft.IsNew, Converter={StaticResource TitleConverter}}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource SaveButton}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding Context.Draft.CanSave}"
+                    Text="保存" />
+        </Grid>
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource BarDividerBoxView}" />
+
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Style="{StaticResource EditContentStack}">
+
+                <!-- 件名 (新規のときは開いたら入力できるようにする) とメモ -->
+                <Border Style="{StaticResource EditCardBorder}">
+                    <VerticalStackLayout Style="{StaticResource EditCardStack}">
+                        <Entry Style="{StaticResource TitleEntry}"
+                               behaviors:Focus.Default="{Binding Context.Draft.IsNew}"
+                               Text="{Binding Context.Draft.Title}"
+                               Placeholder="何をしますか？"
+                               MaxLength="100" />
+                        <Label Style="{StaticResource CounterLabel}"
+                               Text="{Binding Context.Draft.Title.Length, StringFormat='{0} / 100'}" />
+                        <BoxView Style="{StaticResource CardDividerBoxView}" />
+                        <Editor Style="{StaticResource NoteEditor}"
+                                Text="{Binding Context.Draft.Note}"
+                                Placeholder="メモを追加"
+                                MaxLength="1000" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 期限 (4 つのチップを等分に並べ、選んでいるチップを塗る。日付は DatePicker を開く) -->
+                <Label Style="{StaticResource SectionLabel}"
+                       Text="期限" />
+                <Border Style="{StaticResource EditCardBorder}">
+                    <VerticalStackLayout Style="{StaticResource EditCardStack}">
+                        <Grid Style="{StaticResource ChipGrid}"
+                              ColumnDefinitions="*,*,*,*">
+                            <Button Grid.Column="0"
+                                    Style="{StaticResource ChipButton}"
+                                    Command="{Binding DueCommand}"
+                                    CommandParameter="{x:Static models:TodoDue.Today}"
+                                    Text="📅 今日">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Context.Draft.Due}"
+                                                 Value="{x:Static models:TodoDue.Today}">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
+                                        <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
+                                        <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource ChipButton}"
+                                    Command="{Binding DueCommand}"
+                                    CommandParameter="{x:Static models:TodoDue.Tomorrow}"
+                                    Text="🌤️ 明日">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Context.Draft.Due}"
+                                                 Value="{x:Static models:TodoDue.Tomorrow}">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
+                                        <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
+                                        <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Grid Grid.Column="2">
+                                <DatePicker Style="{StaticResource HiddenDatePicker}"
+                                            IsOpen="{Binding IsDatePickerOpen}"
+                                            Date="{Binding Context.Draft.DueDate}" />
+                                <Button Style="{StaticResource ChipButton}"
+                                        Command="{Binding PickDateCommand}"
+                                        Text="📆 日付">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button"
+                                                     Binding="{Binding Context.Draft.Due}"
+                                                     Value="{x:Static models:TodoDue.Later}">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
+                                            <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Button"
+                                                     Binding="{Binding Context.Draft.Due}"
+                                                     Value="{x:Static models:TodoDue.Overdue}">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
+                                            <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </Grid>
+                            <Button Grid.Column="3"
+                                    Style="{StaticResource ChipButton}"
+                                    Command="{Binding DueCommand}"
+                                    CommandParameter="{x:Static models:TodoDue.None}"
+                                    Text="✖️ なし">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Context.Draft.Due}"
+                                                 Value="{x:Static models:TodoDue.None}">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
+                                        <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
+                                        <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </Grid>
+                        <Label Style="{StaticResource DueValueLabel}"
+                               Text="{Binding Context.Draft.DueDate, StringFormat='{0:yyyy年M月d日 (dddd)}', TargetNullValue='期限なし'}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 重要と完了 (完了は既存の行だけ) -->
+                <Border Style="{StaticResource EditCardBorder}">
+                    <VerticalStackLayout>
+                        <Grid Style="{StaticResource SwitchRowGrid}"
+                              ColumnDefinitions="Auto,*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource RowEmojiLabel}"
+                                   Text="⭐" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource RowTextLabel}"
+                                   Text="重要" />
+                            <Switch Grid.Column="2"
+                                    Style="{StaticResource AccentSwitch}"
+                                    IsToggled="{Binding Context.Draft.IsImportant}" />
+                        </Grid>
+                        <BoxView Style="{StaticResource CardDividerBoxView}"
+                                 IsVisible="{Binding Context.Draft.IsNew, Converter={StaticResource ReverseConverter}}" />
+                        <Grid Style="{StaticResource SwitchRowGrid}"
+                              ColumnDefinitions="Auto,*,Auto"
+                              IsVisible="{Binding Context.Draft.IsNew, Converter={StaticResource ReverseConverter}}">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource RowEmojiLabel}"
+                                   Text="✅" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource RowTextLabel}"
+                                   Text="完了" />
+                            <Switch Grid.Column="2"
+                                    Style="{StaticResource AccentSwitch}"
+                                    IsToggled="{Binding Context.Draft.IsDone}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 作成・更新の日時と削除 (既存の行だけ) -->
+                <Label Style="{StaticResource InfoLabel}"
+                       IsVisible="{Binding Context.Draft.IsNew, Converter={StaticResource ReverseConverter}}">
+                    <Label.Text>
+                        <MultiBinding StringFormat="作成 {0:M/d HH:mm} ・ 更新 {1:M/d HH:mm}">
+                            <Binding Path="Context.Draft.CreatedAt" />
+                            <Binding Path="Context.Draft.UpdatedAt" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+                <Button Style="{StaticResource DeleteButton}"
+                        Command="{Binding DeleteCommand}"
+                        IsVisible="{Binding Context.Draft.IsNew, Converter={StaticResource ReverseConverter}}"
+                        Text="🗑️ このタスクを削除" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentView>

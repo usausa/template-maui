@@ -85,7 +85,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         this.networkUsecase = networkUsecase;
 
         ReloadCommand = MakeAsyncCommand(ReloadAsync, () => !Loading);
-        LoadMoreCommand = MakeAsyncCommand(LoadMoreAsync, () => !Loading);
+        LoadMoreCommand = MakeDelegateCommand(CommandMode.Simple, () => _ = LoadMoreAsync(), () => !Loading);
         CreateCommand = MakeAsyncCommand(CreateAsync, () => !Loading);
         UpdateCommand = MakeAsyncCommand(UpdateAsync, () => !Loading && (SelectedItem is not null));
         DeleteCommand = MakeAsyncCommand(DeleteAsync, () => !Loading && (SelectedItem is not null));
