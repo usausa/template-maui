@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 // Top は全カテゴリの記事を集めたもの
 public enum NewsCategory
 {
@@ -10,6 +14,10 @@ public enum NewsCategory
     Entertainment,
     Life
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 
 public sealed record NewsArticle(
     int Id,
@@ -22,8 +30,12 @@ public sealed record NewsArticle(
     bool IsBreaking,
     int CommentCount);
 
-// 見本のダミーの記事を作る (取得の代わり)。random は 0 以上 n 未満を返す
-public sealed class NewsFeed
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+// 記事の見本 (取得の代わり)。random は 0 以上 n 未満を返す
+public sealed class NewsSample
 {
     private const string Notice = "※ この記事は画面の見本のためのダミーです。実在の人物・団体・出来事とは関係ありません。";
 
@@ -104,31 +116,31 @@ public sealed class NewsFeed
 
     private int nextId;
 
-    public NewsFeed(Func<int, int> random)
+    public NewsSample(Func<int, int> random)
     {
         this.random = random;
     }
 
     // 新しい順。時刻は now から少しずつさかのぼる
-    public IReadOnlyList<NewsArticle> Create(NewsCategory category, DateTime now, int count) =>
+    public IReadOnlyList<NewsArticle> LoadArticles(NewsCategory category, DateTime now, int count) =>
         CreateArticles(Enumerable.Range(0, count).Select(_ => NextHeadline(category)).ToArray(), now);
 
     // 今の時刻の記事
-    public NewsArticle CreateLatest(NewsCategory category, DateTime now)
+    public NewsArticle LoadLatest(NewsCategory category, DateTime now)
     {
         var (actual, index) = NextHeadline(category);
         return CreateArticle(actual, index, now);
     }
 
     // 速報 (数分前の記事)
-    public NewsArticle CreateBreaking(DateTime now)
+    public NewsArticle LoadBreaking(DateTime now)
     {
         var category = (NewsCategory)(1 + random(Seeds.Count));
         return CreateArticle(category, random(Seeds[category].Headlines.Count), now.AddMinutes(-(1 + random(10))), true);
     }
 
     // 同じカテゴリの別の記事 (一覧の見出しの順は進めない)
-    public IReadOnlyList<NewsArticle> CreateRelated(NewsArticle article, int count) =>
+    public IReadOnlyList<NewsArticle> LoadRelated(NewsArticle article, int count) =>
         CreateArticles(
             Shuffle(article.Category)
                 .Where(x => Seeds[x.Category].Headlines[x.Index].Title != article.Title)

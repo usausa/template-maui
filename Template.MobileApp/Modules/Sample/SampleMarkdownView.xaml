@@ -16,27 +16,35 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="MarkdownScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Padding" Value="16,12" />
+            </Style>
+
             <Style x:Key="DefaultMarkdownView"
                    TargetType="markdown:MarkdownView">
-                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
                 <Setter Property="TextFontFace" Value="OpenSansRegular" />
                 <Setter Property="TextFontSize" Value="14" />
                 <Setter Property="ImageAspect" Value="Fill" />
                 <Setter Property="ParagraphSpacing" Value="1.25" />
-                <Setter Property="H1Color" Value="{StaticResource BlueAccent4}" />
-                <Setter Property="H1FontSize" Value="24" />
-                <Setter Property="H2Color" Value="{StaticResource BlueAccent3}" />
-                <Setter Property="H2FontSize" Value="20" />
-                <Setter Property="H3Color" Value="{StaticResource BlueAccent2}" />
+                <Setter Property="H1Color" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="H1FontSize" Value="28" />
+                <Setter Property="H1FontAttributes" Value="Bold" />
+                <Setter Property="H2Color" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="H2FontSize" Value="24" />
+                <Setter Property="H2FontAttributes" Value="Bold" />
+                <Setter Property="H3Color" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="H3FontSize" Value="18" />
+                <Setter Property="H3FontAttributes" Value="Bold" />
                 <Setter Property="HyperlinkColor" Value="{StaticResource PurpleDefault}" />
                 <Setter Property="LineColor" Value="{StaticResource GrayDefault}" />
                 <Setter Property="BlockQuoteBackgroundColor" Value="{StaticResource OrangeLighten5}" />
-                <Setter Property="BlockQuoteBorderColor" Value="{StaticResource OrangeDarken4}" />
+                <Setter Property="BlockQuoteBorderColor" Value="{StaticResource OrangeLighten2}" />
                 <Setter Property="BlockQuoteFontFace" Value="OpenSansRegular" />
                 <Setter Property="BlockQuoteTextColor" Value="{StaticResource GrayDarken3}" />
                 <Setter Property="CodeBlockBackgroundColor" Value="{StaticResource GrayLighten5}" />
-                <Setter Property="CodeBlockBorderColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="CodeBlockBorderColor" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="CodeBlockFontFace" Value="JetBrainsMono" />
                 <Setter Property="CodeBlockFontSize" Value="12" />
                 <Setter Property="CodeBlockTextColor" Value="{StaticResource GrayDarken3}" />
@@ -54,7 +62,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView>
+    <ScrollView Style="{StaticResource MarkdownScroll}">
         <markdown:MarkdownView Style="{StaticResource DefaultMarkdownView}"
                                EMailCommand="{Binding EmailCommand}"
                                LinkCommand="{Binding LinkCommand}"

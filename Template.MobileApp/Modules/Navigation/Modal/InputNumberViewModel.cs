@@ -20,14 +20,14 @@ public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopu
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public InputNumberViewModel(IPopupNavigator popupNavigator)
+    public InputNumberViewModel()
     {
         ClearCommand = MakeDelegateCommand(Input.Clear);
         PopCommand = MakeDelegateCommand(Input.Pop);
         PushCommand = MakeDelegateCommand<string>(Input.Push);
 
-        CloseCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync());
-        CommitCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync(Input.Text));
+        CloseCommand = MakeAsyncCommand(async () => await CloseAsync());
+        CommitCommand = MakeAsyncCommand(async () => await CloseAsync(Input.Text));
     }
 
     //--------------------------------------------------------------------------------

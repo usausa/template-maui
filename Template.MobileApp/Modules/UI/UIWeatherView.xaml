@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -655,7 +656,7 @@
 
             <!-- 生活指数 -->
             <Style x:Key="IndexGrid"
-                   TargetType="controls:StaggeredGrid">
+                   TargetType="mcc:StaggeredGrid">
                 <Setter Property="Columns" Value="3" />
                 <Setter Property="Spacing" Value="8" />
             </Style>
@@ -1054,7 +1055,8 @@
                                                                             Text="{Binding Hour.Temperature, StringFormat='{0}°'}"
                                                                             IsHighlighted="{Binding IsCurrent}"
                                                                             Next="{Binding Next}"
-                                                                            Previous="{Binding Previous}" />
+                                                                            Previous="{Binding Previous}"
+                                                                            RevealOrder="{Binding Index}" />
                                                 <Label Grid.Row="3"
                                                        Style="{StaticResource HourRainLabel}"
                                                        Text="{Binding Hour.PrecipitationChance, StringFormat='{0}%'}" />
@@ -1131,164 +1133,176 @@
                     </Border>
 
                     <!-- 生活指数 (5 段階) -->
-                    <Border Style="{StaticResource WeatherCardBorder}">
-                        <VerticalStackLayout Style="{StaticResource CardStack}">
-                            <Label Style="{StaticResource CardTitleLabel}"
-                                   Text="🧭 生活指数" />
-                            <controls:StaggeredGrid Style="{StaticResource IndexGrid}"
-                                                    BindableLayout.ItemsSource="{Binding Forecast.Indices}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="{x:Type models:WeatherIndex}">
-                                        <Border Style="{StaticResource IndexTileBorder}">
-                                            <VerticalStackLayout Style="{StaticResource IndexTileStack}">
-                                                <Label Style="{StaticResource IndexIconLabel}"
-                                                       Text="{Binding Kind, Converter={StaticResource IndexIconConverter}}" />
-                                                <Label Style="{StaticResource IndexNameLabel}"
-                                                       Text="{Binding Kind, Converter={StaticResource IndexNameConverter}}" />
-                                                <Label Style="{StaticResource IndexTextLabel}"
-                                                       Text="{Binding ., Converter={StaticResource IndexTextConverter}}" />
-                                                <controls:SegmentBar Style="{StaticResource IndexSegmentBar}"
-                                                                     Value="{Binding Level}"
-                                                                     ActiveColor="{Binding Kind, Converter={StaticResource IndexColorConverter}}" />
-                                            </VerticalStackLayout>
-                                        </Border>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </controls:StaggeredGrid>
-                        </VerticalStackLayout>
-                    </Border>
+                    <ContentView behaviors:LazyViewOption.Deferred="True">
+                        <behaviors:LazyViewOption.Template>
+                            <DataTemplate x:DataType="module:UIWeatherViewModel">
+                                <Border Style="{StaticResource WeatherCardBorder}">
+                                    <VerticalStackLayout Style="{StaticResource CardStack}">
+                                        <Label Style="{StaticResource CardTitleLabel}"
+                                               Text="🧭 生活指数" />
+                                        <mcc:StaggeredGrid Style="{StaticResource IndexGrid}"
+                                                           BindableLayout.ItemsSource="{Binding Forecast.Indices}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="{x:Type models:WeatherIndex}">
+                                                    <Border Style="{StaticResource IndexTileBorder}">
+                                                        <VerticalStackLayout Style="{StaticResource IndexTileStack}">
+                                                            <Label Style="{StaticResource IndexIconLabel}"
+                                                                   Text="{Binding Kind, Converter={StaticResource IndexIconConverter}}" />
+                                                            <Label Style="{StaticResource IndexNameLabel}"
+                                                                   Text="{Binding Kind, Converter={StaticResource IndexNameConverter}}" />
+                                                            <Label Style="{StaticResource IndexTextLabel}"
+                                                                   Text="{Binding ., Converter={StaticResource IndexTextConverter}}" />
+                                                            <controls:SegmentBar Style="{StaticResource IndexSegmentBar}"
+                                                                                 Value="{Binding Level}"
+                                                                                 ActiveColor="{Binding Kind, Converter={StaticResource IndexColorConverter}}" />
+                                                        </VerticalStackLayout>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </mcc:StaggeredGrid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </behaviors:LazyViewOption.Template>
+                    </ContentView>
 
                     <!-- 詳細 -->
-                    <Grid Style="{StaticResource DetailGrid}"
-                          RowDefinitions="Auto,Auto,Auto"
-                          ColumnDefinitions="*,*">
-
-                        <!-- 風 (矢印は風下を向く) -->
-                        <Border Grid.Row="0" Grid.Column="0"
-                                Style="{StaticResource WeatherCardBorder}">
-                            <VerticalStackLayout Style="{StaticResource DetailStack}">
-                                <Label Style="{StaticResource CardTitleLabel}"
-                                       Text="🌬️ 風" />
-                                <Grid Style="{StaticResource GaugeGrid}">
-                                    <controls:WeatherCompassDial Direction="{Binding Forecast.WindDirection}" />
-                                    <VerticalStackLayout Style="{StaticResource GaugeCenterStack}">
-                                        <Label Style="{StaticResource GaugeValueLabel}"
-                                               Text="{Binding Forecast.WindSpeed, StringFormat='{0:F1}'}" />
-                                        <Label Style="{StaticResource GaugeUnitLabel}"
-                                               Text="m/s" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                                <Label Style="{StaticResource DetailNoteLabel}"
-                                       Text="{Binding Forecast.WindDirection, Converter={StaticResource CompassPointConverter}, StringFormat='{0}の風'}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- UV (段階の色の円弧に今の値の印) -->
-                        <Border Grid.Row="0" Grid.Column="1"
-                                Style="{StaticResource WeatherCardBorder}">
-                            <VerticalStackLayout Style="{StaticResource DetailStack}">
-                                <Label Style="{StaticResource CardTitleLabel}"
-                                       Text="🕶️ UV 指数" />
-                                <Grid Style="{StaticResource GaugeGrid}">
-                                    <controls:ArcMeter Style="{StaticResource UvMeter}"
-                                                       Value="{Binding Forecast.UvIndex}" />
-                                    <VerticalStackLayout Style="{StaticResource GaugeBottomStack}">
-                                        <Label Style="{StaticResource GaugeValueLabel}"
-                                               Text="{Binding Forecast.UvIndex, StringFormat='{0}'}" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                                <Border Style="{StaticResource UvBadgeBorder}"
-                                        BackgroundColor="{Binding Forecast.UvLevel, Converter={StaticResource UvLevelColorConverter}}">
-                                    <Label Style="{StaticResource UvBadgeLabel}"
-                                           Text="{Binding Forecast.UvLevel, Converter={StaticResource UvLevelTextConverter}}" />
-                                </Border>
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- 湿度 -->
-                        <Border Grid.Row="1" Grid.Column="0"
-                                Style="{StaticResource WeatherCardBorder}">
-                            <VerticalStackLayout Style="{StaticResource DetailStack}">
-                                <Label Style="{StaticResource CardTitleLabel}"
-                                       Text="💧 湿度" />
-                                <Grid Style="{StaticResource GaugeGrid}">
-                                    <controls:ArcMeter Style="{StaticResource HumidityMeter}"
-                                                       Value="{Binding Forecast.Humidity}" />
-                                    <VerticalStackLayout Style="{StaticResource GaugeCenterStack}">
-                                        <Label Style="{StaticResource GaugeValueLabel}"
-                                               Text="{Binding Forecast.Humidity, StringFormat='{0}'}" />
-                                        <Label Style="{StaticResource GaugeUnitLabel}"
-                                               Text="%" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                                <Label Style="{StaticResource DetailNoteLabel}"
-                                       Text="{Binding Forecast.DewPoint, StringFormat='露点 {0}°'}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- 気圧 (針は今の値、目盛りは 10 hPa ごと) -->
-                        <Border Grid.Row="1" Grid.Column="1"
-                                Style="{StaticResource WeatherCardBorder}">
-                            <VerticalStackLayout Style="{StaticResource DetailStack}">
-                                <Label Style="{StaticResource CardTitleLabel}"
-                                       Text="🧭 気圧" />
-                                <Grid Style="{StaticResource GaugeGrid}">
-                                    <controls:ArcMeter Style="{StaticResource PressureMeter}"
-                                                       Value="{Binding Forecast.Pressure}" />
-                                    <VerticalStackLayout Style="{StaticResource GaugeBottomStack}">
-                                        <Label Style="{StaticResource GaugeValueLabel}"
-                                               Text="{Binding Forecast.Pressure, StringFormat='{0}'}" />
-                                        <Label Style="{StaticResource GaugeUnitLabel}"
-                                               Text="hPa" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                                <Label Style="{StaticResource DetailNoteLabel}"
-                                       Text="{Binding Forecast.PressureTrend, Converter={StaticResource PressureTrendConverter}}" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- 日の出・日の入り (太陽は今の位置) -->
-                        <Border Grid.Row="2" Grid.Column="0"
-                                Style="{StaticResource WeatherCardBorder}">
-                            <VerticalStackLayout Style="{StaticResource DetailStack}">
-                                <Label Style="{StaticResource CardTitleLabel}"
-                                       Text="🌅 日の出・日の入り" />
-                                <Grid Style="{StaticResource GaugeGrid}">
-                                    <controls:WeatherSunArcView Now="{Binding Forecast.UpdatedAt}"
-                                                                Sunrise="{Binding Forecast.Sunrise}"
-                                                                Sunset="{Binding Forecast.Sunset}" />
-                                </Grid>
-                                <Grid Style="{StaticResource SunTimeGrid}"
+                    <ContentView behaviors:LazyViewOption.Deferred="True">
+                        <behaviors:LazyViewOption.Template>
+                            <DataTemplate x:DataType="module:UIWeatherViewModel">
+                                <Grid Style="{StaticResource DetailGrid}"
+                                      RowDefinitions="Auto,Auto,Auto"
                                       ColumnDefinitions="*,*">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource SunTimeLabel}"
-                                           Text="{Binding Forecast.Sunrise, StringFormat='↑ {0:H:mm}'}" />
-                                    <Label Grid.Column="1"
-                                           Style="{StaticResource SunsetTimeLabel}"
-                                           Text="{Binding Forecast.Sunset, StringFormat='↓ {0:H:mm}'}" />
-                                </Grid>
-                                <Label Style="{StaticResource DetailNoteLabel}"
-                                       Text="{Binding Forecast.DayLength, StringFormat='昼の長さ {0:h\\:mm}'}" />
-                            </VerticalStackLayout>
-                        </Border>
 
-                        <!-- 月の満ち欠け -->
-                        <Border Grid.Row="2" Grid.Column="1"
-                                Style="{StaticResource WeatherCardBorder}">
-                            <VerticalStackLayout Style="{StaticResource DetailStack}">
-                                <Label Style="{StaticResource CardTitleLabel}"
-                                       Text="🌙 月" />
-                                <Grid Style="{StaticResource GaugeGrid}">
-                                    <controls:WeatherMoonPhaseView Age="{Binding Forecast.MoonAge}" />
-                                </Grid>
-                                <Label Style="{StaticResource MoonNameLabel}"
-                                       Text="{Binding Forecast.MoonPhase, Converter={StaticResource MoonPhaseConverter}}" />
-                                <Label Style="{StaticResource DetailNoteLabel}"
-                                       Text="{Binding Forecast.MoonAge, StringFormat='月齢 {0:F1}'}" />
-                            </VerticalStackLayout>
-                        </Border>
+                                    <!-- 風 (矢印は風下を向く) -->
+                                    <Border Grid.Row="0" Grid.Column="0"
+                                            Style="{StaticResource WeatherCardBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource CardTitleLabel}"
+                                                   Text="🌬️ 風" />
+                                            <Grid Style="{StaticResource GaugeGrid}">
+                                                <controls:WeatherCompassDial Direction="{Binding Forecast.WindDirection}" />
+                                                <VerticalStackLayout Style="{StaticResource GaugeCenterStack}">
+                                                    <Label Style="{StaticResource GaugeValueLabel}"
+                                                           Text="{Binding Forecast.WindSpeed, StringFormat='{0:F1}'}" />
+                                                    <Label Style="{StaticResource GaugeUnitLabel}"
+                                                           Text="m/s" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   Text="{Binding Forecast.WindDirection, Converter={StaticResource CompassPointConverter}, StringFormat='{0}の風'}" />
+                                        </VerticalStackLayout>
+                                    </Border>
 
-                    </Grid>
+                                    <!-- UV (段階の色の円弧に今の値の印) -->
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            Style="{StaticResource WeatherCardBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource CardTitleLabel}"
+                                                   Text="🕶️ UV 指数" />
+                                            <Grid Style="{StaticResource GaugeGrid}">
+                                                <controls:ArcMeter Style="{StaticResource UvMeter}"
+                                                                   Value="{Binding Forecast.UvIndex}" />
+                                                <VerticalStackLayout Style="{StaticResource GaugeBottomStack}">
+                                                    <Label Style="{StaticResource GaugeValueLabel}"
+                                                           Text="{Binding Forecast.UvIndex, StringFormat='{0}'}" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                            <Border Style="{StaticResource UvBadgeBorder}"
+                                                    BackgroundColor="{Binding Forecast.UvLevel, Converter={StaticResource UvLevelColorConverter}}">
+                                                <Label Style="{StaticResource UvBadgeLabel}"
+                                                       Text="{Binding Forecast.UvLevel, Converter={StaticResource UvLevelTextConverter}}" />
+                                            </Border>
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- 湿度 -->
+                                    <Border Grid.Row="1" Grid.Column="0"
+                                            Style="{StaticResource WeatherCardBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource CardTitleLabel}"
+                                                   Text="💧 湿度" />
+                                            <Grid Style="{StaticResource GaugeGrid}">
+                                                <controls:ArcMeter Style="{StaticResource HumidityMeter}"
+                                                                   Value="{Binding Forecast.Humidity}" />
+                                                <VerticalStackLayout Style="{StaticResource GaugeCenterStack}">
+                                                    <Label Style="{StaticResource GaugeValueLabel}"
+                                                           Text="{Binding Forecast.Humidity, StringFormat='{0}'}" />
+                                                    <Label Style="{StaticResource GaugeUnitLabel}"
+                                                           Text="%" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   Text="{Binding Forecast.DewPoint, StringFormat='露点 {0}°'}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- 気圧 (針は今の値、目盛りは 10 hPa ごと) -->
+                                    <Border Grid.Row="1" Grid.Column="1"
+                                            Style="{StaticResource WeatherCardBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource CardTitleLabel}"
+                                                   Text="🧭 気圧" />
+                                            <Grid Style="{StaticResource GaugeGrid}">
+                                                <controls:ArcMeter Style="{StaticResource PressureMeter}"
+                                                                   Value="{Binding Forecast.Pressure}" />
+                                                <VerticalStackLayout Style="{StaticResource GaugeBottomStack}">
+                                                    <Label Style="{StaticResource GaugeValueLabel}"
+                                                           Text="{Binding Forecast.Pressure, StringFormat='{0}'}" />
+                                                    <Label Style="{StaticResource GaugeUnitLabel}"
+                                                           Text="hPa" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   Text="{Binding Forecast.PressureTrend, Converter={StaticResource PressureTrendConverter}}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- 日の出・日の入り (太陽は今の位置) -->
+                                    <Border Grid.Row="2" Grid.Column="0"
+                                            Style="{StaticResource WeatherCardBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource CardTitleLabel}"
+                                                   Text="🌅 日の出・日の入り" />
+                                            <Grid Style="{StaticResource GaugeGrid}">
+                                                <controls:WeatherSunArcView Now="{Binding Forecast.UpdatedAt}"
+                                                                            Sunrise="{Binding Forecast.Sunrise}"
+                                                                            Sunset="{Binding Forecast.Sunset}" />
+                                            </Grid>
+                                            <Grid Style="{StaticResource SunTimeGrid}"
+                                                  ColumnDefinitions="*,*">
+                                                <Label Grid.Column="0"
+                                                       Style="{StaticResource SunTimeLabel}"
+                                                       Text="{Binding Forecast.Sunrise, StringFormat='↑ {0:H:mm}'}" />
+                                                <Label Grid.Column="1"
+                                                       Style="{StaticResource SunsetTimeLabel}"
+                                                       Text="{Binding Forecast.Sunset, StringFormat='↓ {0:H:mm}'}" />
+                                            </Grid>
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   Text="{Binding Forecast.DayLength, StringFormat='昼の長さ {0:h\\:mm}'}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- 月の満ち欠け -->
+                                    <Border Grid.Row="2" Grid.Column="1"
+                                            Style="{StaticResource WeatherCardBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource CardTitleLabel}"
+                                                   Text="🌙 月" />
+                                            <Grid Style="{StaticResource GaugeGrid}">
+                                                <controls:WeatherMoonPhaseView Age="{Binding Forecast.MoonAge}" />
+                                            </Grid>
+                                            <Label Style="{StaticResource MoonNameLabel}"
+                                                   Text="{Binding Forecast.MoonPhase, Converter={StaticResource MoonPhaseConverter}}" />
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   Text="{Binding Forecast.MoonAge, StringFormat='月齢 {0:F1}'}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                </Grid>
+                            </DataTemplate>
+                        </behaviors:LazyViewOption.Template>
+                    </ContentView>
 
                 </VerticalStackLayout>
             </ScrollView>

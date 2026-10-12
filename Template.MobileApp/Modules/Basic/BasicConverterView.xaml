@@ -30,25 +30,28 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="ReverseChecked" />
                     </Grid>
-                    <Grid Style="{StaticResource CardInfoGrid}"
+                    <BoxView Style="{StaticResource CardDivider}" />
+                    <Grid Style="{StaticResource CardNameValueGrid}"
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="Reverse" />
                         <Label Grid.Row="0" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
+                               Style="{StaticResource CardValueLabel}"
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding ReverseChecked}"
                                Text="{Binding ReverseChecked, Converter={StaticResource ReverseConverter}}" />
+                        <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
 
                         <Label Grid.Row="1" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="BoolTo" />
                         <Label Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
+                               Style="{StaticResource CardValueLabel}"
                                Text="{Binding ReverseChecked, Converter={s:BoolToText True='ON', False='OFF'}}"
-                               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True=Red, False=Black}}" />
+                               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True={StaticResource RedDefault}, False={StaticResource PrimaryTextColor}}}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -74,14 +77,15 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="Checked2" />
                     </Grid>
-                    <Grid Style="{StaticResource CardInfoGrid}"
+                    <BoxView Style="{StaticResource CardDivider}" />
+                    <Grid Style="{StaticResource CardNameValueGrid}"
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="Any" />
                         <Label Grid.Row="0" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}">
+                               Style="{StaticResource CardValueLabel}">
                             <Label.Text>
                                 <MultiBinding Converter="{StaticResource AnyConverter}">
                                     <Binding Path="MultiChecked1" />
@@ -89,12 +93,14 @@
                                 </MultiBinding>
                             </Label.Text>
                         </Label>
+                        <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
 
                         <Label Grid.Row="1" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="All" />
                         <Label Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}">
+                               Style="{StaticResource CardValueLabel}">
                             <Label.Text>
                                 <MultiBinding Converter="{StaticResource AllConverter}">
                                     <Binding Path="MultiChecked1" />
@@ -115,34 +121,39 @@
                             Command="{Binding SwitchTextCommand}"
                             Text="Switch Text"
                             ImageSource="{x:Static markup:AppIcons.SmallTextFormat}" />
-                    <Grid Style="{StaticResource CardInfoGrid}"
+                    <BoxView Style="{StaticResource CardDivider}" />
+                    <Grid Style="{StaticResource CardNameValueGrid}"
                           RowDefinitions="Auto,Auto,Auto"
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="Upper" />
                         <Label Grid.Row="0" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
+                               Style="{StaticResource CardValueLabel}"
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding Text}"
                                Text="{Binding Text, Converter={StaticResource ToUpperConverter}}" />
+                        <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
 
                         <Label Grid.Row="1" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="Lower" />
                         <Label Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
+                               Style="{StaticResource CardValueLabel}"
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding Text}"
                                Text="{Binding Text, Converter={StaticResource ToLowerConverter}}" />
+                        <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
 
                         <Label Grid.Row="2" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
+                               Style="{StaticResource CardNameLabel}"
                                Text="EmptyTo" />
                         <Label Grid.Row="2" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
+                               Style="{StaticResource CardValueLabel}"
                                Text="{Binding Text, Converter={s:NullToText HandleEmptyString=True, Null='No value', NonNull='Has value'}}"
-                               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null=Red, NonNull=Black}}" />
+                               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null={StaticResource RedDefault}, NonNull={StaticResource PrimaryTextColor}}}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

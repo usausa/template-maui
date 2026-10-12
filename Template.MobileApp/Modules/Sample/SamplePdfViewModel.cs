@@ -41,16 +41,17 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
     {
         this.fileSystem = fileSystem;
 
+        // ページ数の表示と前後の移動は、スライダーと同じ PageIndex から決める
         PageChangedCommand = MakeDelegateCommand<PageChangedEventArgs>(x =>
         {
             TotalPages = x.TotalPages;
             MaxPageIndex = Math.Max(0, x.TotalPages - 1);
-            PageInformation = $"{x.CurrentPage} / {x.TotalPages}";
-            CanMovePrev = x.CurrentPage > 1;
-            CanMoveNext = x.CurrentPage < x.TotalPages;
+            UpdatePage();
         });
         PrevPageCommand = MakeDelegateCommand(() => PageIndex--);
         NextPageCommand = MakeDelegateCommand(() => PageIndex++);
+
+        Disposables.Add(this.AsObservable(nameof(PageIndex)).Subscribe(_ => UpdatePage()));
     }
 
     //--------------------------------------------------------------------------------
@@ -87,5 +88,19 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
     {
         PageIndex++;
         return Task.CompletedTask;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private void UpdatePage()
+    {
+        if (TotalPages > 0)
+        {
+            PageInformation = $"{PageIndex + 1} / {TotalPages}";
+        }
+        CanMovePrev = PageIndex > 0;
+        CanMoveNext = PageIndex < MaxPageIndex;
     }
 }

@@ -23,6 +23,9 @@ public sealed class MainActivity : MauiAppCompatActivity
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
+        // アプリ全体のオーバースクロールを無効にする
+        Theme?.ApplyStyle(_Microsoft.Android.Resource.Designer.ResourceConstant.Style.NoOverScrollTheme, true);
+
         base.OnCreate(savedInstanceState);
 
         backPressedCallback = new BackPressedCallback(this);

@@ -15,7 +15,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     // 再生していないときのシークは位置だけ覚え、再生を始めた直後にシークする
     private double? pendingPosition;
 
-    public IAudioPlayer? AudioPlayer { get; set; }
+    [ObservableProperty]
+    public partial IAudioPlayer? AudioPlayer { get; set; }
 
     [ObservableProperty]
     public partial bool IsPlaying { get; set; }

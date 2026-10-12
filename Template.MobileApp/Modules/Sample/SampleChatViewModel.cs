@@ -9,8 +9,6 @@ using Microsoft.Extensions.AI;
 using OllamaSharp;
 using OllamaSharp.Models.Exceptions;
 
-using Template.MobileApp.Models.Sample.Chat;
-
 using AiMessage = Microsoft.Extensions.AI.ChatMessage;
 
 public sealed partial class SampleChatViewModel : AppViewModelBase
@@ -94,7 +92,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
             Messages.Add(new AiChatMessage
             {
                 Role = AiChatRole.Assistant,
-                Text = $"こんにちは!AI アシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {model})"
+                Text = $"こんにちは!AIアシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {model})"
             });
         }
         return Task.CompletedTask;

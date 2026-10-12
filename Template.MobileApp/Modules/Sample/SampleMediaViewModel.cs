@@ -13,6 +13,9 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
     public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
+    public partial bool IsFailed { get; set; }
+
+    [ObservableProperty]
     public partial bool IsControlBarVisible { get; set; }
 
     public ICommand TogglePlayCommand { get; }
@@ -32,6 +35,7 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
 
         Controller.PlayingChanged = x => IsPlaying = x;
         Controller.LoadingChanged = x => IsLoading = x;
+        Controller.FailedChanged = x => IsFailed = x;
 
         TogglePlayCommand = MakeDelegateCommand(() =>
         {
@@ -62,6 +66,13 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
+
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        IsControlBarVisible = true;
+        RestartHideTimer();
+        return Task.CompletedTask;
+    }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {

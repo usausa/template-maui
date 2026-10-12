@@ -11,7 +11,7 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceOcrView"
              x:DataType="{x:Type module:DeviceOcrViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceOcrViewModel}"
-             shell:ShellProperty.Title="Ocr"
+             shell:ShellProperty.Title="OCR"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function4Text="Scan"
              shell:ShellProperty.Function1Enabled="True"
@@ -76,12 +76,6 @@
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
-            <Style x:Key="ResultPlaceholderLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -127,9 +121,6 @@
                         <Label Style="{StaticResource ResultTextLabel}"
                                behaviors:AnimationOption.FadeInTrigger="{Binding RecognizedText}"
                                Text="{Binding RecognizedText}" />
-                        <Label Style="{StaticResource ResultPlaceholderLabel}"
-                               IsVisible="{Binding RecognizedText, Converter={StaticResource EmptyConverter}}"
-                               Text="Point the camera at text and press Scan" />
                     </Grid>
                 </ScrollView>
 

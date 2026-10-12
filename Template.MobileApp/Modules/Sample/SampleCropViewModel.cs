@@ -12,7 +12,7 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
     public partial ImageSource? CroppedImage { get; private set; }
 
     [ObservableProperty]
-    public partial string ResultText { get; private set; } = "枠を調整して書き出しできます";
+    public partial string ResultText { get; private set; } = string.Empty;
 
     public IObserveCommand ExportCommand { get; }
     public IObserveCommand ResetCommand { get; }

@@ -6,8 +6,9 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
+             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIGraph2View"
              x:DataType="{x:Type module:UIGraph2ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGraph2ViewModel}"
@@ -88,6 +89,27 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="DetailSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="DetailShaLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="6,0,0,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
             <Style x:Key="CommitInfoGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="2" />
@@ -107,7 +129,7 @@
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type graph:TimelineRow}">
+                <DataTemplate x:DataType="holder:Selectable(models:GraphRow)">
                     <Grid RowDefinitions="56,Auto"
                           ColumnDefinitions="Auto,*">
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -119,7 +141,7 @@
 
                         <controls:GraphRowSurface Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
                                                   Style="{StaticResource TimelineSurface}"
-                                                  RowData="{Binding Row}" />
+                                                  RowData="{Binding Item}" />
 
                         <Grid Grid.Row="0" Grid.Column="1"
                               Style="{StaticResource CommitInfoGrid}"
@@ -127,34 +149,50 @@
                               ColumnDefinitions="Auto,Auto,*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource ShaLabel}"
-                                   Text="{Binding Row.ShortSha}" />
+                                   Text="{Binding Item.ShortSha}" />
                             <Label Grid.Row="0" Grid.Column="1"
                                    Style="{StaticResource CommitIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Commit}" />
                             <Label Grid.Row="0" Grid.Column="3"
                                    Style="{StaticResource DateLabel}"
-                                   Text="{Binding Row.When, StringFormat='{0:yyyy-MM-dd}'}" />
+                                   Text="{Binding Item.When, StringFormat='{0:yyyy-MM-dd}'}" />
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
                                    Style="{StaticResource SummaryLabel}"
-                                   Text="{Binding Row.Summary}" />
+                                   Text="{Binding Item.Summary}" />
                         </Grid>
 
                         <!-- タップで展開する詳細 -->
-                        <Border Grid.Row="1" Grid.Column="1"
-                                Style="{StaticResource DetailBorder}"
-                                behaviors:AnimationOption.FadeInTrigger="{Binding IsExpanded}"
-                                IsVisible="{Binding IsExpanded}">
-                            <HorizontalStackLayout>
-                                <Label Style="{StaticResource DetailIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Person}" />
-                                <Label Style="{StaticResource DetailTextLabel}"
-                                       Text="{Binding Row.Author}" />
-                                <Label Style="{StaticResource DetailIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Schedule}" />
-                                <Label Style="{StaticResource DetailTextLabel}"
-                                       Text="{Binding Row.When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
-                            </HorizontalStackLayout>
-                        </Border>
+                        <ContentView Grid.Row="1" Grid.Column="1"
+                                     behaviors:AnimationOption.FadeInTrigger="{Binding IsSelected}"
+                                     behaviors:LazyViewOption.Load="{Binding IsSelected}"
+                                     IsVisible="{Binding IsSelected}">
+                            <behaviors:LazyViewOption.Template>
+                                <DataTemplate x:DataType="holder:Selectable(models:GraphRow)">
+                                    <Border Style="{StaticResource DetailBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource DetailSummaryLabel}"
+                                                   Text="{Binding Item.Summary}" />
+                                            <HorizontalStackLayout>
+                                                <Label Style="{StaticResource DetailIconLabel}"
+                                                       Text="{x:Static fonts:MaterialIcons.Person}" />
+                                                <Label Style="{StaticResource DetailTextLabel}"
+                                                       Text="{Binding Item.Author}" />
+                                                <Label Style="{StaticResource DetailIconLabel}"
+                                                       Text="{x:Static fonts:MaterialIcons.Schedule}" />
+                                                <Label Style="{StaticResource DetailTextLabel}"
+                                                       Text="{Binding Item.When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout>
+                                                <Label Style="{StaticResource DetailIconLabel}"
+                                                       Text="{x:Static fonts:MaterialIcons.Commit}" />
+                                                <Label Style="{StaticResource DetailShaLabel}"
+                                                       Text="{Binding Item.Sha}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </behaviors:LazyViewOption.Template>
+                        </ContentView>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

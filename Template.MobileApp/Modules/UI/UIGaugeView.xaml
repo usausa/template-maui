@@ -2,477 +2,716 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
+             xmlns:clam="clr-namespace:ClamGauge;assembly=ClamGauge"
              x:Class="Template.MobileApp.Modules.UI.UIGaugeView"
              x:DataType="{x:Type module:UIGaugeViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGaugeViewModel}"
              shell:ShellProperty.Title="Gauge"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="{Binding KindIndex, Converter={StaticResource Function2TextConverter}}"
+             shell:ShellProperty.Function3Text="{Binding KindIndex, Converter={StaticResource Function3TextConverter}}"
+             shell:ShellProperty.Function4Text="{Binding KindIndex, Converter={StaticResource Function4TextConverter}}"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
-        <conv:CompassDirectionConverter x:Key="CompassLabelConverter" />
+        <ResourceDictionary>
 
-        <Style x:Key="GaugeScroll"
-               TargetType="ScrollView">
-            <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-        </Style>
-        <Style x:Key="GaugeGrid"
-               TargetType="Grid">
-            <Setter Property="Padding" Value="8" />
-            <Setter Property="ColumnSpacing" Value="8" />
-            <Setter Property="RowSpacing" Value="8" />
-        </Style>
-        <Style x:Key="GaugePanel"
-               TargetType="Border">
-            <Setter Property="BackgroundColor" Value="White" />
-            <Setter Property="StrokeThickness" Value="0" />
-            <Setter Property="StrokeShape" Value="RoundRectangle 12" />
-            <Setter Property="Padding" Value="4,8,4,0" />
-            <Setter Property="Shadow">
-                <Shadow Offset="0,2"
-                        Brush="Black"
-                        Opacity="0.15"
-                        Radius="6" />
-            </Setter>
-        </Style>
-        <Style x:Key="GaugePanelTitle"
-               TargetType="Label">
-            <Setter Property="HorizontalOptions" Value="Center" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-            <Setter Property="CharacterSpacing" Value="2" />
-        </Style>
-        <Style x:Key="GaugeItemLayout"
-               TargetType="VerticalStackLayout">
-            <Setter Property="Spacing" Value="0" />
-        </Style>
+            <converters:CompassDirectionConverter x:Key="CompassDirectionConverter" />
+            <converters:DegreeTextConverter x:Key="DegreeTextConverter" />
 
-        <Style x:Key="GaugeSliderBase"
-               TargetType="Slider">
-            <Setter Property="Margin" Value="8,0" />
-            <Setter Property="MaximumTrackColor" Value="{StaticResource GrayLighten2}" />
-        </Style>
-        <Style x:Key="SliderPressure"
-               TargetType="Slider"
-               BasedOn="{StaticResource GaugeSliderBase}">
-            <Setter Property="ThumbColor" Value="#CC0000" />
-            <Setter Property="MinimumTrackColor" Value="#CC0000" />
-        </Style>
-        <Style x:Key="SliderHumidity"
-               TargetType="Slider"
-               BasedOn="{StaticResource GaugeSliderBase}">
-            <Setter Property="ThumbColor" Value="#2880FF" />
-            <Setter Property="MinimumTrackColor" Value="#2880FF" />
-        </Style>
-        <Style x:Key="SliderTemperature"
-               TargetType="Slider"
-               BasedOn="{StaticResource GaugeSliderBase}">
-            <Setter Property="ThumbColor" Value="#DD6010" />
-            <Setter Property="MinimumTrackColor" Value="#DD6010" />
-        </Style>
-        <Style x:Key="SliderWindDirection"
-               TargetType="Slider"
-               BasedOn="{StaticResource GaugeSliderBase}">
-            <Setter Property="ThumbColor" Value="#CC2020" />
-            <Setter Property="MinimumTrackColor" Value="#606060" />
-        </Style>
-        <Style x:Key="SliderSpeed"
-               TargetType="Slider"
-               BasedOn="{StaticResource GaugeSliderBase}">
-            <Setter Property="ThumbColor" Value="#CC1818" />
-            <Setter Property="MinimumTrackColor" Value="#CC1818" />
-        </Style>
-        <Style x:Key="SliderTachometer"
-               TargetType="Slider"
-               BasedOn="{StaticResource GaugeSliderBase}">
-            <Setter Property="ThumbColor" Value="#CC4400" />
-            <Setter Property="MinimumTrackColor" Value="#CC4400" />
-        </Style>
+            <s:MapToTextConverter x:Key="Function2TextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Int32 0}"
+                                      Value="Unit" />
+                    <s:MapToTextEntry Key="{s:Int32 1}"
+                                      Value="Unit" />
+                    <s:MapToTextEntry Key="{s:Int32 2}"
+                                      Value="Bands" />
+                    <s:MapToTextEntry Key="{s:Int32 3}"
+                                      Value="Labels" />
+                    <s:MapToTextEntry Key="{s:Int32 4}"
+                                      Value="Easing" />
+                    <s:MapToTextEntry Key="{s:Int32 5}"
+                                      Value="Value" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
-        <!-- Sample 1: Pressure -->
-        <Style x:Key="GaugePressure"
-               TargetType="controls:Gauge">
-            <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="MinValue" Value="950" />
-            <Setter Property="MaxValue" Value="1050" />
-            <Setter Property="BezelOuterThickness" Value="6" />
-            <Setter Property="BezelOuterStartColor" Value="#D0D0D0" />
-            <Setter Property="BezelOuterEndColor" Value="#606060" />
-            <Setter Property="BezelInnerThickness" Value="0" />
-            <Setter Property="ArcInnerExtent" Value="0.64" />
-            <Setter Property="ArcOuterExtent" Value="0.76" />
-            <Setter Property="MajorTickInterval" Value="10" />
-            <Setter Property="MajorTickInnerExtent" Value="0.63" />
-            <Setter Property="MajorTickOuterExtent" Value="0.77" />
-            <Setter Property="MajorTickColor" Value="#404040" />
-            <Setter Property="MinorTickInterval" Value="2" />
-            <Setter Property="MinorTickInnerExtent" Value="0.64" />
-            <Setter Property="MinorTickOuterExtent" Value="0.76" />
-            <Setter Property="MinorTickThickness" Value="0.5" />
-            <Setter Property="MinorTickColor" Value="#909090" />
-            <Setter Property="LabelInterval" Value="20" />
-            <Setter Property="LabelExtent" Value="0.88" />
-            <Setter Property="LabelFormat" Value="{}{0:N0}" />
-            <Setter Property="LabelFontSize" Value="9" />
-            <Setter Property="ValueFormat" Value="{}{0:N0}" />
-            <Setter Property="ValueFontSize" Value="18" />
-            <Setter Property="ValueOffsetY" Value="0.5" />
-            <Setter Property="Unit" Value="hPa" />
-            <Setter Property="UnitFontSize" Value="9" />
-            <Setter Property="UnitPosition" Value="Bottom" />
-            <Setter Property="NeedleEndExtent" Value="0.84" />
-            <Setter Property="NeedleStartWidth" Value="5" />
-            <Setter Property="PivotRadius" Value="5" />
-            <Setter Property="Ranges">
-                <Setter.Value>
-                    <x:Array Type="{x:Type controls:GaugeRange}">
-                        <controls:GaugeRange EndColor="#CC0000" EndValue="1050" StartColor="#FFB0B0" StartValue="950" />
-                    </x:Array>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <s:MapToTextConverter x:Key="Function3TextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Int32 0}"
+                                      Value="Labels" />
+                    <s:MapToTextEntry Key="{s:Int32 1}"
+                                      Value="Labels" />
+                    <s:MapToTextEntry Key="{s:Int32 2}"
+                                      Value="Ticks" />
+                    <s:MapToTextEntry Key="{s:Int32 3}"
+                                      Value="Needle" />
+                    <s:MapToTextEntry Key="{s:Int32 4}"
+                                      Value="Time" />
+                    <s:MapToTextEntry Key="{s:Int32 5}"
+                                      Value="Angle" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
-        <!-- Sample 2: Humidity -->
-        <Style x:Key="GaugeHumidity"
-               TargetType="controls:Gauge">
-            <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="MinValue" Value="0" />
-            <Setter Property="MaxValue" Value="100" />
-            <Setter Property="ValueColor" Value="White" />
-            <Setter Property="GaugeBackgroundColor" Value="#1A1E30" />
-            <Setter Property="BezelOuterThickness" Value="6" />
-            <Setter Property="BezelOuterStartColor" Value="#A0A8C0" />
-            <Setter Property="BezelOuterEndColor" Value="#404860" />
-            <Setter Property="BezelInnerThickness" Value="0" />
-            <Setter Property="ArcInnerExtent" Value="0.62" />
-            <Setter Property="ArcOuterExtent" Value="0.74" />
-            <Setter Property="ArcTrackColor" Value="#30FFFFFF" />
-            <Setter Property="MajorTickInterval" Value="10" />
-            <Setter Property="MajorTickInnerExtent" Value="0.62" />
-            <Setter Property="MajorTickOuterExtent" Value="0.78" />
-            <Setter Property="MajorTickColor" Value="White" />
-            <Setter Property="MinorTickInterval" Value="0" />
-            <Setter Property="LabelInterval" Value="20" />
-            <Setter Property="LabelExtent" Value="0.88" />
-            <Setter Property="LabelFormat" Value="{}{0:N0}%" />
-            <Setter Property="LabelFontSize" Value="9" />
-            <Setter Property="LabelColor" Value="White" />
-            <Setter Property="ValueFormat" Value="{}{0:N0}" />
-            <Setter Property="ValueFontSize" Value="14" />
-            <Setter Property="ValueOffsetY" Value="0.5" />
-            <Setter Property="Unit" Value="%" />
-            <Setter Property="UnitFontSize" Value="9" />
-            <Setter Property="UnitColor" Value="#80B0FF" />
-            <Setter Property="UnitPosition" Value="Right" />
-            <Setter Property="NeedleEndExtent" Value="0.86" />
-            <Setter Property="NeedleStartWidth" Value="6" />
-            <Setter Property="NeedleLeftColor" Value="#1848C0" />
-            <Setter Property="NeedleRightColor" Value="#2858D0" />
-            <Setter Property="PivotRadius" Value="5" />
-            <Setter Property="PivotColor" Value="#1848C0" />
-            <Setter Property="Ranges">
-                <Setter.Value>
-                    <x:Array Type="{x:Type controls:GaugeRange}">
-                        <controls:GaugeRange EndColor="#2060CC" EndValue="40" StartColor="#2060CC" StartValue="0" />
-                        <controls:GaugeRange EndColor="#40A0FF" EndValue="70" StartColor="#2880FF" StartValue="40" />
-                        <controls:GaugeRange EndColor="#60C0FF" EndValue="100" StartColor="#40A0FF" StartValue="70" />
-                    </x:Array>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <s:MapToTextConverter x:Key="Function4TextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Int32 0}"
+                                      Value="Value" />
+                    <s:MapToTextEntry Key="{s:Int32 1}"
+                                      Value="Bands" />
+                    <s:MapToTextEntry Key="{s:Int32 2}"
+                                      Value="Labels" />
+                    <s:MapToTextEntry Key="{s:Int32 3}"
+                                      Value="Value" />
+                    <s:MapToTextEntry Key="{s:Int32 4}"
+                                      Value="Unit" />
+                    <s:MapToTextEntry Key="{s:Int32 5}"
+                                      Value="Needle" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
-        <!-- Sample 3: Temperature -->
-        <Style x:Key="GaugeTemperature"
-               TargetType="controls:Gauge">
-            <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="MinValue" Value="-10" />
-            <Setter Property="MaxValue" Value="40" />
-            <Setter Property="ValueColor" Value="White" />
-            <Setter Property="GaugeBackgroundColor" Value="#1A1E30" />
-            <Setter Property="BezelOuterThickness" Value="6" />
-            <Setter Property="BezelOuterStartColor" Value="#A0A8C0" />
-            <Setter Property="BezelOuterEndColor" Value="#404860" />
-            <Setter Property="BezelInnerThickness" Value="0" />
-            <Setter Property="ArcInnerExtent" Value="0.84" />
-            <Setter Property="ArcOuterExtent" Value="0.92" />
-            <Setter Property="ArcTrackColor" Value="#30FFFFFF" />
-            <Setter Property="MajorTickInterval" Value="5" />
-            <Setter Property="MajorTickInnerExtent" Value="0.72" />
-            <Setter Property="MajorTickOuterExtent" Value="0.80" />
-            <Setter Property="MajorTickColor" Value="White" />
-            <Setter Property="MinorTickInterval" Value="1" />
-            <Setter Property="MinorTickInnerExtent" Value="0.76" />
-            <Setter Property="MinorTickOuterExtent" Value="0.80" />
-            <Setter Property="MinorTickColor" Value="#8090B0" />
-            <Setter Property="LabelInterval" Value="10" />
-            <Setter Property="LabelExtent" Value="0.64" />
-            <Setter Property="LabelFormat" Value="{}{0:N0}" />
-            <Setter Property="LabelFontSize" Value="10" />
-            <Setter Property="LabelColor" Value="White" />
-            <Setter Property="ValueFormat" Value="{}{0:N1}" />
-            <Setter Property="ValueFontSize" Value="14" />
-            <Setter Property="ValueOffsetY" Value="0.4" />
-            <Setter Property="Unit" Value="°C" />
-            <Setter Property="UnitFontSize" Value="9" />
-            <Setter Property="UnitColor" Value="#FFA040" />
-            <Setter Property="UnitPosition" Value="Right" />
-            <Setter Property="NeedleStartWidth" Value="8" />
-            <Setter Property="NeedleLeftColor" Value="#CC5000" />
-            <Setter Property="NeedleRightColor" Value="#DD6010" />
-            <Setter Property="PivotRadius" Value="8" />
-            <Setter Property="PivotColor" Value="#CC5000" />
-            <Setter Property="Ranges">
-                <Setter.Value>
-                    <x:Array Type="{x:Type controls:GaugeRange}">
-                        <controls:GaugeRange EndColor="#40C060" EndValue="10" StartColor="#3080FF" StartValue="-10" />
-                        <controls:GaugeRange EndColor="#C8D040" EndValue="25" StartColor="#40C060" StartValue="10" />
-                        <controls:GaugeRange EndColor="#FFA040" EndValue="35" StartColor="#C8D040" StartValue="25" />
-                        <controls:GaugeRange EndColor="#FF3010" EndValue="40" StartColor="#FFA040" StartValue="35" />
-                    </x:Array>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <Style x:Key="GaugeGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
 
-        <!-- Sample 4: Wind Direction -->
-        <Style x:Key="GaugeWindDirection"
-               TargetType="controls:Gauge">
-            <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="MinValue" Value="0" />
-            <Setter Property="MaxValue" Value="360" />
-            <Setter Property="StartAngle" Value="0" />
-            <Setter Property="SweepAngle" Value="360" />
-            <Setter Property="GaugeBackgroundColor" Value="#383838" />
-            <Setter Property="BezelOuterThickness" Value="10" />
-            <Setter Property="BezelOuterStartColor" Value="#252525" />
-            <Setter Property="BezelOuterEndColor" Value="#252525" />
-            <Setter Property="BezelInnerThickness" Value="0" />
-            <Setter Property="ArcTrackColor" Value="Transparent" />
-            <Setter Property="ArcStartColor" Value="Transparent" />
-            <Setter Property="ArcEndColor" Value="Transparent" />
-            <Setter Property="MajorTickInterval" Value="45" />
-            <Setter Property="MajorTickInnerExtent" Value="0.62" />
-            <Setter Property="MajorTickOuterExtent" Value="0.78" />
-            <Setter Property="MajorTickThickness" Value="3" />
-            <Setter Property="MajorTickColor" Value="White" />
-            <Setter Property="MinorTickInterval" Value="22.5" />
-            <Setter Property="MinorTickInnerExtent" Value="0.66" />
-            <Setter Property="MinorTickOuterExtent" Value="0.78" />
-            <Setter Property="MinorTickColor" Value="#C0C0C0" />
-            <Setter Property="LabelInterval" Value="90" />
-            <Setter Property="LabelExtent" Value="0.90" />
-            <Setter Property="LabelFontSize" Value="18" />
-            <Setter Property="LabelColor" Value="White" />
-            <Setter Property="LabelConverter" Value="{StaticResource CompassLabelConverter}" />
-            <Setter Property="ShowValue" Value="False" />
-            <Setter Property="NeedleEndExtent" Value="0.54" />
-            <Setter Property="NeedleStartWidth" Value="12" />
-            <Setter Property="NeedleLeftColor" Value="#CC2020" />
-            <Setter Property="NeedleRightColor" Value="#E03030" />
-            <Setter Property="PivotRadius" Value="10" />
-            <Setter Property="PivotColor" Value="#CC2020" />
-            <Setter Property="AnimationDuration" Value="0" />
-        </Style>
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="KindSegmentLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:SegmentedView}}, Path=SelectCommand, x:DataType={x:Type mcc:SegmentedView}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
-        <!-- Sample 5: Speed -->
-        <Style x:Key="GaugeSpeed"
-               TargetType="controls:Gauge">
-            <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="MinValue" Value="0" />
-            <Setter Property="MaxValue" Value="200" />
-            <Setter Property="ValueColor" Value="#1A2E48" />
-            <Setter Property="GaugeBackgroundColor" Value="#5070A0" />
-            <Setter Property="GaugeBackgroundColor2" Value="#E4F2FC" />
-            <Setter Property="BezelOuterThickness" Value="6" />
-            <Setter Property="BezelOuterStartColor" Value="#D8EEFF" />
-            <Setter Property="BezelOuterEndColor" Value="#7888A8" />
-            <Setter Property="BezelInnerThickness" Value="3" />
-            <Setter Property="BezelInnerStartColor" Value="#5A6878" />
-            <Setter Property="BezelInnerEndColor" Value="#B8D4F0" />
-            <Setter Property="ArcInnerExtent" Value="0.82" />
-            <Setter Property="ArcOuterExtent" Value="0.94" />
-            <Setter Property="ArcTrackColor" Value="#25000000" />
-            <Setter Property="MajorTickInterval" Value="20" />
-            <Setter Property="MajorTickInnerExtent" Value="0.76" />
-            <Setter Property="MajorTickOuterExtent" Value="0.94" />
-            <Setter Property="MajorTickColor" Value="White" />
-            <Setter Property="MinorTickInterval" Value="10" />
-            <Setter Property="MinorTickInnerExtent" Value="0.82" />
-            <Setter Property="MinorTickOuterExtent" Value="0.94" />
-            <Setter Property="MinorTickColor" Value="#B0C8E0" />
-            <Setter Property="LabelInterval" Value="40" />
-            <Setter Property="LabelExtent" Value="0.64" />
-            <Setter Property="LabelFormat" Value="{}{0:N0}" />
-            <Setter Property="LabelFontSize" Value="12" />
-            <Setter Property="LabelColor" Value="#1A2E48" />
-            <Setter Property="ValueFormat" Value="{}{0:N0}" />
-            <Setter Property="ValueFontSize" Value="28" />
-            <Setter Property="ValueOffsetY" Value="0.5" />
-            <Setter Property="Unit" Value="km/h" />
-            <Setter Property="UnitFontSize" Value="9" />
-            <Setter Property="UnitColor" Value="#204060" />
-            <Setter Property="UnitPosition" Value="Bottom" />
-            <Setter Property="NeedleEndExtent" Value="0.90" />
-            <Setter Property="NeedleStartWidth" Value="8" />
-            <Setter Property="NeedleLeftColor" Value="#CC1818" />
-            <Setter Property="NeedleRightColor" Value="#DD2828" />
-            <Setter Property="PivotRadius" Value="6" />
-            <Setter Property="PivotColor" Value="#CC1818" />
-            <Setter Property="AnimationDuration" Value="1000" />
-            <Setter Property="Ranges">
-                <Setter.Value>
-                    <x:Array Type="{x:Type controls:GaugeRange}">
-                        <controls:GaugeRange EndColor="#C8D020" EndValue="80" StartColor="#30CC30" StartValue="0" />
-                        <controls:GaugeRange EndColor="#FF8020" EndValue="140" StartColor="#C8D020" StartValue="80" />
-                        <controls:GaugeRange EndColor="#FF2020" EndValue="200" StartColor="#FF8020" StartValue="140" />
-                    </x:Array>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <Style x:Key="KindSegment"
+                   TargetType="mcc:SegmentedView">
+                <Setter Property="Margin" Value="16,12,16,4" />
+                <Setter Property="SegmentWidth" Value="60" />
+                <Setter Property="SegmentHeight" Value="36" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="SelectedBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedTextColor" Value="White" />
+                <Setter Property="ItemStyle" Value="{StaticResource KindSegmentLabel}" />
+            </Style>
 
-        <!-- Sample 6: Tachometer -->
-        <Style x:Key="GaugeTachometer"
-               TargetType="controls:Gauge">
-            <Setter Property="HeightRequest" Value="200" />
-            <Setter Property="MinValue" Value="0" />
-            <Setter Property="MaxValue" Value="8" />
-            <Setter Property="StartAngle" Value="-150" />
-            <Setter Property="SweepAngle" Value="270" />
-            <Setter Property="GaugeBackgroundColor" Value="#141414" />
-            <Setter Property="GaugeBackgroundColor2" Value="#D0D0D8" />
-            <Setter Property="BezelOuterThickness" Value="6" />
-            <Setter Property="BezelOuterStartColor" Value="#D0D0D8" />
-            <Setter Property="BezelOuterEndColor" Value="#505058" />
-            <Setter Property="BezelInnerThickness" Value="0" />
-            <Setter Property="ArcInnerExtent" Value="0.80" />
-            <Setter Property="ArcOuterExtent" Value="0.88" />
-            <Setter Property="ArcTrackColor" Value="Transparent" />
-            <Setter Property="MajorTickInterval" Value="1" />
-            <Setter Property="MajorTickInnerExtent" Value="0.74" />
-            <Setter Property="MajorTickOuterExtent" Value="0.90" />
-            <Setter Property="MajorTickThickness" Value="3" />
-            <Setter Property="MajorTickColor" Value="White" />
-            <Setter Property="MinorTickInterval" Value="0.25" />
-            <Setter Property="MinorTickInnerExtent" Value="0.78" />
-            <Setter Property="MinorTickOuterExtent" Value="0.90" />
-            <Setter Property="MinorTickColor" Value="#A0A0A0" />
-            <Setter Property="LabelInterval" Value="2" />
-            <Setter Property="LabelExtent" Value="0.65" />
-            <Setter Property="LabelFormat" Value="{}{0:N0}" />
-            <Setter Property="LabelFontSize" Value="14" />
-            <Setter Property="LabelColor" Value="White" />
-            <Setter Property="ShowValue" Value="False" />
-            <Setter Property="NeedleEndExtent" Value="0.94" />
-            <Setter Property="NeedleStartWidth" Value="8" />
-            <Setter Property="NeedleLeftColor" Value="#CC4400" />
-            <Setter Property="NeedleRightColor" Value="#DD5010" />
-            <Setter Property="PivotRadius" Value="8" />
-            <Setter Property="PivotColor" Value="#CC4400" />
-            <Setter Property="AnimationDuration" Value="1000" />
-            <Setter Property="Ranges">
-                <Setter.Value>
-                    <x:Array Type="{x:Type controls:GaugeRange}">
-                        <controls:GaugeRange EndColor="#FF2020" EndValue="8" StartColor="#CC2020" StartValue="6" />
-                    </x:Array>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <Style x:Key="KindGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="GaugeSliderBase"
+                   TargetType="Slider">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="MaximumTrackColor" Value="{StaticResource GrayLighten2}" />
+            </Style>
+            <Style x:Key="SliderPressure"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC0000" />
+                <Setter Property="MinimumTrackColor" Value="#CC0000" />
+            </Style>
+            <Style x:Key="SliderHumidity"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#2880FF" />
+                <Setter Property="MinimumTrackColor" Value="#2880FF" />
+            </Style>
+            <Style x:Key="SliderTemperature"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#DD6010" />
+                <Setter Property="MinimumTrackColor" Value="#DD6010" />
+            </Style>
+            <Style x:Key="SliderWind"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC2020" />
+                <Setter Property="MinimumTrackColor" Value="#606060" />
+            </Style>
+            <Style x:Key="SliderSpeed"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC1818" />
+                <Setter Property="MinimumTrackColor" Value="#CC1818" />
+            </Style>
+            <Style x:Key="SliderRpm"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC4400" />
+                <Setter Property="MinimumTrackColor" Value="#CC4400" />
+            </Style>
+
+            <Style x:Key="SwatchGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="6,3" />
+                <Setter Property="ColumnSpacing" Value="6" />
+                <Setter Property="HeightRequest" Value="44" />
+            </Style>
+            <Style x:Key="SwatchLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+            <Style x:Key="SwatchLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+            <Style x:Key="SwatchButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="CornerRadius" Value="4" />
+            </Style>
+
+            <Style x:Key="GaugeBase"
+                   TargetType="clam:ClamGaugeView">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+
+            <!-- Pressure -->
+            <Style x:Key="GaugePressure"
+                   TargetType="clam:ClamGaugeView"
+                   BasedOn="{StaticResource GaugeBase}">
+                <Setter Property="MinValue" Value="950" />
+                <Setter Property="MaxValue" Value="1050" />
+                <Setter Property="BezelOuterThickness" Value="3.5" />
+                <Setter Property="BezelOuterStartColor" Value="#D0D0D0" />
+                <Setter Property="BezelOuterEndColor" Value="#606060" />
+                <Setter Property="BezelInnerThickness" Value="0" />
+                <Setter Property="ArcInnerExtent" Value="0.64" />
+                <Setter Property="ArcOuterExtent" Value="0.76" />
+                <Setter Property="MajorTickInterval" Value="10" />
+                <Setter Property="MajorTickInnerExtent" Value="0.63" />
+                <Setter Property="MajorTickOuterExtent" Value="0.77" />
+                <Setter Property="MajorTickColor" Value="#404040" />
+                <Setter Property="MinorTickInterval" Value="2" />
+                <Setter Property="MinorTickInnerExtent" Value="0.64" />
+                <Setter Property="MinorTickOuterExtent" Value="0.76" />
+                <Setter Property="MinorTickThickness" Value="0.5" />
+                <Setter Property="MinorTickColor" Value="#909090" />
+                <Setter Property="LabelExtent" Value="0.88" />
+                <Setter Property="LabelFormat" Value="{}{0:N0}" />
+                <Setter Property="LabelFontSize" Value="14" />
+                <Setter Property="ValueFormat" Value="{}{0:N0}" />
+                <Setter Property="ValueFontSize" Value="28" />
+                <Setter Property="ValueOffsetY" Value="0.5" />
+                <Setter Property="Unit" Value="hPa" />
+                <Setter Property="UnitFontSize" Value="14" />
+                <Setter Property="NeedleEndExtent" Value="0.84" />
+                <Setter Property="NeedleStartWidth" Value="8" />
+                <Setter Property="PivotRadius" Value="8" />
+            </Style>
+
+            <!-- Humidity -->
+            <Style x:Key="GaugeHumidity"
+                   TargetType="clam:ClamGaugeView"
+                   BasedOn="{StaticResource GaugeBase}">
+                <Setter Property="MinValue" Value="0" />
+                <Setter Property="MaxValue" Value="100" />
+                <Setter Property="ValueColor" Value="White" />
+                <Setter Property="BezelOuterThickness" Value="3.5" />
+                <Setter Property="BezelOuterStartColor" Value="#A0A8C0" />
+                <Setter Property="BezelOuterEndColor" Value="#404860" />
+                <Setter Property="BezelInnerThickness" Value="0" />
+                <Setter Property="ArcInnerExtent" Value="0.62" />
+                <Setter Property="ArcOuterExtent" Value="0.74" />
+                <Setter Property="ArcTrackColor" Value="#30FFFFFF" />
+                <Setter Property="ArcStartColor" Value="#2060CC" />
+                <Setter Property="ArcEndColor" Value="#60C0FF" />
+                <Setter Property="MajorTickInterval" Value="10" />
+                <Setter Property="MajorTickInnerExtent" Value="0.62" />
+                <Setter Property="MajorTickOuterExtent" Value="0.78" />
+                <Setter Property="MajorTickColor" Value="White" />
+                <Setter Property="MinorTickInterval" Value="0" />
+                <Setter Property="LabelInterval" Value="20" />
+                <Setter Property="LabelExtent" Value="0.88" />
+                <Setter Property="LabelFormat" Value="{}{0:N0}%" />
+                <Setter Property="LabelFontSize" Value="14" />
+                <Setter Property="LabelColor" Value="White" />
+                <Setter Property="ValueFormat" Value="{}{0:N0}" />
+                <Setter Property="ValueFontSize" Value="24" />
+                <Setter Property="ValueOffsetY" Value="0.5" />
+                <Setter Property="Unit" Value="%" />
+                <Setter Property="UnitFontSize" Value="14" />
+                <Setter Property="UnitColor" Value="#80B0FF" />
+                <Setter Property="NeedleEndExtent" Value="0.86" />
+                <Setter Property="NeedleStartWidth" Value="8" />
+                <Setter Property="NeedleLeftColor" Value="#1848C0" />
+                <Setter Property="NeedleRightColor" Value="#2858D0" />
+                <Setter Property="PivotRadius" Value="7" />
+                <Setter Property="PivotColor" Value="#1848C0" />
+            </Style>
+
+            <!-- Temperature -->
+            <Style x:Key="GaugeTemperature"
+                   TargetType="clam:ClamGaugeView"
+                   BasedOn="{StaticResource GaugeBase}">
+                <Setter Property="MinValue" Value="-10" />
+                <Setter Property="MaxValue" Value="40" />
+                <Setter Property="ValueColor" Value="White" />
+                <Setter Property="GaugeBackgroundStartColor" Value="#1A1E30" />
+                <Setter Property="BezelOuterThickness" Value="3.5" />
+                <Setter Property="BezelOuterStartColor" Value="#A0A8C0" />
+                <Setter Property="BezelOuterEndColor" Value="#404860" />
+                <Setter Property="BezelInnerThickness" Value="0" />
+                <Setter Property="ArcInnerExtent" Value="0.84" />
+                <Setter Property="ArcOuterExtent" Value="0.92" />
+                <Setter Property="ArcTrackColor" Value="#30FFFFFF" />
+                <Setter Property="MajorTickInterval" Value="5" />
+                <Setter Property="MajorTickInnerExtent" Value="0.72" />
+                <Setter Property="MajorTickOuterExtent" Value="0.80" />
+                <Setter Property="MajorTickColor" Value="White" />
+                <Setter Property="MinorTickInnerExtent" Value="0.76" />
+                <Setter Property="MinorTickOuterExtent" Value="0.80" />
+                <Setter Property="MinorTickColor" Value="#8090B0" />
+                <Setter Property="LabelExtent" Value="0.64" />
+                <Setter Property="LabelFormat" Value="{}{0:N0}" />
+                <Setter Property="LabelFontSize" Value="16" />
+                <Setter Property="LabelColor" Value="White" />
+                <Setter Property="ValueFormat" Value="{}{0:N1}" />
+                <Setter Property="ValueFontSize" Value="24" />
+                <Setter Property="ValueOffsetY" Value="0.4" />
+                <Setter Property="Unit" Value="°C" />
+                <Setter Property="UnitFontSize" Value="14" />
+                <Setter Property="UnitColor" Value="#FFA040" />
+                <Setter Property="UnitPosition" Value="Right" />
+                <Setter Property="NeedleStartWidth" Value="8" />
+                <Setter Property="NeedleLeftColor" Value="#CC5000" />
+                <Setter Property="NeedleRightColor" Value="#DD6010" />
+                <Setter Property="PivotRadius" Value="8" />
+                <Setter Property="PivotColor" Value="#CC5000" />
+            </Style>
+
+            <!-- Wind -->
+            <Style x:Key="GaugeWind"
+                   TargetType="clam:ClamGaugeView"
+                   BasedOn="{StaticResource GaugeBase}">
+                <Setter Property="MinValue" Value="0" />
+                <Setter Property="MaxValue" Value="360" />
+                <Setter Property="StartAngle" Value="0" />
+                <Setter Property="SweepAngle" Value="360" />
+                <Setter Property="ValueColor" Value="White" />
+                <Setter Property="GaugeBackgroundStartColor" Value="#383838" />
+                <Setter Property="BezelOuterThickness" Value="6" />
+                <Setter Property="BezelOuterStartColor" Value="#252525" />
+                <Setter Property="BezelOuterEndColor" Value="#252525" />
+                <Setter Property="BezelInnerThickness" Value="0" />
+                <Setter Property="ArcTrackColor" Value="Transparent" />
+                <Setter Property="ArcStartColor" Value="Transparent" />
+                <Setter Property="ArcEndColor" Value="Transparent" />
+                <Setter Property="MajorTickInterval" Value="45" />
+                <Setter Property="MajorTickInnerExtent" Value="0.62" />
+                <Setter Property="MajorTickOuterExtent" Value="0.78" />
+                <Setter Property="MajorTickThickness" Value="2" />
+                <Setter Property="MajorTickColor" Value="White" />
+                <Setter Property="MinorTickInterval" Value="22.5" />
+                <Setter Property="MinorTickInnerExtent" Value="0.66" />
+                <Setter Property="MinorTickOuterExtent" Value="0.78" />
+                <Setter Property="MinorTickColor" Value="#C0C0C0" />
+                <Setter Property="LabelExtent" Value="0.90" />
+                <Setter Property="LabelFontSize" Value="28" />
+                <Setter Property="LabelColor" Value="White" />
+                <Setter Property="LabelConverter" Value="{StaticResource CompassDirectionConverter}" />
+                <Setter Property="ValueFormat" Value="{}{0:N0}°" />
+                <Setter Property="ValueFontSize" Value="24" />
+                <Setter Property="NeedleEndExtent" Value="0.54" />
+                <Setter Property="NeedleStartWidth" Value="12" />
+                <Setter Property="NeedleLeftColor" Value="#CC2020" />
+                <Setter Property="NeedleRightColor" Value="#E03030" />
+                <Setter Property="PivotRadius" Value="10" />
+                <Setter Property="PivotColor" Value="#CC2020" />
+            </Style>
+
+            <!-- Speed -->
+            <Style x:Key="GaugeSpeed"
+                   TargetType="clam:ClamGaugeView"
+                   BasedOn="{StaticResource GaugeBase}">
+                <Setter Property="MinValue" Value="0" />
+                <Setter Property="MaxValue" Value="200" />
+                <Setter Property="ValueColor" Value="#1A2E48" />
+                <Setter Property="GaugeBackgroundStartColor" Value="#5070A0" />
+                <Setter Property="GaugeBackgroundEndColor" Value="#E4F2FC" />
+                <Setter Property="BezelOuterThickness" Value="3.5" />
+                <Setter Property="BezelOuterStartColor" Value="#D8EEFF" />
+                <Setter Property="BezelOuterEndColor" Value="#7888A8" />
+                <Setter Property="BezelInnerThickness" Value="2" />
+                <Setter Property="BezelInnerStartColor" Value="#5A6878" />
+                <Setter Property="BezelInnerEndColor" Value="#B8D4F0" />
+                <Setter Property="ArcInnerExtent" Value="0.82" />
+                <Setter Property="ArcOuterExtent" Value="0.94" />
+                <Setter Property="ArcTrackColor" Value="#25000000" />
+                <Setter Property="MajorTickInterval" Value="20" />
+                <Setter Property="MajorTickInnerExtent" Value="0.76" />
+                <Setter Property="MajorTickOuterExtent" Value="0.94" />
+                <Setter Property="MajorTickColor" Value="White" />
+                <Setter Property="MinorTickInterval" Value="10" />
+                <Setter Property="MinorTickInnerExtent" Value="0.82" />
+                <Setter Property="MinorTickOuterExtent" Value="0.94" />
+                <Setter Property="MinorTickColor" Value="#B0C8E0" />
+                <Setter Property="LabelInterval" Value="40" />
+                <Setter Property="LabelExtent" Value="0.64" />
+                <Setter Property="LabelFormat" Value="{}{0:N0}" />
+                <Setter Property="LabelFontSize" Value="18" />
+                <Setter Property="LabelColor" Value="#1A2E48" />
+                <Setter Property="ValueFormat" Value="{}{0:N0}" />
+                <Setter Property="ValueFontSize" Value="48" />
+                <Setter Property="ValueOffsetY" Value="0.5" />
+                <Setter Property="Unit" Value="km/h" />
+                <Setter Property="UnitFontSize" Value="14" />
+                <Setter Property="UnitColor" Value="#204060" />
+                <Setter Property="NeedleEndExtent" Value="0.90" />
+                <Setter Property="NeedleStartWidth" Value="8" />
+                <Setter Property="NeedleLeftColor" Value="#CC1818" />
+                <Setter Property="NeedleRightColor" Value="#DD2828" />
+                <Setter Property="PivotRadius" Value="6" />
+                <Setter Property="PivotColor" Value="#CC1818" />
+                <Setter Property="Ranges">
+                    <Setter.Value>
+                        <x:Array Type="{x:Type clam:GaugeRange}">
+                            <clam:GaugeRange EndColor="#C8D020" EndValue="80" StartColor="#30CC30" StartValue="0" />
+                            <clam:GaugeRange EndColor="#FF8020" EndValue="140" StartColor="#C8D020" StartValue="80" />
+                            <clam:GaugeRange EndColor="#FF2020" EndValue="200" StartColor="#FF8020" StartValue="140" />
+                        </x:Array>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- RPM -->
+            <Style x:Key="GaugeRpm"
+                   TargetType="clam:ClamGaugeView"
+                   BasedOn="{StaticResource GaugeBase}">
+                <Setter Property="MinValue" Value="0" />
+                <Setter Property="MaxValue" Value="8" />
+                <Setter Property="SweepAngle" Value="270" />
+                <Setter Property="ValueColor" Value="White" />
+                <Setter Property="GaugeBackgroundStartColor" Value="#141414" />
+                <Setter Property="GaugeBackgroundEndColor" Value="#D0D0D8" />
+                <Setter Property="BezelOuterThickness" Value="3.5" />
+                <Setter Property="BezelOuterStartColor" Value="#D0D0D8" />
+                <Setter Property="BezelOuterEndColor" Value="#505058" />
+                <Setter Property="BezelInnerThickness" Value="0" />
+                <Setter Property="ArcInnerExtent" Value="0.80" />
+                <Setter Property="ArcOuterExtent" Value="0.88" />
+                <Setter Property="ArcTrackColor" Value="Transparent" />
+                <Setter Property="MajorTickInterval" Value="1" />
+                <Setter Property="MajorTickInnerExtent" Value="0.74" />
+                <Setter Property="MajorTickOuterExtent" Value="0.90" />
+                <Setter Property="MajorTickThickness" Value="2" />
+                <Setter Property="MajorTickColor" Value="White" />
+                <Setter Property="MinorTickInterval" Value="0.25" />
+                <Setter Property="MinorTickInnerExtent" Value="0.78" />
+                <Setter Property="MinorTickOuterExtent" Value="0.90" />
+                <Setter Property="MinorTickColor" Value="#A0A0A0" />
+                <Setter Property="LabelInterval" Value="2" />
+                <Setter Property="LabelExtent" Value="0.65" />
+                <Setter Property="LabelFormat" Value="{}{0:N0}" />
+                <Setter Property="LabelFontSize" Value="24" />
+                <Setter Property="LabelColor" Value="White" />
+                <Setter Property="ValueFormat" Value="{}{0:N1}" />
+                <Setter Property="ValueFontSize" Value="24" />
+                <Setter Property="Unit" Value="x1000 rpm" />
+                <Setter Property="UnitFontSize" Value="14" />
+                <Setter Property="UnitColor" Value="#A0A0A0" />
+                <Setter Property="NeedleEndExtent" Value="0.94" />
+                <Setter Property="NeedleStartWidth" Value="8" />
+                <Setter Property="NeedleEndWidth" Value="2" />
+                <Setter Property="NeedleLeftColor" Value="#CC4400" />
+                <Setter Property="NeedleRightColor" Value="#DD5010" />
+                <Setter Property="PivotRadius" Value="8" />
+                <Setter Property="PivotColor" Value="#CC4400" />
+                <Setter Property="AnimationDuration" Value="1000" />
+                <Setter Property="Ranges">
+                    <Setter.Value>
+                        <x:Array Type="{x:Type clam:GaugeRange}">
+                            <clam:GaugeRange EndColor="#FF2020" EndValue="8" StartColor="#CC2020" StartValue="6" />
+                        </x:Array>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
     </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView Style="{StaticResource GaugeScroll}">
-        <Grid Style="{StaticResource GaugeGrid}"
-              RowDefinitions="Auto,Auto,Auto"
-              ColumnDefinitions="*,*">
+    <Grid Style="{StaticResource GaugeGrid}"
+          RowDefinitions="Auto,*">
 
-            <!-- Sample 1: Pressure -->
-            <Border Grid.Row="0" Grid.Column="0"
-                    Style="{StaticResource GaugePanel}">
-                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
-                    <Label Style="{StaticResource GaugePanelTitle}"
-                           Text="PRESSURE" />
-                    <controls:Gauge Style="{StaticResource GaugePressure}"
-                                    Value="{Binding Pressure}" />
-                    <Slider Style="{StaticResource SliderPressure}"
-                            Value="{Binding Pressure, Mode=TwoWay}"
-                            Minimum="950" Maximum="1050" />
-                </VerticalStackLayout>
-            </Border>
+        <mcc:SegmentedView Grid.Row="0"
+                           Style="{StaticResource KindSegment}"
+                           ItemsSource="{Binding Kinds}"
+                           SelectedIndex="{Binding KindIndex, Mode=TwoWay}" />
 
-            <!-- Sample 2: Humidity -->
-            <Border Grid.Row="0" Grid.Column="1"
-                    Style="{StaticResource GaugePanel}">
-                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
-                    <Label Style="{StaticResource GaugePanelTitle}"
-                           Text="HUMIDITY" />
-                    <controls:Gauge Style="{StaticResource GaugeHumidity}"
-                                    Value="{Binding Humidity}" />
-                    <Slider Style="{StaticResource SliderHumidity}"
-                            Value="{Binding Humidity, Mode=TwoWay}"
-                            Minimum="0" Maximum="100" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- Pressure -->
+        <ContentView Grid.Row="1"
+                     behaviors:LazyViewOption.Load="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=0}"
+                     IsVisible="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=0}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIGaugeViewModel">
+                    <Grid Style="{StaticResource KindGrid}"
+                          RowDefinitions="*,Auto,Auto">
+                        <clam:ClamGaugeView Grid.Row="0"
+                                            Style="{StaticResource GaugePressure}"
+                                            Value="{Binding Pressure}"
+                                            LabelInterval="{Binding PressureLabelInterval}"
+                                            Ranges="{Binding PressureRanges}"
+                                            UnitPosition="{Binding PressureUnitPosition}">
+                            <clam:ClamGaugeView.Triggers>
+                                <DataTrigger TargetType="clam:ClamGaugeView"
+                                             Binding="{Binding PressureValueDecimal}"
+                                             Value="True">
+                                    <Setter Property="ValueFormat" Value="{}{0:N1}" />
+                                </DataTrigger>
+                            </clam:ClamGaugeView.Triggers>
+                            <clam:ClamGaugeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RandomCommand}"
+                                                      CommandParameter="{x:Static module:GaugeKind.Pressure}" />
+                            </clam:ClamGaugeView.GestureRecognizers>
+                        </clam:ClamGaugeView>
+                        <Slider Grid.Row="1"
+                                Style="{StaticResource SliderPressure}"
+                                Value="{Binding Pressure, Mode=TwoWay}"
+                                Minimum="950" Maximum="1050" />
+                        <Grid Grid.Row="2"
+                              Style="{StaticResource SwatchGrid}"
+                              ColumnDefinitions="88,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource SwatchLabel}"
+                                   Text="Band" />
+                            <HorizontalStackLayout Grid.Column="1"
+                                                   Style="{StaticResource SwatchLayout}"
+                                                   BindableLayout.ItemsSource="{Binding PressureBandSwatches}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="module:GaugeColorSwatch">
+                                        <Button Style="{StaticResource SwatchButton}"
+                                                Command="{Binding Command}"
+                                                Background="{Binding Brush}" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
-            <!-- Sample 3: Temperature -->
-            <Border Grid.Row="1" Grid.Column="0"
-                    Style="{StaticResource GaugePanel}">
-                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
-                    <Label Style="{StaticResource GaugePanelTitle}"
-                           Text="TEMPERATURE" />
-                    <controls:Gauge Style="{StaticResource GaugeTemperature}"
-                                    Value="{Binding Temperature}" />
-                    <Slider Style="{StaticResource SliderTemperature}"
-                            Value="{Binding Temperature, Mode=TwoWay}"
-                            Minimum="-10" Maximum="40" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- Humidity -->
+        <ContentView Grid.Row="1"
+                     behaviors:LazyViewOption.Load="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=1}"
+                     IsVisible="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=1}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIGaugeViewModel">
+                    <Grid Style="{StaticResource KindGrid}"
+                          RowDefinitions="*,Auto,Auto">
+                        <clam:ClamGaugeView Grid.Row="0"
+                                            Style="{StaticResource GaugeHumidity}"
+                                            Value="{Binding Humidity}"
+                                            GaugeBackgroundStartColor="{Binding HumidityBackgroundColor}"
+                                            Ranges="{Binding HumidityRanges}"
+                                            UnitPosition="{Binding HumidityUnitPosition}">
+                            <clam:ClamGaugeView.Triggers>
+                                <DataTrigger TargetType="clam:ClamGaugeView"
+                                             Binding="{Binding HumidityLabelPercent}"
+                                             Value="False">
+                                    <Setter Property="LabelFormat" Value="{}{0:N0}" />
+                                </DataTrigger>
+                            </clam:ClamGaugeView.Triggers>
+                            <clam:ClamGaugeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RandomCommand}"
+                                                      CommandParameter="{x:Static module:GaugeKind.Humidity}" />
+                            </clam:ClamGaugeView.GestureRecognizers>
+                        </clam:ClamGaugeView>
+                        <Slider Grid.Row="1"
+                                Style="{StaticResource SliderHumidity}"
+                                Value="{Binding Humidity, Mode=TwoWay}"
+                                Minimum="0" Maximum="100" />
+                        <Grid Grid.Row="2"
+                              Style="{StaticResource SwatchGrid}"
+                              ColumnDefinitions="88,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource SwatchLabel}"
+                                   Text="Background" />
+                            <HorizontalStackLayout Grid.Column="1"
+                                                   Style="{StaticResource SwatchLayout}"
+                                                   BindableLayout.ItemsSource="{Binding HumidityBackgroundSwatches}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="module:GaugeColorSwatch">
+                                        <Button Style="{StaticResource SwatchButton}"
+                                                Command="{Binding Command}"
+                                                Background="{Binding Brush}" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
-            <!-- Sample 4: Wind Direction -->
-            <Border Grid.Row="1" Grid.Column="1"
-                    Style="{StaticResource GaugePanel}">
-                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
-                    <Label Style="{StaticResource GaugePanelTitle}"
-                           Text="WIND" />
-                    <controls:Gauge Style="{StaticResource GaugeWindDirection}"
-                                    Value="{Binding WindDirection}" />
-                    <Slider Style="{StaticResource SliderWindDirection}"
-                            Value="{Binding WindDirection, Mode=TwoWay}"
-                            Minimum="0" Maximum="360" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- Temperature -->
+        <ContentView Grid.Row="1"
+                     behaviors:LazyViewOption.Load="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=2}"
+                     IsVisible="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=2}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIGaugeViewModel">
+                    <Grid Style="{StaticResource KindGrid}"
+                          RowDefinitions="*,Auto,Auto">
+                        <clam:ClamGaugeView Grid.Row="0"
+                                            Style="{StaticResource GaugeTemperature}"
+                                            Value="{Binding Temperature}"
+                                            ArcEndColor="{Binding TemperatureArcEndColor}"
+                                            ArcStartColor="{Binding TemperatureArcStartColor}"
+                                            LabelInterval="{Binding TemperatureLabelInterval}"
+                                            MinorTickInterval="{Binding TemperatureMinorTickInterval}"
+                                            Ranges="{Binding TemperatureRanges}">
+                            <clam:ClamGaugeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RandomCommand}"
+                                                      CommandParameter="{x:Static module:GaugeKind.Temperature}" />
+                            </clam:ClamGaugeView.GestureRecognizers>
+                        </clam:ClamGaugeView>
+                        <Slider Grid.Row="1"
+                                Style="{StaticResource SliderTemperature}"
+                                Value="{Binding Temperature, Mode=TwoWay}"
+                                Minimum="-10" Maximum="40" />
+                        <Grid Grid.Row="2"
+                              Style="{StaticResource SwatchGrid}"
+                              ColumnDefinitions="88,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource SwatchLabel}"
+                                   Text="Arc" />
+                            <HorizontalStackLayout Grid.Column="1"
+                                                   Style="{StaticResource SwatchLayout}"
+                                                   BindableLayout.ItemsSource="{Binding TemperatureArcSwatches}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="module:GaugeColorSwatch">
+                                        <Button Style="{StaticResource SwatchButton}"
+                                                Command="{Binding Command}"
+                                                Background="{Binding Brush}" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
-            <!-- Sample 5: Speed -->
-            <Border Grid.Row="2" Grid.Column="0"
-                    Style="{StaticResource GaugePanel}">
-                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
-                    <Label Style="{StaticResource GaugePanelTitle}"
-                           Text="SPEED" />
-                    <controls:Gauge Style="{StaticResource GaugeSpeed}"
-                                    Value="{Binding SpeedKmh}" />
-                    <Slider Style="{StaticResource SliderSpeed}"
-                            Value="{Binding SpeedKmh, Mode=TwoWay}"
-                            Minimum="0" Maximum="200" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- Wind -->
+        <ContentView Grid.Row="1"
+                     behaviors:LazyViewOption.Load="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=3}"
+                     IsVisible="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=3}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIGaugeViewModel">
+                    <Grid Style="{StaticResource KindGrid}"
+                          RowDefinitions="*,Auto">
+                        <clam:ClamGaugeView Grid.Row="0"
+                                            Style="{StaticResource GaugeWind}"
+                                            Value="{Binding WindDirection}"
+                                            AnimationDuration="{Binding WindAnimationDuration}"
+                                            LabelInterval="{Binding WindLabelInterval}"
+                                            ValueVisible="{Binding WindValueVisible}">
+                            <clam:ClamGaugeView.Triggers>
+                                <DataTrigger TargetType="clam:ClamGaugeView"
+                                             Binding="{Binding WindDegreeLabel}"
+                                             Value="True">
+                                    <Setter Property="LabelConverter" Value="{StaticResource DegreeTextConverter}" />
+                                </DataTrigger>
+                            </clam:ClamGaugeView.Triggers>
+                            <clam:ClamGaugeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RandomCommand}"
+                                                      CommandParameter="{x:Static module:GaugeKind.Wind}" />
+                            </clam:ClamGaugeView.GestureRecognizers>
+                        </clam:ClamGaugeView>
+                        <Slider Grid.Row="1"
+                                Style="{StaticResource SliderWind}"
+                                Value="{Binding WindDirection, Mode=TwoWay}"
+                                Minimum="0" Maximum="360" />
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
-            <!-- Sample 6: Tachometer -->
-            <Border Grid.Row="2" Grid.Column="1"
-                    Style="{StaticResource GaugePanel}">
-                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
-                    <Label Style="{StaticResource GaugePanelTitle}"
-                           Text="TACHO" />
-                    <controls:Gauge Style="{StaticResource GaugeTachometer}"
-                                    Value="{Binding Rpm}" />
-                    <Slider Style="{StaticResource SliderTachometer}"
-                            Value="{Binding Rpm, Mode=TwoWay}"
-                            Minimum="0" Maximum="8" />
-                </VerticalStackLayout>
-            </Border>
+        <!-- Speed -->
+        <ContentView Grid.Row="1"
+                     behaviors:LazyViewOption.Load="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=4}"
+                     IsVisible="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=4}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIGaugeViewModel">
+                    <Grid Style="{StaticResource KindGrid}"
+                          RowDefinitions="*,Auto">
+                        <clam:ClamGaugeView Grid.Row="0"
+                                            Style="{StaticResource GaugeSpeed}"
+                                            Value="{Binding SpeedKmh}"
+                                            AnimationDuration="{Binding SpeedAnimationDuration}"
+                                            AnimationEasing="{Binding SpeedAnimationEasing}"
+                                            UnitPosition="{Binding SpeedUnitPosition}">
+                            <clam:ClamGaugeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RandomCommand}"
+                                                      CommandParameter="{x:Static module:GaugeKind.Speed}" />
+                            </clam:ClamGaugeView.GestureRecognizers>
+                        </clam:ClamGaugeView>
+                        <Slider Grid.Row="1"
+                                Style="{StaticResource SliderSpeed}"
+                                Value="{Binding SpeedKmh, Mode=TwoWay}"
+                                Minimum="0" Maximum="200" />
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
-        </Grid>
-    </ScrollView>
+        <!-- RPM -->
+        <ContentView Grid.Row="1"
+                     behaviors:LazyViewOption.Load="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=5}"
+                     IsVisible="{Binding KindIndex, Converter={s:CompareToBool}, ConverterParameter=5}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIGaugeViewModel">
+                    <Grid Style="{StaticResource KindGrid}"
+                          RowDefinitions="*,Auto">
+                        <clam:ClamGaugeView Grid.Row="0"
+                                            Style="{StaticResource GaugeRpm}"
+                                            Value="{Binding Rpm}"
+                                            StartAngle="{Binding RpmStartAngle}"
+                                            ValueVisible="{Binding RpmValueVisible}">
+                            <clam:ClamGaugeView.Triggers>
+                                <DataTrigger TargetType="clam:ClamGaugeView"
+                                             Binding="{Binding RpmWideNeedle}"
+                                             Value="True">
+                                    <Setter Property="NeedleEndExtent" Value="0.72" />
+                                    <Setter Property="NeedleStartWidth" Value="16" />
+                                    <Setter Property="NeedleEndWidth" Value="6" />
+                                    <Setter Property="NeedleLeftColor" Value="#B0B0B8" />
+                                    <Setter Property="NeedleRightColor" Value="#F0F0F8" />
+                                    <Setter Property="PivotColor" Value="#707078" />
+                                </DataTrigger>
+                            </clam:ClamGaugeView.Triggers>
+                            <clam:ClamGaugeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RandomCommand}"
+                                                      CommandParameter="{x:Static module:GaugeKind.Rpm}" />
+                            </clam:ClamGaugeView.GestureRecognizers>
+                        </clam:ClamGaugeView>
+                        <Slider Grid.Row="1"
+                                Style="{StaticResource SliderRpm}"
+                                Value="{Binding Rpm, Mode=TwoWay}"
+                                Minimum="0" Maximum="8" />
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
+
+    </Grid>
 
 </ContentView>

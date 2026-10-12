@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIHabitView"
+             x:DataType="{x:Type module:UIHabitViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIHabitViewModel}"
+             shell:ShellProperty.Title="Habit"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#121212">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Color x:Key="HabitBackColor">#121212</Color>
+            <Color x:Key="HabitCardColor">#1E1E1E</Color>
+            <Color x:Key="HabitButtonColor">#2A2A2A</Color>
+            <Color x:Key="HabitDotColor">#3A3A3A</Color>
+            <Color x:Key="HabitChipTextColor">#121212</Color>
+
+            <s:MapToTextConverter x:Key="CategoryTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Fitness}"
+                                      Value="運動" />
+                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Wellness}"
+                                      Value="健康" />
+                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Learning}"
+                                      Value="学習" />
+                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Work}"
+                                      Value="仕事" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="CategoryColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Fitness}"
+                                       Value="{StaticResource TealAccent4}" />
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Wellness}"
+                                       Value="{StaticResource PurpleLighten2}" />
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Learning}"
+                                       Value="{StaticResource OrangeLighten1}" />
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Work}"
+                                       Value="{StaticResource BlueLighten1}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToColorConverter x:Key="CategoryTrackColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Fitness}"
+                                       Value="#4000BFA5" />
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Wellness}"
+                                       Value="#40BA68C8" />
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Learning}"
+                                       Value="#40FFA726" />
+                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Work}"
+                                       Value="#4042A5F5" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <Style x:Key="HabitRootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource HabitBackColor}" />
+            </Style>
+
+            <Style x:Key="HabitStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,12,16,24" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="TopBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="RoundIconButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource HabitButtonColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="DateLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TitleLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,8,0,4" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource HabitCardColor}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="HabitCardBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CardBorder}">
+                <Setter Property="Padding" Value="8,8,16,8" />
+            </Style>
+
+            <Style x:Key="ProgressGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ProgressTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="ProgressTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SubTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="DailyRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="112" />
+                <Setter Property="HeightRequest" Value="112" />
+            </Style>
+
+            <Style x:Key="DailyRing"
+                   TargetType="controls:GlowRing">
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="StartColor" Value="{StaticResource TealAccent4}" />
+                <Setter Property="EndColor" Value="{StaticResource BlueLighten1}" />
+            </Style>
+
+            <Style x:Key="RingPercentLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="WeekStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="DayStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="DayLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="DayDotBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="14" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource HabitDotColor}" />
+                <Setter Property="Stroke" Value="{StaticResource TealAccent4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 7" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="4,8,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="HabitListStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="HabitGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HabitRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="104" />
+                <Setter Property="HeightRequest" Value="104" />
+            </Style>
+
+            <Style x:Key="HabitRing"
+                   TargetType="controls:GlowRing">
+                <Setter Property="Thickness" Value="8" />
+            </Style>
+
+            <Style x:Key="RingCenterStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="HabitPercentLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CheckLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HabitInfoStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="ChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+            </Style>
+
+            <Style x:Key="ChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource HabitChipTextColor}" />
+            </Style>
+
+            <Style x:Key="HabitNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="GoalGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="StreakLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SubTextLabel}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="StreakHotLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource StreakLabel}">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDarken1}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource HabitRootGrid}">
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource HabitStack}">
+
+                <Grid Style="{StaticResource TopBarGrid}"
+                      ColumnDefinitions="Auto,*,Auto">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource RoundIconButton}"
+                            Command="{Binding BackCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource DateLabel}"
+                           Text="{Binding Today, StringFormat='{0:M月d日(ddd)}'}" />
+                    <Button Grid.Column="2"
+                            Style="{StaticResource RoundIconButton}"
+                            Text="{x:Static fonts:MaterialIcons.Menu}" />
+                </Grid>
+
+                <Label Style="{StaticResource TitleLabel}"
+                       Text="今日の習慣" />
+
+                <Border Style="{StaticResource CardBorder}">
+                    <Grid Style="{StaticResource ProgressGrid}"
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                                             Style="{StaticResource ProgressTextStack}">
+                            <Label Style="{StaticResource ProgressTitleLabel}"
+                                   Text="今日の達成率" />
+                            <Label Style="{StaticResource SubTextLabel}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}完了">
+                                        <Binding Path="Tracker.DoneSteps" />
+                                        <Binding Path="Tracker.TotalSteps" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                        <Grid Grid.Row="0" Grid.Column="1"
+                              Style="{StaticResource DailyRingGrid}">
+                            <controls:GlowRing Style="{StaticResource DailyRing}"
+                                               Progress="{Binding Tracker.Progress}" />
+                            <Label Style="{StaticResource RingPercentLabel}"
+                                   Text="{Binding Tracker.Progress, StringFormat='{0:P0}'}" />
+                        </Grid>
+                        <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                               Style="{StaticResource WeekStack}"
+                                               BindableLayout.ItemsSource="{Binding Tracker.Week}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:HabitDay">
+                                    <VerticalStackLayout Style="{StaticResource DayStack}">
+                                        <Label Style="{StaticResource DayLabel}"
+                                               Text="{Binding Date, StringFormat='{0:ddd}'}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
+                                                             Binding="{Binding IsToday}"
+                                                             Value="True">
+                                                    <Setter Property="FontAttributes" Value="Bold" />
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Border Style="{StaticResource DayDotBorder}">
+                                            <Border.Triggers>
+                                                <DataTrigger TargetType="Border"
+                                                             Binding="{Binding IsToday}"
+                                                             Value="True">
+                                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                                    <Setter Property="StrokeThickness" Value="2" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Border"
+                                                             Binding="{Binding IsAchieved}"
+                                                             Value="True">
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource TealAccent4}" />
+                                                </DataTrigger>
+                                            </Border.Triggers>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Label Style="{StaticResource SectionLabel}"
+                       Text="習慣" />
+
+                <VerticalStackLayout Style="{StaticResource HabitListStack}"
+                                     BindableLayout.ItemsSource="{Binding Tracker.Habits}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:HabitItem">
+                            <Border Style="{StaticResource HabitCardBorder}">
+                                <Border.GestureRecognizers>
+                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIHabitViewModel}}, Path=StepCommand, x:DataType={x:Type module:UIHabitViewModel}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid Style="{StaticResource HabitGrid}"
+                                      ColumnDefinitions="Auto,*">
+                                    <Grid Grid.Column="0"
+                                          Style="{StaticResource HabitRingGrid}"
+                                          behaviors:AnimationOption.BounceTrigger="{Binding IsCompleted}"
+                                          behaviors:AnimationOption.BounceValue="{s:Bool Value=True}">
+                                        <controls:GlowRing Style="{StaticResource HabitRing}"
+                                                           Progress="{Binding Progress}"
+                                                           EndColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}"
+                                                           StartColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}"
+                                                           TrackColor="{Binding Category, Converter={StaticResource CategoryTrackColorConverter}}" />
+                                        <VerticalStackLayout Style="{StaticResource RingCenterStack}">
+                                            <Label Style="{StaticResource HabitPercentLabel}"
+                                                   Text="{Binding Progress, StringFormat='{0:P0}'}" />
+                                            <Label Style="{StaticResource CheckLabel}"
+                                                   IsVisible="{Binding IsCompleted}"
+                                                   Text="{x:Static fonts:MaterialIcons.Check}"
+                                                   TextColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Style="{StaticResource HabitInfoStack}">
+                                        <Border Style="{StaticResource ChipBorder}"
+                                                BackgroundColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}">
+                                            <Label Style="{StaticResource ChipLabel}"
+                                                   Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}" />
+                                        </Border>
+                                        <Label Style="{StaticResource HabitNameLabel}"
+                                               Text="{Binding Name}" />
+                                        <Grid Style="{StaticResource GoalGrid}"
+                                              ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource SubTextLabel}"
+                                                   Text="{Binding Goal, StringFormat='目標: {0}'}" />
+                                            <Label Grid.Column="1"
+                                                   Style="{StaticResource StreakLabel}"
+                                                   IsVisible="{Binding IsCompleted, Converter={StaticResource ReverseConverter}}"
+                                                   Text="{Binding Streak, StringFormat='{0}日連続'}" />
+                                            <Label Grid.Column="1"
+                                                   Style="{StaticResource StreakHotLabel}"
+                                                   IsVisible="{Binding IsCompleted}"
+                                                   Text="{Binding Streak, StringFormat='{0}日連続 🔥'}" />
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentView>

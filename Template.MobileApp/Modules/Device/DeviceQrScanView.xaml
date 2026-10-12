@@ -5,6 +5,8 @@
              xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceQrScanView"
@@ -31,9 +33,93 @@
                 <Setter Property="InputTransparent" Value="True" />
             </Style>
 
-            <Style x:Key="ScanPlaceholderLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ResultLabel}">
+            <Style x:Key="ScanFrameOverlay"
+                   TargetType="controls:CameraOverlayView">
+                <Setter Property="WidthRequest" Value="260" />
+                <Setter Property="HeightRequest" Value="260" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="ShowGrid" Value="False" />
+            </Style>
+
+            <Style x:Key="StateChipStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="StateChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,4" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="StateChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="OverlayButtonStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,0,0,20" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="OverlayIconButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+            </Style>
+
+            <Style x:Key="ResultBandBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="ResultGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ResultIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="ResultValueLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="ResultPlaceholderLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
@@ -41,68 +127,116 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto,Auto,Auto">
+    <Grid Style="{StaticResource DarkRootGrid}"
+          RowDefinitions="*,Auto">
 
         <scanner:CameraView Grid.Row="0"
                             behaviors:BarcodeBind.Controller="{Binding Controller}"
                             OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
+        <controls:CameraOverlayView Grid.Row="0"
+                                    Style="{StaticResource ScanFrameOverlay}" />
+
         <drawing:DrawingControl Grid.Row="0"
                                 Drawing="{Binding Drawing}" />
 
-        <!-- 検出時のフラッシュ -->
         <BoxView Grid.Row="0"
                  Style="{StaticResource DetectFlashBoxView}"
                  behaviors:AnimationOption.FlashTrigger="{Binding Barcode}" />
 
-        <Grid Grid.Row="1">
-            <Label Style="{StaticResource ResultLabel}"
-                   IsVisible="{Binding Barcode, Converter={StaticResource NotEmptyConverter}}"
-                   Text="{Binding Barcode}" />
-            <Label Style="{StaticResource ScanPlaceholderLabel}"
-                   IsVisible="{Binding Barcode, Converter={StaticResource EmptyConverter}}"
-                   Text="Scan a code..." />
-        </Grid>
+        <HorizontalStackLayout Grid.Row="0"
+                               Style="{StaticResource StateChipStack}">
+            <Border Style="{StaticResource StateChipBorder}">
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.CameraFace, StringFormat='Camera {0}'}" />
+            </Border>
+            <Border Style="{StaticResource StateChipBorder}">
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.CurrentZoomFactor, StringFormat='Zoom x{0:0.0}'}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding Controller.CurrentZoomFactor}"
+                                     Value="-1">
+                            <Setter Property="Text" Value="Zoom -" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </Border>
+            <Border Style="{StaticResource StateChipBorder}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding Controller.ForceInvert}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.ForceInvert, Converter={s:BoolToText True='ON', False='OFF'}, StringFormat='Invert {0}'}" />
+            </Border>
+            <Border Style="{StaticResource StateChipBorder}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding Controller.VibrationOnDetect}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.VibrationOnDetect, Converter={s:BoolToText True='ON', False='OFF'}, StringFormat='Vibe {0}'}" />
+            </Border>
+        </HorizontalStackLayout>
 
-        <Grid Grid.Row="2"
-              Style="{StaticResource FillGrid}"
-              RowDefinitions="*,*"
-              ColumnDefinitions="*,*">
-            <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.CameraFace, StringFormat='Camera: {0}'}" />
-            <Label Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.CurrentZoomFactor, StringFormat='Zoom: x{0}'}" />
-            <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.ForceInvert, StringFormat='Invert: {0}'}" />
-            <Label Grid.Row="1" Grid.Column="1"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.VibrationOnDetect, StringFormat='Vibe: {0}'}" />
-        </Grid>
-
-        <Grid Grid.Row="3"
-              Style="{StaticResource SubMenuGrid}"
-              ColumnDefinitions="*,*,*,*">
-            <Button Grid.Column="0"
-                    Style="{StaticResource SubMenuButton}"
+        <HorizontalStackLayout Grid.Row="0"
+                               Style="{StaticResource OverlayButtonStack}">
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding TorchCommand}"
-                    Text="Torch" />
-            <Button Grid.Column="1"
-                    Style="{StaticResource SubMenuButton}"
+                    Text="{x:Static fonts:MaterialIcons.Flashlight_off}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Controller.TorchOn}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
+                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Flashlight_on}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding AimCommand}"
-                    Text="Aim" />
-            <Button Grid.Column="2"
-                    Style="{StaticResource SubMenuButton}"
+                    Text="{x:Static fonts:MaterialIcons.Center_focus_strong}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Controller.AimMode}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding ZoomOutCommand}"
-                    Text="ZoomOut" />
-            <Button Grid.Column="3"
-                    Style="{StaticResource SubMenuButton}"
+                    Text="{x:Static fonts:MaterialIcons.Zoom_out}" />
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding ZoomInCommand}"
-                    Text="ZoomIn" />
-        </Grid>
+                    Text="{x:Static fonts:MaterialIcons.Zoom_in}" />
+        </HorizontalStackLayout>
+
+        <Border Grid.Row="1"
+                Style="{StaticResource ResultBandBorder}">
+            <Grid Style="{StaticResource ResultGrid}"
+                  ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource ResultIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Qr_code_2}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource ResultValueLabel}"
+                       IsVisible="{Binding Barcode, Converter={StaticResource NotEmptyConverter}}"
+                       Text="{Binding Barcode}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource ResultPlaceholderLabel}"
+                       IsVisible="{Binding Barcode, Converter={StaticResource EmptyConverter}}"
+                       Text="Scan a code..." />
+            </Grid>
+        </Border>
+
     </Grid>
 
 </ContentView>

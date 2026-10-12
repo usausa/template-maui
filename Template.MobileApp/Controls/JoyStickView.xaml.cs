@@ -2,7 +2,11 @@ namespace Template.MobileApp.Controls;
 
 public partial class JoyStickView
 {
-    // Mode
+    private const int ValueRange = 255;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ModeProperty = BindableProperty.Create(
         nameof(Mode),
@@ -11,25 +15,11 @@ public partial class JoyStickView
         JoyStickMode.Both,
         propertyChanged: OnPropertyChanged);
 
-    public JoyStickMode Mode
-    {
-        get => (JoyStickMode)GetValue(ModeProperty);
-        set => SetValue(ModeProperty, value);
-    }
-
-    // Size
-
     public static readonly BindableProperty ThumbSizeProperty = BindableProperty.Create(
         nameof(ThumbSize),
         typeof(double),
         typeof(JoyStickView),
         80.0);
-
-    public double ThumbSize
-    {
-        get => (double)GetValue(ThumbSizeProperty);
-        set => SetValue(ThumbSizeProperty, value);
-    }
 
     public static readonly BindableProperty RangeOfMotionProperty = BindableProperty.Create(
         nameof(RangeOfMotion),
@@ -37,25 +27,11 @@ public partial class JoyStickView
         typeof(JoyStickView),
         56.0);
 
-    public double RangeOfMotion
-    {
-        get => (double)GetValue(RangeOfMotionProperty);
-        set => SetValue(RangeOfMotionProperty, value);
-    }
-
     public static readonly BindableProperty ThumbBorderWidthProperty = BindableProperty.Create(
         nameof(ThumbBorderWidth),
         typeof(double),
         typeof(JoyStickView),
         8.0);
-
-    public double ThumbBorderWidth
-    {
-        get => (double)GetValue(ThumbBorderWidthProperty);
-        set => SetValue(ThumbBorderWidthProperty, value);
-    }
-
-    // Color
 
     public static readonly BindableProperty BaseBackgroundProperty = BindableProperty.Create(
         nameof(BaseBackground),
@@ -64,24 +40,12 @@ public partial class JoyStickView
         Brush.LightGray,
         propertyChanged: OnPropertyChanged);
 
-    public Brush BaseBackground
-    {
-        get => (Brush)GetValue(BaseBackgroundProperty);
-        set => SetValue(BaseBackgroundProperty, value);
-    }
-
     public static readonly BindableProperty ThumbBackgroundProperty = BindableProperty.Create(
         nameof(ThumbBackground),
         typeof(Brush),
         typeof(JoyStickView),
         Brush.Red,
         propertyChanged: OnPropertyChanged);
-
-    public Brush ThumbBackground
-    {
-        get => (Brush)GetValue(ThumbBackgroundProperty);
-        set => SetValue(ThumbBackgroundProperty, value);
-    }
 
     public static readonly BindableProperty ThumbBorderBackgroundProperty = BindableProperty.Create(
         nameof(ThumbBorderBackground),
@@ -90,25 +54,11 @@ public partial class JoyStickView
         Brush.DarkRed,
         propertyChanged: OnPropertyChanged);
 
-    public Brush ThumbBorderBackground
-    {
-        get => (Brush)GetValue(ThumbBorderBackgroundProperty);
-        set => SetValue(ThumbBorderBackgroundProperty, value);
-    }
-
     public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
         nameof(ArrowColor),
         typeof(Color),
         typeof(JoyStickView),
         Colors.White);
-
-    public Color ArrowColor
-    {
-        get => (Color)GetValue(ArrowColorProperty);
-        set => SetValue(ArrowColorProperty, value);
-    }
-
-    // Arrow
 
     public static readonly BindableProperty ArrowMarginRatioProperty = BindableProperty.Create(
         nameof(ArrowMarginRatio),
@@ -117,24 +67,12 @@ public partial class JoyStickView
         0.1d,
         propertyChanged: OnPropertyChanged);
 
-    public double ArrowMarginRatio
-    {
-        get => (double)GetValue(ArrowMarginRatioProperty);
-        set => SetValue(ArrowMarginRatioProperty, value);
-    }
-
     public static readonly BindableProperty ArrowHeightRatioProperty = BindableProperty.Create(
         nameof(ArrowHeightRatio),
         typeof(double),
         typeof(JoyStickView),
         0.2d,
         propertyChanged: OnPropertyChanged);
-
-    public double ArrowHeightRatio
-    {
-        get => (double)GetValue(ArrowHeightRatioProperty);
-        set => SetValue(ArrowHeightRatioProperty, value);
-    }
 
     public static readonly BindableProperty ArrowHalfWidthRatioProperty = BindableProperty.Create(
         nameof(ArrowHalfWidthRatio),
@@ -143,25 +81,11 @@ public partial class JoyStickView
         0.2d,
         propertyChanged: OnPropertyChanged);
 
-    public double ArrowHalfWidthRatio
-    {
-        get => (double)GetValue(ArrowHalfWidthRatioProperty);
-        set => SetValue(ArrowHalfWidthRatioProperty, value);
-    }
-
-    // Value
-
     public static readonly BindableProperty XValueProperty = BindableProperty.Create(
         nameof(XValue),
         typeof(int),
         typeof(JoyStickView),
         defaultBindingMode: BindingMode.OneWayToSource);
-
-    public int XValue
-    {
-        get => (int)GetValue(XValueProperty);
-        private set => SetValue(XValueProperty, value);
-    }
 
     public static readonly BindableProperty YValueProperty = BindableProperty.Create(
         nameof(YValue),
@@ -169,11 +93,87 @@ public partial class JoyStickView
         typeof(JoyStickView),
         defaultBindingMode: BindingMode.OneWayToSource);
 
+    public JoyStickMode Mode
+    {
+        get => (JoyStickMode)GetValue(ModeProperty);
+        set => SetValue(ModeProperty, value);
+    }
+
+    public double ThumbSize
+    {
+        get => (double)GetValue(ThumbSizeProperty);
+        set => SetValue(ThumbSizeProperty, value);
+    }
+
+    public double RangeOfMotion
+    {
+        get => (double)GetValue(RangeOfMotionProperty);
+        set => SetValue(RangeOfMotionProperty, value);
+    }
+
+    public double ThumbBorderWidth
+    {
+        get => (double)GetValue(ThumbBorderWidthProperty);
+        set => SetValue(ThumbBorderWidthProperty, value);
+    }
+
+    public Brush BaseBackground
+    {
+        get => (Brush)GetValue(BaseBackgroundProperty);
+        set => SetValue(BaseBackgroundProperty, value);
+    }
+
+    public Brush ThumbBackground
+    {
+        get => (Brush)GetValue(ThumbBackgroundProperty);
+        set => SetValue(ThumbBackgroundProperty, value);
+    }
+
+    public Brush ThumbBorderBackground
+    {
+        get => (Brush)GetValue(ThumbBorderBackgroundProperty);
+        set => SetValue(ThumbBorderBackgroundProperty, value);
+    }
+
+    public Color ArrowColor
+    {
+        get => (Color)GetValue(ArrowColorProperty);
+        set => SetValue(ArrowColorProperty, value);
+    }
+
+    public double ArrowMarginRatio
+    {
+        get => (double)GetValue(ArrowMarginRatioProperty);
+        set => SetValue(ArrowMarginRatioProperty, value);
+    }
+
+    public double ArrowHeightRatio
+    {
+        get => (double)GetValue(ArrowHeightRatioProperty);
+        set => SetValue(ArrowHeightRatioProperty, value);
+    }
+
+    public double ArrowHalfWidthRatio
+    {
+        get => (double)GetValue(ArrowHalfWidthRatioProperty);
+        set => SetValue(ArrowHalfWidthRatioProperty, value);
+    }
+
+    public int XValue
+    {
+        get => (int)GetValue(XValueProperty);
+        private set => SetValue(XValueProperty, value);
+    }
+
     public int YValue
     {
         get => (int)GetValue(YValueProperty);
         private set => SetValue(YValueProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public JoyStickView()
     {
@@ -185,6 +185,10 @@ public partial class JoyStickView
         panGesture.PanUpdated += OnPanUpdated;
         ThumbGrid.GestureRecognizers.Add(panGesture);
     }
+
+    //--------------------------------------------------------------------------------
+    // Layout
+    //--------------------------------------------------------------------------------
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -203,11 +207,9 @@ public partial class JoyStickView
         var cx = Width / 2.0;
         var cy = Height / 2.0;
 
-        // Base
         BaseEllipse.WidthRequest = size;
         BaseEllipse.HeightRequest = size;
 
-        // Arrow
         var margin = r * ArrowMarginRatio;
         var h = r * ArrowHeightRatio;
         var w = r * ArrowHalfWidthRatio;
@@ -215,23 +217,23 @@ public partial class JoyStickView
         var horizontal = (Mode & JoyStickMode.Horizontal) == JoyStickMode.Horizontal;
         var vertical = (Mode & JoyStickMode.Vertical) == JoyStickMode.Vertical;
 
-        // Up
         var apexUp = new Point(cx, cy - r + margin);
         UpArrow.Points = [apexUp, new Point(cx - w, apexUp.Y + h), new Point(cx + w, apexUp.Y + h)];
         UpArrow.IsVisible = vertical;
-        // Down
         var apexDown = new Point(cx, cy + r - margin);
         DownArrow.Points = [apexDown, new Point(cx + w, apexDown.Y - h), new Point(cx - w, apexDown.Y - h)];
         DownArrow.IsVisible = vertical;
-        // Left
         var apexLeft = new Point(cx - r + margin, cy);
         LeftArrow.Points = [apexLeft, new Point(apexLeft.X + h, cy - w), new Point(apexLeft.X + h, cy + w)];
         LeftArrow.IsVisible = horizontal;
-        // Right
         var apexRight = new Point(cx + r - margin, cy);
         RightArrow.Points = [apexRight, new Point(apexRight.X - h, cy + w), new Point(apexRight.X - h, cy - w)];
         RightArrow.IsVisible = horizontal;
     }
+
+    //--------------------------------------------------------------------------------
+    // Drag
+    //--------------------------------------------------------------------------------
 
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
@@ -246,8 +248,8 @@ public partial class JoyStickView
                 Thumb.TranslationX = x;
                 Thumb.TranslationY = y;
 
-                XValue = (int)Math.Round(255 * (x / radius), MidpointRounding.AwayFromZero);
-                YValue = (int)Math.Round(255 * (y / radius), MidpointRounding.AwayFromZero);
+                XValue = (int)Math.Round(ValueRange * (x / radius), MidpointRounding.AwayFromZero);
+                YValue = (int)Math.Round(ValueRange * (y / radius), MidpointRounding.AwayFromZero);
                 break;
 
             case GestureStatus.Completed:

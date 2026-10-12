@@ -88,6 +88,7 @@ public enum ViewId
     ViewMenu,
 
     ViewLayout,
+    ViewState,
 
     ViewBorder,
     ViewShadow,
@@ -95,33 +96,23 @@ public enum ViewId
     ViewAnimation,
     ViewEasing,
 
+    ViewEffect,
+    ViewDragDrop,
+
+    ViewGraphics,
+    ViewDrawing,
+
     ViewLottie,
     ViewSvg,
 
-    ViewGraphics,
+    ViewBottomSheet,
+    ViewDrawer,
 
-    ViewDrawing,
-    ViewDragDrop,
+    ViewToolkit,
+    ViewCustom,
 
-    ViewEffect,
-    ViewState,
-
-    // Control
-    ControlMenu,
-
-    ControlCollection,
-
-    ControlCarousel,
-    ControlRefresh,
-
-    ControlToolkit,
-    ControlCustom,
-
-    ControlChart,
-    ControlSfChart,
-
-    ControlBottomSheet,
-    ControlDrawer,
+    ViewChart,
+    ViewSfChart,
 
     // UI
     UIMenu1,
@@ -147,6 +138,7 @@ public enum ViewId
     UISchedule,
 
     UIMail,
+    UIMailDetail,
     UIChat,
 
     UIWeather,
@@ -165,6 +157,9 @@ public enum ViewId
     UIStreamDetail,
 
     UIDock,
+
+    UIHome,
+    UIHabit,
 
     UIGraph,
     UIGraph2,

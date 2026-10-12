@@ -23,7 +23,6 @@
                    TargetType="Entry">
                 <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
                 <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource GreenDefault}" />
-                <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
@@ -111,7 +110,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="mct:MaskedBehavior (電話番号 000-0000-0000)" />
+                               Text="mct:MaskedBehavior (000-0000-0000)" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    Text="{Binding Phone}"
@@ -125,7 +124,7 @@
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="EntryOption.TypingStoppedCommand (入力停止 800ms で確定)" />
+                               Text="EntryOption.TypingStoppedCommand" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    behaviors:EntryOption.TypingStoppedCommand="{Binding TypingStoppedCommand}"
@@ -136,12 +135,12 @@
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding LastStopped}"
                                IsVisible="{Binding LastStopped, Converter={StaticResource NotEmptyConverter}}"
-                               Text="{Binding LastStopped, StringFormat='確定: {0}'}" />
+                               Text="{Binding LastStopped, StringFormat='Committed: {0}'}" />
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="s:EventToCommandBehavior (Toggled イベント → Command)" />
+                               Text="s:EventToCommandBehavior" />
                         <Grid Style="{StaticResource CardRowGrid}"
                               ColumnDefinitions="Auto,*">
                             <Switch Grid.Column="0">
@@ -153,7 +152,7 @@
                             <Label Grid.Column="1"
                                    Style="{StaticResource CardRowLabel}"
                                    behaviors:AnimationOption.BounceTrigger="{Binding SwitchCount}"
-                                   Text="{Binding SwitchCount, StringFormat='イベント発火: {0} 回'}" />
+                                   Text="{Binding SwitchCount, StringFormat='Fired: {0}'}" />
                         </Grid>
                     </VerticalStackLayout>
                 </VerticalStackLayout>

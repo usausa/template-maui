@@ -23,6 +23,29 @@
                 <Setter Property="ColumnSpacing" Value="0" />
             </Style>
 
+            <Style x:Key="SelectGroupBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="SelectDivider"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="GroupSelectButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SelectButtonBase}">
+                <Setter Property="HeightRequest" Value="34" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -116,28 +139,34 @@
                                Icon="{x:Static fonts:MaterialIcons.Keyboard}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Segmented select (tap to choose a value)" />
-                    <Grid Style="{StaticResource SegmentRowGrid}"
-                          ColumnDefinitions="*,*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource LeftSelectButton}"
-                                behaviors:Select.EmptyString="-"
-                                behaviors:Select.List="{Binding Items}"
-                                behaviors:Select.Value="{Binding Value1}"
-                                Command="{Binding Select1Command}" />
-                        <Button Grid.Column="1"
-                                Style="{StaticResource CenterSelectButton}"
-                                behaviors:Select.EmptyString="-"
-                                behaviors:Select.List="{Binding Items}"
-                                behaviors:Select.Value="{Binding Value3}"
-                                Command="{Binding Select3Command}" />
-                        <Button Grid.Column="2"
-                                Style="{StaticResource RightSelectButton}"
-                                behaviors:Select.EmptyString="-"
-                                behaviors:Select.List="{Binding Items}"
-                                behaviors:Select.Value="{Binding Value2}"
-                                Command="{Binding Select2Command}" />
-                    </Grid>
+                           Text="Segmented select" />
+                    <Border Style="{StaticResource SelectGroupBorder}">
+                        <Grid Style="{StaticResource SegmentRowGrid}"
+                              ColumnDefinitions="*,Auto,*,Auto,*">
+                            <Button Grid.Column="0"
+                                    Style="{StaticResource GroupSelectButton}"
+                                    behaviors:Select.EmptyString="-"
+                                    behaviors:Select.List="{Binding Items}"
+                                    behaviors:Select.Value="{Binding Value1}"
+                                    Command="{Binding Select1Command}" />
+                            <BoxView Grid.Column="1"
+                                     Style="{StaticResource SelectDivider}" />
+                            <Button Grid.Column="2"
+                                    Style="{StaticResource GroupSelectButton}"
+                                    behaviors:Select.EmptyString="-"
+                                    behaviors:Select.List="{Binding Items}"
+                                    behaviors:Select.Value="{Binding Value2}"
+                                    Command="{Binding Select2Command}" />
+                            <BoxView Grid.Column="3"
+                                     Style="{StaticResource SelectDivider}" />
+                            <Button Grid.Column="4"
+                                    Style="{StaticResource GroupSelectButton}"
+                                    behaviors:Select.EmptyString="-"
+                                    behaviors:Select.List="{Binding Items}"
+                                    behaviors:Select.Value="{Binding Value3}"
+                                    Command="{Binding Select3Command}" />
+                        </Grid>
+                    </Border>
                 </VerticalStackLayout>
             </controls:InfoCard>
 

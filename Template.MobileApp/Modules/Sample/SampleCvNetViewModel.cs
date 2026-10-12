@@ -117,7 +117,7 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
             if (input is null)
             {
                 State = CaptureState.Preview;
-                await dialog.InformationAsync("撮影できませんでした。もう一度お試しください。");
+                await dialog.InformationAsync("Capture failed. Try again.");
                 return;
             }
 
@@ -164,7 +164,7 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
 
         if (error is not null)
         {
-            await dialog.InformationAsync($"解析に失敗しました。\n{error.Message}");
+            await dialog.InformationAsync($"Analysis failed.\n{error.Message}");
         }
     }
 
@@ -180,7 +180,7 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
 
             TagsText = tags.Value.Length > 0
                 ? String.Join("\n", tags.Value.Select(static x => $"🏷 {x.Name}  {x.Confidence:P0}"))
-                : "タグは検出されませんでした";
+                : "No tags found";
             return null;
         }
 

@@ -42,11 +42,12 @@ public static partial class LabelOption
 
     public static void SetCountUpDuration(BindableObject bindable, int value) => bindable.SetValue(CountUpDurationProperty, value);
 
+    // 既定値は NaN (最初の値が 0 でも変更として表示する)
     public static readonly BindableProperty CountUpValueProperty = BindableProperty.CreateAttached(
         "CountUpValue",
         typeof(double),
         typeof(LabelOption),
-        0d,
+        Double.NaN,
         propertyChanged: OnCountUpValueChanged);
 
     public static double GetCountUpValue(BindableObject bindable) => (double)bindable.GetValue(CountUpValueProperty);

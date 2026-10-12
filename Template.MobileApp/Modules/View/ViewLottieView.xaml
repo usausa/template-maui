@@ -26,7 +26,14 @@
                    TargetType="Border">
                 <Setter Property="Margin" Value="12" />
                 <Setter Property="Padding" Value="8" />
-                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0" Color="{StaticResource BlueLighten5}" />
+                            <GradientStop Offset="1" Color="{StaticResource PurpleLighten5}" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
@@ -43,6 +50,11 @@
             <Style x:Key="PlayerStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TimeRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="15,0" />
             </Style>
 
             <Style x:Key="TransportRow"
@@ -100,7 +112,8 @@
 
             <Style x:Key="ScrubTrackLabel"
                    TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
@@ -108,8 +121,8 @@
 
             <Style x:Key="HoldButton"
                    TargetType="Button">
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
@@ -123,12 +136,12 @@
           RowDefinitions="*,Auto">
 
         <Border Grid.Row="0"
-                Style="{StaticResource FrameBorder}"
-                behaviors:AnimationOption.EnterAnimation="FadeUp">
+                Style="{StaticResource FrameBorder}">
             <extended:SKLottieView Source="Lottie/popping.json"
                                    Progress="{Binding Progress}"
                                    Duration="{Binding Duration}"
-                                   IsAnimationEnabled="{Binding IsAnimationEnabled}" />
+                                   IsAnimationEnabled="{Binding IsAnimationEnabled}"
+                                   RepeatCount="-1" />
         </Border>
 
         <!-- プレイヤーコントロール -->
@@ -141,7 +154,8 @@
                             Value="{Binding ProgressSeconds, Mode=OneWay}"
                             Minimum="0"
                             Maximum="{Binding DurationSeconds}" />
-                    <Grid ColumnDefinitions="*,Auto">
+                    <Grid Style="{StaticResource TimeRowGrid}"
+                          ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource BasicMonoLabel}"
                                Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.f}'}" />
@@ -153,20 +167,18 @@
 
                 <!-- スクロール連動 / 長押し進行 -->
                 <VerticalStackLayout Style="{StaticResource ScrubStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="スクロール連動 (横スクロールでシーク) / 長押しで進行" />
                     <ScrollView behaviors:Scroll.RatioCommand="{Binding ScrubCommand}"
                                 Orientation="Horizontal"
                                 HorizontalScrollBarVisibility="Never">
                         <Border Style="{StaticResource ScrubTrackBorder}">
                             <Label Style="{StaticResource ScrubTrackLabel}"
-                                   Text="→ → → スクロールで再生位置が進みます → → →" />
+                                   Text="→ → → Scroll to play → → →" />
                         </Border>
                     </ScrollView>
                     <Button Style="{StaticResource HoldButton}"
                             behaviors:AnimationOption.HoldCommand="{Binding ScrubCommand}"
                             behaviors:AnimationOption.HoldDuration="2000"
-                            Text="長押しで進行 (2 秒)" />
+                            Text="Long press (2s)" />
                 </VerticalStackLayout>
 
                 <HorizontalStackLayout Style="{StaticResource TransportRow}">

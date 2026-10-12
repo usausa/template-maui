@@ -6,6 +6,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicDialogView"
              x:DataType="{x:Type module:BasicDialogViewModel}"
@@ -14,22 +15,47 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="NotificationCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="ConfirmCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="ProgressCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource AmberDarken2}" />
+            </Style>
+
+            <Style x:Key="FeedbackCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource NotificationCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Notification"
                                Icon="{x:Static fonts:MaterialIcons.Info}">
-                <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="*,*">
-                    <Button Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
-                            Command="{Binding InformationCommand}"
-                            Text="Information" />
-                </Grid>
+                <Button Style="{StaticResource BasicIconOutlinedButton}"
+                        Command="{Binding InformationCommand}"
+                        Text="Information"
+                        ImageSource="{x:Static markup:AppIcons.SmallInfo}" />
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource ConfirmCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
                                Title="Confirm / Select / Input"
                                Icon="{x:Static fonts:MaterialIcons.Question_answer}">
@@ -37,25 +63,30 @@
                       RowDefinitions="Auto,Auto"
                       ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding ConfirmCommand}"
-                            Text="Confirm" />
+                            Text="Confirm"
+                            ImageSource="{x:Static markup:AppIcons.SmallHelpOutline}" />
                     <Button Grid.Row="0" Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding Confirm3Command}"
-                            Text="Confirm3" />
+                            Text="Confirm3"
+                            ImageSource="{x:Static markup:AppIcons.SmallRule}" />
                     <Button Grid.Row="1" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding SelectCommand}"
-                            Text="Select" />
+                            Text="Select"
+                            ImageSource="{x:Static markup:AppIcons.SmallChecklist}" />
                     <Button Grid.Row="1" Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding InputCommand}"
-                            Text="Input" />
+                            Text="Input"
+                            ImageSource="{x:Static markup:AppIcons.SmallDialpad}" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource ProgressCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
                                Title="Progress"
                                Icon="{x:Static fonts:MaterialIcons.Schedule}">
@@ -63,38 +94,45 @@
                       RowDefinitions="Auto,Auto"
                       ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding IndicatorCommand}"
-                            Text="Indicator" />
+                            Text="Indicator"
+                            ImageSource="{x:Static markup:AppIcons.SmallAutorenew}" />
                     <Button Grid.Row="0" Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding LockCommand}"
-                            Text="Lock" />
+                            Text="Lock"
+                            ImageSource="{x:Static markup:AppIcons.SmallLock}" />
                     <Button Grid.Row="1" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding LoadingCommand}"
-                            Text="Loading" />
+                            Text="Loading"
+                            ImageSource="{x:Static markup:AppIcons.SmallDownloading}" />
                     <Button Grid.Row="1" Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding ProgressCommand}"
-                            Text="Progress" />
+                            Text="Progress"
+                            ImageSource="{x:Static markup:AppIcons.SmallDataUsage}" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource FeedbackCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240"
                                Title="Feedback"
                                Icon="{x:Static fonts:MaterialIcons.Speaker_notes}">
                 <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding SnackbarCommand}"
-                            Text="Snackbar" />
+                            Text="Snackbar"
+                            ImageSource="{x:Static markup:AppIcons.SmallCallToAction}" />
                     <Button Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding ToastCommand}"
-                            Text="Toast" />
+                            Text="Toast"
+                            ImageSource="{x:Static markup:AppIcons.SmallMessage}" />
                 </Grid>
             </controls:InfoCard>
 

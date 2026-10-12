@@ -83,7 +83,7 @@ public static partial class ButtonOption
             return;
         }
 
-        if (oldValue is not null)
+        if (oldValue is true)
         {
             var behavior = view.Behaviors.FirstOrDefault(static x => x is PressBindBehavior);
             if (behavior is not null)
@@ -92,7 +92,7 @@ public static partial class ButtonOption
             }
         }
 
-        if (newValue is not null)
+        if (newValue is true)
         {
             view.Behaviors.Add(new PressBindBehavior());
         }

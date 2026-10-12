@@ -2,17 +2,33 @@ namespace Template.MobileApp.Modules.UI;
 
 using System.Text.Json;
 
-using Template.MobileApp.Models.Sample.Graph;
-
 public sealed partial class UIGraphViewModel : AppViewModelBase
 {
-    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
-
     [ObservableProperty]
     public partial string HeaderText { get; private set; } = string.Empty;
 
     [ObservableProperty]
     public partial IReadOnlyList<GraphRow> Rows { get; private set; } = [];
+
+    [ObservableProperty]
+    public partial GraphRow? Selected { get; set; }
+
+    // シートの内容 (閉じる途中も残す)
+    [ObservableProperty]
+    public partial GraphRow Detail { get; private set; } = default!;
+
+    [ObservableProperty]
+    public partial bool IsDetailOpen { get; set; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
+    public UIGraphViewModel()
+    {
+        SubscribeSelected(OpenDetail);
+        SubscribeIsDetailOpen(ClearSelection);
+    }
 
     //--------------------------------------------------------------------------------
     // Navigation
@@ -26,13 +42,40 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsDetailOpen)
+        {
+            IsDetailOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu2);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     //--------------------------------------------------------------------------------
     // Operation
     //--------------------------------------------------------------------------------
+
+    private void OpenDetail(GraphRow? row)
+    {
+        if (row is not null)
+        {
+            Detail = row;
+            IsDetailOpen = true;
+        }
+    }
+
+    // 閉じたら選択を外す (同じ行をもう一度押しても開く)
+    private void ClearSelection(bool open)
+    {
+        if (!open)
+        {
+            Selected = null;
+        }
+    }
 
     private async Task LoadAsync()
     {
@@ -41,8 +84,8 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var data = await Task.Run(async () =>
             {
-                var (commits, refs) = await LoadRepositoryAsync().ConfigureAwait(false);
-                return GraphBuilder.Build(commits, refs);
+                var repository = await GraphSample.LoadRepositoryAsync().ConfigureAwait(false);
+                return GraphBuilder.Build(repository.Commits, repository.Refs);
             }).ConfigureAwait(true);
             sw.Stop();
 
@@ -53,24 +96,5 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         {
             HeaderText = $"Failed to build graph: {ex.Message}";
         }
-    }
-
-    //--------------------------------------------------------------------------------
-    // Helper
-    //--------------------------------------------------------------------------------
-
-    private static async Task<(IReadOnlyList<GraphCommit> Commits, IReadOnlyList<GraphRefData> Refs)> LoadRepositoryAsync()
-    {
-        await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Graph", "repository.json")).ConfigureAwait(false);
-        var data = await JsonSerializer.DeserializeAsync<RepositoryData>(stream, JsonOptions).ConfigureAwait(false) ?? RepositoryData.Empty;
-        return (data.Commits, data.Refs);
-    }
-
-    private sealed class RepositoryData
-    {
-        public static readonly RepositoryData Empty = new();
-
-        public List<GraphCommit> Commits { get; set; } = [];
-        public List<GraphRefData> Refs { get; set; } = [];
     }
 }

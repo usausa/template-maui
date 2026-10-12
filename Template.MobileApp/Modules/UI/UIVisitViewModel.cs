@@ -108,7 +108,16 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsSortPanelOpen)
+        {
+            IsSortPanelOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -153,7 +162,7 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
     private void Load()
     {
         source.Clear();
-        source.AddRange(VisitSamples.Create(VisitCount).Select(static x => new VisitCard(x)));
+        source.AddRange(VisitSample.LoadVisits(VisitCount).Select(static x => new VisitCard(x)));
         PlannedCount = source.Count(static x => x.Status == VisitStatus.Planned);
         VisitedCount = source.Count(static x => x.Status == VisitStatus.Visited);
         RevisitCount = source.Count(static x => x.Status == VisitStatus.Revisit);

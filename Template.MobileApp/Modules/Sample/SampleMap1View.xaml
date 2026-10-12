@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
@@ -13,7 +14,9 @@
              s:BindingContextResolver.Type="{x:Type module:SampleMap1ViewModel}"
              shell:ShellProperty.Title="Map"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Layer"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
@@ -44,6 +47,36 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="LayerSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="LayerSheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,20" />
+            </Style>
+
+            <Style x:Key="ToggleRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="4" />
+                <Setter Property="HeightRequest" Value="44" />
+            </Style>
+
+            <Style x:Key="ToggleNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="ToggleSwitch"
+                   TargetType="Switch">
+                <Setter Property="Scale" Value="0.8" />
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -65,22 +98,56 @@
         <!-- Google Map 標準のズームボタン(右下)と重ならないよう右上に配置する -->
         <VerticalStackLayout Style="{StaticResource MapFabStack}">
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{x:Static markup:AppIcons.MapLayers}"
-                         Command="{Binding ToggleMapTypeCommand}" />
-            <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
-            <!-- MapElements: 経路 / 範囲 / 半径円 -->
-            <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{x:Static markup:AppIcons.MapRoute}"
-                         Command="{Binding ToggleRouteCommand}" />
-            <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{x:Static markup:AppIcons.MapPentagon}"
-                         Command="{Binding ToggleAreaCommand}" />
-            <ImageButton Style="{StaticResource MapFabButton}"
-                         Source="{x:Static markup:AppIcons.MapCircle}"
-                         Command="{Binding ToggleCircleCommand}" />
         </VerticalStackLayout>
+
+        <!-- 地図の種類と MapElements (経路 / 範囲 / 半径円) の切り替え -->
+        <mcc:BottomSheetView Style="{StaticResource LayerSheet}"
+                             IsOpen="{Binding IsLayerOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
+                <DataTemplate x:DataType="module:SampleMap1ViewModel">
+                    <VerticalStackLayout Style="{StaticResource LayerSheetStack}">
+                        <Grid Style="{StaticResource ToggleRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource ToggleNameLabel}"
+                                   Text="🛰️ Hybrid" />
+                            <Switch Grid.Column="1"
+                                    Style="{StaticResource ToggleSwitch}"
+                                    IsToggled="{Binding HybridEnabled}" />
+                        </Grid>
+                        <Grid Style="{StaticResource ToggleRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource ToggleNameLabel}"
+                                   Text="🛣️ Route" />
+                            <Switch Grid.Column="1"
+                                    Style="{StaticResource ToggleSwitch}"
+                                    IsToggled="{Binding RouteVisible}" />
+                        </Grid>
+                        <Grid Style="{StaticResource ToggleRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource ToggleNameLabel}"
+                                   Text="🟩 Area" />
+                            <Switch Grid.Column="1"
+                                    Style="{StaticResource ToggleSwitch}"
+                                    IsToggled="{Binding AreaVisible}" />
+                        </Grid>
+                        <Grid Style="{StaticResource ToggleRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource ToggleNameLabel}"
+                                   Text="🔴 Circle" />
+                            <Switch Grid.Column="1"
+                                    Style="{StaticResource ToggleSwitch}"
+                                    IsToggled="{Binding CircleVisible}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
     </Grid>
 

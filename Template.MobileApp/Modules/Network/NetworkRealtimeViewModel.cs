@@ -5,6 +5,15 @@ using Mofucat.ReactiveHub;
 using Template.MobileApp.Components;
 using Template.MobileApp.Services;
 
+public enum RealtimeState
+{
+    Stopped,
+    Connecting,
+    Connected,
+    Reconnecting,
+    Error
+}
+
 public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 {
     private const int NotificationId = 100;
@@ -33,7 +42,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     private SerialDisposable Connecting { get; } = new();
 
     [ObservableProperty]
-    public partial string StateText { get; set; } = "停止";
+    public partial RealtimeState State { get; set; }
 
     [ObservableProperty]
     public partial string ConnectionId { get; set; } = "-";
@@ -146,19 +155,19 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     private void Disconnect()
     {
         Connecting.Disposable = null;
-        StateText = "停止";
+        State = RealtimeState.Stopped;
         ConnectionId = "-";
         LastError = string.Empty;
     }
 
     private void OnStatus(HubStatus status)
     {
-        StateText = status.Kind switch
+        State = status.Kind switch
         {
-            HubStatusKind.Connecting => "接続中...",
-            HubStatusKind.Connected => "接続済み",
-            HubStatusKind.Reconnecting => "再接続中...",
-            _ => "停止"
+            HubStatusKind.Connecting => RealtimeState.Connecting,
+            HubStatusKind.Connected => RealtimeState.Connected,
+            HubStatusKind.Reconnecting => RealtimeState.Reconnecting,
+            _ => RealtimeState.Stopped
         };
         ConnectionId = status.ConnectionId ?? "-";
         LastError = status.Error?.Message ?? string.Empty;
@@ -173,7 +182,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     private void OnError(Exception ex)
     {
         log.WarnMonitorError(ex);
-        StateText = "エラー";
+        State = RealtimeState.Error;
         LastError = ex.Message;
     }
 

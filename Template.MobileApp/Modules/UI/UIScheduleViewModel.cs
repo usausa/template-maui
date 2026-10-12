@@ -2,8 +2,10 @@ namespace Template.MobileApp.Modules.UI;
 
 using ClamCalendar;
 
-using Template.MobileApp.Models.Sample.Calendar;
 using Template.MobileApp.Services;
+
+// 終日の予定 (カレンダーの予定の名前と色)
+public sealed record UIScheduleAllDay(string Title, Color Color);
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {
@@ -20,6 +22,9 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial TimetableDay? SelectedDay { get; set; }
+
+    [ObservableProperty]
+    public partial IReadOnlyList<UIScheduleAllDay> AllDayEvents { get; private set; } = [];
 
     [ObservableProperty]
     public partial IReadOnlyList<TimetableEvent> Events { get; private set; } = [];
@@ -40,7 +45,22 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string FreeTimeText { get; private set; } = string.Empty;
 
+    // 詳細のシートの予定 (開く前に設定する)
+    [ObservableProperty]
+    public partial TimetableEvent SelectedEvent { get; private set; } = default!;
+
+    [ObservableProperty]
+    public partial string SelectedTimeText { get; private set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string SelectedDurationText { get; private set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool IsDetailOpen { get; set; }
+
     public IObserveCommand EventTappedCommand { get; }
+
+    public IObserveCommand CloseDetailCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -48,12 +68,18 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     public UIScheduleViewModel(
         IDispatcher dispatcher,
-        IDialog dialog,
         ICalendarService calendarService)
     {
         this.calendarService = calendarService;
 
-        EventTappedCommand = MakeAsyncCommand<TimetableEvent>(x => dialog.Toast($"{x.Title} {x.Start:hh\\:mm} - {x.End:hh\\:mm}").AsTask());
+        EventTappedCommand = MakeDelegateCommand<TimetableEvent>(x =>
+        {
+            SelectedEvent = x;
+            SelectedTimeText = $"{x.Start:hh\\:mm} - {x.End:hh\\:mm}";
+            SelectedDurationText = TimetableCalculator.FormatDuration(x.End - x.Start);
+            IsDetailOpen = true;
+        });
+        CloseDetailCommand = MakeDelegateCommand(() => IsDetailOpen = false);
 
         // 現在時刻ラインは 1 分毎に更新する
         CurrentTime = DateTime.Now.TimeOfDay;
@@ -106,32 +132,18 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         var day = SelectedDay;
         if (day is null)
         {
+            AllDayEvents = [];
             Events = [];
             ShowCurrentTime = false;
             UpdateSummary();
             return;
         }
 
-        // 日付単位のサンプルイベントへ決定論的に時間帯を割り当ててタイムテーブル化する
-        var source = calendarService.GetEvents(day.Date, day.Date);
-        var events = new List<TimetableEvent>(source.Count);
-        var index = 0;
-        foreach (var ev in source)
-        {
-            var startHour = 8 + ((StableHash(ev.Key ?? ev.Title) + (index * 3)) % 9);
-            var duration = 1 + (StableHash(ev.Title) % 2);
-            var color = ev.Style == CalendarEventStyle.Filled ? ev.BackgroundColor : ev.TextColor;
-            events.Add(new TimetableEvent
-            {
-                Title = ev.Title,
-                Start = TimeSpan.FromHours(startHour),
-                End = TimeSpan.FromHours(Math.Min(startHour + duration, 20)),
-                Color = color
-            });
-            index++;
-        }
-
-        Events = events;
+        // 終日の予定はカレンダーと同じ予定、時刻のある予定はタイムテーブルに置く
+        AllDayEvents = calendarService.GetEvents(day.Date, day.Date)
+            .Select(static x => new UIScheduleAllDay(x.Title, x.Style == CalendarEventStyle.Filled ? x.BackgroundColor : x.TextColor))
+            .ToArray();
+        Events = calendarService.GetSchedule(day.Date);
         ShowCurrentTime = day.IsToday;
         UpdateSummary();
     }
@@ -143,19 +155,5 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
         // 空き時間は表示範囲のうちイベントで埋まっていない時間
         FreeTimeText = TimetableCalculator.FormatDuration(EndTime - StartTime - TimetableCalculator.GetBusyTotal(Events, StartTime, EndTime));
-    }
-
-    //--------------------------------------------------------------------------------
-    // Helper
-    //--------------------------------------------------------------------------------
-
-    private static int StableHash(string value)
-    {
-        var hash = 0;
-        foreach (var c in value)
-        {
-            hash = ((hash * 31) + c) & 0x7FFFFFFF;
-        }
-        return hash;
     }
 }

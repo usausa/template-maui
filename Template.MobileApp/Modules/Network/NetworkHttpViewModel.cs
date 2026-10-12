@@ -48,7 +48,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
     public partial bool Loading { get; set; }
 
     [ObservableProperty]
-    public partial bool IsEmpty { get; set; } = true;
+    public partial bool IsEmpty { get; set; }
 
     [ObservableProperty]
     public partial bool Delaying { get; set; }
@@ -138,7 +138,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
                 Total = result.Value.Total;
                 IsEmpty = Items.Count == 0;
                 SelectedItem = null;
-                AddLog($"一覧 {Items.Count} / {Total} 件");
+                AddLog($"List {Items.Count} / {Total}");
             }
         }
         finally
@@ -166,7 +166,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
                     Items.Add(new DataListItem(entry.Id, entry.Name));
                 }
                 Total = result.Value.Total;
-                AddLog($"追加読み込み {Items.Count} / {Total} 件");
+                AddLog($"More {Items.Count} / {Total}");
             }
         }
         finally
@@ -188,11 +188,11 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         {
             Name = result.Value.Name;
             Value = result.Value.Value.ToString(CultureInfo.InvariantCulture);
-            AddLog($"取得 id={result.Value.Id} name={result.Value.Name} value={result.Value.Value} created={result.Value.CreatedAt.ToLocalTime():yyyy/MM/dd HH:mm:ss}");
+            AddLog($"Get id={result.Value.Id} name={result.Value.Name} value={result.Value.Value} created={result.Value.CreatedAt.ToLocalTime():yyyy/MM/dd HH:mm:ss}");
         }
         else
         {
-            AddLog($"取得失敗 id={item.Id}: {FormatError(result)}");
+            AddLog($"Get failed id={item.Id}: {FormatError(result)}");
         }
     }
 
@@ -210,12 +210,12 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         var result = await networkUsecase.CreateDataAsync(name, value);
         if (result.IsSuccess)
         {
-            AddLog($"作成 id={result.Value.Id} name={name} value={value}");
+            AddLog($"Create id={result.Value.Id} name={name} value={value}");
             await ReloadAsync();
         }
         else
         {
-            AddLog($"作成失敗: {FormatError(result)}");
+            AddLog($"Create failed: {FormatError(result)}");
         }
     }
 
@@ -230,12 +230,12 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         var result = await networkUsecase.UpdateDataAsync(item.Id, name, value);
         if (result.IsSuccess)
         {
-            AddLog($"更新 id={item.Id} name={name} value={value}");
+            AddLog($"Update id={item.Id} name={name} value={value}");
             item.Name = name;
         }
         else
         {
-            AddLog($"更新失敗 id={item.Id}: {FormatError(result)}");
+            AddLog($"Update failed id={item.Id}: {FormatError(result)}");
         }
     }
 
@@ -247,7 +247,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
             return;
         }
 
-        if (!await dialog.ConfirmAsync($"id={item.Id} {item.Name} を削除しますか?"))
+        if (!await dialog.ConfirmAsync($"Delete id={item.Id} {item.Name} ?"))
         {
             return;
         }
@@ -255,7 +255,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         var result = await networkUsecase.DeleteDataAsync(item.Id);
         if (result.IsSuccess)
         {
-            AddLog($"削除 id={item.Id}");
+            AddLog($"Delete id={item.Id}");
             Items.Remove(item);
             Total--;
             IsEmpty = Items.Count == 0;
@@ -264,7 +264,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         }
         else
         {
-            AddLog($"削除失敗 id={item.Id}: {FormatError(result)}");
+            AddLog($"Delete failed id={item.Id}: {FormatError(result)}");
         }
     }
 
@@ -280,7 +280,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         name = Name.Trim();
         if ((name.Length == 0) || !Int32.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
         {
-            AddLog("名前と数値を入力してください");
+            AddLog("Enter name and value");
             value = 0;
             return false;
         }
@@ -295,13 +295,13 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
     private async Task TestErrorAsync()
     {
         var result = await networkUsecase.GetTestErrorAsync(ErrorStatusCode);
-        AddLog($"エラー {ErrorStatusCode}: {FormatError(result)}");
+        AddLog($"Error {ErrorStatusCode}: {FormatError(result)}");
     }
 
     private async Task TestDelayAsync()
     {
         var result = await networkUsecase.GetTestDelayAsync(ShortDelayMilliseconds);
-        AddLog(result.IsSuccess ? $"遅延 {ShortDelayMilliseconds / 1000} 秒 完了" : $"遅延 {ShortDelayMilliseconds / 1000} 秒 失敗: {FormatError(result)}");
+        AddLog(result.IsSuccess ? $"Delay {ShortDelayMilliseconds / 1000} s done" : $"Delay {ShortDelayMilliseconds / 1000} s failed: {FormatError(result)}");
     }
 
     private async Task DelayAsync()
@@ -311,13 +311,13 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         cancelDelay = cts.Cancel;
         try
         {
-            AddLog($"遅延 {DelayMilliseconds / 1000} 秒 開始");
+            AddLog($"Delay {DelayMilliseconds / 1000} s started");
             var result = await networkUsecase.RunTestDelayAsync(DelayMilliseconds, cts.Token);
             AddLog(result.Type switch
             {
-                NetworkResultType.Success => "遅延 完了",
-                NetworkResultType.Canceled => "遅延 キャンセル",
-                _ => $"遅延 失敗: {FormatError(result)}"
+                NetworkResultType.Success => "Delay done",
+                NetworkResultType.Canceled => "Delay canceled",
+                _ => $"Delay failed: {FormatError(result)}"
             });
         }
         finally
@@ -343,16 +343,16 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
     private static string FormatError(NetworkResult result) =>
         result.Type switch
         {
-            NetworkResultType.Disconnected => "未接続",
-            NetworkResultType.Canceled => "キャンセル",
-            NetworkResultType.NotFound => "見つからない (404)",
+            NetworkResultType.Disconnected => "Not connected",
+            NetworkResultType.Canceled => "Cancel",
+            NetworkResultType.NotFound => "Not found (404)",
             NetworkResultType.HttpError => result.StatusCode switch
             {
-                HttpStatusCode.Unauthorized => "認証エラー (401)",
-                HttpStatusCode.Conflict => "名前が重複 (409)",
-                HttpStatusCode.BadRequest => "入力エラー (400)",
-                _ => $"HTTP エラー ({(int)result.StatusCode})"
+                HttpStatusCode.Unauthorized => "Unauthorized (401)",
+                HttpStatusCode.Conflict => "Duplicate name (409)",
+                HttpStatusCode.BadRequest => "Bad request (400)",
+                _ => $"HTTP error ({(int)result.StatusCode})"
             },
-            _ => "通信エラー"
+            _ => "Network error"
         };
 }

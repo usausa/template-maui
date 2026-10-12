@@ -22,9 +22,6 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Busy { get; set; }
 
-    [ObservableProperty]
-    public partial string ServerFingerprint { get; set; } = string.Empty;
-
     public ObservableCollection<string> Logs { get; } = [];
 
     public IObserveCommand UploadCommand { get; }
@@ -82,7 +79,7 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
                 return;
             }
 
-            ApplyResult($"アップロード: {result.FileName} ({result.Size:N0} bytes)", result.Transfer, token);
+            ApplyResult($"Upload: {result.FileName} ({result.Size:N0} bytes)", result.Transfer, token);
             if (result.Transfer.Success)
             {
                 RemoteFileName = result.FileName;
@@ -93,10 +90,10 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
         ExecuteTransferAsync(async token =>
         {
             var result = await sshUsecase.DownloadAsync(RemoteFileName, new Progress<double>(x => Progress = x), token);
-            ApplyResult($"ダウンロード: {RemoteFileName} ({result.Size:N0} bytes)", result.Transfer, token);
+            ApplyResult($"Download: {RemoteFileName} ({result.Size:N0} bytes)", result.Transfer, token);
             if (result.Transfer.Success)
             {
-                AddLog($"保存先: {result.Path}");
+                AddLog($"Saved: {result.Path}");
             }
         });
 
@@ -122,16 +119,11 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
         if (result.Success)
         {
             Progress = 1d;
-            AddLog($"{subject} 完了");
+            AddLog($"{subject} done");
         }
         else
         {
-            AddLog(token.IsCancellationRequested ? $"{subject} キャンセルしました" : $"{subject} 失敗: {result.Error}");
-        }
-
-        if (!String.IsNullOrEmpty(result.ServerFingerprint))
-        {
-            ServerFingerprint = result.ServerFingerprint;
+            AddLog(token.IsCancellationRequested ? $"{subject} canceled" : $"{subject} failed: {result.Error}");
         }
     }
 

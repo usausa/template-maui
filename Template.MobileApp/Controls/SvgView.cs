@@ -6,8 +6,21 @@ using Svg.Skia;
 
 public sealed class SvgView : SKCanvasView
 {
-    // Source 指定でロードした SKSvg の共有キャッシュ (アプリパッケージ内アセットが対象のため無効化は不要)
     private static readonly Dictionary<string, SKSvg> SourceCache = [];
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private SKSvg? sourceSvg;
+
+    private bool sourceFailed;
+
+    private int loadVersion;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty SvgProperty = BindableProperty.Create(
         nameof(Svg),
@@ -33,57 +46,47 @@ public sealed class SvgView : SKCanvasView
         typeof(SvgView),
         propertyChanged: static (bindable, _, newValue) => ((SvgView)bindable).HandleFallbackChanged((string?)newValue));
 
-    public event EventHandler? Loading;
-
-    public event EventHandler? Ready;
-
-    public event EventHandler? Error;
-
     public SKSvg? Svg
     {
         get => (SKSvg?)GetValue(SvgProperty);
         set => SetValue(SvgProperty, value);
     }
 
-    // アプリパッケージ内のファイルパス (例: Svg/dotnet_bot.svg)。Svg より優先される
     public string? Source
     {
         get => (string?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
-    // ロード中に表示する SVG のパス
     public string? Placeholder
     {
         get => (string?)GetValue(PlaceholderProperty);
         set => SetValue(PlaceholderProperty, value);
     }
 
-    // ロード失敗時に表示する SVG のパス
     public string? ErrorPlaceholder
     {
         get => (string?)GetValue(ErrorPlaceholderProperty);
         set => SetValue(ErrorPlaceholderProperty, value);
     }
 
-    private SKSvg? sourceSvg;
+    public event EventHandler? Loading;
 
-    private bool sourceFailed;
+    public event EventHandler? Ready;
 
-    private int loadVersion;
+    public event EventHandler? Error;
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public SvgView()
     {
         PaintSurface += OnPaintSurface;
     }
 
-    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
-    {
-        ((SvgView)bindable).InvalidateSurface();
-    }
-
     //--------------------------------------------------------------------------------
-    // Source loading
+    // Source
     //--------------------------------------------------------------------------------
 
     private void HandleSourceChanged()
@@ -113,7 +116,6 @@ public sealed class SvgView : SKCanvasView
         _ = LoadSourceAsync(source, version);
     }
 
-    // Placeholder / ErrorPlaceholder は表示タイミングでロードが間に合わないため先読みしておく
     private void HandleFallbackChanged(string? source)
     {
         if (!String.IsNullOrEmpty(source) && !SourceCache.ContainsKey(source))
@@ -167,24 +169,6 @@ public sealed class SvgView : SKCanvasView
         }).ConfigureAwait(false);
     }
 
-    private static async Task<SKSvg?> LoadSvgAsync(string source)
-    {
-        try
-        {
-            var svg = new SKSvg();
-            await using (var stream = await FileSystem.OpenAppPackageFileAsync(source).ConfigureAwait(false))
-            {
-                svg.Load(stream);
-            }
-
-            return svg.Picture is not null ? svg : null;
-        }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or System.Xml.XmlException)
-        {
-            return null;
-        }
-    }
-
     private SKSvg? ResolveDisplaySvg()
     {
         if (String.IsNullOrEmpty(Source))
@@ -206,9 +190,32 @@ public sealed class SvgView : SKCanvasView
         return null;
     }
 
+    private static async Task<SKSvg?> LoadSvgAsync(string source)
+    {
+        try
+        {
+            var svg = new SKSvg();
+            await using (var stream = await FileSystem.OpenAppPackageFileAsync(source).ConfigureAwait(false))
+            {
+                svg.Load(stream);
+            }
+
+            return svg.Picture is not null ? svg : null;
+        }
+        catch (Exception ex) when (ex is IOException or InvalidOperationException or System.Xml.XmlException)
+        {
+            return null;
+        }
+    }
+
     //--------------------------------------------------------------------------------
-    // Paint
+    // Render
     //--------------------------------------------------------------------------------
+
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((SvgView)bindable).InvalidateSurface();
+    }
 
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {

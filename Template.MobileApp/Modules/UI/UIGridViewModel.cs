@@ -131,9 +131,9 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 
     private void Load()
     {
-        Rows.SetSource(OrderSamples.Create(RowCount));
+        Rows.SetSource(OrderSample.LoadOrders(RowCount));
         UpdateCounts();
-        Message = "見出しタップで並べ替え、長押しで列設定。行タップで選択、長押しで未処理を一括選択";
+        Message = string.Empty;
     }
 
     private async Task CommitAsync()

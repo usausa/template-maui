@@ -124,7 +124,7 @@ public sealed class NetworkUsecase
     public ValueTask<NetworkResult<DataListResponse>> GetDataRangeAsync(int offset, int size, CancellationToken cancellationToken = default) =>
         ExecuteVerboseAsync((h, t) => h.GetDataListAsync(offset, size, t), cancellationToken: cancellationToken);
 
-    public ValueTask<NetworkResult<DataResponse>> GetDataAsync(long id, CancellationToken cancellationToken = default) =>
+    public ValueTask<NetworkResult<DataGetResponse>> GetDataAsync(long id, CancellationToken cancellationToken = default) =>
         ExecuteAsync((h, t) => h.GetDataAsync(id, t), cancellationToken: cancellationToken);
 
     public ValueTask<NetworkResult<DataCreateResponse>> CreateDataAsync(string name, int value, CancellationToken cancellationToken = default)

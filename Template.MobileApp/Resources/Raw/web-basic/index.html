@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title>Index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="_framework/hybridwebview.js"></script>
+    <link rel="stylesheet" href="style.css" />
     <script>
         function UpdateStatus(msg) {
             var status = document.getElementById("status");
@@ -57,16 +59,16 @@
     <div>
         <button onclick="window.HybridWebView.SendRawMessage('From JS')">Send message to C#</button>
     </div>
-    <div>
+    <div class="group">
         <button onclick="InvokeMethod()">Call C# method</button>
         <button onclick="InvokeAsyncMethod()">Call C# async method</button>
     </div>
     <div>
         <button onclick="FetchLocal()">Fetch local resource</button>
     </div>
-    <div>
+    <div class="log">
         <div>Log:</div>
-        <textarea readonly id="status" style="width: 100%; height: 5em;"></textarea>
+        <textarea readonly id="status"></textarea>
     </div>
 </body>
 </html>

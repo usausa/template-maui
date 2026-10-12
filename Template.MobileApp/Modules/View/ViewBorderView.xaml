@@ -4,6 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewBorderView"
@@ -16,11 +18,6 @@
 
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <Style x:Key="BorderVerticalStackLayout"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="8" />
-            </Style>
 
             <Style x:Key="SharedBorderStyle"
                    TargetType="Border">
@@ -37,146 +34,247 @@
                 <Setter Property="StrokeLineCap" Value="{Binding StrokeLineCap}" />
             </Style>
 
-            <Style x:Key="SeparateBoxView"
-                   TargetType="BoxView">
-                <Setter Property="Margin" Value="0,8" />
-                <Setter Property="HeightRequest" Value="2" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            <Style x:Key="PreviewCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="Margin" Value="12,12,12,0" />
+            </Style>
+
+            <Style x:Key="BorderValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowValueLabel}">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+            </Style>
+
+            <Style x:Key="BorderPickerBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CardFieldBorder}">
+                <Setter Property="WidthRequest" Value="200" />
+            </Style>
+
+            <Style x:Key="ColorDotBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="20" />
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <VerticalStackLayout Style="{StaticResource BorderVerticalStackLayout}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="Auto,*">
 
-        <!-- Target -->
+        <controls:InfoCard Grid.Row="0"
+                           Style="{StaticResource PreviewCard}"
+                           behaviors:AnimationOption.EnterAnimation="FadeUp"
+                           Title="Preview"
+                           Icon="{x:Static fonts:MaterialIcons.Visibility}">
+            <Grid>
+                <Border Style="{StaticResource SharedBorderStyle}"
+                        IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="{Binding CornerRadius}" />
+                    </Border.StrokeShape>
+                </Border>
+                <Border Style="{StaticResource SharedBorderStyle}"
+                        IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Ellipse}}">
+                    <Border.StrokeShape>
+                        <Ellipse />
+                    </Border.StrokeShape>
+                </Border>
+                <Border Style="{StaticResource SharedBorderStyle}"
+                        IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Rectangle}}">
+                    <Border.StrokeShape>
+                        <Rectangle />
+                    </Border.StrokeShape>
+                </Border>
+                <Border Style="{StaticResource SharedBorderStyle}"
+                        IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Polygon}}">
+                    <Border.StrokeShape>
+                        <Path Data="M 120 0 L 0 80 L 240 80 Z" />
+                    </Border.StrokeShape>
+                </Border>
+            </Grid>
+        </controls:InfoCard>
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="{Binding CornerRadius}" />
-            </Border.StrokeShape>
-        </Border>
+        <ScrollView Grid.Row="1"
+                    Style="{StaticResource RootScroll}">
+            <VerticalStackLayout Style="{StaticResource PageStack}">
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Ellipse}}">
-            <Border.StrokeShape>
-                <Ellipse />
-            </Border.StrokeShape>
-        </Border>
+                <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                   Title="Shape and color"
+                                   Icon="{x:Static fonts:MaterialIcons.Palette}">
+                    <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="Shape" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource BorderPickerBorder}">
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                <Picker Style="{StaticResource CardFieldPicker}"
+                                        ItemsSource="{Binding Shapes}"
+                                        SelectedItem="{Binding BorderShape, Mode=TwoWay}" />
+                            </Border>
+                        </Grid>
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="Color" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource ColorDotBorder}"
+                                    BackgroundColor="{Binding BorderColor.Color}" />
+                            <Border Grid.Column="2"
+                                    Style="{StaticResource BorderPickerBorder}">
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                <Picker Style="{StaticResource CardFieldPicker}"
+                                        ItemsSource="{Binding BorderColors}"
+                                        SelectedItem="{Binding BorderColor, Mode=TwoWay}"
+                                        ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+                            </Border>
+                        </Grid>
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="StrokeColor" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource ColorDotBorder}"
+                                    BackgroundColor="{Binding StrokeColor.Color}" />
+                            <Border Grid.Column="2"
+                                    Style="{StaticResource BorderPickerBorder}">
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                <Picker Style="{StaticResource CardFieldPicker}"
+                                        ItemsSource="{Binding StrokeColors}"
+                                        SelectedItem="{Binding StrokeColor, Mode=TwoWay}"
+                                        ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </controls:InfoCard>
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Rectangle}}">
-            <Border.StrokeShape>
-                <Rectangle />
-            </Border.StrokeShape>
-        </Border>
+                <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                   Title="Stroke"
+                                   Icon="{x:Static fonts:MaterialIcons.Line_weight}">
+                    <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="StrokeThickness" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource BorderValueLabel}"
+                                   Text="{Binding StrokeThickness, StringFormat='{0:F2}'}" />
+                        </Grid>
+                        <Slider Value="{Binding StrokeThickness}"
+                                Minimum="0" Maximum="20" />
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Polygon}}">
-            <Border.StrokeShape>
-                <Path Data="M 120 0 L 0 80 L 240 80 Z" />
-            </Border.StrokeShape>
-        </Border>
+                        <BoxView Style="{StaticResource CardDivider}" />
 
-        <!-- Setting -->
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="StrokeDashArray" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource BorderValueLabel}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0:F2}, {1:F2}">
+                                        <Binding Path="StrokeDashLength1" />
+                                        <Binding Path="StrokeDashLength2" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </Grid>
+                        <Slider Value="{Binding StrokeDashLength1}"
+                                Minimum="0" Maximum="10" />
+                        <Slider Value="{Binding StrokeDashLength2}"
+                                Minimum="0" Maximum="10" />
 
-        <BoxView Style="{StaticResource SeparateBoxView}" />
+                        <BoxView Style="{StaticResource CardDivider}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Shape" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding Shapes}"
-                SelectedItem="{Binding BorderShape, Mode=TwoWay}" />
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="StrokeDashOffset" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource BorderValueLabel}"
+                                   Text="{Binding StrokeDashOffset, StringFormat='{0:F2}'}" />
+                        </Grid>
+                        <Slider Value="{Binding StrokeDashOffset}"
+                                Minimum="0" Maximum="20" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Color" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding BorderColors}"
-                SelectedItem="{Binding BorderColor, Mode=TwoWay}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+                        <BoxView Style="{StaticResource CardDivider}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="StrokeColor" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding StrokeColors}"
-                SelectedItem="{Binding StrokeColor, Mode=TwoWay}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="StrokeLineJoin" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource BorderPickerBorder}">
+                                <Picker Style="{StaticResource CardFieldPicker}"
+                                        ItemsSource="{Binding LineJoins}"
+                                        SelectedItem="{Binding StrokeLineJoin, Mode=TwoWay}" />
+                            </Border>
+                        </Grid>
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="StrokeLineCap" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource BorderPickerBorder}">
+                                <Picker Style="{StaticResource CardFieldPicker}"
+                                        ItemsSource="{Binding LineCaps}"
+                                        SelectedItem="{Binding StrokeLineCap, Mode=TwoWay}" />
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </controls:InfoCard>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding StrokeThickness, StringFormat='StrokeThickness: {0:F2}'}" />
-        <Slider Value="{Binding StrokeThickness}"
-                Minimum="0" Maximum="20" />
+                <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                   Title="Corner radius"
+                                   Icon="{x:Static fonts:MaterialIcons.Rounded_corner}"
+                                   IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
+                    <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                        <Grid Style="{StaticResource CardRowGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardRowLabel}"
+                                   Text="CornerRadius" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource BorderValueLabel}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0:F2}, {1:F2}, {2:F2}, {3:F2}">
+                                        <Binding Path="CornerRadiusTopLeft" />
+                                        <Binding Path="CornerRadiusTopRight" />
+                                        <Binding Path="CornerRadiusBottomLeft" />
+                                        <Binding Path="CornerRadiusBottomRight" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </Grid>
+                        <Slider Value="{Binding CornerRadiusTopLeft}"
+                                Minimum="0" Maximum="40" />
+                        <Slider Value="{Binding CornerRadiusTopRight}"
+                                Minimum="0" Maximum="40" />
+                        <Slider Value="{Binding CornerRadiusBottomLeft}"
+                                Minimum="0" Maximum="40" />
+                        <Slider Value="{Binding CornerRadiusBottomRight}"
+                                Minimum="0" Maximum="40" />
+                    </VerticalStackLayout>
+                </controls:InfoCard>
 
-        <Label Style="{StaticResource NameLabel}">
-            <Label.FormattedText>
-                <FormattedString>
-                    <Span Style="{StaticResource NameSpan}"
-                          Text="StrokeDashArray: " />
-                    <Span Style="{StaticResource NameSpan}"
-                          Text="{Binding StrokeDashLength1, StringFormat='{0:F2}'}" />
-                    <Span Style="{StaticResource NameSpan}"
-                          Text=", " />
-                    <Span Style="{StaticResource NameSpan}"
-                          Text="{Binding StrokeDashLength2, StringFormat='{0:F2}'}" />
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-        <Slider Value="{Binding StrokeDashLength1}"
-                Minimum="0" Maximum="10" />
-        <Slider Value="{Binding StrokeDashLength2}"
-                Minimum="0" Maximum="10" />
+            </VerticalStackLayout>
+        </ScrollView>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding StrokeDashOffset, StringFormat='StrokeDashOffset: {0:F2}'}" />
-        <Slider Value="{Binding StrokeDashOffset}"
-                Minimum="0" Maximum="20" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="StrokeLineJoin" />
-        <Picker ItemsSource="{Binding LineJoins}"
-                SelectedItem="{Binding StrokeLineJoin, Mode=TwoWay}" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="StrokeLineCap" />
-        <Picker ItemsSource="{Binding LineCaps}"
-                SelectedItem="{Binding StrokeLineCap, Mode=TwoWay}" />
-
-        <!-- Setting:RoundRectangle -->
-
-        <VerticalStackLayout IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
-            <Label Style="{StaticResource NameLabel}">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="CornerRadius: " />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusTopLeft, StringFormat='{0:F2}'}" />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text=", " />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusTopRight, StringFormat='{0:F2}'}" />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text=", " />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusBottomLeft, StringFormat='{0:F2}'}" />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text=", " />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusBottomRight, StringFormat='{0:F2}'}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Slider Value="{Binding CornerRadiusTopLeft}"
-                    Minimum="0" Maximum="40" />
-            <Slider Value="{Binding CornerRadiusTopRight}"
-                    Minimum="0" Maximum="40" />
-            <Slider Value="{Binding CornerRadiusBottomLeft}"
-                    Minimum="0" Maximum="40" />
-            <Slider Value="{Binding CornerRadiusBottomRight}"
-                    Minimum="0" Maximum="40" />
-        </VerticalStackLayout>
-
-    </VerticalStackLayout>
+    </Grid>
 
 </ContentView>

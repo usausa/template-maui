@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Controls;
 
-using Template.MobileApp.Models.Sample.Chat;
-
 public sealed class AiChatTemplateSelector : DataTemplateSelector
 {
     public DataTemplate? UserTemplate { get; set; }

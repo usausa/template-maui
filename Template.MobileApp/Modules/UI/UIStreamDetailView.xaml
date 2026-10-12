@@ -2,11 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamDetailView"
              x:DataType="{x:Type module:UIStreamDetailViewModel}"
@@ -17,6 +18,36 @@
 
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <converters:RuntimeTextConverter x:Key="RuntimeTextConverter" />
+
+            <s:MapToTextConverter x:Key="GenreNameConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Sf}"
+                                      Value="SF" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Action}"
+                                      Value="アクション" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Romance}"
+                                      Value="恋愛" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Comedy}"
+                                      Value="コメディ" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Documentary}"
+                                      Value="ドキュメンタリー" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Fantasy}"
+                                      Value="ファンタジー" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="TrailerKindConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:StreamTrailerKind.Trailer}"
+                                      Value="予告編" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamTrailerKind.Teaser}"
+                                      Value="ティザー" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamTrailerKind.Extra}"
+                                      Value="特典" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
             <Style x:Key="StreamDetailScroll"
                    TargetType="ScrollView">
@@ -46,22 +77,10 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Watch progress on the player (fill ratio via star-sized columns) -->
-            <Style x:Key="ProgressGrid"
-                   TargetType="Grid">
+            <Style x:Key="PlayerProgressBar"
+                   TargetType="ProgressBar">
                 <Setter Property="VerticalOptions" Value="End" />
-            </Style>
-
-            <Style x:Key="ProgressTrack"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="3" />
-                <Setter Property="Color" Value="#33FFFFFF" />
-            </Style>
-
-            <Style x:Key="ProgressFill"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="3" />
-                <Setter Property="Color" Value="{StaticResource RedAccent3}" />
+                <Setter Property="ProgressColor" Value="{StaticResource RedAccent3}" />
             </Style>
 
             <Style x:Key="StreamDetailTitleLabel"
@@ -145,7 +164,7 @@
             </Style>
 
             <Style x:Key="FriendsAvatars"
-                   TargetType="controls:AvatarGroup">
+                   TargetType="mcc:AvatarGroup">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="MaxDisplayed" Value="3" />
                 <Setter Property="Overlap" Value="10" />
@@ -303,42 +322,57 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource StreamDetailScroll}">
+    <ScrollView Style="{StaticResource StreamDetailScroll}"
+                behaviors:Scroll.TopTrigger="{Binding Context.Selected}">
         <VerticalStackLayout>
 
             <Grid Style="{StaticResource PlayerGrid}">
                 <Image Style="{StaticResource PlayerImage}"
-                       Source="stream_hero.jpg" />
+                       Source="{Binding Context.Selected.Work.Image}" />
                 <Button Style="{StaticResource PlayButtonOverlay}"
                         behaviors:ButtonOption.PressEffect="True" />
-                <Grid Style="{StaticResource ProgressGrid}"
-                      ColumnDefinitions="40*,60*">
-                    <BoxView Grid.ColumnSpan="2"
-                             Style="{StaticResource ProgressTrack}" />
-                    <BoxView Grid.Column="0"
-                             Style="{StaticResource ProgressFill}" />
-                </Grid>
+                <ProgressBar Style="{StaticResource PlayerProgressBar}"
+                             IsVisible="{Binding Context.Selected.HasProgress}"
+                             Progress="{Binding Context.Selected.Progress}" />
             </Grid>
 
             <Label Style="{StaticResource StreamDetailTitleLabel}"
-                   Text="{Binding Title}" />
+                   Text="{Binding Context.Selected.Work.Title}" />
             <HorizontalStackLayout Style="{StaticResource MetaRow}">
                 <Label Style="{StaticResource MatchLabel}"
-                       Text="{Binding Match}" />
-                <Label Style="{StaticResource MetaLabel}"
-                       Text="{Binding Meta}" />
+                       Text="{Binding Context.Selected.Work.Match, StringFormat='{0}% マッチ'}" />
+                <Label Style="{StaticResource MetaLabel}">
+                    <Label.Text>
+                        <MultiBinding StringFormat="{}{0} · {1} · {2} · {3}">
+                            <Binding Path="Context.Selected.Work.Year" />
+                            <Binding Path="Context.Selected.Work.Genre"
+                                     Converter="{StaticResource GenreNameConverter}" />
+                            <Binding Path="Context.Selected.Work.Minutes"
+                                     Converter="{StaticResource RuntimeTextConverter}" />
+                            <Binding Path="Context.Selected.Work.Rated" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Style="{StaticResource ActionRow}">
                 <Button Style="{StaticResource PrimaryPlayButton}"
-                        behaviors:ButtonOption.PressEffect="True" />
+                        behaviors:ButtonOption.PressEffect="True">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Context.Selected.HasProgress}"
+                                     Value="False">
+                            <Setter Property="Text" Value="▶ Play" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
                 <Button Style="{StaticResource IconActionButton}"
                         behaviors:ButtonOption.PressEffect="True"
                         Command="{Binding DownloadCommand}"
                         Text="{x:Static fonts:MaterialIcons.Download}">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
-                                     Binding="{Binding IsDownloaded}"
+                                     Binding="{Binding Context.Selected.IsDownloaded}"
                                      Value="True">
                             <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
                             <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
@@ -349,13 +383,14 @@
                         behaviors:ButtonOption.PressEffect="True"
                         Text="{x:Static fonts:MaterialIcons.Share}" />
                 <Button Style="{StaticResource IconActionButton}"
-                        behaviors:AnimationOption.BounceTrigger="{Binding IsFavorite}"
+                        behaviors:AnimationOption.HeartbeatTrigger="{Binding Context.Selected.IsFavorite}"
+                        behaviors:AnimationOption.HeartbeatValue="{s:Bool Value=True}"
                         behaviors:ButtonOption.PressEffect="True"
                         Command="{Binding FavoriteCommand}"
                         Text="{x:Static fonts:MaterialIcons.Favorite_outline}">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
-                                     Binding="{Binding IsFavorite}"
+                                     Binding="{Binding Context.Selected.IsFavorite}"
                                      Value="True">
                             <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Favorite}" />
                             <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
@@ -365,14 +400,20 @@
             </HorizontalStackLayout>
 
             <Label Style="{StaticResource SynopsisLabel}"
-                   Text="{Binding Synopsis}" />
-            <Label Style="{StaticResource CastLabel}"
-                   Text="{Binding CastLine}" />
+                   Text="{Binding Context.Selected.Work.Synopsis}" />
+            <Label Style="{StaticResource CastLabel}">
+                <Label.Text>
+                    <MultiBinding StringFormat="出演: {0} · 監督: {1}">
+                        <Binding Path="Context.Selected.Work.Cast" />
+                        <Binding Path="Context.Selected.Work.Director" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
 
             <!-- Friends watching (overlapping avatars) -->
             <HorizontalStackLayout Style="{StaticResource FriendsRow}">
-                <controls:AvatarGroup Style="{StaticResource FriendsAvatars}"
-                                      ItemsSource="{Binding Friends}" />
+                <mcc:AvatarGroup Style="{StaticResource FriendsAvatars}"
+                                 ItemsSource="{Binding Friends}" />
                 <Label Style="{StaticResource FriendsLabel}"
                        Text="Friends are watching" />
             </HorizontalStackLayout>
@@ -416,35 +457,41 @@
             <!-- Trailers tab -->
             <VerticalStackLayout Style="{StaticResource TrailerStack}"
                                  behaviors:AnimationOption.FadeInTrigger="{Binding TrailersSelected}"
-                                 BindableLayout.ItemsSource="{Binding Trailers}"
+                                 BindableLayout.ItemsSource="{Binding Context.Selected.Work.Trailers}"
                                  IsVisible="{Binding TrailersSelected}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="module:UIStreamDetailTrailer">
+                    <DataTemplate x:DataType="models:StreamTrailer">
                         <Grid Style="{StaticResource TrailerRowGrid}"
                               ColumnDefinitions="Auto,*">
-                            <toolkit:SfEffectsView Grid.ColumnSpan="2"
-                                                   TouchDownEffects="Ripple">
-                                <Grid ColumnDefinitions="Auto,*">
-                                    <Border Grid.Column="0"
-                                            Style="{StaticResource TrailerThumbBorder}">
-                                        <Grid>
-                                            <Image Style="{StaticResource TrailerImage}"
-                                                   Source="{Binding Image}" />
-                                            <Border Style="{StaticResource TrailerPlayBorder}">
-                                                <Label Style="{StaticResource TrailerPlayLabel}"
-                                                       Text="▶" />
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1"
-                                                         Style="{StaticResource TrailerTextStack}">
-                                        <Label Style="{StaticResource TrailerTitleLabel}"
-                                               Text="{Binding Title}" />
-                                        <Label Style="{StaticResource TrailerMetaLabel}"
-                                               Text="{Binding Duration}" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                            <Grid Grid.ColumnSpan="2"
+                                  ColumnDefinitions="Auto,*"
+                                  behaviors:TouchOption.Ripple="True">
+                                <Border Grid.Column="0"
+                                        Style="{StaticResource TrailerThumbBorder}">
+                                    <Grid>
+                                        <Image Style="{StaticResource TrailerImage}"
+                                               Source="{Binding Image}" />
+                                        <Border Style="{StaticResource TrailerPlayBorder}">
+                                            <Label Style="{StaticResource TrailerPlayLabel}"
+                                                   Text="▶" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Style="{StaticResource TrailerTextStack}">
+                                    <Label Style="{StaticResource TrailerTitleLabel}"
+                                           Text="{Binding Title}" />
+                                    <Label Style="{StaticResource TrailerMetaLabel}">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} · {1:m'm 'ss's'}">
+                                                <Binding Path="Kind"
+                                                         Converter="{StaticResource TrailerKindConverter}" />
+                                                <Binding Path="Length" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </VerticalStackLayout>
+                            </Grid>
                         </Grid>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
@@ -453,31 +500,33 @@
             <!-- More Like This tab -->
             <CollectionView Style="{StaticResource RelatedCollection}"
                             behaviors:AnimationOption.FadeInTrigger="{Binding RelatedSelected}"
-                            ItemsSource="{Binding Related}"
+                            ItemsSource="{Binding Context.Related}"
                             IsVisible="{Binding RelatedSelected}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
                                      Span="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="module:UIStreamDetailRelated">
+                    <DataTemplate x:DataType="models:StreamItem">
                         <Border Style="{StaticResource RelatedBorder}">
-                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                                <Grid>
-                                    <Image Style="{StaticResource RelatedImage}"
-                                           Source="{Binding Image}" />
-                                    <Border Style="{StaticResource RelatedOverlay}">
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <Label Grid.Column="0"
-                                                   Style="{StaticResource RelatedTitleLabel}"
-                                                   Text="{Binding Title}" />
-                                            <Label Grid.Column="1"
-                                                   Style="{StaticResource RelatedDurationLabel}"
-                                                   Text="{Binding Duration}" />
-                                        </Grid>
-                                    </Border>
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                            <Grid behaviors:TouchOption.ClickCommand="{Binding RelatedCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamDetailViewModel}}, x:DataType={x:Type module:UIStreamDetailViewModel}}"
+                                  behaviors:TouchOption.ClickCommandParameter="{Binding .}"
+                                  behaviors:TouchOption.Ripple="True">
+                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                <Image Style="{StaticResource RelatedImage}"
+                                       Source="{Binding Work.Image}" />
+                                <Border Style="{StaticResource RelatedOverlay}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Style="{StaticResource RelatedTitleLabel}"
+                                               Text="{Binding Work.Title}" />
+                                        <Label Grid.Column="1"
+                                               Style="{StaticResource RelatedDurationLabel}"
+                                               Text="{Binding Work.Minutes, Converter={StaticResource RuntimeTextConverter}}" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceInfoView"
@@ -14,101 +15,149 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="DeviceCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="DeviceHeadStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="DeviceNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="DeviceChipStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <converters:MapToToneConverter x:Key="DeviceTypeToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{s:Bool Value=False}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
+                                               Value="Warning" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+
+            <Style x:Key="ApplicationCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="DisplayCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource DeviceCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Device"
                                Icon="{x:Static fonts:MaterialIcons.Smartphone}">
-                <Grid Style="{StaticResource CardInfoGrid}"
-                      RowDefinitions="Auto,Auto,Auto"
-                      ColumnDefinitions="2*,3*">
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Version" />
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding DeviceVersion}" />
-
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Name" />
-                    <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                <VerticalStackLayout Style="{StaticResource DeviceHeadStack}">
+                    <Label Style="{StaticResource DeviceNameLabel}"
                            Text="{Binding DeviceName}" />
-
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
-                           Text="Emulator" />
-                    <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
-                           Text="{Binding IsDeviceEmulator}" />
-                </Grid>
+                    <HorizontalStackLayout Style="{StaticResource DeviceChipStack}">
+                        <controls:StatusChip Icon="{x:Static fonts:MaterialIcons.Android}"
+                                             Text="{Binding DeviceVersion, StringFormat='Android {0}'}" />
+                        <controls:StatusChip Icon="{Binding IsDeviceEmulator, Converter={s:BoolToText True={x:Static fonts:MaterialIcons.Computer}, False={x:Static fonts:MaterialIcons.Smartphone}}}"
+                                             Text="{Binding IsDeviceEmulator, Converter={s:BoolToText True='Emulator', False='Physical'}}"
+                                             Tone="{Binding IsDeviceEmulator, Converter={StaticResource DeviceTypeToneConverter}}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource ApplicationCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100"
                                Title="Application"
                                Icon="{x:Static fonts:MaterialIcons.Apps}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Name" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding ApplicationName}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="PackageName" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding ApplicationPackageName}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Version" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding ApplicationVersion}" />
+                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
                     <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Build" />
                     <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding ApplicationBuild}" />
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource DisplayCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="200"
                                Title="Display"
                                Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Width" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DisplayWidth, StringFormat='{0:F0} px'}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Height" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DisplayHeight, StringFormat='{0:F0} px'}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Density" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DisplayDensity, StringFormat='{0:F1}'}" />
                 </Grid>
             </controls:InfoCard>

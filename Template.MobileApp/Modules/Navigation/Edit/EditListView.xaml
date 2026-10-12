@@ -22,23 +22,31 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="WorkRowBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="8,4" />
-                <Setter Property="Padding" Value="12,8" />
+            <Style x:Key="WorkRowGrid"
+                   TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="WorkRowContentGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,6,8,6" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="WorkRowSeparator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
             <Style x:Key="WorkIdBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="8,2" />
                 <Setter Property="MinimumWidthRequest" Value="44" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                 <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
@@ -47,8 +55,33 @@
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="WorkIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="WorkEditButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource WorkIconButton}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="WorkDeleteButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource WorkIconButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
             <Style x:Key="WorkNameLabel"
@@ -83,8 +116,10 @@
                 <Setter Property="HeightRequest" Value="40" />
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="BorderWidth" Value="1" />
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
@@ -93,11 +128,7 @@
                    BasedOn="{StaticResource SelectionBarButton}">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <Style x:Key="WorkRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="10" />
+                <Setter Property="BorderWidth" Value="0" />
             </Style>
 
             <Style x:Key="SelectionBarGrid"
@@ -124,41 +155,44 @@
                     </Border>
                     <Label Style="{StaticResource BasicCenterTitleLabel}"
                            Text="No items" />
-                    <Label Style="{StaticResource BasicCenterHintLabel}"
-                           Text="Press New to add a work item" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type entity:WorkEntity}">
-                    <Border x:Name="RowBorder"
-                            Style="{StaticResource WorkRowBorder}">
+                    <Grid x:Name="RowGrid"
+                          Style="{StaticResource WorkRowGrid}"
+                          RowDefinitions="*,Auto">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroupList>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal" />
                                     <VisualState x:Name="Selected">
                                         <VisualState.Setters>
-                                            <Setter TargetName="RowBorder" Property="Border.BackgroundColor" Value="{StaticResource BlueLighten5}" />
-                                            <Setter TargetName="RowBorder" Property="Border.Stroke" Value="{StaticResource BlueDefault}" />
+                                            <Setter TargetName="RowGrid" Property="Grid.BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                                            <Setter TargetName="IdBorder" Property="Border.BackgroundColor" Value="White" />
+                                            <Setter TargetName="IdLabel" Property="Label.TextColor" Value="{StaticResource BrownDarken1}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateGroupList>
                         </VisualStateManager.VisualStateGroups>
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                        <Grid Style="{StaticResource WorkRowGrid}"
+                        <Grid Grid.Row="0"
+                              Style="{StaticResource WorkRowContentGrid}"
                               ColumnDefinitions="Auto,*,Auto,Auto">
-                            <Border Grid.Column="0"
+                            <Border x:Name="IdBorder"
+                                    Grid.Column="0"
                                     Style="{StaticResource WorkIdBorder}">
-                                <Label Style="{StaticResource WorkIdLabel}"
+                                <Label x:Name="IdLabel"
+                                       Style="{StaticResource WorkIdLabel}"
                                        Text="{Binding Id, StringFormat='#{0}'}" />
                             </Border>
-                            <Label Grid.Column="1"
+                            <Label x:Name="NameLabel"
+                                   Grid.Column="1"
                                    Style="{StaticResource WorkNameLabel}"
                                    Text="{Binding Name}" />
                             <Button Grid.Column="2"
-                                    Style="{StaticResource ItemCollectionButtonPrimary}"
-                                    behaviors:ButtonOption.PressEffect="True"
+                                    Style="{StaticResource WorkEditButton}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand, x:DataType={x:Type module:EditListViewModel}}"
                                     CommandParameter="{Binding}"
                                     Text="{x:Static fonts:MaterialIcons.Edit}">
@@ -171,8 +205,7 @@
                                 </Button.Triggers>
                             </Button>
                             <Button Grid.Column="3"
-                                    Style="{StaticResource ItemCollectionButtonDanger}"
-                                    behaviors:ButtonOption.PressEffect="True"
+                                    Style="{StaticResource WorkDeleteButton}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:EditListViewModel}}"
                                     CommandParameter="{Binding}"
                                     Text="{x:Static fonts:MaterialIcons.Delete}">
@@ -186,7 +219,9 @@
                             </Button>
                         </Grid>
                         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    </Border>
+                        <BoxView Grid.Row="1"
+                                 Style="{StaticResource WorkRowSeparator}" />
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
@@ -199,15 +234,15 @@
                   ColumnDefinitions="*,Auto,Auto">
                 <Label Grid.Column="0"
                        Style="{StaticResource SelectionCountLabel}"
-                       Text="{Binding SelectedItems.Count, StringFormat='{0} 件選択'}" />
+                       Text="{Binding SelectedItems.Count, StringFormat='{0} selected'}" />
                 <Button Grid.Column="1"
                         Style="{StaticResource SelectionBarButton}"
                         Command="{Binding SelectAllCommand}"
-                        Text="全選択" />
+                        Text="Select all" />
                 <Button Grid.Column="2"
                         Style="{StaticResource SelectionBarButtonDanger}"
                         Command="{Binding BulkDeleteCommand}"
-                        Text="削除" />
+                        Text="Delete" />
             </Grid>
         </Border>
 

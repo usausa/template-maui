@@ -16,4 +16,12 @@ public sealed class PopupFocusPlugin : IPopupPlugin
             };
         }
     }
+
+    public void OnOpening(ContentView view)
+    {
+    }
+
+    public void OnClosed(ContentView view)
+    {
+    }
 }

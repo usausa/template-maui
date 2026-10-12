@@ -4,13 +4,15 @@ using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
-using Template.MobileApp.Models.Sample.Graph;
-
 public sealed class GraphRowSurface : SKCanvasView
 {
     private const float DefaultRowHeight = 26f;
+
     private const float MarginLeft = 8f;
+
     private const float MarginRight = 8f;
+
+    private const float NodeBorderWidth = 1.5f;
 
     private static readonly SKColor[] LaneColors =
     [
@@ -26,18 +28,16 @@ public sealed class GraphRowSurface : SKCanvasView
         new(0x17, 0xBE, 0xCF)
     ];
 
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty RowDataProperty = BindableProperty.Create(
         nameof(RowData),
         typeof(GraphRow),
         typeof(GraphRowSurface),
         defaultValue: null,
         propertyChanged: OnRowDataChanged);
-
-    public GraphRow? RowData
-    {
-        get => (GraphRow?)GetValue(RowDataProperty);
-        set => SetValue(RowDataProperty, value);
-    }
 
     public static readonly BindableProperty LineWidthProperty = BindableProperty.Create(
         nameof(LineWidth),
@@ -46,24 +46,12 @@ public sealed class GraphRowSurface : SKCanvasView
         2f,
         propertyChanged: OnVisualPropertyChanged);
 
-    public float LineWidth
-    {
-        get => (float)GetValue(LineWidthProperty);
-        set => SetValue(LineWidthProperty, value);
-    }
-
     public static readonly BindableProperty NodeRadiusProperty = BindableProperty.Create(
         nameof(NodeRadius),
         typeof(float),
         typeof(GraphRowSurface),
         5f,
         propertyChanged: OnVisualPropertyChanged);
-
-    public float NodeRadius
-    {
-        get => (float)GetValue(NodeRadiusProperty);
-        set => SetValue(NodeRadiusProperty, value);
-    }
 
     public static readonly BindableProperty LaneWidthProperty = BindableProperty.Create(
         nameof(LaneWidth),
@@ -72,13 +60,6 @@ public sealed class GraphRowSurface : SKCanvasView
         18f,
         propertyChanged: OnLaneWidthChanged);
 
-    public float LaneWidth
-    {
-        get => (float)GetValue(LaneWidthProperty);
-        set => SetValue(LaneWidthProperty, value);
-    }
-
-    // ノード中心の Y 位置(0 以下で行の中央)。行を展開して高さが変わる場合に固定位置を指定する
     public static readonly BindableProperty NodeCenterYProperty = BindableProperty.Create(
         nameof(NodeCenterY),
         typeof(float),
@@ -86,13 +67,6 @@ public sealed class GraphRowSurface : SKCanvasView
         0f,
         propertyChanged: OnVisualPropertyChanged);
 
-    public float NodeCenterY
-    {
-        get => (float)GetValue(NodeCenterYProperty);
-        set => SetValue(NodeCenterYProperty, value);
-    }
-
-    // 分岐・合流を曲線で描く
     public static readonly BindableProperty UseCurvesProperty = BindableProperty.Create(
         nameof(UseCurves),
         typeof(bool),
@@ -100,16 +74,85 @@ public sealed class GraphRowSurface : SKCanvasView
         false,
         propertyChanged: OnVisualPropertyChanged);
 
+    public GraphRow? RowData
+    {
+        get => (GraphRow?)GetValue(RowDataProperty);
+        set => SetValue(RowDataProperty, value);
+    }
+
+    public float LineWidth
+    {
+        get => (float)GetValue(LineWidthProperty);
+        set => SetValue(LineWidthProperty, value);
+    }
+
+    public float NodeRadius
+    {
+        get => (float)GetValue(NodeRadiusProperty);
+        set => SetValue(NodeRadiusProperty, value);
+    }
+
+    public float LaneWidth
+    {
+        get => (float)GetValue(LaneWidthProperty);
+        set => SetValue(LaneWidthProperty, value);
+    }
+
+    public float NodeCenterY
+    {
+        get => (float)GetValue(NodeCenterYProperty);
+        set => SetValue(NodeCenterYProperty, value);
+    }
+
     public bool UseCurves
     {
         get => (bool)GetValue(UseCurvesProperty);
         set => SetValue(UseCurvesProperty, value);
     }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public GraphRowSurface()
     {
-        // 高さは親レイアウト(行)に従う。UIGraph は行 Grid の HeightRequest=26 で決まる
         IgnorePixelScaling = false;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Layout
+    //--------------------------------------------------------------------------------
+
+    private static void OnRowDataChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var element = (GraphRowSurface)bindable;
+        if (newValue is GraphRow row)
+        {
+            element.WidthRequest = element.GetCellWidth(row.LaneCount);
+        }
+        element.InvalidateSurface();
+    }
+
+    private static void OnLaneWidthChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var element = (GraphRowSurface)bindable;
+        if (element.RowData is { } row)
+        {
+            element.WidthRequest = element.GetCellWidth(row.LaneCount);
+        }
+        element.InvalidateSurface();
+    }
+
+    private float GetCellWidth(int laneCount) =>
+        MarginLeft + (LaneWidth * Math.Max(laneCount, 1)) + MarginRight;
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
+
+    private static void OnVisualPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((GraphRowSurface)bindable).InvalidateSurface();
     }
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
@@ -135,34 +178,6 @@ public sealed class GraphRowSurface : SKCanvasView
         canvas.Restore();
     }
 
-    private static void OnRowDataChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var element = (GraphRowSurface)bindable;
-        if (newValue is GraphRow row)
-        {
-            element.WidthRequest = element.GetCellWidth(row.LaneCount);
-        }
-        element.InvalidateSurface();
-    }
-
-    private static void OnLaneWidthChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var element = (GraphRowSurface)bindable;
-        if (element.RowData is { } row)
-        {
-            element.WidthRequest = element.GetCellWidth(row.LaneCount);
-        }
-        element.InvalidateSurface();
-    }
-
-    private static void OnVisualPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        ((GraphRowSurface)bindable).InvalidateSurface();
-    }
-
-    private float GetCellWidth(int laneCount) =>
-        MarginLeft + (LaneWidth * Math.Max(laneCount, 1)) + MarginRight;
-
     private void Render(SKCanvas canvas, GraphRow row)
     {
         canvas.Clear(SKColors.Transparent);
@@ -178,8 +193,11 @@ public sealed class GraphRowSurface : SKCanvasView
         strokePaint.StrokeCap = SKStrokeCap.Round;
         strokePaint.StrokeJoin = SKStrokeJoin.Round;
 
-        foreach (var seg in row.Segments)
+        var segments = row.Segments;
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < segments.Count; i++)
         {
+            var seg = segments[i];
             strokePaint.Color = LaneColors[seg.ColorIndex % LaneColors.Length];
             DrawSegment(canvas, seg, strokePaint, rowHeight, nodeCenterY);
         }
@@ -193,7 +211,7 @@ public sealed class GraphRowSurface : SKCanvasView
         fillPaint.IsAntialias = true;
         using var borderPaint = new SKPaint();
         borderPaint.Style = SKPaintStyle.Stroke;
-        borderPaint.StrokeWidth = 1.5f;
+        borderPaint.StrokeWidth = NodeBorderWidth;
         borderPaint.Color = SKColors.White;
         borderPaint.IsAntialias = true;
 
@@ -233,7 +251,6 @@ public sealed class GraphRowSurface : SKCanvasView
             return;
         }
 
-        // S 字カーブで滑らかに接続する
         var midY = (y1 + y2) / 2f;
         using var builder = new SKPathBuilder();
         builder.MoveTo(x1, y1);

@@ -2,10 +2,12 @@ namespace Template.MobileApp.Controls;
 
 using Microsoft.Maui.Layouts;
 
-// 子要素を左上から右下へ重ねて並べるカスタムレイアウト (MDI ウィンドウ風)
 public sealed class CascadeStackLayout : Layout
 {
-    // 子要素ごとにずらす量
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty OffsetProperty = BindableProperty.Create(
         nameof(Offset),
         typeof(double),
@@ -18,6 +20,10 @@ public sealed class CascadeStackLayout : Layout
         get => (double)GetValue(OffsetProperty);
         set => SetValue(OffsetProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Layout
+    //--------------------------------------------------------------------------------
 
     protected override ILayoutManager CreateLayoutManager() => new CascadeLayoutManager(this);
 

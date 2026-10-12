@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
@@ -19,14 +20,52 @@
             <Style x:Key="TimelineGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-                <Setter Property="Padding" Value="16" />
-                <Setter Property="RowSpacing" Value="12" />
             </Style>
 
             <!-- Header -->
             <Style x:Key="TimelineHeaderGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="16,16,16,12" />
                 <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="FilterScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Padding" Value="16,0,16,12" />
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="FilterChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type mcc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style x:Key="FilterChipGroup"
+                   TargetType="mcc:ChipGroup">
+                <Setter Property="ChipTextSize" Value="14" />
+                <Setter Property="ChipCornerRadius" Value="16" />
+                <Setter Property="ChipPadding" Value="12,0" />
+                <Setter Property="ChipBackground" Value="White" />
+                <Setter Property="ChipStroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedChipTextColor" Value="White" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="ItemStyle" Value="{StaticResource FilterChipLabel}" />
+            </Style>
+
+            <Style x:Key="TimelineHeaderDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
             <Style x:Key="CalendarIconBorder"
@@ -79,6 +118,7 @@
 
             <Style x:Key="EventRowGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="16,0,16,0" />
                 <Setter Property="ColumnSpacing" Value="10" />
             </Style>
 
@@ -132,19 +172,25 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="EventCardBorder"
+            <!-- Flat box: 1px frame + accent bar in the event color (the current row is tinted) -->
+            <Style x:Key="EventBoxBorder"
                    TargetType="Border">
-                <Setter Property="Padding" Value="14" />
+                <Setter Property="Margin" Value="0,5" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-                <Setter Property="Margin" Value="0,4,0,8" />
-                <Setter Property="Shadow">
-                    <Shadow Offset="0,2"
-                            Brush="Black"
-                            Opacity="0.1"
-                            Radius="10" />
-                </Setter>
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="EventAccentBox"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="4" />
+            </Style>
+
+            <Style x:Key="EventContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12,12,14,12" />
             </Style>
 
             <Style x:Key="EventTitleRow"
@@ -164,7 +210,7 @@
                    TargetType="Border">
                 <Setter Property="Padding" Value="7,2" />
                 <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
@@ -173,6 +219,19 @@
                 <Setter Property="FontSize" Value="9" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="BookmarkButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star_border}" />
             </Style>
 
             <Style x:Key="EventDescLabel"
@@ -193,7 +252,7 @@
                 <Setter Property="Padding" Value="8,3" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                 <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
             </Style>
 
             <Style x:Key="TagContentRow"
@@ -216,11 +275,45 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="NowTimeLabel"
+                   TargetType="Label">
+                <Setter Property="WidthRequest" Value="50" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="NowDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="10" />
+                <Setter Property="HeightRequest" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Fill" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="NowLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="EmptyLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
     <Grid Style="{StaticResource TimelineGrid}"
-          RowDefinitions="Auto,*">
+          RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- Header -->
         <Grid Grid.Row="0"
@@ -237,12 +330,28 @@
                 <Label Style="{StaticResource DateCaptionLabel}"
                        Text="本日のスケジュール" />
                 <Label Style="{StaticResource DateLabel}"
-                       Text="{Binding DateLabel}" />
+                       Text="{Binding Today, StringFormat='AWS Summit Japan {0:yyyy} · Day 1 ({0:yyyy/MM/dd})'}" />
             </VerticalStackLayout>
         </Grid>
 
+        <ScrollView Grid.Row="1"
+                    Style="{StaticResource FilterScroll}">
+            <mcc:ChipGroup Style="{StaticResource FilterChipGroup}"
+                           ItemsSource="{Binding Filters}"
+                           SelectedItem="{Binding SelectedFilter}">
+                <mcc:ChipGroup.ItemTemplate>
+                    <DataTemplate x:DataType="module:UITimelineFilterOption">
+                        <Label Text="{Binding Name}" />
+                    </DataTemplate>
+                </mcc:ChipGroup.ItemTemplate>
+            </mcc:ChipGroup>
+        </ScrollView>
+
+        <BoxView Grid.Row="2"
+                 Style="{StaticResource TimelineHeaderDivider}" />
+
         <!-- Timeline list -->
-        <CollectionView Grid.Row="1"
+        <CollectionView Grid.Row="3"
                         Style="{StaticResource TimelineCollection}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
                         behaviors:AnimationOption.EnterDelay="80"
@@ -250,19 +359,22 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="module:UITimelineEvent">
                     <Grid Style="{StaticResource EventRowGrid}"
-                          ColumnDefinitions="Auto,Auto,*"
-                          Opacity="{Binding RowOpacity}">
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="Auto,Auto,*">
 
                         <!-- Time -->
-                        <Label Grid.Column="0"
+                        <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource EventTimeLabel}"
-                               Text="{Binding Time}" />
+                               Opacity="{Binding RowOpacity}"
+                               Text="{Binding Start, StringFormat='{0:HH:mm}'}" />
 
                         <!-- Dot + line (done: check / current: halo / upcoming: hollow) -->
-                        <Grid Grid.Column="1"
+                        <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                 Style="{StaticResource TimelineLine}"
+                                 Opacity="{Binding RowOpacity}" />
+                        <Grid Grid.Row="0" Grid.Column="1"
                               Style="{StaticResource TimelineDotGrid}"
-                              RowDefinitions="*">
-                            <BoxView Style="{StaticResource TimelineLine}" />
+                              Opacity="{Binding RowOpacity}">
                             <Ellipse Style="{StaticResource TimelineDotHalo}"
                                      behaviors:AnimationOption.Pulse="{Binding Current}"
                                      IsVisible="{Binding Current}"
@@ -275,49 +387,90 @@
                                    Text="{x:Static fonts:MaterialIcons.Check}" />
                         </Grid>
 
-                        <!-- Card with title, status badge, description, tags -->
-                        <Border Grid.Column="2"
-                                Style="{StaticResource EventCardBorder}">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource EventTitleRow}"
-                                      ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource EventTitleLabel}"
-                                           Text="{Binding Title}" />
-                                    <Border Grid.Column="1"
-                                            Style="{StaticResource NowBadgeBorder}"
-                                            IsVisible="{Binding Current}"
-                                            BackgroundColor="{Binding DotColor}">
-                                        <Label Style="{StaticResource NowBadgeLabel}"
-                                               Text="進行中" />
-                                    </Border>
-                                </Grid>
-                                <Label Style="{StaticResource EventDescLabel}"
-                                       Text="{Binding Description}" />
-                                <HorizontalStackLayout Style="{StaticResource TagRow}">
-                                    <Border Style="{StaticResource TagBorder}">
-                                        <HorizontalStackLayout Style="{StaticResource TagContentRow}">
-                                            <Label Style="{StaticResource TagIcon}"
-                                                   Text="{x:Static fonts:MaterialIcons.Tag}" />
-                                            <Label Style="{StaticResource TagLabel}"
-                                                   Text="{Binding Tag1}" />
-                                        </HorizontalStackLayout>
-                                    </Border>
-                                    <Border Style="{StaticResource TagBorder}">
-                                        <HorizontalStackLayout Style="{StaticResource TagContentRow}">
-                                            <Label Style="{StaticResource TagIcon}"
-                                                   Text="{x:Static fonts:MaterialIcons.Tag}" />
-                                            <Label Style="{StaticResource TagLabel}"
-                                                   Text="{Binding Tag2}" />
-                                        </HorizontalStackLayout>
-                                    </Border>
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
+                        <!-- Flat box with title, status badge, description, tags -->
+                        <Border Grid.Row="0" Grid.Column="2"
+                                Style="{StaticResource EventBoxBorder}"
+                                Opacity="{Binding RowOpacity}">
+                            <Grid ColumnDefinitions="Auto,*"
+                                  BackgroundColor="{Binding RowBackground}">
+                                <BoxView Grid.Column="0"
+                                         Style="{StaticResource EventAccentBox}"
+                                         Color="{Binding DotColor}" />
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Style="{StaticResource EventContentStack}">
+                                    <Grid Style="{StaticResource EventTitleRow}"
+                                          ColumnDefinitions="*,Auto,Auto">
+                                        <Label Grid.Column="0"
+                                               Style="{StaticResource EventTitleLabel}"
+                                               Text="{Binding Title}" />
+                                        <Border Grid.Column="1"
+                                                Style="{StaticResource NowBadgeBorder}"
+                                                IsVisible="{Binding Current}"
+                                                BackgroundColor="{Binding DotColor}">
+                                            <Label Style="{StaticResource NowBadgeLabel}"
+                                                   Text="進行中" />
+                                        </Border>
+                                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                        <Button Grid.Column="2"
+                                                Style="{StaticResource BookmarkButton}"
+                                                behaviors:AnimationOption.BounceTrigger="{Binding IsBookmarked}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:UITimelineViewModel}}, Path=BookmarkCommand, x:DataType={x:Type module:UITimelineViewModel}}"
+                                                CommandParameter="{Binding .}">
+                                            <Button.Triggers>
+                                                <DataTrigger TargetType="Button"
+                                                             Binding="{Binding IsBookmarked}"
+                                                             Value="True">
+                                                    <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star}" />
+                                                    <Setter Property="TextColor" Value="{StaticResource AmberDarken1}" />
+                                                </DataTrigger>
+                                            </Button.Triggers>
+                                        </Button>
+                                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                    </Grid>
+                                    <Label Style="{StaticResource EventDescLabel}"
+                                           Text="{Binding Description}" />
+                                    <HorizontalStackLayout Style="{StaticResource TagRow}">
+                                        <Border Style="{StaticResource TagBorder}">
+                                            <HorizontalStackLayout Style="{StaticResource TagContentRow}">
+                                                <Label Style="{StaticResource TagIcon}"
+                                                       Text="{x:Static fonts:MaterialIcons.Tag}" />
+                                                <Label Style="{StaticResource TagLabel}"
+                                                       Text="{Binding Tag1}" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                        <Border Style="{StaticResource TagBorder}">
+                                            <HorizontalStackLayout Style="{StaticResource TagContentRow}">
+                                                <Label Style="{StaticResource TagIcon}"
+                                                       Text="{x:Static fonts:MaterialIcons.Tag}" />
+                                                <Label Style="{StaticResource TagLabel}"
+                                                       Text="{Binding Tag2}" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
                         </Border>
+
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource NowTimeLabel}"
+                               IsVisible="{Binding IsNowAfter}"
+                               Text="{Binding Source={RelativeSource AncestorType={x:Type module:UITimelineViewModel}}, Path=Now, StringFormat='{0:HH:mm}', x:DataType={x:Type module:UITimelineViewModel}}" />
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                        <Ellipse Grid.Row="1" Grid.Column="1"
+                                 Style="{StaticResource NowDot}"
+                                 IsVisible="{Binding IsNowAfter}" />
+                        <BoxView Grid.Row="1" Grid.Column="2"
+                                 Style="{StaticResource NowLine}"
+                                 IsVisible="{Binding IsNowAfter}" />
 
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <Label Style="{StaticResource EmptyLabel}"
+                       Text="該当するセッションはありません" />
+            </CollectionView.EmptyView>
         </CollectionView>
 
     </Grid>

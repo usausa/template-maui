@@ -10,6 +10,9 @@ public interface ICalendarService
     IReadOnlyList<CalendarStamp> GetStamps(DateOnly startDate, DateOnly endDate);
 
     IReadOnlyList<DateOnly> GetHolidays(DateOnly startDate, DateOnly endDate);
+
+    // 時刻のある予定 (Schedule のタイムテーブル)
+    IReadOnlyList<TimetableEvent> GetSchedule(DateOnly day);
 }
 
 public sealed class CalendarService : ICalendarService
@@ -29,6 +32,44 @@ public sealed class CalendarService : ICalendarService
     private static readonly Color Blue = Color.FromArgb("#1E88E5");
     private static readonly Color CyanText = Color.FromArgb("#00ACC1");
     private static readonly Color YellowText = Color.FromArgb("#F9A825");
+    private static readonly Color Purple = Color.FromArgb("#8E24AA");
+    private static readonly Color Teal = Color.FromArgb("#00897B");
+    private static readonly Color Indigo = Color.FromArgb("#3949AB");
+    private static readonly Color Red = Color.FromArgb("#E53935");
+    private static readonly Color BlueGray = Color.FromArgb("#546E7A");
+    private static readonly Color Amber = Color.FromArgb("#FFB300");
+
+    private static readonly string[] MemberAvatars =
+    [
+        "avatar_person01.jpg",
+        "avatar_person02.jpg",
+        "avatar_person03.jpg",
+        "avatar_person04.jpg",
+        "avatar_person05.jpg"
+    ];
+
+    // 平日の予定。先頭 (朝会) は毎日入る
+    private static readonly (TimeSpan Start, TimeSpan End, string Title, string Place, int Members, string Memo, Color Color)[] WorkScheduleTemplates =
+    [
+        (new(9, 0, 0), new(9, 30, 0), "朝会", "オンライン", 5, "今日の作業と、困っていることを共有する。", Blue),
+        (new(10, 0, 0), new(11, 30, 0), "設計レビュー", "会議室 A", 4, "画面とモデルの分け方を確認する。資料は前日までに共有。", Indigo),
+        (new(11, 0, 0), new(11, 30, 0), "1on1", "会議室 C", 2, "来期の目標と、勉強したい分野の相談。", Teal),
+        (new(12, 0, 0), new(13, 0, 0), "ランチミーティング", "社員食堂", 3, "新しく入ったメンバーの歓迎会を兼ねる。", Orange),
+        (new(13, 30, 0), new(15, 0, 0), "お客さまとの打ち合わせ", "渋谷オフィス", 4, "見積もりと日程を確認する。デモの端末を持っていく。", Red),
+        (new(14, 0, 0), new(15, 0, 0), "採用面接", "会議室 B", 3, "エンジニアの 2 次面接。評価のシートを事前に読む。", HotPink),
+        (new(15, 30, 0), new(16, 30, 0), "スプリント計画", "会議室 A", 6, "次の 2 週間で進める作業を決める。", Green),
+        (new(16, 0, 0), new(17, 0, 0), "社内勉強会", "セミナールーム", 8, "MAUI の新しい機能の紹介と、質問の時間。", Amber),
+        (new(17, 30, 0), new(18, 0, 0), "振り返り", "オンライン", 5, "今週の良かったことと、次に試すこと。", BlueGray)
+    ];
+
+    private static readonly (TimeSpan Start, TimeSpan End, string Title, string Place, int Members, string Memo, Color Color)[] HolidayScheduleTemplates =
+    [
+        (new(10, 0, 0), new(11, 30, 0), "ジム", "駅前のジム", 1, "体幹のトレーニングとストレッチ。", Cyan),
+        (new(11, 30, 0), new(13, 0, 0), "ブランチ", "近所のカフェ", 2, "季節のパンケーキを食べる。", Orange),
+        (new(14, 0, 0), new(16, 0, 0), "買い物", "ショッピングモール", 2, "冬物の服と日用品をまとめて買う。", Amber),
+        (new(16, 30, 0), new(18, 30, 0), "映画", "シネマコンプレックス", 3, "話題のアニメ映画。席は予約済み。", Purple),
+        (new(19, 0, 0), new(20, 0, 0), "夕食", "イタリアン", 4, "友だちの誕生日のお祝い。ケーキを頼んである。", Red)
+    ];
 
     private static readonly (DayOfWeek Dow, string Title, CalendarEventStyle Style, Color Color)[] WeeklyTemplates =
     [
@@ -335,5 +376,31 @@ public sealed class CalendarService : ICalendarService
     {
         var x = year - 1980;
         return (int)(23.09 + (0.242194 * x) - Math.Floor(x / 4.0));
+    }
+
+    //--------------------------------------------------------------------------------
+    // Schedule
+    //--------------------------------------------------------------------------------
+
+    // 日付で決まる予定 (平日は朝会と、ほかの約半分。土日と祝日は 3 件)
+    public IReadOnlyList<TimetableEvent> GetSchedule(DateOnly day)
+    {
+        var seed = day.DayNumber;
+        var holiday = (day.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday) || GetYearHolidays(day.Year).Contains(day);
+        var templates = holiday
+            ? HolidayScheduleTemplates.Where((_, i) => ((i + seed) % HolidayScheduleTemplates.Length) < 3)
+            : WorkScheduleTemplates.Where((_, i) => (i == 0) || (((i + seed) % 2) == 0));
+        return templates
+            .Select((x, i) => new TimetableEvent
+            {
+                Title = x.Title,
+                Start = x.Start,
+                End = x.End,
+                Color = x.Color,
+                Place = x.Place,
+                Members = Enumerable.Range(0, x.Members).Select(m => MemberAvatars[(seed + i + m) % MemberAvatars.Length]).ToArray(),
+                Memo = x.Memo
+            })
+            .ToList();
     }
 }

@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
@@ -42,6 +43,11 @@
                    TargetType="Label"
                    BasedOn="{StaticResource DockPaneLabel}">
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="UniformItems"
+                   TargetType="mct:UniformItemsLayout">
+                <Setter Property="Margin" Value="-3,0" />
             </Style>
 
             <Style x:Key="UniformCell"
@@ -86,12 +92,12 @@
             </Style>
 
             <Style x:Key="StaggeredLayout"
-                   TargetType="controls:StaggeredGrid">
+                   TargetType="mcc:StaggeredGrid">
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
             <Style x:Key="TileLayout"
-                   TargetType="controls:VariableSizeWrapPanel">
+                   TargetType="mcc:VariableSizeWrapPanel">
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
@@ -213,8 +219,6 @@
                                Title="DockLayout"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="子要素を上下左右へドッキングし、最後の要素が残りを埋める" />
                     <mct:DockLayout HeightRequest="240"
                                     HorizontalSpacing="4" ShouldExpandLastChild="True" VerticalSpacing="4">
                         <Border Style="{StaticResource DockPane}"
@@ -222,14 +226,14 @@
                                 BackgroundColor="{StaticResource BlueDefault}"
                                 mct:DockLayout.DockPosition="Top">
                             <Label Style="{StaticResource DockPaneLabel}"
-                                   Text="Top (ツールバー)" />
+                                   Text="Top" />
                         </Border>
                         <Border Style="{StaticResource DockPane}"
                                 HeightRequest="32"
                                 BackgroundColor="{StaticResource BlueGrayDefault}"
                                 mct:DockLayout.DockPosition="Bottom">
                             <Label Style="{StaticResource DockPaneLabel}"
-                                   Text="Bottom (ステータス)" />
+                                   Text="Bottom" />
                         </Border>
                         <Border Style="{StaticResource DockPane}"
                                 WidthRequest="64"
@@ -248,7 +252,7 @@
                         <Border Style="{StaticResource DockPane}"
                                 BackgroundColor="{StaticResource GrayLighten2}">
                             <Label Style="{StaticResource DockFillLabel}"
-                                   Text="Fill (コンテンツ)" />
+                                   Text="Fill" />
                         </Border>
                     </mct:DockLayout>
                 </VerticalStackLayout>
@@ -259,38 +263,45 @@
                                Title="UniformItemsLayout"
                                Icon="{x:Static fonts:MaterialIcons.Grid_view}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="全セルが同じサイズになる (MaxColumns=4)" />
-                    <mct:UniformItemsLayout MaxColumns="4">
-                        <Border Style="{StaticResource UniformCell}">
+                    <mct:UniformItemsLayout Style="{StaticResource UniformItems}"
+                                            MaxColumns="4">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="A" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource GreenLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="B" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource AmberLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="C" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource PinkLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="D" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource CyanLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="E" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource PurpleLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="F" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource OrangeLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="G" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource GrayLighten2}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="H" />
                         </Border>
@@ -300,40 +311,47 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
-                               Title="CircularLayout (自作)"
+                               Title="CircularLayout"
                                Icon="{x:Static fonts:MaterialIcons.Data_usage}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ILayoutManager 自作。子要素を円周へ均等配置 (Angle 指定で個別配置も可)" />
                     <Grid HeightRequest="240">
                         <controls:CircularLayout>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="月" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="火" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="水" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="木" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="金" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource BlueLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
-                                       Text="土" />
+                                       Text="土"
+                                       TextColor="{StaticResource BlueDefault}" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource RedLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
-                                       Text="日" />
+                                       Text="日"
+                                       TextColor="{StaticResource RedDefault}" />
                             </Border>
                         </controls:CircularLayout>
                         <Label Style="{StaticResource UniformCellLabel}"
@@ -341,28 +359,31 @@
                                Text="WEEK"
                                FontSize="12" />
                     </Grid>
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="StartAngle / SweepAngle で円弧配置 (半円: 180°→360°)。FitToArc で弧の外接矩形にサイズを詰める" />
                     <controls:CircularLayout HorizontalOptions="Center"
                                              Radius="88"
                                              FitToArc="True" StartAngle="180" SweepAngle="180">
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="1" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource GreenLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="2" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource AmberLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="3" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource PinkLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="4" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource CyanLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="5" />
                         </Border>
@@ -372,37 +393,40 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240"
-                               Title="CircularLayout 回転 / リング (自作)"
+                               Title="CircularLayout rotation / ring"
                                Icon="{x:Static fonts:MaterialIcons.Track_changes}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="左: RotateItems で子を接線方向へ回転した扇。右: 添付 Orbit で中心 (0) と 2 つのリング (1 / 2) へ振り分け" />
                     <Grid ColumnDefinitions="*,*">
                         <controls:CircularLayout Grid.Column="0"
                                                  HorizontalOptions="Center" VerticalOptions="Center"
                                                  Radius="64"
                                                  FitToArc="True" RotateItems="True" StartAngle="200" SweepAngle="140">
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource BlueLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="A"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource GreenLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="B"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource AmberLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="C"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource PinkLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="D"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource CyanLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="E"
                                        FontSize="12" />
@@ -414,21 +438,30 @@
                                                  OrbitSpacing="40">
                             <Border Style="{StaticResource OrbitCenter}"
                                     controls:CircularLayout.Orbit="0" />
-                            <Border Style="{StaticResource OrbitDot}" />
-                            <Border Style="{StaticResource OrbitDot}" />
-                            <Border Style="{StaticResource OrbitDot}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    BackgroundColor="{StaticResource BlueLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    BackgroundColor="{StaticResource GreenLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    BackgroundColor="{StaticResource AmberLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource BlueLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource GreenLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource AmberLighten4}" />
+                            <Border Style="{StaticResource OrbitDot}"
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource PinkLighten4}" />
+                            <Border Style="{StaticResource OrbitDot}"
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource CyanLighten4}" />
+                            <Border Style="{StaticResource OrbitDot}"
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource PurpleLighten4}" />
                         </controls:CircularLayout>
                     </Grid>
                 </VerticalStackLayout>
@@ -436,11 +469,9 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320"
-                               Title="HoneycombLayout (自作)"
+                               Title="HoneycombLayout"
                                Icon="{x:Static fonts:MaterialIcons.Hexagon}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="列を交互に半セルずらして上から埋める (Columns=3、Spacing=6)。7 個で中央 1 + 周囲 6 の花形。タップで選択 (枠 + バッジ)" />
                     <controls:HoneycombLayout Style="{StaticResource HexLayout}"
                                               BindableLayout.ItemsSource="{Binding Hexes}"
                                               Columns="3">
@@ -490,13 +521,11 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="400"
-                               Title="StaggeredGrid (自作)"
+                               Title="StaggeredGrid"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
-                    <controls:StaggeredGrid Style="{StaticResource StaggeredLayout}"
-                                            Columns="3">
+                    <mcc:StaggeredGrid Style="{StaticResource StaggeredLayout}"
+                                       Columns="3">
                         <Border Style="{StaticResource StaggeredCell}"
                                 HeightRequest="90"
                                 BackgroundColor="{StaticResource BlueLighten4}">
@@ -545,28 +574,26 @@
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="8" />
                         </Border>
-                    </controls:StaggeredGrid>
+                    </mcc:StaggeredGrid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="480"
-                               Title="VariableSizeWrapPanel (自作)"
+                               Title="VariableSizeWrapPanel"
                                Icon="{x:Static fonts:MaterialIcons.View_quilt}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ColumnSpan / RowSpan で占有セル数を指定し、空きセルは先頭から埋め戻す (Columns=3、RowHeight=56)" />
-                    <controls:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
-                                                    Columns="3" RowHeight="56">
+                    <mcc:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
+                                               Columns="3" RowHeight="56">
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource BlueLighten4}"
-                                controls:VariableSizeWrapPanel.ColumnSpan="2">
+                                mcc:VariableSizeWrapPanel.ColumnSpan="2"
+                                BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="2×1" />
                         </Border>
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource GreenLighten4}"
-                                controls:VariableSizeWrapPanel.RowSpan="2">
+                                mcc:VariableSizeWrapPanel.RowSpan="2"
+                                BackgroundColor="{StaticResource GreenLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="1×2" />
                         </Border>
@@ -581,8 +608,8 @@
                                    Text="1×1" />
                         </Border>
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource CyanLighten4}"
-                                controls:VariableSizeWrapPanel.ColumnSpan="2" controls:VariableSizeWrapPanel.RowSpan="2">
+                                mcc:VariableSizeWrapPanel.ColumnSpan="2" mcc:VariableSizeWrapPanel.RowSpan="2"
+                                BackgroundColor="{StaticResource CyanLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="2×2" />
                         </Border>
@@ -592,26 +619,24 @@
                                    Text="1×1" />
                         </Border>
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource OrangeLighten4}"
-                                controls:VariableSizeWrapPanel.ColumnSpan="3">
+                                mcc:VariableSizeWrapPanel.ColumnSpan="3"
+                                BackgroundColor="{StaticResource OrangeLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="3×1" />
                         </Border>
-                    </controls:VariableSizeWrapPanel>
+                    </mcc:VariableSizeWrapPanel>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="560"
-                               Title="OverlapPanel (自作)"
+                               Title="OverlapPanel"
                                Icon="{x:Static fonts:MaterialIcons.Filter_none}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="子を OffsetX / OffsetY でずらして重ねる (左)。ReverseZIndex=True で先頭が最前面になる (右=重ねアバターの土台)" />
                     <Grid ColumnDefinitions="*,*">
-                        <controls:OverlapPanel Grid.Column="0"
-                                               HorizontalOptions="Start" VerticalOptions="Start"
-                                               OffsetX="18" OffsetY="14">
+                        <mcc:OverlapPanel Grid.Column="0"
+                                          HorizontalOptions="Start" VerticalOptions="Start"
+                                          OffsetX="18" OffsetY="14">
                             <Border Style="{StaticResource DockPane}"
                                     WidthRequest="96" HeightRequest="60"
                                     BackgroundColor="{StaticResource BlueDefault}">
@@ -630,11 +655,11 @@
                                 <Label Style="{StaticResource DockPaneLabel}"
                                        Text="3" />
                             </Border>
-                        </controls:OverlapPanel>
-                        <controls:OverlapPanel Grid.Column="1"
-                                               HorizontalOptions="Start" VerticalOptions="Center"
-                                               OffsetX="26"
-                                               ReverseZIndex="True">
+                        </mcc:OverlapPanel>
+                        <mcc:OverlapPanel Grid.Column="1"
+                                          HorizontalOptions="Start" VerticalOptions="Center"
+                                          OffsetX="26"
+                                          ReverseZIndex="True">
                             <Border Style="{StaticResource OverlapCircle}"
                                     BackgroundColor="{StaticResource BlueDefault}" />
                             <Border Style="{StaticResource OverlapCircle}"
@@ -643,7 +668,7 @@
                                     BackgroundColor="{StaticResource OrangeDefault}" />
                             <Border Style="{StaticResource OverlapCircle}"
                                     BackgroundColor="{StaticResource BlueGrayDefault}" />
-                        </controls:OverlapPanel>
+                        </mcc:OverlapPanel>
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -653,8 +678,6 @@
                                Title="CascadeStackLayout"
                                Icon="{x:Static fonts:MaterialIcons.Layers}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="Layout 派生クラスの CreateLayoutManager で子要素を左上から右下へ重ねて配置する。ずらす量は Offset プロパティ" />
                     <controls:CascadeStackLayout HorizontalOptions="Start">
                         <Border Style="{StaticResource DockPane}"
                                 WidthRequest="200" HeightRequest="72"

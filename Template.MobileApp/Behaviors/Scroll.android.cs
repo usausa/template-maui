@@ -2,6 +2,7 @@ namespace Template.MobileApp.Behaviors;
 
 using Android.Views;
 
+using Microsoft.Maui.Controls.Handlers.Items;
 using Microsoft.Maui.Handlers;
 
 public static partial class Scroll
@@ -11,6 +12,7 @@ public static partial class Scroll
         if (options.DisableOverScroll)
         {
             ViewHandler.ViewMapper.AppendToMapping(DisableOverScrollProperty.PropertyName, UpdateDisableOverScroll);
+            CarouselViewHandler.Mapper.AppendToMapping(nameof(CarouselView.IsBounceEnabled), UpdateDisableOverScroll);
         }
     }
 

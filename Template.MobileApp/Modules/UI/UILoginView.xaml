@@ -6,7 +6,6 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:effectsView="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UILoginView"
              x:DataType="{x:Type module:UILoginViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UILoginViewModel}"
@@ -160,16 +159,10 @@
             </Style>
 
             <!-- Forget password -->
-            <Style x:Key="ForgetPasswordEffect"
-                   TargetType="effectsView:SfEffectsView">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="TouchDownEffects" Value="Ripple" />
-            </Style>
-
             <Style x:Key="ForgetPasswordLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource LightBlueDarken4}" />
                 <Setter Property="FontSize" Value="18" />
@@ -289,13 +282,12 @@
                                IsRunning="{Binding LoggingIn}"
                                IsVisible="{Binding LoggingIn}" />
 
-            <effectsView:SfEffectsView Grid.Row="13"
-                                       Style="{StaticResource ForgetPasswordEffect}"
-                                       behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                       behaviors:AnimationOption.EnterDelay="560">
-                <Label Style="{StaticResource ForgetPasswordLabel}"
-                       Text="パスワードを忘れた場合" />
-            </effectsView:SfEffectsView>
+            <Label Grid.Row="13"
+                   Style="{StaticResource ForgetPasswordLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="560"
+                   behaviors:TouchOption.Ripple="True"
+                   Text="パスワードを忘れた場合" />
 
         </Grid>
 

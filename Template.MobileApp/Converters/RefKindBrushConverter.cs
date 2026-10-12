@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-using Template.MobileApp.Models.Sample.Graph;
-
 public sealed class RefKindBrushConverter : IValueConverter
 {
     public bool Foreground { get; set; }

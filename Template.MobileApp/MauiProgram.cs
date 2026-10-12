@@ -1,3 +1,4 @@
+//#define NAVIGATION_PERFORMANCE
 namespace Template.MobileApp;
 
 using System.Net.Http.Headers;
@@ -234,7 +235,8 @@ public static partial class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // TODO App center alternative
+        // Fallback fonts
+        FallbackFonts.Languages = ["ja"];
 
         // Crash dump
         CrashReport.Start();
@@ -321,6 +323,7 @@ public static partial class MauiProgram
             c.EnablePromptSelectAll = true;
         });
         services.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
+        services.AddComponentsPopupPlugin<PopupActivationPlugin>();
         services.AddComponentsPopupPlugin<PopupFocusPlugin>();
         services.AddComponentsScreen();
         services.AddComponentsLocation();
@@ -333,7 +336,14 @@ public static partial class MauiProgram
         // Navigator
         services.AddNavigator(static (_, config) =>
         {
-            config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
+            config.UseMauiNavigationProvider(static options =>
+            {
+                options.RestoreFocus = false;
+                options.RegisterAppEffects();
+            });
+#if NAVIGATION_PERFORMANCE
+            config.AddPlugin<NavigationPerformancePlugin>();
+#endif
             config.AddPlugin<NavigationTelemetryPlugin>();
             config.AddPlugin<NavigationFocusPlugin>();
             config.AddPlugin<NavigationFeedbackPlugin>();
@@ -474,6 +484,9 @@ public static partial class MauiProgram
 
         // Setup navigator
         var navigator = services.GetRequiredService<INavigator>();
+#if NAVIGATION_PERFORMANCE
+        NavigationPerformancePlugin.Attach(navigator);
+#endif
         navigator.Navigated += (_, args) =>
         {
             // for debug

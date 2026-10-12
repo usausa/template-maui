@@ -125,7 +125,7 @@ public sealed partial class DeviceBiometricViewModel : AppViewModelBase
     // 顔認証などの後の確認のボタンは省く。結果の後に使えるかどうかを読み直す (失敗回数の超過で一時的に使えなくなる)
     private async Task AuthenticateAsync(BiometricMethod method)
     {
-        var text = new BiometricPromptText("本人確認", "キャンセル")
+        var text = new BiometricPromptText("Verify", "Cancel")
         {
             Subtitle = "Device > Biometric",
             Description = authenticator.GetLabels(method)?.PromptMessage,
@@ -152,7 +152,7 @@ public sealed partial class DeviceBiometricViewModel : AppViewModelBase
         var challenge = server.IssueChallenge();
         Challenge = challenge;
 
-        var text = new BiometricPromptText("ログイン", "キャンセル")
+        var text = new BiometricPromptText("Log in", "Cancel")
         {
             Subtitle = "Key sign in",
             Description = authenticator.GetLabels(BiometricMethod.Biometric)?.PromptMessage

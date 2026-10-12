@@ -24,13 +24,21 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ValidationEntry"
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BasicFieldEntry}">
+                <Setter Property="behaviors:Focus.ErrorStroke" Value="{StaticResource RedDefault}" />
+            </Style>
+
             <Style x:Key="InvalidEntry"
-                   TargetType="Entry">
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BasicFieldEntry}">
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
             <Style x:Key="ValidEntry"
-                   TargetType="Entry">
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BasicFieldEntry}">
                 <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
             </Style>
 
@@ -46,13 +54,14 @@
                                Icon="{x:Static fonts:MaterialIcons.Fact_check}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Text1 (clears error on focus, validates on unfocused)" />
+                           Text="Text1" />
                     <Border Style="{StaticResource CardFieldBorder}"
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
                             behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text1]}">
                         <Entry s:Behavior.Key="Text1"
                                s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
-                               Style="{StaticResource BasicFieldEntry}"
+                               Style="{StaticResource ValidationEntry}"
+                               behaviors:Focus.HasError="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
                                Text="{Binding Text1}" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
@@ -73,7 +82,8 @@
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
                             behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text2]}">
                         <Entry s:Behavior.Key="Text2"
-                               Style="{StaticResource BasicFieldEntry}"
+                               Style="{StaticResource ValidationEntry}"
+                               behaviors:Focus.HasError="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
                                Text="{Binding Text2}" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
@@ -123,12 +133,13 @@
                                Text="{Binding Password}" />
                     </Border>
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Confirm ([Compare] で Password との一致を入力の度に検証。Password 変更時も再検証)" />
+                           Text="Confirm" />
                     <Border Style="{StaticResource CardFieldBorder}"
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
                             behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Confirm]}">
                         <Entry s:Behavior.Key="Confirm"
-                               Style="{StaticResource BasicFieldEntry}"
+                               Style="{StaticResource ValidationEntry}"
+                               behaviors:Focus.HasError="{Binding Errors[Confirm], Converter={StaticResource NotEmptyConverter}}"
                                IsPassword="True"
                                Text="{Binding Confirm}" />
                     </Border>
@@ -145,7 +156,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Extension}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="EmailValidationBehavior (入力の度に検証し文字色が変わる)" />
+                           Text="Email" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
                                Text="{Binding Email}"
@@ -157,8 +168,10 @@
                             </Entry.Behaviors>
                         </Entry>
                     </Border>
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="EmailValidationBehavior (format only)" />
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="NumericValidationBehavior (1〜100 の数値のみ)" />
+                           Text="Quantity" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
                                Text="{Binding Quantity}"
@@ -171,6 +184,8 @@
                             </Entry.Behaviors>
                         </Entry>
                     </Border>
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="NumericValidationBehavior (1-100)" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

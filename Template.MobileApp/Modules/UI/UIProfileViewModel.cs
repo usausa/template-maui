@@ -1,11 +1,5 @@
 namespace Template.MobileApp.Modules.UI;
 
-public sealed class UIProfileStat
-{
-    public string Value { get; init; } = string.Empty;
-    public string Caption { get; init; } = string.Empty;
-}
-
 public sealed class UIProfileInterest
 {
     public string Label { get; init; } = string.Empty;
@@ -18,6 +12,10 @@ public sealed class UIProfilePhoto
     public string Image { get; init; } = string.Empty;
 }
 
+public sealed record UIProfilePost(DateTime Posted, string Text, int Likes, int Comments);
+
+public sealed record UIProfileLike(string Avatar, string Author, DateTime Posted, string Text);
+
 public sealed partial class UIProfileViewModel : AppViewModelBase
 {
     public string UserName { get; } = "山奥 うさぎ, 29";
@@ -26,12 +24,9 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
     public string Bio { get; } =
         ".NET と AWS を組み合わせたバックエンド設計が専門。ECS/Lambda を駆使したサーバーレスアーキテクチャと、C# で書くインフラ as Code に情熱を注いでいます。";
 
-    public IReadOnlyList<UIProfileStat> Stats { get; } =
-    [
-        new() { Value = "247", Caption = "投稿" },
-        new() { Value = "3.8k", Caption = "フォロワー" },
-        new() { Value = "420", Caption = "フォロー中" }
-    ];
+    public int Posts { get; } = 247;
+
+    public int Following { get; } = 420;
 
     public IReadOnlyList<UIProfileInterest> Interests { get; } =
     [
@@ -53,6 +48,14 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
         new() { Image = "gallery06.jpg" }
     ];
 
+    public IReadOnlyList<string> Tabs { get; } = ["写真", "投稿", "いいね"];
+
+    public IReadOnlyList<UIProfilePost> PostList { get; }
+
+    public IReadOnlyList<UIProfileLike> LikeList { get; }
+
+    public int Followers { get; } = 3812;
+
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
@@ -62,11 +65,24 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsStarred { get; set; } = true;
 
+    [ObservableProperty]
+    public partial int SelectedTab { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsPhotoViewerVisible { get; set; }
+
+    [ObservableProperty]
+    public partial int PhotoPosition { get; set; }
+
     public IObserveCommand FollowCommand { get; }
 
     public IObserveCommand LikeCommand { get; }
 
     public IObserveCommand StarCommand { get; }
+
+    public IObserveCommand OpenPhotoCommand { get; }
+
+    public IObserveCommand ClosePhotoCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -74,16 +90,59 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
 
     public UIProfileViewModel()
     {
+        var now = DateTime.Now;
+        PostList =
+        [
+            new(now.AddHours(-2), "ECS のデプロイを Blue/Green に切り替えました。ロールバックが一瞬で済むのは安心感が違います。", 48, 6),
+            new(now.AddDays(-1).AddHours(-3), ".NET MAUI のアプリの起動時間を測りました。アイコンの準備をやめただけで 1 秒近く縮みました。", 112, 14),
+            new(now.AddDays(-3), "週末は CDK で個人のインフラを書き直し。Terraform との違いも近いうちにまとめます。", 75, 9)
+        ];
+        LikeList =
+        [
+            new("avatar_person02.jpg", "日本酒飲郎", now.AddHours(-5), "Lambda の SnapStart が .NET でも使えるようになっていて驚き。コールドスタートがかなり速い。"),
+            new("avatar_person01.jpg", "M･I･O", now.AddDays(-1).AddHours(-1), "CollectionView のヘッダーを固定する小技を共有します。"),
+            new("avatar_person03.jpg", "悪いスライム", now.AddDays(-2), "DynamoDB の単一テーブル設計、やっと腑に落ちました。")
+        ];
+
         FollowCommand = MakeDelegateCommand(() => IsFollowed = !IsFollowed);
         LikeCommand = MakeDelegateCommand(() => IsLiked = !IsLiked);
         StarCommand = MakeDelegateCommand(() => IsStarred = !IsStarred);
+        OpenPhotoCommand = MakeDelegateCommand<UIProfilePhoto>(OpenPhoto);
+        ClosePhotoCommand = MakeDelegateCommand(() => IsPhotoViewerVisible = false);
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsPhotoViewerVisible)
+        {
+            IsPhotoViewerVisible = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void OpenPhoto(UIProfilePhoto photo)
+    {
+        for (var i = 0; i < Photos.Count; i++)
+        {
+            if (ReferenceEquals(Photos[i], photo))
+            {
+                PhotoPosition = i;
+                break;
+            }
+        }
+
+        IsPhotoViewerVisible = true;
+    }
 }

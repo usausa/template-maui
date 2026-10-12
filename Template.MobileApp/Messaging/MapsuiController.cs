@@ -175,7 +175,7 @@ public sealed class MapsuiController : IMapsuiController
     }
 
     // 経路 (経度緯度) を設定する。null で消去
-    public void SetOverlayRoute(IReadOnlyList<(double Lon, double Lat)>? route)
+    public void SetOverlayRoute(IEnumerable<(double Lon, double Lat)>? route)
     {
         overlayRoute = route?.Select(static p => SphericalMercator.FromLonLat(p.Lon, p.Lat).ToMPoint()).ToList();
         overlayView?.InvalidateSurface();
@@ -224,18 +224,12 @@ public sealed class MapsuiController : IMapsuiController
         paint.StrokeWidth = 7f;
         for (var i = 1; i < points.Length; i++)
         {
-            var c0 = Lerp(start, end, (i - 1) / (float)(points.Length - 1));
-            var c1 = Lerp(start, end, i / (float)(points.Length - 1));
+            var c0 = start.Lerp(end, (i - 1) / (float)(points.Length - 1));
+            var c1 = start.Lerp(end, i / (float)(points.Length - 1));
             using var shader = SKShader.CreateLinearGradient(points[i - 1], points[i], [c0, c1], null, SKShaderTileMode.Clamp);
             paint.Shader = shader;
             canvas.DrawLine(points[i - 1], points[i], paint);
             paint.Shader = null;
         }
     }
-
-    private static SKColor Lerp(SKColor from, SKColor to, float t) =>
-        new(
-            (byte)(from.Red + ((to.Red - from.Red) * t)),
-            (byte)(from.Green + ((to.Green - from.Green) * t)),
-            (byte)(from.Blue + ((to.Blue - from.Blue) * t)));
 }

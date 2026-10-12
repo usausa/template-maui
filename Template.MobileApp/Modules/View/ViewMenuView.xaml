@@ -23,9 +23,11 @@
                 Text="Layout"
                 ImageSource="{x:Static markup:AppIcons.ViewQuilt}" />
         <Button Grid.Row="0" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewState}"
+                Text="State"
+                ImageSource="{x:Static markup:AppIcons.ToggleOn}" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
@@ -56,15 +58,15 @@
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewLottie}"
-                Text="Lottie"
-                ImageSource="{x:Static markup:AppIcons.MovieFilter}" />
+                CommandParameter="{markup:ViewId ViewEffect}"
+                Text="Effect"
+                ImageSource="{x:Static markup:AppIcons.AutoAwesome}" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewSvg}"
-                Text="Svg"
-                ImageSource="{x:Static markup:AppIcons.Image}" />
+                CommandParameter="{markup:ViewId ViewDragDrop}"
+                Text="Drag &amp; Drop"
+                ImageSource="{x:Static markup:AppIcons.DragIndicator}" />
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
@@ -73,52 +75,62 @@
                 Text="Graphics"
                 ImageSource="{x:Static markup:AppIcons.Brush}" />
         <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
-
-        <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewDrawing}"
                 Text="Drawing"
                 ImageSource="{x:Static markup:AppIcons.Draw}" />
+
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewLottie}"
+                Text="Lottie"
+                ImageSource="{x:Static markup:AppIcons.MovieFilter}" />
         <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewDragDrop}"
-                Text="DragDrop"
-                ImageSource="{x:Static markup:AppIcons.DragIndicator}" />
+                CommandParameter="{markup:ViewId ViewSvg}"
+                Text="SVG"
+                ImageSource="{x:Static markup:AppIcons.Image}" />
 
         <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewEffect}"
-                Text="Effect"
-                ImageSource="{x:Static markup:AppIcons.AutoAwesome}" />
+                CommandParameter="{markup:ViewId ViewBottomSheet}"
+                Text="Bottom Sheet"
+                ImageSource="{x:Static markup:AppIcons.VerticalAlignBottom}" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewState}"
-                Text="State"
-                ImageSource="{x:Static markup:AppIcons.ToggleOn}" />
+                CommandParameter="{markup:ViewId ViewDrawer}"
+                Text="Drawer"
+                ImageSource="{x:Static markup:AppIcons.MenuOpen}" />
 
         <Button Grid.Row="7" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewToolkit}"
+                Text="Toolkit"
+                ImageSource="{x:Static markup:AppIcons.Handyman}" />
         <Button Grid.Row="7" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewCustom}"
+                Text="Custom"
+                ImageSource="{x:Static markup:AppIcons.Extension}" />
 
         <Button Grid.Row="8" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewChart}"
+                Text="Chart"
+                ImageSource="{x:Static markup:AppIcons.BarChart}" />
         <Button Grid.Row="8" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewSfChart}"
+                Text="Sf Chart"
+                ImageSource="{x:Static markup:AppIcons.InsertChart}" />
     </Grid>
 </ContentView>

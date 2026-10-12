@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum WeatherCondition
 {
     Clear,
@@ -49,9 +53,6 @@ public enum WeatherIndexKind
     Pollen
 }
 
-// Level は 1〜5
-public sealed record WeatherIndex(WeatherIndexKind Kind, int Level);
-
 public enum WeatherAlertKind
 {
     HeavyRain,
@@ -67,6 +68,13 @@ public enum WeatherAlertLevel
     Warning
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
+// Level は 1〜5
+public sealed record WeatherIndex(WeatherIndexKind Kind, int Level);
+
 public sealed record WeatherAlert(WeatherAlertKind Kind, WeatherAlertLevel Level);
 
 // 気温は ℃、降水確率は %
@@ -74,31 +82,11 @@ public sealed record WeatherHour(DateTime Time, WeatherCondition Condition, bool
 
 public sealed record WeatherDay(DateTime Date, WeatherCondition Condition, int Low, int High, int PrecipitationChance);
 
-// 現在・今から 24 時間・今日から 7 日の予報 (見本のダミー)
+// 現在・今から 24 時間・今日から 7 日の予報
 public sealed class WeatherForecast
 {
-    private const int HourCount = 24;
-
-    private const int DayCount = 7;
-
-    // 最低・最高の時刻
-    private const double LowHour = 5;
-
-    private const double HighHour = 14;
-
-    // 露点の近似 (Magnus の式) の係数
-    private const double MagnusB = 17.62;
-
-    private const double MagnusC = 243.12;
-
-    private const double SynodicMonth = 29.530588853;
-
-    private static readonly DateTime NewMoon = new(2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
-
-    // 月ごとの平均気温と、晴れの日の UV の最大
-    private static readonly double[] MonthlyTemperature = [5.4, 6.1, 9.4, 14.3, 18.8, 21.9, 25.7, 26.9, 23.3, 18.0, 12.5, 7.7];
-
-    private static readonly int[] MonthlyUv = [2, 3, 5, 6, 8, 8, 9, 9, 7, 5, 3, 2];
+    // 月の満ち欠けの周期 (日)
+    public const double SynodicMonth = 29.530588853;
 
     public required string Location { get; init; }
 
@@ -172,13 +160,37 @@ public sealed class WeatherForecast
 
     // 先頭は今日
     public required IReadOnlyList<WeatherDay> Days { get; init; }
+}
 
-    //--------------------------------------------------------------------------------
-    // Create
-    //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
 
-    // random は 0 以上 n 未満を返す
-    public static WeatherForecast Create(DateTime now, Func<int, int> random)
+// 予報の見本。日ごとの天気と気温は前の日から少しずつ変える (random は 0 以上 n 未満を返す)
+public static class WeatherSample
+{
+    private const int HourCount = 24;
+
+    private const int DayCount = 7;
+
+    // 最低・最高の時刻
+    private const double LowHour = 5;
+
+    private const double HighHour = 14;
+
+    // 露点の近似 (Magnus の式) の係数
+    private const double MagnusB = 17.62;
+
+    private const double MagnusC = 243.12;
+
+    private static readonly DateTime NewMoon = new(2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
+
+    // 月ごとの平均気温と、晴れの日の UV の最大
+    private static readonly double[] MonthlyTemperature = [5.4, 6.1, 9.4, 14.3, 18.8, 21.9, 25.7, 26.9, 23.3, 18.0, 12.5, 7.7];
+
+    private static readonly int[] MonthlyUv = [2, 3, 5, 6, 8, 8, 9, 9, 7, 5, 3, 2];
+
+    public static WeatherForecast LoadForecast(DateTime now, Func<int, int> random)
     {
         // 日ごとの天気と平均気温は前の日から少しずつ変える
         var conditions = new WeatherCondition[DayCount];
@@ -395,7 +407,7 @@ public sealed class WeatherForecast
     private static double CalculateMoonAge(DateTime now)
     {
         var days = (now.ToUniversalTime() - NewMoon).TotalDays;
-        return ((days % SynodicMonth) + SynodicMonth) % SynodicMonth;
+        return ((days % WeatherForecast.SynodicMonth) + WeatherForecast.SynodicMonth) % WeatherForecast.SynodicMonth;
     }
 
     // 洗濯・傘・服装・熱中症・紫外線・花粉 (値が大きいほど、よく乾く・必要・厚着・危険・強い・多い)

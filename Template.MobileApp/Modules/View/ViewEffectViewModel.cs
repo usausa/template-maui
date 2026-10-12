@@ -20,9 +20,6 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
     public partial int FeedbackCount { get; set; }
 
     [ObservableProperty]
-    public partial bool WavePulseEnabled { get; set; } = true;
-
-    [ObservableProperty]
     public partial bool ConfettiEnabled { get; set; }
 
     [ObservableProperty]

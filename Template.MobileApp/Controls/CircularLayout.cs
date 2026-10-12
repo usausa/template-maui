@@ -2,13 +2,14 @@ namespace Template.MobileApp.Controls;
 
 using Microsoft.Maui.Layouts;
 
-// 子要素を円周上に配置するカスタムレイアウト。
-// ILayoutManager の Measure / ArrangeChildren を実装する最小例 (AlohaKit.Layouts の CircularLayout 相当)。
-// StartAngle / SweepAngle で円弧 (Nova.Avalonia.UI の ArcPanel 相当)、RotateItems で子を接線方向へ回転 (同 RadialPanel 相当)、
-// 添付 Orbit で中心 + 同心円のリングへの振り分け (同 OrbitPanel 相当) にもなる。既定値は従来どおりの全周・1 リング
 public sealed class CircularLayout : Layout
 {
-    // 基本の円 (Orbit=1) の半径。負値なら利用可能領域から自動算出 (最外周のリングが収まる大きさ)
+    private const double UnboundedSizeRate = 4;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty RadiusProperty = BindableProperty.Create(
         nameof(Radius),
         typeof(double),
@@ -16,7 +17,6 @@ public sealed class CircularLayout : Layout
         -1d,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 配置開始角 (度)。-90 で真上、時計回りに増加
     public static readonly BindableProperty StartAngleProperty = BindableProperty.Create(
         nameof(StartAngle),
         typeof(double),
@@ -24,7 +24,6 @@ public sealed class CircularLayout : Layout
         -90d,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 配置する角度の幅 (度)。360 で全周、それ未満で円弧
     public static readonly BindableProperty SweepAngleProperty = BindableProperty.Create(
         nameof(SweepAngle),
         typeof(double),
@@ -32,7 +31,6 @@ public sealed class CircularLayout : Layout
         360d,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 円弧のとき両端を含めて均等配置する (false なら SweepAngle / 子数 の刻みで終端を含めない)
     public static readonly BindableProperty DistributeEvenlyProperty = BindableProperty.Create(
         nameof(DistributeEvenly),
         typeof(bool),
@@ -40,7 +38,6 @@ public sealed class CircularLayout : Layout
         true,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 円弧の外接矩形に自身のサイズを詰める (Radius 指定時のみ有効。半円メニューなどで余白を無くす)
     public static readonly BindableProperty FitToArcProperty = BindableProperty.Create(
         nameof(FitToArc),
         typeof(bool),
@@ -48,7 +45,6 @@ public sealed class CircularLayout : Layout
         false,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 子を接線方向へ回転する (子の上端が円の外側を向く)。中心 (Orbit=0) の子は回転しない
     public static readonly BindableProperty RotateItemsProperty = BindableProperty.Create(
         nameof(RotateItems),
         typeof(bool),
@@ -56,7 +52,6 @@ public sealed class CircularLayout : Layout
         false,
         propertyChanged: static (bindable, _, newValue) => ((CircularLayout)bindable).OnRotateItemsChanged((bool)newValue));
 
-    // RotateItems のときに加える回転角 (度)
     public static readonly BindableProperty ItemAngleProperty = BindableProperty.Create(
         nameof(ItemAngle),
         typeof(double),
@@ -64,7 +59,6 @@ public sealed class CircularLayout : Layout
         0d,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // リングの間隔。Orbit=k の半径は Radius + (k - 1) × OrbitSpacing
     public static readonly BindableProperty OrbitSpacingProperty = BindableProperty.Create(
         nameof(OrbitSpacing),
         typeof(double),
@@ -72,7 +66,6 @@ public sealed class CircularLayout : Layout
         48d,
         propertyChanged: static (bindable, _, _) => ((CircularLayout)bindable).InvalidateMeasure());
 
-    // 子要素ごとの角度 (度)。未指定 (NaN) の子は同じリング内で均等配置 (StartAngle から時計回り)
     public static readonly BindableProperty AngleProperty = BindableProperty.CreateAttached(
         "Angle",
         typeof(double),
@@ -80,7 +73,6 @@ public sealed class CircularLayout : Layout
         Double.NaN,
         propertyChanged: OnChildPropertyChanged);
 
-    // 子要素ごとのリング番号。0 = 中心、1 = 基本の円 (既定)、2 以降 = 外側のリング
     public static readonly BindableProperty OrbitProperty = BindableProperty.CreateAttached(
         "Orbit",
         typeof(int),
@@ -136,6 +128,10 @@ public sealed class CircularLayout : Layout
         set => SetValue(OrbitSpacingProperty, value);
     }
 
+    //--------------------------------------------------------------------------------
+    // Attached property
+    //--------------------------------------------------------------------------------
+
     public static double GetAngle(BindableObject bindable) => (double)bindable.GetValue(AngleProperty);
 
     public static void SetAngle(BindableObject bindable, double value) => bindable.SetValue(AngleProperty, value);
@@ -152,7 +148,10 @@ public sealed class CircularLayout : Layout
         }
     }
 
-    // 回転を止めたときは配置で設定した回転を戻す
+    //--------------------------------------------------------------------------------
+    // Layout
+    //--------------------------------------------------------------------------------
+
     private void OnRotateItemsChanged(bool rotate)
     {
         if (!rotate)
@@ -171,7 +170,6 @@ public sealed class CircularLayout : Layout
 
     protected override ILayoutManager CreateLayoutManager() => new CircularLayoutManager(this);
 
-    // 子の配置。中心 (Orbit=0) の子は Angle=NaN / Radius=0
     private readonly record struct Placement(IView View, int Orbit, double Angle, double Radius);
 
     private sealed class CircularLayoutManager : ILayoutManager
@@ -220,7 +218,7 @@ public sealed class CircularLayout : Layout
                 return new Size(side, side);
             }
 
-            var width = Double.IsFinite(widthConstraint) ? widthConstraint : maxChild * 4d;
+            var width = Double.IsFinite(widthConstraint) ? widthConstraint : maxChild * UnboundedSizeRate;
             var height = Double.IsFinite(heightConstraint) ? heightConstraint : width;
             var side2 = Math.Min(width, height);
             return new Size(side2, side2);
@@ -251,7 +249,6 @@ public sealed class CircularLayout : Layout
                 : AutoRadius(bounds, children, maxChild);
             var placements = ComputePlacements(children, radius);
 
-            // 中心は領域の中央。FitToArc のときは円弧の外接矩形が中央に来るよう中心をずらす
             var cx = bounds.Center.X;
             var cy = bounds.Center.Y;
             if (layout.FitToArc && (layout.Radius > 0d))
@@ -280,7 +277,6 @@ public sealed class CircularLayout : Layout
             return bounds.Size;
         }
 
-        // 自動半径。最外周のリングが領域に収まるように基本の円の半径を決める
         private double AutoRadius(Rect bounds, List<IView> children, double maxChild)
         {
             var maxOrbit = 1;
@@ -293,7 +289,6 @@ public sealed class CircularLayout : Layout
             return Math.Max(0d, outer - ((maxOrbit - 1) * layout.OrbitSpacing));
         }
 
-        // 各子の配置。リング毎に StartAngle から SweepAngle を等分し、Angle 添付プロパティ指定の子はその値を使う
         private List<Placement> ComputePlacements(List<IView> children, double baseRadius)
         {
             var counts = new Dictionary<int, int>();
@@ -336,7 +331,6 @@ public sealed class CircularLayout : Layout
             return placements;
         }
 
-        // 円の中心を原点とした子の中心位置
         private static (double X, double Y) Offset(Placement placement)
         {
             if (placement.Orbit == 0)
@@ -348,7 +342,6 @@ public sealed class CircularLayout : Layout
             return (placement.Radius * Math.Cos(rad), placement.Radius * Math.Sin(rad));
         }
 
-        // 円の中心を原点とした、全ての子を含む外接矩形
         private static Rect ComputeExtent(List<Placement> placements, double maxChild)
         {
             var minX = Double.PositiveInfinity;

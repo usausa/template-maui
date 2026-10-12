@@ -77,6 +77,9 @@ public sealed class WheelDrawing : DrawingObject
 
     public bool IsSpinning { get; private set; }
 
+    // 項目の色 (扇形と同じ)
+    public static Color ColorOf(int index, int count) => SegmentColors[ColorIndex(index, count)];
+
     public void SetItems(IReadOnlyList<WheelItem> values)
     {
         items = values;
@@ -224,7 +227,7 @@ public sealed class WheelDrawing : DrawingObject
         {
             using var path = CreateSegmentPath(cx, cy, rect, i, sweep);
 
-            canvas.SetFillPaint(SegmentPaints[i % SegmentPaints.Length], rect);
+            canvas.SetFillPaint(SegmentPaints[ColorIndex(i, items.Count)], rect);
             canvas.FillPath(path);
 
             canvas.StrokeColor = Colors.White;
@@ -245,6 +248,10 @@ public sealed class WheelDrawing : DrawingObject
             canvas.DrawPath(path);
         }
     }
+
+    // 最後の項目が先頭と同じ色で隣り合わないようにする
+    private static int ColorIndex(int index, int count) =>
+        ((index > 0) && (index == count - 1) && ((index % SegmentColors.Length) == 0)) ? 1 : (index % SegmentColors.Length);
 
     private PathF CreateSegmentPath(float cx, float cy, RectF rect, int index, float sweep)
     {

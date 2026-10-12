@@ -1,10 +1,22 @@
 namespace Template.MobileApp.Controls;
 
-// カメラプレビューに重ねる撮影ガイド(三分割グリッド+四隅マーカー)
 public sealed class CameraOverlayView : GraphicsView, IDrawable
 {
     private const float CornerMargin = 16f;
+
     private const float CornerLength = 28f;
+
+    private const float GridAlpha = 0.35f;
+
+    private const float GridStrokeSize = 1f;
+
+    private const float CornerAlpha = 0.8f;
+
+    private const float CornerStrokeSize = 3f;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ShowGridProperty = BindableProperty.Create(
         nameof(ShowGrid),
@@ -13,24 +25,12 @@ public sealed class CameraOverlayView : GraphicsView, IDrawable
         true,
         propertyChanged: HandlePropertyChanged);
 
-    public bool ShowGrid
-    {
-        get => (bool)GetValue(ShowGridProperty);
-        set => SetValue(ShowGridProperty, value);
-    }
-
     public static readonly BindableProperty ShowCornersProperty = BindableProperty.Create(
         nameof(ShowCorners),
         typeof(bool),
         typeof(CameraOverlayView),
         true,
         propertyChanged: HandlePropertyChanged);
-
-    public bool ShowCorners
-    {
-        get => (bool)GetValue(ShowCornersProperty);
-        set => SetValue(ShowCornersProperty, value);
-    }
 
     public static readonly BindableProperty LineColorProperty = BindableProperty.Create(
         nameof(LineColor),
@@ -39,11 +39,27 @@ public sealed class CameraOverlayView : GraphicsView, IDrawable
         Colors.White,
         propertyChanged: HandlePropertyChanged);
 
+    public bool ShowGrid
+    {
+        get => (bool)GetValue(ShowGridProperty);
+        set => SetValue(ShowGridProperty, value);
+    }
+
+    public bool ShowCorners
+    {
+        get => (bool)GetValue(ShowCornersProperty);
+        set => SetValue(ShowCornersProperty, value);
+    }
+
     public Color LineColor
     {
         get => (Color)GetValue(LineColorProperty);
         set => SetValue(LineColorProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public CameraOverlayView()
     {
@@ -51,6 +67,10 @@ public sealed class CameraOverlayView : GraphicsView, IDrawable
         BackgroundColor = Colors.Transparent;
         InputTransparent = true;
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void HandlePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -63,11 +83,10 @@ public sealed class CameraOverlayView : GraphicsView, IDrawable
 
         canvas.Antialias = true;
 
-        // 三分割グリッド
         if (ShowGrid)
         {
-            canvas.StrokeColor = new Color(color.Red, color.Green, color.Blue, 0.35f);
-            canvas.StrokeSize = 1f;
+            canvas.StrokeColor = new Color(color.Red, color.Green, color.Blue, GridAlpha);
+            canvas.StrokeSize = GridStrokeSize;
 
             var w3 = dirtyRect.Width / 3f;
             var h3 = dirtyRect.Height / 3f;
@@ -77,11 +96,10 @@ public sealed class CameraOverlayView : GraphicsView, IDrawable
             canvas.DrawLine(dirtyRect.Left, dirtyRect.Top + (h3 * 2), dirtyRect.Right, dirtyRect.Top + (h3 * 2));
         }
 
-        // 四隅のコーナーマーカー
         if (ShowCorners)
         {
-            canvas.StrokeColor = new Color(color.Red, color.Green, color.Blue, 0.8f);
-            canvas.StrokeSize = 3f;
+            canvas.StrokeColor = new Color(color.Red, color.Green, color.Blue, CornerAlpha);
+            canvas.StrokeSize = CornerStrokeSize;
             canvas.StrokeLineCap = LineCap.Round;
 
             var left = dirtyRect.Left + CornerMargin;
@@ -89,16 +107,12 @@ public sealed class CameraOverlayView : GraphicsView, IDrawable
             var right = dirtyRect.Right - CornerMargin;
             var bottom = dirtyRect.Bottom - CornerMargin;
 
-            // 左上
             canvas.DrawLine(left, top, left + CornerLength, top);
             canvas.DrawLine(left, top, left, top + CornerLength);
-            // 右上
             canvas.DrawLine(right - CornerLength, top, right, top);
             canvas.DrawLine(right, top, right, top + CornerLength);
-            // 左下
             canvas.DrawLine(left, bottom, left + CornerLength, bottom);
             canvas.DrawLine(left, bottom - CornerLength, left, bottom);
-            // 右下
             canvas.DrawLine(right - CornerLength, bottom, right, bottom);
             canvas.DrawLine(right, bottom - CornerLength, right, bottom);
         }

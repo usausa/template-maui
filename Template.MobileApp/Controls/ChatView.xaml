@@ -4,7 +4,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample.Chat"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              x:Class="Template.MobileApp.Controls.ChatView"
              x:Name="Root">
 
@@ -157,6 +157,18 @@
                 <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
             </Style>
 
+            <Style x:Key="VoiceRing"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="{StaticResource RedDefault}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
             <!-- Assistant -->
             <DataTemplate x:Key="AssistantTemplate"
                           x:DataType="{x:Type models:AiChatMessage}">
@@ -238,22 +250,27 @@
                 </Entry>
             </Border>
             <!-- 音声入力 (VoiceCommand が設定されたときだけ表示。認識中は停止ボタン) -->
-            <Button Grid.Column="1"
-                    Style="{StaticResource VoiceButton}"
-                    behaviors:AnimationOption.Pulse="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
-                    Command="{Binding Source={x:Reference Root}, Path=VoiceCommand, x:DataType={x:Type controls:ChatView}}"
-                    IsVisible="{Binding Source={x:Reference Root}, Path=VoiceCommand, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type controls:ChatView}}"
-                    Text="{x:Static fonts:MaterialIcons.Mic}">
-                <Button.Triggers>
-                    <DataTrigger TargetType="Button"
-                                 Binding="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
-                                 Value="True">
-                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Stop}" />
-                        <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
-                        <Setter Property="TextColor" Value="White" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
+            <Grid Grid.Column="1"
+                  IsVisible="{Binding Source={x:Reference Root}, Path=VoiceCommand, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type controls:ChatView}}">
+                <Ellipse Style="{StaticResource VoiceRing}"
+                         behaviors:AnimationOption.Ripple="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}" />
+                <Ellipse Style="{StaticResource VoiceRing}"
+                         behaviors:AnimationOption.Ripple="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
+                         behaviors:AnimationOption.RippleDelay="900" />
+                <Button Style="{StaticResource VoiceButton}"
+                        Command="{Binding Source={x:Reference Root}, Path=VoiceCommand, x:DataType={x:Type controls:ChatView}}"
+                        Text="{x:Static fonts:MaterialIcons.Mic}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Stop}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
             <!-- 送信 (応答中は中断ボタンに入れ替わる) -->
             <Button Grid.Column="2"
                     Style="{StaticResource SendButton}"

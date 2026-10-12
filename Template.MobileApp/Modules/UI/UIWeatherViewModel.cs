@@ -7,6 +7,9 @@ public sealed class UIWeatherHour
 {
     public required WeatherHour Hour { get; init; }
 
+    // 線を描き込む順番。CollectionView ではインデックスが取れないためモデル側で持つ
+    public required int Index { get; init; }
+
     public required bool IsCurrent { get; init; }
 
     public required double? Previous { get; init; }
@@ -99,7 +102,7 @@ public sealed partial class UIWeatherViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
 
     private WeatherForecast CreateForecast() =>
-        WeatherForecast.Create(timeProvider.GetLocalNow().DateTime, static x => RandomNumberGenerator.GetInt32(x));
+        WeatherSample.LoadForecast(timeProvider.GetLocalNow().DateTime, static x => RandomNumberGenerator.GetInt32(x));
 
     private void UpdateItems()
     {
@@ -110,6 +113,7 @@ public sealed partial class UIWeatherViewModel : AppViewModelBase
             .Select((x, i) => new UIWeatherHour
             {
                 Hour = x,
+                Index = i,
                 IsCurrent = i == 0,
                 Previous = i > 0 ? hours[i - 1].Temperature : null,
                 Next = i < hours.Count - 1 ? hours[i + 1].Temperature : null,

@@ -18,6 +18,8 @@ public sealed class MediaController : IMediaController
 
     public Action<bool>? LoadingChanged { get; set; }
 
+    public Action<bool>? FailedChanged { get; set; }
+
     void IMediaController.Attach(MediaElement view)
     {
         player = view;
@@ -37,6 +39,7 @@ public sealed class MediaController : IMediaController
     {
         PlayingChanged?.Invoke(e.NewState == MediaElementState.Playing);
         LoadingChanged?.Invoke(e.NewState is MediaElementState.Opening or MediaElementState.Buffering);
+        FailedChanged?.Invoke(e.NewState == MediaElementState.Failed);
     }
 
     public void TogglePlay()

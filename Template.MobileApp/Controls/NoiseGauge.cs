@@ -8,28 +8,40 @@ using Font = Microsoft.Maui.Graphics.Font;
 public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
 {
     private const float StartAngle = 210f;
+
     private const float EndAngle = -30f;
+
     private const float RangeAngle = StartAngle - EndAngle;
+
+    private const double FrameInterval = 1000d / 60;
+
+    private const double SettleThreshold = 0.1;
+
+    private const double EasingRate = 0.1;
+
+    private const int MajorTickStep = 10;
+
+    private const int MinorTickStep = 5;
 
     private static readonly Font DefaultFont = new("Arial");
 
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly System.Timers.Timer animationTimer = new(FrameInterval);
+
     private double animatedValue;
 
-    private readonly System.Timers.Timer animationTimer = new(1000d / 60);
-
-    // Value
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(double),
         typeof(NoiseGauge),
         propertyChanged: HandleValueChanged);
-
-    public double Value
-    {
-        get => (double)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
 
     public static readonly BindableProperty MinProperty = BindableProperty.Create(
         nameof(Min),
@@ -38,24 +50,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         20d,
         propertyChanged: Invalidate);
 
-    public double Min
-    {
-        get => (double)GetValue(MinProperty);
-        set => SetValue(MinProperty, value);
-    }
-
     public static readonly BindableProperty MaxProperty = BindableProperty.Create(
         nameof(Max),
         typeof(double),
         typeof(NoiseGauge),
         120d,
         propertyChanged: Invalidate);
-
-    public double Max
-    {
-        get => (double)GetValue(MaxProperty);
-        set => SetValue(MaxProperty, value);
-    }
 
     public static readonly BindableProperty ThresholdProperty = BindableProperty.Create(
         nameof(Threshold),
@@ -64,25 +64,11 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         70d,
         propertyChanged: Invalidate);
 
-    public double Threshold
-    {
-        get => (double)GetValue(ThresholdProperty);
-        set => SetValue(ThresholdProperty, value);
-    }
-
     public static readonly BindableProperty PeakValueProperty = BindableProperty.Create(
         nameof(PeakValue),
         typeof(double),
         typeof(NoiseGauge),
         propertyChanged: Invalidate);
-
-    public double PeakValue
-    {
-        get => (double)GetValue(PeakValueProperty);
-        set => SetValue(PeakValueProperty, value);
-    }
-
-    // Size
 
     public static readonly BindableProperty BorderMarginProperty = BindableProperty.Create(
         nameof(BorderMargin),
@@ -91,24 +77,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         12f,
         propertyChanged: Invalidate);
 
-    public float BorderMargin
-    {
-        get => (float)GetValue(BorderMarginProperty);
-        set => SetValue(BorderMarginProperty, value);
-    }
-
     public static readonly BindableProperty GaugeWidthProperty = BindableProperty.Create(
         nameof(GaugeWidth),
         typeof(float),
         typeof(NoiseGauge),
         4f,
         propertyChanged: Invalidate);
-
-    public float GaugeWidth
-    {
-        get => (float)GetValue(GaugeWidthProperty);
-        set => SetValue(GaugeWidthProperty, value);
-    }
 
     public static readonly BindableProperty TickLengthProperty = BindableProperty.Create(
         nameof(TickLength),
@@ -117,24 +91,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         12f,
         propertyChanged: Invalidate);
 
-    public float TickLength
-    {
-        get => (float)GetValue(TickLengthProperty);
-        set => SetValue(TickLengthProperty, value);
-    }
-
     public static readonly BindableProperty MinorTickLengthProperty = BindableProperty.Create(
         nameof(MinorTickLength),
         typeof(float),
         typeof(NoiseGauge),
         18f,
         propertyChanged: Invalidate);
-
-    public float MinorTickLength
-    {
-        get => (float)GetValue(MinorTickLengthProperty);
-        set => SetValue(MinorTickLengthProperty, value);
-    }
 
     public static readonly BindableProperty MajorTickLengthProperty = BindableProperty.Create(
         nameof(MajorTickLength),
@@ -143,24 +105,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         24f,
         propertyChanged: Invalidate);
 
-    public float MajorTickLength
-    {
-        get => (float)GetValue(MajorTickLengthProperty);
-        set => SetValue(MajorTickLengthProperty, value);
-    }
-
     public static readonly BindableProperty TickWidthProperty = BindableProperty.Create(
         nameof(TickWidth),
         typeof(float),
         typeof(NoiseGauge),
         1f,
         propertyChanged: Invalidate);
-
-    public float TickWidth
-    {
-        get => (float)GetValue(TickWidthProperty);
-        set => SetValue(TickWidthProperty, value);
-    }
 
     public static readonly BindableProperty MinorTickWidthProperty = BindableProperty.Create(
         nameof(MinorTickWidth),
@@ -169,24 +119,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         2f,
         propertyChanged: Invalidate);
 
-    public float MinorTickWidth
-    {
-        get => (float)GetValue(MinorTickWidthProperty);
-        set => SetValue(MinorTickWidthProperty, value);
-    }
-
     public static readonly BindableProperty MajorTickWidthProperty = BindableProperty.Create(
         nameof(MajorTickWidth),
         typeof(float),
         typeof(NoiseGauge),
         4f,
         propertyChanged: Invalidate);
-
-    public float MajorTickWidth
-    {
-        get => (float)GetValue(MajorTickWidthProperty);
-        set => SetValue(MajorTickWidthProperty, value);
-    }
 
     public static readonly BindableProperty TextOffsetProperty = BindableProperty.Create(
         nameof(TextOffset),
@@ -195,12 +133,6 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         44f,
         propertyChanged: Invalidate);
 
-    public float TextOffset
-    {
-        get => (float)GetValue(TextOffsetProperty);
-        set => SetValue(TextOffsetProperty, value);
-    }
-
     public static readonly BindableProperty NeedleWidthProperty = BindableProperty.Create(
         nameof(NeedleWidth),
         typeof(float),
@@ -208,11 +140,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         11f,
         propertyChanged: Invalidate);
 
-    public float NeedleWidth
-    {
-        get => (float)GetValue(NeedleWidthProperty);
-        set => SetValue(NeedleWidthProperty, value);
-    }
+    public static readonly BindableProperty PeakNeedleWidthProperty = BindableProperty.Create(
+        nameof(PeakNeedleWidth),
+        typeof(float),
+        typeof(NoiseGauge),
+        3f,
+        propertyChanged: Invalidate);
 
     public static readonly BindableProperty CenterCircleRadiusProperty = BindableProperty.Create(
         nameof(CenterCircleRadius),
@@ -221,24 +154,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         10f,
         propertyChanged: Invalidate);
 
-    public float CenterCircleRadius
-    {
-        get => (float)GetValue(CenterCircleRadiusProperty);
-        set => SetValue(CenterCircleRadiusProperty, value);
-    }
-
     public static readonly BindableProperty NeedleLengthPercentageProperty = BindableProperty.Create(
         nameof(NeedleLengthPercentage),
         typeof(float),
         typeof(NoiseGauge),
         1f,
         propertyChanged: Invalidate);
-
-    public float NeedleLengthPercentage
-    {
-        get => (float)GetValue(NeedleLengthPercentageProperty);
-        set => SetValue(NeedleLengthPercentageProperty, value);
-    }
 
     public static readonly BindableProperty NeedleBackLengthPercentageProperty = BindableProperty.Create(
         nameof(NeedleBackLengthPercentage),
@@ -247,26 +168,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         0.15f,
         propertyChanged: Invalidate);
 
-    public float NeedleBackLengthPercentage
-    {
-        get => (float)GetValue(NeedleBackLengthPercentageProperty);
-        set => SetValue(NeedleBackLengthPercentageProperty, value);
-    }
-
-    // Font
-
     public static readonly BindableProperty FontProperty = BindableProperty.Create(
         nameof(Font),
         typeof(Font),
         typeof(NoiseGauge),
         DefaultFont,
         propertyChanged: Invalidate);
-
-    public Font Font
-    {
-        get => (Font)GetValue(FontProperty);
-        set => SetValue(FontProperty, value);
-    }
 
     public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
         nameof(FontSize),
@@ -275,14 +182,6 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         18f,
         propertyChanged: Invalidate);
 
-    public float FontSize
-    {
-        get => (float)GetValue(FontSizeProperty);
-        set => SetValue(FontSizeProperty, value);
-    }
-
-    // Color
-
     public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
         nameof(TextColor),
         typeof(Color),
@@ -290,13 +189,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         Colors.White,
         propertyChanged: Invalidate);
 
-    public Color TextColor
-    {
-        get => (Color)GetValue(TextColorProperty);
-        set => SetValue(TextColorProperty, value);
-    }
-
-    public Color GaugeColor { get; set; } = Colors.White;
+    public static readonly BindableProperty GaugeColorProperty = BindableProperty.Create(
+        nameof(GaugeColor),
+        typeof(Color),
+        typeof(NoiseGauge),
+        Colors.White,
+        propertyChanged: Invalidate);
 
     public static readonly BindableProperty WarningGaugeColorProperty = BindableProperty.Create(
         nameof(WarningGaugeColor),
@@ -305,24 +203,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         Colors.Red,
         propertyChanged: Invalidate);
 
-    public Color WarningGaugeColor
-    {
-        get => (Color)GetValue(WarningGaugeColorProperty);
-        set => SetValue(WarningGaugeColorProperty, value);
-    }
-
     public static readonly BindableProperty NeedleColorProperty = BindableProperty.Create(
         nameof(NeedleColor),
         typeof(Color),
         typeof(NoiseGauge),
         Colors.Red,
         propertyChanged: Invalidate);
-
-    public Color NeedleColor
-    {
-        get => (Color)GetValue(NeedleColorProperty);
-        set => SetValue(NeedleColorProperty, value);
-    }
 
     public static readonly BindableProperty NeedleCenterColorProperty = BindableProperty.Create(
         nameof(NeedleCenterColor),
@@ -331,12 +217,6 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         Colors.Red,
         propertyChanged: Invalidate);
 
-    public Color NeedleCenterColor
-    {
-        get => (Color)GetValue(NeedleCenterColorProperty);
-        set => SetValue(NeedleCenterColorProperty, value);
-    }
-
     public static readonly BindableProperty PeakNeedleColorProperty = BindableProperty.Create(
         nameof(PeakNeedleColor),
         typeof(Color),
@@ -344,11 +224,171 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         Colors.Gold,
         propertyChanged: Invalidate);
 
+    public double Value
+    {
+        get => (double)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
+    public double Min
+    {
+        get => (double)GetValue(MinProperty);
+        set => SetValue(MinProperty, value);
+    }
+
+    public double Max
+    {
+        get => (double)GetValue(MaxProperty);
+        set => SetValue(MaxProperty, value);
+    }
+
+    public double Threshold
+    {
+        get => (double)GetValue(ThresholdProperty);
+        set => SetValue(ThresholdProperty, value);
+    }
+
+    public double PeakValue
+    {
+        get => (double)GetValue(PeakValueProperty);
+        set => SetValue(PeakValueProperty, value);
+    }
+
+    public float BorderMargin
+    {
+        get => (float)GetValue(BorderMarginProperty);
+        set => SetValue(BorderMarginProperty, value);
+    }
+
+    public float GaugeWidth
+    {
+        get => (float)GetValue(GaugeWidthProperty);
+        set => SetValue(GaugeWidthProperty, value);
+    }
+
+    public float TickLength
+    {
+        get => (float)GetValue(TickLengthProperty);
+        set => SetValue(TickLengthProperty, value);
+    }
+
+    public float MinorTickLength
+    {
+        get => (float)GetValue(MinorTickLengthProperty);
+        set => SetValue(MinorTickLengthProperty, value);
+    }
+
+    public float MajorTickLength
+    {
+        get => (float)GetValue(MajorTickLengthProperty);
+        set => SetValue(MajorTickLengthProperty, value);
+    }
+
+    public float TickWidth
+    {
+        get => (float)GetValue(TickWidthProperty);
+        set => SetValue(TickWidthProperty, value);
+    }
+
+    public float MinorTickWidth
+    {
+        get => (float)GetValue(MinorTickWidthProperty);
+        set => SetValue(MinorTickWidthProperty, value);
+    }
+
+    public float MajorTickWidth
+    {
+        get => (float)GetValue(MajorTickWidthProperty);
+        set => SetValue(MajorTickWidthProperty, value);
+    }
+
+    public float TextOffset
+    {
+        get => (float)GetValue(TextOffsetProperty);
+        set => SetValue(TextOffsetProperty, value);
+    }
+
+    public float NeedleWidth
+    {
+        get => (float)GetValue(NeedleWidthProperty);
+        set => SetValue(NeedleWidthProperty, value);
+    }
+
+    public float PeakNeedleWidth
+    {
+        get => (float)GetValue(PeakNeedleWidthProperty);
+        set => SetValue(PeakNeedleWidthProperty, value);
+    }
+
+    public float CenterCircleRadius
+    {
+        get => (float)GetValue(CenterCircleRadiusProperty);
+        set => SetValue(CenterCircleRadiusProperty, value);
+    }
+
+    public float NeedleLengthPercentage
+    {
+        get => (float)GetValue(NeedleLengthPercentageProperty);
+        set => SetValue(NeedleLengthPercentageProperty, value);
+    }
+
+    public float NeedleBackLengthPercentage
+    {
+        get => (float)GetValue(NeedleBackLengthPercentageProperty);
+        set => SetValue(NeedleBackLengthPercentageProperty, value);
+    }
+
+    public Font Font
+    {
+        get => (Font)GetValue(FontProperty);
+        set => SetValue(FontProperty, value);
+    }
+
+    public float FontSize
+    {
+        get => (float)GetValue(FontSizeProperty);
+        set => SetValue(FontSizeProperty, value);
+    }
+
+    public Color TextColor
+    {
+        get => (Color)GetValue(TextColorProperty);
+        set => SetValue(TextColorProperty, value);
+    }
+
+    public Color GaugeColor
+    {
+        get => (Color)GetValue(GaugeColorProperty);
+        set => SetValue(GaugeColorProperty, value);
+    }
+
+    public Color WarningGaugeColor
+    {
+        get => (Color)GetValue(WarningGaugeColorProperty);
+        set => SetValue(WarningGaugeColorProperty, value);
+    }
+
+    public Color NeedleColor
+    {
+        get => (Color)GetValue(NeedleColorProperty);
+        set => SetValue(NeedleColorProperty, value);
+    }
+
+    public Color NeedleCenterColor
+    {
+        get => (Color)GetValue(NeedleCenterColorProperty);
+        set => SetValue(NeedleCenterColorProperty, value);
+    }
+
     public Color PeakNeedleColor
     {
         get => (Color)GetValue(PeakNeedleColorProperty);
         set => SetValue(PeakNeedleColorProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public NoiseGauge()
     {
@@ -363,32 +403,9 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         animationTimer.Dispose();
     }
 
-    private void TimerElapsed(object? sender, ElapsedEventArgs e)
-    {
-        if (Math.Abs(animatedValue - Value) < 0.1)
-        {
-            animationTimer.Stop();
-            animatedValue = Value;
-        }
-        else
-        {
-            var diff = Value - animatedValue;
-            animatedValue += diff * 0.1;
-        }
-
-        Dispatcher.Dispatch(Invalidate);
-    }
-
-    private void HandleValueChanged(double oldValue)
-    {
-        animatedValue = oldValue;
-        animationTimer.Start();
-    }
-
-    private static void HandleValueChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        ((NoiseGauge)bindable).HandleValueChanged((double)oldValue);
-    }
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
     {
@@ -421,7 +438,6 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         var gaugeColor = GaugeColor;
         var warningGaugeColor = WarningGaugeColor;
 
-        // Calculate
         var size = Math.Min(dirtyRect.Width, dirtyRect.Height) - (borderMargin * 2);
         var radius = size / 2;
         var rect = new RectF(dirtyRect.Center.X - radius, borderMargin, size, size);
@@ -429,21 +445,18 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         var cx = dirtyRect.Center.X;
         var cy = rect.Center.Y;
 
-        // Setup
         canvas.Font = font;
         canvas.FontSize = fontSize;
 
-        // Background
         canvas.FillColor = BackgroundColor;
         canvas.FillRectangle(dirtyRect);
 
-        // Tick
         canvas.StrokeLineCap = LineCap.Square;
         for (var i = 0; i <= (int)range; i++)
         {
             var angle = (float)((RangeAngle * i / range) - (StartAngle - 90));
-            var isMajor = i % 10 == 0;
-            var isMinor = i % 5 == 0;
+            var isMajor = i % MajorTickStep == 0;
+            var isMinor = i % MinorTickStep == 0;
 
             var width = isMajor ? majorTickWidth : isMinor ? minorTickWidth : tickWidth;
             var length = isMajor ? majorTickLength : isMinor ? minorTickLength : tickLength;
@@ -473,7 +486,6 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
             }
         }
 
-        // Arc
         canvas.StrokeSize = gaugeWidth;
         canvas.StrokeColor = gaugeColor;
         canvas.DrawArc(rect, StartAngle, EndAngle, true, false);
@@ -482,7 +494,6 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         canvas.StrokeColor = warningGaugeColor;
         canvas.DrawArc(rect, warningStart, EndAngle, true, false);
 
-        // Peak needle (直近ピークを示す細針。本針より先に描いて下に重ねる)
         var needleLengthBase = (radius - MajorTickLength) * NeedleLengthPercentage;
         var peak = PeakValue;
         if (peak > min)
@@ -490,11 +501,10 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
             var peakRadian = (float)((StartAngle - (RangeAngle * (Math.Clamp(peak, min, max) - min) / range)) * MathF.PI / 180);
             canvas.StrokeLineCap = LineCap.Round;
             canvas.StrokeColor = PeakNeedleColor;
-            canvas.StrokeSize = 3f;
+            canvas.StrokeSize = PeakNeedleWidth;
             canvas.DrawLine(cx, cy, cx + (needleLengthBase * MathF.Cos(peakRadian)), cy - (needleLengthBase * MathF.Sin(peakRadian)));
         }
 
-        // Needle
         var value = Math.Clamp(Value, min, max);
         var needleRadian = (float)((StartAngle - (RangeAngle * (value - Min) / range)) * MathF.PI / 180);
 
@@ -515,9 +525,39 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         canvas.FillColor = NeedleColor;
         canvas.FillPath(path);
 
-        // Center
         var centerCircleRadius = CenterCircleRadius;
         canvas.FillColor = NeedleCenterColor;
         canvas.FillCircle(cx, cy, centerCircleRadius);
+    }
+
+    //--------------------------------------------------------------------------------
+    // Animation
+    //--------------------------------------------------------------------------------
+
+    private void HandleValueChanged(double oldValue)
+    {
+        animatedValue = oldValue;
+        animationTimer.Start();
+    }
+
+    private static void HandleValueChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((NoiseGauge)bindable).HandleValueChanged((double)oldValue);
+    }
+
+    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (Math.Abs(animatedValue - Value) < SettleThreshold)
+        {
+            animationTimer.Stop();
+            animatedValue = Value;
+        }
+        else
+        {
+            var diff = Value - animatedValue;
+            animatedValue += diff * EasingRate;
+        }
+
+        Dispatcher.Dispatch(Invalidate);
     }
 }

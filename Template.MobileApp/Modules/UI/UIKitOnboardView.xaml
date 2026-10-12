@@ -18,7 +18,11 @@
             <Style x:Key="OnboardGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Padding" Value="0,32,0,16" />
+            </Style>
+
+            <Style x:Key="OnboardPageGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,32,0,140" />
             </Style>
 
             <Style x:Key="OnboardPageStack"
@@ -81,6 +85,18 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
+            <Style x:Key="NextButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource StartButton}">
+                <Setter Property="Text" Value="次へ" />
+            </Style>
+
+            <Style x:Key="LastStartButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource StartButton}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -88,23 +104,27 @@
           RowDefinitions="*,Auto,Auto">
 
         <CarouselView x:Name="OnboardCarousel"
-                      Grid.Row="0"
+                      Grid.Row="0" Grid.RowSpan="3"
                       ItemsSource="{Binding Pages}"
                       IndicatorView="{x:Reference Indicators}"
-                      Loop="False">
+                      Loop="False"
+                      Position="{Binding Position}">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="module:UIKitOnboardPage">
-                    <VerticalStackLayout Style="{StaticResource OnboardPageStack}">
-                        <Image Style="{StaticResource PageImage}"
-                               Source="{Binding Image}" />
-                        <!-- ページ切替でテキストをフェードイン -->
-                        <VerticalStackLayout behaviors:AnimationOption.FadeInTrigger="{Binding Source={x:Reference OnboardCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
-                            <Label Style="{StaticResource PageTitle}"
-                                   Text="{Binding Title}" />
-                            <Label Style="{StaticResource PageDescription}"
-                                   Text="{Binding Description}" />
+                    <Grid Style="{StaticResource OnboardPageGrid}"
+                          BackgroundColor="{Binding Background}">
+                        <VerticalStackLayout Style="{StaticResource OnboardPageStack}">
+                            <Image Style="{StaticResource PageImage}"
+                                   Source="{Binding Image}" />
+                            <!-- ページ切替でテキストをフェードイン -->
+                            <VerticalStackLayout behaviors:AnimationOption.FadeInTrigger="{Binding Source={x:Reference OnboardCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
+                                <Label Style="{StaticResource PageTitle}"
+                                       Text="{Binding Title}" />
+                                <Label Style="{StaticResource PageDescription}"
+                                       Text="{Binding Description}" />
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
+                    </Grid>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
@@ -119,11 +139,18 @@
             <Button Grid.Column="0"
                     Style="{StaticResource SkipButton}"
                     behaviors:ButtonOption.PressEffect="True"
-                    Command="{Binding CompleteCommand}" />
+                    Command="{Binding CompleteCommand}"
+                    IsVisible="{Binding Position, Converter={StaticResource NotEqualsConverter}, ConverterParameter={x:Int32 2}}" />
             <Button Grid.Column="1"
-                    Style="{StaticResource StartButton}"
+                    Style="{StaticResource NextButton}"
                     behaviors:ButtonOption.PressEffect="True"
-                    Command="{Binding CompleteCommand}" />
+                    Command="{Binding NextCommand}"
+                    IsVisible="{Binding Position, Converter={StaticResource NotEqualsConverter}, ConverterParameter={x:Int32 2}}" />
+            <Button Grid.Column="0" Grid.ColumnSpan="2"
+                    Style="{StaticResource LastStartButton}"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CompleteCommand}"
+                    IsVisible="{Binding Position, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Int32 2}}" />
         </Grid>
 
     </Grid>

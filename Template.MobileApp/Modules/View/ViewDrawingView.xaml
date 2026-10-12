@@ -39,12 +39,11 @@
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCenterHintLabel}">
                 <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
             <Style x:Key="CanvasView"
                    TargetType="toolkit:DrawingView">
-                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Background" Value="White" />
             </Style>
 
             <Style x:Key="PaletteBorder"
@@ -82,7 +81,7 @@
                 <Setter Property="BackgroundColor" Value="Black" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding LineColor}"
+                                 Binding="{Binding Controller.LineColor}"
                                  Value="{x:Static Colors.Black}">
                         <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
                     </DataTrigger>
@@ -95,7 +94,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding LineColor}"
+                                 Binding="{Binding Controller.LineColor}"
                                  Value="{StaticResource RedDefault}">
                         <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
                     </DataTrigger>
@@ -108,7 +107,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding LineColor}"
+                                 Binding="{Binding Controller.LineColor}"
                                  Value="{StaticResource BlueDefault}">
                         <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
                     </DataTrigger>
@@ -121,7 +120,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding LineColor}"
+                                 Binding="{Binding Controller.LineColor}"
                                  Value="{StaticResource GreenDefault}">
                         <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
                     </DataTrigger>
@@ -134,7 +133,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding LineColor}"
+                                 Binding="{Binding Controller.LineColor}"
                                  Value="{StaticResource OrangeDefault}">
                         <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
                     </DataTrigger>
@@ -147,7 +146,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding LineColor}"
+                                 Binding="{Binding Controller.LineColor}"
                                  Value="{StaticResource PurpleDefault}">
                         <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
                     </DataTrigger>
@@ -201,9 +200,7 @@
         <toolkit:DrawingView Grid.Row="0"
                              Style="{StaticResource CanvasView}"
                              behaviors:DrawingBind.Controller="{Binding Controller}"
-                             IsMultiLineModeEnabled="True"
-                             LineColor="{Binding LineColor}"
-                             LineWidth="{Binding LineWidth}" />
+                             IsMultiLineModeEnabled="True" />
 
         <!-- パレット -->
         <Border Grid.Row="1"
@@ -255,11 +252,11 @@
                            Style="{StaticResource WidthIcon}"
                            Text="{x:Static fonts:MaterialIcons.Edit}" />
                     <Slider Grid.Column="1"
-                            Value="{Binding LineWidth}"
+                            Value="{Binding Controller.LineWidth}"
                             Minimum="1" Maximum="24" />
                     <Label Grid.Column="2"
                            Style="{StaticResource WidthValueLabel}"
-                           Text="{Binding LineWidth, StringFormat='{0:F0}'}" />
+                           Text="{Binding Controller.LineWidth, StringFormat='{0:F0}'}" />
                 </Grid>
 
             </VerticalStackLayout>

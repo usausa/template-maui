@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:core="clr-namespace:CommunityToolkit.Maui.Core;assembly=CommunityToolkit.Maui.Camera"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceCameraView"
              x:DataType="{x:Type module:DeviceCameraViewModel}"
@@ -19,50 +21,139 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto,Auto">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <mct:CameraView Grid.Row="0"
-                        behaviors:CameraBind.Controller="{Binding Controller}" />
+            <Style x:Key="StateChipStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
 
-        <Grid Grid.Row="1"
-              Style="{StaticResource FillGrid}"
-              RowDefinitions="*,*"
-              ColumnDefinitions="*,*">
-            <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.Selected.Name, StringFormat='Camera: {0}', FallbackValue='-'}" />
-            <Label Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.ZoomFactor, StringFormat='Zoom: x{0}', FallbackValue='-'}" />
-            <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.CameraFlashMode, StringFormat='Flash mode: {0}', FallbackValue='-'}" />
-            <Label Grid.Row="1" Grid.Column="1"
-                   Style="{StaticResource BasicStatusLabel}"
-                   Text="{Binding Controller.IsTorchOn, StringFormat='Torch: {0}', FallbackValue='-'}" />
-        </Grid>
+            <Style x:Key="StateChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,4" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
 
-        <Grid Grid.Row="2"
-              Style="{StaticResource SubMenuGrid}"
-              ColumnDefinitions="*,*,*,*">
-            <Button Grid.Column="0"
-                    Style="{StaticResource SubMenuButton}"
+            <Style x:Key="StateChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="OverlayButtonStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,0,0,20" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="OverlayIconButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource DarkRootGrid}">
+
+        <mct:CameraView behaviors:CameraBind.Controller="{Binding Controller}" />
+
+        <HorizontalStackLayout Style="{StaticResource StateChipStack}">
+            <Border Style="{StaticResource StateChipBorder}">
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.Selected.Name, FallbackValue='-'}" />
+            </Border>
+            <Border Style="{StaticResource StateChipBorder}">
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.ZoomFactor, StringFormat='Zoom x{0:0.0}'}" />
+            </Border>
+            <Border Style="{StaticResource StateChipBorder}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding Controller.CameraFlashMode}"
+                                 Value="{x:Static core:CameraFlashMode.On}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding Controller.CameraFlashMode}"
+                                 Value="{x:Static core:CameraFlashMode.Auto}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.CameraFlashMode, StringFormat='Flash {0}'}" />
+            </Border>
+            <Border Style="{StaticResource StateChipBorder}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 Binding="{Binding Controller.IsTorchOn}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Style="{StaticResource StateChipLabel}"
+                       Text="{Binding Controller.IsTorchOn, Converter={s:BoolToText True='ON', False='OFF'}, StringFormat='Torch {0}'}" />
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Style="{StaticResource OverlayButtonStack}">
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding TorchCommand}"
-                    Text="Torch" />
-            <Button Grid.Column="1"
-                    Style="{StaticResource SubMenuButton}"
+                    Text="{x:Static fonts:MaterialIcons.Flashlight_off}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Controller.IsTorchOn}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
+                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Flashlight_on}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding FlashModeCommand}"
-                    Text="Flash" />
-            <Button Grid.Column="2"
-                    Style="{StaticResource SubMenuButton}"
+                    Text="{x:Static fonts:MaterialIcons.Flash_off}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Controller.CameraFlashMode}"
+                                 Value="{x:Static core:CameraFlashMode.On}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
+                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Flash_on}" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Controller.CameraFlashMode}"
+                                 Value="{x:Static core:CameraFlashMode.Auto}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Flash_auto}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding ZoomOutCommand}"
-                    Text="ZoomOut" />
-            <Button Grid.Column="3"
-                    Style="{StaticResource SubMenuButton}"
+                    Text="{x:Static fonts:MaterialIcons.Zoom_out}" />
+            <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding ZoomInCommand}"
-                    Text="ZoomIn" />
-        </Grid>
+                    Text="{x:Static fonts:MaterialIcons.Zoom_in}" />
+        </HorizontalStackLayout>
+
     </Grid>
 
 </ContentView>

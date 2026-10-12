@@ -1,5 +1,11 @@
 namespace Template.MobileApp.Models.App;
 
+using System.Collections.Specialized;
+
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 // 期限の区分け (日付で比べる)
 public enum TodoDue
 {
@@ -20,6 +26,10 @@ public enum TodoGroup
     NoDue,
     Done
 }
+
+//--------------------------------------------------------------------------------
+// Rule
+//--------------------------------------------------------------------------------
 
 public static class TodoDueRule
 {
@@ -46,6 +56,10 @@ public static class TodoDueRule
                 _ => TodoGroup.NoDue
             };
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 
 // 一覧の行
 public sealed partial class TodoItem : ObservableObject
@@ -80,16 +94,82 @@ public sealed partial class TodoItem : ObservableObject
     public void UpdateDue(DateTime today) => Due = TodoDueRule.Classify(DueDate, today);
 }
 
-// グループの行 (見出しの件数は Count)
-public sealed class TodoSection : ObservableCollection<TodoItem>
+// グループの行。一覧に出す行 (列挙と Count) は、畳んでいる間は空。全部の行は Items、見出しの件数は Total
+public sealed class TodoSection : IReadOnlyList<TodoItem>, INotifyCollectionChanged, INotifyPropertyChanged
 {
+    private static readonly PropertyChangedEventArgs IsExpandedChangedEventArgs = new(nameof(IsExpanded));
+
+    private static readonly PropertyChangedEventArgs TotalChangedEventArgs = new(nameof(Total));
+
+    private static readonly NotifyCollectionChangedEventArgs ResetEventArgs = new(NotifyCollectionChangedAction.Reset);
+
+    private readonly List<TodoItem> items = [];
+
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public TodoGroup Group { get; }
+
+    public IReadOnlyList<TodoItem> Items => items;
+
+    public int Total => items.Count;
+
+    public bool IsExpanded { get; private set; } = true;
+
+    public int Count => IsExpanded ? items.Count : 0;
+
+    public TodoItem this[int index] => IsExpanded ? items[index] : throw new ArgumentOutOfRangeException(nameof(index));
 
     public TodoSection(TodoGroup group)
     {
         Group = group;
     }
+
+    public IEnumerator<TodoItem> GetEnumerator() => (IsExpanded ? items : []).GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    // 畳む・開く
+    public void ToggleExpanded()
+    {
+        IsExpanded = !IsExpanded;
+        PropertyChanged?.Invoke(this, IsExpandedChangedEventArgs);
+        CollectionChanged?.Invoke(this, ResetEventArgs);
+    }
+
+    public void Insert(int index, TodoItem item)
+    {
+        items.Insert(index, item);
+        PropertyChanged?.Invoke(this, TotalChangedEventArgs);
+        if (IsExpanded)
+        {
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+        }
+    }
+
+    public bool Remove(TodoItem item)
+    {
+        var index = items.IndexOf(item);
+        if (index < 0)
+        {
+            return false;
+        }
+
+        items.RemoveAt(index);
+        PropertyChanged?.Invoke(this, TotalChangedEventArgs);
+        if (IsExpanded)
+        {
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
+        }
+
+        return true;
+    }
 }
+
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
 
 // 一覧。行を期限と完了でグループに分けて並べ、件数と完了の割合を数える
 public sealed partial class TodoList : ObservableObject
@@ -128,7 +208,7 @@ public sealed partial class TodoList : ObservableObject
     {
         var section = sections[TodoDueRule.ToGroup(item.Due, item.IsDone)];
         var index = 0;
-        while ((index < section.Count) && (Compare(section[index], item) <= 0))
+        while ((index < section.Total) && (Compare(section.Items[index], item) <= 0))
         {
             index++;
         }
@@ -151,7 +231,7 @@ public sealed partial class TodoList : ObservableObject
     // 消されていなければ、今の状態のグループの位置へ動かす
     public void Move(TodoItem item)
     {
-        if (sections.Values.Any(x => x.Contains(item)))
+        if (sections.Values.Any(x => x.Items.Contains(item)))
         {
             Remove(item);
             Place(item);
@@ -160,8 +240,8 @@ public sealed partial class TodoList : ObservableObject
 
     public void UpdateSummary()
     {
-        TotalCount = sections.Values.Sum(static x => x.Count);
-        DoneCount = sections.Values.Sum(static x => x.Count(static y => y.IsDone));
+        TotalCount = sections.Values.Sum(static x => x.Total);
+        DoneCount = sections.Values.Sum(static x => x.Items.Count(static y => y.IsDone));
         RemainingCount = TotalCount - DoneCount;
         Progress = TotalCount > 0 ? (double)DoneCount / TotalCount : 0;
     }
@@ -169,7 +249,7 @@ public sealed partial class TodoList : ObservableObject
     // 行があり、隠している完了でなければ、グループの順の位置に出す
     private void UpdateVisibility(TodoSection section)
     {
-        var visible = (section.Count > 0) && ((section.Group != TodoGroup.Done) || ShowDone);
+        var visible = (section.Total > 0) && ((section.Group != TodoGroup.Done) || ShowDone);
         var index = Sections.IndexOf(section);
         if (visible && (index < 0))
         {
@@ -192,55 +272,5 @@ public sealed partial class TodoList : ObservableObject
     {
         var result = x.IsDone ? y.UpdatedAt.CompareTo(x.UpdatedAt) : Nullable.Compare(x.DueDate, y.DueDate);
         return result != 0 ? result : x.Id.CompareTo(y.Id);
-    }
-}
-
-// 編集の入力 (新規は Id が null)。期限の区分けは Today から見る
-public sealed partial class TodoDraft : ObservableObject
-{
-    public DateTime Today { get; init; }
-
-    public long? Id { get; set; }
-
-    public bool IsNew => Id is null;
-
-    [ObservableProperty(NotifyAlso = [nameof(CanSave)])]
-    public partial string Title { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial string Note { get; set; } = string.Empty;
-
-    [ObservableProperty(NotifyAlso = [nameof(Due)])]
-    public partial DateTime? DueDate { get; set; }
-
-    public TodoDue Due => TodoDueRule.Classify(DueDate, Today);
-
-    [ObservableProperty]
-    public partial bool IsImportant { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsDone { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public bool CanSave => !String.IsNullOrWhiteSpace(Title);
-
-    // 期限のチップ (今日 / 明日 / 期限なし)
-    public void SetDue(TodoDue due) =>
-        DueDate = due switch
-        {
-            TodoDue.Today => Today,
-            TodoDue.Tomorrow => Today.AddDays(1),
-            _ => null
-        };
-
-    // 前後の空白を除き、期限は日付だけにする
-    public void Normalize()
-    {
-        Title = Title.Trim();
-        Note = Note.Trim();
-        DueDate = DueDate?.Date;
     }
 }

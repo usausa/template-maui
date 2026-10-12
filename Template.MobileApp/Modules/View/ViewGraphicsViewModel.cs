@@ -46,12 +46,14 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public ViewGraphicsViewModel()
+    public ViewGraphicsViewModel(ResourceDictionary resources)
     {
+        var lineColor = resources.FindResource<Color>("BlueDefault");
+        var rectColor = resources.FindResource<Color>("RedDefault");
         Drawing.Size = new SizeF(100, 100);
-        Drawing.Shapes.Add(new Line { Color = Colors.Blue, Point1 = new PointF(10, 10), Point2 = new PointF(90, 90) });
-        Drawing.Shapes.Add(new Line { Color = Colors.Blue, Point1 = new PointF(10, 90), Point2 = new PointF(90, 10) });
-        Drawing.Shapes.Add(new Rectangle { Color = Colors.Red, Rect = new RectF(40, 40, 20, 20) });
+        Drawing.Shapes.Add(new Line { Color = lineColor, Point1 = new PointF(10, 10), Point2 = new PointF(90, 90) });
+        Drawing.Shapes.Add(new Line { Color = lineColor, Point1 = new PointF(10, 90), Point2 = new PointF(90, 10) });
+        Drawing.Shapes.Add(new Rectangle { Color = rectColor, Rect = new RectF(40, 40, 20, 20) });
         Drawing.Invalidate();
         ShapeCount = Drawing.Shapes.Count;
 

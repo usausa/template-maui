@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -16,6 +17,28 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <s:MapToTextConverter x:Key="CrowdTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:SuperCrowd.Low}"
+                                      Value="空いています" />
+                    <s:MapToTextEntry Key="{x:Static models:SuperCrowd.Medium}"
+                                      Value="やや混雑" />
+                    <s:MapToTextEntry Key="{x:Static models:SuperCrowd.High}"
+                                      Value="混雑" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="CrowdColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:SuperCrowd.Low}"
+                                       Value="{StaticResource GreenDarken1}" />
+                    <s:MapToColorEntry Key="{x:Static models:SuperCrowd.Medium}"
+                                       Value="{StaticResource OrangeDarken1}" />
+                    <s:MapToColorEntry Key="{x:Static models:SuperCrowd.High}"
+                                       Value="{StaticResource RedDarken1}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
 
             <Style x:Key="SuperPageStack"
                    TargetType="VerticalStackLayout">
@@ -127,19 +150,13 @@
                 <Setter Property="FlexLayout.Basis" Value="22%" />
             </Style>
 
-            <Style x:Key="AppIconBorder"
-                   TargetType="Border">
+            <Style x:Key="AppIconButton"
+                   TargetType="Button">
                 <Setter Property="WidthRequest" Value="52" />
                 <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 26" />
-            </Style>
-
-            <Style x:Key="AppIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="CornerRadius" Value="26" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="TextColor" Value="White" />
@@ -194,6 +211,109 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="32" />
                 <Setter Property="TextColor" Value="#4DFFFFFF" />
+            </Style>
+
+            <Style x:Key="CouponAcquireButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="ShopCollection"
+                   TargetType="CollectionView">
+                <Setter Property="Margin" Value="16,0,0,0" />
+                <Setter Property="HeightRequest" Value="100" />
+            </Style>
+
+            <Style x:Key="ShopBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="180" />
+                <Setter Property="Margin" Value="0,0,12,0" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="ShopIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="ShopIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ShopNameStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="10,0,0,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="ShopNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="MaxLines" Value="1" />
+            </Style>
+
+            <Style x:Key="ShopCategoryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="ShopBadgeStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,10,0,0" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="DistanceBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,2" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+            </Style>
+
+            <Style x:Key="DistanceBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="CrowdBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,2" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+            </Style>
+
+            <Style x:Key="CrowdBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
             </Style>
 
             <Style x:Key="SearchRowGrid"
@@ -262,11 +382,10 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:SuperApp}">
                         <VerticalStackLayout Style="{StaticResource AppItemStack}">
-                            <Border Style="{StaticResource AppIconBorder}"
-                                    BackgroundColor="{Binding Color}">
-                                <Label Style="{StaticResource AppIconLabel}"
-                                       Text="{Binding Glyph}" />
-                            </Border>
+                            <Button Style="{StaticResource AppIconButton}"
+                                    behaviors:ButtonOption.PressEffect="True"
+                                    BackgroundColor="{Binding Color}"
+                                    Text="{Binding Glyph}" />
                             <Label Style="{StaticResource AppNameLabel}"
                                    Text="{Binding Name}" />
                         </VerticalStackLayout>
@@ -280,8 +399,7 @@
             <CollectionView Style="{StaticResource CouponCollection}"
                             ItemsSource="{Binding Coupons}">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal"
-                                       SnapPointsAlignment="Start" SnapPointsType="Mandatory" />
+                    <LinearItemsLayout Orientation="Horizontal" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:SuperCoupon}">
@@ -296,7 +414,66 @@
                                 </VerticalStackLayout>
                                 <Label Style="{StaticResource CouponIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Confirmation_number}" />
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                <Button Style="{StaticResource CouponAcquireButton}"
+                                        behaviors:AnimationOption.BounceTrigger="{Binding IsAcquired}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type module:UISuperViewModel}}, Path=AcquireCommand, x:DataType={x:Type module:UISuperViewModel}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="獲得する">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button"
+                                                     Binding="{Binding IsAcquired}"
+                                                     Value="True">
+                                            <Setter Property="Text" Value="✓ 獲得済み" />
+                                            <Setter Property="BackgroundColor" Value="#40FFFFFF" />
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
                             </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Style="{StaticResource SuperSectionLabel}"
+                   Text="近くのお店" />
+            <CollectionView Style="{StaticResource ShopCollection}"
+                            ItemsSource="{Binding Shops}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:SuperShop}">
+                        <Border Style="{StaticResource ShopBorder}">
+                            <VerticalStackLayout>
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Border Grid.Column="0"
+                                            Style="{StaticResource ShopIconBorder}"
+                                            BackgroundColor="{Binding Color}">
+                                        <Label Style="{StaticResource ShopIconLabel}"
+                                               Text="{Binding Glyph}" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Style="{StaticResource ShopNameStack}">
+                                        <Label Style="{StaticResource ShopNameLabel}"
+                                               Text="{Binding Name}" />
+                                        <Label Style="{StaticResource ShopCategoryLabel}"
+                                               Text="{Binding Category}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <HorizontalStackLayout Style="{StaticResource ShopBadgeStack}">
+                                    <Border Style="{StaticResource DistanceBadgeBorder}">
+                                        <Label Style="{StaticResource DistanceBadgeLabel}"
+                                               Text="{Binding Distance, StringFormat='📍 {0:N0} m'}" />
+                                    </Border>
+                                    <Border Style="{StaticResource CrowdBadgeBorder}"
+                                            BackgroundColor="{Binding Crowd, Converter={StaticResource CrowdColorConverter}}">
+                                        <Label Style="{StaticResource CrowdBadgeLabel}"
+                                               Text="{Binding Crowd, Converter={StaticResource CrowdTextConverter}}" />
+                                    </Border>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

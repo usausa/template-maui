@@ -60,7 +60,7 @@ public sealed partial class UINewsContext : ObservableObject
 
     private readonly TimeProvider timeProvider;
 
-    private readonly NewsFeed feed = new(static x => RandomNumberGenerator.GetInt32(x));
+    private readonly NewsSample sample = new(static x => RandomNumberGenerator.GetInt32(x));
 
     public IReadOnlyList<UINewsPage> Pages { get; }
 
@@ -85,7 +85,7 @@ public sealed partial class UINewsContext : ObservableObject
             .Select(static x => new UINewsPage { Category = x, IsLoading = true })
             .Append(new UINewsPage { Category = null, IsLoaded = true })
             .ToArray();
-        Breaking = feed.CreateBreaking(timeProvider.GetLocalNow().DateTime);
+        Breaking = sample.LoadBreaking(timeProvider.GetLocalNow().DateTime);
     }
 
     // 初めて表示したページの記事を、取得に見立てて少し待ってから入れる
@@ -98,7 +98,7 @@ public sealed partial class UINewsContext : ObservableObject
             await Task.Delay(700).ConfigureAwait(true);
 
             var now = timeProvider.GetLocalNow().DateTime;
-            var articles = feed.Create(category, now, PageSize);
+            var articles = sample.LoadArticles(category, now, PageSize);
             page.Top = ToItem(articles[0], now);
             page.Items.AddRange(articles.Skip(1).Select(x => ToItem(x, now)));
             page.IsLoading = false;
@@ -121,12 +121,12 @@ public sealed partial class UINewsContext : ObservableObject
 
             for (var i = 1; i < count; i++)
             {
-                page.Items.Insert(0, ToItem(feed.CreateLatest(category, now), now));
+                page.Items.Insert(0, ToItem(sample.LoadLatest(category, now), now));
             }
 
-            page.Top = ToItem(feed.CreateLatest(category, now), now);
+            page.Top = ToItem(sample.LoadLatest(category, now), now);
             page.NewArrivals = count;
-            Breaking = feed.CreateBreaking(now);
+            Breaking = sample.LoadBreaking(now);
         }
 
         page.IsRefreshing = false;
@@ -142,17 +142,17 @@ public sealed partial class UINewsContext : ObservableObject
             await Task.Delay(700).ConfigureAwait(true);
 
             var now = timeProvider.GetLocalNow().DateTime;
-            page.Items.AddRange(feed.Create(category, page.Items[^1].Article.PublishedAt, MoreSize).Select(x => ToItem(x, now)));
+            page.Items.AddRange(sample.LoadArticles(category, page.Items[^1].Article.PublishedAt, MoreSize).Select(x => ToItem(x, now)));
             page.IsEnd = page.Items.Count >= MaxCount;
             page.IsLoadingMore = false;
         }
     }
 
     public void Open(UINewsItem item) =>
-        Show(item.Article, feed.CreateRelated(item.Article, RelatedCount));
+        Show(item.Article, sample.LoadRelated(item.Article, RelatedCount));
 
     public void OpenBreaking() =>
-        Show(Breaking, feed.CreateRelated(Breaking, RelatedCount));
+        Show(Breaking, sample.LoadRelated(Breaking, RelatedCount));
 
     // 今の記事は関連記事の先頭に回す
     public void ShowRelated(NewsArticle article) =>

@@ -59,7 +59,7 @@ public sealed class MapsuiWidgetManager : IMapsuiMapManager
             };
             zoomInOut = new ZoomInOutWidget
             {
-                HorizontalAlignment = Mapsui.Widgets.HorizontalAlignment.Left,
+                HorizontalAlignment = Mapsui.Widgets.HorizontalAlignment.Right,
                 VerticalAlignment = Mapsui.Widgets.VerticalAlignment.Top,
                 Margin = new Mapsui.MRect(16)
             };

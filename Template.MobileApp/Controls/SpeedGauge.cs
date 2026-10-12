@@ -2,18 +2,24 @@ namespace Template.MobileApp.Controls;
 
 public sealed class SpeedGauge : GraphicsView, IDrawable
 {
+    private const float StartAngle = 210f;
+
+    private const float GaugeAngle = 240f;
+
+    private const float MidRatio = 0.5f;
+
+    private const float HighRatio = 0.75f;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty GaugeColorProperty = BindableProperty.Create(
         nameof(GaugeColor),
         typeof(Color),
         typeof(SpeedGauge),
         Colors.LightGray,
         propertyChanged: Invalidate);
-
-    public Color GaugeColor
-    {
-        get => (Color)GetValue(GaugeColorProperty);
-        set => SetValue(GaugeColorProperty, value);
-    }
 
     public static readonly BindableProperty ValueColorProperty = BindableProperty.Create(
         nameof(ValueColor),
@@ -22,24 +28,12 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         Colors.Turquoise,
         propertyChanged: Invalidate);
 
-    public Color ValueColor
-    {
-        get => (Color)GetValue(ValueColorProperty);
-        set => SetValue(ValueColorProperty, value);
-    }
-
     public static readonly BindableProperty MidColorProperty = BindableProperty.Create(
         nameof(MidColor),
         typeof(Color),
         typeof(SpeedGauge),
         Colors.Yellow,
         propertyChanged: Invalidate);
-
-    public Color MidColor
-    {
-        get => (Color)GetValue(MidColorProperty);
-        set => SetValue(MidColorProperty, value);
-    }
 
     public static readonly BindableProperty HighColorProperty = BindableProperty.Create(
         nameof(HighColor),
@@ -48,24 +42,12 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         Colors.Red,
         propertyChanged: Invalidate);
 
-    public Color HighColor
-    {
-        get => (Color)GetValue(HighColorProperty);
-        set => SetValue(HighColorProperty, value);
-    }
-
     public static readonly BindableProperty BorderMarginProperty = BindableProperty.Create(
         nameof(BorderMargin),
         typeof(float),
         typeof(SpeedGauge),
         10f,
         propertyChanged: Invalidate);
-
-    public float BorderMargin
-    {
-        get => (float)GetValue(BorderMarginProperty);
-        set => SetValue(BorderMarginProperty, value);
-    }
 
     public static readonly BindableProperty GaugeWidthProperty = BindableProperty.Create(
         nameof(GaugeWidth),
@@ -74,23 +56,11 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         32f,
         propertyChanged: Invalidate);
 
-    public float GaugeWidth
-    {
-        get => (float)GetValue(GaugeWidthProperty);
-        set => SetValue(GaugeWidthProperty, value);
-    }
-
     public static readonly BindableProperty MaxSpeedProperty = BindableProperty.Create(
         nameof(MaxSpeed),
         typeof(int),
         typeof(SpeedGauge),
         propertyChanged: Invalidate);
-
-    public int MaxSpeed
-    {
-        get => (int)GetValue(MaxSpeedProperty);
-        set => SetValue(MaxSpeedProperty, value);
-    }
 
     public static readonly BindableProperty SpeedProperty = BindableProperty.Create(
         nameof(Speed),
@@ -98,17 +68,67 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         typeof(SpeedGauge),
         propertyChanged: Invalidate);
 
+    public Color GaugeColor
+    {
+        get => (Color)GetValue(GaugeColorProperty);
+        set => SetValue(GaugeColorProperty, value);
+    }
+
+    public Color ValueColor
+    {
+        get => (Color)GetValue(ValueColorProperty);
+        set => SetValue(ValueColorProperty, value);
+    }
+
+    public Color MidColor
+    {
+        get => (Color)GetValue(MidColorProperty);
+        set => SetValue(MidColorProperty, value);
+    }
+
+    public Color HighColor
+    {
+        get => (Color)GetValue(HighColorProperty);
+        set => SetValue(HighColorProperty, value);
+    }
+
+    public float BorderMargin
+    {
+        get => (float)GetValue(BorderMarginProperty);
+        set => SetValue(BorderMarginProperty, value);
+    }
+
+    public float GaugeWidth
+    {
+        get => (float)GetValue(GaugeWidthProperty);
+        set => SetValue(GaugeWidthProperty, value);
+    }
+
+    public int MaxSpeed
+    {
+        get => (int)GetValue(MaxSpeedProperty);
+        set => SetValue(MaxSpeedProperty, value);
+    }
+
     public int Speed
     {
         get => (int)GetValue(SpeedProperty);
         set => SetValue(SpeedProperty, value);
     }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SpeedGauge()
     {
         Drawable = this;
         BackgroundColor = Colors.Transparent;
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
     {
@@ -130,38 +150,32 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
 
         canvas.Antialias = true;
 
-        // Background
         canvas.FillColor = BackgroundColor;
         canvas.FillRectangle(0, 0, width, height);
 
-        // Arc
-        const float startAngle = 210f;
-        const float gaugeAngle = 240f;
-        var valueAngle = startAngle - (gaugeAngle * Speed / MaxSpeed);
+        var valueAngle = StartAngle - (GaugeAngle * Speed / MaxSpeed);
 
-        // Gauge
         canvas.StrokeColor = GaugeColor;
         canvas.StrokeSize = gaugeWidth;
 
-        canvas.DrawArc(gaugeRect, startAngle, startAngle - gaugeAngle, true, false);
+        canvas.DrawArc(gaugeRect, StartAngle, StartAngle - GaugeAngle, true, false);
 
-        // Value
         canvas.StrokeColor = CalcValueColor();
         canvas.StrokeSize = gaugeWidth;
 
-        canvas.DrawArc(gaugeRect, startAngle, valueAngle, true, false);
+        canvas.DrawArc(gaugeRect, StartAngle, valueAngle, true, false);
     }
 
     private Color CalcValueColor()
     {
         var ratio = MaxSpeed > 0 ? (float)Speed / MaxSpeed : 0f;
-        if (ratio < 0.5f)
+        if (ratio < MidRatio)
         {
-            return LerpColor(ValueColor, MidColor, ratio / 0.5f);
+            return LerpColor(ValueColor, MidColor, ratio / MidRatio);
         }
-        if (ratio < 0.75f)
+        if (ratio < HighRatio)
         {
-            return LerpColor(MidColor, HighColor, (ratio - 0.5f) / 0.25f);
+            return LerpColor(MidColor, HighColor, (ratio - MidRatio) / (HighRatio - MidRatio));
         }
         return HighColor;
     }

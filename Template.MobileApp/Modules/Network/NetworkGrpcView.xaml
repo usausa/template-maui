@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              xmlns:services="clr-namespace:Template.MobileApp.Services"
@@ -23,11 +24,10 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="ChatEmptyLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCaptionLabel}">
-                <Setter Property="Margin" Value="12" />
-                <Setter Property="VerticalOptions" Value="Start" />
+            <Style x:Key="ChatEmptyStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicEmptyStack}">
+                <Setter Property="Padding" Value="24,0" />
             </Style>
 
             <Style x:Key="PageGrid"
@@ -37,11 +37,51 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
 
-            <Style x:Key="ErrorLabel"
+            <Style x:Key="AddressLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
             </Style>
+
+            <Style x:Key="StateChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <s:MapToTextConverter x:Key="StateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Disconnected}"
+                                      Value="Disconnected" />
+                    <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Connecting}"
+                                      Value="Connecting" />
+                    <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Connected}"
+                                      Value="Connected" />
+                    <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Reconnecting}"
+                                      Value="Reconnecting" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToBoolConverter x:Key="StateBusyConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static services:ChatConnectionState.Connecting}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static services:ChatConnectionState.Reconnecting}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <converters:MapToToneConverter x:Key="StateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static services:ChatConnectionState.Connecting}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static services:ChatConnectionState.Connected}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static services:ChatConnectionState.Reconnecting}"
+                                               Value="Warning" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <Style x:Key="ChatBorder"
                    TargetType="Border">
@@ -60,14 +100,52 @@
 
             <Style x:Key="MessageGrid"
                    TargetType="Grid">
-                <Setter Property="Padding" Value="12,6" />
-                <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="Padding" Value="12,8,12,0" />
+                <Setter Property="RowSpacing" Value="4" />
             </Style>
 
-            <Style x:Key="MessageHeaderLabel"
+            <Style x:Key="UserBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,1" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="UserBadgeLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="MessageTimeLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="MessageDivider"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="0,4,0,0" />
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="SendButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
         </ResourceDictionary>
@@ -79,26 +157,47 @@
 
         <controls:InfoCard Grid.Row="0"
                            behaviors:AnimationOption.EnterAnimation="FadeUp"
-                           Title="接続"
+                           Title="Connection"
                            Icon="{x:Static fonts:MaterialIcons.Hub}">
             <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                <Label Style="{StaticResource BasicCaptionLabel}"
+                <Label Style="{StaticResource AddressLabel}"
                        Text="{Binding AddressDisplay}" />
-                <Label Style="{StaticResource BasicBodyLabel}"
-                       Text="{Binding StateText, StringFormat='状態: {0}'}" />
-                <Label Style="{StaticResource ErrorLabel}"
-                       IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}"
-                       Text="{Binding LastError}" />
-                <Label Style="{StaticResource BasicCaptionLabel}"
-                       Text="{Binding PendingCount, StringFormat='未配送の送信: {0} 件 (切断中の送信は再接続後に配送)'}" />
-                <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="Auto,*">
-                    <Button Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
-                            Command="{Binding ServerTimeCommand}"
-                            Text="サーバー時刻 (単項 RPC)" />
+                <controls:StatusChip Style="{StaticResource StateChip}"
+                                     Icon="{x:Static fonts:MaterialIcons.Sync}"
+                                     Text="{Binding State, Converter={StaticResource StateTextConverter}}"
+                                     IconSpin="{Binding State, Converter={StaticResource StateBusyConverter}}"
+                                     Tone="{Binding State, Converter={StaticResource StateToneConverter}}" />
+                <Border Style="{StaticResource CardErrorBorder}"
+                        IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}">
+                    <Grid Style="{StaticResource CardErrorGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardErrorIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Error_outline}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardErrorLabel}"
+                               Text="{Binding LastError}" />
+                    </Grid>
+                </Border>
+                <Grid Style="{StaticResource CardNameValueGrid}"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource CardNameLabel}"
+                           Text="Pending sends" />
                     <Label Grid.Column="1"
-                           Style="{StaticResource CardRowLabel}"
+                           Style="{StaticResource CardValueLabel}"
+                           Text="{Binding PendingCount, StringFormat='{0}'}" />
+                </Grid>
+                <Button Style="{StaticResource BasicOutlinedButton}"
+                        Command="{Binding ServerTimeCommand}"
+                        Text="Server time (unary RPC)" />
+                <Grid Style="{StaticResource CardNameValueGrid}"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource CardNameLabel}"
+                           Text="Server time" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding ServerTime}" />
                 </Grid>
             </VerticalStackLayout>
@@ -109,27 +208,35 @@
                 behaviors:AnimationOption.EnterAnimation="FadeUp"
                 behaviors:AnimationOption.EnterDelay="80">
             <Grid>
-                <Label Style="{StaticResource ChatEmptyLabel}"
-                       IsVisible="{Binding IsEmpty}"
-                       Text="接続すると直近 50 件の履歴を受信する。管理画面の /chat と相互に表示" />
+                <VerticalStackLayout Style="{StaticResource ChatEmptyStack}"
+                                     IsVisible="{Binding IsEmpty}">
+                    <Border Style="{StaticResource BasicEmptyIconBorder}">
+                        <Label Style="{StaticResource BasicEmptyIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Forum}" />
+                    </Border>
+                    <Label Style="{StaticResource BasicCenterHintLabel}"
+                           Text="No messages yet" />
+                </VerticalStackLayout>
                 <CollectionView Style="{StaticResource ChatCollection}"
                                 ItemsSource="{Binding Messages}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type services:ChatMessageEntry}">
                             <Grid Style="{StaticResource MessageGrid}"
-                                  RowDefinitions="Auto,Auto">
-                                <Label Grid.Row="0"
-                                       Style="{StaticResource MessageHeaderLabel}">
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} - {1:HH:mm:ss}">
-                                            <Binding Path="User" />
-                                            <Binding Path="Timestamp" />
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
-                                <Label Grid.Row="1"
+                                  RowDefinitions="Auto,Auto,Auto"
+                                  ColumnDefinitions="*,Auto">
+                                <Border Grid.Row="0" Grid.Column="0"
+                                        Style="{StaticResource UserBadgeBorder}">
+                                    <Label Style="{StaticResource UserBadgeLabel}"
+                                           Text="{Binding User}" />
+                                </Border>
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Style="{StaticResource MessageTimeLabel}"
+                                       Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}" />
+                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                        Style="{StaticResource BasicBodyLabel}"
                                        Text="{Binding Text}" />
+                                <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                         Style="{StaticResource MessageDivider}" />
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -140,16 +247,18 @@
         <Grid Grid.Row="2"
               Style="{StaticResource BasicButtonGrid}"
               ColumnDefinitions="*,Auto">
-            <Entry Grid.Column="0"
-                   Style="{StaticResource BasicEntry}"
-                   Text="{Binding Input}"
-                   Placeholder="メッセージ"
-                   ReturnCommand="{Binding SendCommand}"
-                   ReturnType="Send" />
+            <Border Grid.Column="0"
+                    Style="{StaticResource CardFieldBorder}">
+                <Entry Style="{StaticResource BasicFieldEntry}"
+                       Text="{Binding Input}"
+                       Placeholder="Message"
+                       ReturnCommand="{Binding SendCommand}"
+                       ReturnType="Send" />
+            </Border>
             <Button Grid.Column="1"
-                    Style="{StaticResource BasicOutlinedButton}"
+                    Style="{StaticResource SendButton}"
                     Command="{Binding SendCommand}"
-                    Text="送信" />
+                    Text="{x:Static fonts:MaterialIcons.Send}" />
         </Grid>
 
     </Grid>

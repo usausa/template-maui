@@ -2,31 +2,21 @@ namespace Template.MobileApp.Modules.UI;
 
 using System.Collections.ObjectModel;
 
-using Template.MobileApp.Models.Sample.Chat;
-
 public sealed partial class UIChatViewModel : AppViewModelBase
 {
-    private const string AvatarAlice = "avatar_person01.jpg";
-    private const string AvatarBob = "avatar_person02.jpg";
-    private const string AvatarCarol = "avatar_person03.jpg";
-    private const string AvatarDave = "avatar_person04.jpg";
-    private const string AvatarMe = "avatar_person05.jpg";
-
-    private static readonly string[] Stamps =
-    [
-        "stamp01.png", "stamp02.png", "stamp03.png", "stamp04.png",
-        "stamp05.png", "stamp06.png", "stamp07.png", "stamp08.png"
-    ];
+    private static readonly string[] ReactionEmojis = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
 
     private readonly IDispatcher dispatcher;
 
+    private Selectable<ChatMessage>? reactionTarget;
+
     public CollectionController Controller { get; } = new();
 
-    public ObservableCollection<ChatMessage> Messages { get; } = [];
+    public ObservableCollection<Selectable<ChatMessage>> Messages { get; } = [];
 
-    public IReadOnlyList<string> StampList { get; } = Stamps;
+    public IReadOnlyList<string> StampList { get; } = ChatSample.LoadStamps();
 
-    public string CurrentUser { get; } = "自分";
+    public IReadOnlyList<string> ReactionList { get; } = ReactionEmojis;
 
     [ObservableProperty]
     public partial string InputText { get; set; } = string.Empty;
@@ -39,6 +29,8 @@ public sealed partial class UIChatViewModel : AppViewModelBase
     public IObserveCommand PickImageCommand { get; }
     public IObserveCommand PickStickerCommand { get; }
     public IObserveCommand ScrollToLatestCommand { get; }
+    public IObserveCommand SelectCommand { get; }
+    public IObserveCommand AddReactionCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -50,9 +42,16 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
         SendCommand = MakeDelegateCommand(ExecuteSend, () => !String.IsNullOrWhiteSpace(InputText));
         SendStampCommand = MakeDelegateCommand<string>(ExecuteSendStamp);
-        PickImageCommand = MakeDelegateCommand(static () => { });
-        PickStickerCommand = MakeDelegateCommand(() => IsStampTrayVisible = !IsStampTrayVisible);
+        PickImageCommand = MakeAsyncCommand(PickImageAsync);
+        PickStickerCommand = MakeDelegateCommand(() =>
+        {
+            var open = !IsStampTrayVisible;
+            CloseTrays();
+            IsStampTrayVisible = open;
+        });
         ScrollToLatestCommand = MakeDelegateCommand(() => ScrollToLast());
+        SelectCommand = MakeDelegateCommand<Selectable<ChatMessage>>(SelectMessage);
+        AddReactionCommand = MakeDelegateCommand<string>(AddReaction);
     }
 
     //--------------------------------------------------------------------------------
@@ -63,7 +62,10 @@ public sealed partial class UIChatViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            LoadSampleMessages();
+            foreach (var message in ChatSample.LoadMessages(DateTime.Today))
+            {
+                Add(message);
+            }
         }
         return Task.CompletedTask;
     }
@@ -74,7 +76,16 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if ((reactionTarget is not null) || IsStampTrayVisible)
+        {
+            CloseTrays();
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -95,132 +106,59 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
     private void ExecuteSend()
     {
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.Send,
-            DateTime = DateTime.Now,
-            Author = CurrentUser,
-            AvatarSource = AvatarMe,
-            TextContent = InputText.Trim()
-        });
+        Add(ChatTalk.Send(DateTime.Now, InputText.Trim()));
         InputText = string.Empty;
-        IsStampTrayVisible = false;
+        CloseTrays();
         ScrollToLast();
+    }
+
+    private async Task PickImageAsync()
+    {
+        var files = await MediaPicker.Default.PickPhotosAsync(new MediaPickerOptions { SelectionLimit = 1 });
+        var file = files.FirstOrDefault();
+        if (file is not null)
+        {
+            Add(ChatTalk.SendPhoto(DateTime.Now, file.FullPath));
+            CloseTrays();
+            ScrollToLast();
+        }
+    }
+
+    // 同じメッセージをもう一度押すと閉じる
+    private void SelectMessage(Selectable<ChatMessage> message)
+    {
+        var select = !message.IsSelected;
+        CloseTrays();
+        if (select)
+        {
+            message.IsSelected = true;
+            reactionTarget = message;
+
+            // 下に出す帯が隠れないよう、選んだメッセージが見える位置までスクロールする
+            var index = Messages.IndexOf(message);
+            dispatcher.Dispatch(() => Controller.ScrollRequest(index, position: ScrollToPosition.MakeVisible));
+        }
+    }
+
+    private void AddReaction(string emoji)
+    {
+        reactionTarget?.Item.AddReaction(emoji);
+        CloseTrays();
+    }
+
+    private void CloseTrays()
+    {
+        reactionTarget?.IsSelected = false;
+        reactionTarget = null;
+        IsStampTrayVisible = false;
     }
 
     private void ExecuteSendStamp(string stamp)
     {
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.Send,
-            DateTime = DateTime.Now,
-            Author = CurrentUser,
-            AvatarSource = AvatarMe,
-            StampSource = stamp,
-            TextContent = string.Empty
-        });
-        IsStampTrayVisible = false;
+        Add(ChatTalk.SendStamp(DateTime.Now, stamp));
+        CloseTrays();
         ScrollToLast();
     }
 
-    private void LoadSampleMessages()
-    {
-        var today = DateTime.Today;
-        var yesterday = today.AddDays(-1);
-
-        AddSystem(yesterday);
-
-        AddReceive(yesterday.AddHours(9).AddMinutes(5), "M･I･O", AvatarAlice, "おはようございます。");
-        AddSend(yesterday.AddHours(9).AddMinutes(18), "おはようございます。", isRead: true);
-        AddReceive(yesterday.AddHours(9).AddMinutes(30), "日本酒飲郎", AvatarBob, "昨日の PR レビューしました。CI が通っていないようなのでテストの修正をお願いできますか？コメントもいくつか書いてあります。");
-        AddSend(yesterday.AddHours(9).AddMinutes(32), "ありがとうございます！\n午前中に対応します。", isRead: true);
-        AddReceive(yesterday.AddHours(12).AddMinutes(30), "日本酒飲郎", AvatarBob, "お昼ご飯食べてきます〜", reactions: [new MessageReaction { Emoji = "🍱", Count = 3 }]);
-        AddReceive(yesterday.AddHours(14), "悪いスライム", AvatarCarol, "定例始めます。");
-        AddSend(yesterday.AddHours(14).AddMinutes(1), "入ります。", isRead: true);
-        AddReceive(yesterday.AddHours(16), "M･I･O", AvatarAlice, "資料 PDF 共有しますね。");
-        AddSend(yesterday.AddHours(16).AddMinutes(5), "確認しました！", isRead: true, reactions: [new MessageReaction { Emoji = "🙏", Count = 1 }]);
-        AddReceive(yesterday.AddHours(18).AddMinutes(30), "†聖天使†", AvatarDave, "お疲れさまでした！");
-
-        AddSystem(today);
-
-        AddReceive(today.AddHours(10).AddMinutes(5), "M･I･O", AvatarAlice, "資料できましたー！来週の会議で使うものなので、月曜日までに確認をお願いします🙏");
-        AddSend(today.AddHours(10).AddMinutes(7), "了解しました！\n以下の点を確認します。\n・議事録\n・来週の資料\n・レビュー", isRead: true);
-        AddReceiveStamp(today.AddHours(10).AddMinutes(10), "日本酒飲郎", AvatarBob, GetStamp(0));
-        AddSend(today.AddHours(10).AddMinutes(12), "👀 確認中…", isRead: true, reactions: [new MessageReaction { Emoji = "👀", Count = 1 }]);
-        AddSendStamp(today.AddHours(10).AddMinutes(15), GetStamp(1), isRead: true);
-        AddReceive(today.AddHours(10).AddMinutes(30), "悪いスライム", AvatarCarol, "今日は 15:00 から会議です。");
-        AddReceiveStamp(today.AddHours(10).AddMinutes(35), "悪いスライム", AvatarCarol, GetStamp(2));
-        AddSend(today.AddHours(10).AddMinutes(37), "了解しました。", isRead: true);
-        AddSendStamp(today.AddHours(10).AddMinutes(40), GetStamp(3), isRead: true);
-        AddReceive(today.AddHours(11), "M･I･O", AvatarAlice, "ランチ何にします？");
-        AddReceiveStamp(today.AddHours(11).AddMinutes(1), "M･I･O", AvatarAlice, GetStamp(4));
-        AddReceive(today.AddHours(11).AddMinutes(2), "日本酒飲郎", AvatarBob, "寿司でどうでしょう。", reactions: [new MessageReaction { Emoji = "🍣", Count = 2 }]);
-        AddReceiveStamp(today.AddHours(11).AddMinutes(3), "日本酒飲郎", AvatarBob, GetStamp(5));
-        AddSend(today.AddHours(11).AddMinutes(5), "いいですね！ちなみに本日のミーティングお疲れさまでした。共有いただいた資料についていくつか質問があるので、後ほど別途連絡いたします。", isRead: false);
-        AddSendStamp(today.AddHours(11).AddMinutes(6), GetStamp(6), isRead: false);
-    }
-
-    private void AddSystem(DateTime date) =>
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.System,
-            DateTime = date,
-            TextContent = date.ToString("yyyy年M月d日 (ddd)")
-        });
-
-    private void AddReceive(
-        DateTime dateTime, string author, string avatar, string text,
-        IReadOnlyList<MessageReaction>? reactions = null) =>
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.Receive,
-            DateTime = dateTime,
-            Author = author,
-            AvatarSource = avatar,
-            TextContent = text,
-            Reactions = reactions ?? []
-        });
-
-    private void AddReceiveStamp(DateTime dateTime, string author, string avatar, string stampSource) =>
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.Receive,
-            DateTime = dateTime,
-            Author = author,
-            AvatarSource = avatar,
-            StampSource = stampSource,
-            TextContent = string.Empty
-        });
-
-    private void AddSendStamp(DateTime dateTime, string stampSource, bool isRead) =>
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.Send,
-            DateTime = dateTime,
-            Author = CurrentUser,
-            AvatarSource = AvatarMe,
-            StampSource = stampSource,
-            TextContent = string.Empty,
-            IsRead = isRead
-        });
-
-    private void AddSend(
-        DateTime dateTime, string text, bool isRead,
-        IReadOnlyList<MessageReaction>? reactions = null) =>
-        Messages.Add(new ChatMessage
-        {
-            Type = MessageType.Send,
-            DateTime = dateTime,
-            Author = CurrentUser,
-            AvatarSource = AvatarMe,
-            TextContent = text,
-            IsRead = isRead,
-            Reactions = reactions ?? []
-        });
-
-    //--------------------------------------------------------------------------------
-    // Helper
-    //--------------------------------------------------------------------------------
-
-    private static string GetStamp(int index) => Stamps[index % Stamps.Length];
+    private void Add(ChatMessage message) => Messages.Add(new Selectable<ChatMessage>(message));
 }

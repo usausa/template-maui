@@ -9,7 +9,9 @@ public enum MailPage
 
 public sealed partial class UIMailViewModel : AppViewModelBase
 {
-    private readonly IFileSystem fileSystem;
+    [Scope]
+    [ObservableProperty]
+    public partial UIMailContext Context { get; set; } = default!;
 
     [ObservableProperty]
     public partial MailPage Selected { get; set; } = MailPage.Mail;
@@ -17,7 +19,10 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsLoading { get; set; }
 
-    public ObservableCollection<MailMessage> Messages { get; } = [];
+    [ObservableProperty]
+    public partial bool IsDrawerOpen { get; set; }
+
+    public string OwnerName { get; } = "うさうささん";
 
     public ICommand ArchiveCommand { get; }
 
@@ -25,30 +30,53 @@ public sealed partial class UIMailViewModel : AppViewModelBase
 
     public IObserveCommand SelectCommand { get; }
 
+    public IObserveCommand OpenCommand { get; }
+
+    public IObserveCommand StarCommand { get; }
+
+    public IObserveCommand DrawerCommand { get; }
+
+    public IObserveCommand FolderCommand { get; }
+
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public UIMailViewModel(IFileSystem fileSystem)
+    public UIMailViewModel()
     {
-        this.fileSystem = fileSystem;
-
         SelectCommand = MakeDelegateCommand<MailPage>(x => Selected = x);
-        ArchiveCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
-        DeleteCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
+        ArchiveCommand = MakeDelegateCommand<MailMessage>(Archive);
+        DeleteCommand = MakeDelegateCommand<MailMessage>(Delete);
+        OpenCommand = MakeAsyncCommand<MailMessage>(OpenAsync);
+        StarCommand = MakeDelegateCommand<MailMessage>(ToggleStar);
+        DrawerCommand = MakeDelegateCommand(() => IsDrawerOpen = true);
+        FolderCommand = MakeDelegateCommand<Selectable<MailViewCount>>(ShowFolder);
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
+    // 本文の画面から戻ったときは読み込まない
     // ReSharper disable once ArrangeModifiersOrder
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Navigator.PostActionAsync(LoadMessagesAsync);
+        if (!Context.IsLoaded)
+        {
+            await Navigator.PostActionAsync(LoadMessagesAsync);
+        }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsDrawerOpen)
+        {
+            IsDrawerOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -56,7 +84,24 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // ReSharper disable StringLiteralTypo
+    private Task OpenAsync(MailMessage message)
+    {
+        Context.Open(message);
+        return Navigator.PushAsync(ViewId.UIMailDetail);
+    }
+
+    private void Archive(MailMessage message) => Context.Archive(message);
+
+    private void Delete(MailMessage message) => Context.Delete(message);
+
+    private void ToggleStar(MailMessage message) => Context.ToggleStar(message);
+
+    private void ShowFolder(Selectable<MailViewCount> folder)
+    {
+        IsDrawerOpen = false;
+        Context.Show(folder.Item.View);
+    }
+
     private async Task LoadMessagesAsync()
     {
         IsLoading = true;
@@ -64,83 +109,8 @@ public sealed partial class UIMailViewModel : AppViewModelBase
         // Simulate delay
         await Task.Delay(500);
 
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now,
-            Image = await LoadImage("mofusand.jpg"),
-            From = "山奥通信",
-            Title = "タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん",
-            Body = "こんにちは。\nうさうさです、どうぞよろしくお願いしますだよもん。\n文章はまだ続きます。",
-            IsUnread = true
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddHours(-3).AddMinutes(-12),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!",
-            IsUnread = true
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddHours(-6).AddMinutes(-15),
-            Image = await LoadImage("mofusand.jpg"),
-            From = "山奥通信",
-            Title = "タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん",
-            Body = "こんにちは。\n私はうさうさです。\nどうぞよろしくお願いしますだよもん。\n文章はまだ続きます。"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-1),
-            Image = await LoadImage("usausa.png"),
-            From = "うさうさ・メープル・フレンチトースト",
-            Title = "Re: Re: おはようございます！",
-            Body = "こんにちは！\n先日はありがとうございました"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-2),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-5),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-10),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-20),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
+        Context.Load();
 
         IsLoading = false;
-
-        async ValueTask<SKBitmapImageSource> LoadImage(string fileName)
-        {
-            await using var stream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Avatar", fileName));
-            var bitmap = SKBitmap.Decode(stream);
-            // SKBitmapはアンマネージドメモリを持つため画面破棄時に解放する
-            Disposables.Add(bitmap);
-            return new SKBitmapImageSource { Bitmap = bitmap };
-        }
     }
-    // ReSharper restore StringLiteralTypo
 }

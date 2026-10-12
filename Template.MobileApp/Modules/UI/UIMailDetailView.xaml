@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIMailDetailView"
+             x:DataType="{x:Type module:UIMailDetailViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMailDetailViewModel}"
+             shell:ShellProperty.Title="Mail"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function4Text="Delete"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="DetailScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,16,16,24" />
+                <Setter Property="Spacing" Value="14" />
+            </Style>
+
+            <Style x:Key="SubjectGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SubjectLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <Style x:Key="StarButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star_border}" />
+            </Style>
+
+            <Style x:Key="SenderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SenderImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Aspect" Value="AspectFill" />
+                <Setter Property="Clip">
+                    <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="SenderTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="SenderNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <Style x:Key="SenderDateLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="RowLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="AttachmentBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+            </Style>
+
+            <Style x:Key="AttachmentStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="AttachmentIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="AttachmentNameLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="BodyLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="LineHeight" Value="1.4" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource DetailScroll}">
+        <VerticalStackLayout Style="{StaticResource DetailStack}"
+                             behaviors:AnimationOption.EnterAnimation="FadeUp">
+
+            <Grid Style="{StaticResource SubjectGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SubjectLabel}"
+                       Text="{Binding Context.Selected.Title}" />
+                <Button Grid.Column="1"
+                        Style="{StaticResource StarButton}"
+                        behaviors:AnimationOption.BounceTrigger="{Binding Context.Selected.IsStarred}"
+                        Command="{Binding StarCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Context.Selected.IsStarred}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star}" />
+                            <Setter Property="TextColor" Value="{StaticResource AmberDarken1}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+
+            <Grid Style="{StaticResource SenderGrid}"
+                  ColumnDefinitions="Auto,*">
+                <controls:MailAvatarImage Grid.Column="0"
+                                          Style="{StaticResource SenderImage}"
+                                          Avatar="{Binding Context.Selected.Avatar}"
+                                          Sender="{Binding Context.Selected.From}" />
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource SenderTextStack}">
+                    <Label Style="{StaticResource SenderNameLabel}"
+                           Text="{Binding Context.Selected.From}" />
+                    <Label Style="{StaticResource SenderDateLabel}"
+                           Text="{Binding Context.Selected.DateTime, StringFormat='{0:yyyy/MM/dd (ddd) H:mm}'}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <BoxView Style="{StaticResource RowLine}" />
+
+            <Border Style="{StaticResource AttachmentBorder}"
+                    IsVisible="{Binding Context.Selected.HasAttachment}">
+                <HorizontalStackLayout Style="{StaticResource AttachmentStack}">
+                    <Label Style="{StaticResource AttachmentIconLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Attach_file}" />
+                    <Label Style="{StaticResource AttachmentNameLabel}"
+                           Text="{Binding Context.Selected.Attachment}" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource BodyLabel}"
+                   Text="{Binding Context.Selected.Body}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Controls;
 
-using Template.MobileApp.Models.Sample.Chat;
-
 public sealed class ChatMessageTemplateSelector : DataTemplateSelector
 {
     public DataTemplate SendTemplate { get; set; } = default!;
@@ -12,12 +10,12 @@ public sealed class ChatMessageTemplateSelector : DataTemplateSelector
 
     protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
     {
-        if (item is not ChatMessage message)
+        if (item is not Selectable<ChatMessage> message)
         {
             return SystemTemplate;
         }
 
-        return message.Type switch
+        return message.Item.Type switch
         {
             MessageType.Send => SendTemplate,
             MessageType.Receive => ReceiveTemplate,

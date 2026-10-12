@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.App;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum Puzzle2048Direction
 {
     Up,
@@ -7,6 +11,10 @@ public enum Puzzle2048Direction
     Left,
     Right
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 
 // 盤面のタイル (Id で動きを追う。合体すると新しい Id になる)
 public sealed record Puzzle2048Tile(int Id, int Value, int Row, int Column);
@@ -19,10 +27,12 @@ public sealed class Puzzle2048Move
 {
     public static Puzzle2048Move None { get; } = new([], [], null, 0);
 
-    public IReadOnlyList<Puzzle2048Slide> Slides { get; }
+#pragma warning disable CA1819
+    public Puzzle2048Slide[] Slides { get; }
 
     // 合体でできたタイル
-    public IReadOnlyList<Puzzle2048Tile> Merged { get; }
+    public Puzzle2048Tile[] Merged { get; }
+#pragma warning restore CA1819
 
     // 新しく置いたタイル
     public Puzzle2048Tile? Spawned { get; }
@@ -30,9 +40,9 @@ public sealed class Puzzle2048Move
     // 加点
     public int Gained { get; }
 
-    public bool Moved => (Merged.Count > 0) || Slides.Any(static x => (x.FromRow != x.ToRow) || (x.FromColumn != x.ToColumn));
+    public bool Moved => (Merged.Length > 0) || Slides.Any(static x => (x.FromRow != x.ToRow) || (x.FromColumn != x.ToColumn));
 
-    public Puzzle2048Move(IReadOnlyList<Puzzle2048Slide> slides, IReadOnlyList<Puzzle2048Tile> merged, Puzzle2048Tile? spawned, int gained)
+    public Puzzle2048Move(Puzzle2048Slide[] slides, Puzzle2048Tile[] merged, Puzzle2048Tile? spawned, int gained)
     {
         Slides = slides;
         Merged = merged;
@@ -42,7 +52,9 @@ public sealed class Puzzle2048Move
 }
 
 // 描く盤面 (Move は直前の 1 手。無ければ動かさずに描く)
-public sealed record Puzzle2048Frame(IReadOnlyList<Puzzle2048Tile> Tiles, Puzzle2048Move? Move);
+#pragma warning disable CA1819
+public sealed record Puzzle2048Frame(Puzzle2048Tile[] Tiles, Puzzle2048Move? Move);
+#pragma warning restore CA1819
 
 // 保存する状態 (値は行ごとに並べる。0 は空き)
 public sealed class Puzzle2048Snapshot
@@ -57,6 +69,10 @@ public sealed class Puzzle2048Snapshot
 
     public bool KeepPlaying { get; set; }
 }
+
+//--------------------------------------------------------------------------------
+// Game
+//--------------------------------------------------------------------------------
 
 // 2048。最高点は新しいゲームでも残す。乱数は 0 以上 n 未満を返す関数で受け取る
 public sealed class Puzzle2048Game
@@ -89,7 +105,9 @@ public sealed class Puzzle2048Game
     // 動ける方向が無い
     public bool IsOver { get; private set; }
 
-    public IReadOnlyList<Puzzle2048Tile> Tiles => [.. cells.OfType<Puzzle2048Tile>()];
+#pragma warning disable CA1819
+    public Puzzle2048Tile[] Tiles => [.. cells.OfType<Puzzle2048Tile>()];
+#pragma warning restore CA1819
 
     public Puzzle2048Game(Func<int, int> random)
     {
@@ -149,13 +167,14 @@ public sealed class Puzzle2048Game
                 }
             }
 
-            if (new Puzzle2048Move(slides, merged, null, gained).Moved)
+            var moved = new Puzzle2048Move([.. slides], [.. merged], null, gained);
+            if (moved.Moved)
             {
                 cells = next;
                 Score += gained;
                 BestScore = Math.Max(BestScore, Score);
                 IsWon |= merged.Any(static x => x.Value >= Goal);
-                result = new Puzzle2048Move(slides, merged, Spawn(), gained);
+                result = new Puzzle2048Move(moved.Slides, moved.Merged, Spawn(), gained);
                 IsOver = !CanMove();
             }
         }

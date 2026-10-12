@@ -3,37 +3,80 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitNotifyView"
              x:DataType="{x:Type module:UIKitNotifyViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIKitNotifyViewModel}"
              shell:ShellProperty.Title="Notifications"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function4Text="Read All"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
 
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <converters:RelativeDayConverter x:Key="RelativeDayConverter" />
+
+            <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
             <Style x:Key="NotifyList"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="ItemBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="12,6" />
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <Style x:Key="GroupHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="16,12,16,6" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
 
-            <Style x:Key="UnreadBarBoxView"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="4" />
-                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
-                <Setter Property="CornerRadius" Value="2" />
+            <Style x:Key="ReadSwipeItem"
+                   TargetType="SwipeItemView">
+                <Setter Property="WidthRequest" Value="88" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+            </Style>
+
+            <Style x:Key="DeleteSwipeItem"
+                   TargetType="SwipeItemView">
+                <Setter Property="WidthRequest" Value="88" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
+            </Style>
+
+            <Style x:Key="SwipeIcon"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="ReadSwipeIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SwipeIcon}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken1}" />
+            </Style>
+
+            <Style x:Key="DeleteSwipeIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SwipeIcon}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken1}" />
+            </Style>
+
+            <Style x:Key="RowStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="NotifyRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
             <Style x:Key="IconBorder"
@@ -93,70 +136,109 @@
                 <Setter Property="CornerRadius" Value="4" />
             </Style>
 
-            <Style x:Key="NotifyRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="12" />
+            <Style x:Key="RowLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="EmptyLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
     <CollectionView Style="{StaticResource NotifyList}"
-                    ItemsSource="{Binding Notifications}">
+                    IsGrouped="True"
+                    ItemsSource="{Binding Groups}">
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate x:DataType="module:UIKitNotifyGroup">
+                <Label Style="{StaticResource GroupHeaderLabel}"
+                       Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="module:UIKitNotifyItem">
-                <Border Style="{StaticResource ItemBorder}">
+                <SwipeView>
                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=ReadCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
-                                              CommandParameter="{Binding .}" />
-                    </Border.GestureRecognizers>
-                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border"
-                                     Binding="{Binding IsUnread}"
-                                     Value="True">
-                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
-                            <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
-                        </DataTrigger>
-                    </Border.Triggers>
-                    <Grid Style="{StaticResource NotifyRowGrid}"
-                          ColumnDefinitions="Auto,Auto,*,Auto">
-                        <BoxView Grid.Column="0"
-                                 Style="{StaticResource UnreadBarBoxView}"
-                                 IsVisible="{Binding IsUnread}" />
-                        <Border Grid.Column="1"
-                                Style="{StaticResource IconBorder}">
-                            <Label Style="{StaticResource IconLabel}"
-                                   Text="{Binding Icon}" />
-                        </Border>
-                        <VerticalStackLayout Grid.Column="2"
-                                             Style="{StaticResource NotifyTextStack}">
-                            <Label Style="{StaticResource KitNotifyTitleLabel}"
-                                   Text="{Binding Title}">
-                                <Label.Triggers>
-                                    <DataTrigger TargetType="Label"
-                                                 Binding="{Binding IsUnread}"
-                                                 Value="False">
-                                        <Setter Property="FontAttributes" Value="None" />
-                                        <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
-                            <Label Style="{StaticResource DescLabel}"
-                                   Text="{Binding Description}" />
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="3"
-                                             Style="{StaticResource NotifyMetaStack}">
-                            <Label Style="{StaticResource NotifyTimeLabel}"
-                                   Text="{Binding Time}" />
-                            <BoxView Style="{StaticResource UnreadDotBoxView}"
-                                     IsVisible="{Binding IsUnread}" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Border>
+                    <SwipeView.LeftItems>
+                        <SwipeItems Mode="Execute">
+                            <SwipeItemView Style="{StaticResource ReadSwipeItem}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=ReadCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
+                                           CommandParameter="{Binding .}">
+                                <Label Style="{StaticResource ReadSwipeIcon}"
+                                       Text="{x:Static fonts:MaterialIcons.Check}" />
+                            </SwipeItemView>
+                        </SwipeItems>
+                    </SwipeView.LeftItems>
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Execute">
+                            <SwipeItemView Style="{StaticResource DeleteSwipeItem}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
+                                           CommandParameter="{Binding .}">
+                                <Label Style="{StaticResource DeleteSwipeIcon}"
+                                       Text="{x:Static fonts:MaterialIcons.Delete}" />
+                            </SwipeItemView>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <VerticalStackLayout Style="{StaticResource RowStack}">
+                        <VerticalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=ReadCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
+                                                  CommandParameter="{Binding .}" />
+                        </VerticalStackLayout.GestureRecognizers>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                        <VerticalStackLayout.Triggers>
+                            <DataTrigger TargetType="VerticalStackLayout"
+                                         Binding="{Binding IsUnread}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                            </DataTrigger>
+                        </VerticalStackLayout.Triggers>
+                        <Grid Style="{StaticResource NotifyRowGrid}"
+                              ColumnDefinitions="Auto,*,Auto">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource IconBorder}">
+                                <Label Style="{StaticResource IconLabel}"
+                                       Text="{Binding Icon}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Style="{StaticResource NotifyTextStack}">
+                                <Label Style="{StaticResource KitNotifyTitleLabel}"
+                                       Text="{Binding Title}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsUnread}"
+                                                     Value="False">
+                                            <Setter Property="FontAttributes" Value="None" />
+                                            <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Style="{StaticResource DescLabel}"
+                                       Text="{Binding Description}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2"
+                                                 Style="{StaticResource NotifyMetaStack}">
+                                <Label Style="{StaticResource NotifyTimeLabel}"
+                                       Text="{Binding Time, Converter={StaticResource ElapsedTimeConverter}}" />
+                                <BoxView Style="{StaticResource UnreadDotBoxView}"
+                                         IsVisible="{Binding IsUnread}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <BoxView Style="{StaticResource RowLine}" />
+                    </VerticalStackLayout>
+                </SwipeView>
             </DataTemplate>
         </CollectionView.ItemTemplate>
+        <CollectionView.EmptyView>
+            <Label Style="{StaticResource EmptyLabel}"
+                   Text="通知はありません" />
+        </CollectionView.EmptyView>
     </CollectionView>
 
 </ContentView>

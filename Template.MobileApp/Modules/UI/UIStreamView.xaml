@@ -2,10 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamView"
              x:DataType="{x:Type module:UIStreamViewModel}"
@@ -16,6 +17,57 @@
 
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <converters:RuntimeTextConverter x:Key="RuntimeTextConverter" />
+
+            <s:MapToTextConverter x:Key="GenreNameConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Sf}"
+                                      Value="SF" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Action}"
+                                      Value="アクション" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Romance}"
+                                      Value="恋愛" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Comedy}"
+                                      Value="コメディ" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Documentary}"
+                                      Value="ドキュメンタリー" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Fantasy}"
+                                      Value="ファンタジー" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="BadgeTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:StreamBadge.New}"
+                                      Value="NEW" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamBadge.NewSeason}"
+                                      Value="NEW SEASON" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamBadge.Live}"
+                                      Value="LIVE" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToBoolConverter x:Key="BadgeVisibleConverter"
+                                  DefaultValue="True">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static models:StreamBadge.None}"
+                                      Value="False" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToTextConverter x:Key="ShelfNameConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.TopRated}"
+                                      Value="高評価" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Original}"
+                                      Value="オリジナル" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Trending}"
+                                      Value="急上昇" />
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Action}"
+                                      Value="アクション &amp; アドベンチャー" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
             <Style x:Key="TopIconButton"
                    TargetType="Button"
@@ -41,24 +93,29 @@
                 <Setter Property="TextColor" Value="{StaticResource RedAccent3}" />
             </Style>
 
-            <Style x:Key="HeroGrid"
-                   TargetType="Grid">
-                <Setter Property="HeightRequest" Value="380" />
+            <Style x:Key="FeaturedCarousel"
+                   TargetType="CarouselView">
+                <Setter Property="HeightRequest" Value="340" />
+                <Setter Property="Loop" Value="False" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
             </Style>
 
-            <Style x:Key="HeroImage"
+            <Style x:Key="FeaturedImage"
                    TargetType="Image">
                 <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
-            <Style x:Key="HeroOverlay"
+            <Style x:Key="FeaturedShade"
                    TargetType="BoxView">
-                <Setter Property="Color" Value="Black" />
-                <Setter Property="Opacity" Value="0.45" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0.35" Color="#00000000" />
+                        <GradientStop Offset="1" Color="#E6000000" />
+                    </LinearGradientBrush>
+                </Setter>
             </Style>
 
-            <!-- Floating info card over the hero (from UI3Camp's weather card) -->
-            <Style x:Key="HeroRatingBorder"
+            <Style x:Key="FeaturedRatingBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16" />
                 <Setter Property="Padding" Value="12,8" />
@@ -69,23 +126,16 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 14" />
             </Style>
 
-            <Style x:Key="HeroRatingLabel"
+            <Style x:Key="FeaturedRatingLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
             </Style>
 
-            <Style x:Key="HeroRatingSubLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="10" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="Opacity" Value="0.9" />
-            </Style>
-
-            <Style x:Key="HeroInfo"
+            <Style x:Key="FeaturedInfo"
                    TargetType="VerticalStackLayout">
-                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="Padding" Value="16,0,16,16" />
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
@@ -146,6 +196,39 @@
                 <Setter Property="WidthRequest" Value="120" />
             </Style>
 
+            <Style x:Key="FeaturedIndicator"
+                   TargetType="IndicatorView">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="IndicatorColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="SelectedIndicatorColor" Value="{StaticResource RedAccent3}" />
+            </Style>
+
+            <Style x:Key="FeaturedIndicatorBar"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="12" />
+                <Setter Property="HeightRequest" Value="4" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken2}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="WidthRequest" Value="28" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource RedAccent3}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
             <Style x:Key="SectionHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="16,16,16,8" />
@@ -168,6 +251,57 @@
             <Style x:Key="RowCollection"
                    TargetType="CollectionView">
                 <Setter Property="HeightRequest" Value="170" />
+            </Style>
+
+            <Style x:Key="ContinueCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="194" />
+            </Style>
+
+            <Style x:Key="ContinueStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="8,0" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="ContinueBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="110" />
+                <Setter Property="HeightRequest" Value="160" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="ContinuePlayBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="#88000000" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="1.5" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="ContinuePlayLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ContinueProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="ProgressColor" Value="{StaticResource RedAccent3}" />
+            </Style>
+
+            <Style x:Key="ContinueRemainLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
             <Style x:Key="PosterBorder"
@@ -241,51 +375,118 @@
                         Text="{x:Static fonts:MaterialIcons.Notifications}" />
             </Grid>
 
-            <Grid Style="{StaticResource HeroGrid}">
-                <Image Style="{StaticResource HeroImage}"
-                       Source="stream_hero.jpg" />
-                <BoxView Style="{StaticResource HeroOverlay}" />
-                <Border Style="{StaticResource HeroRatingBorder}"
-                        behaviors:AnimationOption.EnterAnimation="Pop"
-                        behaviors:AnimationOption.EnterDelay="200">
-                    <VerticalStackLayout>
-                        <Label Style="{StaticResource HeroRatingLabel}"
-                               Text="{Binding HeroRating}" />
-                        <Label Style="{StaticResource HeroRatingSubLabel}"
-                               Text="{Binding HeroRatingSub}" />
-                    </VerticalStackLayout>
-                </Border>
-                <VerticalStackLayout Style="{StaticResource HeroInfo}"
-                                     behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                     behaviors:AnimationOption.EnterDelay="80">
-                    <Border Style="{StaticResource HeroBadgeBorder}">
-                        <Label Style="{StaticResource HeroBadgeLabel}"
-                               Text="{Binding HeroBadge}" />
-                    </Border>
-                    <Label Style="{StaticResource HeroTitleLabel}"
-                           Text="{Binding HeroTitle}" />
-                    <Label Style="{StaticResource HeroMetaLabel}"
-                           Text="{Binding HeroMeta}" />
-                    <HorizontalStackLayout Style="{StaticResource HeroButtonsRow}">
-                        <Button Style="{StaticResource HeroPlayButton}"
-                                behaviors:ButtonOption.PressEffect="True"
-                                Command="{Binding DetailCommand}" />
-                        <Button Style="{StaticResource HeroListButton}"
-                                behaviors:ButtonOption.PressEffect="True"
-                                Command="{Binding MyListCommand}">
-                            <Button.Triggers>
-                                <DataTrigger TargetType="Button"
-                                             Binding="{Binding InMyList}"
-                                             Value="True">
-                                    <Setter Property="Text" Value="✓ In My List" />
-                                    <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
-                                    <Setter Property="TextColor" Value="White" />
-                                </DataTrigger>
-                            </Button.Triggers>
-                        </Button>
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-            </Grid>
+            <CarouselView Style="{StaticResource FeaturedCarousel}"
+                          behaviors:AnimationOption.EnterAnimation="FadeUp"
+                          behaviors:AnimationOption.EnterDelay="80"
+                          ItemsSource="{Binding Featured}"
+                          Position="{Binding FeaturedPosition}"
+                          CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
+                          IndicatorView="{x:Reference FeaturedIndicator}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="models:StreamItem">
+                        <Grid>
+                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            <Image Style="{StaticResource FeaturedImage}"
+                                   Source="{Binding Work.Image}" />
+                            <BoxView Style="{StaticResource FeaturedShade}" />
+                            <Border Style="{StaticResource FeaturedRatingBorder}">
+                                <Label Style="{StaticResource FeaturedRatingLabel}"
+                                       Text="{Binding Work.Rating, StringFormat='★ {0:F1}'}" />
+                            </Border>
+                            <VerticalStackLayout Style="{StaticResource FeaturedInfo}">
+                                <Border Style="{StaticResource HeroBadgeBorder}"
+                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static models:StreamBadge.Live}}"
+                                        IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
+                                    <Label Style="{StaticResource HeroBadgeLabel}"
+                                           Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />
+                                </Border>
+                                <Label Style="{StaticResource HeroTitleLabel}"
+                                       Text="{Binding Work.Title}" />
+                                <Label Style="{StaticResource HeroMetaLabel}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} · {1} · {2}">
+                                            <Binding Path="Work.Year" />
+                                            <Binding Path="Work.Genre"
+                                                     Converter="{StaticResource GenreNameConverter}" />
+                                            <Binding Path="Work.Minutes"
+                                                     Converter="{StaticResource RuntimeTextConverter}" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                                <HorizontalStackLayout Style="{StaticResource HeroButtonsRow}">
+                                    <Button Style="{StaticResource HeroPlayButton}"
+                                            behaviors:ButtonOption.PressEffect="True"
+                                            Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                            CommandParameter="{Binding .}" />
+                                    <Button Style="{StaticResource HeroListButton}"
+                                            behaviors:ButtonOption.PressEffect="True"
+                                            Command="{Binding MyListCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                            CommandParameter="{Binding .}">
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button"
+                                                         Binding="{Binding InMyList}"
+                                                         Value="True">
+                                                <Setter Property="Text" Value="✓ My List" />
+                                                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                        </Grid>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <IndicatorView x:Name="FeaturedIndicator"
+                           Style="{StaticResource FeaturedIndicator}">
+                <IndicatorView.IndicatorTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource FeaturedIndicatorBar}" />
+                    </DataTemplate>
+                </IndicatorView.IndicatorTemplate>
+            </IndicatorView>
+
+            <VerticalStackLayout behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                 behaviors:AnimationOption.EnterDelay="160">
+                <Grid Style="{StaticResource SectionHeaderGrid}">
+                    <Label Style="{StaticResource StreamSectionLabel}"
+                           Text="続きを見る" />
+                </Grid>
+                <CollectionView Style="{StaticResource ContinueCollection}"
+                                ItemsSource="{Binding Continue}"
+                                ItemsLayout="HorizontalList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:StreamItem">
+                            <VerticalStackLayout Style="{StaticResource ContinueStack}">
+                                <Border Style="{StaticResource ContinueBorder}">
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                    <Grid behaviors:TouchOption.ClickCommand="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                          behaviors:TouchOption.ClickCommandParameter="{Binding .}"
+                                          behaviors:TouchOption.Ripple="True">
+                                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                        <Image Style="{StaticResource PosterImage}"
+                                               Source="{Binding Work.Image}" />
+                                        <Border Style="{StaticResource ContinuePlayBorder}">
+                                            <Label Style="{StaticResource ContinuePlayLabel}"
+                                                   Text="▶" />
+                                        </Border>
+                                        <ProgressBar Style="{StaticResource ContinueProgressBar}"
+                                                     Progress="{Binding Progress}" />
+                                    </Grid>
+                                </Border>
+                                <Label Style="{StaticResource ContinueRemainLabel}"
+                                       Text="{Binding RemainMinutes, StringFormat='残り {0} 分'}" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
 
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}">
                 <BindableLayout.ItemTemplate>
@@ -296,7 +497,7 @@
                                   ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
                                        Style="{StaticResource StreamSectionLabel}"
-                                       Text="{Binding Title}" />
+                                       Text="{Binding Shelf, Converter={StaticResource ShelfNameConverter}}" />
                                 <Label Grid.Column="1"
                                        Style="{StaticResource SeeAllLabel}"
                                        Text="See all ›" />
@@ -305,29 +506,26 @@
                                             ItemsSource="{Binding Items}"
                                             ItemsLayout="HorizontalList">
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="module:UIStreamPoster">
+                                    <DataTemplate x:DataType="models:StreamItem">
                                         <Border Style="{StaticResource PosterBorder}">
-                                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                                <toolkit:SfEffectsView.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}" />
-                                                </toolkit:SfEffectsView.GestureRecognizers>
+                                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                            <Grid behaviors:TouchOption.ClickCommand="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                                  behaviors:TouchOption.ClickCommandParameter="{Binding .}"
+                                                  behaviors:TouchOption.Ripple="True">
                                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                                                <Grid>
-                                                    <Image Style="{StaticResource PosterImage}"
-                                                           Source="{Binding Image}" />
-                                                    <Border Style="{StaticResource PosterBadgeBorder}"
-                                                            IsVisible="{Binding HasBadge}">
-                                                        <Label Style="{StaticResource PosterBadgeLabel}"
-                                                               Text="{Binding Badge}" />
-                                                    </Border>
-                                                    <Border Style="{StaticResource PosterDurationBorder}"
-                                                            IsVisible="{Binding HasDuration}">
-                                                        <Label Style="{StaticResource PosterDurationLabel}"
-                                                               Text="{Binding Duration}" />
-                                                    </Border>
-                                                </Grid>
-                                            </toolkit:SfEffectsView>
+                                                <Image Style="{StaticResource PosterImage}"
+                                                       Source="{Binding Work.Image}" />
+                                                <Border Style="{StaticResource PosterBadgeBorder}"
+                                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static models:StreamBadge.Live}}"
+                                                        IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
+                                                    <Label Style="{StaticResource PosterBadgeLabel}"
+                                                           Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />
+                                                </Border>
+                                                <Border Style="{StaticResource PosterDurationBorder}">
+                                                    <Label Style="{StaticResource PosterDurationLabel}"
+                                                           Text="{Binding Work.Minutes, Converter={StaticResource RuntimeTextConverter}}" />
+                                                </Border>
+                                            </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>

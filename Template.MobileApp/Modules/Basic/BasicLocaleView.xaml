@@ -65,19 +65,19 @@
                                Icon="{x:Static fonts:MaterialIcons.Language}">
                 <Grid Style="{StaticResource CardInfoGrid}"
                       RowDefinitions="Auto,Auto"
-                      ColumnDefinitions="2*,3*">
+                      ColumnDefinitions="72,*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource ResourceTagLabel}"
                            Text="Culture" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardPrimaryValueLabel}"
                            Text="{Binding CultureName}" />
 
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource ResourceTagLabel}"
                            Text="UICulture" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardPrimaryValueLabel}"
                            Text="{Binding UICultureName}" />
                 </Grid>
             </controls:InfoCard>
@@ -91,44 +91,44 @@
                                          BindableLayout.ItemsSource="{Binding ResourceEntries}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="{x:Type module:ResourceEntry}">
-                                <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
-                                    <Label Style="{StaticResource BasicMonoLabel}"
-                                           Text="{Binding Key}" />
-                                    <Grid Style="{StaticResource CardInfoGrid}"
-                                          RowDefinitions="Auto,Auto,Auto"
-                                          ColumnDefinitions="72,*">
-                                        <Label Grid.Row="0" Grid.Column="0"
-                                               Style="{StaticResource ResourceTagLabel}"
-                                               Text="neutral" />
-                                        <Label Grid.Row="0" Grid.Column="1"
-                                               Style="{StaticResource CardPrimaryValueLabel}"
-                                               Text="{Binding NeutralValue}" />
-                                        <Label Grid.Row="1" Grid.Column="0"
-                                               Style="{StaticResource ResourceTagLabel}"
-                                               Text="ja" />
-                                        <Label Grid.Row="1" Grid.Column="1"
-                                               Style="{StaticResource CardPrimaryValueLabel}"
-                                               Text="{Binding JapaneseValue}" />
-                                        <Label Grid.Row="2" Grid.Column="0"
-                                               Style="{StaticResource ResourceTagLabel}"
-                                               Text="current" />
-                                        <Label Grid.Row="2" Grid.Column="1"
-                                               Style="{StaticResource CurrentValueLabel}"
-                                               Text="{Binding CurrentValue}" />
-                                    </Grid>
+                                <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                                    <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
+                                        <Label Style="{StaticResource BasicMonoLabel}"
+                                               Text="{Binding Key}" />
+                                        <Grid Style="{StaticResource CardInfoGrid}"
+                                              RowDefinitions="Auto,Auto,Auto"
+                                              ColumnDefinitions="72,*">
+                                            <Label Grid.Row="0" Grid.Column="0"
+                                                   Style="{StaticResource ResourceTagLabel}"
+                                                   Text="neutral" />
+                                            <Label Grid.Row="0" Grid.Column="1"
+                                                   Style="{StaticResource CardPrimaryValueLabel}"
+                                                   Text="{Binding NeutralValue}" />
+                                            <Label Grid.Row="1" Grid.Column="0"
+                                                   Style="{StaticResource ResourceTagLabel}"
+                                                   Text="ja" />
+                                            <Label Grid.Row="1" Grid.Column="1"
+                                                   Style="{StaticResource CardPrimaryValueLabel}"
+                                                   Text="{Binding JapaneseValue}" />
+                                            <Label Grid.Row="2" Grid.Column="0"
+                                                   Style="{StaticResource ResourceTagLabel}"
+                                                   Text="current" />
+                                            <Label Grid.Row="2" Grid.Column="1"
+                                                   Style="{StaticResource CurrentValueLabel}"
+                                                   Text="{Binding CurrentValue}" />
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                    <BoxView Style="{StaticResource CardDivider}" />
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
-                    <BoxView Style="{StaticResource CardDivider}" />
                     <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                         <Label Style="{StaticResource BasicMonoLabel}"
                                Text="x:Static reference" />
                         <Label Style="{StaticResource CardPrimaryValueLabel}"
                                Text="{x:Static strings:Messages.Hello_World}" />
                     </VerticalStackLayout>
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Values switch with the system language (en / ja resx)" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

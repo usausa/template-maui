@@ -48,18 +48,12 @@
                     CommandParameter="{markup:ViewId NetworkMenu}"
                     Text="Network"
                     ImageSource="{x:Static markup:AppIcons.Cloud}" />
-            <Button Grid.Row="4" Grid.Column="0"
+            <Button Grid.Row="4" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId ViewMenu}"
                     Text="View"
                     ImageSource="{x:Static markup:AppIcons.Layers}" />
-            <Button Grid.Row="4" Grid.Column="1"
-                    Style="{StaticResource MenuIconButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId ControlMenu}"
-                    Text="Control"
-                    ImageSource="{x:Static markup:AppIcons.ViewModule}" />
             <Button Grid.Row="5" Grid.Column="0"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"
@@ -100,8 +94,10 @@
 
         <FlexLayout Grid.Row="1"
                     Style="{StaticResource FooterFlexLayout}">
-            <Label Style="{StaticResource FooterInfoLabel}"
-                   Text="{Binding Flavor, StringFormat='{0} flavor'}" />
+            <Border Style="{StaticResource FooterFlavorBorder}">
+                <Label Style="{StaticResource FooterFlavorLabel}"
+                       Text="{Binding Flavor, StringFormat='{0} flavor'}" />
+            </Border>
             <Label Style="{StaticResource FooterInfoLabel}"
                    Text="{Binding Version, StringFormat='Version {0}'}" />
         </FlexLayout>

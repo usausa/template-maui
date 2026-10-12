@@ -54,14 +54,14 @@ internal static class UIGridStyles
         AscendingSortMark = "▲",
         DescendingSortMark = "▼",
         SortMarkPosition = GridSortMarkPosition.End,
-        ShowSortPriority = true,
+        SortPriorityVisible = true,
         CellColors = SelectCellColors
     };
 
     // 行ヘッダはドラッグの取っ手 (AllowRowDragging のときライブラリが描く)
     private static GridStyle CreateSettings() => CreateBase() with
     {
-        ShowRowHeaders = true,
+        RowHeadersVisible = true,
         RowHeaderWidth = 56,
         RowHeaderBackground = Color.FromArgb("#F5F7FA"),
         CornerText = string.Empty
@@ -74,8 +74,8 @@ internal static class UIGridStyles
         RowHeight = 46,
         HeaderHeight = 42,
         HorizontalPadding = 10,
-        ShowRowHeaders = false,
-        ShowVerticalLines = false,
+        RowHeadersVisible = false,
+        VerticalLinesVisible = false,
         TextColor = Color.FromArgb("#37474F"),
         Background = Colors.White,
         HeaderBackground = Color.FromArgb("#F5F7FA"),

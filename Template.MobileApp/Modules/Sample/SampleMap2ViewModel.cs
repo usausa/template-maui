@@ -57,6 +57,11 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool OverlayEnabled { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsLayerOpen { get; set; }
+
+    public ICommand LayerCommand { get; }
+
     public ICommand ZoomInCommand { get; }
 
     public ICommand ZoomOutCommand { get; }
@@ -69,6 +74,7 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
 
     public SampleMap2ViewModel()
     {
+        LayerCommand = MakeDelegateCommand(() => IsLayerOpen = true);
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
         ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
         HomeCommand = MakeDelegateCommand(() => Controller.MoveTo(InitialLatitude, InitialLongitude));

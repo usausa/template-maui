@@ -4,7 +4,8 @@ public enum EnterAnimationType
 {
     None,
     FadeUp,
-    Pop
+    Pop,
+    Grow
 }
 
 public static class AnimationOption
@@ -16,6 +17,12 @@ public static class AnimationOption
     private const string HighlightAnimationName = "AnimationOptionHighlight";
     private const string FlashAnimationName = "AnimationOptionFlash";
     private const string WaveAnimationName = "AnimationOptionWave";
+    private const string RippleAnimationName = "AnimationOptionRipple";
+    private const string SpinAnimationName = "AnimationOptionSpin";
+    private const string BlinkAnimationName = "AnimationOptionBlink";
+    private const string HeartbeatAnimationName = "AnimationOptionHeartbeat";
+    private const string JumpAnimationName = "AnimationOptionJump";
+    private const string FloatAnimationName = "AnimationOptionFloat";
     private const string EnterAnimationName = "AnimationOptionEnter";
 
     // ------------------------------------------------------------------ Pulse
@@ -264,6 +271,533 @@ public static class AnimationOption
             700,
             Easing.Linear,
             repeat: () => GetWave(element));
+    }
+
+    // ------------------------------------------------------------------ Ripple
+
+    public static readonly BindableProperty RippleProperty = BindableProperty.CreateAttached(
+        "Ripple",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnRippleChanged);
+
+    public static bool GetRipple(BindableObject bindable) => (bool)bindable.GetValue(RippleProperty);
+
+    public static void SetRipple(BindableObject bindable, bool value) => bindable.SetValue(RippleProperty, value);
+
+    public static readonly BindableProperty RippleDelayProperty = BindableProperty.CreateAttached(
+        "RippleDelay",
+        typeof(int),
+        typeof(AnimationOption),
+        0);
+
+    public static int GetRippleDelay(BindableObject bindable) => (int)bindable.GetValue(RippleDelayProperty);
+
+    public static void SetRippleDelay(BindableObject bindable, int value) => bindable.SetValue(RippleDelayProperty, value);
+
+    private static void OnRippleChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnRippleLoaded;
+            element.Unloaded += OnRippleUnloaded;
+            if (element.IsLoaded)
+            {
+                StartRippleAfterDelay(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnRippleLoaded;
+            element.Unloaded -= OnRippleUnloaded;
+            StopRipple(element);
+        }
+    }
+
+    private static void OnRippleLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StartRippleAfterDelay(element);
+        }
+    }
+
+    private static void OnRippleUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StopRipple(element);
+        }
+    }
+
+    private static void StartRippleAfterDelay(VisualElement element)
+    {
+        var delay = GetRippleDelay(element);
+        if (delay > 0)
+        {
+            // 要素毎に位相をずらして輪を重ねる
+            element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
+            {
+                if (element.IsLoaded && GetRipple(element))
+                {
+                    StartRipple(element);
+                }
+            });
+        }
+        else
+        {
+            StartRipple(element);
+        }
+    }
+
+    private static void StartRipple(VisualElement element)
+    {
+        element.AbortAnimation(RippleAnimationName);
+
+        // 元の大きさから 1.5 倍へ広がりながら消える
+        element.Animate(
+            RippleAnimationName,
+            v =>
+            {
+                element.Scale = 1 + (0.5 * v);
+                element.Opacity = 0.8 * (1 - v);
+            },
+            16,
+            1800,
+            Easing.CubicOut,
+            repeat: () => GetRipple(element));
+    }
+
+    private static void StopRipple(VisualElement element)
+    {
+        element.AbortAnimation(RippleAnimationName);
+        element.Scale = 1;
+        element.Opacity = 0;
+    }
+
+    // ------------------------------------------------------------------ Spin (回り続ける。止めると 0 度に戻す)
+
+    public static readonly BindableProperty SpinProperty = BindableProperty.CreateAttached(
+        "Spin",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnSpinChanged);
+
+    public static bool GetSpin(BindableObject bindable) => (bool)bindable.GetValue(SpinProperty);
+
+    public static void SetSpin(BindableObject bindable, bool value) => bindable.SetValue(SpinProperty, value);
+
+    private static void OnSpinChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnSpinLoaded;
+            element.Unloaded += OnSpinUnloaded;
+            if (element.IsLoaded)
+            {
+                StartSpin(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnSpinLoaded;
+            element.Unloaded -= OnSpinUnloaded;
+            element.AbortAnimation(SpinAnimationName);
+            element.Rotation = 0;
+        }
+    }
+
+    private static void OnSpinLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StartSpin(element);
+        }
+    }
+
+    private static void OnSpinUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            element.AbortAnimation(SpinAnimationName);
+            element.Rotation = 0;
+        }
+    }
+
+    private static void StartSpin(VisualElement element)
+    {
+        element.AbortAnimation(SpinAnimationName);
+
+        // 1 周 1.2 秒で回り続ける
+        element.Animate(
+            SpinAnimationName,
+            v => element.Rotation = 360 * v,
+            16,
+            1200,
+            Easing.Linear,
+            repeat: () => GetSpin(element));
+    }
+
+    // ------------------------------------------------------------------ Blink (透明度の点滅)
+
+    public static readonly BindableProperty BlinkProperty = BindableProperty.CreateAttached(
+        "Blink",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnBlinkChanged);
+
+    public static bool GetBlink(BindableObject bindable) => (bool)bindable.GetValue(BlinkProperty);
+
+    public static void SetBlink(BindableObject bindable, bool value) => bindable.SetValue(BlinkProperty, value);
+
+    private static void OnBlinkChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnBlinkLoaded;
+            element.Unloaded += OnBlinkUnloaded;
+            if (element.IsLoaded)
+            {
+                StartBlink(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnBlinkLoaded;
+            element.Unloaded -= OnBlinkUnloaded;
+            element.AbortAnimation(BlinkAnimationName);
+            element.Opacity = 1;
+        }
+    }
+
+    private static void OnBlinkLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StartBlink(element);
+        }
+    }
+
+    private static void OnBlinkUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            element.AbortAnimation(BlinkAnimationName);
+            element.Opacity = 1;
+        }
+    }
+
+    private static void StartBlink(VisualElement element)
+    {
+        element.AbortAnimation(BlinkAnimationName);
+
+        // 1 → 0.3 → 1 を 1 秒で繰り返す
+        element.Animate(
+            BlinkAnimationName,
+            v => element.Opacity = 0.65 + (0.35 * Math.Cos(v * 2 * Math.PI)),
+            16,
+            1000,
+            Easing.Linear,
+            repeat: () => GetBlink(element));
+    }
+
+    // ------------------------------------------------------------------ Heartbeat (2 段に大きくなる鼓動)
+
+    public static readonly BindableProperty HeartbeatProperty = BindableProperty.CreateAttached(
+        "Heartbeat",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnHeartbeatChanged);
+
+    public static bool GetHeartbeat(BindableObject bindable) => (bool)bindable.GetValue(HeartbeatProperty);
+
+    public static void SetHeartbeat(BindableObject bindable, bool value) => bindable.SetValue(HeartbeatProperty, value);
+
+    // 毎分の回数 (72 回で 1 拍 833 ms)
+    public static readonly BindableProperty HeartbeatRateProperty = BindableProperty.CreateAttached(
+        "HeartbeatRate",
+        typeof(int),
+        typeof(AnimationOption),
+        72,
+        propertyChanged: OnHeartbeatRateChanged);
+
+    public static int GetHeartbeatRate(BindableObject bindable) => (int)bindable.GetValue(HeartbeatRateProperty);
+
+    public static void SetHeartbeatRate(BindableObject bindable, int value) => bindable.SetValue(HeartbeatRateProperty, value);
+
+    public static readonly BindableProperty HeartbeatTriggerProperty = BindableProperty.CreateAttached(
+        "HeartbeatTrigger",
+        typeof(object),
+        typeof(AnimationOption),
+        null,
+        propertyChanged: OnHeartbeatTriggerChanged);
+
+    public static object? GetHeartbeatTrigger(BindableObject bindable) => bindable.GetValue(HeartbeatTriggerProperty);
+
+    public static void SetHeartbeatTrigger(BindableObject bindable, object? value) => bindable.SetValue(HeartbeatTriggerProperty, value);
+
+    public static readonly BindableProperty HeartbeatValueProperty = BindableProperty.CreateAttached(
+        "HeartbeatValue",
+        typeof(object),
+        typeof(AnimationOption),
+        null);
+
+    public static object? GetHeartbeatValue(BindableObject bindable) => bindable.GetValue(HeartbeatValueProperty);
+
+    public static void SetHeartbeatValue(BindableObject bindable, object? value) => bindable.SetValue(HeartbeatValueProperty, value);
+
+    private static void OnHeartbeatChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnHeartbeatLoaded;
+            element.Unloaded += OnHeartbeatUnloaded;
+            if (element.IsLoaded)
+            {
+                StartHeartbeat(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnHeartbeatLoaded;
+            element.Unloaded -= OnHeartbeatUnloaded;
+            element.AbortAnimation(HeartbeatAnimationName);
+            element.Scale = 1.0;
+        }
+    }
+
+    private static void OnHeartbeatRateChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        // 回数が変わったら新しい間隔で打ち直す
+        if ((bindable is VisualElement element) && GetHeartbeat(element) && element.IsLoaded)
+        {
+            StartHeartbeat(element);
+        }
+    }
+
+    private static void OnHeartbeatLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StartHeartbeat(element);
+        }
+    }
+
+    private static void OnHeartbeatUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            element.AbortAnimation(HeartbeatAnimationName);
+            element.Scale = 1.0;
+        }
+    }
+
+    private static void StartHeartbeat(VisualElement element)
+    {
+        element.AbortAnimation(HeartbeatAnimationName);
+
+        // 1 拍の前半で 2 段に打ち、後半は休む
+        element.Animate(
+            HeartbeatAnimationName,
+            v => element.Scale = v < 0.5 ? BeatScale(v / 0.5) : 1.0,
+            16,
+            (uint)(60000 / Math.Max(GetHeartbeatRate(element), 1)),
+            Easing.Linear,
+            repeat: () => GetHeartbeat(element));
+    }
+
+    private static void OnHeartbeatTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        // 初回バインドでは打たない。HeartbeatValue の指定時は一致したときだけ 1 回打つ
+        if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
+        {
+            return;
+        }
+
+        var target = GetHeartbeatValue(element);
+        if ((target is not null) && !Equals(target, newValue))
+        {
+            return;
+        }
+
+        element.AbortAnimation(HeartbeatAnimationName);
+        element.Animate(
+            HeartbeatAnimationName,
+            v => element.Scale = BeatScale(v),
+            16,
+            450,
+            Easing.Linear,
+            (_, _) => element.Scale = 1.0);
+    }
+
+    // 1.0 → 1.18 → 1.0 → 1.1 → 1.0 (v は 0〜1)
+    private static double BeatScale(double v) =>
+        v < 0.5 ? 1.0 + (0.18 * Math.Sin(v / 0.5 * Math.PI)) : 1.0 + (0.1 * Math.Sin((v - 0.5) / 0.5 * Math.PI));
+
+    // ------------------------------------------------------------------ Jump (上へ跳ねて落ち、着地で縦につぶれて戻る)
+
+    public static readonly BindableProperty JumpTriggerProperty = BindableProperty.CreateAttached(
+        "JumpTrigger",
+        typeof(object),
+        typeof(AnimationOption),
+        null,
+        propertyChanged: OnJumpTriggerChanged);
+
+    public static object? GetJumpTrigger(BindableObject bindable) => bindable.GetValue(JumpTriggerProperty);
+
+    public static void SetJumpTrigger(BindableObject bindable, object? value) => bindable.SetValue(JumpTriggerProperty, value);
+
+    public static readonly BindableProperty JumpValueProperty = BindableProperty.CreateAttached(
+        "JumpValue",
+        typeof(object),
+        typeof(AnimationOption),
+        null);
+
+    public static object? GetJumpValue(BindableObject bindable) => bindable.GetValue(JumpValueProperty);
+
+    public static void SetJumpValue(BindableObject bindable, object? value) => bindable.SetValue(JumpValueProperty, value);
+
+    private static void OnJumpTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        // 初回バインドでは跳ねない。JumpValue の指定時は一致したときだけ跳ねる
+        if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
+        {
+            return;
+        }
+
+        var target = GetJumpValue(element);
+        if ((target is not null) && !Equals(target, newValue))
+        {
+            return;
+        }
+
+        // 途中で打ち切ると完了の処理で元の位置へ戻るので、その後の値を基準にする
+        element.AbortAnimation(JumpAnimationName);
+        var baseTranslationY = element.TranslationY;
+        var baseAnchorY = element.AnchorY;
+        element.AnchorY = 1;
+        element.Animate(
+            JumpAnimationName,
+            v =>
+            {
+                if (v < 0.7)
+                {
+                    // 放物線で 14 上がって落ちる
+                    var p = v / 0.7;
+                    element.TranslationY = baseTranslationY - (56 * p * (1 - p));
+                }
+                else
+                {
+                    // 下の端を起点に縦につぶれて戻る
+                    var s = Math.Sin((v - 0.7) / 0.3 * Math.PI);
+                    element.TranslationY = baseTranslationY;
+                    element.ScaleY = 1 - (0.18 * s);
+                    element.ScaleX = 1 + (0.1 * s);
+                }
+            },
+            16,
+            520,
+            Easing.Linear,
+            (_, _) =>
+            {
+                element.TranslationY = baseTranslationY;
+                element.ScaleX = 1;
+                element.ScaleY = 1;
+                element.AnchorY = baseAnchorY;
+            });
+    }
+
+    // ------------------------------------------------------------------ Float (ゆっくり上下に漂う)
+
+    public static readonly BindableProperty FloatProperty = BindableProperty.CreateAttached(
+        "Float",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnFloatChanged);
+
+    public static bool GetFloat(BindableObject bindable) => (bool)bindable.GetValue(FloatProperty);
+
+    public static void SetFloat(BindableObject bindable, bool value) => bindable.SetValue(FloatProperty, value);
+
+    private static void OnFloatChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnFloatLoaded;
+            element.Unloaded += OnFloatUnloaded;
+            if (element.IsLoaded)
+            {
+                StartFloat(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnFloatLoaded;
+            element.Unloaded -= OnFloatUnloaded;
+            element.AbortAnimation(FloatAnimationName);
+            element.TranslationY = 0;
+        }
+    }
+
+    private static void OnFloatLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StartFloat(element);
+        }
+    }
+
+    private static void OnFloatUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            element.AbortAnimation(FloatAnimationName);
+            element.TranslationY = 0;
+        }
+    }
+
+    private static void StartFloat(VisualElement element)
+    {
+        element.AbortAnimation(FloatAnimationName);
+
+        // 3 秒で 6 上がって戻る
+        element.Animate(
+            FloatAnimationName,
+            v => element.TranslationY = -3 * (1 - Math.Cos(v * 2 * Math.PI)),
+            16,
+            3000,
+            Easing.Linear,
+            repeat: () => GetFloat(element));
     }
 
     // ------------------------------------------------------------------ Flash
@@ -633,6 +1167,13 @@ public static class AnimationOption
             element.Opacity = 0;
             element.TranslationY = GetEnterBaseTranslationY(element) + 16;
         }
+        else if (GetEnterAnimation(element) == EnterAnimationType.Grow)
+        {
+            // 上の端を起点に縦に伸ばす
+            GetEnterBaseTranslationY(element);
+            element.AnchorY = 0;
+            element.ScaleY = 0;
+        }
         else
         {
             // Pop は TranslationY を使わないが、基準値の取得漏れを防ぐためここで確定させる
@@ -682,6 +1223,16 @@ public static class AnimationOption
                 Easing.CubicOut,
                 (_, _) => ResetEnter(element));
         }
+        else if (GetEnterAnimation(element) == EnterAnimationType.Grow)
+        {
+            element.Animate(
+                EnterAnimationName,
+                v => element.ScaleY = v,
+                16,
+                400,
+                Easing.CubicOut,
+                (_, _) => ResetEnter(element));
+        }
         else
         {
             // 0 → 1.15 → 1.0 と弾んで出現
@@ -705,6 +1256,7 @@ public static class AnimationOption
         // 0 固定にすると Style 等で指定された静的な TranslationY を壊すため、退避した基準値へ戻す
         element.TranslationY = GetEnterBaseTranslationY(element);
         element.Scale = 1;
+        element.ScaleY = 1;
     }
 
     private static Color LerpColor(Color from, Color to, double t) =>

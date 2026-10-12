@@ -53,7 +53,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     public partial bool Loading { get; set; }
 
     [ObservableProperty]
-    public partial bool IsEmpty { get; set; } = true;
+    public partial bool IsEmpty { get; set; }
 
     [ObservableProperty]
     public partial bool Transferring { get; set; }
@@ -137,7 +137,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
                 }
                 IsEmpty = Entries.Count == 0;
                 SelectedEntry = null;
-                AddLog($"一覧 /{CurrentPath} {Entries.Count} 件");
+                AddLog($"List /{CurrentPath} {Entries.Count}");
             }
         }
         finally
@@ -199,11 +199,11 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     {
         var path = $"{CurrentPath}{name}";
         var result = await TransferAsync(
-            $"アップロード開始: {path} ({stream.Length:N0} bytes)",
+            $"Upload started: {path} ({stream.Length:N0} bytes)",
             t => networkUsecase.UploadStorageAsync(path, stream, x => Progress = x / 100, t));
         if (result.IsSuccess)
         {
-            AddLog($"アップロード完了: {path}");
+            AddLog($"Upload done: {path}");
             await ReloadAsync();
         }
     }
@@ -219,10 +219,10 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
 
         var path = $"{CurrentPath}{entry.Name}";
         var filename = Path.Combine(storageManager.PublicFolder, entry.Name);
-        var result = await TransferAsync($"ダウンロード開始: {path}", t => networkUsecase.DownloadStorageAsync(path, filename, x => Progress = x / 100, t));
+        var result = await TransferAsync($"Download started: {path}", t => networkUsecase.DownloadStorageAsync(path, filename, x => Progress = x / 100, t));
         if (result.IsSuccess)
         {
-            AddLog($"保存先: {filename}");
+            AddLog($"Saved: {filename}");
         }
     }
 
@@ -242,7 +242,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
             }
             else
             {
-                AddLog($"転送失敗: {FormatError(result)}");
+                AddLog($"Transfer failed: {FormatError(result)}");
             }
 
             return result;
@@ -267,7 +267,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
         }
 
         var path = $"{CurrentPath}{entry.Name}";
-        if (!await dialog.ConfirmAsync(entry.IsDirectory ? $"{path}/ を配下ごと削除しますか?" : $"{path} を削除しますか?"))
+        if (!await dialog.ConfirmAsync(entry.IsDirectory ? $"Delete {path}/ and its contents ?" : $"Delete {path} ?"))
         {
             return;
         }
@@ -275,12 +275,12 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
         var result = await networkUsecase.DeleteStorageAsync(path);
         if (result.IsSuccess)
         {
-            AddLog($"削除: {path}");
+            AddLog($"Deleted: {path}");
             await ReloadAsync();
         }
         else
         {
-            AddLog($"削除失敗: {path} {FormatError(result)}");
+            AddLog($"Delete failed: {path} {FormatError(result)}");
         }
     }
 
@@ -291,11 +291,11 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     private static string FormatError(NetworkResult result) =>
         result.Type switch
         {
-            NetworkResultType.Disconnected => "未接続",
-            NetworkResultType.Canceled => "キャンセル",
-            NetworkResultType.NotFound => "見つからない (404)",
-            NetworkResultType.HttpError => $"HTTP エラー ({(int)result.StatusCode})",
-            _ => "通信エラー"
+            NetworkResultType.Disconnected => "Not connected",
+            NetworkResultType.Canceled => "Cancel",
+            NetworkResultType.NotFound => "Not found (404)",
+            NetworkResultType.HttpError => $"HTTP error ({(int)result.StatusCode})",
+            _ => "Network error"
         };
 
     private void AddLog(string message)

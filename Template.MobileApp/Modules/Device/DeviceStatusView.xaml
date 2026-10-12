@@ -5,8 +5,10 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
+             xmlns:devices="clr-namespace:Microsoft.Maui.Devices;assembly=Microsoft.Maui.Essentials" xmlns:networking="clr-namespace:Microsoft.Maui.Networking;assembly=Microsoft.Maui.Essentials" xmlns:state="clr-namespace:Template.MobileApp.State"
              x:Class="Template.MobileApp.Modules.Device.DeviceStatusView"
              x:DataType="{x:Type module:DeviceStatusViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceStatusViewModel}"
@@ -24,25 +26,56 @@
                 <Setter Property="ColumnSpacing" Value="16" />
             </Style>
 
-            <Style x:Key="BatteryIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="48" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="VerticalOptions" Value="Center" />
+            <SolidColorBrush x:Key="BatteryBrush"
+                             Color="{StaticResource GreenDefault}" />
+            <SolidColorBrush x:Key="BatteryLowBrush"
+                             Color="{StaticResource RedDefault}" />
+
+            <Style x:Key="BatteryRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="120" />
             </Style>
 
-            <Style x:Key="BatteryStack"
+            <Style x:Key="BatteryMeter"
+                   TargetType="controls:ArcMeter">
+                <Setter Property="StartAngle" Value="-90" />
+                <Setter Property="SweepAngle" Value="360" />
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="1" />
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="TrackColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="Brush" Value="{StaticResource BatteryBrush}" />
+            </Style>
+
+            <Style x:Key="BatteryCenterStack"
                    TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="BatteryIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
             </Style>
 
             <Style x:Key="BigValueLabel"
                    TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+            </Style>
+
+            <Style x:Key="BatteryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="8" />
             </Style>
 
             <Style x:Key="StateChip"
@@ -50,16 +83,88 @@
                 <Setter Property="Margin" Value="0,0,8,8" />
             </Style>
 
-            <Style x:Key="NetworkStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="0,4" />
-                <Setter Property="Spacing" Value="4" />
-            </Style>
+            <s:MapToTextConverter x:Key="BatteryStateTextConverter"
+                                  DefaultValue="Unknown">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Charging}"
+                                      Value="Charging" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Full}"
+                                      Value="Full" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Discharging}"
+                                      Value="Discharging" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotCharging}"
+                                      Value="Not charging" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotPresent}"
+                                      Value="No battery" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <converters:MapToToneConverter x:Key="BatteryStateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static devices:BatteryState.Charging}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static devices:BatteryState.Full}"
+                                               Value="Success" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+            <s:MapToTextConverter x:Key="PowerSourceTextConverter"
+                                  DefaultValue="Unknown">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.AC}"
+                                      Value="AC" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Usb}"
+                                      Value="USB" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Wireless}"
+                                      Value="Wireless" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Battery}"
+                                      Value="Battery" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
-            <Style x:Key="NetworkGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
+            <s:MapToTextConverter x:Key="NetworkAccessTextConverter"
+                                  DefaultValue="Unknown">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Internet}"
+                                      Value="Internet" />
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
+                                      Value="Limited" />
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Local}"
+                                      Value="Local" />
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.None}"
+                                      Value="None" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <converters:MapToToneConverter x:Key="NetworkAccessToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.Internet}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.Local}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.None}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+            <s:MapToTextConverter x:Key="NetworkStateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
+                                      Value="High speed" />
+                    <s:MapToTextEntry Key="{x:Static state:NetworkState.Connected}"
+                                      Value="Connected" />
+                    <s:MapToTextEntry Key="{x:Static state:NetworkState.Disconnected}"
+                                      Value="Disconnected" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <converters:MapToToneConverter x:Key="NetworkStateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.Connected}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.Disconnected}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
         </ResourceDictionary>
     </ContentView.Resources>
@@ -74,45 +179,50 @@
                 <Grid Style="{StaticResource BatteryGrid}"
                       ColumnDefinitions="Auto,*">
 
-                    <Label Grid.Column="0"
-                           Style="{StaticResource BatteryIconLabel}">
-                        <Label.Text>
-                            <MultiBinding Converter="{StaticResource BatteryIconConverter}">
-                                <Binding Path="DeviceState.BatteryChargeLevel" />
-                                <Binding Path="DeviceState.BatteryState" />
-                                <Binding Path="DeviceState.BatteryPowerSource" />
-                            </MultiBinding>
-                        </Label.Text>
-                        <Label.Triggers>
-                            <DataTrigger TargetType="Label"
-                                         Binding="{Binding DeviceState.BatteryState}"
-                                         Value="Charging">
-                                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
+                    <Grid Grid.Column="0"
+                          Style="{StaticResource BatteryRingGrid}">
+                        <controls:ArcMeter Style="{StaticResource BatteryMeter}"
+                                           Value="{Binding DeviceState.BatteryChargeLevel}">
+                            <controls:ArcMeter.Triggers>
+                                <DataTrigger TargetType="controls:ArcMeter"
+                                             Binding="{Binding DeviceState.BatteryChargeLevel, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Double 0.2}}"
+                                             Value="False">
+                                    <Setter Property="Brush" Value="{StaticResource BatteryLowBrush}" />
+                                </DataTrigger>
+                            </controls:ArcMeter.Triggers>
+                        </controls:ArcMeter>
+                        <VerticalStackLayout Style="{StaticResource BatteryCenterStack}">
+                            <Label Style="{StaticResource BatteryIconLabel}">
+                                <Label.Text>
+                                    <MultiBinding Converter="{StaticResource BatteryIconConverter}">
+                                        <Binding Path="DeviceState.BatteryChargeLevel" />
+                                        <Binding Path="DeviceState.BatteryState" />
+                                        <Binding Path="DeviceState.BatteryPowerSource" />
+                                    </MultiBinding>
+                                </Label.Text>
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding DeviceState.BatteryState}"
+                                                 Value="Charging">
+                                        <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Style="{StaticResource BigValueLabel}"
+                                   Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='{0:P0}'}" />
+                        </VerticalStackLayout>
+                    </Grid>
 
                     <VerticalStackLayout Grid.Column="1"
                                          Style="{StaticResource BatteryStack}">
-                        <Label Style="{StaticResource BigValueLabel}"
-                               Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='{0:P0}'}" />
-                        <ProgressBar Progress="{Binding DeviceState.BatteryChargeLevel}"
-                                     ProgressColor="{StaticResource GreenDefault}">
-                            <ProgressBar.Triggers>
-                                <DataTrigger TargetType="ProgressBar"
-                                             Binding="{Binding DeviceState.BatteryChargeLevel, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Double 0.2}}"
-                                             Value="False">
-                                    <Setter Property="ProgressColor" Value="{StaticResource RedDefault}" />
-                                </DataTrigger>
-                            </ProgressBar.Triggers>
-                        </ProgressBar>
                         <FlexLayout Wrap="Wrap">
                             <controls:StatusChip Style="{StaticResource StateChip}"
                                                  Icon="{x:Static fonts:MaterialIcons.Bolt}"
-                                                 Text="{Binding DeviceState.BatteryState}" />
+                                                 Text="{Binding DeviceState.BatteryState, Converter={StaticResource BatteryStateTextConverter}}"
+                                                 Tone="{Binding DeviceState.BatteryState, Converter={StaticResource BatteryStateToneConverter}}" />
                             <controls:StatusChip Style="{StaticResource StateChip}"
                                                  Icon="{x:Static fonts:MaterialIcons.Power}"
-                                                 Text="{Binding DeviceState.BatteryPowerSource}" />
+                                                 Text="{Binding DeviceState.BatteryPowerSource, Converter={StaticResource PowerSourceTextConverter}}" />
                         </FlexLayout>
                     </VerticalStackLayout>
 
@@ -122,72 +232,37 @@
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100"
                                Title="Network"
-                               Icon="{x:Static fonts:MaterialIcons.Network_wifi}">
-                <VerticalStackLayout Style="{StaticResource NetworkStack}">
+                               Icon="{x:Static fonts:MaterialIcons.Wifi}">
+                <Grid Style="{StaticResource CardNameValueGrid}"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource CardNameLabel}"
+                           Text="Profile" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource CardValueLabel}"
+                           Text="{Binding DeviceState.NetworkProfile}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
-                    <FlexLayout Wrap="Wrap">
-                        <controls:StatusChip Style="{StaticResource StateChip}"
-                                             Icon="{x:Static fonts:MaterialIcons.Cloud_done}"
-                                             Text="{Binding DeviceState.NetworkState}">
-                            <controls:StatusChip.Triggers>
-                                <DataTrigger TargetType="controls:StatusChip"
-                                             Binding="{Binding DeviceState.NetworkState}"
-                                             Value="ConnectedHighSpeed">
-                                    <Setter Property="ChipColor" Value="{StaticResource GreenLighten4}" />
-                                    <Setter Property="IconColor" Value="{StaticResource GreenDarken2}" />
-                                    <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
-                                </DataTrigger>
-                                <DataTrigger TargetType="controls:StatusChip"
-                                             Binding="{Binding DeviceState.NetworkState}"
-                                             Value="Connected">
-                                    <Setter Property="ChipColor" Value="{StaticResource AmberLighten4}" />
-                                    <Setter Property="IconColor" Value="{StaticResource AmberDarken3}" />
-                                    <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
-                                </DataTrigger>
-                                <DataTrigger TargetType="controls:StatusChip"
-                                             Binding="{Binding DeviceState.NetworkState}"
-                                             Value="Disconnected">
-                                    <Setter Property="Icon" Value="{x:Static fonts:MaterialIcons.Cloud_off}" />
-                                    <Setter Property="ChipColor" Value="{StaticResource RedLighten4}" />
-                                    <Setter Property="IconColor" Value="{StaticResource RedDarken2}" />
-                                    <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
-                                </DataTrigger>
-                            </controls:StatusChip.Triggers>
-                        </controls:StatusChip>
-                        <controls:StatusChip Style="{StaticResource StateChip}"
-                                             Icon="{x:Static fonts:MaterialIcons.Wifi}"
-                                             Text="{Binding DeviceState.NetworkProfile}" />
-                        <controls:StatusChip Style="{StaticResource StateChip}"
-                                             Icon="{x:Static fonts:MaterialIcons.Public}"
-                                             Text="{Binding DeviceState.NetworkAccess}" />
-                    </FlexLayout>
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource CardNameLabel}"
+                           Text="Access" />
+                    <controls:StatusChip Grid.Row="1" Grid.Column="1"
+                                         Style="{StaticResource CardValueChip}"
+                                         Text="{Binding DeviceState.NetworkAccess, Converter={StaticResource NetworkAccessTextConverter}}"
+                                         Tone="{Binding DeviceState.NetworkAccess, Converter={StaticResource NetworkAccessToneConverter}}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
 
-                    <Grid Style="{StaticResource NetworkGrid}"
-                          RowDefinitions="Auto,Auto,Auto"
-                          ColumnDefinitions="2*,3*">
-                        <Label Grid.Row="0" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="Profile" />
-                        <Label Grid.Row="0" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding DeviceState.NetworkProfile}" />
-
-                        <Label Grid.Row="1" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="Access" />
-                        <Label Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding DeviceState.NetworkAccess}" />
-
-                        <Label Grid.Row="2" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="State" />
-                        <Label Grid.Row="2" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding DeviceState.NetworkState}" />
-                    </Grid>
-
-                </VerticalStackLayout>
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource CardNameLabel}"
+                           Text="State" />
+                    <controls:StatusChip Grid.Row="2" Grid.Column="1"
+                                         Style="{StaticResource CardValueChip}"
+                                         Text="{Binding DeviceState.NetworkState, Converter={StaticResource NetworkStateTextConverter}}"
+                                         Tone="{Binding DeviceState.NetworkState, Converter={StaticResource NetworkStateToneConverter}}" />
+                </Grid>
             </controls:InfoCard>
 
         </VerticalStackLayout>

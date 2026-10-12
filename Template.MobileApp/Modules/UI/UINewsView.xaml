@@ -2,14 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UINewsView"
              x:DataType="{x:Type module:UINewsViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UINewsViewModel}"
@@ -88,7 +87,7 @@
 
             <!-- タブ (選んだ見出しはカテゴリの色) -->
             <Style x:Key="NewsTabStrip"
-                   TargetType="controls:TabStrip">
+                   TargetType="mcc:TabStrip">
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="IndicatorHeight" Value="3" />
                 <Setter Property="IndicatorInset" Value="12" />
@@ -139,7 +138,7 @@
             </Style>
 
             <Style x:Key="BreakingMarquee"
-                   TargetType="controls:MarqueeLabel">
+                   TargetType="mcc:MarqueeLabel">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
@@ -454,8 +453,7 @@
 
             <!-- 読み込み中のスケルトン -->
             <Style x:Key="SkeletonShimmer"
-                   TargetType="sf:SfShimmer">
-                <Setter Property="VerticalOptions" Value="Start" />
+                   TargetType="mcc:ShimmerView">
                 <Setter Property="IsActive" Value="True" />
             </Style>
 
@@ -515,13 +513,6 @@
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
-            </Style>
-
-            <Style x:Key="EmptyNoteLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
             </Style>
 
             <!-- 一覧の最後 -->
@@ -620,13 +611,13 @@
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- タブ (見出しのタップと、ページのスワイプの両方で SelectedIndex が変わる。下線はスワイプに合わせて動く) -->
-        <controls:TabStrip Grid.Row="0"
-                           Style="{StaticResource NewsTabStrip}"
-                           ItemsSource="{Binding Context.Pages}"
-                           IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
-                           PagePosition="{Binding PagePosition}"
-                           SelectedIndex="{Binding SelectedIndex}">
-            <controls:TabStrip.ItemTemplate>
+        <mcc:TabStrip Grid.Row="0"
+                      Style="{StaticResource NewsTabStrip}"
+                      ItemsSource="{Binding Context.Pages}"
+                      IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
+                      PagePosition="{Binding PagePosition}"
+                      SelectedIndex="{Binding SelectedIndex}">
+            <mcc:TabStrip.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type module:UINewsPage}">
                     <Label Style="{StaticResource TabLabel}"
                            Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}">
@@ -644,8 +635,8 @@
                         </VisualStateManager.VisualStateGroups>
                     </Label>
                 </DataTemplate>
-            </controls:TabStrip.ItemTemplate>
-        </controls:TabStrip>
+            </mcc:TabStrip.ItemTemplate>
+        </mcc:TabStrip>
         <BoxView Grid.Row="1"
                  Style="{StaticResource TabLine}" />
 
@@ -661,9 +652,9 @@
                 <Label Style="{StaticResource BreakingBadgeLabel}"
                        Text="速報" />
             </Border>
-            <controls:MarqueeLabel Grid.Column="1"
-                                   Style="{StaticResource BreakingMarquee}"
-                                   Text="{Binding Context.Breaking.Title}" />
+            <mcc:MarqueeLabel Grid.Column="1"
+                              Style="{StaticResource BreakingMarquee}"
+                              Text="{Binding Context.Breaking.Title}" />
         </Grid>
 
         <!-- カテゴリごとのページと、保存した記事のページ -->
@@ -765,45 +756,38 @@
                                 <CollectionView.EmptyView>
                                     <Grid>
                                         <!-- 読み込み中 -->
-                                        <sf:SfShimmer Style="{StaticResource SkeletonShimmer}"
-                                                      IsVisible="{Binding IsLoading}">
-                                            <sf:SfShimmer.CustomView>
-                                                <VerticalStackLayout Style="{StaticResource SkeletonStack}">
-                                                    <Grid Style="{StaticResource SkeletonRowGrid}"
-                                                          RowDefinitions="Auto,Auto,Auto"
-                                                          ColumnDefinitions="*,Auto">
-                                                        <BoxView Grid.Row="0" Grid.Column="0"
-                                                                 Style="{StaticResource SkeletonBar}" />
-                                                        <BoxView Grid.Row="1" Grid.Column="0"
-                                                                 Style="{StaticResource SkeletonShortBar}" />
-                                                        <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
-                                                                 Style="{StaticResource SkeletonThumbnail}" />
-                                                    </Grid>
-                                                    <Grid Style="{StaticResource SkeletonRowGrid}"
-                                                          RowDefinitions="Auto,Auto,Auto"
-                                                          ColumnDefinitions="*,Auto">
-                                                        <BoxView Grid.Row="0" Grid.Column="0"
-                                                                 Style="{StaticResource SkeletonBar}" />
-                                                        <BoxView Grid.Row="1" Grid.Column="0"
-                                                                 Style="{StaticResource SkeletonShortBar}" />
-                                                        <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
-                                                                 Style="{StaticResource SkeletonThumbnail}" />
-                                                    </Grid>
-                                                </VerticalStackLayout>
-                                            </sf:SfShimmer.CustomView>
-                                            <sf:SfShimmer.Content>
-                                                <BoxView HeightRequest="0"
-                                                         Color="Transparent" />
-                                            </sf:SfShimmer.Content>
-                                        </sf:SfShimmer>
+                                        <mcc:ShimmerView Style="{StaticResource SkeletonShimmer}"
+                                                         IsVisible="{Binding IsLoading}">
+                                            <VerticalStackLayout Style="{StaticResource SkeletonStack}">
+                                                <Grid Style="{StaticResource SkeletonRowGrid}"
+                                                      RowDefinitions="Auto,Auto,Auto"
+                                                      ColumnDefinitions="*,Auto">
+                                                    <BoxView Grid.Row="0" Grid.Column="0"
+                                                             Style="{StaticResource SkeletonBar}" />
+                                                    <BoxView Grid.Row="1" Grid.Column="0"
+                                                             Style="{StaticResource SkeletonShortBar}" />
+                                                    <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                                             Style="{StaticResource SkeletonThumbnail}" />
+                                                </Grid>
+                                                <Grid Style="{StaticResource SkeletonRowGrid}"
+                                                      RowDefinitions="Auto,Auto,Auto"
+                                                      ColumnDefinitions="*,Auto">
+                                                    <BoxView Grid.Row="0" Grid.Column="0"
+                                                             Style="{StaticResource SkeletonBar}" />
+                                                    <BoxView Grid.Row="1" Grid.Column="0"
+                                                             Style="{StaticResource SkeletonShortBar}" />
+                                                    <BoxView Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                                             Style="{StaticResource SkeletonThumbnail}" />
+                                                </Grid>
+                                            </VerticalStackLayout>
+                                        </mcc:ShimmerView>
                                         <!-- 保存した記事が無い -->
                                         <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                                              IsVisible="{Binding IsSaved}">
-                                            <Label Style="{StaticResource EmptyIconLabel}" />
+                                            <Label Style="{StaticResource EmptyIconLabel}"
+                                                   behaviors:AnimationOption.Float="True" />
                                             <Label Style="{StaticResource EmptyTitleLabel}"
                                                    Text="保存した記事はありません" />
-                                            <Label Style="{StaticResource EmptyNoteLabel}"
-                                                   Text="記事を開いて「保存」を押してください" />
                                         </VerticalStackLayout>
                                     </Grid>
                                 </CollectionView.EmptyView>

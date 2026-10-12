@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              x:Class="Template.MobileApp.Modules.UI.UIGridColumnView"
@@ -56,7 +55,7 @@
                            IsReadOnly="False"
                            RowMovedCommand="{Binding RowMovedCommand}"
                            RowMover="{Binding RowMover}"
-                           ValueAccessors="{x:Static models:ColumnOptionAccessors.Option}">
+                           ValueAccessors="{x:Static module:ColumnOptionAccessors.Option}">
             <clam:GridColumn Key="IsVisible"
                              Width="72"
                              Alignment="Center" AllowSorting="False" Header="表示" IsBoolean="True" />

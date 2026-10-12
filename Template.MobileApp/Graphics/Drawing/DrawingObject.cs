@@ -18,6 +18,13 @@ public interface IInteractiveDrawing
     void OnInteractionEnd(PointF point);
 }
 
+// DrawingControl のタップ (指をほとんど動かさずに離す) を受け取る Drawing。
+// IInteractiveDrawing と違い、スクロールの中で親のスクロールを止めない
+public interface ITapDrawing
+{
+    void OnTap(PointF point);
+}
+
 #pragma warning disable CA1033
 public abstract class DrawingObject : IDrawingObject
 {

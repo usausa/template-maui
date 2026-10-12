@@ -5,28 +5,57 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIWheelView"
              x:DataType="{x:Type module:UIWheelViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIWheelViewModel}"
              shell:ShellProperty.Title="Wheel"
              shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function3Text="Add"
              shell:ShellProperty.Function4Text="Spin"
              shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="{Binding CanAdd}"
              shell:ShellProperty.Function4Enabled="True">
 
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <Style x:Key="WheelRootGrid"
+                   TargetType="Grid">
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{StaticResource IndigoDarken4}" />
+                        <GradientStop Offset="0.6" Color="{StaticResource DeepPurpleDarken4}" />
+                        <GradientStop Offset="1" Color="{StaticResource PurpleDarken4}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
 
             <Style x:Key="WheelDrawing"
                    TargetType="drawing:DrawingControl">
                 <Setter Property="Margin" Value="8" />
             </Style>
 
+            <Style x:Key="ResultBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,12" />
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="BackgroundColor" Value="#1FFFFFFF" />
+                <Setter Property="Stroke" Value="#40FFFFFF" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="ResultStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="ResultCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="TextColor" Value="#B3FFFFFF" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
@@ -34,26 +63,106 @@
                    TargetType="Label">
                 <Setter Property="FontSize" Value="32" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="ResultStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-                <Setter Property="Margin" Value="0,0,0,24" />
             </Style>
 
             <Style x:Key="ResultPlaceholderLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource ResultValueLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="TextColor" Value="#66FFFFFF" />
+            </Style>
+
+            <Style x:Key="SectionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,0,16,12" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="SectionCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#B3FFFFFF" />
+            </Style>
+
+            <Style x:Key="ChipLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="Direction" Value="Row" />
+                <Setter Property="AlignItems" Value="Start" />
+                <Setter Property="AlignContent" Value="Start" />
+            </Style>
+
+            <Style x:Key="HistoryBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,6,6" />
+                <Setter Property="Padding" Value="10,4" />
+                <Setter Property="BackgroundColor" Value="#26FFFFFF" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="HistoryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HistoryEmptyLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#80FFFFFF" />
+            </Style>
+
+            <Style x:Key="ItemChipBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,6,6" />
+                <Setter Property="Padding" Value="10,0,4,0" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="BackgroundColor" Value="#1FFFFFFF" />
+                <Setter Property="Stroke" Value="#40FFFFFF" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="ItemChipStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="ItemDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="10" />
+                <Setter Property="HeightRequest" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ItemLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ItemRemoveButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="#B3FFFFFF" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Close}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid Style="{StaticResource WheelRootGrid}"
+          RowDefinitions="*,Auto,Auto,Auto">
 
         <!-- ホイール (F4 のほかタップでも回転) -->
         <drawing:DrawingControl Grid.Row="0"
@@ -64,42 +173,124 @@
             </drawing:DrawingControl.GestureRecognizers>
         </drawing:DrawingControl>
 
-        <VerticalStackLayout Grid.Row="1"
-                             Style="{StaticResource ResultStack}">
-            <Label Style="{StaticResource ResultCaptionLabel}"
-                   Text="RESULT">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding IsJackpot}"
-                                 Value="True">
-                        <Setter Property="Text" Value="JACKPOT!" />
-                        <Setter Property="FontAttributes" Value="Bold" />
-                        <Setter Property="TextColor" Value="{StaticResource AmberDarken2}" />
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
-            <Label Style="{StaticResource ResultValueLabel}"
-                   behaviors:AnimationOption.BounceTrigger="{Binding Winner}"
-                   IsVisible="False"
-                   Text="{Binding Winner}">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding HasResult}"
-                                 Value="True">
-                        <Setter Property="IsVisible" Value="True" />
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
-            <Label Style="{StaticResource ResultPlaceholderLabel}"
-                   Text="？">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding HasResult}"
-                                 Value="True">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
+        <Border Grid.Row="1"
+                Style="{StaticResource ResultBorder}">
+            <Border.Triggers>
+                <DataTrigger TargetType="Border"
+                             Binding="{Binding IsJackpot}"
+                             Value="True">
+                    <Setter Property="BackgroundColor" Value="#33FFC107" />
+                    <Setter Property="Stroke" Value="{StaticResource AmberDefault}" />
+                    <Setter Property="StrokeThickness" Value="2" />
+                </DataTrigger>
+            </Border.Triggers>
+            <VerticalStackLayout Style="{StaticResource ResultStack}">
+                <Label Style="{StaticResource ResultCaptionLabel}"
+                       Text="RESULT">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding IsJackpot}"
+                                     Value="True">
+                            <Setter Property="Text" Value="JACKPOT!" />
+                            <Setter Property="FontAttributes" Value="Bold" />
+                            <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Label Style="{StaticResource ResultValueLabel}"
+                       behaviors:AnimationOption.BounceTrigger="{Binding Winner}"
+                       IsVisible="False"
+                       Text="{Binding Winner}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding HasResult}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Label Style="{StaticResource ResultPlaceholderLabel}"
+                       Text="？">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label"
+                                     Binding="{Binding HasResult}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </VerticalStackLayout>
+        </Border>
+
+        <VerticalStackLayout Grid.Row="2"
+                             Style="{StaticResource SectionStack}">
+            <Label Style="{StaticResource SectionCaptionLabel}"
+                   Text="履歴" />
+            <FlexLayout Style="{StaticResource ChipLayout}"
+                        BindableLayout.ItemsSource="{Binding History}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="module:UIWheelResult">
+                        <Border Style="{StaticResource HistoryBorder}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsJackpot}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label Style="{StaticResource HistoryLabel}"
+                                   Text="{Binding Label}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding IsJackpot}"
+                                                 Value="True">
+                                        <Setter Property="FontAttributes" Value="Bold" />
+                                        <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+                <BindableLayout.EmptyView>
+                    <Label Style="{StaticResource HistoryEmptyLabel}"
+                           Text="まだありません" />
+                </BindableLayout.EmptyView>
+            </FlexLayout>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="3"
+                             Style="{StaticResource SectionStack}">
+            <Label Style="{StaticResource SectionCaptionLabel}"
+                   Text="{Binding Entries.Count, StringFormat='項目 ({0})'}" />
+            <FlexLayout Style="{StaticResource ChipLayout}"
+                        BindableLayout.ItemsSource="{Binding Entries}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="module:UIWheelEntry">
+                        <Border Style="{StaticResource ItemChipBorder}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding Item.Effect}"
+                                             Value="{x:Static drawing:WheelEffect.Confetti}">
+                                    <Setter Property="Stroke" Value="{StaticResource AmberDefault}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <HorizontalStackLayout Style="{StaticResource ItemChipStack}">
+                                <Ellipse Style="{StaticResource ItemDot}"
+                                         Fill="{Binding Color}" />
+                                <Label Style="{StaticResource ItemLabel}"
+                                       Text="{Binding Item.Label}" />
+                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                <Button Style="{StaticResource ItemRemoveButton}"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIWheelViewModel}}, Path=CanRemove, x:DataType={x:Type module:UIWheelViewModel}}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIWheelViewModel}}, Path=RemoveCommand, x:DataType={x:Type module:UIWheelViewModel}}"
+                                        CommandParameter="{Binding .}" />
+                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
         </VerticalStackLayout>
 
     </Grid>

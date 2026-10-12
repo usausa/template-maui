@@ -2,6 +2,16 @@ namespace Template.MobileApp.Modules.UI;
 
 using ClamGrid;
 
+// 列設定画面の行 (表示の有無はチェックで編集する)
+public static class ColumnOptionAccessors
+{
+    public static GridValueAccessorCollection<GridColumnOption> Option { get; } = new()
+    {
+        { nameof(GridColumnOption.IsVisible), static x => x.IsVisible, static (x, value) => x.IsVisible = value },
+        { nameof(GridColumnOption.Header), static x => x.Header }
+    };
+}
+
 // 列の表示 / 順序の設定。一覧画面から編集用のコピー (GridColumnEditSession) を受け取り、Apply で結果を返す
 public sealed partial class UIGridColumnViewModel : AppViewModelBase
 {
@@ -59,5 +69,5 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
 
     private void UpdateMessage() =>
-        Message = $"表示 {session.Columns.Count(static x => x.IsVisible)} / {session.Columns.Count} 列。チェックで表示を切り替え、左端をドラッグして順序を変更";
+        Message = $"表示 {session.Columns.Count(static x => x.IsVisible)} / {session.Columns.Count} 列";
 }

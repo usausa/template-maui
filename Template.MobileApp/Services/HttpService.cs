@@ -42,7 +42,7 @@ public sealed class DataListResponse
 }
 #pragma warning restore CA1819
 
-public sealed class DataResponse
+public sealed class DataGetResponse
 {
     public long Id { get; set; }
 
@@ -158,10 +158,10 @@ public sealed class HttpService
         return client.GetAsync<DataListResponse>($"api/data/list?offset={offset}&size={size}", cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<DataResponse>> GetDataAsync(long id, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<DataGetResponse>> GetDataAsync(long id, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.GetAsync<DataResponse>($"api/data/{id}", cancel: cancellationToken);
+        return client.GetAsync<DataGetResponse>($"api/data/{id}", cancel: cancellationToken);
     }
 
     public ValueTask<IRestResponse<DataCreateResponse>> PostDataAsync(DataCreateRequest request, CancellationToken cancellationToken = default)

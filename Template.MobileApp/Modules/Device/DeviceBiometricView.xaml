@@ -24,27 +24,38 @@
             <s:MapToTextConverter x:Key="AvailabilityTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Available}"
-                                      Value="✅ 使える" />
+                                      Value="Available" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoHardware}"
-                                      Value="🚫 センサー無し" />
+                                      Value="No sensor" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoneEnrolled}"
-                                      Value="⚠️ 未登録" />
+                                      Value="Not enrolled" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Unavailable}"
-                                      Value="⏳ 一時的に使えない" />
+                                      Value="Unavailable now" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
+
+            <converters:MapToToneConverter x:Key="AvailabilityToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static components:BiometricAvailability.Available}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static components:BiometricAvailability.NoHardware}"
+                                               Value="Error" />
+                    <converters:MapToToneEntry Key="{x:Static components:BiometricAvailability.NoneEnrolled}"
+                                               Value="Warning" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <s:MapToTextConverter x:Key="ResultTextConverter"
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Succeeded}"
-                                      Value="✅ 成功" />
+                                      Value="✅ Success" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Canceled}"
-                                      Value="↩️ キャンセル" />
+                                      Value="↩️ Canceled" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Lockout}"
-                                      Value="🔒 失敗回数の超過" />
+                                      Value="🔒 Too many attempts" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Failed}"
-                                      Value="❌ エラー" />
+                                      Value="❌ Error" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -52,20 +63,20 @@
                                   DefaultValue="">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricAuthenticationType.Biometric}"
-                                      Value="(生体)" />
+                                      Value="(Biometric)" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAuthenticationType.DeviceCredential}"
-                                      Value="(画面ロック)" />
+                                      Value="(Screen lock)" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="KeyStateTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.None}"
-                                      Value="— 無し" />
+                                      Value="— None" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.Available}"
-                                      Value="🔑 あり" />
+                                      Value="🔑 Exists" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.Invalidated}"
-                                      Value="⚠️ 使えない" />
+                                      Value="⚠️ Unusable" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -79,7 +90,7 @@
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.Software}"
                                       Value="⚠️ Software" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.Unknown}"
-                                      Value="❓ 不明" />
+                                      Value="❓ Unknown" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -87,17 +98,17 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Succeeded}"
-                                      Value="✅ 署名した" />
+                                      Value="✅ Signed" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Canceled}"
-                                      Value="↩️ キャンセル" />
+                                      Value="↩️ Canceled" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Lockout}"
-                                      Value="🔒 失敗回数の超過" />
+                                      Value="🔒 Too many attempts" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Failed}"
-                                      Value="❌ エラー" />
+                                      Value="❌ Error" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.NoKey}"
-                                      Value="— 鍵が無い" />
+                                      Value="— No key" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.KeyInvalidated}"
-                                      Value="⚠️ 鍵が使えない" />
+                                      Value="⚠️ Key unusable" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -106,9 +117,9 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{s:Bool Value=True}"
-                                      Value="✅ 一致" />
+                                      Value="✅ Match" />
                     <s:MapToTextEntry Key="{s:Bool Value=False}"
-                                      Value="❌ 不一致" />
+                                      Value="❌ Mismatch" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -116,9 +127,9 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{s:Bool Value=False}"
-                                      Value="🛡️ 拒否" />
+                                      Value="🛡️ Rejected" />
                     <s:MapToTextEntry Key="{s:Bool Value=True}"
-                                      Value="⚠️ 受け付けた" />
+                                      Value="⚠️ Accepted" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -139,15 +150,20 @@
                 <Setter Property="Spacing" Value="2" />
             </Style>
 
+            <Style x:Key="TileChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
             <Style x:Key="HexValueLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicMonoLabel}">
                 <Setter Property="FontSize" Value="12" />
             </Style>
 
-            <Style x:Key="ResultRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
+            <Style x:Key="ResultValueStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
             </Style>
 
         </ResourceDictionary>
@@ -168,29 +184,40 @@
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Biometric" />
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding BiometricStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                        <controls:StatusChip Style="{StaticResource TileChip}"
+                                             Text="{Binding BiometricStatus, Converter={StaticResource AvailabilityTextConverter}}"
+                                             Tone="{Binding BiometricStatus, Converter={StaticResource AvailabilityToneConverter}}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Weak" />
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding WeakStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                        <controls:StatusChip Style="{StaticResource TileChip}"
+                                             Text="{Binding WeakStatus, Converter={StaticResource AvailabilityTextConverter}}"
+                                             Tone="{Binding WeakStatus, Converter={StaticResource AvailabilityToneConverter}}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Row="0" Grid.Column="2"
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Screen lock" />
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding CredentialStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                        <controls:StatusChip Style="{StaticResource TileChip}"
+                                             Text="{Binding CredentialStatus, Converter={StaticResource AvailabilityTextConverter}}"
+                                             Tone="{Binding CredentialStatus, Converter={StaticResource AvailabilityToneConverter}}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Row="1" Grid.Column="0"
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Last used" />
                         <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} 前', TargetNullValue='—'}" />
+                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} ago', TargetNullValue='—'}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding SinceLastAuthentication, Converter={StaticResource EmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
                     </VerticalStackLayout>
                     <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                             Style="{StaticResource BasicIconOutlinedButton}"
@@ -227,18 +254,24 @@
                                 Text="PIN"
                                 ImageSource="{x:Static markup:AppIcons.SmallPassword}" />
                     </Grid>
-                    <Grid Style="{StaticResource ResultRowGrid}"
-                          ColumnDefinitions="*,Auto,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource CardRowLabel}"
+                    <VerticalStackLayout Style="{StaticResource TileStack}">
+                        <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Result" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource CardRowValueLabel}"
-                               Text="{Binding Result, Converter={StaticResource ResultTextConverter}}" />
-                        <Label Grid.Column="2"
-                               Style="{StaticResource CardRowValueLabel}"
-                               Text="{Binding AuthenticationType, Converter={StaticResource AuthenticationTypeTextConverter}}" />
-                    </Grid>
+                        <HorizontalStackLayout Style="{StaticResource ResultValueStack}">
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding Result, Converter={StaticResource ResultTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Result, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding AuthenticationType, Converter={StaticResource AuthenticationTypeTextConverter}}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -248,8 +281,6 @@
                                Title="Key sign in"
                                Icon="{x:Static fonts:MaterialIcons.Key}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="サーバーの役 (登録・チャレンジ・検証) は端末の中で行う" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
@@ -276,14 +307,30 @@
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Key" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding KeyState, Converter={StaticResource KeyStateTextConverter}}" />
+                                   Text="{Binding KeyState, Converter={StaticResource KeyStateTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding KeyState}"
+                                                 Value="{x:Static components:BiometricKeyState.None}">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                              Style="{StaticResource TileStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Location" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding KeyLocation, Converter={StaticResource KeyLocationTextConverter}}" />
+                                   Text="{Binding KeyLocation, Converter={StaticResource KeyLocationTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding KeyLocation, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="0"
                                              Style="{StaticResource TileStack}">
@@ -311,7 +358,15 @@
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Result" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding SignStatus, Converter={StaticResource SignStatusTextConverter}}" />
+                                   Text="{Binding SignStatus, Converter={StaticResource SignStatusTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding SignStatus, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                     </Grid>
                     <Grid Style="{StaticResource TileGrid}"
@@ -321,21 +376,45 @@
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Verify" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding Verified, Converter={StaticResource AcceptTextConverter}}" />
+                                   Text="{Binding Verified, Converter={StaticResource AcceptTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Verified, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                              Style="{StaticResource TileStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Tampered" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding TamperedVerified, Converter={StaticResource RejectTextConverter}}" />
+                                   Text="{Binding TamperedVerified, Converter={StaticResource RejectTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding TamperedVerified, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="2"
                                              Style="{StaticResource TileStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Replay" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding ReplayVerified, Converter={StaticResource RejectTextConverter}}" />
+                                   Text="{Binding ReplayVerified, Converter={StaticResource RejectTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding ReplayVerified, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                     </Grid>
                 </VerticalStackLayout>

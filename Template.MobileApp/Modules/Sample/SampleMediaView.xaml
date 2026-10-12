@@ -5,6 +5,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:conv="clr-namespace:Template.MobileApp.Converters"
@@ -20,6 +21,28 @@
         <ResourceDictionary>
 
             <conv:DurationToSecondsConverter x:Key="DurationToSecondsConverter" />
+
+            <Style x:Key="FailedStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FailedIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FailedTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
 
             <Style x:Key="ControlBarBorder"
                    TargetType="Border">
@@ -69,6 +92,14 @@
                               behaviors:MediaBind.Controller="{Binding Controller}"
                               Source="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4"
                               Aspect="AspectFit" ShouldAutoPlay="True" ShouldShowPlaybackControls="False" />
+
+        <VerticalStackLayout Style="{StaticResource FailedStack}"
+                             IsVisible="{Binding IsFailed}">
+            <Label Style="{StaticResource FailedIconLabel}"
+                   Text="{x:Static fonts:MaterialIcons.Error_outline}" />
+            <Label Style="{StaticResource FailedTextLabel}"
+                   Text="Cannot play" />
+        </VerticalStackLayout>
 
         <!-- タップでコントロールバーの表示を切り替える -->
         <BoxView Color="#01000000">

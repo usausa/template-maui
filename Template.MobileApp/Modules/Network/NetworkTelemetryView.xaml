@@ -25,6 +25,60 @@
                 <Setter Property="WidthRequest" Value="40" />
             </Style>
 
+            <Style x:Key="BlueValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CustomValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="BlueSlider"
+                   TargetType="Slider">
+                <Setter Property="MinimumTrackColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="GreenValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CustomValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="GreenSlider"
+                   TargetType="Slider">
+                <Setter Property="MinimumTrackColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="OrangeValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CustomValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+            <Style x:Key="OrangeSlider"
+                   TargetType="Slider">
+                <Setter Property="MinimumTrackColor" Value="{StaticResource OrangeDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+            <Style x:Key="PurpleValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CustomValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="PurpleSlider"
+                   TargetType="Slider">
+                <Setter Property="MinimumTrackColor" Value="{StaticResource PurpleDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="CrashButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -43,12 +97,12 @@
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding WarningCommand}"
                                 Text="Warning"
-                                ImageSource="{x:Static markup:AppIcons.SmallWarning}" />
+                                ImageSource="{x:Static markup:AppIcons.TelemetryWarning}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding ErrorCommand}"
                                 Text="Error"
-                                ImageSource="{x:Static markup:AppIcons.SmallError}" />
+                                ImageSource="{x:Static markup:AppIcons.TelemetryError}" />
                     </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
@@ -71,10 +125,10 @@
                                 Text="Flush"
                                 ImageSource="{x:Static markup:AppIcons.SmallSend}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Style="{StaticResource CrashButton}"
                                 Command="{Binding CrashCommand}"
                                 Text="Crash"
-                                ImageSource="{x:Static markup:AppIcons.SmallBugReport}" />
+                                ImageSource="{x:Static markup:AppIcons.TelemetryCrash}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -91,11 +145,12 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="Value 1" />
                         <Slider Grid.Column="1"
+                                Style="{StaticResource BlueSlider}"
                                 behaviors:SliderOption.Step="1"
                                 Value="{Binding Value1}"
                                 Minimum="0" Maximum="100" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource CustomValueLabel}"
+                               Style="{StaticResource BlueValueLabel}"
                                Text="{Binding Value1, StringFormat='{0:F0}'}" />
                     </Grid>
                     <Grid Style="{StaticResource CardRowGrid}"
@@ -104,11 +159,12 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="Value 2" />
                         <Slider Grid.Column="1"
+                                Style="{StaticResource GreenSlider}"
                                 behaviors:SliderOption.Step="1"
                                 Value="{Binding Value2}"
                                 Minimum="0" Maximum="100" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource CustomValueLabel}"
+                               Style="{StaticResource GreenValueLabel}"
                                Text="{Binding Value2, StringFormat='{0:F0}'}" />
                     </Grid>
                     <Grid Style="{StaticResource CardRowGrid}"
@@ -117,11 +173,12 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="Value 3" />
                         <Slider Grid.Column="1"
+                                Style="{StaticResource OrangeSlider}"
                                 behaviors:SliderOption.Step="1"
                                 Value="{Binding Value3}"
                                 Minimum="0" Maximum="100" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource CustomValueLabel}"
+                               Style="{StaticResource OrangeValueLabel}"
                                Text="{Binding Value3, StringFormat='{0:F0}'}" />
                     </Grid>
                     <Grid Style="{StaticResource CardRowGrid}"
@@ -130,11 +187,12 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="Value 4" />
                         <Slider Grid.Column="1"
+                                Style="{StaticResource PurpleSlider}"
                                 behaviors:SliderOption.Step="1"
                                 Value="{Binding Value4}"
                                 Minimum="0" Maximum="100" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource CustomValueLabel}"
+                               Style="{StaticResource PurpleValueLabel}"
                                Text="{Binding Value4, StringFormat='{0:F0}'}" />
                     </Grid>
                 </VerticalStackLayout>

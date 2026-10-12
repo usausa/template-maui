@@ -41,6 +41,9 @@ public static partial class EntryOption
             EntryHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Entry)handler.VirtualView));
             EditorHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Editor)handler.VirtualView));
             PickerHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (Picker)handler.VirtualView));
+            DatePickerHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (BindableObject)handler.VirtualView));
+            TimePickerHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateHandleNoBorder(handler.PlatformView, (BindableObject)handler.VirtualView));
+            SearchBarHandler.Mapper.AppendToMapping(NoBorderProperty.PropertyName, static (handler, _) => UpdateSearchBarNoBorder(handler.PlatformView, (SearchBar)handler.VirtualView));
         }
 
         // InputFilter
@@ -67,6 +70,17 @@ public static partial class EntryOption
     {
         var value = GetNoBorder(element);
         editText.BackgroundTintList = value ? ColorStateList.ValueOf(Android.Graphics.Color.Transparent) : null;
+    }
+
+    // SearchView の下線は入力欄ではなく、入力欄を囲む search_plate の背景
+    private static void UpdateSearchBarNoBorder(View searchView, BindableObject element)
+    {
+        var plate = searchView.FindViewById(_Microsoft.Android.Resource.Designer.ResourceConstant.Id.search_plate);
+        if (plate is not null)
+        {
+            var value = GetNoBorder(element);
+            plate.BackgroundTintList = value ? ColorStateList.ValueOf(Android.Graphics.Color.Transparent) : null;
+        }
     }
 
     private static void UpdateInputFilter(TextView editText, BindableObject element)

@@ -38,8 +38,10 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     [ObservableProperty]
     public partial DateOnly? SelectedEndDate { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsSettingOpen { get; set; }
+
     public IObserveCommand DisplayDateChangedCommand { get; }
-    public IObserveCommand GoToTodayCommand { get; }
     public IObserveCommand DayTappedCommand { get; }
     public IObserveCommand EventTappedCommand { get; }
     public IObserveCommand SelectModeCommand { get; }
@@ -56,7 +58,6 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 
         // 月が変わるたびにコントロールから表示範囲が通知される (初回は遷移の途中に来る)
         DisplayDateChangedCommand = MakeDelegateCommand<CalendarDisplayDateChangedEventArgs>(CommandMode.Simple, Load);
-        GoToTodayCommand = MakeDelegateCommand(() => DisplayDate = Today);
         DayTappedCommand = MakeAsyncCommand<CalendarDayEventArgs>(x => dialog.Toast($"{x.Date:yyyy/MM/dd}").AsTask());
         EventTappedCommand = MakeAsyncCommand<CalendarEventEventArgs>(x => dialog.Toast(x.Event.Title).AsTask());
         SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(OnSelectMode);
@@ -66,9 +67,30 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsSettingOpen)
+        {
+            IsSettingOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction2()
+    {
+        IsSettingOpen = !IsSettingOpen;
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyFunction3()
+    {
+        DisplayDate = Today;
+        return Task.CompletedTask;
+    }
 
     //--------------------------------------------------------------------------------
     // Operation
@@ -90,5 +112,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         SelectedDates.Clear();
         SelectedStartDate = null;
         SelectedEndDate = null;
+
+        IsSettingOpen = false;
     }
 }

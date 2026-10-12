@@ -6,6 +6,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:Template.MobileApp"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:services="clr-namespace:Template.MobileApp.Services"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
@@ -70,11 +71,13 @@
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="96,*,48,48"
               IsVisible="{Binding HeaderVisible.Value}">
-            <Label Grid.Column="0" Grid.ColumnSpan="4"
+            <Label Grid.Column="1"
                    Style="{StaticResource HeaderTitleLabel}"
                    Text="{Binding Title.Value}" />
             <Label Grid.Column="2"
                    Style="{StaticResource HeaderIconLabel}"
+                   behaviors:AnimationOption.Blink="{Binding PushStatus, Converter={s:CompareToBool}, ConverterParameter={x:Static services:PushStatus.Retrying}}"
+                   behaviors:AnimationOption.Spin="{Binding PushStatus, Converter={s:CompareToBool}, ConverterParameter={x:Static services:PushStatus.Connecting}}"
                    IsVisible="{Binding PushStatus, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static services:PushStatus.Stopped}}"
                    Text="{Binding PushStatus, Converter={StaticResource PushStatusTextConverter}}" />
             <Button Grid.Column="3"

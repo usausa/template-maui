@@ -19,11 +19,55 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ScreenCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="FeedbackCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="LightCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource AmberDarken2}" />
+            </Style>
+
+            <Style x:Key="SpeechCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="NotificationCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
             <Style x:Key="SpeechRateLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource ValueLabel}">
                 <Setter Property="WidthRequest" Value="40" />
                 <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ListeningRippleGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ListeningRing"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="22" />
+                <Setter Property="HeightRequest" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="{StaticResource RedDefault}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
             </Style>
 
             <Style x:Key="ListeningIcon"
@@ -34,6 +78,35 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="SegmentBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="SegmentGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="SegmentDivider"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="SegmentButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="HeightRequest" Value="42" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="False" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -41,51 +114,64 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource ScreenCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Screen"
                                Icon="{x:Static fonts:MaterialIcons.Smartphone}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding KeepScreenOnCommand}"
-                                Text="Keep on"
-                                ImageSource="{x:Static markup:AppIcons.SmallVisibility}" />
-                        <Button Grid.Column="1"
-                                Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding KeepScreenOffCommand}"
-                                Text="Keep off"
-                                ImageSource="{x:Static markup:AppIcons.SmallVisibilityOff}" />
-                    </Grid>
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding OrientationPortraitCommand}"
-                                Text="Portrait"
-                                ImageSource="{x:Static markup:AppIcons.SmallStayCurrentPortrait}" />
-                        <Button Grid.Column="1"
-                                Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding OrientationLandscapeCommand}"
-                                Text="Landscape"
-                                ImageSource="{x:Static markup:AppIcons.SmallStayCurrentLandscape}" />
-                    </Grid>
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding BrightnessCommand}"
-                                CommandParameter="{s:Float Value=0.0}"
-                                Text="Bright 0"
-                                ImageSource="{x:Static markup:AppIcons.SmallBrightnessLow}" />
-                        <Button Grid.Column="1"
-                                Style="{StaticResource BasicIconOutlinedButton}"
-                                Command="{Binding BrightnessCommand}"
-                                CommandParameter="{s:Float Value=1.0}"
-                                Text="Bright 1"
-                                ImageSource="{x:Static markup:AppIcons.SmallBrightnessHigh}" />
-                    </Grid>
+                    <Border Style="{StaticResource SegmentBorder}">
+                        <Grid Style="{StaticResource SegmentGrid}"
+                              ColumnDefinitions="*,Auto,*">
+                            <Button Grid.Column="0"
+                                    Style="{StaticResource SegmentButton}"
+                                    Command="{Binding KeepScreenOnCommand}"
+                                    Text="Keep on"
+                                    ImageSource="{x:Static markup:AppIcons.SmallVisibility}" />
+                            <BoxView Grid.Column="1"
+                                     Style="{StaticResource SegmentDivider}" />
+                            <Button Grid.Column="2"
+                                    Style="{StaticResource SegmentButton}"
+                                    Command="{Binding KeepScreenOffCommand}"
+                                    Text="Keep off"
+                                    ImageSource="{x:Static markup:AppIcons.SmallVisibilityOff}" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource SegmentBorder}">
+                        <Grid Style="{StaticResource SegmentGrid}"
+                              ColumnDefinitions="*,Auto,*">
+                            <Button Grid.Column="0"
+                                    Style="{StaticResource SegmentButton}"
+                                    Command="{Binding OrientationPortraitCommand}"
+                                    Text="Portrait"
+                                    ImageSource="{x:Static markup:AppIcons.SmallStayCurrentPortrait}" />
+                            <BoxView Grid.Column="1"
+                                     Style="{StaticResource SegmentDivider}" />
+                            <Button Grid.Column="2"
+                                    Style="{StaticResource SegmentButton}"
+                                    Command="{Binding OrientationLandscapeCommand}"
+                                    Text="Landscape"
+                                    ImageSource="{x:Static markup:AppIcons.SmallStayCurrentLandscape}" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource SegmentBorder}">
+                        <Grid Style="{StaticResource SegmentGrid}"
+                              ColumnDefinitions="*,Auto,*">
+                            <Button Grid.Column="0"
+                                    Style="{StaticResource SegmentButton}"
+                                    Command="{Binding BrightnessCommand}"
+                                    CommandParameter="{s:Float Value=0.0}"
+                                    Text="Bright 0"
+                                    ImageSource="{x:Static markup:AppIcons.SmallBrightnessLow}" />
+                            <BoxView Grid.Column="1"
+                                     Style="{StaticResource SegmentDivider}" />
+                            <Button Grid.Column="2"
+                                    Style="{StaticResource SegmentButton}"
+                                    Command="{Binding BrightnessCommand}"
+                                    CommandParameter="{s:Float Value=1.0}"
+                                    Text="Bright 1"
+                                    ImageSource="{x:Static markup:AppIcons.SmallBrightnessHigh}" />
+                        </Grid>
+                    </Border>
                     <Button Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding ScreenshotCommand}"
                             Text="Screenshot"
@@ -93,7 +179,8 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource FeedbackCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
                                Title="Feedback"
                                Icon="{x:Static fonts:MaterialIcons.Vibration}">
@@ -127,26 +214,32 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource LightCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
                                Title="Light"
                                Icon="{x:Static fonts:MaterialIcons.Flashlight_on}">
-                <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="*,*">
-                    <Button Grid.Column="0"
-                            Style="{StaticResource BasicIconOutlinedButton}"
-                            Command="{Binding LightOnCommand}"
-                            Text="Light on"
-                            ImageSource="{x:Static markup:AppIcons.SmallFlashlightOn}" />
-                    <Button Grid.Column="1"
-                            Style="{StaticResource BasicIconOutlinedButton}"
-                            Command="{Binding LightOffCommand}"
-                            Text="Light off"
-                            ImageSource="{x:Static markup:AppIcons.SmallFlashlightOff}" />
-                </Grid>
+                <Border Style="{StaticResource SegmentBorder}">
+                    <Grid Style="{StaticResource SegmentGrid}"
+                          ColumnDefinitions="*,Auto,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource SegmentButton}"
+                                Command="{Binding LightOnCommand}"
+                                Text="Light on"
+                                ImageSource="{x:Static markup:AppIcons.SmallFlashlightOn}" />
+                        <BoxView Grid.Column="1"
+                                 Style="{StaticResource SegmentDivider}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource SegmentButton}"
+                                Command="{Binding LightOffCommand}"
+                                Text="Light off"
+                                ImageSource="{x:Static markup:AppIcons.SmallFlashlightOff}" />
+                    </Grid>
+                </Border>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource SpeechCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240"
                                Title="Speech"
                                Icon="{x:Static fonts:MaterialIcons.Record_voice_over}">
@@ -185,10 +278,17 @@
                     <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*"
                           IsVisible="{Binding IsListening}">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource ListeningIcon}"
-                               behaviors:AnimationOption.Pulse="True"
-                               Text="{x:Static fonts:MaterialIcons.Mic}" />
+                        <Grid Grid.Column="0"
+                              Style="{StaticResource ListeningRippleGrid}">
+                            <Ellipse Style="{StaticResource ListeningRing}"
+                                     behaviors:AnimationOption.Ripple="True" />
+                            <Ellipse Style="{StaticResource ListeningRing}"
+                                     behaviors:AnimationOption.Ripple="True"
+                                     behaviors:AnimationOption.RippleDelay="900" />
+                            <Label Style="{StaticResource ListeningIcon}"
+                                   HorizontalOptions="Center"
+                                   Text="{x:Static fonts:MaterialIcons.Mic}" />
+                        </Grid>
                         <Label Grid.Column="1"
                                Style="{StaticResource BasicItemValueLabel}"
                                Text="Listening..." />
@@ -202,7 +302,8 @@
             </controls:InfoCard>
 
             <!-- ローカル通知 (自作 NotificationService)。即時 (アクションボタン付き) / 10 秒後 / 取消 / 正確なアラームの許可設定 -->
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+            <controls:InfoCard Style="{StaticResource NotificationCard}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="400"
                                Title="Notification"
                                Icon="{x:Static fonts:MaterialIcons.Notifications}">

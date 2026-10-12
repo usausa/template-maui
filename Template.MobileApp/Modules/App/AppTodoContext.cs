@@ -6,6 +6,60 @@ using Template.MobileApp.Models.App;
 using Template.MobileApp.Services;
 
 //--------------------------------------------------------------------------------
+// Input
+//--------------------------------------------------------------------------------
+
+// 編集の入力 (新規は Id が null)。期限の区分けは Today から見る
+public sealed partial class TodoDraft : ObservableObject
+{
+    public DateTime Today { get; init; }
+
+    public long? Id { get; set; }
+
+    public bool IsNew => Id is null;
+
+    [ObservableProperty(NotifyAlso = [nameof(CanSave)])]
+    public partial string Title { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string Note { get; set; } = string.Empty;
+
+    [ObservableProperty(NotifyAlso = [nameof(Due)])]
+    public partial DateTime? DueDate { get; set; }
+
+    public TodoDue Due => TodoDueRule.Classify(DueDate, Today);
+
+    [ObservableProperty]
+    public partial bool IsImportant { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsDone { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public bool CanSave => !String.IsNullOrWhiteSpace(Title);
+
+    // 期限のチップ (今日 / 明日 / 期限なし)
+    public void SetDue(TodoDue due) =>
+        DueDate = due switch
+        {
+            TodoDue.Today => Today,
+            TodoDue.Tomorrow => Today.AddDays(1),
+            _ => null
+        };
+
+    // 前後の空白を除き、期限は日付だけにする
+    public void Normalize()
+    {
+        Title = Title.Trim();
+        Note = Note.Trim();
+        DueDate = DueDate?.Date;
+    }
+}
+
+//--------------------------------------------------------------------------------
 // Mapper
 //--------------------------------------------------------------------------------
 

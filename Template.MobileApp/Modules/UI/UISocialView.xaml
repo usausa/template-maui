@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -40,11 +39,6 @@
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="VerticalOptions" Value="Start" />
                 <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
-            </Style>
-
-            <Style x:Key="ButtonEffect"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="Ripple" />
             </Style>
 
             <!-- background -->
@@ -143,31 +137,25 @@
               RowDefinitions="Auto,Auto"
               ColumnDefinitions="Auto,Auto,Auto,*,Auto">
 
-            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialIcon Style="{StaticResource Icon}"
-                                         Text="{x:Static fonts:MaterialIcons.Settings}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialIcon Style="{StaticResource Icon}"
-                                         Text="{x:Static fonts:MaterialIcons.Mail}" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasIconNotificationMail}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialIcon Style="{StaticResource Icon}"
-                                         Text="{x:Static fonts:MaterialIcons.Info}" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasIconNotificationInfo}" />
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Row="0" Grid.Column="0"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialIcon Style="{StaticResource Icon}"
+                                     Text="{x:Static fonts:MaterialIcons.Settings}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialIcon Style="{StaticResource Icon}"
+                                     Text="{x:Static fonts:MaterialIcons.Mail}" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasIconNotificationMail}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="2"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialIcon Style="{StaticResource Icon}"
+                                     Text="{x:Static fonts:MaterialIcons.Info}" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasIconNotificationInfo}" />
+            </Grid>
 
             <controls:SocialEpisode Grid.Row="1" Grid.ColumnSpan="4"
                                     Style="{StaticResource Episode}"
@@ -250,89 +238,71 @@
               Style="{StaticResource LayoutGrid}"
               RowDefinitions="Auto,Auto,Auto"
               ColumnDefinitions="*,*,*">
-            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="作戦" Text2="OPERATION" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationOperation}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="編成" Text2="FORMATION" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationFormation}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="法術支援要請" Text2="ART"
-                                         FontSize1="20" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationArt}" />
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Row="0" Grid.Column="0"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="作戦" Text2="OPERATION" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationOperation}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="編成" Text2="FORMATION" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationFormation}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="2"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="法術支援要請" Text2="ART"
+                                     FontSize1="20" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationArt}" />
+            </Grid>
 
-            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="0"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="騎体整備" Text2="HANGAR" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationHangar}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="倉庫" Text2="WEAPON STORAGE" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationWeaponStorage}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="技術開発" Text2="DEVELOPMENT" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationDevelopment}" />
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Row="1" Grid.Column="0"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="騎体整備" Text2="HANGAR" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationHangar}" />
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="1"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="倉庫" Text2="WEAPON STORAGE" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationWeaponStorage}" />
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="2"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="技術開発" Text2="DEVELOPMENT" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationDevelopment}" />
+            </Grid>
 
-            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="0"
-                                   Style="{StaticResource ButtonEffect}"
-                                   TouchDownCommand="{Binding BackCommand}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="作戦中止" Text2="ABORT MISSION" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="1"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="司令部" Text2="HEADQUARTER" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationHeadquarter}" />
-                </Grid>
-            </toolkit:SfEffectsView>
-            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="2"
-                                   Style="{StaticResource ButtonEffect}">
-                <Grid>
-                    <controls:SocialMenu Style="{StaticResource Menu}"
-                                         Text1="公演" Text2="LIVE" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
-                                                      IsVisible="{Binding HasMenuNotificationLive}" />
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Row="2" Grid.Column="0"
+                  behaviors:TouchOption.ClickCommand="{Binding BackCommand}"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="作戦中止" Text2="ABORT MISSION" />
+            </Grid>
+            <Grid Grid.Row="2" Grid.Column="1"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="司令部" Text2="HEADQUARTER" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationHeadquarter}" />
+            </Grid>
+            <Grid Grid.Row="2" Grid.Column="2"
+                  behaviors:TouchOption.Ripple="True">
+                <controls:SocialMenu Style="{StaticResource Menu}"
+                                     Text1="公演" Text2="LIVE" />
+                <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                  IsVisible="{Binding HasMenuNotificationLive}" />
+            </Grid>
         </Grid>
 
     </Grid>

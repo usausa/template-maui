@@ -41,7 +41,7 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     // Notification
 
-    public ObservableCollection<SocialNotificationInfo> Notifications { get; } = [];
+    public ObservableCollection<SocialNotificationInfo> Notifications { get; }
 
     // Status
 
@@ -101,42 +101,49 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     public UISocialViewModel()
     {
-        BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIMenu2));
+        BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
 
-        HasIconNotificationMail = true;
-        HasIconNotificationInfo = true;
+        var badges = SocialSample.LoadBadges();
+        HasIconNotificationMail = badges.HasFlag(SocialBadges.Mail);
+        HasIconNotificationInfo = badges.HasFlag(SocialBadges.Info);
 
-        Episode = "EP10 豊穣の雨作戦";
+        var player = SocialSample.LoadPlayer();
+        Episode = player.Episode;
+        PlayerExpPercent = player.ExpPercent;
+        CountParts = player.Parts;
+        CountGem = player.Gem;
+        CountMoney = player.Money;
 
-        PlayerExpPercent = 45;
+        var alert = SocialSample.LoadAlert();
+        AlertTitle = alert.Title;
+        AlertMessage = alert.Message;
 
-        CountParts = 65536;
-        CountGem = 30000;
-        CountMoney = 1024000;
+        Notifications = [.. SocialSample.LoadNotifications()];
 
-        AlertTitle = "BEAST ALERT";
-        AlertMessage = "牛鬼級旅団出現";
+        var status = SocialSample.LoadStatus();
+        StatusName = status.Name;
+        StatusForm = status.Form;
+        StatusHeal = status.Heal;
+        StatusBuff = status.Buff;
+        StatusDebuff = status.Debuff;
 
-        Notifications.Add(new SocialNotificationInfo { Category = "MELEE WEAPON", Name = "04式単分子長刀", Code = "SWOARD OF SLASSING", Percent = 87, Delay = 0 });
-        Notifications.Add(new SocialNotificationInfo { Category = "GOLEM", Name = "大型機動兵器戦鎚IV型", Code = "WARHAMMER TYPE=4R", Percent = 65, Delay = 120 });
-        Notifications.Add(new SocialNotificationInfo { Category = "VEHICLE", Name = "08式騎士輸送用装甲車両", Code = "SLEIPNIR", Percent = 23, Delay = 240 });
+        var information = SocialSample.LoadInformation();
+        InformationTitle = information.Title;
+        InformationUnits = information.Units;
 
-        StatusName = "甲種聖装 瑠璃";
-        StatusForm = "A FORM";
-        StatusHeal = 37200;
-        StatusBuff = 48800;
-        StatusDebuff = 23500;
-
-        InformationTitle = "投入戦力 支援部隊";
-        InformationUnits =
-        [
-            new SocialUnit { Name = "辺境伯直属戦術機甲大隊", Code = "WOLF GRP", Force = "MF-4000 x36" },
-            new SocialUnit { Name = "第二騎士団聖女計画特務中隊", Code = "HOUND SQD", Force = "TYPE-19E x10 + JXD-20" },
-            new SocialUnit { Name = "第三騎士団強襲突撃部隊", Code = "VIPPERS", Force = "TYPE-19 BLOOD x8" }
-        ];
-
-        HasMenuNotificationOperation = true;
-        HasMenuNotificationWeaponStorage = true;
-        HasMenuNotificationDevelopment = true;
+        HasMenuNotificationOperation = badges.HasFlag(SocialBadges.Operation);
+        HasMenuNotificationFormation = badges.HasFlag(SocialBadges.Formation);
+        HasMenuNotificationArt = badges.HasFlag(SocialBadges.Art);
+        HasMenuNotificationHangar = badges.HasFlag(SocialBadges.Hangar);
+        HasMenuNotificationWeaponStorage = badges.HasFlag(SocialBadges.WeaponStorage);
+        HasMenuNotificationDevelopment = badges.HasFlag(SocialBadges.Development);
+        HasMenuNotificationHeadquarter = badges.HasFlag(SocialBadges.Headquarter);
+        HasMenuNotificationLive = badges.HasFlag(SocialBadges.Live);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 }

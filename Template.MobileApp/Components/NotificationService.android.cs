@@ -178,8 +178,8 @@ public sealed partial class NotificationService
             return;
         }
 
-        using var channel = new NotificationChannel(ChannelId, "通知", NotificationImportance.Default);
-        channel.Description = "アプリからの通知";
+        using var channel = new NotificationChannel(ChannelId, "Notifications", NotificationImportance.Default);
+        channel.Description = "Notifications from the app";
         manager.CreateNotificationChannel(channel);
     }
 

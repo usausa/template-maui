@@ -8,8 +8,8 @@ public abstract class AppViewModelBase :
     IValidatable,
     INavigatorAware,
     INavigationEventSupportAsync,
-    INotifySupportAsync<ShellEvent>,
-    INavigationLifecycleSupport
+    INavigationLifecycleSupport,
+    INotifySupportAsync<ShellEvent>
 {
     public INavigator Navigator { get; set; } = default!;
 

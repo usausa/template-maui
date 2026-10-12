@@ -61,7 +61,7 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
     {
         if ((image is null) || !cropInitialized || (imageRect.Width <= 0))
         {
-            return Result.Failure<(int Width, int Height)>("画像が未設定か、枠が未確定です");
+            return Result.Failure<(int Width, int Height)>("No image or crop area");
         }
 
         var scale = image.Width / imageRect.Width;

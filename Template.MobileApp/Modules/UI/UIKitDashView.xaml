@@ -2,11 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitDashView"
              x:DataType="{x:Type module:UIKitDashViewModel}"
@@ -23,7 +25,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
 
-            <!-- Extra bottom padding keeps the header content clear of the overlapping heart card (-30 margin) -->
+            <!-- Extra bottom padding keeps the header content clear of the overlapping steps card (-30 margin) -->
             <Style x:Key="KitDashHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="20,24,20,62" />
@@ -86,17 +88,17 @@
             </Style>
 
             <!--
-                Tiles: heart card (ColumnSpan=2) + metrics are laid out by VariableSizeWrapPanel via BindableLayout.
-                The -30 top margin overlaps the header (moved here from the heart card)
+                Tiles: steps card (ColumnSpan=2) + metrics are laid out by VariableSizeWrapPanel via BindableLayout.
+                The -30 top margin overlaps the header (moved here from the steps card)
             -->
             <Style x:Key="TileLayout"
-                   TargetType="controls:VariableSizeWrapPanel">
+                   TargetType="mcc:VariableSizeWrapPanel">
                 <Setter Property="Margin" Value="16,-30,16,16" />
                 <Setter Property="Columns" Value="2" />
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <Style x:Key="HeartCardBorder"
+            <Style x:Key="StepCardBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="20" />
                 <Setter Property="BackgroundColor" Value="White" />
@@ -151,17 +153,80 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
+            <Style x:Key="StepCardGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="20" />
+            </Style>
+
+            <Style x:Key="StepRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="104" />
+                <Setter Property="HeightRequest" Value="104" />
+            </Style>
+
+            <Style x:Key="StepRing"
+                   TargetType="controls:GlowRing">
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="StartColor" Value="{StaticResource LightBlueLighten1}" />
+                <Setter Property="EndColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TrackColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="StepRateLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="StepTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="StepGoalLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="StepRemainLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
             <DataTemplate x:Key="HeroTemplate"
                           x:DataType="module:UIKitDashHero">
-                <Border Style="{StaticResource HeartCardBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        controls:VariableSizeWrapPanel.ColumnSpan="2">
-                    <VerticalStackLayout>
-                        <Label Style="{StaticResource CardCaption}"
-                               Text="{Binding Caption}" />
-                        <Label Style="{StaticResource CardValue}"
-                               Text="{Binding Value}" />
-                    </VerticalStackLayout>
+                <Border Style="{StaticResource StepCardBorder}"
+                        mcc:VariableSizeWrapPanel.ColumnSpan="2"
+                        behaviors:AnimationOption.EnterAnimation="FadeUp">
+                    <Grid Style="{StaticResource StepCardGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Grid Grid.Column="0"
+                              Style="{StaticResource StepRingGrid}">
+                            <controls:GlowRing Style="{StaticResource StepRing}"
+                                               Progress="{Binding Rate}" />
+                            <Label Style="{StaticResource StepRateLabel}"
+                                   Text="{Binding Rate, StringFormat='{0:P0}'}" />
+                        </Grid>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource StepTextStack}">
+                            <Label Style="{StaticResource CardCaption}"
+                                   Text="今日の歩数" />
+                            <Label Style="{StaticResource CardValue}"
+                                   behaviors:LabelOption.CountUpFormat="{}{0:N0} 歩"
+                                   behaviors:LabelOption.CountUpValue="{Binding Steps}" />
+                            <Label Style="{StaticResource StepGoalLabel}"
+                                   Text="{Binding Goal, StringFormat='目標 {0:N0} 歩'}" />
+                            <Label Style="{StaticResource StepRemainLabel}"
+                                   Text="{Binding Remain, StringFormat='あと {0:N0} 歩'}" />
+                        </VerticalStackLayout>
+                    </Grid>
                 </Border>
             </DataTemplate>
 
@@ -186,6 +251,141 @@
             <module:UIKitDashTileTemplateSelector x:Key="TileTemplateSelector"
                                                   HeroTemplate="{StaticResource HeroTemplate}"
                                                   MetricTemplate="{StaticResource MetricTemplate}" />
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="PeriodSegmentLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:SegmentedView}}, Path=SelectCommand, x:DataType={x:Type mcc:SegmentedView}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style x:Key="PeriodSegment"
+                   TargetType="mcc:SegmentedView">
+                <Setter Property="Margin" Value="16,7,16,15" />
+                <Setter Property="SegmentHeight" Value="36" />
+                <Setter Property="SelectedBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedTextColor" Value="White" />
+                <Setter Property="ItemStyle" Value="{StaticResource PeriodSegmentLabel}" />
+            </Style>
+
+            <Style x:Key="ChartCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,12" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="ChartTitleLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="ChartSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="StepChartControl"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="Margin" Value="-12,4,-12,-8" />
+                <Setter Property="HeightRequest" Value="190" />
+            </Style>
+
+            <Style x:Key="HeartChartControl"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="Margin" Value="-12,4,-12,-8" />
+                <Setter Property="HeightRequest" Value="170" />
+            </Style>
+
+            <Style x:Key="SleepTimeLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,2,0,8" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="SleepBand"
+                   TargetType="controls:KitSleepBand">
+                <Setter Property="HeightRequest" Value="120" />
+                <Setter Property="AwakeColor" Value="{StaticResource BlueLighten3}" />
+                <Setter Property="RemColor" Value="{StaticResource BlueLighten1}" />
+                <Setter Property="LightColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="DeepColor" Value="{StaticResource BlueDarken4}" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="GridColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="SleepLegendFlex"
+                   TargetType="FlexLayout">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="JustifyContent" Value="SpaceBetween" />
+            </Style>
+
+            <Style x:Key="SleepLegendStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="SleepLegendNameStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="SleepLegendDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="8" />
+                <Setter Property="HeightRequest" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SleepLegendNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="SleepLegendValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <s:MapToTextConverter x:Key="SleepStageNameConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:KitSleepStage.Deep}"
+                                      Value="深い" />
+                    <s:MapToTextEntry Key="{x:Static models:KitSleepStage.Light}"
+                                      Value="浅い" />
+                    <s:MapToTextEntry Key="{x:Static models:KitSleepStage.Rem}"
+                                      Value="レム" />
+                    <s:MapToTextEntry Key="{x:Static models:KitSleepStage.Awake}"
+                                      Value="覚醒" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="SleepStageColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:KitSleepStage.Deep}"
+                                       Value="{StaticResource BlueDarken4}" />
+                    <s:MapToColorEntry Key="{x:Static models:KitSleepStage.Light}"
+                                       Value="{StaticResource BlueDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static models:KitSleepStage.Rem}"
+                                       Value="{StaticResource BlueLighten1}" />
+                    <s:MapToColorEntry Key="{x:Static models:KitSleepStage.Awake}"
+                                       Value="{StaticResource BlueLighten3}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
 
             <!-- Quick link cards to other kit screens -->
             <Style x:Key="LinkCardBorder"
@@ -275,66 +475,143 @@
                         Text="{x:Static fonts:MaterialIcons.Settings}" />
             </Grid>
 
-            <!-- Heart card (full width) + metrics, packed by VariableSizeWrapPanel (2 columns, template per tile type) -->
-            <controls:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
-                                            BindableLayout.ItemsSource="{Binding Tiles}"
-                                            BindableLayout.ItemTemplateSelector="{StaticResource TileTemplateSelector}" />
+            <!-- Steps card (full width) + metrics, packed by VariableSizeWrapPanel (2 columns, template per tile type) -->
+            <mcc:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
+                                       BindableLayout.ItemsSource="{Binding Tiles}"
+                                       BindableLayout.ItemTemplateSelector="{StaticResource TileTemplateSelector}" />
+
+            <mcc:SegmentedView Style="{StaticResource PeriodSegment}"
+                               ItemsSource="{Binding Periods}"
+                               SelectedIndex="{Binding PeriodIndex, Mode=TwoWay}" />
+
+            <Border Style="{StaticResource ChartCardBorder}">
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ChartTitleLabel}"
+                               Text="歩数" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource ChartSummaryLabel}"
+                               Text="{Binding StepTotal, StringFormat='合計 {0:N0} 歩'}" />
+                    </Grid>
+                    <drawing:DrawingControl Style="{StaticResource StepChartControl}"
+                                            Drawing="{Binding StepChart}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource ChartCardBorder}">
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ChartTitleLabel}"
+                               Text="心拍数" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource ChartSummaryLabel}"
+                               Text="{Binding HeartAverage, StringFormat='平均 {0} bpm'}" />
+                    </Grid>
+                    <drawing:DrawingControl Style="{StaticResource HeartChartControl}"
+                                            Drawing="{Binding HeartChart}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource ChartCardBorder}">
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ChartTitleLabel}"
+                               Text="昨夜の睡眠" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource ChartSummaryLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding SleepLength.Hours}" />
+                                    <Span Text="時間" />
+                                    <Span Text="{Binding SleepLength.Minutes}" />
+                                    <Span Text="分" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                    <Label Style="{StaticResource SleepTimeLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding BedTime, StringFormat='{0:H:mm}'}" />
+                                <Span Text=" 〜 " />
+                                <Span Text="{Binding WakeTime, StringFormat='{0:H:mm}'}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <controls:KitSleepBand Style="{StaticResource SleepBand}"
+                                           Spans="{Binding Sleep}" />
+                    <FlexLayout Style="{StaticResource SleepLegendFlex}"
+                                BindableLayout.ItemsSource="{Binding SleepTotals}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:KitSleepTotal">
+                                <VerticalStackLayout Style="{StaticResource SleepLegendStack}">
+                                    <HorizontalStackLayout Style="{StaticResource SleepLegendNameStack}">
+                                        <Ellipse Style="{StaticResource SleepLegendDot}"
+                                                 Fill="{Binding Stage, Converter={StaticResource SleepStageColorConverter}}" />
+                                        <Label Style="{StaticResource SleepLegendNameLabel}"
+                                               Text="{Binding Stage, Converter={StaticResource SleepStageNameConverter}}" />
+                                    </HorizontalStackLayout>
+                                    <Label Style="{StaticResource SleepLegendValueLabel}"
+                                           Text="{Binding Length, StringFormat='{0:h\\:mm}'}" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
 
             <!-- Quick links to other kit screens -->
             <Border Style="{StaticResource LinkCardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="320">
-                <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                    <toolkit:SfEffectsView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding TrackingCommand}" />
-                    </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource LinkCardGrid}"
-                          ColumnDefinitions="Auto,*,Auto">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource LinkIconBorder}">
-                            <Label Style="{StaticResource LinkIcon}"
-                                   Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                             Style="{StaticResource LinkTextStack}">
-                            <Label Style="{StaticResource LinkTitle}"
-                                   Text="注文 #2412" />
-                            <Label Style="{StaticResource LinkCaption}"
-                                   Text="配達中 · 12:30 到着予定" />
-                        </VerticalStackLayout>
-                        <Label Grid.Column="2"
-                               Style="{StaticResource LinkChevron}"
-                               Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
-                    </Grid>
-                </toolkit:SfEffectsView>
+                <Grid Style="{StaticResource LinkCardGrid}"
+                      ColumnDefinitions="Auto,*,Auto"
+                      behaviors:TouchOption.ClickCommand="{Binding TrackingCommand}"
+                      behaviors:TouchOption.Ripple="True">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource LinkIconBorder}">
+                        <Label Style="{StaticResource LinkIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource LinkTextStack}">
+                        <Label Style="{StaticResource LinkTitle}"
+                               Text="{Binding OrderNumber, StringFormat='注文 {0}'}" />
+                        <Label Style="{StaticResource LinkCaption}"
+                               Text="{Binding OrderEta, StringFormat='配達中 · {0:H:mm} 到着予定'}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2"
+                           Style="{StaticResource LinkChevron}"
+                           Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                </Grid>
             </Border>
 
             <Border Style="{StaticResource LinkCardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="380">
-                <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                    <toolkit:SfEffectsView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OnboardCommand}" />
-                    </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource LinkCardGrid}"
-                          ColumnDefinitions="Auto,*,Auto">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource LinkIconBorder}">
-                            <Label Style="{StaticResource LinkIcon}"
-                                   Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                             Style="{StaticResource LinkTextStack}">
-                            <Label Style="{StaticResource LinkTitle}"
-                                   Text="はじめに" />
-                            <Label Style="{StaticResource LinkCaption}"
-                                   Text="3 ステップで目標を設定" />
-                        </VerticalStackLayout>
-                        <Label Grid.Column="2"
-                               Style="{StaticResource LinkChevron}"
-                               Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
-                    </Grid>
-                </toolkit:SfEffectsView>
+                <Grid Style="{StaticResource LinkCardGrid}"
+                      ColumnDefinitions="Auto,*,Auto"
+                      behaviors:TouchOption.ClickCommand="{Binding OnboardCommand}"
+                      behaviors:TouchOption.Ripple="True">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource LinkIconBorder}">
+                        <Label Style="{StaticResource LinkIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource LinkTextStack}">
+                        <Label Style="{StaticResource LinkTitle}"
+                               Text="はじめに" />
+                        <Label Style="{StaticResource LinkCaption}"
+                               Text="3 ステップで目標を設定" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2"
+                           Style="{StaticResource LinkChevron}"
+                           Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                </Grid>
             </Border>
         </VerticalStackLayout>
     </ScrollView>

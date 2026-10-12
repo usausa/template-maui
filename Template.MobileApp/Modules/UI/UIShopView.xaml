@@ -2,27 +2,46 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIShopView"
              x:DataType="{x:Type module:UIShopViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIShopViewModel}"
              shell:ShellProperty.Title="Shop"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function1Enabled="True"
+             behaviors:Focus.SuppressDefaultFocus="True">
 
+    <!--
+        一覧・商品・カートは文脈 (UIShopContext) を共有する。
+        上の部分は CollectionView の Header にして、商品の一覧と一緒にスクロールする
+    -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <s:BoolToTextConverter x:Key="FavoriteGlyphConverter"
+                                   TrueValue="{x:Static fonts:MaterialIcons.Favorite}"
+                                   FalseValue="{x:Static fonts:MaterialIcons.Favorite_outline}" />
 
             <!-- Root -->
             <Style x:Key="ShopGrid"
                    TargetType="Grid">
-                <Setter Property="Padding" Value="16" />
-                <Setter Property="RowSpacing" Value="12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="ItemsCollection"
+                   TargetType="CollectionView">
+                <Setter Property="Margin" Value="11,0" />
+            </Style>
+
+            <Style x:Key="ShopHeaderStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="5,16,5,8" />
+                <Setter Property="Spacing" Value="12" />
             </Style>
 
             <!-- Header -->
@@ -60,6 +79,55 @@
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <!-- Cart button with badge -->
+            <Style x:Key="CartButtonArea"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CartButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="6" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="CartBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="20" />
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="CartBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <!-- Search -->
@@ -101,10 +169,15 @@
                    TargetType="Entry">
                 <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
                 <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
-                <Setter Property="behaviors:Focus.FocusedThickness" Value="2" />
-                <Setter Property="Placeholder" Value="Search" />
+                <Setter Property="Placeholder" Value="商品を検索" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FilterButtonArea"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
             </Style>
 
             <Style x:Key="FilterButton"
@@ -124,10 +197,60 @@
                 </Setter>
             </Style>
 
+            <!-- 並び順か価格を指定しているときの印 -->
+            <Style x:Key="FilterDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="12" />
+                <Setter Property="HeightRequest" Value="12" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Fill" Value="{StaticResource AmberDefault}" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <!-- Category chips -->
+            <Style x:Key="ChipScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="ShopChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type mcc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style x:Key="ShopChipGroup"
+                   TargetType="mcc:ChipGroup">
+                <Setter Property="ChipTextSize" Value="14" />
+                <Setter Property="ChipCornerRadius" Value="18" />
+                <Setter Property="ChipPadding" Value="14,0" />
+                <Setter Property="ChipBackground" Value="White" />
+                <Setter Property="ChipStroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedChipTextColor" Value="White" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="ItemStyle" Value="{StaticResource ShopChipLabel}" />
+            </Style>
+            <Style x:Key="ShopWrapChipGroup"
+                   TargetType="mcc:ChipGroup"
+                   BasedOn="{StaticResource ShopChipGroup}">
+                <Setter Property="Wrap" Value="True" />
+            </Style>
+
+            <!-- シートの中は折り返す -->
             <!-- Section title -->
-            <Style x:Key="SectionTitleRow"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="6" />
+            <Style x:Key="SectionTitleGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="6" />
                 <Setter Property="Margin" Value="0,4,0,0" />
             </Style>
 
@@ -142,57 +265,114 @@
 
             <Style x:Key="SectionTitle"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Popular: horizontal cards -->
-            <Style x:Key="PopularCollection"
-                   TargetType="CollectionView">
-                <Setter Property="HeightRequest" Value="200" />
+            <Style x:Key="SectionCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Popular: のぞきと中央の強調のあるカルーセル -->
+            <Style x:Key="PopularCarousel"
+                   TargetType="CarouselView">
+                <Setter Property="HeightRequest" Value="168" />
+                <Setter Property="PeekAreaInsets" Value="40" />
+                <Setter Property="Loop" Value="False" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
             </Style>
 
             <Style x:Key="PopularCardBorder"
                    TargetType="Border">
-                <Setter Property="WidthRequest" Value="150" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Margin" Value="6,8" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource BlueDefault}" />
+                        <GradientStop Offset="1" Color="{StaticResource IndigoDarken2}" />
+                    </LinearGradientBrush>
+                </Setter>
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,4"
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="10" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="PopularCardGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="PopularImageBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="112" />
+                <Setter Property="HeightRequest" Value="112" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
             <Style x:Key="PopularImage"
                    TargetType="Image">
-                <Setter Property="Margin" Value="12,12,12,0" />
+                <Setter Property="Margin" Value="8" />
                 <Setter Property="Aspect" Value="AspectFit" />
-                <Setter Property="HeightRequest" Value="120" />
+            </Style>
+
+            <Style x:Key="PopularTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="PopularRankLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource AmberLighten2}" />
             </Style>
 
             <Style x:Key="PopularTitleLabel"
                    TargetType="Label">
-                <Setter Property="Margin" Value="10,8,10,0" />
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="MaxLines" Value="2" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="PopularRatingLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource BlueLighten4}" />
             </Style>
 
             <Style x:Key="PopularPriceLabel"
                    TargetType="Label">
-                <Setter Property="Margin" Value="10,2,10,10" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="PopularIndicator"
+                   TargetType="IndicatorView">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="IndicatorsShape" Value="Circle" />
+                <Setter Property="IndicatorSize" Value="7" />
+                <Setter Property="IndicatorColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <!-- All items: 2-column grid -->
-            <Style x:Key="ItemsCollection"
-                   TargetType="CollectionView">
-                <Setter Property="VerticalOptions" Value="Fill" />
-            </Style>
-
             <Style x:Key="ItemCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="5" />
@@ -210,159 +390,414 @@
                 <Setter Property="HeightRequest" Value="104" />
             </Style>
 
-            <Style x:Key="ItemTitleLabel"
+            <Style x:Key="FavoriteButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="6" />
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
+            <Style x:Key="ItemKindLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="12,8,12,0" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="ItemTitleLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="12,2,12,0" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
             </Style>
 
+            <Style x:Key="ItemRatingStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="12,2,12,0" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="ItemRatingLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+            </Style>
+
+            <Style x:Key="ItemReviewLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
             <Style x:Key="ItemPriceLabel"
                    TargetType="Label">
-                <Setter Property="Margin" Value="12,0,12,10" />
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="12,2,12,12" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <!-- Empty -->
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,40" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="EmptyTextLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <!-- Filter sheet -->
+            <Style x:Key="FilterSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="FilterSheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,20" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="FilterTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="FilterCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,4,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <Style x:Key="FilterButtonGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="FilterResetButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="FilterApplyButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource ShopGrid}"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+    <Grid Style="{StaticResource ShopGrid}">
 
-        <!-- Header -->
-        <Grid Grid.Row="0"
-              Style="{StaticResource ShopHeaderGrid}"
-              ColumnDefinitions="Auto,*"
-              behaviors:AnimationOption.EnterAnimation="FadeUp">
-            <Border Grid.Column="0"
-                    Style="{StaticResource AvatarBorder}">
-                <Image Style="{StaticResource AvatarImage}"
-                       Source="profile.jpg" />
-            </Border>
-            <VerticalStackLayout Grid.Column="1"
-                                 Style="{StaticResource ShopHeaderTextStack}">
-                <Label Style="{StaticResource GreetingLabel}"
-                       Text="{Binding Greeting}" />
-                <Label Style="{StaticResource SubGreetingLabel}"
-                       Text="{Binding SubGreeting}" />
-            </VerticalStackLayout>
-        </Grid>
-
-        <!-- Search + filter -->
-        <Grid Grid.Row="1"
-              Style="{StaticResource SearchRowGrid}"
-              ColumnDefinitions="*,Auto"
-              behaviors:AnimationOption.EnterAnimation="FadeUp"
-              behaviors:AnimationOption.EnterDelay="80">
-            <Border Grid.Column="0"
-                    Style="{StaticResource SearchBorder}">
-                <Grid Style="{StaticResource SearchRowLayout}"
-                      ColumnDefinitions="Auto,*">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SearchIconLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Search}" />
-                    <Entry Grid.Column="1"
-                           Style="{StaticResource SearchEntry}"
-                           Text="{Binding SearchText}" />
-                </Grid>
-            </Border>
-            <Button Grid.Column="1"
-                    Style="{StaticResource FilterButton}"
-                    Text="{x:Static fonts:MaterialIcons.Tune}" />
-        </Grid>
-
-        <!-- Popular (horizontal scroll) -->
-        <HorizontalStackLayout Grid.Row="2"
-                               Style="{StaticResource SectionTitleRow}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
-            <BoxView Style="{StaticResource SectionAccent}" />
-            <Label Style="{StaticResource SectionTitle}"
-                   Text="Popular" />
-        </HorizontalStackLayout>
-
-        <CollectionView Grid.Row="3"
-                        Style="{StaticResource PopularCollection}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="200"
-                        ItemsSource="{Binding Popular}">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal"
-                                   ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="module:UIShopItem">
-                    <Border Style="{StaticResource PopularCardBorder}">
-                        <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                            <toolkit:SfEffectsView.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
-                            </toolkit:SfEffectsView.GestureRecognizers>
-                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                            <Grid RowDefinitions="Auto,Auto,Auto">
-                                <Image Grid.Row="0"
-                                       Style="{StaticResource PopularImage}"
-                                       Source="{Binding Image}" />
-                                <Label Grid.Row="1"
-                                       Style="{StaticResource PopularTitleLabel}"
-                                       Text="{Binding Title}" />
-                                <Label Grid.Row="2"
-                                       Style="{StaticResource PopularPriceLabel}"
-                                       Text="{Binding Price}" />
-                            </Grid>
-                        </toolkit:SfEffectsView>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-        <!-- All items (2-column grid) -->
-        <HorizontalStackLayout Grid.Row="4"
-                               Style="{StaticResource SectionTitleRow}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-            <BoxView Style="{StaticResource SectionAccent}" />
-            <Label Style="{StaticResource SectionTitle}"
-                   Text="All Items" />
-        </HorizontalStackLayout>
-
-        <CollectionView Grid.Row="5"
-                        Style="{StaticResource ItemsCollection}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="280"
+        <CollectionView Style="{StaticResource ItemsCollection}"
                         ItemsSource="{Binding Items}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
                                  Span="2" />
             </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="module:UIShopItem">
-                    <Border Style="{StaticResource ItemCardBorder}">
-                        <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                            <toolkit:SfEffectsView.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
-                            </toolkit:SfEffectsView.GestureRecognizers>
-                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                            <Grid RowDefinitions="Auto,Auto,Auto">
-                                <Image Grid.Row="0"
-                                       Style="{StaticResource ItemImage}"
-                                       Source="{Binding Image}" />
-                                <Label Grid.Row="1"
-                                       Style="{StaticResource ItemTitleLabel}"
-                                       Text="{Binding Title}" />
-                                <Label Grid.Row="2"
-                                       Style="{StaticResource ItemPriceLabel}"
-                                       Text="{Binding Price}" />
+
+            <CollectionView.Header>
+                <VerticalStackLayout Style="{StaticResource ShopHeaderStack}">
+
+                    <!-- Header -->
+                    <Grid Style="{StaticResource ShopHeaderGrid}"
+                          ColumnDefinitions="Auto,*,Auto"
+                          behaviors:AnimationOption.EnterAnimation="FadeUp">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource AvatarBorder}">
+                            <Image Style="{StaticResource AvatarImage}"
+                                   Source="profile.jpg" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource ShopHeaderTextStack}">
+                            <Label Style="{StaticResource GreetingLabel}"
+                                   Text="{Binding Greeting}" />
+                            <Label Style="{StaticResource SubGreetingLabel}"
+                                   Text="{Binding SubGreeting}" />
+                        </VerticalStackLayout>
+                        <Grid Grid.Column="2"
+                              Style="{StaticResource CartButtonArea}">
+                            <Button Style="{StaticResource CartButton}"
+                                    Command="{Binding CartCommand}"
+                                    Text="{x:Static fonts:MaterialIcons.Shopping_cart}" />
+                            <Border Style="{StaticResource CartBadgeBorder}"
+                                    behaviors:AnimationOption.BounceTrigger="{Binding Context.Store.CartCount}"
+                                    IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+                                <Label Style="{StaticResource CartBadgeLabel}"
+                                       Text="{Binding Context.Store.CartCount, Converter={StaticResource BadgeCountConverter}}" />
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Popular -->
+                    <Grid Style="{StaticResource SectionTitleGrid}"
+                          ColumnDefinitions="Auto,*"
+                          behaviors:AnimationOption.EnterAnimation="FadeUp"
+                          behaviors:AnimationOption.EnterDelay="80">
+                        <BoxView Grid.Column="0"
+                                 Style="{StaticResource SectionAccent}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource SectionTitle}"
+                               Text="人気の商品" />
+                    </Grid>
+
+                    <CarouselView x:Name="PopularCarousel"
+                                  Style="{StaticResource PopularCarousel}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="120"
+                                  ItemsSource="{Binding Popular}"
+                                  CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
+                                  CurrentItemChangedCommandParameter="{Binding Source={x:Reference PopularCarousel}, Path=CurrentItem, x:DataType=CarouselView}"
+                                  IndicatorView="{x:Reference PopularIndicator}">
+                        <CarouselView.ItemTemplate>
+                            <DataTemplate x:DataType="module:UIShopPopularItem">
+                                <Border Style="{StaticResource PopularCardBorder}">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border"
+                                                     Binding="{Binding IsCurrent}"
+                                                     Value="False">
+                                            <Setter Property="Scale" Value="0.9" />
+                                            <Setter Property="Opacity" Value="0.6" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}"
+                                                              CommandParameter="{Binding Item}" />
+                                    </Border.GestureRecognizers>
+                                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                    <Grid Style="{StaticResource PopularCardGrid}"
+                                          ColumnDefinitions="Auto,*">
+                                        <Border Grid.Column="0"
+                                                Style="{StaticResource PopularImageBorder}">
+                                            <Image Style="{StaticResource PopularImage}"
+                                                   Source="{Binding Item.Product.Image}" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Style="{StaticResource PopularTextStack}">
+                                            <Label Style="{StaticResource PopularRankLabel}"
+                                                   Text="{Binding Item.Product.Kind}" />
+                                            <Label Style="{StaticResource PopularTitleLabel}"
+                                                   Text="{Binding Item.Product.Name}" />
+                                            <Label Style="{StaticResource PopularRatingLabel}"
+                                                   Text="{Binding Item.Product.Rating, StringFormat='★ {0:F1}'}" />
+                                            <Label Style="{StaticResource PopularPriceLabel}"
+                                                   Text="{Binding Item.Product.Price, StringFormat='¥{0:N0}'}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CarouselView.ItemTemplate>
+                    </CarouselView>
+
+                    <IndicatorView x:Name="PopularIndicator"
+                                   Style="{StaticResource PopularIndicator}" />
+
+                    <!-- Search + filter -->
+                    <Grid Style="{StaticResource SearchRowGrid}"
+                          ColumnDefinitions="*,Auto"
+                          behaviors:AnimationOption.EnterAnimation="FadeUp"
+                          behaviors:AnimationOption.EnterDelay="160">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource SearchBorder}">
+                            <Grid Style="{StaticResource SearchRowLayout}"
+                                  ColumnDefinitions="Auto,*">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource SearchIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Search}" />
+                                <Entry Grid.Column="1"
+                                       Style="{StaticResource SearchEntry}"
+                                       Text="{Binding SearchText}" />
                             </Grid>
-                        </toolkit:SfEffectsView>
+                        </Border>
+                        <Grid Grid.Column="1"
+                              Style="{StaticResource FilterButtonArea}">
+                            <Button Style="{StaticResource FilterButton}"
+                                    Command="{Binding FilterCommand}"
+                                    Text="{x:Static fonts:MaterialIcons.Tune}" />
+                            <Ellipse Style="{StaticResource FilterDot}"
+                                     IsVisible="{Binding IsFiltered}" />
+                        </Grid>
+                    </Grid>
+
+                    <!-- Category -->
+                    <ScrollView Style="{StaticResource ChipScroll}"
+                                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                behaviors:AnimationOption.EnterDelay="200">
+                        <mcc:ChipGroup Style="{StaticResource ShopChipGroup}"
+                                       ItemsSource="{Binding Categories}"
+                                       SelectedItem="{Binding SelectedCategory}">
+                            <mcc:ChipGroup.ItemTemplate>
+                                <DataTemplate x:DataType="module:UIShopCategoryOption">
+                                    <Label Text="{Binding Name}" />
+                                </DataTemplate>
+                            </mcc:ChipGroup.ItemTemplate>
+                        </mcc:ChipGroup>
+                    </ScrollView>
+
+                    <!-- All items -->
+                    <Grid Style="{StaticResource SectionTitleGrid}"
+                          ColumnDefinitions="Auto,*,Auto"
+                          behaviors:AnimationOption.EnterAnimation="FadeUp"
+                          behaviors:AnimationOption.EnterDelay="240">
+                        <BoxView Grid.Column="0"
+                                 Style="{StaticResource SectionAccent}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource SectionTitle}"
+                               Text="商品の一覧" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource SectionCountLabel}"
+                               Text="{Binding Items.Count, StringFormat='{0} 件'}" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ShopItem">
+                    <Border Style="{StaticResource ItemCardBorder}">
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}"
+                                                  CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                            <Image Grid.Row="0"
+                                   Style="{StaticResource ItemImage}"
+                                   Source="{Binding Product.Image}" />
+                            <Button Grid.Row="0"
+                                    Style="{StaticResource FavoriteButton}"
+                                    behaviors:AnimationOption.HeartbeatTrigger="{Binding IsFavorite}"
+                                    behaviors:AnimationOption.HeartbeatValue="{s:Bool Value=True}"
+                                    Command="{Binding FavoriteCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}"
+                                    CommandParameter="{Binding .}"
+                                    Text="{Binding IsFavorite, Converter={StaticResource FavoriteGlyphConverter}}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding IsFavorite}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource PinkDefault}" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                            <Label Grid.Row="1"
+                                   Style="{StaticResource ItemKindLabel}"
+                                   Text="{Binding Product.Kind}" />
+                            <Label Grid.Row="2"
+                                   Style="{StaticResource ItemTitleLabel}"
+                                   Text="{Binding Product.Name}" />
+                            <HorizontalStackLayout Grid.Row="3"
+                                                   Style="{StaticResource ItemRatingStack}">
+                                <Label Style="{StaticResource ItemRatingLabel}"
+                                       Text="{Binding Product.Rating, StringFormat='★ {0:F1}'}" />
+                                <Label Style="{StaticResource ItemReviewLabel}"
+                                       Text="{Binding Product.ReviewCount, StringFormat='({0})'}" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="4"
+                                   Style="{StaticResource ItemPriceLabel}"
+                                   Text="{Binding Product.Price, StringFormat='¥{0:N0}'}" />
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Style="{StaticResource EmptyStack}">
+                    <Label Style="{StaticResource EmptyIconLabel}"
+                           behaviors:AnimationOption.Float="True"
+                           Text="{x:Static fonts:MaterialIcons.Search_off}" />
+                    <Label Style="{StaticResource EmptyTextLabel}"
+                           Text="条件に合う商品はありません" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
         </CollectionView>
+
+        <!-- 並び順と価格のシート -->
+        <mcc:BottomSheetView Style="{StaticResource FilterSheet}"
+                             IsOpen="{Binding IsFilterOpen}">
+            <mcc:BottomSheetView.SheetContent>
+                <VerticalStackLayout Style="{StaticResource FilterSheetStack}">
+                    <Label Style="{StaticResource FilterTitleLabel}"
+                           Text="並び替えと絞り込み" />
+                    <Label Style="{StaticResource FilterCaptionLabel}"
+                           Text="並び順" />
+                    <mcc:ChipGroup Style="{StaticResource ShopWrapChipGroup}"
+                                   ItemsSource="{Binding Sorts}"
+                                   SelectedItem="{Binding SelectedSort}">
+                        <mcc:ChipGroup.ItemTemplate>
+                            <DataTemplate x:DataType="module:UIShopSortOption">
+                                <Label Text="{Binding Name}" />
+                            </DataTemplate>
+                        </mcc:ChipGroup.ItemTemplate>
+                    </mcc:ChipGroup>
+                    <Label Style="{StaticResource FilterCaptionLabel}"
+                           Text="価格" />
+                    <mcc:ChipGroup Style="{StaticResource ShopWrapChipGroup}"
+                                   ItemsSource="{Binding Prices}"
+                                   SelectedItem="{Binding SelectedPrice}">
+                        <mcc:ChipGroup.ItemTemplate>
+                            <DataTemplate x:DataType="module:UIShopPriceOption">
+                                <Label Text="{Binding Name}" />
+                            </DataTemplate>
+                        </mcc:ChipGroup.ItemTemplate>
+                    </mcc:ChipGroup>
+                    <Grid Style="{StaticResource FilterButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource FilterResetButton}"
+                                Command="{Binding ResetFilterCommand}"
+                                Text="リセット" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource FilterApplyButton}"
+                                Command="{Binding CloseFilterCommand}"
+                                Text="{Binding Items.Count, StringFormat='{0} 件を表示'}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </mcc:BottomSheetView.SheetContent>
+        </mcc:BottomSheetView>
 
     </Grid>
 

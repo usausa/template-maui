@@ -2,6 +2,10 @@ namespace Template.MobileApp.Models.App;
 
 using System.Numerics;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum SudokuLevel
 {
     Easy,
@@ -9,10 +13,16 @@ public enum SudokuLevel
     Hard
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
 public readonly record struct SudokuCell(int Row, int Column);
 
 // 描く盤面 (Placed は直前に数字を入れたマス、Flash はそろった行・列・ブロックや完成で光らせるマス)
-public sealed record SudokuFrame(SudokuGame Game, SudokuCell? Selected, SudokuCell? Placed, IReadOnlyList<SudokuCell> Flash);
+#pragma warning disable CA1819
+public sealed record SudokuFrame(SudokuGame Game, SudokuCell? Selected, SudokuCell? Placed, SudokuCell[] Flash);
+#pragma warning restore CA1819
 
 // 保存する状態 (マスは行ごとに並べる。値の 0 は空き、メモは数字のビット。ベストタイムは難易度の順の秒で、0 は記録なし)
 public sealed class SudokuSnapshot
@@ -36,22 +46,9 @@ public sealed class SudokuSnapshot
     public IReadOnlyList<int> BestSeconds { get; set; } = [];
 }
 
-// 数字のキー (答えの位置に置いていない残りの数)
-public sealed partial class SudokuDigit : ObservableObject
-{
-    public int Value { get; }
-
-    // キーを並べる列
-    public int Column => Value - 1;
-
-    [ObservableProperty]
-    public partial int Remaining { get; set; }
-
-    public SudokuDigit(int value)
-    {
-        Value = value;
-    }
-}
+//--------------------------------------------------------------------------------
+// Game
+//--------------------------------------------------------------------------------
 
 // 数独。答えが 1 つだけの問題を作り、答えと違う数字はミスとして数える (答えと同じ数字は変えられない)。完成したら難易度ごとのベストタイムを残す。
 // 経過時間は数え始めた時刻と止めた時点までの時間から計算する (時刻は呼び出し側が渡す)。乱数は 0 以上 n 未満を返す関数で受け取る
@@ -303,20 +300,8 @@ public sealed class SudokuGame
 
     public bool HasNote(SudokuCell cell, int value) => (notes[ToIndex(cell)] & (1 << value)) != 0;
 
-    // 答えの位置に置いた数
-    // 1〜9 の数字のキー
-    public static IReadOnlyList<SudokuDigit> CreateDigits() =>
-        [.. Enumerable.Range(1, Size).Select(static x => new SudokuDigit(x))];
-
-    public void UpdateDigits(IEnumerable<SudokuDigit> digits)
-    {
-        foreach (var digit in digits)
-        {
-            digit.Remaining = Size - CountPlaced(digit.Value);
-        }
-    }
-
-    private int CountPlaced(int value) => Enumerable.Range(0, CellCount).Count(x => (cells[x] == value) && (solution[x] == value));
+    // 答えの位置にまだ置いていない数
+    public int CountRemaining(int value) => Size - Enumerable.Range(0, CellCount).Count(x => (cells[x] == value) && (solution[x] == value));
 
     //--------------------------------------------------------------------------------
     // Input
@@ -422,7 +407,7 @@ public sealed class SudokuGame
     }
 
     // マスを含む、すべて答えになった行・列・ブロックのマス (完成したら盤面のすべてのマス)
-    public IReadOnlyList<SudokuCell> GetCompletedCells(SudokuCell cell)
+    public SudokuCell[] GetCompletedCells(SudokuCell cell)
     {
         var index = ToIndex(cell);
         var row = index / Size;

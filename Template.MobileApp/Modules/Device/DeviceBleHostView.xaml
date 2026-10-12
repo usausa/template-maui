@@ -10,7 +10,7 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceBleHostView"
              x:DataType="{x:Type module:DeviceBleHostViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceBleHostViewModel}"
-             shell:ShellProperty.Title="Host"
+             shell:ShellProperty.Title="BLE Host"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function4Text="{Binding Running, Converter={s:BoolToText True='OFF', False='ON'}}"
              shell:ShellProperty.Function1Enabled="True"
@@ -22,7 +22,6 @@
             <Style x:Key="UserIdValueLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicMonoLabel}">
-                <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
@@ -30,6 +29,31 @@
             <Style x:Key="StateChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RadioRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="150" />
+                <Setter Property="HeightRequest" Value="150" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RadioRing"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="{StaticResource GreenDefault}" />
+                <Setter Property="StrokeThickness" Value="3" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="RadioIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BasicIconCircleBorder}">
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
@@ -41,11 +65,32 @@
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
-                <Border Style="{StaticResource BasicIconCircleBorder}"
-                        behaviors:AnimationOption.Pulse="{Binding Running}">
-                    <Label Style="{StaticResource BasicIconCircleLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Podcasts}" />
-                </Border>
+                <Grid Style="{StaticResource RadioRingGrid}">
+                    <Ellipse Style="{StaticResource RadioRing}"
+                             behaviors:AnimationOption.Ripple="{Binding Running}" />
+                    <Ellipse Style="{StaticResource RadioRing}"
+                             behaviors:AnimationOption.Ripple="{Binding Running}"
+                             behaviors:AnimationOption.RippleDelay="900" />
+                    <Border Style="{StaticResource RadioIconBorder}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding Running}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Label Style="{StaticResource BasicIconCircleLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Podcasts}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding Running}"
+                                             Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Border>
+                </Grid>
 
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="BLE Peripheral" />

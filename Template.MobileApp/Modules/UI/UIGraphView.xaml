@@ -2,10 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters" xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UIGraphView"
              x:DataType="{x:Type module:UIGraphViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGraphViewModel}"
@@ -88,6 +91,77 @@
                 <Setter Property="ColumnSpacing" Value="0" />
                 <Setter Property="HeightRequest" Value="26" />
             </Style>
+
+            <DataTemplate x:Key="RefBadgeTemplate"
+                          x:DataType="{x:Type models:GraphRef}">
+                <Border Style="{StaticResource RefBadgeBorder}"
+                        BackgroundColor="{Binding Kind, Converter={StaticResource RefBackgroundConverter}}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding Kind}"
+                                     Value="{x:Static models:GraphRefKind.Head}">
+                            <Setter Property="StrokeThickness" Value="2" />
+                            <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource RefBadgeLabel}"
+                           Text="{Binding Name}"
+                           TextColor="{Binding Kind, Converter={StaticResource RefForegroundConverter}}" />
+                </Border>
+            </DataTemplate>
+
+            <Style x:Key="CommitSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="SheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,24" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SheetSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="SheetRefLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="Direction" Value="Row" />
+                <Setter Property="AlignItems" Value="Start" />
+            </Style>
+
+            <Style x:Key="SheetRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SheetIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <Style x:Key="SheetValueLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="SheetShaLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SheetValueLabel}">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="13" />
+            </Style>
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -103,13 +177,14 @@
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Rows}"
                         SelectionMode="Single"
+                        SelectedItem="{Binding Selected}"
                         HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Always">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical"
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type graph:GraphRow}">
+                <DataTemplate x:DataType="{x:Type models:GraphRow}">
                     <Grid Style="{StaticResource GraphRowGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto"
                           BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">
@@ -131,26 +206,8 @@
 
                         <HorizontalStackLayout Grid.Column="1"
                                                Style="{StaticResource RefListStack}"
-                                               BindableLayout.ItemsSource="{Binding Refs}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="{x:Type graph:GraphRef}">
-                                    <Border Style="{StaticResource RefBadgeBorder}"
-                                            BackgroundColor="{Binding Kind, Converter={StaticResource RefBackgroundConverter}}">
-                                        <Border.Triggers>
-                                            <DataTrigger TargetType="Border"
-                                                         Binding="{Binding Kind}"
-                                                         Value="{x:Static graph:GraphRefKind.Head}">
-                                                <Setter Property="StrokeThickness" Value="2" />
-                                                <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
-                                            </DataTrigger>
-                                        </Border.Triggers>
-                                        <Label Style="{StaticResource RefBadgeLabel}"
-                                               Text="{Binding Name}"
-                                               TextColor="{Binding Kind, Converter={StaticResource RefForegroundConverter}}" />
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </HorizontalStackLayout>
+                                               BindableLayout.ItemsSource="{Binding Refs}"
+                                               BindableLayout.ItemTemplate="{StaticResource RefBadgeTemplate}" />
 
                         <Label Grid.Column="2"
                                Style="{StaticResource SummaryLabel}"
@@ -167,6 +224,48 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="2"
+                             Style="{StaticResource CommitSheet}"
+                             IsOpen="{Binding IsDetailOpen}">
+            <mcc:BottomSheetView.SheetContent>
+                <VerticalStackLayout Style="{StaticResource SheetStack}">
+                    <Label Style="{StaticResource SheetSummaryLabel}"
+                           Text="{Binding Detail.Summary}" />
+                    <FlexLayout Style="{StaticResource SheetRefLayout}"
+                                BindableLayout.ItemsSource="{Binding Detail.Refs}"
+                                BindableLayout.ItemTemplate="{StaticResource RefBadgeTemplate}"
+                                IsVisible="{Binding Detail.Refs.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}" />
+                    <Grid Style="{StaticResource SheetRowGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource SheetIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Person}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource SheetValueLabel}"
+                               Text="{Binding Detail.Author}" />
+                    </Grid>
+                    <Grid Style="{StaticResource SheetRowGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource SheetIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Schedule}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource SheetValueLabel}"
+                               Text="{Binding Detail.When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
+                    </Grid>
+                    <Grid Style="{StaticResource SheetRowGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource SheetIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Commit}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource SheetShaLabel}"
+                               Text="{Binding Detail.Sha}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </mcc:BottomSheetView.SheetContent>
+        </mcc:BottomSheetView>
     </Grid>
 
 </ContentView>

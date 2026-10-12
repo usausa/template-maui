@@ -10,7 +10,7 @@
              x:Class="Template.MobileApp.Modules.View.ViewDragDropView"
              x:DataType="{x:Type module:ViewDragDropViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewDragDropViewModel}"
-             shell:ShellProperty.Title="DragDrop"
+             shell:ShellProperty.Title="Drag &amp; Drop"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
@@ -36,6 +36,66 @@
             </Style>
 
             <!-- 挿入位置の線 (上へ動かすときは行の上端、下へ動かすときは行の下端) -->
+            <Style x:Key="ReorderListBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="ReorderRowBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Rectangle" />
+            </Style>
+
+            <Style x:Key="RowDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="HandleLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="ColumnBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="TodoBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ColumnBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="DoneBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ColumnBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="ColumnBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
             <Style x:Key="InsertLine"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="3" />
@@ -127,6 +187,67 @@
                 </Border>
             </DataTemplate>
 
+            <DataTemplate x:Key="ReorderTemplate"
+                          x:DataType="{x:Type module:DragTask}">
+                <Border Style="{StaticResource ReorderRowBorder}">
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=IsDragging, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                     Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource BlueLighten2}" />
+                            <Setter Property="StrokeThickness" Value="1" />
+                            <Setter Property="StrokeDashArray" Value="4,3" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsOver}"
+                                     Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                            <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsSource}"
+                                     Value="True">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Border.GestureRecognizers>
+                        <DragGestureRecognizer CanDrag="True"
+                                               DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragStartingCommandParameter="{Binding .}"
+                                               DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:ViewDragDropViewModel}}" />
+                        <DropGestureRecognizer AllowDrop="True"
+                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemLeaveCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragLeaveCommandParameter="{Binding .}"
+                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemOverCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragOverCommandParameter="{Binding .}"
+                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DropCommandParameter="{Binding .}" />
+                    </Border.GestureRecognizers>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                    <Grid RowDefinitions="Auto,*,Auto,Auto"
+                          ColumnDefinitions="4,*,Auto">
+                        <BoxView Grid.Row="0" Grid.ColumnSpan="3"
+                                 Style="{StaticResource InsertLine}"
+                                 IsVisible="{Binding IsOverAbove}" />
+                        <BoxView Grid.Row="2" Grid.ColumnSpan="3"
+                                 Style="{StaticResource InsertLine}"
+                                 IsVisible="{Binding IsOverBelow}" />
+                        <BoxView Grid.Row="1" Grid.Column="0"
+                                 Color="{Binding Accent}" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource TaskLabel}"
+                               Text="{Binding Text}" />
+                        <Label Grid.Row="1" Grid.Column="2"
+                               Style="{StaticResource HandleLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Drag_indicator}" />
+                        <BoxView Grid.Row="3" Grid.ColumnSpan="3"
+                                 Style="{StaticResource RowDivider}" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
             <Style x:Key="BoardGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
@@ -140,23 +261,21 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="並べ替え"
+                               Title="Reorder"
                                Icon="{x:Static fonts:MaterialIcons.Swap_vert}">
                 <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="行を長押しでドラッグし、別の行に重ねて離すとその位置へ移動する (ドラッグ中は受け入れ先が破線、重ねた行に挿入位置の線)" />
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
-                                         BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
+                    <Border Style="{StaticResource ReorderListBorder}">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
+                                             BindableLayout.ItemTemplate="{StaticResource ReorderTemplate}" />
+                    </Border>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
-                               Title="リスト間移動とゴミ箱"
+                               Title="Move between lists / Trash"
                                Icon="{x:Static fonts:MaterialIcons.Move_up}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除 (重ねている先が濃く光る)" />
                     <Grid Style="{StaticResource BoardGrid}"
                           ColumnDefinitions="*,*">
                         <Border Grid.Column="0"
@@ -188,8 +307,10 @@
                                                        DropCommandParameter="Todo" />
                             </Border.GestureRecognizers>
                             <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
-                                <Label Style="{StaticResource BasicHeaderCaptionLabel}"
-                                       Text="TODO" />
+                                <Border Style="{StaticResource TodoBadgeBorder}">
+                                    <Label Style="{StaticResource ColumnBadgeLabel}"
+                                           Text="TODO" />
+                                </Border>
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding TodoList}"
                                                      BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
                             </VerticalStackLayout>
@@ -223,8 +344,10 @@
                                                        DropCommandParameter="Done" />
                             </Border.GestureRecognizers>
                             <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
-                                <Label Style="{StaticResource BasicHeaderCaptionLabel}"
-                                       Text="DONE" />
+                                <Border Style="{StaticResource DoneBadgeBorder}">
+                                    <Label Style="{StaticResource ColumnBadgeLabel}"
+                                           Text="✅ DONE" />
+                                </Border>
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding DoneList}"
                                                      BindableLayout.ItemTemplate="{StaticResource TaskTemplate}" />
                             </VerticalStackLayout>

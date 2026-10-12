@@ -50,6 +50,105 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
+            <Style x:Key="RemainStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="RemainCaption"
+                   TargetType="Label"
+                   BasedOn="{StaticResource OrderCaption}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="RemainValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="RemainNumberSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="RemainUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="DeliveryProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="CourierBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,8" />
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            </Style>
+
+            <Style x:Key="CourierGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="CourierIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+            </Style>
+
+            <Style x:Key="CourierIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="CourierTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="CourierNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="CourierInfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="CourierButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
             <Style x:Key="StepRow"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="24,0" />
@@ -102,6 +201,12 @@
                 <Setter Property="Margin" Value="0,18,0,0" />
             </Style>
 
+            <Style x:Key="TimelineDoneLine"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource TimelineLine}">
+                <Setter Property="Color" Value="{StaticResource GreenDefault}" />
+            </Style>
+
             <Style x:Key="StepTextStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="2" />
@@ -127,13 +232,60 @@
         <VerticalStackLayout>
             <Border Style="{StaticResource HeaderBorder}">
                 <VerticalStackLayout>
-                    <Label Style="{StaticResource OrderCaption}"
-                           Text="注文番号" />
-                    <Label Style="{StaticResource OrderValue}"
-                           Text="{Binding OrderNumber}" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Style="{StaticResource OrderCaption}"
+                                   Text="注文番号" />
+                            <Label Style="{StaticResource OrderValue}"
+                                   Text="{Binding OrderNumber}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource RemainStack}">
+                            <Label Style="{StaticResource RemainCaption}"
+                                   Text="到着まで" />
+                            <Label Style="{StaticResource RemainValueLabel}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Style="{StaticResource RemainNumberSpan}"
+                                              Text="{Binding RemainMinutes}" />
+                                        <Span Style="{StaticResource RemainUnitSpan}"
+                                              Text=" 分" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <ProgressBar Style="{StaticResource DeliveryProgressBar}"
+                                 Progress="{Binding DeliveryProgress}" />
                     <Label Style="{StaticResource EtaLabel}"
-                           Text="{Binding Eta}" />
+                           Text="{Binding Eta, StringFormat='到着予定: {0:H:mm}'}" />
                 </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CourierBorder}">
+                <Grid Style="{StaticResource CourierGrid}"
+                      ColumnDefinitions="Auto,*,Auto,Auto">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource CourierIconBorder}">
+                        <Label Style="{StaticResource CourierIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Delivery_dining}" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource CourierTextStack}">
+                        <Label Style="{StaticResource CourierNameLabel}"
+                               Text="宇佐見さん" />
+                        <Label Style="{StaticResource CourierInfoLabel}"
+                               Text="★ 4.9 · 配達 1,284 件" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="2"
+                            Style="{StaticResource CourierButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            Text="{x:Static fonts:MaterialIcons.Phone}" />
+                    <Button Grid.Column="3"
+                            Style="{StaticResource CourierButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            Text="{x:Static fonts:MaterialIcons.Chat}" />
+                </Grid>
             </Border>
 
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Steps}">
@@ -144,15 +296,11 @@
                               behaviors:AnimationOption.EnterAnimation="FadeUp"
                               behaviors:AnimationOption.EnterDelay="{Binding Delay}">
                             <Grid Grid.Column="0">
-                                <BoxView Style="{StaticResource TimelineLine}">
-                                    <BoxView.Triggers>
-                                        <DataTrigger TargetType="BoxView"
-                                                     Binding="{Binding IsComplete}"
-                                                     Value="True">
-                                            <Setter Property="Color" Value="{StaticResource GreenDefault}" />
-                                        </DataTrigger>
-                                    </BoxView.Triggers>
-                                </BoxView>
+                                <BoxView Style="{StaticResource TimelineLine}" />
+                                <BoxView Style="{StaticResource TimelineDoneLine}"
+                                         behaviors:AnimationOption.EnterAnimation="Grow"
+                                         behaviors:AnimationOption.EnterDelay="{Binding LineDelay}"
+                                         IsVisible="{Binding IsComplete}" />
                                 <Ellipse Style="{StaticResource DotComplete}"
                                          IsVisible="{Binding IsComplete}" />
                                 <Label Style="{StaticResource DotCheckLabel}"
@@ -176,7 +324,7 @@
                                     </Label.Triggers>
                                 </Label>
                                 <Label Style="{StaticResource StepTime}"
-                                       Text="{Binding Time}" />
+                                       Text="{Binding Time, StringFormat='{0:M/d H:mm}'}" />
                             </VerticalStackLayout>
                         </Grid>
                     </DataTemplate>

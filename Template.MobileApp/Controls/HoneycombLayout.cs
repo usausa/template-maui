@@ -2,11 +2,12 @@ namespace Template.MobileApp.Controls;
 
 using Microsoft.Maui.Layouts;
 
-// 子要素をハニカム (六角形の敷き詰め) 状に配置するカスタムレイアウト。
-// 列を交互に半セル分ずらし、上にあるセルから順に埋める。3 列に 7 個置くと中央 1 + 周囲 6 の花形になる
 public sealed class HoneycombLayout : Layout
 {
-    // 列数
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty ColumnsProperty = BindableProperty.Create(
         nameof(Columns),
         typeof(int),
@@ -14,7 +15,6 @@ public sealed class HoneycombLayout : Layout
         3,
         propertyChanged: static (bindable, _, _) => ((HoneycombLayout)bindable).InvalidateMeasure());
 
-    // セル間の余白
     public static readonly BindableProperty SpacingProperty = BindableProperty.Create(
         nameof(Spacing),
         typeof(double),
@@ -22,7 +22,6 @@ public sealed class HoneycombLayout : Layout
         0d,
         propertyChanged: static (bindable, _, _) => ((HoneycombLayout)bindable).InvalidateMeasure());
 
-    // 半セル下げる列 (true=偶数列 / false=奇数列)
     public static readonly BindableProperty StaggerEvenColumnsProperty = BindableProperty.Create(
         nameof(StaggerEvenColumns),
         typeof(bool),
@@ -47,6 +46,10 @@ public sealed class HoneycombLayout : Layout
         get => (bool)GetValue(StaggerEvenColumnsProperty);
         set => SetValue(StaggerEvenColumnsProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Layout
+    //--------------------------------------------------------------------------------
 
     protected override ILayoutManager CreateLayoutManager() => new HoneycombLayoutManager(this);
 
@@ -107,7 +110,6 @@ public sealed class HoneycombLayout : Layout
             return bounds.Size;
         }
 
-        // 各セルの左上座標。ずらさない列とずらす列を半段ずつ交互に上から埋める
         private Point[] ComputeSlots(int count, Size cell)
         {
             var columns = Math.Max(1, layout.Columns);
@@ -131,7 +133,6 @@ public sealed class HoneycombLayout : Layout
             return slots;
         }
 
-        // 全セルを含む外接サイズ
         private Size ComputeExtent(int count, Size cell)
         {
             if (count == 0)

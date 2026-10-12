@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
@@ -21,11 +20,6 @@
             <Style x:Key="BackgroundGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
-            </Style>
-
-            <Style x:Key="LinkRowEffect"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="Ripple" />
             </Style>
 
             <Style x:Key="ValueRowGrid"
@@ -251,21 +245,20 @@
         <BoxView Grid.Row="3"
                  Style="{StaticResource SubSeparatorBoxView}" />
 
-        <toolkit:SfEffectsView Grid.Row="4"
-                               Style="{StaticResource LinkRowEffect}">
-            <Grid Style="{StaticResource ValueRowGrid}"
-                  ColumnDefinitions="*,Auto,24">
-                <Label Grid.Column="0"
-                       Style="{StaticResource PosNameLabel}"
-                       Text="値引・割引" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource PosValueLabel}"
-                       Text="￥ 0" />
-                <Label Grid.Column="2"
-                       Style="{StaticResource LinkLabel}"
-                       Text="›" />
-            </Grid>
-        </toolkit:SfEffectsView>
+        <Grid Grid.Row="4"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24"
+              behaviors:TouchOption.Ripple="True">
+            <Label Grid.Column="0"
+                   Style="{StaticResource PosNameLabel}"
+                   Text="値引・割引" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource PosValueLabel}"
+                   Text="￥ 0" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource LinkLabel}"
+                   Text="›" />
+        </Grid>
 
         <BoxView Grid.Row="5"
                  Style="{StaticResource SubSeparatorBoxView}" />
@@ -310,21 +303,20 @@
         <BoxView Grid.Row="9"
                  Style="{StaticResource SubSeparatorBoxView}" />
 
-        <toolkit:SfEffectsView Grid.Row="10"
-                               Style="{StaticResource LinkRowEffect}">
-            <Grid Style="{StaticResource ValueRowGrid}"
-                  ColumnDefinitions="*,Auto,24">
-                <Label Grid.Column="0"
-                       Style="{StaticResource PosSubNameLabel}"
-                       Text="内消費税" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource PosSubValueLabel}"
-                       Text="{Binding InnerTax, StringFormat='(￥ {0:N0})'}" />
-                <Label Grid.Column="2"
-                       Style="{StaticResource LinkLabel}"
-                       Text="›" />
-            </Grid>
-        </toolkit:SfEffectsView>
+        <Grid Grid.Row="10"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24"
+              behaviors:TouchOption.Ripple="True">
+            <Label Grid.Column="0"
+                   Style="{StaticResource PosSubNameLabel}"
+                   Text="内消費税" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource PosSubValueLabel}"
+                   Text="{Binding InnerTax, StringFormat='(￥ {0:N0})'}" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource LinkLabel}"
+                   Text="›" />
+        </Grid>
 
         <BoxView Grid.Row="11"
                  Style="{StaticResource SeparatorBoxView}" />
@@ -339,46 +331,44 @@
         <BoxView Grid.Row="14"
                  Style="{StaticResource SeparatorBoxView}" />
 
-        <toolkit:SfEffectsView Grid.Row="15"
-                               Style="{StaticResource LinkRowEffect}">
-            <Grid Style="{StaticResource ValueRowGrid}"
-                  ColumnDefinitions="24,*,Auto,24">
-                <Label Grid.Column="0"
-                       Style="{StaticResource IconLabel}"
-                       Text="{x:Static fonts:MaterialIcons.Money}" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource PosNameLabel}"
-                       Text="現金預り" />
-                <Label Grid.Column="2"
-                       Style="{StaticResource PosValueLabel}"
-                       Text="{Binding Deposit, StringFormat='￥ {0:N0}'}" />
-                <Label Grid.Column="3"
-                       Style="{StaticResource LinkLabel}"
-                       Text="›" />
-            </Grid>
-        </toolkit:SfEffectsView>
+        <Grid Grid.Row="15"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="24,*,Auto,24"
+              behaviors:TouchOption.Ripple="True">
+            <Label Grid.Column="0"
+                   Style="{StaticResource IconLabel}"
+                   Text="{x:Static fonts:MaterialIcons.Money}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource PosNameLabel}"
+                   Text="現金預り" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource PosValueLabel}"
+                   Text="{Binding Deposit, StringFormat='￥ {0:N0}'}" />
+            <Label Grid.Column="3"
+                   Style="{StaticResource LinkLabel}"
+                   Text="›" />
+        </Grid>
 
         <BoxView Grid.Row="16"
                  Style="{StaticResource SubSeparatorBoxView}" />
 
-        <toolkit:SfEffectsView Grid.Row="17"
-                               Style="{StaticResource LinkRowEffect}">
-            <Grid Style="{StaticResource ValueRowGrid}"
-                  ColumnDefinitions="24,*,Auto,24">
-                <Label Grid.Column="0"
-                       Style="{StaticResource IconLabel}"
-                       Text="{x:Static fonts:MaterialIcons.Credit_card}" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource PosNameLabel}"
-                       Text="クレジット" />
-                <Label Grid.Column="2"
-                       Style="{StaticResource PosValueLabel}"
-                       Text="￥ 0" />
-                <Label Grid.Column="3"
-                       Style="{StaticResource LinkLabel}"
-                       Text="›" />
-            </Grid>
-        </toolkit:SfEffectsView>
+        <Grid Grid.Row="17"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="24,*,Auto,24"
+              behaviors:TouchOption.Ripple="True">
+            <Label Grid.Column="0"
+                   Style="{StaticResource IconLabel}"
+                   Text="{x:Static fonts:MaterialIcons.Credit_card}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource PosNameLabel}"
+                   Text="クレジット" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource PosValueLabel}"
+                   Text="￥ 0" />
+            <Label Grid.Column="3"
+                   Style="{StaticResource LinkLabel}"
+                   Text="›" />
+        </Grid>
 
         <BoxView Grid.Row="18"
                  Style="{StaticResource SubSeparatorBoxView}" />
@@ -409,21 +399,20 @@
         <BoxView Grid.Row="22"
                  Style="{StaticResource SeparatorBoxView}" />
 
-        <toolkit:SfEffectsView Grid.Row="23"
-                               Style="{StaticResource LinkRowEffect}">
-            <Grid Style="{StaticResource ValueRowGrid}"
-                  ColumnDefinitions="*,Auto,24">
-                <Label Grid.Column="0"
-                       Style="{StaticResource PosNameLabel}"
-                       Text="担当者" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource PosValueLabel}"
-                       Text="うさうさ" />
-                <Label Grid.Column="2"
-                       Style="{StaticResource LinkLabel}"
-                       Text="›" />
-            </Grid>
-        </toolkit:SfEffectsView>
+        <Grid Grid.Row="23"
+              Style="{StaticResource ValueRowGrid}"
+              ColumnDefinitions="*,Auto,24"
+              behaviors:TouchOption.Ripple="True">
+            <Label Grid.Column="0"
+                   Style="{StaticResource PosNameLabel}"
+                   Text="担当者" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource PosValueLabel}"
+                   Text="うさうさ" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource LinkLabel}"
+                   Text="›" />
+        </Grid>
 
         <BoxView Grid.Row="24"
                  Style="{StaticResource SeparatorBoxView}" />

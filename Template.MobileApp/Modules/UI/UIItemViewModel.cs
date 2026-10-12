@@ -2,49 +2,83 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UIItemViewModel : AppViewModelBase
 {
-    public string Title { get; } = "メカニカルキーボード";
+    private const int MaxQuantity = 99;
 
-    public string Price { get; } = "¥19,800";
+    // カートに入れた後の表示を出しておく時間
+    private static readonly TimeSpan AddedDuration = TimeSpan.FromSeconds(1.5);
 
-    public string Category { get; } = "キーボード";
+    private readonly IDispatcher dispatcher;
 
-    public string Description { get; } =
-        "静音メカニカルスイッチを採用したワイヤレスキーボード。有線と Bluetooth の両対応で、最大 3 台の機器をワンタッチで切り替えられます。";
-
+    [Scope]
     [ObservableProperty]
-    public partial string SelectedSwitch { get; set; } = "茶軸";
+    public partial UIShopContext Context { get; set; } = default!;
+
+    // 表示の前 (OnNavigatingToAsync) に設定する
+    [ObservableProperty]
+    public partial string SelectedVariant { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial int Quantity { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial bool IsAdded { get; set; }
 
     public IObserveCommand BackCommand { get; }
 
     public IObserveCommand CartCommand { get; }
 
-    public IObserveCommand SwitchCommand { get; }
+    public IObserveCommand FavoriteCommand { get; }
 
     public IObserveCommand IncrementCommand { get; }
 
     public IObserveCommand DecrementCommand { get; }
 
+    public IObserveCommand AddCommand { get; }
+
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public UIItemViewModel()
+    public UIItemViewModel(IDispatcher dispatcher)
     {
-        BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIShop));
-        CartCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UICart));
-        SwitchCommand = MakeDelegateCommand<string>(x => SelectedSwitch = x);
-        IncrementCommand = MakeDelegateCommand(() => Quantity = Math.Min(99, Quantity + 1));
+        this.dispatcher = dispatcher;
+
+        BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
+        CartCommand = MakeAsyncCommand(() => Navigator.PushAsync(ViewId.UICart));
+        FavoriteCommand = MakeDelegateCommand(() => Context.Selected.IsFavorite = !Context.Selected.IsFavorite);
+        IncrementCommand = MakeDelegateCommand(() => Quantity = Math.Min(MaxQuantity, Quantity + 1));
         DecrementCommand = MakeDelegateCommand(() => Quantity = Math.Max(1, Quantity - 1));
+        AddCommand = MakeDelegateCommand(Add);
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIShop);
+    public override Task OnNavigatingToAsync(INavigationContext context)
+    {
+        if (!context.Attribute.IsRestore())
+        {
+            var variants = Context.Selected.Product.Variants;
+            SelectedVariant = variants.Count > 0 ? variants[0] : string.Empty;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void Add()
+    {
+        Context.Store.AddToCart(Context.Selected, SelectedVariant, Quantity);
+        Quantity = 1;
+        IsAdded = true;
+        dispatcher.DispatchDelayed(AddedDuration, () => IsAdded = false);
+    }
 }

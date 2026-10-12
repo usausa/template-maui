@@ -96,7 +96,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         SpeakCommand = MakeDelegateCommand(() =>
         {
 #pragma warning disable CA2012
-            _ = speech.SpeakAsync("テストです", rate: (float)SpeechRate);
+            _ = speech.SpeakAsync("Test", rate: (float)SpeechRate);
 #pragma warning restore CA2012
         });
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
@@ -132,33 +132,33 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         {
             if (!await Permissions.RequestNotificationsAsync())
             {
-                NotificationText = "通知の許可がありません";
+                NotificationText = "Notification not permitted";
                 return;
             }
 
-            notification.Show(NotificationId, "承認依頼", "SO-2026-000123 の承認をお願いします", "SO-2026-000123", [new("approve", "承認"), new("reject", "却下")]);
-            NotificationText = "通知を表示しました (本体またはボタンのタップで戻ります)";
+            notification.Show(NotificationId, "Approval request", "Approve SO-2026-000123", "SO-2026-000123", [new("approve", "Approve"), new("reject", "Reject")]);
+            NotificationText = "Notification shown";
         });
         NotifyScheduleCommand = MakeAsyncCommand(async () =>
         {
             if (!await Permissions.RequestNotificationsAsync())
             {
-                NotificationText = "通知の許可がありません";
+                NotificationText = "Notification not permitted";
                 return;
             }
 
-            notification.Schedule(ScheduledNotificationId, "リマインダー", "10 秒後に予約した通知です", TimeSpan.FromSeconds(10), "reminder");
-            NotificationText = notification.CanScheduleExact ? "10 秒後に通知します" : "10 秒後に通知します (正確なアラームが未許可のため前後します)";
+            notification.Schedule(ScheduledNotificationId, "Reminder", "Scheduled 10 s ago", TimeSpan.FromSeconds(10), "reminder");
+            NotificationText = notification.CanScheduleExact ? "Notify in 10 s" : "Notify in about 10 s (inexact)";
         });
         NotifyCancelCommand = MakeDelegateCommand(() =>
         {
             notification.Cancel(NotificationId);
             notification.Cancel(ScheduledNotificationId);
-            NotificationText = "通知を取り消しました";
+            NotificationText = "Notification canceled";
         });
         NotifyExactSettingCommand = MakeDelegateCommand(notification.OpenExactAlarmSettings);
         Disposables.Add(notification.TappedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
-            NotificationText = x.Action is null ? $"タップ: {x.Payload}" : $"ボタン [{x.Action}]: {x.Payload}"));
+            NotificationText = x.Action is null ? $"Tap: {x.Payload}" : $"Button [{x.Action}]: {x.Payload}"));
     }
 
     //--------------------------------------------------------------------------------

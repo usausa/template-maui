@@ -2,6 +2,9 @@ namespace Template.MobileApp.Graphics.Scene;
 
 using System.Diagnostics;
 
+//--------------------------------------------------------------------------------
+// Interface
+//--------------------------------------------------------------------------------
 public interface ISceneObject
 {
     void Attach(SceneControl view);
@@ -13,6 +16,9 @@ public interface ISceneObject
     bool Touch(SKPoint location, int width, int height);
 }
 
+//--------------------------------------------------------------------------------
+// Base
+//--------------------------------------------------------------------------------
 // DrawingObject の Skia(SKCanvas)版。ビューから切り離した描画モデル基底で、
 // アニメーション用のランループ(Start/Stop)を自身に内包する。
 // 画面の VM がこの派生クラスをメンバとして保持し、ナビゲーションで Start/Stop を制御する。
@@ -191,6 +197,9 @@ public abstract class SceneObject : ISceneObject, IDisposable
         try
         {
             using var timer = new PeriodicTimer(Interval);
+            var invalidate = InvalidateFrame;
+            var update = UpdateFrame;
+
             // UI スレッドの SynchronizationContext へ戻さずスレッドプールで回す (UI スレッドでは描画しない)
             while (await timer.WaitForNextTickAsync(token).ConfigureAwait(false))
             {
@@ -204,37 +213,41 @@ public abstract class SceneObject : ISceneObject, IDisposable
                     Time = t;
                     Update(t, dt);
                     RenderToBuffer(lastWidth, lastHeight);
-                    Post(() =>
-                    {
-                        if (!token.IsCancellationRequested)
-                        {
-                            Invalidate();
-                        }
-                    });
+                    Post(invalidate);
                 }
                 else
                 {
-                    Post(() =>
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            return;
-                        }
-
-                        var t = (float)clock.Elapsed.TotalSeconds;
-                        var dt = Math.Clamp(t - lastTime, 0f, 0.1f);
-                        lastTime = t;
-
-                        Time = t;
-                        Update(t, dt);
-                        Invalidate();
-                    });
+                    Post(update);
                 }
             }
         }
         catch (OperationCanceledException)
         {
             // Ignore
+        }
+
+        void InvalidateFrame()
+        {
+            if (!token.IsCancellationRequested)
+            {
+                Invalidate();
+            }
+        }
+
+        void UpdateFrame()
+        {
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            var t = (float)clock.Elapsed.TotalSeconds;
+            var dt = Math.Clamp(t - lastTime, 0f, 0.1f);
+            lastTime = t;
+
+            Time = t;
+            Update(t, dt);
+            Invalidate();
         }
     }
 
@@ -345,6 +358,9 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
             layerCache.Clear();
 
+            staticImage?.Dispose();
+            staticImage = null;
+
             lock (bufferSync)
             {
                 frontImage?.Dispose();
@@ -374,7 +390,7 @@ public abstract class SceneObject : ISceneObject, IDisposable
     // 静的レイヤ (背景グリッド・目盛り・パネル枠等の不変描画) を SKPicture として記録し、
     // 以降のフレームでは再生のみ行う。サイズが変わったときだけ draw を再実行する。
     // 呼び出し時点のキャンバス変換 (Scale 等) の中で再生されるため、記録は仮想座標系で行うこと。
-    protected void DrawCachedLayer(SKCanvas canvas, string key, float width, float height, Action<SKCanvas> draw)
+    protected void DrawCachedLayer<TState>(SKCanvas canvas, string key, float width, float height, TState state, Action<SKCanvas, TState> draw)
     {
         if (!layerCache.TryGetValue(key, out var layer))
         {
@@ -387,13 +403,38 @@ public abstract class SceneObject : ISceneObject, IDisposable
             layer.Picture?.Dispose();
             layer.Picture = null;
             using var recorder = new SKPictureRecorder();
-            draw(recorder.BeginRecording(new SKRect(0f, 0f, width, height)));
+            draw(recorder.BeginRecording(new SKRect(0f, 0f, width, height)), state);
             layer.Picture = recorder.EndRecording();
             layer.Width = width;
             layer.Height = height;
         }
 
         canvas.DrawPicture(layer.Picture);
+    }
+
+    private SKImage? staticImage;
+
+    private int staticWidth;
+
+    private int staticHeight;
+
+    // 背景・パネルの枠・見出しのような変わらない部分を、端末の解像度の画像に一度だけ描いて写す。
+    // オフスクリーンは CPU で描くため、全画面のグラデーションなどを毎フレーム描く (DrawCachedLayer の再生を含む) より軽い。
+    // draw には仮想座標 (scale を掛けた) のキャンバスが渡る
+    protected void DrawStaticImage<TState>(SKCanvas canvas, int width, int height, float scale, TState state, Action<SKCanvas, TState> draw)
+    {
+        if ((staticImage is null) || (staticWidth != width) || (staticHeight != height))
+        {
+            staticImage?.Dispose();
+            using var surface = SKSurface.Create(new SKImageInfo(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul));
+            surface.Canvas.Scale(scale);
+            draw(surface.Canvas, state);
+            staticImage = surface.Snapshot();
+            staticWidth = width;
+            staticHeight = height;
+        }
+
+        canvas.DrawImage(staticImage, 0f, 0f, new SKSamplingOptions(SKFilterMode.Nearest));
     }
 
     //--------------------------------------------------------------------------------

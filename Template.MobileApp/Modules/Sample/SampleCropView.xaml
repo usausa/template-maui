@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleCropView"
              x:DataType="{x:Type module:SampleCropViewModel}"
@@ -36,11 +37,18 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
+            <Style x:Key="PreviewEmptyIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
             <Style x:Key="CropButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="16,0" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
@@ -88,8 +96,13 @@
                   ColumnDefinitions="Auto,*">
                 <Border Grid.Column="0"
                         Style="{StaticResource PreviewBorder}">
-                    <Image Source="{Binding CroppedImage}"
-                           Aspect="AspectFit" />
+                    <Grid>
+                        <Label Style="{StaticResource PreviewEmptyIconLabel}"
+                               IsVisible="{Binding CroppedImage, Converter={StaticResource EmptyConverter}}"
+                               Text="{x:Static fonts:MaterialIcons.Crop}" />
+                        <Image Source="{Binding CroppedImage}"
+                               Aspect="AspectFit" />
+                    </Grid>
                 </Border>
                 <VerticalStackLayout Grid.Column="1"
                                      Style="{StaticResource ExportResultStack}">
@@ -98,10 +111,10 @@
                     <HorizontalStackLayout Style="{StaticResource CropButtonStack}">
                         <Button Style="{StaticResource CropButtonPrimary}"
                                 Command="{Binding ExportCommand}"
-                                Text="書き出し" />
+                                Text="Export" />
                         <Button Style="{StaticResource CropButton}"
                                 Command="{Binding ResetCommand}"
-                                Text="リセット" />
+                                Text="Reset" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Grid>

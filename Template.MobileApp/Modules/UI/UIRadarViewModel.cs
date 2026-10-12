@@ -1,16 +1,13 @@
 namespace Template.MobileApp.Modules.UI;
 
 #pragma warning disable CA5394
-public sealed partial class UIRadarViewModel : AppViewModelBase
+public sealed class UIRadarViewModel : AppViewModelBase
 {
     private readonly Random random = new();
 
     private readonly IDispatcherTimer timer;
 
-    [ObservableProperty(NotifyAlso = [nameof(TargetCount)])]
-    public partial IReadOnlyList<RadarTarget> Targets { get; set; }
-
-    public int TargetCount => Targets.Count;
+    public ObservableCollection<RadarTarget> Targets { get; } = [];
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -18,12 +15,12 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
 
     public UIRadarViewModel(IDispatcher dispatcher)
     {
-        Targets = GenerateTargets();
+        UpdateTargets();
 
         // 一定間隔でターゲットを入れ替えるデモ駆動
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(5);
-        Disposables.Add(timer.TickAsObservable().Subscribe(_ => Targets = GenerateTargets()));
+        Disposables.Add(timer.TickAsObservable().Subscribe(_ => UpdateTargets()));
     }
 
     //--------------------------------------------------------------------------------
@@ -47,21 +44,13 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     //--------------------------------------------------------------------------------
-    // Operation
+    // Event
     //--------------------------------------------------------------------------------
 
-    private RadarTarget[] GenerateTargets()
+    private void UpdateTargets()
     {
-        var targets = new RadarTarget[random.Next(4, 8)];
-        for (var i = 0; i < targets.Length; i++)
-        {
-            targets[i] = new RadarTarget
-            {
-                Angle = (float)(random.NextDouble() * 360d),
-                Distance = (float)((random.NextDouble() * 0.85d) + 0.1d)
-            };
-        }
-        return targets;
+        Targets.Clear();
+        Targets.AddRange(RadarSample.LoadTargets(random.NextDouble));
     }
 }
 #pragma warning restore CA5394

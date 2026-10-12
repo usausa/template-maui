@@ -169,16 +169,15 @@
             </Style>
 
             <!-- Bottom -->
+            <Style x:Key="BottomGrid"
+                   TargetType="Grid">
+                <Setter Property="MinimumHeightRequest" Value="120" />
+            </Style>
+
             <Style x:Key="BottomStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="HintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource MineSubTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="ResultBorder"
@@ -187,6 +186,7 @@
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
                 <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="Shadow">
                     <Setter.Value>
                         <Shadow Offset="0,3"
@@ -335,80 +335,80 @@
                             LongPressCommand="{Binding LongPressCommand}"
                             TapCommand="{Binding TapCommand}" />
 
-        <!-- 遊んでいる間は操作の切り替え (タップで開く / 旗) -->
-        <VerticalStackLayout Grid.Row="4"
-                             Style="{StaticResource BottomStack}"
-                             IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.LessThan}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
-            <Border Style="{StaticResource PillBorder}">
-                <Grid ColumnDefinitions="*,*">
-                    <Button Grid.Column="0"
-                            Style="{StaticResource PillButton}"
-                            Command="{Binding FlagModeCommand}"
-                            CommandParameter="{s:Bool Value=False}"
-                            Text="⛏ 開く">
-                        <Button.Triggers>
-                            <DataTrigger TargetType="Button"
-                                         Binding="{Binding IsFlagMode}"
-                                         Value="False">
-                                <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
-                                <Setter Property="TextColor" Value="White" />
-                            </DataTrigger>
-                        </Button.Triggers>
-                    </Button>
+        <!-- 下の領域は、操作の切り替えと結果で同じ高さにする (結果が出ても盤面が動かない) -->
+        <Grid Grid.Row="4"
+              Style="{StaticResource BottomGrid}">
+            <!-- 遊んでいる間は操作の切り替え (タップで開く / 旗) -->
+            <VerticalStackLayout Style="{StaticResource BottomStack}"
+                                 IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.LessThan}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
+                <Border Style="{StaticResource PillBorder}">
+                    <Grid ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource PillButton}"
+                                Command="{Binding FlagModeCommand}"
+                                CommandParameter="{s:Bool Value=False}"
+                                Text="⛏ 開く">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding IsFlagMode}"
+                                             Value="False">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button Grid.Column="1"
+                                Style="{StaticResource PillButton}"
+                                Command="{Binding FlagModeCommand}"
+                                CommandParameter="{s:Bool Value=True}"
+                                Text="🚩 旗">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding IsFlagMode}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- 終わったら結果 (盤面は見えたまま) -->
+            <Border Style="{StaticResource ResultBorder}"
+                    behaviors:AnimationOption.FadeInTrigger="{Binding State}"
+                    IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.GreaterThanOrEqual}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
+                <Grid Style="{StaticResource ResultGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0"
+                                         Style="{StaticResource ResultTextStack}">
+                        <Label Style="{StaticResource ResultTitleLabel}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
+                               Text="🎉 クリア!" />
+                        <Label Style="{StaticResource LostTitleLabel}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
+                               Text="💥 ゲームオーバー" />
+                        <Label Style="{StaticResource ResultTextLabel}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
+                               Text="{Binding ElapsedSeconds, StringFormat='タイム {0} 秒'}" />
+                        <Label Style="{StaticResource ResultTextLabel}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
+                               Text="地雷を踏みました" />
+                        <Label Style="{StaticResource NewBestLabel}"
+                               IsVisible="{Binding IsNewBest}"
+                               Text="🏆 ベストタイム更新!" />
+                        <Label Style="{StaticResource ResultTextLabel}"
+                               IsVisible="{Binding BestSeconds, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                               Text="{Binding BestSeconds, StringFormat='🏆 ベスト {0} 秒'}" />
+                    </VerticalStackLayout>
                     <Button Grid.Column="1"
-                            Style="{StaticResource PillButton}"
-                            Command="{Binding FlagModeCommand}"
-                            CommandParameter="{s:Bool Value=True}"
-                            Text="🚩 旗">
-                        <Button.Triggers>
-                            <DataTrigger TargetType="Button"
-                                         Binding="{Binding IsFlagMode}"
-                                         Value="True">
-                                <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
-                                <Setter Property="TextColor" Value="White" />
-                            </DataTrigger>
-                        </Button.Triggers>
-                    </Button>
+                            Style="{StaticResource RetryButton}"
+                            Command="{Binding NewGameCommand}"
+                            Text="もう一度" />
                 </Grid>
             </Border>
-            <Label Style="{StaticResource HintLabel}"
-                   Text="長押しでも旗を立てられる ・ 数字のタップで周りを開く" />
-        </VerticalStackLayout>
-
-        <!-- 終わったら結果 (盤面は見えたまま) -->
-        <Border Grid.Row="4"
-                Style="{StaticResource ResultBorder}"
-                behaviors:AnimationOption.FadeInTrigger="{Binding State}"
-                IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.GreaterThanOrEqual}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
-            <Grid Style="{StaticResource ResultGrid}"
-                  ColumnDefinitions="*,Auto">
-                <VerticalStackLayout Grid.Column="0"
-                                     Style="{StaticResource ResultTextStack}">
-                    <Label Style="{StaticResource ResultTitleLabel}"
-                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
-                           Text="🎉 クリア!" />
-                    <Label Style="{StaticResource LostTitleLabel}"
-                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
-                           Text="💥 ゲームオーバー" />
-                    <Label Style="{StaticResource ResultTextLabel}"
-                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
-                           Text="{Binding ElapsedSeconds, StringFormat='タイム {0} 秒'}" />
-                    <Label Style="{StaticResource ResultTextLabel}"
-                           IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
-                           Text="地雷を踏みました" />
-                    <Label Style="{StaticResource NewBestLabel}"
-                           IsVisible="{Binding IsNewBest}"
-                           Text="🏆 ベストタイム更新!" />
-                    <Label Style="{StaticResource ResultTextLabel}"
-                           IsVisible="{Binding BestSeconds, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
-                           Text="{Binding BestSeconds, StringFormat='🏆 ベスト {0} 秒'}" />
-                </VerticalStackLayout>
-                <Button Grid.Column="1"
-                        Style="{StaticResource RetryButton}"
-                        Command="{Binding NewGameCommand}"
-                        Text="もう一度" />
-            </Grid>
-        </Border>
+        </Grid>
 
     </Grid>
 

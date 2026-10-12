@@ -2,7 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -225,27 +227,21 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <!-- 並替パネル -->
-            <Style x:Key="SortPanelBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="12,0,12,8" />
-                <Setter Property="Padding" Value="10" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource BlueLighten4}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <!-- 並替シート -->
+            <Style x:Key="SortSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="SortSheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,24" />
             </Style>
 
             <Style x:Key="SortPanelGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="SortPanelLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="Margin" Value="0,0,0,6" />
             </Style>
 
             <Style x:Key="SortClearButton"
@@ -328,15 +324,11 @@
                 <Setter Property="SelectionMode" Value="None" />
             </Style>
 
-            <Style x:Key="CardBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="Rectangle" />
+            <Style x:Key="CardGrid"
+                   TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{Binding Status, x:DataType={x:Type module:VisitCard}, Converter={StaticResource StatusRowColorConverter}}" />
                 <Style.Triggers>
-                    <DataTrigger TargetType="Border"
+                    <DataTrigger TargetType="Grid"
                                  Binding="{Binding IsSelected, x:DataType={x:Type module:VisitCard}}"
                                  Value="True">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
@@ -514,7 +506,7 @@
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,Auto,Auto,*">
+          RowDefinitions="Auto,Auto,*">
 
         <!-- 件数: 状態ごとのバッジ (⏳ 未訪問 / ✅ 訪問済 / 🔁 再訪問 / 🚫 不在) -->
         <Grid Grid.Row="0"
@@ -572,152 +564,159 @@
                     Text="{x:Static font:MaterialIcons.Refresh}" />
         </Grid>
 
-        <!-- 並替パネル: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
-        <Border Grid.Row="2"
-                Style="{StaticResource SortPanelBorder}"
-                IsVisible="{Binding IsSortPanelOpen}">
-            <VerticalStackLayout>
-                <Grid Style="{StaticResource SortPanelGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SortPanelLabel}"
-                           Text="タップで第 1 キーに。同じキーをもう一度タップすると昇順 / 降順が切り替わる (最大 3 キー)" />
-                    <Button Grid.Column="1"
-                            Style="{StaticResource SortClearButton}"
-                            Command="{Binding ClearSortCommand}"
-                            Text="クリア" />
-                </Grid>
-                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                <FlexLayout Style="{StaticResource SortKeyFlex}"
-                            BindableLayout.ItemsSource="{Binding SortKeys}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
-                            <Border Style="{StaticResource SortKeyChip}">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
-                                                          CommandParameter="{Binding .}" />
-                                </Border.GestureRecognizers>
-                                <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
-                                    <Border Style="{StaticResource SortKeyBadgeBorder}"
-                                            IsVisible="{Binding IsActive}">
-                                        <Label Style="{StaticResource SortKeyBadge}"
-                                               Text="{Binding Priority}" />
-                                    </Border>
-                                    <Label Style="{StaticResource SortKeyLabel}"
-                                           Text="{Binding Name}" />
-                                    <Label Style="{StaticResource SortKeyLabel}"
-                                           IsVisible="{Binding IsActive}"
-                                           Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
-                                </HorizontalStackLayout>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </FlexLayout>
-                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-            </VerticalStackLayout>
-        </Border>
-
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-        <CollectionView Grid.Row="3"
+        <CollectionView Grid.Row="2"
                         Style="{StaticResource CardCollection}"
                         ItemsSource="{Binding Cards}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type module:VisitCard}">
-                    <Border Style="{StaticResource CardBorder}">
-                        <Border.GestureRecognizers>
+                    <Grid Style="{StaticResource CardGrid}"
+                          RowDefinitions="*,Auto"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleSelectCommand, x:DataType={x:Type module:UIVisitViewModel}}"
                                                   CommandParameter="{Binding .}" />
-                        </Border.GestureRecognizers>
-                        <Grid RowDefinitions="*,Auto"
-                              ColumnDefinitions="Auto,*,Auto">
-                            <BoxView Grid.Row="0" Grid.Column="0"
-                                     Style="{StaticResource StatusStrip}" />
+                        </Grid.GestureRecognizers>
+                        <BoxView Grid.Row="0" Grid.Column="0"
+                                 Style="{StaticResource StatusStrip}" />
 
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="1"
-                                                 Style="{StaticResource CardBody}">
-                                <HorizontalStackLayout Style="{StaticResource CardRow}">
-                                    <Border Style="{StaticResource StaffAvatar}">
-                                        <Label Style="{StaticResource StaffAvatarLabel}"
-                                               Text="{Binding Staff, Converter={StaticResource InitialConverter}}" />
-                                    </Border>
-                                    <Label Style="{StaticResource CodeLabel}"
-                                           Text="{Binding Code}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
-                                    <Label Style="{StaticResource CardNameLabel}"
-                                           Text="{Binding Name}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                                </HorizontalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                             Style="{StaticResource CardBody}">
+                            <HorizontalStackLayout Style="{StaticResource CardRow}">
+                                <Border Style="{StaticResource StaffAvatar}">
+                                    <Label Style="{StaticResource StaffAvatarLabel}"
+                                           Text="{Binding Staff, Converter={StaticResource InitialConverter}}" />
+                                </Border>
+                                <Label Style="{StaticResource CodeLabel}"
+                                       Text="{Binding Code}"
+                                       TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                <Label Style="{StaticResource CardNameLabel}"
+                                       Text="{Binding Name}"
+                                       TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                            </HorizontalStackLayout>
 
-                                <FlexLayout Style="{StaticResource ChipRow}">
-                                    <Border Style="{StaticResource StatusChip}">
-                                        <Label Style="{StaticResource ChipLabel}"
-                                               Text="{Binding Status, Converter={StaticResource StatusTextConverter}}" />
-                                    </Border>
-                                    <Border Style="{StaticResource PriorityChip}"
-                                            IsVisible="{Binding IsPriority}">
-                                        <Label Style="{StaticResource ChipLabel}"
-                                               Text="🔥 重点" />
-                                    </Border>
-                                    <Border Style="{StaticResource TodayChip}"
-                                            IsVisible="{Binding IsToday}">
-                                        <Label Style="{StaticResource ChipLabel}"
-                                               Text="📌 今日" />
-                                    </Border>
-                                    <Border Style="{StaticResource FirstChip}"
-                                            IsVisible="{Binding IsFirstVisit}">
-                                        <Label Style="{StaticResource ChipLabel}"
-                                               Text="🆕 初回" />
-                                    </Border>
-                                    <Border Style="{StaticResource CategoryChip}">
-                                        <Label Style="{StaticResource CategoryChipLabel}"
-                                               Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}" />
-                                    </Border>
-                                </FlexLayout>
+                            <FlexLayout Style="{StaticResource ChipRow}">
+                                <Border Style="{StaticResource StatusChip}">
+                                    <Label Style="{StaticResource ChipLabel}"
+                                           Text="{Binding Status, Converter={StaticResource StatusTextConverter}}" />
+                                </Border>
+                                <Border Style="{StaticResource PriorityChip}"
+                                        IsVisible="{Binding IsPriority}">
+                                    <Label Style="{StaticResource ChipLabel}"
+                                           Text="🔥 重点" />
+                                </Border>
+                                <Border Style="{StaticResource TodayChip}"
+                                        IsVisible="{Binding IsToday}">
+                                    <Label Style="{StaticResource ChipLabel}"
+                                           Text="📌 今日" />
+                                </Border>
+                                <Border Style="{StaticResource FirstChip}"
+                                        IsVisible="{Binding IsFirstVisit}">
+                                    <Label Style="{StaticResource ChipLabel}"
+                                           Text="🆕 初回" />
+                                </Border>
+                                <Border Style="{StaticResource CategoryChip}">
+                                    <Label Style="{StaticResource CategoryChipLabel}"
+                                           Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}" />
+                                </Border>
+                            </FlexLayout>
 
-                                <FlexLayout Style="{StaticResource InfoRow}">
-                                    <Label Style="{StaticResource DetailLabel}"
-                                           Text="{Binding Address, StringFormat='📍 {0}'}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
-                                    <Label Style="{StaticResource DetailLabel}"
-                                           Text="{Binding Staff, StringFormat='👤 {0}'}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
-                                    <Label Style="{StaticResource DetailLabel}"
-                                           Text="{Binding ScheduledAt, StringFormat='🕒 {0:MM/dd (ddd) HH:mm}'}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
-                                </FlexLayout>
+                            <FlexLayout Style="{StaticResource InfoRow}">
+                                <Label Style="{StaticResource DetailLabel}"
+                                       Text="{Binding Address, StringFormat='📍 {0}'}"
+                                       TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                <Label Style="{StaticResource DetailLabel}"
+                                       Text="{Binding Staff, StringFormat='👤 {0}'}"
+                                       TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                                <Label Style="{StaticResource DetailLabel}"
+                                       Text="{Binding ScheduledAt, StringFormat='🕒 {0:MM/dd (ddd) HH:mm}'}"
+                                       TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
+                            </FlexLayout>
 
-                                <!-- 展開部分 -->
-                                <VerticalStackLayout Style="{StaticResource DetailStack}"
-                                                     IsVisible="{Binding IsExpanded}">
-                                    <BoxView Style="{StaticResource DetailSeparator}" />
-                                    <FlexLayout Style="{StaticResource InfoRow}">
-                                        <Label Style="{StaticResource DetailLabel}"
-                                               Text="{Binding Phone, StringFormat='📞 {0}'}"
-                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                                        <Label Style="{StaticResource DetailLabel}"
-                                               Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
-                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                                    </FlexLayout>
-                                    <Label Style="{StaticResource DetailNoteLabel}"
-                                           IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
-                                           Text="{Binding Note, StringFormat='📝 {0}'}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                                </VerticalStackLayout>
-                            </VerticalStackLayout>
+                            <!-- 展開部分 -->
+                            <ContentView behaviors:LazyViewOption.Load="{Binding IsExpanded}"
+                                         IsVisible="{Binding IsExpanded}">
+                                <behaviors:LazyViewOption.Template>
+                                    <DataTemplate x:DataType="module:VisitCard">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <BoxView Style="{StaticResource DetailSeparator}" />
+                                            <FlexLayout Style="{StaticResource InfoRow}">
+                                                <Label Style="{StaticResource DetailLabel}"
+                                                       Text="{Binding Phone, StringFormat='📞 {0}'}"
+                                                       TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                                <Label Style="{StaticResource DetailLabel}"
+                                                       Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
+                                                       TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                            </FlexLayout>
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
+                                                   Text="{Binding Note, StringFormat='📝 {0}'}"
+                                                   TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </behaviors:LazyViewOption.Template>
+                            </ContentView>
+                        </VerticalStackLayout>
 
-                            <Button Grid.Row="0" Grid.Column="2"
-                                    Style="{StaticResource ExpandButton}"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleExpandCommand, x:DataType={x:Type module:UIVisitViewModel}}"
-                                    CommandParameter="{Binding .}"
-                                    Text="{Binding IsExpanded, Converter={StaticResource ExpandGlyphConverter}}" />
-                            <BoxView Grid.Row="1" Grid.ColumnSpan="3"
-                                     Style="{StaticResource RowSeparator}" />
-                        </Grid>
-                    </Border>
+                        <Button Grid.Row="0" Grid.Column="2"
+                                Style="{StaticResource ExpandButton}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleExpandCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                CommandParameter="{Binding .}"
+                                Text="{Binding IsExpanded, Converter={StaticResource ExpandGlyphConverter}}" />
+                        <BoxView Grid.Row="1" Grid.ColumnSpan="3"
+                                 Style="{StaticResource RowSeparator}" />
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+        <!-- 並替シート: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+                             Style="{StaticResource SortSheet}"
+                             IsOpen="{Binding IsSortPanelOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
+                <DataTemplate x:DataType="module:UIVisitViewModel">
+                    <VerticalStackLayout Style="{StaticResource SortSheetStack}">
+                        <Grid Style="{StaticResource SortPanelGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource SortClearButton}"
+                                    Command="{Binding ClearSortCommand}"
+                                    Text="クリア" />
+                        </Grid>
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <FlexLayout Style="{StaticResource SortKeyFlex}"
+                                    BindableLayout.ItemsSource="{Binding SortKeys}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
+                                    <Border Style="{StaticResource SortKeyChip}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
+                                            <Border Style="{StaticResource SortKeyBadgeBorder}"
+                                                    IsVisible="{Binding IsActive}">
+                                                <Label Style="{StaticResource SortKeyBadge}"
+                                                       Text="{Binding Priority}" />
+                                            </Border>
+                                            <Label Style="{StaticResource SortKeyLabel}"
+                                                   Text="{Binding Name}" />
+                                            <Label Style="{StaticResource SortKeyLabel}"
+                                                   IsVisible="{Binding IsActive}"
+                                                   Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
+
     </Grid>
 
 </ContentView>

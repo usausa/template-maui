@@ -14,12 +14,16 @@ internal static class AppHostBuilderExtensions
 
         Border.UseCustomMapper(options);
         Scroll.UseCustomMapper(options);
+        TouchOption.UseCustomMapper(options);
 
         LabelOption.UseCustomMapper(options);
         ButtonOption.UseCustomMapper(options);
         EntryOption.UseCustomMapper(options);
+        StepperOption.UseCustomMapper(options);
 
         CarouselOption.UseCustomMapper(options);
+
+        PdfOption.UseCustomMapper(options);
 
         return builder;
     }

@@ -1,13 +1,44 @@
 namespace Template.MobileApp.Controls;
 
-// Easing 曲線を背景に描画する(横=時間 0→1、縦=出力 0→1。Spring/Bounce のオーバーシュートに備えて上下に余白を取る)
 public sealed class EasingCurveView : GraphicsView, IDrawable
 {
+    private const float BallRadius = 8f;
+
+    private const float MarginRate = 0.18f;
+
+    private const int CurveSegments = 40;
+
+    private const float GuideStrokeSize = 1f;
+
+    private const float GuideDash = 4f;
+
+    private const float CurveStrokeSize = 2f;
+
+    private static readonly Color GuideColor = Color.FromArgb("#E0E0E0");
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty EasingProperty = BindableProperty.Create(
         nameof(Easing),
         typeof(Easing),
         typeof(EasingCurveView),
         Easing.Linear,
+        propertyChanged: Invalidate);
+
+    public static readonly BindableProperty LineColorProperty = BindableProperty.Create(
+        nameof(LineColor),
+        typeof(Color),
+        typeof(EasingCurveView),
+        Color.FromArgb("#90CAF9"),
+        propertyChanged: Invalidate);
+
+    public static readonly BindableProperty ProgressProperty = BindableProperty.Create(
+        nameof(Progress),
+        typeof(double),
+        typeof(EasingCurveView),
+        0d,
         propertyChanged: Invalidate);
 
     public Easing Easing
@@ -16,25 +47,31 @@ public sealed class EasingCurveView : GraphicsView, IDrawable
         set => SetValue(EasingProperty, value);
     }
 
-    // 既定値は BlueLighten3 相当
-    public static readonly BindableProperty LineColorProperty = BindableProperty.Create(
-        nameof(LineColor),
-        typeof(Color),
-        typeof(EasingCurveView),
-        Color.FromArgb("#90CAF9"),
-        propertyChanged: Invalidate);
-
     public Color LineColor
     {
         get => (Color)GetValue(LineColorProperty);
         set => SetValue(LineColorProperty, value);
     }
 
+    public double Progress
+    {
+        get => (double)GetValue(ProgressProperty);
+        set => SetValue(ProgressProperty, value);
+    }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public EasingCurveView()
     {
         Drawable = this;
         InputTransparent = true;
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
     {
@@ -50,16 +87,27 @@ public sealed class EasingCurveView : GraphicsView, IDrawable
             return;
         }
 
-        const float margin = 0.18f;
-        var usable = height * (1f - (margin * 2f));
+        var usable = height * (1f - (MarginRate * 2f));
+
+        var bottom = dirtyRect.Bottom - (height * MarginRate);
+        var top = bottom - usable;
+        canvas.StrokeColor = GuideColor;
+        canvas.StrokeSize = GuideStrokeSize;
+        canvas.StrokeDashPattern = [GuideDash, GuideDash];
+        canvas.DrawLine(dirtyRect.Left, bottom, dirtyRect.Right, bottom);
+        canvas.DrawLine(dirtyRect.Left, top, dirtyRect.Right, top);
+        canvas.StrokeDashPattern = null;
+
+        var left = dirtyRect.Left + BallRadius;
+        var span = width - (BallRadius * 2f);
 
         using var path = new PathF();
-        for (var i = 0; i <= 40; i++)
+        for (var i = 0; i <= CurveSegments; i++)
         {
-            var t = i / 40f;
+            var t = i / (float)CurveSegments;
             var v = (float)Easing.Ease(t);
-            var x = dirtyRect.Left + (t * width);
-            var y = dirtyRect.Bottom - (height * margin) - (v * usable);
+            var x = left + (t * span);
+            var y = bottom - (v * usable);
             if (i == 0)
             {
                 path.MoveTo(x, y);
@@ -71,7 +119,11 @@ public sealed class EasingCurveView : GraphicsView, IDrawable
         }
 
         canvas.StrokeColor = LineColor;
-        canvas.StrokeSize = 2f;
+        canvas.StrokeSize = CurveStrokeSize;
         canvas.DrawPath(path);
+
+        var progress = (float)Math.Clamp(Progress, 0d, 1d);
+        canvas.FillColor = LineColor;
+        canvas.FillCircle(left + (progress * span), bottom - ((float)Easing.Ease(progress) * usable), BallRadius);
     }
 }

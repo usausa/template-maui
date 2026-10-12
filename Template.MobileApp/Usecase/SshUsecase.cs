@@ -8,7 +8,7 @@ using Renci.SshNet.Common;
 using Template.MobileApp.Components;
 using Template.MobileApp.Helpers;
 
-public sealed record SftpTransferResult(bool Success, string? Error, string? ServerFingerprint);
+public sealed record SftpTransferResult(bool Success, string? Error);
 
 public sealed record SftpUploadResult(string FileName, long Size, SftpTransferResult Transfer);
 
@@ -77,21 +77,18 @@ public sealed class SshUsecase
         return await Task.Run(
             () =>
             {
-                string? serverFingerprint = null;
                 try
                 {
                     using var client = new SftpClient(connectionInfo);
-                    client.HostKeyReceived += (_, e) => serverFingerprint = "SHA256:" + e.FingerPrintSHA256;
-
                     client.Connect();
                     action(client);
                     client.Disconnect();
 
-                    return new SftpTransferResult(true, null, serverFingerprint);
+                    return new SftpTransferResult(true, null);
                 }
                 catch (Exception ex) when (ex is SshException or SocketException or IOException or InvalidOperationException or ObjectDisposedException or OperationCanceledException)
                 {
-                    return new SftpTransferResult(false, ex.Message, serverFingerprint);
+                    return new SftpTransferResult(false, ex.Message);
                 }
             },
             cancel);

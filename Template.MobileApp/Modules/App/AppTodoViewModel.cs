@@ -22,6 +22,8 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
     public IObserveCommand BackCommand { get; }
     public IObserveCommand ShowDoneCommand { get; }
 
+    public IObserveCommand SectionCommand { get; }
+
     public IObserveCommand AddCommand { get; }
     public IObserveCommand EditCommand { get; }
     public IObserveCommand DoneCommand { get; }
@@ -43,6 +45,7 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
 #pragma warning disable IDE0200
         ShowDoneCommand = MakeDelegateCommand(() => Context.List.ToggleShowDone());
 #pragma warning restore IDE0200
+        SectionCommand = MakeDelegateCommand<TodoSection>(static x => x.ToggleExpanded());
 
         AddCommand = MakeAsyncCommand(() => OpenEditAsync(null));
         EditCommand = MakeAsyncCommand<TodoItem>(OpenEditAsync);

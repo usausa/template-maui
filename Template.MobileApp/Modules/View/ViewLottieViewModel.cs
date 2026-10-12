@@ -28,18 +28,24 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
     {
         PlayPauseCommand = MakeDelegateCommand(() => IsAnimationEnabled = !IsAnimationEnabled);
         ResetCommand = MakeDelegateCommand(() => Progress = TimeSpan.Zero);
-        SeekCommand = MakeDelegateCommand<double>(x => Progress = TimeSpan.FromSeconds(x));
+        SeekCommand = MakeDelegateCommand<double>(x => Seek(TimeSpan.FromSeconds(x)));
 
         ScrubCommand = MakeDelegateCommand<double>(CommandMode.Simple, x =>
         {
             IsAnimationEnabled = false;
-            Progress = Duration.Ticks > 0 ? TimeSpan.FromTicks((long)(Duration.Ticks * x)) : TimeSpan.Zero;
+            Seek(TimeSpan.FromTicks((long)(Duration.Ticks * x)));
         });
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
+
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        IsAnimationEnabled = true;
+        return Task.CompletedTask;
+    }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 
@@ -56,4 +62,12 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
         IsAnimationEnabled = !IsAnimationEnabled;
         return Task.CompletedTask;
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    // 繰り返す SKLottieView は、止めたまま最後の位置にすると、先頭に戻す値と最後の値を交互に設定し続けて固まる。最後の 1 tick 手前までにする
+    private void Seek(TimeSpan value) =>
+        Progress = TimeSpan.FromTicks(Math.Clamp(value.Ticks, 0, Math.Max(0, Duration.Ticks - 1)));
 }

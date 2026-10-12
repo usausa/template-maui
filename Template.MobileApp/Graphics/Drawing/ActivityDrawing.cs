@@ -2,6 +2,8 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 public sealed class ActivityDrawing : DrawingObject
 {
+    private const string AnimationName = "ActivityStep";
+
     private const int Max = 10000;
 
     private const float StartAngle = 240f;
@@ -9,17 +11,24 @@ public sealed class ActivityDrawing : DrawingObject
 
     private const float CircleWidth = 24f;
 
-    private static readonly Color ActiveColor = Color.FromArgb("#03A9F4");
+    // 進んだ分の弧を短い弧に分けて、始まりの色から今の位置の色へ少しずつ変える(Timer の文字盤と同じ色)
+    private const int Segments = 90;
+
+    private static readonly Color StartColor = Color.FromArgb("#22D3EE");
+    private static readonly Color EndColor = Color.FromArgb("#3B82F6");
     private static readonly Color CircleColor = Color.FromArgb("#ECEFF1");
     private static readonly Color BackgroundColor = Colors.White;
 
+    private float shownStep;
+
+    // 値が変わると、輪は今の長さから新しい値まで伸びる
     public int Step
     {
         get;
         set
         {
             field = value;
-            Invalidate();
+            AnimateValue(AnimationName, shownStep, value, 600, Easing.CubicOut, v => shownStep = (float)v);
         }
     }
 
@@ -42,10 +51,26 @@ public sealed class ActivityDrawing : DrawingObject
         canvas.StrokeColor = CircleColor;
         canvas.DrawArc(arcRect, StartAngle, EndAngle, true, false);
 
-        var value = Math.Min(Max, Step);
-        var valueAngle = StartAngle - ((StartAngle - EndAngle) * ((float)value / Max));
+        var value = Math.Min(Max, shownStep);
+        if (value <= 0)
+        {
+            return;
+        }
 
-        canvas.StrokeColor = ActiveColor;
-        canvas.DrawArc(arcRect, StartAngle, valueAngle, true, false);
+        var sweep = (StartAngle - EndAngle) * (value / Max);
+        var count = Math.Max(1, (int)MathF.Ceiling(Segments * (value / Max)));
+        for (var i = 0; i < count; i++)
+        {
+            var from = StartAngle - (sweep * i / count);
+            var to = StartAngle - (sweep * (i + 1) / count);
+            canvas.StrokeColor = Blend(StartColor, EndColor, (i + 0.5f) / count);
+            canvas.DrawArc(arcRect, from, to, true, false);
+        }
     }
+
+    private static Color Blend(Color from, Color to, float amount) =>
+        new(
+            from.Red + ((to.Red - from.Red) * amount),
+            from.Green + ((to.Green - from.Green) * amount),
+            from.Blue + ((to.Blue - from.Blue) * amount));
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
@@ -75,7 +76,7 @@
                                   DefaultValue="🔒 Enterprise">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Open}"
-                                      Value="🔓 オープン" />
+                                      Value="🔓 Open" />
                     <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wep}"
                                       Value="🔒 WEP" />
                     <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa}"
@@ -119,7 +120,7 @@
             <Style x:Key="ConnectionSignalIcon"
                    TargetType="Label"
                    BasedOn="{StaticResource SignalIconBase}">
-                <Setter Property="FontSize" Value="56" />
+                <Setter Property="FontSize" Value="48" />
                 <Setter Property="WidthRequest" Value="64" />
                 <Setter Property="TextColor" Value="{Binding Connection.SignalLevel, Converter={StaticResource SignalColorConverter}, FallbackValue={StaticResource GrayDefault}}" />
             </Style>
@@ -189,7 +190,7 @@
             <Style x:Key="InfoLabel"
                    TargetType="Label">
                 <Setter Property="FlexLayout.Shrink" Value="0" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="Margin" Value="0,0,12,2" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
@@ -256,6 +257,14 @@
                    TargetType="Label"
                    BasedOn="{StaticResource ChipLabel}">
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="ScanIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="ScanLabel"
@@ -449,7 +458,7 @@
                         <!-- ReSharper restore Xaml.PossibleNullReferenceException -->
                         <Label Style="{StaticResource PermissionHintLabel}"
                                IsVisible="{Binding HasPermission, Converter={StaticResource ReverseConverter}}"
-                               Text="位置情報 / 付近の Wi-Fi 機器の権限が無いため SSID とスキャン結果は取得できません" />
+                               Text="Location / nearby devices permission required for SSID and scan" />
                     </VerticalStackLayout>
                 </VerticalStackLayout>
                 <Button Grid.Row="0" Grid.Column="2"
@@ -464,10 +473,10 @@
         <!-- 一覧ヘッダ: 件数と帯域ごとの内訳、更新時刻 (スキャンは自動のみ) -->
         <Grid Grid.Row="1"
               Style="{StaticResource ListHeaderGrid}"
-              ColumnDefinitions="Auto,Auto,Auto,Auto,*">
+              ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto">
             <Label Grid.Column="0"
                    Style="{StaticResource ListTitleLabel}"
-                   Text="{Binding AccessPoints.Count, StringFormat='アクセスポイント {0}'}" />
+                   Text="{Binding AccessPoints.Count, StringFormat='Access points {0}'}" />
             <Border Grid.Column="1"
                     Style="{StaticResource CountChip}">
                 <Label Style="{StaticResource CountChipLabel}"
@@ -487,6 +496,11 @@
             <Label Grid.Column="4"
                    Style="{StaticResource ScanLabel}"
                    Text="{Binding ScanMessage}" />
+            <Label Grid.Column="5"
+                   Style="{StaticResource ScanIcon}"
+                   behaviors:AnimationOption.Spin="{Binding Scanning}"
+                   IsVisible="{Binding Scanning}"
+                   Text="{x:Static fonts:MaterialIcons.Sync}" />
         </Grid>
 
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -510,16 +524,16 @@
                                                  Style="{StaticResource AccessPointStack}">
                                 <FlexLayout Style="{StaticResource InfoRow}">
                                     <Label Style="{StaticResource AccessPointSsidLabel}"
-                                           Text="{Binding AccessPoint.Ssid, Converter={StaticResource SsidConverter}, ConverterParameter='(非公開)'}" />
+                                           Text="{Binding AccessPoint.Ssid, Converter={StaticResource SsidConverter}, ConverterParameter='(Hidden)'}" />
                                     <Border Style="{StaticResource ConnectedChip}"
                                             IsVisible="{Binding IsConnected}">
                                         <Label Style="{StaticResource ConnectedChipLabel}"
-                                               Text="接続中" />
+                                               Text="Connected" />
                                     </Border>
                                     <Border Style="{StaticResource StaleChip}"
                                             IsVisible="{Binding IsStale}">
                                         <Label Style="{StaticResource ChipLabel}"
-                                               Text="未検出" />
+                                               Text="Not found" />
                                     </Border>
                                     <Border Style="{StaticResource BandChip}">
                                         <Label Style="{StaticResource ChipLabel}"

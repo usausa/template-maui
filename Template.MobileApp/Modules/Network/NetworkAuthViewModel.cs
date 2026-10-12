@@ -18,10 +18,10 @@ public sealed partial class NetworkAuthViewModel : AppViewModelBase
     public partial bool IsAuthenticated { get; set; }
 
     [ObservableProperty]
-    public partial string LoginState { get; set; } = string.Empty;
+    public partial string AuthenticatedId { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial string TokenExpires { get; set; } = string.Empty;
+    public partial DateTime? TokenExpires { get; set; }
 
     public IObserveCommand LoginCommand { get; }
     public IObserveCommand LogoutCommand { get; }
@@ -99,7 +99,7 @@ public sealed partial class NetworkAuthViewModel : AppViewModelBase
     private void UpdateState()
     {
         IsAuthenticated = apiContext.IsAuthenticated;
-        LoginState = apiContext.IsAuthenticated ? $"ログイン済み ({apiContext.LoginId})" : "未ログイン";
-        TokenExpires = apiContext.TokenExpires is { } expires ? expires.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture) : "-";
+        AuthenticatedId = apiContext.IsAuthenticated ? apiContext.LoginId : string.Empty;
+        TokenExpires = apiContext.TokenExpires;
     }
 }

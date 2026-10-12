@@ -6,6 +6,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkSftpView"
              x:DataType="{x:Type module:NetworkSftpViewModel}"
@@ -18,12 +19,44 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="FingerprintLabel"
+            <Style x:Key="PageGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="HostGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HostIconLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="11" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+            </Style>
+
+            <Style x:Key="HostLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
                 <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="ProgressGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ProgressValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicMonoLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="TransferProgressBar"
@@ -31,78 +64,169 @@
                 <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <Style x:Key="RedButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="LogBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="LogHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LogHeaderIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
+            <Style x:Key="LogHeaderTitleLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
+            <Style x:Key="LogHeaderDivider"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="LogCollection"
+                   TargetType="CollectionView">
+                <Setter Property="Margin" Value="12,8" />
+                <Setter Property="ItemsUpdatingScrollMode" Value="KeepLastItemInView" />
+                <Setter Property="SelectionMode" Value="None" />
+            </Style>
+
+            <Style x:Key="LogEmptyStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicEmptyStack}">
+                <Setter Property="Padding" Value="24,0" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView Style="{StaticResource RootScroll}">
-        <VerticalStackLayout Style="{StaticResource PageStack}">
+    <Grid Style="{StaticResource PageGrid}"
+          RowDefinitions="Auto,Auto,*">
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="接続先"
-                               Icon="{x:Static fonts:MaterialIcons.Dns}">
-                <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicBodyLabel}"
+        <controls:InfoCard Grid.Row="0"
+                           behaviors:AnimationOption.EnterAnimation="FadeUp"
+                           Title="Server"
+                           Icon="{x:Static fonts:MaterialIcons.Dns}">
+            <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                <Grid Style="{StaticResource HostGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource HostIconLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Dns}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource HostLabel}"
                            Text="{Binding HostDisplay}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="サーバのホスト鍵指紋 (参考表示)" />
-                    <Label Style="{StaticResource FingerprintLabel}"
-                           IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding ServerFingerprint}" />
-                </VerticalStackLayout>
-            </controls:InfoCard>
+                </Grid>
+            </VerticalStackLayout>
+        </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80"
-                               Title="転送"
-                               Icon="{x:Static fonts:MaterialIcons.Sync_alt}">
-                <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Entry Style="{StaticResource BasicEntry}"
+        <controls:InfoCard Grid.Row="1"
+                           behaviors:AnimationOption.EnterAnimation="FadeUp"
+                           behaviors:AnimationOption.EnterDelay="80"
+                           Title="Transfer"
+                           Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
+                           IconSpin="{Binding Busy}">
+            <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                       Text="Remote file name" />
+                <Border Style="{StaticResource CardFieldBorder}">
+                    <Entry Style="{StaticResource BasicFieldEntry}"
                            Text="{Binding RemoteFileName}"
-                           Placeholder="リモートファイル名" />
-                    <ProgressBar Style="{StaticResource TransferProgressBar}"
-                                 Progress="{Binding Progress}" />
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding UploadCommand}"
-                                Text="アップロード" />
-                        <Button Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding DownloadCommand}"
-                                Text="ダウンロード" />
-                        <Button Grid.Column="2"
-                                Style="{StaticResource BasicOutlinedCancelButton}"
-                                Command="{Binding CancelCommand}"
-                                Text="キャンセル" />
-                    </Grid>
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="アップロードは FilePicker で選んだファイルをリモートのホームへ、ダウンロードは上のファイル名を公開フォルダへ取得する" />
-                </VerticalStackLayout>
-            </controls:InfoCard>
+                           Placeholder="e.g. sample.txt" />
+                </Border>
+                <Grid Style="{StaticResource ProgressGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <ProgressBar Grid.Column="0"
+                                 Style="{StaticResource TransferProgressBar}"
+                                 behaviors:AnimationOption.ProgressTo="{Binding Progress}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource ProgressValueLabel}"
+                           Text="{Binding Progress, StringFormat='{0:P0}'}" />
+                </Grid>
+                <Grid Style="{StaticResource BasicButtonGrid}"
+                      ColumnDefinitions="*,*,*">
+                    <Button Grid.Column="0"
+                            Style="{StaticResource BasicIconOutlinedButton}"
+                            Command="{Binding UploadCommand}"
+                            Text="UL"
+                            ImageSource="{x:Static markup:AppIcons.SmallUploadFile}" />
+                    <Button Grid.Column="1"
+                            Style="{StaticResource BasicIconOutlinedButton}"
+                            Command="{Binding DownloadCommand}"
+                            Text="DL"
+                            ImageSource="{x:Static markup:AppIcons.SmallDownloading}" />
+                    <Button Grid.Column="2"
+                            Style="{StaticResource RedButton}"
+                            Command="{Binding CancelCommand}"
+                            Text="Cancel"
+                            ImageSource="{x:Static markup:AppIcons.NetworkCancel}" />
+                </Grid>
+            </VerticalStackLayout>
+        </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160"
-                               Title="ログ"
-                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
-                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
-                                     BindableLayout.ItemsSource="{Binding Logs}">
-                    <BindableLayout.ItemTemplate>
+        <Border Grid.Row="2"
+                Style="{StaticResource LogBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                behaviors:AnimationOption.EnterDelay="160">
+            <Grid RowDefinitions="Auto,1,*">
+                <Grid Grid.Row="0"
+                      Style="{StaticResource LogHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource LogHeaderIconLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Receipt_long}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource LogHeaderTitleLabel}"
+                           Text="Log" />
+                </Grid>
+                <BoxView Grid.Row="1"
+                         Style="{StaticResource LogHeaderDivider}" />
+                <CollectionView Grid.Row="2"
+                                Style="{StaticResource LogCollection}"
+                                ItemsSource="{Binding Logs}">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Style="{StaticResource LogEmptyStack}">
+                            <Border Style="{StaticResource BasicEmptyIconBorder}">
+                                <Label Style="{StaticResource BasicEmptyIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Receipt_long}" />
+                            </Border>
+                            <Label Style="{StaticResource BasicCenterHintLabel}"
+                                   Text="No transfers yet" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">
                             <Label Style="{StaticResource CardLogLabel}"
                                    Text="{Binding .}" />
                         </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                    <BindableLayout.EmptyView>
-                        <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="まだ転送していません" />
-                    </BindableLayout.EmptyView>
-                </VerticalStackLayout>
-            </controls:InfoCard>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
 
-        </VerticalStackLayout>
-    </ScrollView>
+    </Grid>
 
 </ContentView>

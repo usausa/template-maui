@@ -47,15 +47,40 @@ public static class Focus
 
     public static void SetFocusedStroke(BindableObject bindable, Color? value) => bindable.SetValue(FocusedStrokeProperty, value);
 
+    // 既定(NaN)は枠の太さを変えない
     public static readonly BindableProperty FocusedThicknessProperty = BindableProperty.CreateAttached(
         "FocusedThickness",
         typeof(double),
         typeof(Focus),
-        2d);
+        double.NaN);
 
     public static double GetFocusedThickness(BindableObject bindable) => (double)bindable.GetValue(FocusedThicknessProperty);
 
     public static void SetFocusedThickness(BindableObject bindable, double value) => bindable.SetValue(FocusedThicknessProperty, value);
+
+    // ------------------------------------------------------------------ ErrorStroke / HasError (エラーの枠)
+
+    // HasError の間は、フォーカス中も枠を ErrorStroke にする(FocusedStroke と併せて使う)
+    public static readonly BindableProperty ErrorStrokeProperty = BindableProperty.CreateAttached(
+        "ErrorStroke",
+        typeof(Color),
+        typeof(Focus),
+        null);
+
+    public static Color? GetErrorStroke(BindableObject bindable) => (Color?)bindable.GetValue(ErrorStrokeProperty);
+
+    public static void SetErrorStroke(BindableObject bindable, Color? value) => bindable.SetValue(ErrorStrokeProperty, value);
+
+    public static readonly BindableProperty HasErrorProperty = BindableProperty.CreateAttached(
+        "HasError",
+        typeof(bool),
+        typeof(Focus),
+        false,
+        propertyChanged: OnHasErrorChanged);
+
+    public static bool GetHasError(BindableObject bindable) => (bool)bindable.GetValue(HasErrorProperty);
+
+    public static void SetHasError(BindableObject bindable, bool value) => bindable.SetValue(HasErrorProperty, value);
 
     private static void OnFocusedStrokeChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
@@ -78,7 +103,17 @@ public static class Focus
         }
     }
 
-    // FocusedStroke / FocusedThickness に応じて、親 Border の枠線を色・太さアニメーション付きで強調する。
+    private static void OnHasErrorChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is VisualElement element)
+        {
+            element.Behaviors.OfType<FocusBorderBehavior>().FirstOrDefault()?.Refresh();
+        }
+    }
+
+    // FocusedStroke に応じて、親 Border の枠線の色をアニメーション付きで強調する。
+    // FocusedThickness を指定したときは太さも変える。太さは Border の大きさに含まれるため、
+    // 太くした分だけ Margin を外へ広げ、周りの位置と大きさを変えない。
     // XAML から直接は使わず、上記の添付プロパティ経由で自動付与される。
     private sealed class FocusBorderBehavior : BehaviorBase<VisualElement>
     {
@@ -88,6 +123,8 @@ public static class Focus
         private Color normalStroke = Colors.Transparent;
 
         private double normalThickness;
+
+        private Thickness normalMargin;
 
         private bool captured;
 
@@ -112,6 +149,14 @@ public static class Focus
             base.OnDetachingFrom(bindable);
         }
 
+        public void Refresh()
+        {
+            if (AssociatedObject is { } element)
+            {
+                AnimateBorder(element.IsFocused);
+            }
+        }
+
         private void OnFocused(object? sender, FocusEventArgs e) => AnimateBorder(focused: true);
 
         private void OnUnfocused(object? sender, FocusEventArgs e) => AnimateBorder(focused: false);
@@ -128,15 +173,18 @@ public static class Focus
                 captured = true;
                 normalStroke = (border.Stroke as SolidColorBrush)?.Color ?? Colors.Transparent;
                 normalThickness = border.StrokeThickness;
+                normalMargin = border.Margin;
             }
 
             var focusedStroke = GetFocusedStroke(element) ?? Colors.Blue;
+            var errorStroke = GetHasError(element) ? GetErrorStroke(element) : null;
             var focusedThickness = GetFocusedThickness(element);
+            var changeThickness = !Double.IsNaN(focusedThickness);
 
             var fromColor = (border.Stroke as SolidColorBrush)?.Color ?? normalStroke;
-            var toColor = focused ? focusedStroke : normalStroke;
+            var toColor = errorStroke ?? (focused ? focusedStroke : normalStroke);
             var fromThickness = border.StrokeThickness;
-            var toThickness = focused ? focusedThickness : normalThickness;
+            var toThickness = focused && changeThickness ? focusedThickness : normalThickness;
 
             border.AbortAnimation(AnimationName);
 
@@ -147,17 +195,37 @@ public static class Focus
                 AnimationName,
                 v =>
                 {
-                    brush.Color = LerpColor(fromColor, toColor, v);
-                    border.StrokeThickness = fromThickness + ((toThickness - fromThickness) * v);
+                    UpdateStroke(border, brush, LerpColor(fromColor, toColor, v));
+                    if (changeThickness)
+                    {
+                        UpdateThickness(border, fromThickness + ((toThickness - fromThickness) * v));
+                    }
                 },
                 16,
                 150,
                 Easing.CubicOut,
                 (_, _) =>
                 {
-                    brush.Color = toColor;
-                    border.StrokeThickness = toThickness;
+                    UpdateStroke(border, brush, toColor);
+                    if (changeThickness)
+                    {
+                        UpdateThickness(border, toThickness);
+                    }
                 });
+        }
+
+        private void UpdateThickness(MauiBorder border, double thickness)
+        {
+            var grow = thickness - normalThickness;
+            border.StrokeThickness = thickness;
+            border.Margin = new Thickness(normalMargin.Left - grow, normalMargin.Top - grow, normalMargin.Right - grow, normalMargin.Bottom - grow);
+        }
+
+        // ブラシの色を変えただけでは枠が描き直されないため、ハンドラーに反映させる
+        private static void UpdateStroke(MauiBorder border, SolidColorBrush brush, Color color)
+        {
+            brush.Color = color;
+            border.Handler?.UpdateValue(nameof(MauiBorder.Stroke));
         }
 
         private static MauiBorder? FindParentBorder(Element start)

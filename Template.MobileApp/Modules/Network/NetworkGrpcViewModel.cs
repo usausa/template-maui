@@ -20,7 +20,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
     public partial string AddressDisplay { get; set; }
 
     [ObservableProperty]
-    public partial string StateText { get; set; } = "切断";
+    public partial ChatConnectionState State { get; set; }
 
     [ObservableProperty]
     public partial string LastError { get; set; } = string.Empty;
@@ -117,13 +117,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
         var error = chatClient.LastError;
         dispatcher.Dispatch(() =>
         {
-            StateText = e.State switch
-            {
-                ChatConnectionState.Connecting => "接続中...",
-                ChatConnectionState.Connected => "接続済み",
-                ChatConnectionState.Reconnecting => "再接続中...",
-                _ => "切断"
-            };
+            State = e.State;
             LastError = error ?? string.Empty;
             PendingCount = chatClient.PendingCount;
         });
@@ -152,7 +146,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
         }
         catch (RpcException ex)
         {
-            ServerTime = $"失敗 ({ex.StatusCode})";
+            ServerTime = $"Failed ({ex.StatusCode})";
         }
     }
 }

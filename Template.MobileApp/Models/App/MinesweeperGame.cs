@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.App;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum MinesweeperLevel
 {
     Beginner,
@@ -21,14 +25,18 @@ public enum MinesweeperCellState
     Flagged
 }
 
-public readonly record struct MinesweeperCell(int Row, int Column);
-
 public enum MinesweeperMoveType
 {
     None,
     Opened,
     Flagged
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
+public readonly record struct MinesweeperCell(int Row, int Column);
 
 // 1 手の結果 (Revealed は見せるマス。負けたときは地雷を踏んだマスから近い順)
 public sealed record MinesweeperMove(MinesweeperMoveType Type, IReadOnlyList<MinesweeperCell> Revealed)
@@ -46,6 +54,10 @@ public sealed class MinesweeperSnapshot
 {
     public IReadOnlyList<int> BestSeconds { get; set; } = [];
 }
+
+//--------------------------------------------------------------------------------
+// Game
+//--------------------------------------------------------------------------------
 
 // マインスイーパー。勝ったら難易度ごとのベストタイムを残す。乱数は 0 以上 n 未満を返す関数、時刻は引数で受け取る
 public sealed class MinesweeperGame

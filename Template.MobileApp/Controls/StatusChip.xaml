@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Controls.StatusChip">
 
@@ -10,7 +11,8 @@
                     BackgroundColor="{TemplateBinding ChipColor}"
                     StrokeThickness="0" StrokeShape="RoundRectangle 14">
                 <HorizontalStackLayout Spacing="6">
-                    <Label VerticalOptions="Center"
+                    <Label behaviors:AnimationOption.Spin="{TemplateBinding IconSpin}"
+                           VerticalOptions="Center"
                            IsVisible="{TemplateBinding Icon, Converter={StaticResource NotEmptyConverter}}"
                            Text="{TemplateBinding Icon}"
                            FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"

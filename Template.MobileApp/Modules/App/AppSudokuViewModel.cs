@@ -5,6 +5,23 @@ using System.Security.Cryptography;
 using Template.MobileApp.Models.App;
 using Template.MobileApp.Services;
 
+// 数字のキー (答えの位置に置いていない残りの数)
+public sealed partial class SudokuDigit : ObservableObject
+{
+    public int Value { get; }
+
+    // キーを並べる列
+    public int Column => Value - 1;
+
+    [ObservableProperty]
+    public partial int Remaining { get; set; }
+
+    public SudokuDigit(int value)
+    {
+        Value = value;
+    }
+}
+
 public sealed partial class AppSudokuViewModel : AppViewModelBase
 {
     private static readonly TimeSpan TickInterval = TimeSpan.FromMilliseconds(250);
@@ -62,7 +79,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsNewBest { get; set; }
 
-    public IReadOnlyList<SudokuDigit> Digits { get; } = SudokuGame.CreateDigits();
+    public IReadOnlyList<SudokuDigit> Digits { get; } = [.. Enumerable.Range(1, SudokuGame.Size).Select(static x => new SudokuDigit(x))];
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand NewGameCommand { get; }
@@ -239,7 +256,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         Refresh(null, []);
     }
 
-    private void Refresh(SudokuCell? placed, IReadOnlyList<SudokuCell> flash)
+    private void Refresh(SudokuCell? placed, SudokuCell[] flash)
     {
         Board = new SudokuFrame(game, selected, placed, flash);
         Level = game.Level;
@@ -250,7 +267,10 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         IsCompleted = game.IsCompleted;
         IsNewBest = game.IsNewBest;
         BestTime = game.BestSeconds > 0 ? TimeSpan.FromSeconds(game.BestSeconds) : null;
-        game.UpdateDigits(Digits);
+        foreach (var digit in Digits)
+        {
+            digit.Remaining = game.CountRemaining(digit.Value);
+        }
     }
 
     // 前の続き (読めなければ新しいゲーム)

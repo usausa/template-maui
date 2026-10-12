@@ -81,33 +81,46 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="AxisBar"
-                   TargetType="ProgressBar">
+            <Style x:Key="AxisRange"
+                   TargetType="controls:RangeBar">
                 <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="1" />
+                <Setter Property="Low" Value="0.5" />
+                <Setter Property="Thickness" Value="8" />
             </Style>
 
-            <Style x:Key="AxisXBar"
-                   TargetType="ProgressBar"
-                   BasedOn="{StaticResource AxisBar}">
-                <Setter Property="ProgressColor" Value="{StaticResource RedDefault}" />
+            <Style x:Key="AxisXRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource RedLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource RedDefault}" />
             </Style>
 
-            <Style x:Key="AxisYBar"
-                   TargetType="ProgressBar"
-                   BasedOn="{StaticResource AxisBar}">
-                <Setter Property="ProgressColor" Value="{StaticResource GreenDefault}" />
+            <Style x:Key="AxisYRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource GreenLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
-            <Style x:Key="AxisZBar"
-                   TargetType="ProgressBar"
-                   BasedOn="{StaticResource AxisBar}">
-                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
+            <Style x:Key="AxisZRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="AxisWBar"
-                   TargetType="ProgressBar"
-                   BasedOn="{StaticResource AxisBar}">
-                <Setter Property="ProgressColor" Value="{StaticResource PurpleDefault}" />
+            <Style x:Key="AxisWRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource PurpleLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource PurpleDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
             <Style x:Key="CenterTick"
@@ -173,8 +186,8 @@
                                    Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisXBar}"
-                                         Progress="{Binding AccelerationX, Converter={StaticResource AccelRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisXRange}"
+                                               High="{Binding AccelerationX, Converter={StaticResource AccelRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -189,8 +202,8 @@
                                    Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisYBar}"
-                                         Progress="{Binding AccelerationY, Converter={StaticResource AccelRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisYRange}"
+                                               High="{Binding AccelerationY, Converter={StaticResource AccelRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -205,8 +218,8 @@
                                    Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisZBar}"
-                                         Progress="{Binding AccelerationZ, Converter={StaticResource AccelRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisZRange}"
+                                               High="{Binding AccelerationZ, Converter={StaticResource AccelRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -229,8 +242,8 @@
                                    Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisXBar}"
-                                         Progress="{Binding GyroscopeX, Converter={StaticResource GyroRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisXRange}"
+                                               High="{Binding GyroscopeX, Converter={StaticResource GyroRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -245,8 +258,8 @@
                                    Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisYBar}"
-                                         Progress="{Binding GyroscopeY, Converter={StaticResource GyroRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisYRange}"
+                                               High="{Binding GyroscopeY, Converter={StaticResource GyroRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -261,8 +274,8 @@
                                    Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisZBar}"
-                                         Progress="{Binding GyroscopeZ, Converter={StaticResource GyroRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisZRange}"
+                                               High="{Binding GyroscopeZ, Converter={StaticResource GyroRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -285,8 +298,8 @@
                                    Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisXBar}"
-                                         Progress="{Binding MagnetometerX, Converter={StaticResource MagRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisXRange}"
+                                               High="{Binding MagnetometerX, Converter={StaticResource MagRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -301,8 +314,8 @@
                                    Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisYBar}"
-                                         Progress="{Binding MagnetometerY, Converter={StaticResource MagRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisYRange}"
+                                               High="{Binding MagnetometerY, Converter={StaticResource MagRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -317,8 +330,8 @@
                                    Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisZBar}"
-                                         Progress="{Binding MagnetometerZ, Converter={StaticResource MagRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisZRange}"
+                                               High="{Binding MagnetometerZ, Converter={StaticResource MagRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -341,8 +354,8 @@
                                    Text="X" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisXBar}"
-                                         Progress="{Binding OrientationX, Converter={StaticResource QuatRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisXRange}"
+                                               High="{Binding OrientationX, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -357,8 +370,8 @@
                                    Text="Y" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisYBar}"
-                                         Progress="{Binding OrientationY, Converter={StaticResource QuatRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisYRange}"
+                                               High="{Binding OrientationY, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -373,8 +386,8 @@
                                    Text="Z" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisZBar}"
-                                         Progress="{Binding OrientationZ, Converter={StaticResource QuatRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisZRange}"
+                                               High="{Binding OrientationZ, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -389,8 +402,8 @@
                                    Text="W" />
                         </Border>
                         <Grid Grid.Column="1">
-                            <ProgressBar Style="{StaticResource AxisWBar}"
-                                         Progress="{Binding OrientationW, Converter={StaticResource QuatRatio}}" />
+                            <controls:RangeBar Style="{StaticResource AxisWRange}"
+                                               High="{Binding OrientationW, Converter={StaticResource QuatRatio}}" />
                             <BoxView Style="{StaticResource CenterTick}" />
                         </Grid>
                         <Label Grid.Column="2"
@@ -432,8 +445,6 @@
                                          Style="{StaticResource SensorTextStack}">
                         <Label Style="{StaticResource ValueLabel}"
                                Text="Bubble level" />
-                        <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="Tilt the device - green when flat" />
                     </VerticalStackLayout>
                 </Grid>
             </controls:InfoCard>

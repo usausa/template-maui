@@ -2,9 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBluetoothView"
@@ -20,8 +22,8 @@
             <Style x:Key="PrintButton"
                    TargetType="Button"
                    BasedOn="{StaticResource BasicFilledButton}">
-                <Setter Property="WidthRequest" Value="200" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="HeightRequest" Value="48" />
             </Style>
 
             <Style x:Key="StateChip"
@@ -29,19 +31,73 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
+            <converters:MapToIntConverter x:Key="StepConverter">
+                <converters:MapToIntConverter.Entries>
+                    <converters:MapToIntEntry Key="{x:Static module:BluetoothPrintState.Connecting}"
+                                              Value="1" />
+                    <converters:MapToIntEntry Key="{x:Static module:BluetoothPrintState.Printing}"
+                                              Value="2" />
+                    <converters:MapToIntEntry Key="{x:Static module:BluetoothPrintState.Completed}"
+                                              Value="3" />
+                </converters:MapToIntConverter.Entries>
+            </converters:MapToIntConverter>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
 
-        <Border Style="{StaticResource CardCenterBorder}"
+        <Border Grid.Row="0"
+                Style="{StaticResource CardCenterBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
                 <Border Style="{StaticResource BasicIconCircleBorder}"
-                        behaviors:AnimationOption.Pulse="{Binding IsBusy}">
+                        behaviors:AnimationOption.Pulse="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static module:BluetoothPrintState.Connecting}}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding State}"
+                                     Value="Connecting">
+                            <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding State}"
+                                     Value="Completed">
+                            <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding State}"
+                                     Value="Failed">
+                            <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
+                        </DataTrigger>
+                    </Border.Triggers>
                     <Label Style="{StaticResource BasicIconCircleLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Bluetooth}" />
+                           behaviors:AnimationOption.Wave="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static module:BluetoothPrintState.Printing}}"
+                           Text="{x:Static fonts:MaterialIcons.Bluetooth}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Connecting">
+                                <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Printing">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Print}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Completed">
+                                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Failed">
+                                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                 </Border>
 
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
@@ -82,16 +138,21 @@
                     </controls:StatusChip.Triggers>
                 </controls:StatusChip>
 
+                <mcc:StepIndicator CurrentStep="{Binding State, Converter={StaticResource StepConverter}}"
+                                   TotalSteps="3"
+                                   IsCountVisible="False" />
+
                 <Label Style="{StaticResource BasicCenterHintLabel}"
                        behaviors:AnimationOption.FadeInTrigger="{Binding Detail}"
                        Text="{Binding Detail}" />
 
-                <Button Style="{StaticResource PrintButton}"
-                        Command="{Binding PrintCommand}"
-                        Text="Print" />
-
             </VerticalStackLayout>
         </Border>
+
+        <Button Grid.Row="1"
+                Style="{StaticResource PrintButton}"
+                Command="{Binding PrintCommand}"
+                Text="Print" />
 
     </Grid>
 

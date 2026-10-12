@@ -11,7 +11,7 @@
              x:Class="Template.MobileApp.Modules.Sample.SampleCvLocalView"
              x:DataType="{x:Type module:SampleCvLocalViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleCvLocalViewModel}"
-             shell:ShellProperty.Title="Custom Vision"
+             shell:ShellProperty.Title="CV Local"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function2Text="{Binding IsPreview, Converter={s:BoolToText True='Out', False=''}}"
              shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='In', False=''}}"
@@ -51,6 +51,11 @@
         <!-- 撮影ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0"
                                     IsVisible="{Binding IsPreview}" />
+
+        <ActivityIndicator Grid.Row="0"
+                           Style="{StaticResource BasicLightLoadingIndicator}"
+                           IsRunning="{Binding IsProcessing}"
+                           IsVisible="{Binding IsProcessing}" />
 
     </Grid>
 

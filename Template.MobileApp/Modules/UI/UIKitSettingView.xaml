@@ -2,8 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitSettingView"
@@ -16,9 +18,19 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- ReSharper disable Xaml.RedundantResource -->
+            <Color x:Key="SfAccordionFocusedHeaderBackground">Transparent</Color>
+            <Color x:Key="SfAccordionFocusedItemStroke">Transparent</Color>
+            <!-- ReSharper restore Xaml.RedundantResource -->
+
             <Style x:Key="KitSettingScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
+            </Style>
+
+            <Style x:Key="KitSettingStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,0,0,16" />
             </Style>
 
             <Style x:Key="KitSettingSectionLabel"
@@ -58,6 +70,13 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
+            <Style x:Key="RowValue"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
             <Style x:Key="RowChevron"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
@@ -66,11 +85,84 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
+            <Style x:Key="LogoutIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource RowIcon}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="LogoutTitle"
+                   TargetType="Label"
+                   BasedOn="{StaticResource RowTitle}">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="TextSizeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="14,0,14,12" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="TextPreviewLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="ColorSwatch"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="CornerRadius" Value="12" />
+            </Style>
+
+            <Style x:Key="ColorPickerPanel"
+                   TargetType="controls:ColorPicker">
+                <Setter Property="Margin" Value="14,0,14,14" />
+            </Style>
+
+            <Style x:Key="FaqAccordion"
+                   TargetType="mcc:AccordionView">
+                <Setter Property="ExpandMode" Value="SingleOrNone" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="FaqHeaderRowGrid"
+                   TargetType="Grid">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:AccordionItem}}, Path=ToggleCommand, x:DataType={x:Type mcc:AccordionItem}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style TargetType="mcc:AccordionItem">
+                <Setter Property="Icon" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
+                <Setter Property="IconFontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="HeaderRowStyle" Value="{StaticResource FaqHeaderRowGrid}" />
+            </Style>
+
+            <Style x:Key="FaqHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="14,12,0,12" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="FaqBodyLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="14,0,14,12" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineHeight" Value="1.3" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
     <ScrollView Style="{StaticResource KitSettingScroll}">
-        <VerticalStackLayout>
+        <VerticalStackLayout Style="{StaticResource KitSettingStack}">
 
             <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -83,9 +175,11 @@
                         <DataTemplate x:DataType="module:UIKitSettingItem">
                             <Grid Style="{StaticResource KitSettingRowGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                                 <Label Grid.Column="0"
                                        Style="{StaticResource RowIcon}"
-                                       Text="{Binding Icon}" />
+                                       Text="{Binding Icon}"
+                                       TextColor="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitSettingViewModel}}, Path=ThemeColor, x:DataType={x:Type module:UIKitSettingViewModel}}" />
                                 <Label Grid.Column="1"
                                        Style="{StaticResource RowTitle}"
                                        Text="{Binding Title}" />
@@ -110,17 +204,161 @@
                         <DataTemplate x:DataType="module:UIKitSettingItem">
                             <Grid Style="{StaticResource KitSettingRowGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
+                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <Label Grid.Column="0"
                                        Style="{StaticResource RowIcon}"
-                                       Text="{Binding Icon}" />
+                                       Text="{Binding Icon}"
+                                       TextColor="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitSettingViewModel}}, Path=ThemeColor, x:DataType={x:Type module:UIKitSettingViewModel}}" />
                                 <Label Grid.Column="1"
                                        Style="{StaticResource RowTitle}"
                                        Text="{Binding Title}" />
                                 <Switch Grid.Column="2"
-                                        IsToggled="{Binding IsOn}" />
+                                        IsToggled="{Binding IsOn}"
+                                        OnColor="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitSettingViewModel}}, Path=ThemeColor, x:DataType={x:Type module:UIKitSettingViewModel}}" />
+                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource KitSettingSectionLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="320"
+                   Text="表示" />
+            <Border Style="{StaticResource GroupBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="400">
+                <VerticalStackLayout>
+                    <Grid Style="{StaticResource KitSettingRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource RowIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Text_fields}"
+                               TextColor="{Binding ThemeColor}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource RowTitle}"
+                               Text="文字の大きさ" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource RowValue}"
+                               Text="{Binding TextSize, StringFormat='{0:F0}'}" />
+                    </Grid>
+                    <VerticalStackLayout Style="{StaticResource TextSizeStack}">
+                        <Slider behaviors:SliderOption.Step="1"
+                                Maximum="20"
+                                Minimum="12"
+                                MinimumTrackColor="{Binding ThemeColor}"
+                                ThumbColor="{Binding ThemeColor}"
+                                Value="{Binding TextSize}" />
+                        <Label Style="{StaticResource TextPreviewLabel}"
+                               FontSize="{Binding TextSize}"
+                               Text="あいうえお Aa 123" />
+                    </VerticalStackLayout>
+                    <Grid Style="{StaticResource KitSettingRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto,Auto">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ColorCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               Style="{StaticResource RowIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Palette}"
+                               TextColor="{Binding ThemeColor}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource RowTitle}"
+                               Text="テーマの色" />
+                        <BoxView Grid.Column="2"
+                                 Style="{StaticResource ColorSwatch}"
+                                 Color="{Binding ThemeColor}" />
+                        <Label Grid.Column="3"
+                               Style="{StaticResource RowChevron}"
+                               Text="{Binding IsColorOpen, Converter={StaticResource ExpandGlyphConverter}}" />
+                    </Grid>
+                    <ContentView behaviors:LazyViewOption.Load="{Binding IsColorOpen}"
+                                 IsVisible="{Binding IsColorOpen}">
+                        <behaviors:LazyViewOption.Template>
+                            <DataTemplate x:DataType="module:UIKitSettingViewModel">
+                                <controls:ColorPicker Style="{StaticResource ColorPickerPanel}"
+                                                      SelectedColor="{Binding ThemeColor}" />
+                            </DataTemplate>
+                        </behaviors:LazyViewOption.Template>
+                    </ContentView>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource KitSettingSectionLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="480"
+                   Text="よくある質問" />
+            <Border Style="{StaticResource GroupBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="560">
+                <mcc:AccordionView Style="{StaticResource FaqAccordion}">
+                    <mcc:AccordionItem>
+                        <mcc:AccordionItem.Header>
+                            <Label Style="{StaticResource FaqHeaderLabel}"
+                                   Text="パスワードを忘れたときは?" />
+                        </mcc:AccordionItem.Header>
+                        <mcc:AccordionItem.Content>
+                            <Label Style="{StaticResource FaqBodyLabel}"
+                                   Text="サインインの画面の「パスワードを忘れた方」から、登録したメールアドレスに再設定のリンクを送れます。" />
+                        </mcc:AccordionItem.Content>
+                    </mcc:AccordionItem>
+                    <mcc:AccordionItem>
+                        <mcc:AccordionItem.Header>
+                            <Label Style="{StaticResource FaqHeaderLabel}"
+                                   Text="通知が届かないときは?" />
+                        </mcc:AccordionItem.Header>
+                        <mcc:AccordionItem.Content>
+                            <Label Style="{StaticResource FaqBodyLabel}"
+                                   Text="端末の設定でこのアプリの通知を許可しているかと、上のプッシュ通知がオンになっているかを確かめてください。" />
+                        </mcc:AccordionItem.Content>
+                    </mcc:AccordionItem>
+                    <mcc:AccordionItem>
+                        <mcc:AccordionItem.Header>
+                            <Label Style="{StaticResource FaqHeaderLabel}"
+                                   Text="別の端末に引き継ぐには?" />
+                        </mcc:AccordionItem.Header>
+                        <mcc:AccordionItem.Content>
+                            <Label Style="{StaticResource FaqBodyLabel}"
+                                   Text="新しい端末で同じアカウントにサインインすると、歩数の記録と設定が引き継がれます。" />
+                        </mcc:AccordionItem.Content>
+                    </mcc:AccordionItem>
+                </mcc:AccordionView>
+            </Border>
+
+            <Label Style="{StaticResource KitSettingSectionLabel}"
+                   behaviors:AnimationOption.EnterAnimation="FadeUp"
+                   behaviors:AnimationOption.EnterDelay="640"
+                   Text="その他" />
+            <Border Style="{StaticResource GroupBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="720">
+                <VerticalStackLayout>
+                    <Grid Style="{StaticResource KitSettingRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource RowIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Info}"
+                               TextColor="{Binding ThemeColor}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource RowTitle}"
+                               Text="バージョン" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource RowValue}"
+                               Text="{Binding Version}" />
+                    </Grid>
+                    <Grid Style="{StaticResource KitSettingRowGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LogoutCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               Style="{StaticResource LogoutIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Logout}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource LogoutTitle}"
+                               Text="ログアウト" />
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Controls.InfoCard">
 
@@ -28,6 +29,7 @@
                           ColumnDefinitions="Auto,*"
                           Padding="12,10">
                         <Label Grid.Column="0"
+                               behaviors:AnimationOption.Spin="{TemplateBinding IconSpin}"
                                VerticalOptions="Center"
                                IsVisible="{TemplateBinding Icon, Converter={StaticResource NotEmptyConverter}}"
                                Text="{TemplateBinding Icon}"

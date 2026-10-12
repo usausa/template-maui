@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceAudioView"
@@ -16,6 +17,51 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <converters:VolumeIconConverter x:Key="VolumeIconConverter"
+                                            High="{x:Static fonts:MaterialIcons.Volume_up}"
+                                            Low="{x:Static fonts:MaterialIcons.Volume_down}"
+                                            Off="{x:Static fonts:MaterialIcons.Volume_off}" />
+
+            <Style x:Key="JacketStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="JacketBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="240" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource DeepPurpleLighten1}" />
+                        <GradientStop Offset="0.55" Color="{StaticResource BlueLighten1}" />
+                        <GradientStop Offset="1" Color="{StaticResource CyanLighten1}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="JacketIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="PlayerPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
 
             <Style x:Key="VolumeValueLabel"
                    TargetType="Label"
@@ -73,20 +119,24 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource RootGrid}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
 
-        <Border Style="{StaticResource CardCenterBorder}"
-                behaviors:AnimationOption.EnterAnimation="FadeUp">
+        <VerticalStackLayout Grid.Row="0"
+                             Style="{StaticResource JacketStack}"
+                             behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <Border Style="{StaticResource JacketBorder}"
+                    behaviors:AnimationOption.Pulse="{Binding IsPlaying}">
+                <Label Style="{StaticResource JacketIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Music_note}" />
+            </Border>
+            <Label Style="{StaticResource BasicCenterTitleLabel}"
+                   Text="Sample.mp3" />
+        </VerticalStackLayout>
+
+        <Border Grid.Row="1"
+                Style="{StaticResource PlayerPanelBorder}">
             <VerticalStackLayout Style="{StaticResource CardStack}">
-
-                <Border Style="{StaticResource BasicIconCircleBorder}"
-                        behaviors:AnimationOption.Pulse="{Binding IsPlaying}">
-                    <Label Style="{StaticResource BasicIconCircleLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Music_note}" />
-                </Border>
-
-                <Label Style="{StaticResource BasicCenterTitleLabel}"
-                       Text="Sample.mp3" />
 
                 <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                     <Slider behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}"
@@ -125,13 +175,13 @@
 
                 <Grid Style="{StaticResource VolumeGrid}"
                       ColumnDefinitions="Auto,*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource VolumeIcon}"
-                           Text="{x:Static fonts:MaterialIcons.Volume_up}" />
                     <Slider x:Name="VolumeSlider"
                             Grid.Column="1"
                             Value="{Binding AudioPlayer.Volume, FallbackValue=0.5}"
                             Minimum="0" Maximum="1" />
+                    <Label Grid.Column="0"
+                           Style="{StaticResource VolumeIcon}"
+                           Text="{Binding Source={x:Reference VolumeSlider}, Path=Value, Converter={StaticResource VolumeIconConverter}, x:DataType=Slider}" />
                     <Label Grid.Column="2"
                            Style="{StaticResource VolumeValueLabel}"
                            Text="{Binding Source={x:Reference VolumeSlider}, Path=Value, StringFormat='{0:P0}', x:DataType=Slider}" />

@@ -6,6 +6,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:data="clr-namespace:Template.MobileApp.Modules.Data"
              x:Class="Template.MobileApp.Modules.Data.DataView"
              x:DataType="{x:Type data:DataViewModel}"
@@ -17,6 +18,12 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <Style x:Key="DeleteButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
 
             <Style x:Key="CountUnitLabel"
                    TargetType="Label"
@@ -47,21 +54,25 @@
                       RowDefinitions="Auto,Auto"
                       ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding InsertCommand}"
-                            Text="Insert" />
+                            Text="Insert"
+                            ImageSource="{x:Static markup:AppIcons.SmallAdd}" />
                     <Button Grid.Row="0" Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding UpdateCommand}"
-                            Text="Update" />
+                            Text="Update"
+                            ImageSource="{x:Static markup:AppIcons.SmallEdit}" />
                     <Button Grid.Row="1" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource DeleteButton}"
                             Command="{Binding DeleteCommand}"
-                            Text="Delete" />
+                            Text="Delete"
+                            ImageSource="{x:Static markup:AppIcons.DataDelete}" />
                     <Button Grid.Row="1" Grid.Column="1"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding QueryCommand}"
-                            Text="Query" />
+                            Text="Query"
+                            ImageSource="{x:Static markup:AppIcons.SmallSearch}" />
                 </Grid>
             </controls:InfoCard>
 
@@ -83,17 +94,20 @@
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="*,*">
                         <Button Grid.Row="0" Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding BulkInsertCommand}"
-                                Text="BulkInsert" />
+                                Text="BulkInsert"
+                                ImageSource="{x:Static markup:AppIcons.SmallPlaylistAdd}" />
                         <Button Grid.Row="0" Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource DeleteButton}"
                                 Command="{Binding DeleteAllCommand}"
-                                Text="DeleteAll" />
+                                Text="DeleteAll"
+                                ImageSource="{x:Static markup:AppIcons.DataDeleteSweep}" />
                         <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding QueryAllCommand}"
-                                Text="QueryAll" />
+                                Text="QueryAll"
+                                ImageSource="{x:Static markup:AppIcons.SmallManageSearch}" />
                     </Grid>
 
                 </VerticalStackLayout>

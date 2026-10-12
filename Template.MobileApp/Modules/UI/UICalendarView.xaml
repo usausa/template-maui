@@ -2,8 +2,8 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              xmlns:clam="clr-namespace:ClamCalendar;assembly=ClamCalendar"
              x:Class="Template.MobileApp.Modules.UI.UICalendarView"
@@ -11,39 +11,15 @@
              s:BindingContextResolver.Type="{x:Type module:UICalendarViewModel}"
              shell:ShellProperty.Title="Calendar"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Setting"
+             shell:ShellProperty.Function3Text="Today"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True">
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <Style x:Key="CalendarDivider"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="0.5" />
-                <Setter Property="Color" Value="#E0E0E0" />
-            </Style>
-
-            <Style x:Key="ModeButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="HeightRequest" Value="32" />
-                <Setter Property="CornerRadius" Value="16" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
-            <Style x:Key="TodayButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="40" />
-                <Setter Property="HeightRequest" Value="32" />
-                <Setter Property="CornerRadius" Value="16" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
 
             <Style x:Key="CalendarGrid"
                    TargetType="Grid">
@@ -51,22 +27,36 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="ModeBarGrid"
+            <Style x:Key="ModeSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="ModeSheetGrid"
                    TargetType="Grid">
-                <Setter Property="Padding" Value="12,8" />
-                <Setter Property="ColumnSpacing" Value="4" />
+                <Setter Property="Padding" Value="20,8,20,24" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ModeButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource CalendarGrid}"
-          RowDefinitions="*,Auto,Auto">
+    <Grid Style="{StaticResource CalendarGrid}">
 
         <!-- ClamCalendar: 表示範囲が変わるたびに DisplayDateChangedCommand で範囲のイベント・スタンプ・祝日を渡す -->
-        <clam:ClamCalendarView Grid.Row="0"
-                               SelectionMode="{Binding SelectionMode}"
+        <clam:ClamCalendarView SelectionMode="{Binding SelectionMode}"
                                DayTappedCommand="{Binding DayTappedCommand}"
                                DisplayDate="{Binding DisplayDate, Mode=TwoWay}"
                                DisplayDateChangedCommand="{Binding DisplayDateChangedCommand}"
@@ -80,74 +70,73 @@
                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
                                Stamps="{Binding Stamps}" />
 
-        <BoxView Grid.Row="1"
-                 Style="{StaticResource CalendarDivider}" />
-
-        <!-- 選択モード切替+今日へ -->
-        <Grid Grid.Row="2"
-              Style="{StaticResource ModeBarGrid}"
-              ColumnDefinitions="*,*,*,*,8,Auto">
-            <Button Grid.Column="0"
-                    Style="{StaticResource ModeButton}"
-                    Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static clam:CalendarSelectionMode.None}"
-                    Text="None">
-                <Button.Triggers>
-                    <DataTrigger TargetType="Button"
-                                 Binding="{Binding SelectionMode}"
-                                 Value="{x:Static clam:CalendarSelectionMode.None}">
-                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                        <Setter Property="TextColor" Value="White" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-            <Button Grid.Column="1"
-                    Style="{StaticResource ModeButton}"
-                    Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static clam:CalendarSelectionMode.SingleDate}"
-                    Text="Single">
-                <Button.Triggers>
-                    <DataTrigger TargetType="Button"
-                                 Binding="{Binding SelectionMode}"
-                                 Value="{x:Static clam:CalendarSelectionMode.SingleDate}">
-                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                        <Setter Property="TextColor" Value="White" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-            <Button Grid.Column="2"
-                    Style="{StaticResource ModeButton}"
-                    Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static clam:CalendarSelectionMode.MultipleDates}"
-                    Text="Multi">
-                <Button.Triggers>
-                    <DataTrigger TargetType="Button"
-                                 Binding="{Binding SelectionMode}"
-                                 Value="{x:Static clam:CalendarSelectionMode.MultipleDates}">
-                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                        <Setter Property="TextColor" Value="White" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-            <Button Grid.Column="3"
-                    Style="{StaticResource ModeButton}"
-                    Command="{Binding SelectModeCommand}"
-                    CommandParameter="{x:Static clam:CalendarSelectionMode.DateRange}"
-                    Text="Range">
-                <Button.Triggers>
-                    <DataTrigger TargetType="Button"
-                                 Binding="{Binding SelectionMode}"
-                                 Value="{x:Static clam:CalendarSelectionMode.DateRange}">
-                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                        <Setter Property="TextColor" Value="White" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-            <Button Grid.Column="5"
-                    Style="{StaticResource TodayButton}"
-                    Command="{Binding GoToTodayCommand}"
-                    Text="{x:Static fonts:MaterialIcons.Today}" />
-        </Grid>
+        <!-- 選択モード切替 -->
+        <mcc:BottomSheetView Style="{StaticResource ModeSheet}"
+                             IsOpen="{Binding IsSettingOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
+                <DataTemplate x:DataType="module:UICalendarViewModel">
+                    <Grid Style="{StaticResource ModeSheetGrid}"
+                          ColumnDefinitions="*,*,*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ModeButton}"
+                                Command="{Binding SelectModeCommand}"
+                                CommandParameter="{x:Static clam:CalendarSelectionMode.None}"
+                                Text="None">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding SelectionMode}"
+                                             Value="{x:Static clam:CalendarSelectionMode.None}">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ModeButton}"
+                                Command="{Binding SelectModeCommand}"
+                                CommandParameter="{x:Static clam:CalendarSelectionMode.SingleDate}"
+                                Text="Single">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding SelectionMode}"
+                                             Value="{x:Static clam:CalendarSelectionMode.SingleDate}">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button Grid.Column="2"
+                                Style="{StaticResource ModeButton}"
+                                Command="{Binding SelectModeCommand}"
+                                CommandParameter="{x:Static clam:CalendarSelectionMode.MultipleDates}"
+                                Text="Multi">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding SelectionMode}"
+                                             Value="{x:Static clam:CalendarSelectionMode.MultipleDates}">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button Grid.Column="3"
+                                Style="{StaticResource ModeButton}"
+                                Command="{Binding SelectModeCommand}"
+                                CommandParameter="{x:Static clam:CalendarSelectionMode.DateRange}"
+                                Text="Range">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding SelectionMode}"
+                                             Value="{x:Static clam:CalendarSelectionMode.DateRange}">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
     </Grid>
 

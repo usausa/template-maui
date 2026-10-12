@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -19,9 +20,9 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:StepIndicator Style="{StaticResource BasicStepIndicator}"
-                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                    CurrentStep="3" TotalSteps="3" />
+            <mcc:StepIndicator Style="{StaticResource BasicStepIndicator}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               CurrentStep="3" TotalSteps="3" />
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
@@ -42,15 +43,6 @@
                                Text="{Binding Context.Data2}" />
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-            </controls:InfoCard>
-
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160"
-                               Title="Done"
-                               Icon="{x:Static fonts:MaterialIcons.Check_circle}"
-                               IconColor="{StaticResource GreenDefault}">
-                <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                       Text="Press ✔️ to finish the wizard and return to the menu" />
             </controls:InfoCard>
 
         </VerticalStackLayout>

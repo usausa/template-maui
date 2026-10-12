@@ -27,16 +27,23 @@
                 <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
 
-            <Style x:Key="PathLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCaptionLabel}">
-                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            <Style x:Key="LastSendStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,6" />
+                <Setter Property="Spacing" Value="4" />
             </Style>
 
-            <Style x:Key="WrapValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            <Style x:Key="LastSendRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LastSendTimeLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
             <Style x:Key="EmptyNoteLabel"
@@ -51,6 +58,12 @@
                 <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
 
+            <Style x:Key="DeleteButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
 
@@ -58,23 +71,34 @@
             <s:BoolToTextConverter x:Key="TelemetryTextConverter"
                                    TrueValue="Sending"
                                    FalseValue="Stopped" />
-            <s:BoolToColorConverter x:Key="TelemetryColorConverter"
-                                    TrueValue="{StaticResource GreenDarken1}"
-                                    FalseValue="{StaticResource GrayDefault}" />
+            <converters:MapToToneConverter x:Key="TelemetryToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
+                                               Value="Success" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
             <s:BoolToTextConverter x:Key="CrashPendingTextConverter"
                                    TrueValue="Not sent"
                                    FalseValue="None" />
-            <s:BoolToColorConverter x:Key="CrashPendingColorConverter"
-                                    TrueValue="{StaticResource OrangeDefault}"
-                                    FalseValue="{StaticResource GrayDefault}" />
+            <converters:MapToToneConverter x:Key="CrashPendingToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
+                                               Value="Warning" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <!-- 直近の送信の成否 -->
             <s:BoolToTextConverter x:Key="SendResultTextConverter"
                                    TrueValue="Succeeded"
                                    FalseValue="Failed" />
-            <s:BoolToColorConverter x:Key="SendResultColorConverter"
-                                    TrueValue="{StaticResource GreenDarken1}"
-                                    FalseValue="{StaticResource OrangeDefault}" />
+            <converters:MapToToneConverter x:Key="SendResultToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{s:Bool Value=False}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <!-- ログレベル -->
             <s:MapToColorConverter x:Key="LogLevelColorConverter"
@@ -157,32 +181,41 @@
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Device"
                                Icon="{x:Static fonts:MaterialIcons.Smartphone}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Name" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DeviceName}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="OS" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DeviceVersion}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Processors" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding ProcessorCount}" />
+                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Device ID" />
                     <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource WrapValueLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding DeviceId}" />
                 </Grid>
             </controls:InfoCard>
@@ -192,14 +225,14 @@
                                behaviors:AnimationOption.EnterDelay="60"
                                Title="Application"
                                Icon="{x:Static fonts:MaterialIcons.Apps}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Installation" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource WrapValueLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding InstallationId}" />
                 </Grid>
             </controls:InfoCard>
@@ -209,26 +242,32 @@
                                behaviors:AnimationOption.EnterDelay="120"
                                Title="Startup"
                                Icon="{x:Static fonts:MaterialIcons.Rocket_launch}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Started" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding StartedAt, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Uptime" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding Uptime, Converter={StaticResource DurationConverter}}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Initialize" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding InitializationTime, Converter={StaticResource DurationConverter}}" />
                 </Grid>
             </controls:InfoCard>
@@ -238,44 +277,59 @@
                                behaviors:AnimationOption.EnterDelay="180"
                                Title="Database"
                                Icon="{x:Static fonts:MaterialIcons.Storage}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Path" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource PathLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding Database.Path}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Size" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding Database.Size, Converter={StaticResource ByteSizeConverter}}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Modified" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding Database.Modified, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Data" />
                     <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding Database.DataCount, StringFormat='{0:N0} rows'}" />
+                    <BoxView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Work" />
                     <Label Grid.Row="4" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding Database.WorkCount, StringFormat='{0:N0} rows'}" />
+                    <BoxView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="5" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="BulkData" />
                     <Label Grid.Row="5" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding Database.BulkDataCount, StringFormat='{0:N0} rows'}" />
                 </Grid>
             </controls:InfoCard>
@@ -285,37 +339,46 @@
                                behaviors:AnimationOption.EnterDelay="240"
                                Title="Connection"
                                Icon="{x:Static fonts:MaterialIcons.Lan}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Login" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            IsVisible="{Binding IsAuthenticated}"
                            Text="{Binding LoginId}" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            IsVisible="{Binding IsAuthenticated, Converter={StaticResource ReverseConverter}}"
                            Text="Not logged in" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Token expires" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding TokenExpires, StringFormat='{0:yyyy/MM/dd HH:mm:ss}'}" />
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Network" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DeviceState.NetworkAccess}" />
+                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Profile" />
                     <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding DeviceState.NetworkProfile}" />
                 </Grid>
             </controls:InfoCard>
@@ -325,51 +388,58 @@
                                behaviors:AnimationOption.EnterDelay="300"
                                Title="Telemetry"
                                Icon="{x:Static fonts:MaterialIcons.Insights}">
-                <Grid Style="{StaticResource CardInfoGrid}"
+                <Grid Style="{StaticResource CardNameValueGrid}"
                       RowDefinitions="Auto,Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Status" />
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding TelemetryActive, Converter={StaticResource TelemetryTextConverter}}"
-                           TextColor="{Binding TelemetryActive, Converter={StaticResource TelemetryColorConverter}}" />
+                    <controls:StatusChip Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource CardValueChip}"
+                                         Text="{Binding TelemetryActive, Converter={StaticResource TelemetryTextConverter}}"
+                                         Tone="{Binding TelemetryActive, Converter={StaticResource TelemetryToneConverter}}" />
+                    <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Last send" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource CardValueLabel}"
+                           IsVisible="{Binding LastSend, Converter={StaticResource EmptyConverter}}"
+                           Text="-" />
                     <VerticalStackLayout Grid.Row="1" Grid.Column="1"
-                                         Style="{StaticResource CardSmallContentStack}">
-                        <Label Style="{StaticResource ValueLabel}"
-                               IsVisible="{Binding LastSend, Converter={StaticResource EmptyConverter}}"
-                               Text="-" />
-                        <Label Style="{StaticResource ValueLabel}"
-                               IsVisible="{Binding LastSend, Converter={StaticResource NotEmptyConverter}}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="{Binding LastSend.Succeeded, Converter={StaticResource SendResultTextConverter}, FallbackValue=''}"
-                                          TextColor="{Binding LastSend.Succeeded, Converter={StaticResource SendResultColorConverter}, FallbackValue={x:Null}}" />
-                                    <Span Text="{Binding LastSend.Time, StringFormat=' {0:HH:mm:ss}', FallbackValue=''}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <Label Style="{StaticResource WrapValueLabel}"
+                                         Style="{StaticResource LastSendStack}"
+                                         IsVisible="{Binding LastSend, Converter={StaticResource NotEmptyConverter}}">
+                        <HorizontalStackLayout Style="{StaticResource LastSendRowStack}">
+                            <controls:StatusChip Text="{Binding LastSend.Succeeded, Converter={StaticResource SendResultTextConverter}, FallbackValue=''}"
+                                                 Tone="{Binding LastSend.Succeeded, Converter={StaticResource SendResultToneConverter}, FallbackValue=Neutral}" />
+                            <Label Style="{StaticResource LastSendTimeLabel}"
+                                   Text="{Binding LastSend.Time, StringFormat='{0:HH:mm:ss}', FallbackValue=''}" />
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource BasicFieldCaptionLabel}"
                                IsVisible="{Binding LastSend.Reason, Converter={StaticResource NotEmptyConverter}, FallbackValue=False}"
                                Text="{Binding LastSend.Reason, FallbackValue=''}" />
                     </VerticalStackLayout>
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Resend" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardValueLabel}"
                            Text="{Binding ResendWaitingCount, StringFormat='{0} waiting'}" />
+                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                             Style="{StaticResource CardRowDivider}" />
+
                     <Label Grid.Row="3" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource CardNameLabel}"
                            Text="Crash" />
-                    <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource CardStrongValueLabel}"
-                           Text="{Binding CrashPending, Converter={StaticResource CrashPendingTextConverter}}"
-                           TextColor="{Binding CrashPending, Converter={StaticResource CrashPendingColorConverter}}" />
+                    <controls:StatusChip Grid.Row="3" Grid.Column="1"
+                                         Style="{StaticResource CardValueChip}"
+                                         Text="{Binding CrashPending, Converter={StaticResource CrashPendingTextConverter}}"
+                                         Tone="{Binding CrashPending, Converter={StaticResource CrashPendingToneConverter}}" />
                 </Grid>
             </controls:InfoCard>
 
@@ -443,10 +513,10 @@
                                 Text="Share files"
                                 ImageSource="{x:Static markup:AppIcons.SmallShare}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Style="{StaticResource DeleteButton}"
                                 Command="{Binding DeleteLogsCommand}"
                                 Text="Delete files"
-                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                                ImageSource="{x:Static markup:AppIcons.DiagnosticsDelete}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -465,10 +535,10 @@
                            Text="{Binding LastCrashReport}" />
                     <Grid Style="{StaticResource ActionRowGrid}"
                           ColumnDefinitions="*">
-                        <Button Style="{StaticResource BasicIconOutlinedButton}"
+                        <Button Style="{StaticResource DeleteButton}"
                                 Command="{Binding ClearCrashReportCommand}"
                                 Text="Clear"
-                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                                ImageSource="{x:Static markup:AppIcons.DiagnosticsDelete}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

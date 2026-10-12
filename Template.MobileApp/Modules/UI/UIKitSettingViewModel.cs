@@ -11,8 +11,10 @@ public sealed partial class UIKitSettingItem : ObservableObject
     public partial bool IsOn { get; set; }
 }
 
-public sealed class UIKitSettingViewModel : AppViewModelBase
+public sealed partial class UIKitSettingViewModel : AppViewModelBase
 {
+    private readonly IDialog dialog;
+
     public IReadOnlyList<UIKitSettingItem> AccountItems { get; } =
     [
         new() { Icon = Fonts.MaterialIcons.Person, Title = "プロフィール", Detail = "うさうささん" },
@@ -27,6 +29,37 @@ public sealed class UIKitSettingViewModel : AppViewModelBase
         new() { Icon = Fonts.MaterialIcons.Dark_mode, Title = "ダークモード", IsSwitch = true, IsOn = false }
     ];
 
+    [ObservableProperty]
+    public partial double TextSize { get; set; } = 14;
+
+    // 画面のアイコンとスイッチの色
+    [ObservableProperty]
+    public partial Color ThemeColor { get; set; } = Color.FromArgb("#2196F3");
+
+    [ObservableProperty]
+    public partial bool IsColorOpen { get; set; }
+
+    public Version Version { get; }
+
+    public IObserveCommand ColorCommand { get; }
+
+    public IObserveCommand LogoutCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
+    public UIKitSettingViewModel(
+        IDialog dialog,
+        IAppInfo appInfo)
+    {
+        this.dialog = dialog;
+        Version = appInfo.Version;
+
+        ColorCommand = MakeDelegateCommand(() => IsColorOpen = !IsColorOpen);
+        LogoutCommand = MakeAsyncCommand(LogoutAsync);
+    }
+
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
@@ -34,4 +67,17 @@ public sealed class UIKitSettingViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    // ログアウトしたら、はじめにの画面へ
+    private async Task LogoutAsync()
+    {
+        if (await dialog.ConfirmAsync("ログアウトしますか?"))
+        {
+            await Navigator.ForwardAsync(ViewId.UIKitOnboard);
+        }
+    }
 }

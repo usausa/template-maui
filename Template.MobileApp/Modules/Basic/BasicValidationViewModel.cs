@@ -16,7 +16,7 @@ public sealed partial class BasicValidationViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string Password { get; set; } = default!;
 
-    [Compare(nameof(Password), ErrorMessage = "Password と一致しません")]
+    [Compare(nameof(Password), ErrorMessage = "Does not match Password")]
     [ObservableProperty]
     public partial string Confirm { get; set; } = default!;
 

@@ -1,92 +1,60 @@
 namespace Template.MobileApp.Modules.UI;
 
-public sealed partial class UICartItem : ObservableObject
-{
-    public string Title { get; init; } = string.Empty;
-    public string Image { get; init; } = string.Empty;
-    public decimal UnitPrice { get; init; }
-    public int Delay { get; init; }
-
-    [ObservableProperty]
-    public partial int Quantity { get; set; }
-
-    public string PriceText => String.Format(CultureInfo.CurrentCulture, "¥{0:N0}", UnitPrice);
-}
-
 public sealed partial class UICartViewModel : AppViewModelBase
 {
-    private const decimal DiscountRate = 0.10m;
-
-    public IReadOnlyList<UICartItem> Items { get; }
-
+    [Scope]
     [ObservableProperty]
-    public partial int ItemCount { get; set; }
-
-    [ObservableProperty]
-    public partial decimal Subtotal { get; set; }
-
-    [ObservableProperty]
-    public partial decimal Discount { get; set; }
-
-    [ObservableProperty(NotifyAlso = [nameof(TotalValue)])]
-    public partial decimal Total { get; set; }
-
-    public double TotalValue => (double)Total;
+    public partial UIShopContext Context { get; set; } = default!;
 
     public string Coupon { get; } = "スプリングセール −10%";
 
     public string Points { get; } = "12,540 pt 利用可能";
 
+    // 確定した注文 (IsCompleted の後に表示する)
+    [ObservableProperty]
+    public partial ShopOrder Order { get; set; } = default!;
+
+    [ObservableProperty]
+    public partial bool IsCompleted { get; set; }
+
+    public IObserveCommand BackCommand { get; }
+
     public IObserveCommand IncrementCommand { get; }
+
     public IObserveCommand DecrementCommand { get; }
+
+    public IObserveCommand RemoveCommand { get; }
+
     public IObserveCommand CheckoutCommand { get; }
+
+    public IObserveCommand ContinueCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public UICartViewModel(IDialog dialog)
+    public UICartViewModel()
     {
-        Items =
-        [
-            new() { Title = "メカニカルキーボード", UnitPrice = 19800m, Quantity = 1, Image = "product_gear01.jpg", Delay = 0 },
-            new() { Title = "ワイヤレスマウス", UnitPrice = 8900m, Quantity = 2, Image = "product_gear02.jpg", Delay = 80 },
-            new() { Title = "ノイズキャンセリングヘッドセット", UnitPrice = 14800m, Quantity = 1, Image = "product_gear03.jpg", Delay = 160 }
-        ];
-
-        IncrementCommand = MakeDelegateCommand<UICartItem>(item =>
+        BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
+#pragma warning disable IDE0200
+        IncrementCommand = MakeDelegateCommand<ShopCartItem>(x => Context.Store.Increase(x));
+        DecrementCommand = MakeDelegateCommand<ShopCartItem>(x => Context.Store.Decrease(x));
+        RemoveCommand = MakeDelegateCommand<ShopCartItem>(x => Context.Store.Remove(x));
+#pragma warning restore IDE0200
+        CheckoutCommand = MakeDelegateCommand(() =>
         {
-            item.Quantity = Math.Min(99, item.Quantity + 1);
-            Recalculate();
+            Order = Context.Checkout();
+            IsCompleted = true;
         });
-        DecrementCommand = MakeDelegateCommand<UICartItem>(item =>
-        {
-            item.Quantity = Math.Max(1, item.Quantity - 1);
-            Recalculate();
-        });
-        CheckoutCommand = MakeAsyncCommand(async () =>
-            await dialog.InformationAsync(String.Format(CultureInfo.CurrentCulture, "お会計が完了しました。\n{0} 点 / ¥{1:N0}", ItemCount, Total)));
-
-        Recalculate();
+        // 一覧の画面まで戻る
+        ContinueCommand = MakeAsyncCommand(() => Navigator.PopAsync(Navigator.StackedCount - 1));
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIItem);
+    protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    //--------------------------------------------------------------------------------
-    // Operation
-    //--------------------------------------------------------------------------------
-
-    private void Recalculate()
-    {
-        ItemCount = Items.Sum(static x => x.Quantity);
-        Subtotal = Items.Sum(static x => x.UnitPrice * x.Quantity);
-        Discount = Math.Round(Subtotal * DiscountRate, 0);
-        Total = Subtotal - Discount;
-    }
 }

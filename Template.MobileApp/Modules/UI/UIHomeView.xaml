@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:holder="clr-namespace:Template.MobileApp.Models"
+             x:Class="Template.MobileApp.Modules.UI.UIHomeView"
+             x:DataType="{x:Type module:UIHomeViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIHomeViewModel}"
+             shell:ShellProperty.Title="Home"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#101418">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Color x:Key="HomeCardColor">#26FFFFFF</Color>
+            <Color x:Key="HomeCardLineColor">#38FFFFFF</Color>
+            <Color x:Key="HomeSubTextColor">#B3FFFFFF</Color>
+            <Color x:Key="HomeTrackColor">#40FFFFFF</Color>
+
+            <converters:HomeDeviceTextConverter x:Key="DeviceIconConverter"
+                                                Part="Icon" />
+            <converters:HomeDeviceTextConverter x:Key="DeviceStateConverter"
+                                                Part="State" />
+            <converters:HomeDeviceTextConverter x:Key="DeviceDetailConverter"
+                                                Part="Detail" />
+            <converters:HomeBatteryLevelConverter x:Key="BatteryTextConverter" />
+            <converters:HomeBatteryLevelConverter x:Key="BatteryColorConverter"
+                                                  HighColor="{StaticResource GreenAccent3}"
+                                                  IsColor="True"
+                                                  LowColor="{StaticResource RedAccent2}"
+                                                  MediumColor="{StaticResource AmberDarken1}" />
+
+            <s:MapToColorConverter x:Key="DeviceColorConverter"
+                                   DefaultValue="{StaticResource CyanAccent3}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceKind.Light}"
+                                       Value="{StaticResource AmberDarken1}" />
+                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceKind.Lamp}"
+                                       Value="{StaticResource AmberDarken1}" />
+                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceKind.Lock}"
+                                       Value="{StaticResource GreenAccent3}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToColorConverter x:Key="StatusColorConverter"
+                                   DefaultValue="{StaticResource GreenAccent3}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceStatus.Active}"
+                                       Value="{StaticResource AmberDarken1}" />
+                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceStatus.Issue}"
+                                       Value="{StaticResource RedAccent2}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToBoolConverter x:Key="SliderKindConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Light}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Lamp}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="TextKindConverter"
+                                  DefaultValue="True">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Light}"
+                                      Value="False" />
+                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Lamp}"
+                                      Value="False" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToTextConverter x:Key="RoomIconConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:HomeRoomKind.LivingRoom}"
+                                      Value="{x:Static fonts:MaterialIcons.Weekend}" />
+                    <s:MapToTextEntry Key="{x:Static models:HomeRoomKind.Bedroom}"
+                                      Value="{x:Static fonts:MaterialIcons.Bed}" />
+                    <s:MapToTextEntry Key="{x:Static models:HomeRoomKind.Kitchen}"
+                                      Value="{x:Static fonts:MaterialIcons.Kitchen}" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <Style x:Key="HomeContentGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8,12,10" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="GlassBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource HomeCardColor}" />
+                <Setter Property="Stroke" Value="{StaticResource HomeCardLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="TileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource GlassBorder}">
+                <Setter Property="Padding" Value="10,8" />
+                <Setter Property="HeightRequest" Value="116" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="GlassIconButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource CyanAccent3}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource HomeCardColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="HeaderTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="CenterSubLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="RoomNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="StatusLineLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource CyanAccent3}" />
+            </Style>
+
+            <Style x:Key="HeaderIconStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="HeaderIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SectionGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ThermostatLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionLabel}">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="ActiveStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="ActiveSwitch"
+                   TargetType="Switch">
+                <Setter Property="OnColor" Value="{StaticResource GreenAccent3}" />
+                <Setter Property="ThumbColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ActiveLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="DialGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="210" />
+                <Setter Property="HeightRequest" Value="210" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="Dial"
+                   TargetType="controls:HomeThermostatDial">
+                <Setter Property="ArcStartColor" Value="{StaticResource OrangeAccent2}" />
+                <Setter Property="ArcEndColor" Value="{StaticResource DeepOrangeAccent2}" />
+            </Style>
+
+            <Style x:Key="DialCenterStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="SetTempLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="StepButtonStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="StepButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource GlassIconButton}">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LegendStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="DotBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="10" />
+                <Setter Property="HeightRequest" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 5" />
+            </Style>
+
+            <Style x:Key="OnlineDotBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource DotBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
+            </Style>
+
+            <Style x:Key="ActiveDotBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource DotBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
+            </Style>
+
+            <Style x:Key="IssueDotBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource DotBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedAccent2}" />
+            </Style>
+
+            <Style x:Key="LegendLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,6,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="TileGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="TileNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="TileStateLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="TileIcon"
+                   TargetType="controls:HomeGlowIcon">
+                <Setter Property="IconSize" Value="36" />
+            </Style>
+
+            <Style x:Key="TileSliderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="TileSlider"
+                   TargetType="Slider">
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="100" />
+                <Setter Property="MinimumTrackColor" Value="{StaticResource AmberDarken1}" />
+                <Setter Property="MaximumTrackColor" Value="{StaticResource HomeTrackColor}" />
+                <Setter Property="ThumbColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TileValueLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TileDetailLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="BatteryBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource GlassBorder}">
+                <Setter Property="Padding" Value="12,10" />
+            </Style>
+
+            <Style x:Key="BatteryGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="ColumnSpacing" Value="6" />
+            </Style>
+
+            <Style x:Key="BatteryNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="BatteryGaugeGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+
+            <Style x:Key="BatteryPercentLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="BatteryLevelLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="TabBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource GlassBorder}">
+                <Setter Property="Padding" Value="8,0,8,6" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+            </Style>
+
+            <Style x:Key="TabStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="TabMarkBoxView"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="3" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="Color" Value="{StaticResource CyanAccent3}" />
+                <Setter Property="Opacity" Value="0" />
+            </Style>
+
+            <Style x:Key="TabIcon"
+                   TargetType="controls:HomeGlowIcon">
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="IconSize" Value="28" />
+                <Setter Property="Color" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="TabLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid>
+        <controls:HomeBlurredImage Source="{Binding Home.Room.Background}"
+                                   BlurRadius="18" Dim="0.55" MaxLuminance="0.08" />
+
+        <Grid Style="{StaticResource HomeContentGrid}"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
+
+            <Border Grid.Row="0"
+                    Style="{StaticResource GlassBorder}">
+                <Grid Style="{StaticResource HeaderGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="72,*,72">
+                    <Button Grid.Row="0" Grid.Column="0"
+                            Style="{StaticResource GlassIconButton}"
+                            Command="{Binding BackCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                         Style="{StaticResource HeaderTextStack}">
+                        <Label Style="{StaticResource CenterSubLabel}"
+                               Text="スマートホーム" />
+                        <Label Style="{StaticResource RoomNameLabel}"
+                               Text="{Binding Home.Room.Name}" />
+                    </VerticalStackLayout>
+                    <HorizontalStackLayout Grid.Row="0" Grid.Column="2"
+                                           Style="{StaticResource HeaderIconStack}">
+                        <Label Style="{StaticResource HeaderIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Account_circle}" />
+                        <Label Style="{StaticResource HeaderIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Settings}" />
+                    </HorizontalStackLayout>
+                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                           Style="{StaticResource StatusLineLabel}">
+                        <Label.Text>
+                            <MultiBinding StringFormat="{}オンライン | 室温{0:0}°C | {1}のシーン">
+                                <Binding Path="Home.Room.Temperature" />
+                                <Binding Path="Home.Room.Scene" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid Style="{StaticResource DialGrid}">
+                    <controls:HomeThermostatDial Style="{StaticResource Dial}"
+                                                 Value="{Binding Home.Room.SetTemperature}"
+                                                 Minimum="{x:Static models:SmartHome.MinTemperature}"
+                                                 Maximum="{x:Static models:SmartHome.MaxTemperature}"
+                                                 IsActive="{Binding Home.Room.IsThermostatActive}"
+                                                 Step="{x:Static models:SmartHome.TemperatureStep}" />
+                    <VerticalStackLayout Style="{StaticResource DialCenterStack}">
+                        <Label Style="{StaticResource CenterSubLabel}"
+                               Text="設定温度" />
+                        <Label Style="{StaticResource SetTempLabel}"
+                               Text="{Binding Home.Room.SetTemperature, StringFormat='{0:0.0}°C'}" />
+                        <HorizontalStackLayout Style="{StaticResource StepButtonStack}">
+                            <Button Style="{StaticResource StepButton}"
+                                    Command="{Binding DownCommand}"
+                                    Text="{x:Static fonts:MaterialIcons.Remove}" />
+                            <Button Style="{StaticResource StepButton}"
+                                    Command="{Binding UpCommand}"
+                                    Text="{x:Static fonts:MaterialIcons.Add}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+                <Label Style="{StaticResource ThermostatLabel}"
+                       Text="空調" />
+                <VerticalStackLayout Style="{StaticResource ActiveStack}">
+                    <Switch Style="{StaticResource ActiveSwitch}"
+                            IsToggled="{Binding Home.Room.IsThermostatActive}" />
+                    <Label Style="{StaticResource ActiveLabel}"
+                           Text="{Binding Home.Room.IsThermostatActive, Converter={s:BoolToText True='運転中', False='停止'}}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid Grid.Row="2"
+                  Style="{StaticResource SectionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SectionLabel}"
+                       Text="機器" />
+                <HorizontalStackLayout Grid.Column="1"
+                                       Style="{StaticResource LegendStack}">
+                    <Border Style="{StaticResource OnlineDotBorder}" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="正常" />
+                    <Border Style="{StaticResource ActiveDotBorder}" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="動作中" />
+                    <Border Style="{StaticResource IssueDotBorder}" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="異常" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <CollectionView Grid.Row="3"
+                            ItemsSource="{Binding Home.Room.Devices}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     HorizontalItemSpacing="8" Span="3" VerticalItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:HomeDevice">
+                        <Border Style="{StaticResource TileBorder}">
+                            <Grid Style="{StaticResource TileGrid}"
+                                  RowDefinitions="Auto,Auto,*,Auto"
+                                  ColumnDefinitions="*,Auto">
+                                <Grid.GestureRecognizers>
+                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIHomeViewModel}}, Path=ToggleCommand, x:DataType={x:Type module:UIHomeViewModel}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Style="{StaticResource TileNameLabel}"
+                                       Text="{Binding Name}" />
+                                <Border Grid.Row="0" Grid.Column="1"
+                                        Style="{StaticResource DotBorder}"
+                                        BackgroundColor="{Binding Status, Converter={StaticResource StatusColorConverter}}" />
+                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Style="{StaticResource TileStateLabel}"
+                                       TextColor="{Binding Kind, Converter={StaticResource DeviceColorConverter}}">
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource DeviceStateConverter}">
+                                            <Binding Path="Kind" />
+                                            <Binding Path="IsOn" />
+                                            <Binding Path="Level" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsOn}"
+                                                     Value="False">
+                                            <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <controls:HomeGlowIcon Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                                       Style="{StaticResource TileIcon}"
+                                                       Color="{Binding Kind, Converter={StaticResource DeviceColorConverter}}"
+                                                       IsGlowing="{Binding IsOn}">
+                                    <controls:HomeGlowIcon.Glyph>
+                                        <MultiBinding Converter="{StaticResource DeviceIconConverter}">
+                                            <Binding Path="Kind" />
+                                            <Binding Path="IsOn" />
+                                            <Binding Path="Level" />
+                                        </MultiBinding>
+                                    </controls:HomeGlowIcon.Glyph>
+                                    <controls:HomeGlowIcon.Triggers>
+                                        <DataTrigger TargetType="controls:HomeGlowIcon"
+                                                     Binding="{Binding IsOn}"
+                                                     Value="False">
+                                            <Setter Property="Color" Value="{StaticResource GrayDefault}" />
+                                        </DataTrigger>
+                                    </controls:HomeGlowIcon.Triggers>
+                                </controls:HomeGlowIcon>
+                                <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                      Style="{StaticResource TileSliderGrid}"
+                                      ColumnDefinitions="*,Auto"
+                                      IsVisible="{Binding Kind, Converter={StaticResource SliderKindConverter}}">
+                                    <Slider Grid.Column="0"
+                                            Style="{StaticResource TileSlider}"
+                                            IsEnabled="{Binding IsOn}"
+                                            Value="{Binding Level}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource TileValueLabel}"
+                                           Text="{Binding Level, StringFormat='{0:0}%'}" />
+                                </Grid>
+                                <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Style="{StaticResource TileDetailLabel}"
+                                       IsVisible="{Binding Kind, Converter={StaticResource TextKindConverter}}"
+                                       TextColor="{Binding Kind, Converter={StaticResource DeviceColorConverter}}">
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource DeviceDetailConverter}">
+                                            <Binding Path="Kind" />
+                                            <Binding Path="IsOn" />
+                                            <Binding Path="Level" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsOn}"
+                                                     Value="False">
+                                            <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Border Grid.Row="4"
+                    Style="{StaticResource BatteryBorder}">
+                <CollectionView ItemsSource="{Binding Home.Room.Batteries}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         HorizontalItemSpacing="8" Span="3" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:HomeBattery">
+                            <Grid Style="{StaticResource BatteryGrid}"
+                                  RowDefinitions="Auto,Auto,Auto"
+                                  ColumnDefinitions="*,Auto">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Style="{StaticResource BatteryNameLabel}"
+                                       Text="{Binding Name}" />
+                                <Border Grid.Row="0" Grid.Column="1"
+                                        Style="{StaticResource DotBorder}"
+                                        BackgroundColor="{Binding Status, Converter={StaticResource StatusColorConverter}}" />
+                                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                      Style="{StaticResource BatteryGaugeGrid}">
+                                    <controls:HomeBatteryGauge FillColor="{Binding Level, Converter={StaticResource BatteryColorConverter}}"
+                                                               Level="{Binding Level}" />
+                                    <Label Style="{StaticResource BatteryPercentLabel}"
+                                           Text="{Binding Level, StringFormat='{0:P0}'}" />
+                                </Grid>
+                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Style="{StaticResource BatteryLevelLabel}"
+                                       Text="{Binding Level, Converter={StaticResource BatteryTextConverter}}"
+                                       TextColor="{Binding Level, Converter={StaticResource BatteryColorConverter}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+
+            <Border Grid.Row="6"
+                    Style="{StaticResource TabBorder}">
+                <CollectionView ItemsSource="{Binding Rooms}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="3" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="holder:Selectable(models:HomeRoom)">
+                            <VerticalStackLayout Style="{StaticResource TabStack}">
+                                <VerticalStackLayout.GestureRecognizers>
+                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIHomeViewModel}}, Path=RoomCommand, x:DataType={x:Type module:UIHomeViewModel}}"
+                                                          CommandParameter="{Binding .}" />
+                                </VerticalStackLayout.GestureRecognizers>
+                                <BoxView Style="{StaticResource TabMarkBoxView}">
+                                    <BoxView.Triggers>
+                                        <DataTrigger TargetType="BoxView"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="Opacity" Value="1" />
+                                        </DataTrigger>
+                                    </BoxView.Triggers>
+                                </BoxView>
+                                <controls:HomeGlowIcon Style="{StaticResource TabIcon}"
+                                                       Glyph="{Binding Item.Kind, Converter={StaticResource RoomIconConverter}}"
+                                                       IsGlowing="{Binding IsSelected}">
+                                    <controls:HomeGlowIcon.Triggers>
+                                        <DataTrigger TargetType="controls:HomeGlowIcon"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="Color" Value="{StaticResource CyanAccent3}" />
+                                        </DataTrigger>
+                                    </controls:HomeGlowIcon.Triggers>
+                                </controls:HomeGlowIcon>
+                                <Label Style="{StaticResource TabLabel}"
+                                       Text="{Binding Item.Name}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource CyanAccent3}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+
+        </Grid>
+    </Grid>
+
+</ContentView>

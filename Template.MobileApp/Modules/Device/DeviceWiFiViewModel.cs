@@ -62,6 +62,9 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string ScanMessage { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    public partial bool Scanning { get; set; }
+
     public IObserveCommand ToggleDetailCommand { get; }
 
     public IObserveCommand ToggleExpandCommand { get; }
@@ -152,7 +155,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     {
         if (wifiManager.StartScan())
         {
-            ScanMessage = "スキャン中…";
+            ScanMessage = "Scanning…";
+            Scanning = true;
         }
 
         ScheduleScan();
@@ -163,7 +167,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         IsRadioOn = wifiManager.IsRadioOn;
         Connection = wifiManager.Connection;
         IsConnected = Connection is not null;
-        StateText = !IsSupported ? "非対応" : !IsRadioOn ? "Wi-Fi オフ" : IsConnected ? "接続中" : "未接続";
+        StateText = !IsSupported ? "Not supported" : !IsRadioOn ? "Wi-Fi off" : IsConnected ? "Connected" : "Not connected";
 
         UpdateAccessPoints(Connection?.Bssid);
     }
@@ -199,7 +203,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
                 }
             }
 
-            ScanMessage = results.Count > 0 ? $"更新 {now:HH:mm:ss}" : HasPermission ? "アクセスポイントは検出されていません" : "権限が無いためスキャン結果を取得できません";
+            ScanMessage = results.Count > 0 ? $"Updated {now:HH:mm:ss}" : HasPermission ? "No access points" : "Permission required for scan";
+            Scanning = false;
             ScheduleScan();
         }
 

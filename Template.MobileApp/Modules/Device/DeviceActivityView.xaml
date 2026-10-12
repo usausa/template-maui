@@ -25,6 +25,8 @@
             <Style x:Key="ActivityValueLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="96" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
@@ -41,61 +43,69 @@
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
-            <Style x:Key="DetailVerticalStack"
-                   TargetType="VerticalStackLayout">
+            <Style x:Key="TileGrid"
+                   TargetType="Grid">
                 <Setter Property="Padding" Value="12,24" />
-                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="ColumnSpacing" Value="12" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="DetailBorder"
+            <Style x:Key="TileBorder"
                    TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
-                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="8,12" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style x:Key="DetailGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="White" />
+            <Style x:Key="CalorieTileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource TileBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeLighten5}" />
             </Style>
 
-            <Style x:Key="DetailIconLabel"
+            <Style x:Key="DistanceTileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource TileBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="TimeTileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource TileBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+            </Style>
+
+            <Style x:Key="TileStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="TileIconLabel"
                    TargetType="Label">
-                <Setter Property="Padding" Value="6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="24" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="DetailNameLabel"
+            <Style x:Key="TileValueLabel"
                    TargetType="Label">
-                <Setter Property="Padding" Value="6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="24" />
-                <Setter Property="HorizontalTextAlignment" Value="Start" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
-            <Style x:Key="DetailValueLabel"
+            <Style x:Key="TileUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="None" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TileNameLabel"
                    TargetType="Label">
-                <Setter Property="Padding" Value="6" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="DetailUnitLabel"
-                   TargetType="Label">
-                <Setter Property="Padding" Value="6" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="HorizontalTextAlignment" Value="Start" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="SeparatorBoxView"
-                   TargetType="BoxView">
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
         </ResourceDictionary>
@@ -121,61 +131,61 @@
                Style="{StaticResource ActivityIconLabel}"
                Text="👟" />
 
-        <VerticalStackLayout Grid.Row="2"
-                             Style="{StaticResource DetailVerticalStack}">
-            <Border Style="{StaticResource DetailBorder}">
-                <Grid Style="{StaticResource DetailGrid}"
-                      RowDefinitions="Auto,1,Auto,1,Auto"
-                      ColumnDefinitions="Auto,Auto,*,Auto">
+        <Grid Grid.Row="2"
+              Style="{StaticResource TileGrid}"
+              ColumnDefinitions="*,*,*">
 
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource DetailIconLabel}"
+            <Border Grid.Column="0"
+                    Style="{StaticResource CalorieTileBorder}">
+                <VerticalStackLayout Style="{StaticResource TileStack}">
+                    <Label Style="{StaticResource TileIconLabel}"
                            Text="🔥" />
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource DetailNameLabel}"
+                    <Label Style="{StaticResource TileValueLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Calculator.Calories, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
+                                <Span Style="{StaticResource TileUnitSpan}"
+                                      Text=" kcal" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Style="{StaticResource TileNameLabel}"
                            Text="消費カロリー" />
-                    <Label Grid.Row="0" Grid.Column="2"
-                           Style="{StaticResource DetailValueLabel}"
-                           Text="{Binding Calculator.Calories, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
-                    <Label Grid.Row="0" Grid.Column="3"
-                           Style="{StaticResource DetailUnitLabel}"
-                           Text="kcal" />
-
-                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
-                             Style="{StaticResource SeparatorBoxView}" />
-
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource DetailIconLabel}"
-                           Text="🏃" />
-                    <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource DetailNameLabel}"
-                           Text="距離" />
-                    <Label Grid.Row="2" Grid.Column="2"
-                           Style="{StaticResource DetailValueLabel}"
-                           Text="{Binding Calculator.Distance, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
-                    <Label Grid.Row="2" Grid.Column="3"
-                           Style="{StaticResource DetailUnitLabel}"
-                           Text="km" />
-
-                    <BoxView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"
-                             Style="{StaticResource SeparatorBoxView}" />
-
-                    <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource DetailIconLabel}"
-                           Text="⏱" />
-                    <Label Grid.Row="4" Grid.Column="1"
-                           Style="{StaticResource DetailNameLabel}"
-                           Text="活動時間" />
-                    <Label Grid.Row="4" Grid.Column="2"
-                           Style="{StaticResource DetailValueLabel}"
-                           Text="{Binding Calculator.ActivityTime.TotalHours, StringFormat='{0:F2}'}" />
-                    <Label Grid.Row="4" Grid.Column="3"
-                           Style="{StaticResource DetailUnitLabel}"
-                           Text="時間" />
-
-                </Grid>
+                </VerticalStackLayout>
             </Border>
-        </VerticalStackLayout>
+
+            <Border Grid.Column="1"
+                    Style="{StaticResource DistanceTileBorder}">
+                <VerticalStackLayout Style="{StaticResource TileStack}">
+                    <Label Style="{StaticResource TileIconLabel}"
+                           Text="🏃" />
+                    <Label Style="{StaticResource TileValueLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Calculator.Distance, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
+                                <Span Style="{StaticResource TileUnitSpan}"
+                                      Text=" km" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Style="{StaticResource TileNameLabel}"
+                           Text="距離" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Style="{StaticResource TimeTileBorder}">
+                <VerticalStackLayout Style="{StaticResource TileStack}">
+                    <Label Style="{StaticResource TileIconLabel}"
+                           Text="⏱️" />
+                    <Label Style="{StaticResource TileValueLabel}"
+                           Text="{Binding Calculator.ActivityTime, StringFormat='{0:h\\:mm}'}" />
+                    <Label Style="{StaticResource TileNameLabel}"
+                           Text="活動時間" />
+                </VerticalStackLayout>
+            </Border>
+
+        </Grid>
 
     </Grid>
 

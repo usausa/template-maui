@@ -167,7 +167,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     }
 
     private static string FormatNotificationTap(NotificationTappedEventArgs args) =>
-        args.Action is null ? $"通知: {args.Payload}" : $"通知 [{args.Action}]: {args.Payload}";
+        args.Action is null ? $"Notification: {args.Payload}" : $"Notification [{args.Action}]: {args.Payload}";
 
     public void OnActivated()
     {

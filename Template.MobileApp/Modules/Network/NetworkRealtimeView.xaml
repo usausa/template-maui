@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkRealtimeView"
@@ -22,24 +23,51 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="ErrorLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            <Style x:Key="StateChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="StatBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
+            <s:MapToTextConverter x:Key="StateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Stopped}"
+                                      Value="Stopped" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Connecting}"
+                                      Value="Connecting" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Connected}"
+                                      Value="Connected" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Reconnecting}"
+                                      Value="Reconnecting" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Error}"
+                                      Value="Error" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToBoolConverter x:Key="StateBusyConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:RealtimeState.Connecting}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:RealtimeState.Reconnecting}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <converters:MapToToneConverter x:Key="StateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Connecting}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Connected}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Reconnecting}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Error}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <Style x:Key="StatGraph"
                    TargetType="controls:StatControl">
-                <Setter Property="HeightRequest" Value="110" />
+                <Setter Property="HeightRequest" Value="120" />
             </Style>
 
         </ResourceDictionary>
@@ -50,64 +78,92 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="接続"
+                               Title="Connection"
                                Icon="{x:Static fonts:MaterialIcons.Sync}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding StateText, StringFormat='状態: {0}'}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding ConnectionId, StringFormat='接続 ID: {0}'}" />
-                    <Label Style="{StaticResource ErrorLabel}"
-                           IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding LastError}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding ServerTime, StringFormat='サーバー時刻: {0}'}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding ReportCount, StringFormat='端末の状態を送信: {0} 回 (10 秒ごと)'}" />
+                    <controls:StatusChip Style="{StaticResource StateChip}"
+                                         Icon="{x:Static fonts:MaterialIcons.Sync}"
+                                         Text="{Binding State, Converter={StaticResource StateTextConverter}}"
+                                         IconSpin="{Binding State, Converter={StaticResource StateBusyConverter}}"
+                                         Tone="{Binding State, Converter={StaticResource StateToneConverter}}" />
+                    <Border Style="{StaticResource CardErrorBorder}"
+                            IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}">
+                        <Grid Style="{StaticResource CardErrorGrid}"
+                              ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardErrorIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Error_outline}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource CardErrorLabel}"
+                                   Text="{Binding LastError}" />
+                        </Grid>
+                    </Border>
+                    <Grid Style="{StaticResource CardNameValueGrid}"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="2*,3*">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource CardNameLabel}"
+                               Text="Connection ID" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource CardMonoValueLabel}"
+                               Text="{Binding ConnectionId}" />
+                        <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
+
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource CardNameLabel}"
+                               Text="Server time" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource CardMonoValueLabel}"
+                               Text="{Binding ServerTime}" />
+                        <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
+
+                        <Label Grid.Row="2" Grid.Column="0"
+                               Style="{StaticResource CardNameLabel}"
+                               Text="Status reports" />
+                        <Label Grid.Row="2" Grid.Column="1"
+                               Style="{StaticResource CardValueLabel}"
+                               Text="{Binding ReportCount, StringFormat='{0} (every 10 s)'}" />
+                    </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding ReconnectCommand}"
-                                Text="再接続" />
+                                Text="Reconnect" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding ReportCommand}"
-                                Text="状態を送信" />
+                                Text="Send status" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                    behaviors:AnimationOption.EnterDelay="80">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding CpuLoadSet}"
-                                      GraphColor="{StaticResource BlueDefault}"
-                                      Label="Server CPU" />
-            </Border>
+            <controls:StatControl Style="{StaticResource StatGraph}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="80"
+                                  DataSet="{Binding CpuLoadSet}"
+                                  GraphColor="{StaticResource BlueDefault}"
+                                  Label="Server CPU" />
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                    behaviors:AnimationOption.EnterDelay="160">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding MemoryLoadSet}"
-                                      GraphColor="{StaticResource GreenDefault}"
-                                      Label="Server memory" MaxValue="512" Unit="MB" />
-            </Border>
+            <controls:StatControl Style="{StaticResource StatGraph}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="160"
+                                  DataSet="{Binding MemoryLoadSet}"
+                                  GraphColor="{StaticResource GreenDefault}"
+                                  Label="Server memory" MaxValue="512" Unit="MB" />
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                    behaviors:AnimationOption.EnterDelay="240">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding ConnectionSet}"
-                                      GraphColor="{StaticResource OrangeDefault}"
-                                      Label="Connections" MaxValue="10" Unit="" />
-            </Border>
+            <controls:StatControl Style="{StaticResource StatGraph}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="240"
+                                  DataSet="{Binding ConnectionSet}"
+                                  GraphColor="{StaticResource OrangeDefault}"
+                                  Label="Connections" MaxValue="10" Unit="" ValueFormat="F0" />
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320"
-                               Title="通知"
+                               Title="Notifications"
                                Icon="{x:Static fonts:MaterialIcons.Notifications}">
                 <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
                                      BindableLayout.ItemsSource="{Binding Notifications}">
@@ -119,7 +175,7 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="管理画面の Devices から送った通知がここに出る (前面ならトースト、バックグラウンドならローカル通知)" />
+                               Text="Notifications from Devices in the dashboard" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>
             </controls:InfoCard>

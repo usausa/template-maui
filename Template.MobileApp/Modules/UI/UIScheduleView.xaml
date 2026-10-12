@@ -2,10 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:calendar="clr-namespace:Template.MobileApp.Models.Sample.Calendar"
              x:Class="Template.MobileApp.Modules.UI.UIScheduleView"
              x:DataType="{x:Type module:UIScheduleViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIScheduleViewModel}"
@@ -96,12 +98,155 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
+            <!-- 終日の予定 -->
+            <Style x:Key="AllDayScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Margin" Value="12,0,12,8" />
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+            </Style>
+
+            <Style x:Key="AllDayStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="AllDayCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,4,0" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AllDayChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,3" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+            </Style>
+
+            <Style x:Key="AllDayChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- 予定の詳細のシート -->
+            <Style x:Key="DetailSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,20" />
+                <Setter Property="Spacing" Value="14" />
+            </Style>
+
+            <Style x:Key="DetailTitleGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="DetailColorBar"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="6" />
+                <Setter Property="CornerRadius" Value="3" />
+            </Style>
+
+            <Style x:Key="DetailTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="DetailRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="DetailIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DetailValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DurationChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+            </Style>
+
+            <Style x:Key="DurationChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="DetailMembers"
+                   TargetType="mcc:AvatarGroup">
+                <Setter Property="AvatarSize" Value="32" />
+                <Setter Property="MaxDisplayed" Value="4" />
+                <Setter Property="Overlap" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DetailMemberCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DetailMemoBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="DetailMemoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineHeight" Value="1.3" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <Style x:Key="DetailCloseButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,Auto,*">
+          RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- 7 日チップ -->
         <CollectionView Grid.Row="0"
@@ -114,7 +259,7 @@
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type calendar:TimetableDay}">
+                <DataTemplate x:DataType="{x:Type models:TimetableDay}">
                     <Grid Style="{StaticResource DayChipGrid}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroupList>
@@ -179,13 +324,96 @@
             </Grid>
         </Border>
 
+        <!-- 終日の予定 (カレンダーと同じ予定) -->
+        <ScrollView Grid.Row="2"
+                    Style="{StaticResource AllDayScroll}"
+                    IsVisible="{Binding AllDayEvents.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+            <HorizontalStackLayout Style="{StaticResource AllDayStack}">
+                <Label Style="{StaticResource AllDayCaptionLabel}"
+                       Text="終日" />
+                <HorizontalStackLayout Style="{StaticResource AllDayStack}"
+                                       BindableLayout.ItemsSource="{Binding AllDayEvents}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="module:UIScheduleAllDay">
+                            <Border Style="{StaticResource AllDayChipBorder}"
+                                    BackgroundColor="{Binding Color}">
+                                <Label Style="{StaticResource AllDayChipLabel}"
+                                       Text="{Binding Title}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </HorizontalStackLayout>
+        </ScrollView>
+
         <!-- タイムテーブル -->
-        <ScrollView Grid.Row="2">
+        <ScrollView Grid.Row="3">
             <controls:DayTimetableView CurrentTime="{Binding CurrentTime}"
                                        EventTappedCommand="{Binding EventTappedCommand}"
                                        Events="{Binding Events}"
                                        ShowCurrentTime="{Binding ShowCurrentTime}" />
         </ScrollView>
+
+        <!-- 予定の詳細 -->
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
+                             Style="{StaticResource DetailSheet}"
+                             IsOpen="{Binding IsDetailOpen}">
+            <mcc:BottomSheetView.SheetContent>
+                <VerticalStackLayout Style="{StaticResource DetailStack}">
+                    <Grid Style="{StaticResource DetailTitleGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <BoxView Grid.Column="0"
+                                 Style="{StaticResource DetailColorBar}"
+                                 Color="{Binding SelectedEvent.Color}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource DetailTitleLabel}"
+                               Text="{Binding SelectedEvent.Title}" />
+                    </Grid>
+                    <Grid Style="{StaticResource DetailRowGrid}"
+                          ColumnDefinitions="Auto,Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource DetailIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Schedule}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource DetailValueLabel}"
+                               Text="{Binding SelectedTimeText}" />
+                        <Border Grid.Column="2"
+                                Style="{StaticResource DurationChipBorder}">
+                            <Label Style="{StaticResource DurationChipLabel}"
+                                   Text="{Binding SelectedDurationText}" />
+                        </Border>
+                    </Grid>
+                    <Grid Style="{StaticResource DetailRowGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource DetailIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Place}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource DetailValueLabel}"
+                               Text="{Binding SelectedEvent.Place}" />
+                    </Grid>
+                    <Grid Style="{StaticResource DetailRowGrid}"
+                          ColumnDefinitions="Auto,Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource DetailIconLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Group}" />
+                        <mcc:AvatarGroup Grid.Column="1"
+                                         Style="{StaticResource DetailMembers}"
+                                         ItemsSource="{Binding SelectedEvent.Members}" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource DetailMemberCountLabel}"
+                               Text="{Binding SelectedEvent.Members.Count, StringFormat='{0} 人'}" />
+                    </Grid>
+                    <Border Style="{StaticResource DetailMemoBorder}">
+                        <Label Style="{StaticResource DetailMemoLabel}"
+                               Text="{Binding SelectedEvent.Memo}" />
+                    </Border>
+                    <Button Style="{StaticResource DetailCloseButton}"
+                            Command="{Binding CloseDetailCommand}"
+                            Text="閉じる" />
+                </VerticalStackLayout>
+            </mcc:BottomSheetView.SheetContent>
+        </mcc:BottomSheetView>
 
     </Grid>
 

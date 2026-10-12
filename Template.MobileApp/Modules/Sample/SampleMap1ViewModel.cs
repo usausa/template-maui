@@ -23,13 +23,10 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial MapType CurrentMapType { get; set; } = MapType.Street;
 
-    public IReadOnlyList<MapSpot> Spots { get; } =
-    [
-        new() { Name = "皇居", Description = "千代田区千代田", Location = new Location(35.685175, 139.752800) },
-        new() { Name = "東京タワー", Description = "港区芝公園", Location = new Location(35.658581, 139.745433) },
-        new() { Name = "東京スカイツリー", Description = "墨田区押上", Location = new Location(35.710063, 139.810700) },
-        new() { Name = "浅草寺", Description = "台東区浅草", Location = new Location(35.714765, 139.796655) }
-    ];
+    public IReadOnlyList<MapSpot> Spots { get; } = MapSample.LoadSpots();
+
+    [ObservableProperty]
+    public partial bool HybridEnabled { get; set; }
 
     [ObservableProperty]
     public partial bool RouteVisible { get; set; }
@@ -40,12 +37,10 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool CircleVisible { get; set; }
 
-    public ICommand HomeCommand { get; }
+    [ObservableProperty]
+    public partial bool IsLayerOpen { get; set; }
 
-    public ICommand ToggleMapTypeCommand { get; }
-    public ICommand ToggleRouteCommand { get; }
-    public ICommand ToggleAreaCommand { get; }
-    public ICommand ToggleCircleCommand { get; }
+    public ICommand HomeCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -54,30 +49,33 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     public SampleMap1ViewModel()
     {
         HomeCommand = MakeDelegateCommand(Controller.MoveToHome);
-        ToggleMapTypeCommand = MakeDelegateCommand(() => CurrentMapType = CurrentMapType == MapType.Street ? MapType.Hybrid : MapType.Street);
 
-        ToggleRouteCommand = MakeDelegateCommand(() =>
-        {
-            RouteVisible = !RouteVisible;
-            Controller.SetRoute(RouteVisible ? Spots.Select(static x => x.Location) : null);
-        });
-        ToggleAreaCommand = MakeDelegateCommand(() =>
-        {
-            AreaVisible = !AreaVisible;
-            Controller.SetArea(AreaVisible ? AreaPoints : null);
-        });
-        ToggleCircleCommand = MakeDelegateCommand(() =>
-        {
-            CircleVisible = !CircleVisible;
-            Controller.SetCircle(CircleVisible ? new Location(InitialLatitude, InitialLongitude) : null, 1.5);
-        });
+        SubscribeHybridEnabled(x => CurrentMapType = x ? MapType.Hybrid : MapType.Street);
+        SubscribeRouteVisible(x => Controller.SetRoute(x ? Spots.Select(static spot => spot.Location) : null));
+        SubscribeAreaVisible(x => Controller.SetArea(x ? AreaPoints : null));
+        SubscribeCircleVisible(x => Controller.SetCircle(x ? new Location(InitialLatitude, InitialLongitude) : null, 1.5));
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsLayerOpen)
+        {
+            IsLayerOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.SampleMenu);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction2()
+    {
+        IsLayerOpen = !IsLayerOpen;
+        return Task.CompletedTask;
+    }
 }

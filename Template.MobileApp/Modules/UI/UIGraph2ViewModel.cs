@@ -2,14 +2,10 @@ namespace Template.MobileApp.Modules.UI;
 
 using System.Text.Json;
 
-using Template.MobileApp.Models.Sample.Graph;
-
 public sealed partial class UIGraph2ViewModel : AppViewModelBase
 {
-    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
-
     [ObservableProperty]
-    public partial IReadOnlyList<TimelineRow> Rows { get; private set; } = [];
+    public partial IReadOnlyList<Selectable<GraphRow>> Rows { get; private set; } = [];
 
     public ICommand ToggleCommand { get; }
 
@@ -19,7 +15,7 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
 
     public UIGraph2ViewModel()
     {
-        ToggleCommand = MakeDelegateCommand<TimelineRow>(static x => x.IsExpanded = !x.IsExpanded);
+        ToggleCommand = MakeDelegateCommand<Selectable<GraphRow>>(static x => x.IsSelected = !x.IsSelected);
     }
 
     //--------------------------------------------------------------------------------
@@ -48,9 +44,9 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
         {
             var rows = await Task.Run(async () =>
             {
-                var (commits, refs) = await LoadRepositoryAsync().ConfigureAwait(false);
-                var data = GraphBuilder.Build(commits, refs);
-                return data.Rows.Select(static x => new TimelineRow { Row = x }).ToList();
+                var repository = await GraphSample.LoadRepositoryAsync().ConfigureAwait(false);
+                var data = GraphBuilder.Build(repository.Commits, repository.Refs);
+                return data.Rows.Select(static x => new Selectable<GraphRow>(x)).ToList();
             }).ConfigureAwait(true);
 
             Rows = rows;
@@ -59,24 +55,5 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
         {
             System.Diagnostics.Debug.WriteLine($"Failed to build timeline: {ex.Message}");
         }
-    }
-
-    //--------------------------------------------------------------------------------
-    // Helper
-    //--------------------------------------------------------------------------------
-
-    private static async Task<(IReadOnlyList<GraphCommit> Commits, IReadOnlyList<GraphRefData> Refs)> LoadRepositoryAsync()
-    {
-        await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Graph", "repository.json")).ConfigureAwait(false);
-        var data = await JsonSerializer.DeserializeAsync<RepositoryData>(stream, JsonOptions).ConfigureAwait(false) ?? RepositoryData.Empty;
-        return (data.Commits, data.Refs);
-    }
-
-    private sealed class RepositoryData
-    {
-        public static readonly RepositoryData Empty = new();
-
-        public List<GraphCommit> Commits { get; set; } = [];
-        public List<GraphRefData> Refs { get; set; } = [];
     }
 }

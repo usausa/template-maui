@@ -5,57 +5,57 @@ Template project for MAUI.
 # Image
 
 <p>
-<img width="25%" src="Document/UI_Login.png" />
-<img width="25%" src="Document/UI_Profile.png" />
-<img width="25%" src="Document/UI_Money.png" />
+<img width="25%" src="Document/Images/UI_Login.png" />
+<img width="25%" src="Document/Images/UI_Profile.png" />
+<img width="25%" src="Document/Images/UI_Money.png" />
 
-<img width="25%" src="Document/UI_Super.png" />
-<img width="25%" src="Document/UI_Pos.png" />
-<img width="25%" src="Document/UI_KitDash.png" />
+<img width="25%" src="Document/Images/UI_Super.png" />
+<img width="25%" src="Document/Images/UI_Pos.png" />
+<img width="25%" src="Document/Images/UI_KitDash.png" />
 
-<img width="25%" src="Document/UI_Shop.png" />
-<img width="25%" src="Document/UI_Item.png" />
-<img width="25%" src="Document/UI_Cart.png" />
+<img width="25%" src="Document/Images/UI_Shop.png" />
+<img width="25%" src="Document/Images/UI_Item.png" />
+<img width="25%" src="Document/Images/UI_Cart.png" />
 
-<img width="25%" src="Document/UI_Calendar.png" />
-<img width="25%" src="Document/UI_Schedule.png" />
-<img width="25%" src="Document/UI_Graph.png" />
+<img width="25%" src="Document/Images/UI_Calendar.png" />
+<img width="25%" src="Document/Images/UI_Schedule.png" />
+<img width="25%" src="Document/Images/UI_Graph.png" />
 
-<img width="25%" src="Document/UI_Mail.png" />
-<img width="25%" src="Document/UI_Chat.png" />
-<img width="25%" src="Document/UI_Timeline.png" />
+<img width="25%" src="Document/Images/UI_Mail.png" />
+<img width="25%" src="Document/Images/UI_Chat.png" />
+<img width="25%" src="Document/Images/UI_Timeline.png" />
 
-<img width="25%" src="Document/UI_Grid.png" />
-<img width="25%" src="Document/UI_Visit.png" />
-<img width="25%" src="Document/Device_WiFi.png" />
+<img width="25%" src="Document/Images/UI_Grid.png" />
+<img width="25%" src="Document/Images/UI_Visit.png" />
+<img width="25%" src="Document/Images/Device_WiFi.png" />
 
-<img width="25%" src="Document/Device_NFC.png" />
-<img width="25%" src="Document/Device_BLE.png" />
-<img width="25%" src="Document/Device_Activity.png" />
+<img width="25%" src="Document/Images/Device_NFC.png" />
+<img width="25%" src="Document/Images/Device_BLE.png" />
+<img width="25%" src="Document/Images/Device_Activity.png" />
 
-<img width="25%" src="Document/UI_Stream.png" />
-<img width="25%" src="Document/UI_Deck.png" />
-<img width="25%" src="Document/UI_Gauge.png" />
+<img width="25%" src="Document/Images/UI_Stream.png" />
+<img width="25%" src="Document/Images/UI_Deck.png" />
+<img width="25%" src="Document/Images/UI_Gauge.png" />
 
-<img width="25%" src="Document/UI_Meter.png" />
-<img width="25%" src="Document/UI_Load.png" />
-<img width="25%" src="Document/UI_Mixier.png" />
+<img width="25%" src="Document/Images/UI_Meter.png" />
+<img width="25%" src="Document/Images/UI_Load.png" />
+<img width="25%" src="Document/Images/UI_Mixier.png" />
 
-<img width="25%" src="Document/Sample_CV.png" />
-<img width="25%" src="Document/UI_TreeMap.png" />
-<img width="25%" src="Document/Control_Chart.png" />
+<img width="25%" src="Document/Images/Sample_CV.png" />
+<img width="25%" src="Document/Images/UI_TreeMap.png" />
+<img width="25%" src="Document/Images/View_Chart.png" />
 
-<img width="25%" src="Document/App_Calc.png" />
-<img width="25%" src="Document/App_Game.png" />
-<img width="25%" src="Document/UI_Radar.png" />
+<img width="25%" src="Document/Images/App_Calc.png" />
+<img width="25%" src="Document/Images/App_Game.png" />
+<img width="25%" src="Document/Images/UI_Radar.png" />
 
-<img width="25%" src="Document/UI_Flight.png" />
-<img width="25%" src="Document/UI_Tactical.png" />
-<img width="25%" src="Document/UI_Telemetry.png" />
+<img width="25%" src="Document/Images/UI_Flight.png" />
+<img width="25%" src="Document/Images/UI_Tactical.png" />
+<img width="25%" src="Document/Images/UI_Telemetry.png" />
 
-<img width="25%" src="Document/UI_Monster.png" />
-<img width="25%" src="Document/UI_Character.png" />
-<img width="25%" src="Document/UI_Social.png" />
+<img width="25%" src="Document/Images/UI_Monster.png" />
+<img width="25%" src="Document/Images/UI_Character.png" />
+<img width="25%" src="Document/Images/UI_Social.png" />
 </p>
 
 # Implement
@@ -67,8 +67,7 @@ Template project for MAUI.
 | Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
 | Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC(Chat) / SFTP / Telemetry(OpenTelemetry) |
-| View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
-| Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
+| View | Layout / State / Border / Shadow / Toolkit / Custom / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) / Animation / Easing / Effect / Drag & Drop / Lottie / SVG / Graphics / Drawing / Chart / SfChart |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
 | UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Weather / News / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Stream / Dock / Graph / Graph2 / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Monster / Character / Social / Flight / Tactical / Telemetry / Energy |
@@ -83,6 +82,8 @@ Template project for MAUI.
 | Device | Biometric |
 | Device | Passkey (Credential Manager + WebAuthn, pending decision) |
 | Decision | Pending decisions (CoreCLR runtime) |
+| Device | Health Connect (candidate, pending decision) |
+| Sample | AI tool calling (candidate, pending decision) |
 
 ## Pending
 
@@ -106,6 +107,8 @@ Template project for MAUI.
 | [Rester](https://github.com/usausa/Rester) | HttpClient extensions |
 | [ClamGrid](https://github.com/usausa/clam-grid) | SkiaSharp grid view |
 | [ClamCalendar](https://github.com/usausa/clam-calendar) | SkiaSharp calendar view |
+| [ClamGauge](https://github.com/usausa/clam-gauge) | SkiaSharp gauge view |
+| [SkiaExtension](https://github.com/usausa/skia-extension) | SkiaSharp extensions |
 | [Mofucat.ReactiveHub](https://github.com/usausa/mofucat-reactive-hub) | Reactive SignalR hub connection |
 | [BunnyTail.DependencyInjection](https://github.com/usausa/bunnytail-dependency-injection) | Source generator based DI |
 | [BunnyTail.EmbeddedBuildProperty](https://github.com/usausa/bunnytail-embedded-build-property) | Embedded build property generator |

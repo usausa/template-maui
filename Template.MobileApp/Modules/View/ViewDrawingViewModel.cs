@@ -9,12 +9,6 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
     public SKBitmapImageSource Image { get; } = new();
 
     [ObservableProperty]
-    public partial Color LineColor { get; set; } = Colors.Black;
-
-    [ObservableProperty]
-    public partial double LineWidth { get; set; } = 5d;
-
-    [ObservableProperty]
     public partial bool HasImage { get; set; }
 
     public IObserveCommand SelectColorCommand { get; }
@@ -25,7 +19,7 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
 
     public ViewDrawingViewModel()
     {
-        SelectColorCommand = MakeDelegateCommand<Color>(x => LineColor = x);
+        SelectColorCommand = MakeDelegateCommand<Color>(x => Controller.LineColor = x);
         Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
 

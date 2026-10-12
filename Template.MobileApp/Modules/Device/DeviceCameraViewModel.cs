@@ -76,7 +76,7 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         await using var input = await Controller.CaptureWithTimeoutAsync().ConfigureAwait(true);
         if (input is null)
         {
-            await dialog.InformationAsync("撮影できませんでした。もう一度お試しください。");
+            await dialog.InformationAsync("Capture failed. Try again.");
             return;
         }
 
