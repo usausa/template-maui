@@ -360,7 +360,7 @@ public sealed class DayTimetableView : SKCanvasView
         }
     }
 
-    private void RenderFreeSlots(SKCanvas canvas, SKPaint paint, SKFont font, IReadOnlyList<TimetableEvent> events, float areaLeft, float areaRight)
+    private void RenderFreeSlots(SKCanvas canvas, SKPaint paint, SKFont font, IEnumerable<TimetableEvent> events, float areaLeft, float areaRight)
     {
         foreach (var (freeStart, freeEnd) in TimetableCalculator.GetFreeSlots(events, StartTime, EndTime))
         {
@@ -378,7 +378,7 @@ public sealed class DayTimetableView : SKCanvasView
         }
     }
 
-    private void RenderEvents(SKCanvas canvas, SKPaint paint, SKFont font, SKFont boldFont, IReadOnlyList<TimetableEvent> events, float areaLeft, float areaRight)
+    private void RenderEvents(SKCanvas canvas, SKPaint paint, SKFont font, SKFont boldFont, IEnumerable<TimetableEvent> events, float areaLeft, float areaRight)
     {
         var sorted = events
             .Select(x => (Event: x, Start: x.Start < StartTime ? StartTime : x.Start, End: x.End > EndTime ? EndTime : x.End))
