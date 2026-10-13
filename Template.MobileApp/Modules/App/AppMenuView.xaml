@@ -57,8 +57,11 @@
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False" />
         <Button Grid.Row="8"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId AppGameBoy}"
+                Text="Game Boy"
+                ImageSource="{x:Static markup:AppIcons.VideogameAsset}" />
     </Grid>
 
 </ContentView>

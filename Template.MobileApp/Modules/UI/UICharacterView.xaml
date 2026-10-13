@@ -4,7 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UICharacterView"
              x:DataType="{x:Type module:UICharacterViewModel}"
@@ -176,7 +176,7 @@
             <CollectionView Style="{StaticResource CharacterCollectionView}"
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:CharacterItem}">
+                    <DataTemplate x:DataType="{x:Type sample:CharacterItem}">
                         <Border Style="{StaticResource CharacterBorder}"
                                 Stroke="{Binding Color}">
                             <Image Source="{Binding Face}" />
@@ -202,7 +202,7 @@
                                     SelectionChangedCommand="{Binding SelectCommand}"
                                     SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem, x:DataType={x:Type CollectionView}}">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type models:CharacterItem}">
+                            <DataTemplate x:DataType="{x:Type sample:CharacterItem}">
                                 <Border Style="{StaticResource ClassBorder}">
                                     <Grid>
                                         <Image Style="{StaticResource ClassImage}"
@@ -225,7 +225,7 @@
             <CollectionView Style="{StaticResource DetailCollectionView}"
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:CharacterItem}">
+                    <DataTemplate x:DataType="{x:Type sample:CharacterItem}">
                         <Border Style="{StaticResource DetailBorder}">
                             <Grid>
                                 <Image Style="{StaticResource DetailImage}"

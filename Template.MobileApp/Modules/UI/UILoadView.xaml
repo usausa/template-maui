@@ -5,9 +5,9 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
              x:DataType="{x:Type module:UILoadViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UILoadViewModel}"
@@ -21,7 +21,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <conv:DecibelToColorConverter x:Key="DecibelToColorConverter" />
+            <converters:DecibelToColorConverter x:Key="DecibelToColorConverter" />
 
             <Style x:Key="LoadRootGrid"
                    TargetType="Grid"

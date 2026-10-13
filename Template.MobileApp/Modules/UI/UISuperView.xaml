@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UISuperView"
              x:DataType="{x:Type module:UISuperViewModel}"
@@ -20,22 +20,22 @@
 
             <s:MapToTextConverter x:Key="CrowdTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:SuperCrowd.Low}"
+                    <s:MapToTextEntry Key="{x:Static sample:SuperCrowd.Low}"
                                       Value="空いています" />
-                    <s:MapToTextEntry Key="{x:Static models:SuperCrowd.Medium}"
+                    <s:MapToTextEntry Key="{x:Static sample:SuperCrowd.Medium}"
                                       Value="やや混雑" />
-                    <s:MapToTextEntry Key="{x:Static models:SuperCrowd.High}"
+                    <s:MapToTextEntry Key="{x:Static sample:SuperCrowd.High}"
                                       Value="混雑" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToColorConverter x:Key="CrowdColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:SuperCrowd.Low}"
+                    <s:MapToColorEntry Key="{x:Static sample:SuperCrowd.Low}"
                                        Value="{StaticResource GreenDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:SuperCrowd.Medium}"
+                    <s:MapToColorEntry Key="{x:Static sample:SuperCrowd.Medium}"
                                        Value="{StaticResource OrangeDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:SuperCrowd.High}"
+                    <s:MapToColorEntry Key="{x:Static sample:SuperCrowd.High}"
                                        Value="{StaticResource RedDarken1}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -355,7 +355,7 @@
                           IndicatorView="BannerIndicator" Loop="True"
                           Position="{Binding BannerPosition, Mode=TwoWay}">
                 <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:SuperBanner}">
+                    <DataTemplate x:DataType="{x:Type sample:SuperBanner}">
                         <Border Style="{StaticResource BannerBorder}">
                             <Grid>
                                 <Image Source="{Binding Image}"
@@ -380,12 +380,12 @@
             <FlexLayout Style="{StaticResource AppFlex}"
                         BindableLayout.ItemsSource="{Binding Apps}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:SuperApp}">
+                    <DataTemplate x:DataType="{x:Type sample:SuperApp}">
                         <VerticalStackLayout Style="{StaticResource AppItemStack}">
                             <Button Style="{StaticResource AppIconButton}"
                                     behaviors:ButtonOption.PressEffect="True"
-                                    BackgroundColor="{Binding Color}"
-                                    Text="{Binding Glyph}" />
+                                    Text="{Binding Glyph}"
+                                    BackgroundColor="{Binding Color}" />
                             <Label Style="{StaticResource AppNameLabel}"
                                    Text="{Binding Name}" />
                         </VerticalStackLayout>
@@ -402,7 +402,7 @@
                     <LinearItemsLayout Orientation="Horizontal" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:SuperCoupon}">
+                    <DataTemplate x:DataType="{x:Type sample:SuperCoupon}">
                         <Border Style="{StaticResource CouponBorder}"
                                 Background="{Binding Background}">
                             <Grid>
@@ -444,7 +444,7 @@
                     <LinearItemsLayout Orientation="Horizontal" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:SuperShop}">
+                    <DataTemplate x:DataType="{x:Type sample:SuperShop}">
                         <Border Style="{StaticResource ShopBorder}">
                             <VerticalStackLayout>
                                 <Grid ColumnDefinitions="Auto,*">

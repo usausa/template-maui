@@ -2,16 +2,16 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:models="clr-namespace:Template.MobileApp.Models"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIMailView"
              x:DataType="{x:Type module:UIMailViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIMailViewModel}"
@@ -31,43 +31,43 @@
 
             <s:MapToTextConverter x:Key="FolderNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Inbox}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Inbox}"
                                       Value="受信トレイ" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Starred}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Starred}"
                                       Value="スター付き" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Sent}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Sent}"
                                       Value="送信済み" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Draft}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Draft}"
                                       Value="下書き" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Trash}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Trash}"
                                       Value="ゴミ箱" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="FolderIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Inbox}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Inbox}"
                                       Value="{x:Static fonts:MaterialIcons.Inbox}" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Starred}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Starred}"
                                       Value="{x:Static fonts:MaterialIcons.Star}" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Sent}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Sent}"
                                       Value="{x:Static fonts:MaterialIcons.Send}" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Draft}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Draft}"
                                       Value="{x:Static fonts:MaterialIcons.Drafts}" />
-                    <s:MapToTextEntry Key="{x:Static models:MailView.Trash}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailView.Trash}"
                                       Value="{x:Static fonts:MaterialIcons.Delete}" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="DayNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MailDay.Today}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailDay.Today}"
                                       Value="今日" />
-                    <s:MapToTextEntry Key="{x:Static models:MailDay.Yesterday}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailDay.Yesterday}"
                                       Value="昨日" />
-                    <s:MapToTextEntry Key="{x:Static models:MailDay.ThisWeek}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailDay.ThisWeek}"
                                       Value="今週" />
-                    <s:MapToTextEntry Key="{x:Static models:MailDay.Earlier}"
+                    <s:MapToTextEntry Key="{x:Static sample:MailDay.Earlier}"
                                       Value="それ以前" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -449,17 +449,17 @@
                         Style="{StaticResource MessageCollection}"
                         behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
                         behaviors:Scroll.HideOnScrollTarget="{x:Reference MailFab}"
-                        IsGrouped="True"
                         ItemsSource="{Binding Context.Groups}"
-                        IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}">
+                        IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
+                        IsGrouped="True">
             <CollectionView.GroupHeaderTemplate>
-                <DataTemplate x:DataType="{x:Type models:MailGroup}">
+                <DataTemplate x:DataType="{x:Type sample:MailGroup}">
                     <Label Style="{StaticResource GroupHeaderLabel}"
                            Text="{Binding Day, Converter={StaticResource DayNameConverter}}" />
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type models:MailMessage}">
+                <DataTemplate x:DataType="{x:Type sample:MailMessage}">
                     <SwipeView>
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <SwipeView.LeftItems>
@@ -625,11 +625,10 @@
             </Button>
         </Grid>
 
-        <mcc:SideDrawer Grid.Row="0" Grid.RowSpan="4"
+        <cmc:SideDrawer Grid.Row="0" Grid.RowSpan="4"
                         IsOpen="{Binding IsDrawerOpen}"
-                        DrawerWidth="280"
-                        EdgeSwipeEnabled="False">
-            <mcc:SideDrawer.DrawerContent>
+                        DrawerWidth="280" EdgeSwipeEnabled="False">
+            <cmc:SideDrawer.DrawerContent>
                 <ContentView behaviors:LazyViewOption.Load="{Binding IsDrawerOpen}">
                     <behaviors:LazyViewOption.Template>
                         <DataTemplate x:DataType="module:UIMailViewModel">
@@ -653,7 +652,7 @@
                                                      Style="{StaticResource FolderStack}"
                                                      BindableLayout.ItemsSource="{Binding Context.Folders}">
                                     <BindableLayout.ItemTemplate>
-                                        <DataTemplate x:DataType="holder:Selectable(models:MailViewCount)">
+                                        <DataTemplate x:DataType="models:Selectable(sample:MailViewCount)">
                                             <Grid Style="{StaticResource FolderRowGrid}"
                                                   ColumnDefinitions="Auto,*,Auto">
                                                 <Grid.Triggers>
@@ -695,8 +694,8 @@
                         </DataTemplate>
                     </behaviors:LazyViewOption.Template>
                 </ContentView>
-            </mcc:SideDrawer.DrawerContent>
-        </mcc:SideDrawer>
+            </cmc:SideDrawer.DrawerContent>
+        </cmc:SideDrawer>
 
     </Grid>
 

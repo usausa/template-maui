@@ -6,9 +6,9 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:models="clr-namespace:Template.MobileApp.Models"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIChatView"
              x:DataType="{x:Type module:UIChatViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIChatViewModel}"
@@ -316,7 +316,7 @@
 
             <!-- Reaction pill -->
             <DataTemplate x:Key="ReactionTemplate"
-                          x:DataType="models:MessageReaction">
+                          x:DataType="sample:MessageReaction">
                 <Border Style="{StaticResource ReactionPillBorder}">
                     <HorizontalStackLayout Style="{StaticResource ReactionPillContent}">
                         <Label Style="{StaticResource ReactionEmojiLabel}"
@@ -328,7 +328,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="PhotoTemplate"
-                          x:DataType="holder:Selectable(models:ChatMessage)">
+                          x:DataType="models:Selectable(sample:ChatMessage)">
                 <Border Style="{StaticResource PhotoBorder}">
                     <Image Style="{StaticResource PhotoImage}"
                            Source="{Binding Item.PhotoSource}" />
@@ -337,7 +337,7 @@
 
             <!-- Send -->
             <DataTemplate x:Key="SendTemplate"
-                          x:DataType="holder:Selectable(models:ChatMessage)">
+                          x:DataType="models:Selectable(sample:ChatMessage)">
                 <Grid Style="{StaticResource SendMessageRow}">
                     <VerticalStackLayout Style="{StaticResource SendMessageStack}">
                         <Grid Style="{StaticResource SendBubbleGrid}"
@@ -382,7 +382,7 @@
 
             <!-- Receive -->
             <DataTemplate x:Key="ReceiveTemplate"
-                          x:DataType="holder:Selectable(models:ChatMessage)">
+                          x:DataType="models:Selectable(sample:ChatMessage)">
                 <Grid Style="{StaticResource ReceiveMessageRow}"
                       ColumnDefinitions="40,*">
                     <Grid.Triggers>
@@ -441,7 +441,7 @@
                         <ContentView behaviors:LazyViewOption.Load="{Binding IsSelected}"
                                      IsVisible="{Binding IsSelected}">
                             <behaviors:LazyViewOption.Template>
-                                <DataTemplate x:DataType="holder:Selectable(models:ChatMessage)">
+                                <DataTemplate x:DataType="models:Selectable(sample:ChatMessage)">
                                     <Border Style="{StaticResource ReactionBand}">
                                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                         <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=ReactionList, x:DataType={x:Type module:UIChatViewModel}}">
@@ -465,7 +465,7 @@
 
             <!-- System -->
             <DataTemplate x:Key="SystemTemplate"
-                          x:DataType="holder:Selectable(models:ChatMessage)">
+                          x:DataType="models:Selectable(sample:ChatMessage)">
                 <Grid Style="{StaticResource SystemMessageRow}"
                       ColumnDefinitions="*,Auto,*">
                     <BoxView Grid.Column="0"

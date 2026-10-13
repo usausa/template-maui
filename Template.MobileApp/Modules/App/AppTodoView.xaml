@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:app="clr-namespace:Template.MobileApp.Models.App"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppTodoView"
              x:DataType="{x:Type module:AppTodoViewModel}"
@@ -51,77 +51,77 @@
             <!-- Converter -->
             <s:MapToTextConverter x:Key="GroupTitleConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Overdue}"
+                    <s:MapToTextEntry Key="{x:Static app:TodoGroup.Overdue}"
                                       Value="⚠️ 期限切れ" />
-                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Today}"
+                    <s:MapToTextEntry Key="{x:Static app:TodoGroup.Today}"
                                       Value="📅 今日" />
-                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Tomorrow}"
+                    <s:MapToTextEntry Key="{x:Static app:TodoGroup.Tomorrow}"
                                       Value="🌤️ 明日" />
-                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Later}"
+                    <s:MapToTextEntry Key="{x:Static app:TodoGroup.Later}"
                                       Value="🗓️ 今後" />
-                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.NoDue}"
+                    <s:MapToTextEntry Key="{x:Static app:TodoGroup.NoDue}"
                                       Value="📝 期限なし" />
-                    <s:MapToTextEntry Key="{x:Static models:TodoGroup.Done}"
+                    <s:MapToTextEntry Key="{x:Static app:TodoGroup.Done}"
                                       Value="✅ 完了" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToColorConverter x:Key="GroupColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Overdue}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Overdue}"
                                        Value="{StaticResource TodoOverdueColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Today}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Today}"
                                        Value="{StaticResource TodoTodayColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Tomorrow}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Tomorrow}"
                                        Value="{StaticResource TodoTomorrowColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Later}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Later}"
                                        Value="{StaticResource TodoLaterColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.NoDue}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.NoDue}"
                                        Value="{StaticResource TodoNoDueColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Done}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Done}"
                                        Value="{StaticResource TodoDoneGroupColor}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <s:MapToColorConverter x:Key="GroupSoftColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Overdue}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Overdue}"
                                        Value="{StaticResource TodoOverdueSoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Today}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Today}"
                                        Value="{StaticResource TodoTodaySoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Tomorrow}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Tomorrow}"
                                        Value="{StaticResource TodoTomorrowSoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Later}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Later}"
                                        Value="{StaticResource TodoLaterSoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.NoDue}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.NoDue}"
                                        Value="{StaticResource TodoNoDueSoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoGroup.Done}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoGroup.Done}"
                                        Value="{StaticResource TodoDoneGroupSoftColor}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <s:MapToColorConverter x:Key="DueColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Overdue}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Overdue}"
                                        Value="{StaticResource TodoOverdueColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Today}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Today}"
                                        Value="{StaticResource TodoTodayColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Tomorrow}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Tomorrow}"
                                        Value="{StaticResource TodoTomorrowColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Later}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Later}"
                                        Value="{StaticResource TodoLaterColor}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <s:MapToColorConverter x:Key="DueSoftColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Overdue}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Overdue}"
                                        Value="{StaticResource TodoOverdueSoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Today}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Today}"
                                        Value="{StaticResource TodoTodaySoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Tomorrow}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Tomorrow}"
                                        Value="{StaticResource TodoTomorrowSoftColor}" />
-                    <s:MapToColorEntry Key="{x:Static models:TodoDue.Later}"
+                    <s:MapToColorEntry Key="{x:Static app:TodoDue.Later}"
                                        Value="{StaticResource TodoLaterSoftColor}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -543,7 +543,7 @@
 
                 <!-- グループの見出しと件数。タップで畳む・開く -->
                 <CollectionView.GroupHeaderTemplate>
-                    <DataTemplate x:DataType="{x:Type models:TodoSection}">
+                    <DataTemplate x:DataType="{x:Type app:TodoSection}">
                         <Grid Style="{StaticResource GroupHeaderGrid}"
                               ColumnDefinitions="Auto,Auto,*,Auto">
                             <Grid.GestureRecognizers>
@@ -570,7 +570,7 @@
 
                 <!-- 行 (丸いチェック・件名・期限とメモのバッジ・重要)。タップで編集、左へのスワイプで削除 -->
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:TodoItem}">
+                    <DataTemplate x:DataType="{x:Type app:TodoItem}">
                         <SwipeView>
                             <SwipeView.RightItems>
                                 <SwipeItems Mode="Execute">
@@ -640,7 +640,7 @@
                                             </DataTrigger>
                                         </HorizontalStackLayout.Triggers>
                                         <Border Style="{StaticResource DueBadgeBorder}"
-                                                IsVisible="{Binding Due, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TodoDue.None}}"
+                                                IsVisible="{Binding Due, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static app:TodoDue.None}}"
                                                 BackgroundColor="{Binding Due, Converter={StaticResource DueSoftColorConverter}}">
                                             <Label Style="{StaticResource DueBadgeLabel}"
                                                    TextColor="{Binding Due, Converter={StaticResource DueColorConverter}}">

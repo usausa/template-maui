@@ -2,13 +2,14 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:drawer="clr-namespace:Syncfusion.Maui.Toolkit.NavigationDrawer;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:drawer="clr-namespace:Syncfusion.Maui.Toolkit.NavigationDrawer;assembly=Syncfusion.Maui.Toolkit" xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewDrawerView"
              x:DataType="{x:Type module:ViewDrawerViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewDrawerViewModel}"
@@ -31,8 +32,8 @@
                    TargetType="sf:SfSegmentedControl">
                 <Setter Property="SelectionIndicatorSettings">
                     <Setter.Value>
-                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
-                                                       TextColor="White" />
+                        <sf:SelectionIndicatorSettings TextColor="White"
+                                                       Background="{StaticResource BlueDefault}" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -283,10 +284,10 @@
             </drawer:SfNavigationDrawer.ContentView>
         </drawer:SfNavigationDrawer>
 
-        <mcc:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
+        <cmc:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
                         DrawerWidth="280"
                         EdgeSwipeEnabled="{Binding IsCustomMode}">
-            <mcc:SideDrawer.DrawerContent>
+            <cmc:SideDrawer.DrawerContent>
                 <ContentView behaviors:LazyViewOption.Load="{Binding IsCustomDrawerOpen}">
                     <behaviors:LazyViewOption.Template>
                         <DataTemplate x:DataType="module:ViewDrawerViewModel">
@@ -318,8 +319,8 @@
                         </DataTemplate>
                     </behaviors:LazyViewOption.Template>
                 </ContentView>
-            </mcc:SideDrawer.DrawerContent>
-        </mcc:SideDrawer>
+            </cmc:SideDrawer.DrawerContent>
+        </cmc:SideDrawer>
 
     </Grid>
 

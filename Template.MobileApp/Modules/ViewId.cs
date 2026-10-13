@@ -215,5 +215,6 @@ public enum ViewId
     AppTodoEdit,
     AppSudoku,
     AppPuzzle2048,
-    AppMinesweeper
+    AppMinesweeper,
+    AppGameBoy
 }

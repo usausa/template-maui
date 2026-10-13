@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:app="clr-namespace:Template.MobileApp.Models.App"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppSudokuView"
              x:DataType="{x:Type module:AppSudokuViewModel}"
@@ -353,12 +353,12 @@
                 <Button Grid.Column="0"
                         Style="{StaticResource PillButton}"
                         Command="{Binding LevelCommand}"
-                        CommandParameter="{x:Static models:SudokuLevel.Easy}"
+                        CommandParameter="{x:Static app:SudokuLevel.Easy}"
                         Text="😊 やさしい">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
                                      Binding="{Binding Level}"
-                                     Value="{x:Static models:SudokuLevel.Easy}">
+                                     Value="{x:Static app:SudokuLevel.Easy}">
                             <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
                             <Setter Property="TextColor" Value="White" />
                         </DataTrigger>
@@ -367,12 +367,12 @@
                 <Button Grid.Column="1"
                         Style="{StaticResource PillButton}"
                         Command="{Binding LevelCommand}"
-                        CommandParameter="{x:Static models:SudokuLevel.Normal}"
+                        CommandParameter="{x:Static app:SudokuLevel.Normal}"
                         Text="🤔 ふつう">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
                                      Binding="{Binding Level}"
-                                     Value="{x:Static models:SudokuLevel.Normal}">
+                                     Value="{x:Static app:SudokuLevel.Normal}">
                             <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
                             <Setter Property="TextColor" Value="White" />
                         </DataTrigger>
@@ -381,12 +381,12 @@
                 <Button Grid.Column="2"
                         Style="{StaticResource PillButton}"
                         Command="{Binding LevelCommand}"
-                        CommandParameter="{x:Static models:SudokuLevel.Hard}"
+                        CommandParameter="{x:Static app:SudokuLevel.Hard}"
                         Text="🔥 むずかしい">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
                                      Binding="{Binding Level}"
-                                     Value="{x:Static models:SudokuLevel.Hard}">
+                                     Value="{x:Static app:SudokuLevel.Hard}">
                             <Setter Property="BackgroundColor" Value="{StaticResource SudokuAccentColor}" />
                             <Setter Property="TextColor" Value="White" />
                         </DataTrigger>

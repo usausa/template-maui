@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:devices="clr-namespace:Microsoft.Maui.Devices;assembly=Microsoft.Maui.Essentials"
+             xmlns:networking="clr-namespace:Microsoft.Maui.Networking;assembly=Microsoft.Maui.Essentials"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:state="clr-namespace:Template.MobileApp.State"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
-             xmlns:devices="clr-namespace:Microsoft.Maui.Devices;assembly=Microsoft.Maui.Essentials" xmlns:networking="clr-namespace:Microsoft.Maui.Networking;assembly=Microsoft.Maui.Essentials" xmlns:state="clr-namespace:Template.MobileApp.State"
              x:Class="Template.MobileApp.Modules.Device.DeviceStatusView"
              x:DataType="{x:Type module:DeviceStatusViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceStatusViewModel}"
@@ -81,6 +83,7 @@
             <Style x:Key="StateChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="Margin" Value="0,0,8,8" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
             </Style>
 
             <s:MapToTextConverter x:Key="BatteryStateTextConverter"

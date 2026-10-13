@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewToolkitView"
              x:DataType="{x:Type module:ViewToolkitViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewToolkitViewModel}"
@@ -42,8 +42,8 @@
                    TargetType="sf:SfSegmentedControl">
                 <Setter Property="SelectionIndicatorSettings">
                     <Setter.Value>
-                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
-                                                       TextColor="White" />
+                        <sf:SelectionIndicatorSettings TextColor="White"
+                                                       Background="{StaticResource BlueDefault}" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -141,18 +141,18 @@
                                         <HorizontalStackLayout Style="{StaticResource AvatarRowStack}">
                                             <mct:AvatarView WidthRequest="48" HeightRequest="48"
                                                             Text="US"
-                                                            TextColor="White"
                                                             BackgroundColor="{StaticResource BlueDefault}"
+                                                            TextColor="White"
                                                             BorderWidth="0" CornerRadius="24" />
                                             <mct:AvatarView WidthRequest="48" HeightRequest="48"
                                                             Text="MK"
-                                                            TextColor="White"
                                                             BackgroundColor="{StaticResource GreenDefault}"
+                                                            TextColor="White"
                                                             BorderWidth="0" CornerRadius="24" />
                                             <mct:AvatarView WidthRequest="48" HeightRequest="48"
                                                             Text="+3"
-                                                            TextColor="{StaticResource GrayDarken3}"
                                                             BackgroundColor="{StaticResource GrayLighten2}"
+                                                            TextColor="{StaticResource GrayDarken3}"
                                                             BorderWidth="0" CornerRadius="24" />
                                         </HorizontalStackLayout>
                                         <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">

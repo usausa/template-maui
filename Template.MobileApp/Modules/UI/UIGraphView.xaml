@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UIGraphView"
              x:DataType="{x:Type module:UIGraphViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGraphViewModel}"
@@ -19,13 +19,13 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-            <conv:RefKindBrushConverter x:Key="RefBackgroundConverter"
-                                        Foreground="False" />
-            <conv:RefKindBrushConverter x:Key="RefForegroundConverter"
-                                        Foreground="True" />
-            <conv:AlternateRowBackgroundConverter x:Key="RowBackgroundConverter"
-                                                  EvenColor="Transparent"
-                                                  OddColor="{StaticResource GrayLighten4}" />
+            <converters:RefKindBrushConverter x:Key="RefBackgroundConverter"
+                                              Foreground="False" />
+            <converters:RefKindBrushConverter x:Key="RefForegroundConverter"
+                                              Foreground="True" />
+            <converters:AlternateRowBackgroundConverter x:Key="RowBackgroundConverter"
+                                                        EvenColor="Transparent"
+                                                        OddColor="{StaticResource GrayLighten4}" />
 
             <Style x:Key="GraphHeaderLabel"
                    TargetType="Label">
@@ -93,13 +93,13 @@
             </Style>
 
             <DataTemplate x:Key="RefBadgeTemplate"
-                          x:DataType="{x:Type models:GraphRef}">
+                          x:DataType="{x:Type sample:GraphRef}">
                 <Border Style="{StaticResource RefBadgeBorder}"
                         BackgroundColor="{Binding Kind, Converter={StaticResource RefBackgroundConverter}}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border"
                                      Binding="{Binding Kind}"
-                                     Value="{x:Static models:GraphRefKind.Head}">
+                                     Value="{x:Static sample:GraphRefKind.Head}">
                             <Setter Property="StrokeThickness" Value="2" />
                             <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
                         </DataTrigger>
@@ -111,7 +111,7 @@
             </DataTemplate>
 
             <Style x:Key="CommitSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -176,15 +176,15 @@
 
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Rows}"
-                        SelectionMode="Single"
                         SelectedItem="{Binding Selected}"
+                        SelectionMode="Single"
                         HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Always">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical"
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type models:GraphRow}">
+                <DataTemplate x:DataType="{x:Type sample:GraphRow}">
                     <Grid Style="{StaticResource GraphRowGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto"
                           BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">
@@ -225,10 +225,10 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="2"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="2"
                              Style="{StaticResource CommitSheet}"
                              IsOpen="{Binding IsDetailOpen}">
-            <mcc:BottomSheetView.SheetContent>
+            <cmc:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
                     <Label Style="{StaticResource SheetSummaryLabel}"
                            Text="{Binding Detail.Summary}" />
@@ -264,8 +264,8 @@
                                Text="{Binding Detail.Sha}" />
                     </Grid>
                 </VerticalStackLayout>
-            </mcc:BottomSheetView.SheetContent>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetContent>
+        </cmc:BottomSheetView>
     </Grid>
 
 </ContentView>

@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UINewsView"
              x:DataType="{x:Type module:UINewsViewModel}"
@@ -30,51 +30,51 @@
             <s:MapToTextConverter x:Key="CategoryTextConverter"
                                   DefaultValue="🔖 保存">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Top}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Top}"
                                       Value="総合" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Economy}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Economy}"
                                       Value="経済" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Technology}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Technology}"
                                       Value="テクノロジー" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Sports}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Sports}"
                                       Value="スポーツ" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Entertainment}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Entertainment}"
                                       Value="エンタメ" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Life}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Life}"
                                       Value="暮らし" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="CategoryColorConverter"
                                    DefaultValue="#F59E0B">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Top}"
+                    <s:MapToColorEntry Key="{x:Static sample:NewsCategory.Top}"
                                        Value="#E53935" />
-                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Economy}"
+                    <s:MapToColorEntry Key="{x:Static sample:NewsCategory.Economy}"
                                        Value="#1E88E5" />
-                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Technology}"
+                    <s:MapToColorEntry Key="{x:Static sample:NewsCategory.Technology}"
                                        Value="#8E24AA" />
-                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Sports}"
+                    <s:MapToColorEntry Key="{x:Static sample:NewsCategory.Sports}"
                                        Value="#43A047" />
-                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Entertainment}"
+                    <s:MapToColorEntry Key="{x:Static sample:NewsCategory.Entertainment}"
                                        Value="#F4511E" />
-                    <s:MapToColorEntry Key="{x:Static models:NewsCategory.Life}"
+                    <s:MapToColorEntry Key="{x:Static sample:NewsCategory.Life}"
                                        Value="#00897B" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToTextConverter x:Key="CategoryGlyphConverter"
                                   DefaultValue="{x:Static fonts:MaterialIcons.Bookmark}">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Top}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Top}"
                                       Value="{x:Static fonts:MaterialIcons.Newspaper}" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Economy}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Economy}"
                                       Value="{x:Static fonts:MaterialIcons.Trending_up}" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Technology}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Technology}"
                                       Value="{x:Static fonts:MaterialIcons.Memory}" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Sports}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Sports}"
                                       Value="{x:Static fonts:MaterialIcons.Sports_soccer}" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Entertainment}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Entertainment}"
                                       Value="{x:Static fonts:MaterialIcons.Theaters}" />
-                    <s:MapToTextEntry Key="{x:Static models:NewsCategory.Life}"
+                    <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Life}"
                                       Value="{x:Static fonts:MaterialIcons.Local_florist}" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -87,7 +87,7 @@
 
             <!-- タブ (選んだ見出しはカテゴリの色) -->
             <Style x:Key="NewsTabStrip"
-                   TargetType="mcc:TabStrip">
+                   TargetType="cmc:TabStrip">
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="IndicatorHeight" Value="3" />
                 <Setter Property="IndicatorInset" Value="12" />
@@ -138,7 +138,7 @@
             </Style>
 
             <Style x:Key="BreakingMarquee"
-                   TargetType="mcc:MarqueeLabel">
+                   TargetType="cmc:MarqueeLabel">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
@@ -453,7 +453,7 @@
 
             <!-- 読み込み中のスケルトン -->
             <Style x:Key="SkeletonShimmer"
-                   TargetType="mcc:ShimmerView">
+                   TargetType="cmc:ShimmerView">
                 <Setter Property="IsActive" Value="True" />
             </Style>
 
@@ -611,13 +611,13 @@
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- タブ (見出しのタップと、ページのスワイプの両方で SelectedIndex が変わる。下線はスワイプに合わせて動く) -->
-        <mcc:TabStrip Grid.Row="0"
+        <cmc:TabStrip Grid.Row="0"
                       Style="{StaticResource NewsTabStrip}"
                       ItemsSource="{Binding Context.Pages}"
                       IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
                       PagePosition="{Binding PagePosition}"
                       SelectedIndex="{Binding SelectedIndex}">
-            <mcc:TabStrip.ItemTemplate>
+            <cmc:TabStrip.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type module:UINewsPage}">
                     <Label Style="{StaticResource TabLabel}"
                            Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}">
@@ -635,8 +635,8 @@
                         </VisualStateManager.VisualStateGroups>
                     </Label>
                 </DataTemplate>
-            </mcc:TabStrip.ItemTemplate>
-        </mcc:TabStrip>
+            </cmc:TabStrip.ItemTemplate>
+        </cmc:TabStrip>
         <BoxView Grid.Row="1"
                  Style="{StaticResource TabLine}" />
 
@@ -652,7 +652,7 @@
                 <Label Style="{StaticResource BreakingBadgeLabel}"
                        Text="速報" />
             </Border>
-            <mcc:MarqueeLabel Grid.Column="1"
+            <cmc:MarqueeLabel Grid.Column="1"
                               Style="{StaticResource BreakingMarquee}"
                               Text="{Binding Context.Breaking.Title}" />
         </Grid>
@@ -756,7 +756,7 @@
                                 <CollectionView.EmptyView>
                                     <Grid>
                                         <!-- 読み込み中 -->
-                                        <mcc:ShimmerView Style="{StaticResource SkeletonShimmer}"
+                                        <cmc:ShimmerView Style="{StaticResource SkeletonShimmer}"
                                                          IsVisible="{Binding IsLoading}">
                                             <VerticalStackLayout Style="{StaticResource SkeletonStack}">
                                                 <Grid Style="{StaticResource SkeletonRowGrid}"
@@ -780,7 +780,7 @@
                                                              Style="{StaticResource SkeletonThumbnail}" />
                                                 </Grid>
                                             </VerticalStackLayout>
-                                        </mcc:ShimmerView>
+                                        </cmc:ShimmerView>
                                         <!-- 保存した記事が無い -->
                                         <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                                              IsVisible="{Binding IsSaved}">

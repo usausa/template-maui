@@ -138,6 +138,7 @@ public static class AppIcons
     public static readonly FontImageSource Tune = Create(MaterialIcons.Tune, MenuSize, Colors.White);
     public static readonly FontImageSource Upload = Create(MaterialIcons.Upload, MenuSize, Colors.White);
     public static readonly FontImageSource VerticalAlignBottom = Create(MaterialIcons.Vertical_align_bottom, MenuSize, Colors.White);
+    public static readonly FontImageSource VideogameAsset = Create(MaterialIcons.Videogame_asset, MenuSize, Colors.White);
     public static readonly FontImageSource ViewAgenda = Create(MaterialIcons.View_agenda, MenuSize, Colors.White);
     public static readonly FontImageSource ViewQuilt = Create(MaterialIcons.View_quilt, MenuSize, Colors.White);
     public static readonly FontImageSource ViewTimeline = Create(MaterialIcons.View_timeline, MenuSize, Colors.White);

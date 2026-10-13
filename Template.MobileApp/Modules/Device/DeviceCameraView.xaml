@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:core="clr-namespace:CommunityToolkit.Maui.Core;assembly=CommunityToolkit.Maui.Camera"
+             xmlns:camera="clr-namespace:CommunityToolkit.Maui.Core;assembly=CommunityToolkit.Maui.Camera"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceCameraView"
              x:DataType="{x:Type module:DeviceCameraViewModel}"
@@ -90,12 +90,12 @@
                 <Border.Triggers>
                     <DataTrigger TargetType="Border"
                                  Binding="{Binding Controller.CameraFlashMode}"
-                                 Value="{x:Static core:CameraFlashMode.On}">
+                                 Value="{x:Static camera:CameraFlashMode.On}">
                         <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
                     </DataTrigger>
                     <DataTrigger TargetType="Border"
                                  Binding="{Binding Controller.CameraFlashMode}"
-                                 Value="{x:Static core:CameraFlashMode.Auto}">
+                                 Value="{x:Static camera:CameraFlashMode.Auto}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                     </DataTrigger>
                 </Border.Triggers>
@@ -134,13 +134,13 @@
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Controller.CameraFlashMode}"
-                                 Value="{x:Static core:CameraFlashMode.On}">
+                                 Value="{x:Static camera:CameraFlashMode.On}">
                         <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken1}" />
                         <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Flash_on}" />
                     </DataTrigger>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Controller.CameraFlashMode}"
-                                 Value="{x:Static core:CameraFlashMode.Auto}">
+                                 Value="{x:Static camera:CameraFlashMode.Auto}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Flash_auto}" />
                     </DataTrigger>

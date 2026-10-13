@@ -6,4 +6,5 @@ using System.Text.Json.Serialization;
 [JsonSerializable(typeof(Puzzle2048Snapshot))]
 [JsonSerializable(typeof(MinesweeperSnapshot))]
 [JsonSerializable(typeof(SudokuSnapshot))]
+[JsonSerializable(typeof(GameBoySnapshot))]
 internal sealed partial class AppJsonContext : JsonSerializerContext;

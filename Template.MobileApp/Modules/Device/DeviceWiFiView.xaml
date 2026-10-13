@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:cm="clr-namespace:MauiComponents;assembly=MauiComponents"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
-             xmlns:components="clr-namespace:MauiComponents;assembly=MauiComponents"
              x:Class="Template.MobileApp.Modules.Device.DeviceWiFiView"
              x:DataType="{x:Type module:DeviceWiFiViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceWiFiViewModel}"
@@ -75,15 +75,15 @@
             <s:MapToTextConverter x:Key="SecurityTextConverter"
                                   DefaultValue="🔒 Enterprise">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Open}"
+                    <s:MapToTextEntry Key="{x:Static cm:WiFiSecurity.Open}"
                                       Value="🔓 Open" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wep}"
+                    <s:MapToTextEntry Key="{x:Static cm:WiFiSecurity.Wep}"
                                       Value="🔒 WEP" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa}"
+                    <s:MapToTextEntry Key="{x:Static cm:WiFiSecurity.Wpa}"
                                       Value="🔒 WPA" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa2}"
+                    <s:MapToTextEntry Key="{x:Static cm:WiFiSecurity.Wpa2}"
                                       Value="🔒 WPA2" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa3}"
+                    <s:MapToTextEntry Key="{x:Static cm:WiFiSecurity.Wpa3}"
                                       Value="🔒 WPA3" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -336,6 +336,7 @@
                    TargetType="Border"
                    BasedOn="{StaticResource CountChip}">
                 <Setter Property="Margin" Value="0,0,6,0" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
             </Style>
 
             <Style x:Key="ConnectedChip"
@@ -369,7 +370,7 @@
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
                                  Binding="{Binding AccessPoint.Security, x:DataType={x:Type module:WiFiAccessPointItem}}"
-                                 Value="{x:Static components:WiFiSecurity.Open}">
+                                 Value="{x:Static cm:WiFiSecurity.Open}">
                         <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
                     </DataTrigger>
                 </Style.Triggers>

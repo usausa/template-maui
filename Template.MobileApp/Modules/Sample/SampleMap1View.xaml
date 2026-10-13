@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
              x:Class="Template.MobileApp.Modules.Sample.SampleMap1View"
              x:DataType="{x:Type module:SampleMap1ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMap1ViewModel}"
@@ -48,7 +48,7 @@
             </Style>
 
             <Style x:Key="LayerSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -87,7 +87,7 @@
                   ItemsSource="{Binding Spots}"
                   MapType="{Binding CurrentMapType}">
             <maps:Map.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type models:MapSpot}">
+                <DataTemplate x:DataType="{x:Type sample:MapSpot}">
                     <maps:Pin Address="{Binding Description}"
                               Label="{Binding Name}"
                               Location="{Binding Location}" />
@@ -103,9 +103,9 @@
         </VerticalStackLayout>
 
         <!-- 地図の種類と MapElements (経路 / 範囲 / 半径円) の切り替え -->
-        <mcc:BottomSheetView Style="{StaticResource LayerSheet}"
+        <cmc:BottomSheetView Style="{StaticResource LayerSheet}"
                              IsOpen="{Binding IsLayerOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:SampleMap1ViewModel">
                     <VerticalStackLayout Style="{StaticResource LayerSheetStack}">
                         <Grid Style="{StaticResource ToggleRowGrid}"
@@ -146,8 +146,8 @@
                         </Grid>
                     </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
     </Grid>
 

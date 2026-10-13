@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitSettingView"
              x:DataType="{x:Type module:UIKitSettingViewModel}"
@@ -124,7 +124,7 @@
             </Style>
 
             <Style x:Key="FaqAccordion"
-                   TargetType="mcc:AccordionView">
+                   TargetType="cmc:AccordionView">
                 <Setter Property="ExpandMode" Value="SingleOrNone" />
             </Style>
 
@@ -132,11 +132,11 @@
             <Style x:Key="FaqHeaderRowGrid"
                    TargetType="Grid">
                 <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
-                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:AccordionItem}}, Path=ToggleCommand, x:DataType={x:Type mcc:AccordionItem}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:AccordionItem}}, Path=ToggleCommand, x:DataType={x:Type cmc:AccordionItem}}" />
             </Style>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
-            <Style TargetType="mcc:AccordionItem">
+            <Style TargetType="cmc:AccordionItem">
                 <Setter Property="Icon" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
                 <Setter Property="IconFontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
                 <Setter Property="HeaderRowStyle" Value="{StaticResource FaqHeaderRowGrid}" />
@@ -245,14 +245,13 @@
                     </Grid>
                     <VerticalStackLayout Style="{StaticResource TextSizeStack}">
                         <Slider behaviors:SliderOption.Step="1"
-                                Maximum="20"
-                                Minimum="12"
+                                Value="{Binding TextSize}"
+                                Minimum="12" Maximum="20"
                                 MinimumTrackColor="{Binding ThemeColor}"
-                                ThumbColor="{Binding ThemeColor}"
-                                Value="{Binding TextSize}" />
+                                ThumbColor="{Binding ThemeColor}" />
                         <Label Style="{StaticResource TextPreviewLabel}"
-                               FontSize="{Binding TextSize}"
-                               Text="あいうえお Aa 123" />
+                               Text="あいうえお Aa 123"
+                               FontSize="{Binding TextSize}" />
                     </VerticalStackLayout>
                     <Grid Style="{StaticResource KitSettingRowGrid}"
                           ColumnDefinitions="Auto,*,Auto,Auto">
@@ -292,38 +291,38 @@
             <Border Style="{StaticResource GroupBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="560">
-                <mcc:AccordionView Style="{StaticResource FaqAccordion}">
-                    <mcc:AccordionItem>
-                        <mcc:AccordionItem.Header>
+                <cmc:AccordionView Style="{StaticResource FaqAccordion}">
+                    <cmc:AccordionItem>
+                        <cmc:AccordionItem.Header>
                             <Label Style="{StaticResource FaqHeaderLabel}"
                                    Text="パスワードを忘れたときは?" />
-                        </mcc:AccordionItem.Header>
-                        <mcc:AccordionItem.Content>
+                        </cmc:AccordionItem.Header>
+                        <cmc:AccordionItem.Content>
                             <Label Style="{StaticResource FaqBodyLabel}"
                                    Text="サインインの画面の「パスワードを忘れた方」から、登録したメールアドレスに再設定のリンクを送れます。" />
-                        </mcc:AccordionItem.Content>
-                    </mcc:AccordionItem>
-                    <mcc:AccordionItem>
-                        <mcc:AccordionItem.Header>
+                        </cmc:AccordionItem.Content>
+                    </cmc:AccordionItem>
+                    <cmc:AccordionItem>
+                        <cmc:AccordionItem.Header>
                             <Label Style="{StaticResource FaqHeaderLabel}"
                                    Text="通知が届かないときは?" />
-                        </mcc:AccordionItem.Header>
-                        <mcc:AccordionItem.Content>
+                        </cmc:AccordionItem.Header>
+                        <cmc:AccordionItem.Content>
                             <Label Style="{StaticResource FaqBodyLabel}"
                                    Text="端末の設定でこのアプリの通知を許可しているかと、上のプッシュ通知がオンになっているかを確かめてください。" />
-                        </mcc:AccordionItem.Content>
-                    </mcc:AccordionItem>
-                    <mcc:AccordionItem>
-                        <mcc:AccordionItem.Header>
+                        </cmc:AccordionItem.Content>
+                    </cmc:AccordionItem>
+                    <cmc:AccordionItem>
+                        <cmc:AccordionItem.Header>
                             <Label Style="{StaticResource FaqHeaderLabel}"
                                    Text="別の端末に引き継ぐには?" />
-                        </mcc:AccordionItem.Header>
-                        <mcc:AccordionItem.Content>
+                        </cmc:AccordionItem.Header>
+                        <cmc:AccordionItem.Content>
                             <Label Style="{StaticResource FaqBodyLabel}"
                                    Text="新しい端末で同じアカウントにサインインすると、歩数の記録と設定が引き継がれます。" />
-                        </mcc:AccordionItem.Content>
-                    </mcc:AccordionItem>
-                </mcc:AccordionView>
+                        </cmc:AccordionItem.Content>
+                    </cmc:AccordionItem>
+                </cmc:AccordionView>
             </Border>
 
             <Label Style="{StaticResource KitSettingSectionLabel}"

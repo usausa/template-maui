@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBluetoothView"
              x:DataType="{x:Type module:DeviceBluetoothViewModel}"
@@ -138,7 +138,7 @@
                     </controls:StatusChip.Triggers>
                 </controls:StatusChip>
 
-                <mcc:StepIndicator CurrentStep="{Binding State, Converter={StaticResource StepConverter}}"
+                <cmc:StepIndicator CurrentStep="{Binding State, Converter={StaticResource StepConverter}}"
                                    TotalSteps="3"
                                    IsCountVisible="False" />
 

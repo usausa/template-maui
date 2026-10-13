@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamView"
              x:DataType="{x:Type module:UIStreamViewModel}"
@@ -22,28 +22,28 @@
 
             <s:MapToTextConverter x:Key="GenreNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Sf}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Sf}"
                                       Value="SF" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Action}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Action}"
                                       Value="アクション" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Romance}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Romance}"
                                       Value="恋愛" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Comedy}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Comedy}"
                                       Value="コメディ" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Documentary}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Documentary}"
                                       Value="ドキュメンタリー" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Fantasy}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Fantasy}"
                                       Value="ファンタジー" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="BadgeTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:StreamBadge.New}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamBadge.New}"
                                       Value="NEW" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamBadge.NewSeason}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamBadge.NewSeason}"
                                       Value="NEW SEASON" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamBadge.Live}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamBadge.Live}"
                                       Value="LIVE" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -51,20 +51,20 @@
             <s:MapToBoolConverter x:Key="BadgeVisibleConverter"
                                   DefaultValue="True">
                 <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Static models:StreamBadge.None}"
+                    <s:MapToBoolEntry Key="{x:Static sample:StreamBadge.None}"
                                       Value="False" />
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
 
             <s:MapToTextConverter x:Key="ShelfNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.TopRated}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamShelf.TopRated}"
                                       Value="高評価" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Original}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamShelf.Original}"
                                       Value="オリジナル" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Trending}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamShelf.Trending}"
                                       Value="急上昇" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Action}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamShelf.Action}"
                                       Value="アクション &amp; アドベンチャー" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -379,11 +379,11 @@
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
                           behaviors:AnimationOption.EnterDelay="80"
                           ItemsSource="{Binding Featured}"
-                          Position="{Binding FeaturedPosition}"
                           CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
-                          IndicatorView="{x:Reference FeaturedIndicator}">
+                          IndicatorView="{x:Reference FeaturedIndicator}"
+                          Position="{Binding FeaturedPosition}">
                 <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="models:StreamItem">
+                    <DataTemplate x:DataType="sample:StreamItem">
                         <Grid>
                             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                             <Grid.GestureRecognizers>
@@ -399,7 +399,7 @@
                             </Border>
                             <VerticalStackLayout Style="{StaticResource FeaturedInfo}">
                                 <Border Style="{StaticResource HeroBadgeBorder}"
-                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static models:StreamBadge.Live}}"
+                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:StreamBadge.Live}}"
                                         IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
                                     <Label Style="{StaticResource HeroBadgeLabel}"
                                            Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />
@@ -410,10 +410,10 @@
                                     <Label.Text>
                                         <MultiBinding StringFormat="{}{0} · {1} · {2}">
                                             <Binding Path="Work.Year" />
-                                            <Binding Path="Work.Genre"
-                                                     Converter="{StaticResource GenreNameConverter}" />
-                                            <Binding Path="Work.Minutes"
-                                                     Converter="{StaticResource RuntimeTextConverter}" />
+                                            <Binding Converter="{StaticResource GenreNameConverter}"
+                                                     Path="Work.Genre" />
+                                            <Binding Converter="{StaticResource RuntimeTextConverter}"
+                                                     Path="Work.Minutes" />
                                         </MultiBinding>
                                     </Label.Text>
                                 </Label>
@@ -462,7 +462,7 @@
                                 ItemsSource="{Binding Continue}"
                                 ItemsLayout="HorizontalList">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:StreamItem">
+                        <DataTemplate x:DataType="sample:StreamItem">
                             <VerticalStackLayout Style="{StaticResource ContinueStack}">
                                 <Border Style="{StaticResource ContinueBorder}">
                                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -506,7 +506,7 @@
                                             ItemsSource="{Binding Items}"
                                             ItemsLayout="HorizontalList">
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:StreamItem">
+                                    <DataTemplate x:DataType="sample:StreamItem">
                                         <Border Style="{StaticResource PosterBorder}">
                                             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                             <Grid behaviors:TouchOption.ClickCommand="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
@@ -516,7 +516,7 @@
                                                 <Image Style="{StaticResource PosterImage}"
                                                        Source="{Binding Work.Image}" />
                                                 <Border Style="{StaticResource PosterBadgeBorder}"
-                                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static models:StreamBadge.Live}}"
+                                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:StreamBadge.Live}}"
                                                         IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
                                                     <Label Style="{StaticResource PosterBadgeLabel}"
                                                            Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />

@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITimelineView"
              x:DataType="{x:Type module:UITimelineViewModel}"
@@ -43,13 +43,13 @@
                    TargetType="Label">
                 <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
                 <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
-                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type mcc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type cmc:ChipGroup}}" />
                 <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
             </Style>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
             <Style x:Key="FilterChipGroup"
-                   TargetType="mcc:ChipGroup">
+                   TargetType="cmc:ChipGroup">
                 <Setter Property="ChipTextSize" Value="14" />
                 <Setter Property="ChipCornerRadius" Value="16" />
                 <Setter Property="ChipPadding" Value="12,0" />
@@ -336,15 +336,15 @@
 
         <ScrollView Grid.Row="1"
                     Style="{StaticResource FilterScroll}">
-            <mcc:ChipGroup Style="{StaticResource FilterChipGroup}"
+            <cmc:ChipGroup Style="{StaticResource FilterChipGroup}"
                            ItemsSource="{Binding Filters}"
                            SelectedItem="{Binding SelectedFilter}">
-                <mcc:ChipGroup.ItemTemplate>
+                <cmc:ChipGroup.ItemTemplate>
                     <DataTemplate x:DataType="module:UITimelineFilterOption">
                         <Label Text="{Binding Name}" />
                     </DataTemplate>
-                </mcc:ChipGroup.ItemTemplate>
-            </mcc:ChipGroup>
+                </cmc:ChipGroup.ItemTemplate>
+            </cmc:ChipGroup>
         </ScrollView>
 
         <BoxView Grid.Row="2"
@@ -365,8 +365,8 @@
                         <!-- Time -->
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource EventTimeLabel}"
-                               Opacity="{Binding RowOpacity}"
-                               Text="{Binding Start, StringFormat='{0:HH:mm}'}" />
+                               Text="{Binding Start, StringFormat='{0:HH:mm}'}"
+                               Opacity="{Binding RowOpacity}" />
 
                         <!-- Dot + line (done: check / current: halo / upcoming: hollow) -->
                         <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"

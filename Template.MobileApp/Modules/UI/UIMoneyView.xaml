@@ -2,17 +2,17 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:models="clr-namespace:Template.MobileApp.Models"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
              x:DataType="{x:Type module:UIMoneyViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIMoneyViewModel}"
@@ -38,114 +38,114 @@
 
             <s:MapToTextConverter x:Key="ShopEmojiConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Cafe}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Cafe}"
                                       Value="☕" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Restaurant}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Restaurant}"
                                       Value="🍱" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Grocery}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Grocery}"
                                       Value="🛒" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Convenience}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Convenience}"
                                       Value="🏪" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Fashion}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Fashion}"
                                       Value="👕" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Train}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Train}"
                                       Value="🚃" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Taxi}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Taxi}"
                                       Value="🚕" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Electricity}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Electricity}"
                                       Value="💡" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Water}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Water}"
                                       Value="🚰" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Mobile}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Mobile}"
                                       Value="📱" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Cinema}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Cinema}"
                                       Value="🎬" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Book}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Book}"
                                       Value="📚" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Pharmacy}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Pharmacy}"
                                       Value="💊" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyShopKind.Charge}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyShopKind.Charge}"
                                       Value="💰" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="CategoryNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Food}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Food}"
                                       Value="食費" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Shopping}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Shopping}"
                                       Value="買い物" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Transport}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Transport}"
                                       Value="交通" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Utility}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Utility}"
                                       Value="光熱・通信" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Entertainment}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Entertainment}"
                                       Value="趣味" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Health}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Health}"
                                       Value="医療" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="CategoryIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Food}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Food}"
                                       Value="{x:Static fonts:MaterialIcons.Restaurant}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Shopping}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Shopping}"
                                       Value="{x:Static fonts:MaterialIcons.Shopping_bag}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Transport}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Transport}"
                                       Value="{x:Static fonts:MaterialIcons.Train}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Utility}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Utility}"
                                       Value="{x:Static fonts:MaterialIcons.Lightbulb}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Entertainment}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Entertainment}"
                                       Value="{x:Static fonts:MaterialIcons.Movie}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyCategory.Health}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyCategory.Health}"
                                       Value="{x:Static fonts:MaterialIcons.Local_hospital}" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToColorConverter x:Key="CategoryColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:MoneyCategory.Food}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyCategory.Food}"
                                        Value="{StaticResource DeepOrangeLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyCategory.Shopping}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyCategory.Shopping}"
                                        Value="{StaticResource PinkLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyCategory.Transport}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyCategory.Transport}"
                                        Value="{StaticResource BlueLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyCategory.Utility}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyCategory.Utility}"
                                        Value="{StaticResource AmberDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyCategory.Entertainment}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyCategory.Entertainment}"
                                        Value="{StaticResource PurpleLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyCategory.Health}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyCategory.Health}"
                                        Value="{StaticResource TealLighten1}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <s:MapToTextConverter x:Key="NoticeIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MoneyNoticeKind.Charge}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyNoticeKind.Charge}"
                                       Value="{x:Static fonts:MaterialIcons.Account_balance_wallet}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyNoticeKind.Point}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyNoticeKind.Point}"
                                       Value="{x:Static fonts:MaterialIcons.Savings}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyNoticeKind.Campaign}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyNoticeKind.Campaign}"
                                       Value="{x:Static fonts:MaterialIcons.Campaign}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyNoticeKind.Statement}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyNoticeKind.Statement}"
                                       Value="{x:Static fonts:MaterialIcons.Receipt_long}" />
-                    <s:MapToTextEntry Key="{x:Static models:MoneyNoticeKind.Security}"
+                    <s:MapToTextEntry Key="{x:Static sample:MoneyNoticeKind.Security}"
                                       Value="{x:Static fonts:MaterialIcons.Verified_user}" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToColorConverter x:Key="NoticeColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:MoneyNoticeKind.Charge}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyNoticeKind.Charge}"
                                        Value="{StaticResource GreenDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyNoticeKind.Point}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyNoticeKind.Point}"
                                        Value="{StaticResource AmberDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyNoticeKind.Campaign}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyNoticeKind.Campaign}"
                                        Value="{StaticResource PinkDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyNoticeKind.Statement}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyNoticeKind.Statement}"
                                        Value="{StaticResource BlueDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:MoneyNoticeKind.Security}"
+                    <s:MapToColorEntry Key="{x:Static sample:MoneyNoticeKind.Security}"
                                        Value="{StaticResource RedDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -471,35 +471,21 @@
             </Style>
 
             <!-- Center button -->
-            <Style x:Key="CenterButtonBorder"
-                   TargetType="Border">
+            <Style x:Key="CenterButton"
+                   TargetType="Button">
                 <Setter Property="WidthRequest" Value="72" />
                 <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="TranslationY" Value="-12" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="BorderWidth" Value="0" />
                 <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
-                <Setter Property="StrokeShape" Value="Ellipse" />
-                <Setter Property="StrokeThickness" Value="0" />
-            </Style>
-
-            <Style x:Key="CenterButtonLayout"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="CenterButtonImage"
-                   TargetType="Image">
-                <Setter Property="WidthRequest" Value="36" />
-                <Setter Property="HeightRequest" Value="36" />
-            </Style>
-
-            <Style x:Key="CenterButtonLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
             <Style x:Key="RateBadgeBorder"
@@ -931,13 +917,13 @@
             </Style>
 
             <Style x:Key="MoneySheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
 
             <Style x:Key="PaymentSheet"
-                   TargetType="mcc:BottomSheetView"
+                   TargetType="cmc:BottomSheetView"
                    BasedOn="{StaticResource MoneySheet}">
                 <Setter Property="HalfExpandedRatio" Value="0.8" />
             </Style>
@@ -1101,7 +1087,7 @@
             </Style>
 
             <DataTemplate x:Key="TransactionTemplate"
-                          x:DataType="models:MoneyTransaction">
+                          x:DataType="sample:MoneyTransaction">
                 <Grid Style="{StaticResource TransactionGrid}"
                       RowDefinitions="Auto,Auto,Auto"
                       ColumnDefinitions="Auto,*,Auto">
@@ -1126,7 +1112,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="DayTemplate"
-                          x:DataType="models:MoneyDay">
+                          x:DataType="sample:MoneyDay">
                 <VerticalStackLayout>
                     <Label Style="{StaticResource DayHeaderLabel}"
                            Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
@@ -1408,7 +1394,7 @@
                             <HorizontalStackLayout Style="{StaticResource CategoryStack}"
                                                    BindableLayout.ItemsSource="{Binding Categories}">
                                 <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:MoneyCategoryTotal">
+                                    <DataTemplate x:DataType="sample:MoneyCategoryTotal">
                                         <VerticalStackLayout Style="{StaticResource CategoryItemStack}">
                                             <Border Style="{StaticResource CategoryIconBorder}"
                                                     BackgroundColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}">
@@ -1463,11 +1449,11 @@
                         </Border>
                         <Border Grid.Row="1"
                                 Style="{StaticResource SearchResultBorder}">
-                            <CollectionView IsGrouped="True"
-                                            ItemsSource="{Binding SearchResults}"
+                            <CollectionView ItemsSource="{Binding SearchResults}"
+                                            IsGrouped="True"
                                             ItemTemplate="{StaticResource TransactionTemplate}">
                                 <CollectionView.GroupHeaderTemplate>
-                                    <DataTemplate x:DataType="models:MoneyDay">
+                                    <DataTemplate x:DataType="sample:MoneyDay">
                                         <Label Style="{StaticResource DayHeaderLabel}"
                                                Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
                                     </DataTemplate>
@@ -1492,7 +1478,7 @@
                         <Border Style="{StaticResource MoneyCardBorder}">
                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notices}">
                                 <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:MoneyNotice">
+                                    <DataTemplate x:DataType="sample:MoneyNotice">
                                         <VerticalStackLayout>
                                             <Grid Style="{StaticResource NoticeRowGrid}"
                                                   ColumnDefinitions="Auto,*,Auto">
@@ -1551,8 +1537,8 @@
                                       ColumnDefinitions="Auto,*">
                                     <Border Grid.Column="0"
                                             Style="{StaticResource AccountAvatarBorder}">
-                                        <Image Aspect="AspectFill"
-                                               Source="avatar_user.jpg" />
+                                        <Image Source="avatar_user.jpg"
+                                               Aspect="AspectFill" />
                                     </Border>
                                     <VerticalStackLayout Grid.Column="1"
                                                          Style="{StaticResource AccountTextStack}">
@@ -1794,160 +1780,153 @@
         </Grid>
 
         <!-- Center button -->
-        <Border Grid.RowSpan="3"
-                Style="{StaticResource CenterButtonBorder}"
-                behaviors:AnimationOption.Pulse="True">
-            <VerticalStackLayout Style="{StaticResource CenterButtonLayout}"
-                                 behaviors:TouchOption.ClickCommand="{Binding PayCommand}"
-                                 behaviors:TouchOption.Ripple="True">
-                <Image Style="{StaticResource CenterButtonImage}"
-                       Source="{x:Static markup:AppIcons.LargeQrCode}" />
-                <Label Style="{StaticResource CenterButtonLabel}"
-                       Text="支払い" />
-            </VerticalStackLayout>
-        </Border>
+        <Button Grid.RowSpan="3"
+                Style="{StaticResource CenterButton}"
+                Command="{Binding PayCommand}"
+                Text="支払い"
+                ImageSource="{x:Static markup:AppIcons.LargeQrCode}" />
 
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource PaymentSheet}"
                              IsOpen="{Binding IsPaymentOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
-                        <VerticalStackLayout Style="{StaticResource SheetStack}">
-                            <Label Style="{StaticResource SheetTitleLabel}"
-                                   Text="支払い" />
-                            <Border Style="{StaticResource PaymentCodeBorder}">
-                                <VerticalStackLayout Style="{StaticResource PaymentCodeStack}">
-                                    <controls:BarcodeView Style="{StaticResource PaymentBarcode}"
-                                                          Value="{Binding PaymentCode}" />
-                                    <Label Style="{StaticResource PaymentCodeLabel}"
-                                           Text="{Binding PaymentCode}" />
-                                    <Image Style="{StaticResource PaymentQrImage}"
-                                           Source="{Binding PaymentCode, Converter={StaticResource QrImageSourceConverter}}" />
-                                </VerticalStackLayout>
-                            </Border>
-                            <ProgressBar Style="{StaticResource PaymentProgressBar}"
-                                         Progress="{Binding PaymentProgress}" />
-                            <Label Style="{StaticResource PaymentRemainLabel}"
-                                   Text="{Binding PaymentRemain, StringFormat='あと {0} 秒でコードを更新'}" />
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0"
-                                       Style="{StaticResource PaymentBalanceLabel}"
-                                       Text="🐰 うさペイ残高" />
-                                <Label Grid.Column="1"
-                                       Style="{StaticResource PaymentBalanceValueLabel}"
-                                       Text="{Binding Balance, StringFormat='{0:N0} 円'}" />
-                            </Grid>
-                        </VerticalStackLayout>
+                    <VerticalStackLayout Style="{StaticResource SheetStack}">
+                        <Label Style="{StaticResource SheetTitleLabel}"
+                               Text="支払い" />
+                        <Border Style="{StaticResource PaymentCodeBorder}">
+                            <VerticalStackLayout Style="{StaticResource PaymentCodeStack}">
+                                <controls:BarcodeView Style="{StaticResource PaymentBarcode}"
+                                                      Value="{Binding PaymentCode}" />
+                                <Label Style="{StaticResource PaymentCodeLabel}"
+                                       Text="{Binding PaymentCode}" />
+                                <Image Style="{StaticResource PaymentQrImage}"
+                                       Source="{Binding PaymentCode, Converter={StaticResource QrImageSourceConverter}}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <ProgressBar Style="{StaticResource PaymentProgressBar}"
+                                     Progress="{Binding PaymentProgress}" />
+                        <Label Style="{StaticResource PaymentRemainLabel}"
+                               Text="{Binding PaymentRemain, StringFormat='あと {0} 秒でコードを更新'}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource PaymentBalanceLabel}"
+                                   Text="🐰 うさペイ残高" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource PaymentBalanceValueLabel}"
+                                   Text="{Binding Balance, StringFormat='{0:N0} 円'}" />
+                        </Grid>
+                    </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsBalanceOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
-                        <VerticalStackLayout Style="{StaticResource SheetStack}">
-                            <Label Style="{StaticResource SheetTitleLabel}"
-                                   Text="残高の推移" />
-                            <Label Style="{StaticResource SheetCaptionLabel}"
-                                   Text="最近 30 日" />
-                            <drawing:DrawingControl Style="{StaticResource BalanceChartControl}"
-                                                    Drawing="{Binding BalanceChart}" />
-                        </VerticalStackLayout>
+                    <VerticalStackLayout Style="{StaticResource SheetStack}">
+                        <Label Style="{StaticResource SheetTitleLabel}"
+                               Text="残高の推移" />
+                        <Label Style="{StaticResource SheetCaptionLabel}"
+                               Text="最近 30 日" />
+                        <drawing:DrawingControl Style="{StaticResource BalanceChartControl}"
+                                                Drawing="{Binding BalanceChart}" />
+                    </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsMonthOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
-                        <VerticalStackLayout Style="{StaticResource SheetStack}">
-                            <Label Style="{StaticResource SheetTitleLabel}"
-                                   Text="月を選ぶ" />
-                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Months}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="holder:Selectable(models:MoneyMonth)">
-                                        <VerticalStackLayout>
-                                            <Grid Style="{StaticResource MonthRowGrid}"
-                                                  ColumnDefinitions="Auto,*,Auto">
-                                                <Grid.GestureRecognizers>
-                                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMoneyViewModel}}, Path=SelectMonthCommand, x:DataType={x:Type module:UIMoneyViewModel}}"
-                                                                          CommandParameter="{Binding .}" />
-                                                </Grid.GestureRecognizers>
-                                                <Label Grid.Column="0"
-                                                       Style="{StaticResource MonthCheckLabel}"
-                                                       IsVisible="{Binding IsSelected}"
-                                                       Text="{x:Static fonts:MaterialIcons.Check}" />
-                                                <Label Grid.Column="1"
-                                                       Style="{StaticResource MonthNameLabel}"
-                                                       Text="{Binding Item.Month, StringFormat='{0:yyyy年M月}'}">
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
-                                                                     Binding="{Binding IsSelected}"
-                                                                     Value="True">
-                                                            <Setter Property="FontAttributes" Value="Bold" />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
-                                                <Label Grid.Column="2"
-                                                       Style="{StaticResource MonthTotalLabel}"
-                                                       Text="{Binding Item.Total, StringFormat='{0:N0} 円'}" />
-                                            </Grid>
-                                            <BoxView Style="{StaticResource RowLine}" />
-                                        </VerticalStackLayout>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </VerticalStackLayout>
+                    <VerticalStackLayout Style="{StaticResource SheetStack}">
+                        <Label Style="{StaticResource SheetTitleLabel}"
+                               Text="月を選ぶ" />
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Months}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Selectable(sample:MoneyMonth)">
+                                    <VerticalStackLayout>
+                                        <Grid Style="{StaticResource MonthRowGrid}"
+                                              ColumnDefinitions="Auto,*,Auto">
+                                            <Grid.GestureRecognizers>
+                                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMoneyViewModel}}, Path=SelectMonthCommand, x:DataType={x:Type module:UIMoneyViewModel}}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Grid.GestureRecognizers>
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource MonthCheckLabel}"
+                                                   IsVisible="{Binding IsSelected}"
+                                                   Text="{x:Static fonts:MaterialIcons.Check}" />
+                                            <Label Grid.Column="1"
+                                                   Style="{StaticResource MonthNameLabel}"
+                                                   Text="{Binding Item.Month, StringFormat='{0:yyyy年M月}'}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label"
+                                                                 Binding="{Binding IsSelected}"
+                                                                 Value="True">
+                                                        <Setter Property="FontAttributes" Value="Bold" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                            <Label Grid.Column="2"
+                                                   Style="{StaticResource MonthTotalLabel}"
+                                                   Text="{Binding Item.Total, StringFormat='{0:N0} 円'}" />
+                                        </Grid>
+                                        <BoxView Style="{StaticResource RowLine}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
+                    </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsCategoryOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
-                        <VerticalStackLayout Style="{StaticResource SheetStack}">
-                            <Label Style="{StaticResource SheetTitleLabel}"
-                                   Text="{Binding Month.Month, StringFormat='{0:M月}の支出の分類'}" />
-                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:MoneyCategoryTotal">
-                                        <Grid Style="{StaticResource CategoryRowGrid}"
-                                              ColumnDefinitions="Auto,*,Auto"
-                                              RowDefinitions="Auto,Auto">
-                                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                                    Style="{StaticResource CategoryRowIconBorder}"
-                                                    BackgroundColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}">
-                                                <Label Style="{StaticResource CategoryIconLabel}"
-                                                       Text="{Binding Category, Converter={StaticResource CategoryIconConverter}}" />
-                                            </Border>
-                                            <Label Grid.Row="0" Grid.Column="1"
-                                                   Style="{StaticResource CategoryRowNameLabel}"
-                                                   Text="{Binding Category, Converter={StaticResource CategoryNameConverter}}" />
-                                            <Label Grid.Row="0" Grid.Column="2"
-                                                   Style="{StaticResource CategoryRowAmountLabel}"
-                                                   Text="{Binding Amount, StringFormat='{0:N0} 円'}" />
-                                            <ProgressBar Grid.Row="1" Grid.Column="1"
-                                                         Style="{StaticResource CategoryRowProgressBar}"
-                                                         Progress="{Binding Ratio}"
-                                                         ProgressColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}" />
-                                            <Label Grid.Row="1" Grid.Column="2"
-                                                   Style="{StaticResource CategoryRowRatioLabel}"
-                                                   Text="{Binding Ratio, StringFormat='{0:P0}'}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </VerticalStackLayout>
+                    <VerticalStackLayout Style="{StaticResource SheetStack}">
+                        <Label Style="{StaticResource SheetTitleLabel}"
+                               Text="{Binding Month.Month, StringFormat='{0:M月}の支出の分類'}" />
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="sample:MoneyCategoryTotal">
+                                    <Grid Style="{StaticResource CategoryRowGrid}"
+                                          RowDefinitions="Auto,Auto"
+                                          ColumnDefinitions="Auto,*,Auto">
+                                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                                Style="{StaticResource CategoryRowIconBorder}"
+                                                BackgroundColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}">
+                                            <Label Style="{StaticResource CategoryIconLabel}"
+                                                   Text="{Binding Category, Converter={StaticResource CategoryIconConverter}}" />
+                                        </Border>
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Style="{StaticResource CategoryRowNameLabel}"
+                                               Text="{Binding Category, Converter={StaticResource CategoryNameConverter}}" />
+                                        <Label Grid.Row="0" Grid.Column="2"
+                                               Style="{StaticResource CategoryRowAmountLabel}"
+                                               Text="{Binding Amount, StringFormat='{0:N0} 円'}" />
+                                        <ProgressBar Grid.Row="1" Grid.Column="1"
+                                                     Style="{StaticResource CategoryRowProgressBar}"
+                                                     Progress="{Binding Ratio}"
+                                                     ProgressColor="{Binding Category, Converter={StaticResource CategoryColorConverter}}" />
+                                        <Label Grid.Row="1" Grid.Column="2"
+                                               Style="{StaticResource CategoryRowRatioLabel}"
+                                               Text="{Binding Ratio, StringFormat='{0:P0}'}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
+                    </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
     </Grid>
 

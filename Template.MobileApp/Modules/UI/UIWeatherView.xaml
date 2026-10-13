@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              x:Class="Template.MobileApp.Modules.UI.UIWeatherView"
              x:DataType="{x:Type module:UIWeatherViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIWeatherViewModel}"
@@ -109,49 +109,49 @@
             <!-- 天気の絵文字 (夜は月と雲) と名前 -->
             <s:MapToTextConverter x:Key="DayIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Clear}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Clear}"
                                       Value="☀️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.PartlyCloudy}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.PartlyCloudy}"
                                       Value="⛅" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Cloudy}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Cloudy}"
                                       Value="☁️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Rain}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Rain}"
                                       Value="🌧️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Thunder}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Thunder}"
                                       Value="⛈️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Snow}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Snow}"
                                       Value="❄️" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="NightIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Clear}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Clear}"
                                       Value="🌙" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.PartlyCloudy}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.PartlyCloudy}"
                                       Value="☁️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Cloudy}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Cloudy}"
                                       Value="☁️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Rain}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Rain}"
                                       Value="🌧️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Thunder}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Thunder}"
                                       Value="⛈️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Snow}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Snow}"
                                       Value="❄️" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="ConditionTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Clear}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Clear}"
                                       Value="晴れ" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.PartlyCloudy}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.PartlyCloudy}"
                                       Value="晴れ時々くもり" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Cloudy}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Cloudy}"
                                       Value="くもり" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Rain}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Rain}"
                                       Value="雨" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Thunder}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Thunder}"
                                       Value="雷雨" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherCondition.Snow}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Snow}"
                                       Value="雪" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -159,29 +159,29 @@
             <!-- UV の段階の名前と色 -->
             <s:MapToTextConverter x:Key="UvLevelTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.Low}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherUvLevel.Low}"
                                       Value="弱い" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.Moderate}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherUvLevel.Moderate}"
                                       Value="中程度" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.High}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherUvLevel.High}"
                                       Value="強い" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.VeryHigh}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherUvLevel.VeryHigh}"
                                       Value="非常に強い" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherUvLevel.Extreme}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherUvLevel.Extreme}"
                                       Value="極端に強い" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="UvLevelColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.Low}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherUvLevel.Low}"
                                        Value="#8BD17C" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.Moderate}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherUvLevel.Moderate}"
                                        Value="#F5D547" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.High}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherUvLevel.High}"
                                        Value="#F59E42" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.VeryHigh}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherUvLevel.VeryHigh}"
                                        Value="#EF5B5B" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherUvLevel.Extreme}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherUvLevel.Extreme}"
                                        Value="#B865D6" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -189,49 +189,49 @@
             <!-- 生活指数の名前・絵文字・色と、段階の文言 -->
             <s:MapToTextConverter x:Key="IndexNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Laundry}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Laundry}"
                                       Value="洗濯" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Umbrella}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Umbrella}"
                                       Value="傘" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Clothing}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Clothing}"
                                       Value="服装" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Heatstroke}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Heatstroke}"
                                       Value="熱中症" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Ultraviolet}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Ultraviolet}"
                                       Value="紫外線" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Pollen}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Pollen}"
                                       Value="花粉" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="IndexIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Laundry}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Laundry}"
                                       Value="👕" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Umbrella}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Umbrella}"
                                       Value="☂️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Clothing}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Clothing}"
                                       Value="🧥" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Heatstroke}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Heatstroke}"
                                       Value="🥵" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Ultraviolet}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Ultraviolet}"
                                       Value="🕶️" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherIndexKind.Pollen}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Pollen}"
                                       Value="🌲" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="IndexColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Laundry}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherIndexKind.Laundry}"
                                        Value="#7DD3FC" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Umbrella}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherIndexKind.Umbrella}"
                                        Value="#A5B4FC" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Clothing}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherIndexKind.Clothing}"
                                        Value="#FCD34D" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Heatstroke}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherIndexKind.Heatstroke}"
                                        Value="#FCA5A5" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Ultraviolet}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherIndexKind.Ultraviolet}"
                                        Value="#D8B4FE" />
-                    <s:MapToColorEntry Key="{x:Static models:WeatherIndexKind.Pollen}"
+                    <s:MapToColorEntry Key="{x:Static sample:WeatherIndexKind.Pollen}"
                                        Value="#86EFAC" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -240,37 +240,37 @@
             <!-- 注意報・警報の名前と説明 -->
             <s:MapToTextConverter x:Key="AlertKindConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavyRain}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.HeavyRain}"
                                       Value="大雨" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Thunder}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.Thunder}"
                                       Value="雷" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.StrongWind}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.StrongWind}"
                                       Value="強風" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Dry}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.Dry}"
                                       Value="乾燥" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavySnow}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.HeavySnow}"
                                       Value="大雪" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="AlertLevelConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertLevel.Advisory}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertLevel.Advisory}"
                                       Value="注意報" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertLevel.Warning}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertLevel.Warning}"
                                       Value="警報" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="AlertDescriptionConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavyRain}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.HeavyRain}"
                                       Value="低い土地の浸水や土砂災害に注意してください" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Thunder}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.Thunder}"
                                       Value="落雷や突風、急な強い雨に注意してください" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.StrongWind}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.StrongWind}"
                                       Value="強い風による飛来物に注意してください" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.Dry}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.Dry}"
                                       Value="火の取り扱いに注意してください" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherAlertKind.HeavySnow}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.HeavySnow}"
                                       Value="積雪や路面の凍結に注意してください" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -278,31 +278,31 @@
             <!-- 気圧の傾向と月の名前 -->
             <s:MapToTextConverter x:Key="PressureTrendConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherPressureTrend.Falling}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherPressureTrend.Falling}"
                                       Value="↘ 下がる" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherPressureTrend.Steady}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherPressureTrend.Steady}"
                                       Value="→ 横ばい" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherPressureTrend.Rising}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherPressureTrend.Rising}"
                                       Value="↗ 上がる" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="MoonPhaseConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.New}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.New}"
                                       Value="新月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaxingCrescent}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.WaxingCrescent}"
                                       Value="三日月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.FirstQuarter}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.FirstQuarter}"
                                       Value="上弦の月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaxingGibbous}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.WaxingGibbous}"
                                       Value="十三夜月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.Full}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.Full}"
                                       Value="満月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaningGibbous}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.WaningGibbous}"
                                       Value="寝待月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.LastQuarter}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.LastQuarter}"
                                       Value="下弦の月" />
-                    <s:MapToTextEntry Key="{x:Static models:WeatherMoonPhase.WaningCrescent}"
+                    <s:MapToTextEntry Key="{x:Static sample:WeatherMoonPhase.WaningCrescent}"
                                       Value="有明月" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -656,7 +656,7 @@
 
             <!-- 生活指数 -->
             <Style x:Key="IndexGrid"
-                   TargetType="mcc:StaggeredGrid">
+                   TargetType="cmc:StaggeredGrid">
                 <Setter Property="Columns" Value="3" />
                 <Setter Property="Spacing" Value="8" />
             </Style>
@@ -835,27 +835,27 @@
         <Grid.Triggers>
             <DataTrigger TargetType="Grid"
                          Binding="{Binding Forecast.Condition}"
-                         Value="{x:Static models:WeatherCondition.PartlyCloudy}">
+                         Value="{x:Static sample:WeatherCondition.PartlyCloudy}">
                 <Setter Property="Background" Value="{StaticResource PartlyCloudySkyBrush}" />
             </DataTrigger>
             <DataTrigger TargetType="Grid"
                          Binding="{Binding Forecast.Condition}"
-                         Value="{x:Static models:WeatherCondition.Cloudy}">
+                         Value="{x:Static sample:WeatherCondition.Cloudy}">
                 <Setter Property="Background" Value="{StaticResource CloudySkyBrush}" />
             </DataTrigger>
             <DataTrigger TargetType="Grid"
                          Binding="{Binding Forecast.Condition}"
-                         Value="{x:Static models:WeatherCondition.Rain}">
+                         Value="{x:Static sample:WeatherCondition.Rain}">
                 <Setter Property="Background" Value="{StaticResource RainSkyBrush}" />
             </DataTrigger>
             <DataTrigger TargetType="Grid"
                          Binding="{Binding Forecast.Condition}"
-                         Value="{x:Static models:WeatherCondition.Thunder}">
+                         Value="{x:Static sample:WeatherCondition.Thunder}">
                 <Setter Property="Background" Value="{StaticResource ThunderSkyBrush}" />
             </DataTrigger>
             <DataTrigger TargetType="Grid"
                          Binding="{Binding Forecast.Condition}"
-                         Value="{x:Static models:WeatherCondition.Snow}">
+                         Value="{x:Static sample:WeatherCondition.Snow}">
                 <Setter Property="Background" Value="{StaticResource SnowSkyBrush}" />
             </DataTrigger>
             <DataTrigger TargetType="Grid"
@@ -947,12 +947,12 @@
                                     <HorizontalStackLayout Style="{StaticResource AlertChipRow}"
                                                            BindableLayout.ItemsSource="{Binding Forecast.Alerts}">
                                         <BindableLayout.ItemTemplate>
-                                            <DataTemplate x:DataType="{x:Type models:WeatherAlert}">
+                                            <DataTemplate x:DataType="{x:Type sample:WeatherAlert}">
                                                 <Border Style="{StaticResource AlertChipBorder}">
                                                     <Border.Triggers>
                                                         <DataTrigger TargetType="Border"
                                                                      Binding="{Binding Level}"
-                                                                     Value="{x:Static models:WeatherAlertLevel.Warning}">
+                                                                     Value="{x:Static sample:WeatherAlertLevel.Warning}">
                                                             <Setter Property="BackgroundColor" Value="#7A000000" />
                                                         </DataTrigger>
                                                     </Border.Triggers>
@@ -984,7 +984,7 @@
                                                  BindableLayout.ItemsSource="{Binding Forecast.Alerts}"
                                                  IsVisible="{Binding IsAlertExpanded}">
                                 <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="{x:Type models:WeatherAlert}">
+                                    <DataTemplate x:DataType="{x:Type sample:WeatherAlert}">
                                         <Label Style="{StaticResource AlertDetailLabel}">
                                             <Label.FormattedText>
                                                 <FormattedString>
@@ -1140,10 +1140,10 @@
                                     <VerticalStackLayout Style="{StaticResource CardStack}">
                                         <Label Style="{StaticResource CardTitleLabel}"
                                                Text="🧭 生活指数" />
-                                        <mcc:StaggeredGrid Style="{StaticResource IndexGrid}"
+                                        <cmc:StaggeredGrid Style="{StaticResource IndexGrid}"
                                                            BindableLayout.ItemsSource="{Binding Forecast.Indices}">
                                             <BindableLayout.ItemTemplate>
-                                                <DataTemplate x:DataType="{x:Type models:WeatherIndex}">
+                                                <DataTemplate x:DataType="{x:Type sample:WeatherIndex}">
                                                     <Border Style="{StaticResource IndexTileBorder}">
                                                         <VerticalStackLayout Style="{StaticResource IndexTileStack}">
                                                             <Label Style="{StaticResource IndexIconLabel}"
@@ -1159,7 +1159,7 @@
                                                     </Border>
                                                 </DataTemplate>
                                             </BindableLayout.ItemTemplate>
-                                        </mcc:StaggeredGrid>
+                                        </cmc:StaggeredGrid>
                                     </VerticalStackLayout>
                                 </Border>
                             </DataTemplate>

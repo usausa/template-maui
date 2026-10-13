@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              x:Class="Template.MobileApp.Modules.UI.UIGridView"
              x:DataType="{x:Type module:UIGridViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGridViewModel}"
@@ -31,27 +31,27 @@
             <!-- 列の文言 (値は列挙や数値のまま渡され、並べ替えも値で行う) -->
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Open}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Open}"
                                       Value="⏳ 未処理" />
-                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Processing}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Processing}"
                                       Value="🔄 処理中" />
-                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Hold}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Hold}"
                                       Value="✋ 保留" />
-                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Completed}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Completed}"
                                       Value="✅ 完了" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <converters:FlagsToTextConverter x:Key="MarksTextConverter">
                 <converters:FlagsToTextConverter.Entries>
-                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Overdue}"
+                    <converters:FlagsTextEntry Key="{x:Static sample:OrderMarks.Overdue}"
                                                Value="❗" />
-                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.DueSoon}"
+                    <converters:FlagsTextEntry Key="{x:Static sample:OrderMarks.DueSoon}"
                                                Value="🔥" />
-                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.LargeAmount}"
+                    <converters:FlagsTextEntry Key="{x:Static sample:OrderMarks.LargeAmount}"
                                                Value="💰" />
-                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Bulk}"
+                    <converters:FlagsTextEntry Key="{x:Static sample:OrderMarks.Bulk}"
                                                Value="📦" />
-                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Recent}"
+                    <converters:FlagsTextEntry Key="{x:Static sample:OrderMarks.Recent}"
                                                Value="🆕" />
                 </converters:FlagsToTextConverter.Entries>
             </converters:FlagsToTextConverter>
@@ -67,13 +67,13 @@
             </s:MapToTextConverter>
             <s:MapToTextConverter x:Key="ChannelTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Store}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderChannel.Store}"
                                       Value="🏪 店頭" />
-                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Web}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderChannel.Web}"
                                       Value="🌐 Web" />
-                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Phone}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderChannel.Phone}"
                                       Value="📞 電話" />
-                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Fax}"
+                    <s:MapToTextEntry Key="{x:Static sample:OrderChannel.Fax}"
                                       Value="📠 FAX" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -151,7 +151,7 @@
                            SelectAllCommand="{Binding SelectAllCommand}"
                            SortCycle="AscendingDescendingNone"
                            SortOrders="{Binding SortOrders}"
-                           ValueAccessors="{x:Static models:OrderInfo.Accessors}">
+                           ValueAccessors="{x:Static sample:OrderInfo.Accessors}">
             <clam:GridColumn Key="Status"
                              Width="100"
                              Converter="{StaticResource StatusTextConverter}"

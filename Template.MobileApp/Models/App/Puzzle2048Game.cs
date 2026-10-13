@@ -20,7 +20,7 @@ public enum Puzzle2048Direction
 public sealed record Puzzle2048Tile(int Id, int Value, int Row, int Column);
 
 // タイルの動き (合体して消えるタイルも合体先へ動く)
-public sealed record Puzzle2048Slide(int Id, int Value, int FromRow, int FromColumn, int ToRow, int ToColumn);
+public sealed record Puzzle2048Slide(int Value, int FromRow, int FromColumn, int ToRow, int ToColumn);
 
 // 1 手の結果
 public sealed class Puzzle2048Move
@@ -237,7 +237,7 @@ public sealed class Puzzle2048Game
     private static int Index(int row, int column) => (row * Size) + column;
 
     private static Puzzle2048Slide ToSlide(Puzzle2048Tile tile, int row, int column) =>
-        new(tile.Id, tile.Value, tile.Row, tile.Column, row, column);
+        new(tile.Value, tile.Row, tile.Column, row, column);
 
     // 空いたマスに 2 (1 割は 4) を置く
     private Puzzle2048Tile? Spawn()

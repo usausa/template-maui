@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:app="clr-namespace:Template.MobileApp.Models.App"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppTimerView"
              x:DataType="{x:Type module:AppTimerViewModel}"
@@ -334,6 +334,7 @@
             <Style x:Key="ChipButton"
                    TargetType="Button">
                 <Setter Property="Margin" Value="4" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="16,0" />
                 <Setter Property="HeightRequest" Value="40" />
                 <Setter Property="CornerRadius" Value="20" />
@@ -377,7 +378,7 @@
                 <Button Grid.Column="0"
                         Style="{StaticResource ModeButton}"
                         Command="{Binding ModeCommand}"
-                        CommandParameter="{x:Static models:TimerMode.Stopwatch}"
+                        CommandParameter="{x:Static app:TimerMode.Stopwatch}"
                         Text="⏱ ストップウォッチ">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
@@ -391,7 +392,7 @@
                 <Button Grid.Column="1"
                         Style="{StaticResource ModeButton}"
                         Command="{Binding ModeCommand}"
-                        CommandParameter="{x:Static models:TimerMode.Countdown}"
+                        CommandParameter="{x:Static app:TimerMode.Countdown}"
                         Text="⏳ タイマー">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
@@ -407,8 +408,8 @@
 
         <!-- Stopwatch -->
         <ContentView Grid.Row="2"
-                     behaviors:LazyViewOption.Load="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Stopwatch}}"
-                     IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Stopwatch}}">
+                     behaviors:LazyViewOption.Load="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerMode.Stopwatch}}"
+                     IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerMode.Stopwatch}}">
             <behaviors:LazyViewOption.Template>
                 <DataTemplate x:DataType="module:AppTimerViewModel">
                     <Grid Style="{StaticResource ModeContentGrid}"
@@ -458,7 +459,7 @@
                                         ItemsSource="{Binding Laps}"
                                         IsVisible="{Binding Laps.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="{x:Type models:TimerLapItem}">
+                                <DataTemplate x:DataType="{x:Type app:TimerLapItem}">
                                     <Grid Style="{StaticResource LapRowGrid}"
                                           RowDefinitions="Auto,Auto"
                                           ColumnDefinitions="Auto,*,Auto">
@@ -508,7 +509,7 @@
                               ColumnDefinitions="*,*">
                             <VerticalStackLayout Grid.Column="0"
                                                  Style="{StaticResource ActionStack}"
-                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerStopwatchState.Running}}">
                                 <Button Style="{StaticResource SubRoundButton}"
                                         Command="{Binding LapCommand}"
                                         Text="{x:Static fonts:MaterialIcons.Flag}" />
@@ -517,7 +518,7 @@
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="0"
                                                  Style="{StaticResource ActionStack}"
-                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static app:TimerStopwatchState.Running}}">
                                 <Button Style="{StaticResource SubRoundButton}"
                                         Command="{Binding ResetCommand}"
                                         Text="{x:Static fonts:MaterialIcons.Replay}" />
@@ -526,7 +527,7 @@
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1"
                                                  Style="{StaticResource ActionStack}"
-                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static app:TimerStopwatchState.Running}}">
                                 <Button Style="{StaticResource StartRoundButton}"
                                         Command="{Binding StartCommand}"
                                         Text="{x:Static fonts:MaterialIcons.Play_arrow}" />
@@ -535,7 +536,7 @@
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1"
                                                  Style="{StaticResource ActionStack}"
-                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerStopwatchState.Running}}">
+                                                 IsVisible="{Binding StopwatchState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerStopwatchState.Running}}">
                                 <Button Style="{StaticResource StopRoundButton}"
                                         Command="{Binding PauseCommand}"
                                         Text="{x:Static fonts:MaterialIcons.Pause}" />
@@ -550,8 +551,8 @@
 
         <!-- Countdown -->
         <ContentView Grid.Row="2"
-                     behaviors:LazyViewOption.Load="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Countdown}}"
-                     IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Countdown}}">
+                     behaviors:LazyViewOption.Load="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerMode.Countdown}}"
+                     IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerMode.Countdown}}">
             <behaviors:LazyViewOption.Template>
                 <DataTemplate x:DataType="module:AppTimerViewModel">
                     <Grid Style="{StaticResource ModeContentGrid}"
@@ -562,7 +563,7 @@
                               Style="{StaticResource DialGrid}">
                             <controls:TimerDial Style="{StaticResource CountdownDial}"
                                                 Progress="{Binding CountdownProgress}"
-                                                IsAlert="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}">
+                                                IsAlert="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Finished}}">
                                 <controls:TimerDial.Triggers>
                                     <DataTrigger TargetType="controls:TimerDial"
                                                  Binding="{Binding IsWarning}"
@@ -574,7 +575,7 @@
                             </controls:TimerDial>
                             <VerticalStackLayout Style="{StaticResource DialCenterStack}">
                                 <!-- 消えているセグメントを後ろに薄く重ねる -->
-                                <Grid behaviors:AnimationOption.Blink="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Paused}}"
+                                <Grid behaviors:AnimationOption.Blink="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Paused}}"
                                       behaviors:AnimationOption.Heartbeat="{Binding IsWarning}"
                                       behaviors:AnimationOption.HeartbeatRate="120">
                                     <Label Style="{StaticResource DialUnlitLabel}"
@@ -583,18 +584,18 @@
                                            Text="{Binding Remaining, Converter={StaticResource RemainingClockConverter}}" />
                                 </Grid>
                                 <Label Style="{StaticResource DialSubLabel}"
-                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Running}}"
+                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Running}}"
                                        Text="{Binding EndTime, StringFormat='🔔 {0:HH:mm} に終了'}" />
                                 <Label Style="{StaticResource DialSubLabel}"
-                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Paused}}"
+                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Paused}}"
                                        Text="⏸ 一時停止中" />
                                 <Label Style="{StaticResource DialSubLabel}"
-                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Stopped}}"
+                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Stopped}}"
                                        Text="{Binding DurationMinutes, StringFormat='⏳ {0} 分'}" />
                                 <Label Style="{StaticResource DialAlertLabel}"
                                        behaviors:AnimationOption.JumpTrigger="{Binding CountdownState}"
-                                       behaviors:AnimationOption.JumpValue="{x:Static models:TimerCountdownState.Finished}"
-                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}"
+                                       behaviors:AnimationOption.JumpValue="{x:Static app:TimerCountdownState.Finished}"
+                                       IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Finished}}"
                                        Text="⏰ 時間です" />
                             </VerticalStackLayout>
                         </Grid>
@@ -673,7 +674,7 @@
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1"
                                                  Style="{StaticResource ActionStack}"
-                                                 IsVisible="{Binding CountdownState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static models:TimerCountdownState.Running}}">
+                                                 IsVisible="{Binding CountdownState, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.NotEqual}}, ConverterParameter={x:Static app:TimerCountdownState.Running}}">
                                 <Button Style="{StaticResource StartRoundButton}"
                                         Command="{Binding CountdownStartCommand}"
                                         Text="{x:Static fonts:MaterialIcons.Play_arrow}" />
@@ -682,7 +683,7 @@
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1"
                                                  Style="{StaticResource ActionStack}"
-                                                 IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Running}}">
+                                                 IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Running}}">
                                 <Button Style="{StaticResource StopRoundButton}"
                                         Command="{Binding CountdownPauseCommand}"
                                         Text="{x:Static fonts:MaterialIcons.Pause}" />

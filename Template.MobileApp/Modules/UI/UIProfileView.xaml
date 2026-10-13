@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIProfileView"
              x:DataType="{x:Type module:UIProfileViewModel}"
@@ -235,6 +235,7 @@
             <Style x:Key="InterestBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,4,8,0" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="12,5" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
@@ -290,7 +291,7 @@
             </Style>
 
             <Style x:Key="ProfileTabStrip"
-                   TargetType="mcc:TabStrip">
+                   TargetType="cmc:TabStrip">
                 <Setter Property="IndicatorColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="IndicatorHeight" Value="3" />
                 <Setter Property="IndicatorInset" Value="16" />
@@ -570,10 +571,10 @@
 
                     <Border Style="{StaticResource TabCardBorder}">
                         <VerticalStackLayout>
-                            <mcc:TabStrip Style="{StaticResource ProfileTabStrip}"
+                            <cmc:TabStrip Style="{StaticResource ProfileTabStrip}"
                                           ItemsSource="{Binding Tabs}"
                                           SelectedIndex="{Binding SelectedTab}">
-                                <mcc:TabStrip.ItemTemplate>
+                                <cmc:TabStrip.ItemTemplate>
                                     <DataTemplate x:DataType="{x:Type x:String}">
                                         <Label Style="{StaticResource TabLabel}"
                                                Text="{Binding .}">
@@ -591,8 +592,8 @@
                                             </VisualStateManager.VisualStateGroups>
                                         </Label>
                                     </DataTemplate>
-                                </mcc:TabStrip.ItemTemplate>
-                            </mcc:TabStrip>
+                                </cmc:TabStrip.ItemTemplate>
+                            </cmc:TabStrip>
                             <BoxView Style="{StaticResource TabLine}" />
 
                             <!-- 件数固定の一覧のため、縦ScrollView内で仮想化が無効になるCollectionViewは使わずBindableLayoutで並べる -->
@@ -706,8 +707,7 @@
                                       behaviors:CarouselOption.PageSnap="True"
                                       ItemsSource="{Binding Photos}"
                                       IndicatorView="{x:Reference PhotoIndicatorView}"
-                                      IsScrollAnimated="False"
-                                      Loop="False"
+                                      IsScrollAnimated="False" Loop="False"
                                       Position="{Binding PhotoPosition}">
                             <CarouselView.ItemTemplate>
                                 <DataTemplate x:DataType="module:UIProfilePhoto">

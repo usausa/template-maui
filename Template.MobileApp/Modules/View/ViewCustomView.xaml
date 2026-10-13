@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewCustomView"
              x:DataType="{x:Type module:ViewCustomViewModel}"
@@ -24,7 +24,7 @@
         <ResourceDictionary>
 
             <Style x:Key="MarqueeTextLabel"
-                   TargetType="mcc:MarqueeLabel">
+                   TargetType="cmc:MarqueeLabel">
                 <Setter Property="HeightRequest" Value="24" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="#7DF36B" />
@@ -39,7 +39,7 @@
             </Style>
 
             <Style x:Key="FileTreeView"
-                   TargetType="mcc:TreeView">
+                   TargetType="cmc:TreeView">
                 <Setter Property="ExpandedIcon" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
                 <Setter Property="CollapsedIcon" Value="{x:Static fonts:MaterialIcons.Chevron_right}" />
                 <Setter Property="IconFontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
@@ -53,7 +53,7 @@
             </Style>
 
             <Style x:Key="MemberAvatarGroup"
-                   TargetType="mcc:AvatarGroup">
+                   TargetType="cmc:AvatarGroup">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="AvatarSize" Value="40" />
@@ -83,7 +83,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Campaign}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Border Style="{StaticResource MarqueeBorder}">
-                        <mcc:MarqueeLabel Style="{StaticResource MarqueeTextLabel}"
+                        <cmc:MarqueeLabel Style="{StaticResource MarqueeTextLabel}"
                                           Text="Maintenance tonight at 21:00 / New item on sale / Double points campaign"
                                           Speed="60" />
                     </Border>
@@ -95,7 +95,7 @@
                                Title="TreeView"
                                Icon="{x:Static fonts:MaterialIcons.Account_tree}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <mcc:TreeView Style="{StaticResource FileTreeView}"
+                    <cmc:TreeView Style="{StaticResource FileTreeView}"
                                   ItemsSource="{Binding Nodes}"
                                   SelectedNode="{Binding SelectedNode}" />
                     <Label Style="{StaticResource CardAccentLabel}"
@@ -137,7 +137,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,Auto,Auto">
-                        <mcc:AvatarGroup Grid.Column="0"
+                        <cmc:AvatarGroup Grid.Column="0"
                                          Style="{StaticResource MemberAvatarGroup}"
                                          ItemsSource="{Binding Avatars}"
                                          MaxDisplayed="4" />

@@ -2,12 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui" xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:Class="Template.MobileApp.Modules.Sample.SampleMap2View"
              x:DataType="{x:Type module:SampleMap2ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMap2ViewModel}"
@@ -51,7 +52,7 @@
             </Style>
 
             <Style x:Key="LayerSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -108,9 +109,9 @@
         </VerticalStackLayout>
 
         <!-- 機能グループ別マネージャのトグル -->
-        <mcc:BottomSheetView Style="{StaticResource LayerSheet}"
+        <cmc:BottomSheetView Style="{StaticResource LayerSheet}"
                              IsOpen="{Binding IsLayerOpen}">
-            <mcc:BottomSheetView.SheetContent>
+            <cmc:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource LayerSheetStack}">
                     <Grid Style="{StaticResource ToggleRowGrid}"
                           ColumnDefinitions="*,Auto">
@@ -167,8 +168,8 @@
                                 IsToggled="{Binding OverlayEnabled}" />
                     </Grid>
                 </VerticalStackLayout>
-            </mcc:BottomSheetView.SheetContent>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetContent>
+        </cmc:BottomSheetView>
 
     </Grid>
 

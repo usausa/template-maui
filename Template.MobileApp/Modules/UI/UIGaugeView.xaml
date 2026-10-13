@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:clam="clr-namespace:ClamGauge;assembly=ClamGauge"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:clam="clr-namespace:ClamGauge;assembly=ClamGauge"
              x:Class="Template.MobileApp.Modules.UI.UIGaugeView"
              x:DataType="{x:Type module:UIGaugeViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGaugeViewModel}"
@@ -89,13 +89,13 @@
             <Style x:Key="KindSegmentLabel"
                    TargetType="Label">
                 <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
-                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:SegmentedView}}, Path=SelectCommand, x:DataType={x:Type mcc:SegmentedView}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:SegmentedView}}, Path=SelectCommand, x:DataType={x:Type cmc:SegmentedView}}" />
                 <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
             </Style>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
             <Style x:Key="KindSegment"
-                   TargetType="mcc:SegmentedView">
+                   TargetType="cmc:SegmentedView">
                 <Setter Property="Margin" Value="16,12,16,4" />
                 <Setter Property="SegmentWidth" Value="60" />
                 <Setter Property="SegmentHeight" Value="36" />
@@ -451,7 +451,7 @@
     <Grid Style="{StaticResource GaugeGrid}"
           RowDefinitions="Auto,*">
 
-        <mcc:SegmentedView Grid.Row="0"
+        <cmc:SegmentedView Grid.Row="0"
                            Style="{StaticResource KindSegment}"
                            ItemsSource="{Binding Kinds}"
                            SelectedIndex="{Binding KindIndex, Mode=TwoWay}" />

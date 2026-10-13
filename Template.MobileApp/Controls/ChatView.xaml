@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              x:Class="Template.MobileApp.Controls.ChatView"
              x:Name="Root">
 
@@ -171,7 +171,7 @@
 
             <!-- Assistant -->
             <DataTemplate x:Key="AssistantTemplate"
-                          x:DataType="{x:Type models:AiChatMessage}">
+                          x:DataType="{x:Type sample:AiChatMessage}">
                 <Border Style="{StaticResource MessageCardBorder}">
                     <VerticalStackLayout>
                         <HorizontalStackLayout Style="{StaticResource RoleHeaderStack}">
@@ -203,7 +203,7 @@
 
             <!-- User -->
             <DataTemplate x:Key="UserTemplate"
-                          x:DataType="{x:Type models:AiChatMessage}">
+                          x:DataType="{x:Type sample:AiChatMessage}">
                 <Border Style="{StaticResource UserCardBorder}">
                     <VerticalStackLayout>
                         <Label Style="{StaticResource RoleNameLabel}"

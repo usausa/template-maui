@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:app="clr-namespace:Template.MobileApp.Models.App"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppMinesweeperView"
              x:DataType="{x:Type module:AppMinesweeperViewModel}"
@@ -39,9 +39,9 @@
             <s:MapToTextConverter x:Key="FaceConverter"
                                   DefaultValue="🙂">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:MinesweeperState.Won}"
+                    <s:MapToTextEntry Key="{x:Static app:MinesweeperState.Won}"
                                       Value="😎" />
-                    <s:MapToTextEntry Key="{x:Static models:MinesweeperState.Lost}"
+                    <s:MapToTextEntry Key="{x:Static app:MinesweeperState.Lost}"
                                       Value="😵" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -274,12 +274,12 @@
                 <Button Grid.Column="0"
                         Style="{StaticResource PillButton}"
                         Command="{Binding LevelCommand}"
-                        CommandParameter="{x:Static models:MinesweeperLevel.Beginner}"
+                        CommandParameter="{x:Static app:MinesweeperLevel.Beginner}"
                         Text="🌱 初級 9×9">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
                                      Binding="{Binding Level}"
-                                     Value="{x:Static models:MinesweeperLevel.Beginner}">
+                                     Value="{x:Static app:MinesweeperLevel.Beginner}">
                             <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
                             <Setter Property="TextColor" Value="White" />
                         </DataTrigger>
@@ -288,12 +288,12 @@
                 <Button Grid.Column="1"
                         Style="{StaticResource PillButton}"
                         Command="{Binding LevelCommand}"
-                        CommandParameter="{x:Static models:MinesweeperLevel.Intermediate}"
+                        CommandParameter="{x:Static app:MinesweeperLevel.Intermediate}"
                         Text="🌳 中級 16×16">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
                                      Binding="{Binding Level}"
-                                     Value="{x:Static models:MinesweeperLevel.Intermediate}">
+                                     Value="{x:Static app:MinesweeperLevel.Intermediate}">
                             <Setter Property="BackgroundColor" Value="{StaticResource MineBarColor}" />
                             <Setter Property="TextColor" Value="White" />
                         </DataTrigger>
@@ -330,17 +330,17 @@
 
         <!-- 盤面 (タップで開く、長押しで旗、開いた数字のタップで周りを開く) -->
         <controls:MinesweeperBoard Grid.Row="3"
-                            Style="{StaticResource Board}"
-                            Board="{Binding Board}"
-                            LongPressCommand="{Binding LongPressCommand}"
-                            TapCommand="{Binding TapCommand}" />
+                                   Style="{StaticResource Board}"
+                                   Board="{Binding Board}"
+                                   LongPressCommand="{Binding LongPressCommand}"
+                                   TapCommand="{Binding TapCommand}" />
 
         <!-- 下の領域は、操作の切り替えと結果で同じ高さにする (結果が出ても盤面が動かない) -->
         <Grid Grid.Row="4"
               Style="{StaticResource BottomGrid}">
             <!-- 遊んでいる間は操作の切り替え (タップで開く / 旗) -->
             <VerticalStackLayout Style="{StaticResource BottomStack}"
-                                 IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.LessThan}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
+                                 IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.LessThan}}, ConverterParameter={x:Static app:MinesweeperState.Won}}">
                 <Border Style="{StaticResource PillBorder}">
                     <Grid ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
@@ -378,22 +378,22 @@
             <!-- 終わったら結果 (盤面は見えたまま) -->
             <Border Style="{StaticResource ResultBorder}"
                     behaviors:AnimationOption.FadeInTrigger="{Binding State}"
-                    IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.GreaterThanOrEqual}}, ConverterParameter={x:Static models:MinesweeperState.Won}}">
+                    IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.GreaterThanOrEqual}}, ConverterParameter={x:Static app:MinesweeperState.Won}}">
                 <Grid Style="{StaticResource ResultGrid}"
                       ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Grid.Column="0"
                                          Style="{StaticResource ResultTextStack}">
                         <Label Style="{StaticResource ResultTitleLabel}"
-                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static app:MinesweeperState.Won}}"
                                Text="🎉 クリア!" />
                         <Label Style="{StaticResource LostTitleLabel}"
-                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static app:MinesweeperState.Lost}}"
                                Text="💥 ゲームオーバー" />
                         <Label Style="{StaticResource ResultTextLabel}"
-                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Won}}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static app:MinesweeperState.Won}}"
                                Text="{Binding ElapsedSeconds, StringFormat='タイム {0} 秒'}" />
                         <Label Style="{StaticResource ResultTextLabel}"
-                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static models:MinesweeperState.Lost}}"
+                               IsVisible="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static app:MinesweeperState.Lost}}"
                                Text="地雷を踏みました" />
                         <Label Style="{StaticResource NewBestLabel}"
                                IsVisible="{Binding IsNewBest}"

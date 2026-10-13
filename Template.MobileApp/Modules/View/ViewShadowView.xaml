@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewShadowView"
              x:DataType="{x:Type module:ViewShadowViewModel}"
@@ -197,7 +197,7 @@
                                 <Picker Style="{StaticResource CardFieldPicker}"
                                         ItemsSource="{Binding BorderColors}"
                                         SelectedItem="{Binding BorderColor, Mode=TwoWay}"
-                                        ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+                                        ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type sample:ColorItem}}" />
                             </Border>
                         </Grid>
                         <Grid Style="{StaticResource CardRowGrid}"
@@ -214,7 +214,7 @@
                                 <Picker Style="{StaticResource CardFieldPicker}"
                                         ItemsSource="{Binding ShadowColors}"
                                         SelectedItem="{Binding ShadowColor, Mode=TwoWay}"
-                                        ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+                                        ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type sample:ColorItem}}" />
                             </Border>
                         </Grid>
 

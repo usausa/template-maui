@@ -2,12 +2,14 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:charts="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:spark="clr-namespace:Syncfusion.Maui.Toolkit.SparkCharts;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:sunburst="clr-namespace:Syncfusion.Maui.Toolkit.SunburstChart;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:charts="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit" xmlns:spark="clr-namespace:Syncfusion.Maui.Toolkit.SparkCharts;assembly=Syncfusion.Maui.Toolkit" xmlns:sunburst="clr-namespace:Syncfusion.Maui.Toolkit.SunburstChart;assembly=Syncfusion.Maui.Toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewSfChartView"
              x:DataType="{x:Type module:ViewSfChartViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewSfChartViewModel}"
@@ -108,8 +110,9 @@
                     </charts:SfCircularChart.Legend>
                     <charts:DoughnutSeries ItemsSource="{Binding Share}"
                                            XBindingPath="Label" YBindingPath="Value"
+                                           EnableAnimation="True"
                                            PaletteBrushes="{StaticResource DoughnutBrushes}"
-                                           EnableAnimation="True" ShowDataLabels="True">
+                                           ShowDataLabels="True">
                         <charts:DoughnutSeries.DataLabelSettings>
                             <charts:CircularDataLabelSettings LabelPosition="Outside">
                                 <charts:CircularDataLabelSettings.ConnectorLineSettings>

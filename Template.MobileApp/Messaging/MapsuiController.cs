@@ -1,7 +1,12 @@
 namespace Template.MobileApp.Messaging;
 
+using BruTile;
+using BruTile.Predefined;
+using BruTile.Web;
+
 using Mapsui.Extensions;
 using Mapsui.Projections;
+using Mapsui.Tiling.Layers;
 using Mapsui.UI.Maui;
 
 using SkiaSharp.Views.Maui;
@@ -22,6 +27,16 @@ public interface IMapsuiController
 // SkiaSharp オーバーレイ (地図上へのグラデーション経路描画) も本クラスが仲介する
 public sealed class MapsuiController : IMapsuiController
 {
+    private const string TileName = "OpenStreetMap";
+
+    private const string TileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+    private const string AttributionText = "© OpenStreetMap contributors";
+
+    private const string AttributionUrl = "https://www.openstreetmap.org/copyright";
+
+    private readonly HttpClient tileClient;
+
     private readonly double homeLongitude;
 
     private readonly double homeLatitude;
@@ -35,8 +50,9 @@ public sealed class MapsuiController : IMapsuiController
 
     private MapControl? map;
 
-    public MapsuiController(double homeLongitude, double homeLatitude, int? initialResolution = null)
+    public MapsuiController(HttpClient tileClient, double homeLongitude, double homeLatitude, int? initialResolution = null)
     {
+        this.tileClient = tileClient;
         this.homeLongitude = homeLongitude;
         this.homeLatitude = homeLatitude;
         this.initialResolution = initialResolution;
@@ -47,7 +63,8 @@ public sealed class MapsuiController : IMapsuiController
         map = view;
 
 #pragma warning disable CA2000
-        map.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
+        var tileSource = new HttpTileSource(new GlobalSphericalMercator(), TileUrl, name: TileName, attribution: new Attribution(AttributionText, AttributionUrl));
+        map.Map.Layers.Add(new TileLayer(tileSource, httpClient: tileClient) { Name = TileName });
 #pragma warning restore CA2000
 
         var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(homeLongitude, homeLatitude).ToMPoint();

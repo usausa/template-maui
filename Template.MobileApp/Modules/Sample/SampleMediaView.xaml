@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.Sample.SampleMediaView"
              x:DataType="{x:Type module:SampleMediaViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMediaViewModel}"
@@ -20,7 +20,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <conv:DurationToSecondsConverter x:Key="DurationToSecondsConverter" />
+            <converters:DurationToSecondsConverter x:Key="DurationToSecondsConverter" />
 
             <Style x:Key="FailedStack"
                    TargetType="VerticalStackLayout">
@@ -88,10 +88,10 @@
 
     <Grid Style="{StaticResource DarkRootGrid}">
 
-        <toolkit:MediaElement x:Name="Player"
-                              behaviors:MediaBind.Controller="{Binding Controller}"
-                              Source="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4"
-                              Aspect="AspectFit" ShouldAutoPlay="True" ShouldShowPlaybackControls="False" />
+        <mct:MediaElement x:Name="Player"
+                          behaviors:MediaBind.Controller="{Binding Controller}"
+                          Source="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4"
+                          Aspect="AspectFit" ShouldAutoPlay="True" ShouldShowPlaybackControls="False" />
 
         <VerticalStackLayout Style="{StaticResource FailedStack}"
                              IsVisible="{Binding IsFailed}">
@@ -134,17 +134,17 @@
 
                 <Label Grid.Column="1"
                        Style="{StaticResource ControlBarTimeLabel}"
-                       Text="{Binding Source={x:Reference Player}, Path=Position, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
+                       Text="{Binding Source={x:Reference Player}, Path=Position, StringFormat='{0:mm\\:ss}', x:DataType={x:Type mct:MediaElement}}" />
 
                 <Slider Grid.Column="2"
                         Style="{StaticResource SeekSlider}"
                         behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}"
-                        Value="{Binding Source={x:Reference Player}, Path=Position.TotalSeconds, Mode=OneWay, x:DataType={x:Type toolkit:MediaElement}}"
-                        Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type toolkit:MediaElement}}" />
+                        Value="{Binding Source={x:Reference Player}, Path=Position.TotalSeconds, Mode=OneWay, x:DataType={x:Type mct:MediaElement}}"
+                        Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type mct:MediaElement}}" />
 
                 <Label Grid.Column="3"
                        Style="{StaticResource ControlBarTimeLabel}"
-                       Text="{Binding Source={x:Reference Player}, Path=Duration, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
+                       Text="{Binding Source={x:Reference Player}, Path=Duration, StringFormat='{0:mm\\:ss}', x:DataType={x:Type mct:MediaElement}}" />
             </Grid>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
         </Border>

@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamDetailView"
              x:DataType="{x:Type module:UIStreamDetailViewModel}"
@@ -23,28 +23,28 @@
 
             <s:MapToTextConverter x:Key="GenreNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Sf}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Sf}"
                                       Value="SF" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Action}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Action}"
                                       Value="アクション" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Romance}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Romance}"
                                       Value="恋愛" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Comedy}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Comedy}"
                                       Value="コメディ" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Documentary}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Documentary}"
                                       Value="ドキュメンタリー" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamGenre.Fantasy}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamGenre.Fantasy}"
                                       Value="ファンタジー" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="TrailerKindConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:StreamTrailerKind.Trailer}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamTrailerKind.Trailer}"
                                       Value="予告編" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamTrailerKind.Teaser}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamTrailerKind.Teaser}"
                                       Value="ティザー" />
-                    <s:MapToTextEntry Key="{x:Static models:StreamTrailerKind.Extra}"
+                    <s:MapToTextEntry Key="{x:Static sample:StreamTrailerKind.Extra}"
                                       Value="特典" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -164,7 +164,7 @@
             </Style>
 
             <Style x:Key="FriendsAvatars"
-                   TargetType="mcc:AvatarGroup">
+                   TargetType="cmc:AvatarGroup">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="MaxDisplayed" Value="3" />
                 <Setter Property="Overlap" Value="10" />
@@ -345,10 +345,10 @@
                     <Label.Text>
                         <MultiBinding StringFormat="{}{0} · {1} · {2} · {3}">
                             <Binding Path="Context.Selected.Work.Year" />
-                            <Binding Path="Context.Selected.Work.Genre"
-                                     Converter="{StaticResource GenreNameConverter}" />
-                            <Binding Path="Context.Selected.Work.Minutes"
-                                     Converter="{StaticResource RuntimeTextConverter}" />
+                            <Binding Converter="{StaticResource GenreNameConverter}"
+                                     Path="Context.Selected.Work.Genre" />
+                            <Binding Converter="{StaticResource RuntimeTextConverter}"
+                                     Path="Context.Selected.Work.Minutes" />
                             <Binding Path="Context.Selected.Work.Rated" />
                         </MultiBinding>
                     </Label.Text>
@@ -412,7 +412,7 @@
 
             <!-- Friends watching (overlapping avatars) -->
             <HorizontalStackLayout Style="{StaticResource FriendsRow}">
-                <mcc:AvatarGroup Style="{StaticResource FriendsAvatars}"
+                <cmc:AvatarGroup Style="{StaticResource FriendsAvatars}"
                                  ItemsSource="{Binding Friends}" />
                 <Label Style="{StaticResource FriendsLabel}"
                        Text="Friends are watching" />
@@ -460,7 +460,7 @@
                                  BindableLayout.ItemsSource="{Binding Context.Selected.Work.Trailers}"
                                  IsVisible="{Binding TrailersSelected}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="models:StreamTrailer">
+                    <DataTemplate x:DataType="sample:StreamTrailer">
                         <Grid Style="{StaticResource TrailerRowGrid}"
                               ColumnDefinitions="Auto,*">
                             <Grid Grid.ColumnSpan="2"
@@ -484,8 +484,8 @@
                                     <Label Style="{StaticResource TrailerMetaLabel}">
                                         <Label.Text>
                                             <MultiBinding StringFormat="{}{0} · {1:m'm 'ss's'}">
-                                                <Binding Path="Kind"
-                                                         Converter="{StaticResource TrailerKindConverter}" />
+                                                <Binding Converter="{StaticResource TrailerKindConverter}"
+                                                         Path="Kind" />
                                                 <Binding Path="Length" />
                                             </MultiBinding>
                                         </Label.Text>
@@ -507,7 +507,7 @@
                                      Span="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:StreamItem">
+                    <DataTemplate x:DataType="sample:StreamItem">
                         <Border Style="{StaticResource RelatedBorder}">
                             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                             <Grid behaviors:TouchOption.ClickCommand="{Binding RelatedCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamDetailViewModel}}, x:DataType={x:Type module:UIStreamDetailViewModel}}"

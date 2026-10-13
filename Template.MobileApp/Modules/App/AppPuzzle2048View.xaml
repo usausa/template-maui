@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:app="clr-namespace:Template.MobileApp.Models.App"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppPuzzle2048View"
              x:DataType="{x:Type module:AppPuzzle2048ViewModel}"
@@ -325,16 +325,16 @@
               Style="{StaticResource SwipeAreaGrid}">
             <Grid.GestureRecognizers>
                 <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static models:Puzzle2048Direction.Up}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Up}"
                                         Direction="Up" Threshold="30" />
                 <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static models:Puzzle2048Direction.Down}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Down}"
                                         Direction="Down" Threshold="30" />
                 <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static models:Puzzle2048Direction.Left}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Left}"
                                         Direction="Left" Threshold="30" />
                 <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static models:Puzzle2048Direction.Right}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Right}"
                                         Direction="Right" Threshold="30" />
             </Grid.GestureRecognizers>
 
@@ -382,24 +382,24 @@
             <Button Grid.Row="0" Grid.Column="1"
                     Style="{StaticResource PadButton}"
                     Command="{Binding SwipeCommand}"
-                    CommandParameter="{x:Static models:Puzzle2048Direction.Up}"
+                    CommandParameter="{x:Static app:Puzzle2048Direction.Up}"
                     Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_up}" />
             <Button Grid.Row="1" Grid.Column="0"
                     Style="{StaticResource PadButton}"
                     Command="{Binding SwipeCommand}"
-                    CommandParameter="{x:Static models:Puzzle2048Direction.Left}"
+                    CommandParameter="{x:Static app:Puzzle2048Direction.Left}"
                     Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_left}" />
             <Border Grid.Row="1" Grid.Column="1"
                     Style="{StaticResource PadHubBorder}" />
             <Button Grid.Row="1" Grid.Column="2"
                     Style="{StaticResource PadButton}"
                     Command="{Binding SwipeCommand}"
-                    CommandParameter="{x:Static models:Puzzle2048Direction.Right}"
+                    CommandParameter="{x:Static app:Puzzle2048Direction.Right}"
                     Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_right}" />
             <Button Grid.Row="2" Grid.Column="1"
                     Style="{StaticResource PadButton}"
                     Command="{Binding SwipeCommand}"
-                    CommandParameter="{x:Static models:Puzzle2048Direction.Down}"
+                    CommandParameter="{x:Static app:Puzzle2048Direction.Down}"
                     Text="{x:Static fonts:MaterialIcons.Keyboard_arrow_down}" />
         </Grid>
 

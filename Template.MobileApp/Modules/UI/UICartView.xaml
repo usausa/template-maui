@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UICartView"
              x:DataType="{x:Type module:UICartViewModel}"
@@ -480,7 +480,7 @@
                         IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Context.Store.Cart}">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="models:ShopCartItem">
+                            <DataTemplate x:DataType="sample:ShopCartItem">
                                 <VerticalStackLayout>
                                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                     <SwipeView>

@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIHabitView"
              x:DataType="{x:Type module:UIHabitViewModel}"
@@ -28,39 +28,39 @@
 
             <s:MapToTextConverter x:Key="CategoryTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Fitness}"
+                    <s:MapToTextEntry Key="{x:Static sample:HabitCategory.Fitness}"
                                       Value="運動" />
-                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Wellness}"
+                    <s:MapToTextEntry Key="{x:Static sample:HabitCategory.Wellness}"
                                       Value="健康" />
-                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Learning}"
+                    <s:MapToTextEntry Key="{x:Static sample:HabitCategory.Learning}"
                                       Value="学習" />
-                    <s:MapToTextEntry Key="{x:Static models:HabitCategory.Work}"
+                    <s:MapToTextEntry Key="{x:Static sample:HabitCategory.Work}"
                                       Value="仕事" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToColorConverter x:Key="CategoryColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Fitness}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Fitness}"
                                        Value="{StaticResource TealAccent4}" />
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Wellness}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Wellness}"
                                        Value="{StaticResource PurpleLighten2}" />
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Learning}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Learning}"
                                        Value="{StaticResource OrangeLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Work}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Work}"
                                        Value="{StaticResource BlueLighten1}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <s:MapToColorConverter x:Key="CategoryTrackColorConverter">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Fitness}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Fitness}"
                                        Value="#4000BFA5" />
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Wellness}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Wellness}"
                                        Value="#40BA68C8" />
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Learning}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Learning}"
                                        Value="#40FFA726" />
-                    <s:MapToColorEntry Key="{x:Static models:HabitCategory.Work}"
+                    <s:MapToColorEntry Key="{x:Static sample:HabitCategory.Work}"
                                        Value="#4042A5F5" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -351,7 +351,7 @@
                                                Style="{StaticResource WeekStack}"
                                                BindableLayout.ItemsSource="{Binding Tracker.Week}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:HabitDay">
+                                <DataTemplate x:DataType="sample:HabitDay">
                                     <VerticalStackLayout Style="{StaticResource DayStack}">
                                         <Label Style="{StaticResource DayLabel}"
                                                Text="{Binding Date, StringFormat='{0:ddd}'}">
@@ -392,7 +392,7 @@
                 <VerticalStackLayout Style="{StaticResource HabitListStack}"
                                      BindableLayout.ItemsSource="{Binding Tracker.Habits}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:HabitItem">
+                        <DataTemplate x:DataType="sample:HabitItem">
                             <Border Style="{StaticResource HabitCardBorder}">
                                 <Border.GestureRecognizers>
                                     <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->

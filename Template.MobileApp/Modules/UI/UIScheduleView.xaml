@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIScheduleView"
              x:DataType="{x:Type module:UIScheduleViewModel}"
@@ -136,7 +136,7 @@
 
             <!-- 予定の詳細のシート -->
             <Style x:Key="DetailSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -203,7 +203,7 @@
             </Style>
 
             <Style x:Key="DetailMembers"
-                   TargetType="mcc:AvatarGroup">
+                   TargetType="cmc:AvatarGroup">
                 <Setter Property="AvatarSize" Value="32" />
                 <Setter Property="MaxDisplayed" Value="4" />
                 <Setter Property="Overlap" Value="10" />
@@ -259,7 +259,7 @@
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type models:TimetableDay}">
+                <DataTemplate x:DataType="{x:Type sample:TimetableDay}">
                     <Grid Style="{StaticResource DayChipGrid}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroupList>
@@ -355,10 +355,10 @@
         </ScrollView>
 
         <!-- 予定の詳細 -->
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
                              Style="{StaticResource DetailSheet}"
                              IsOpen="{Binding IsDetailOpen}">
-            <mcc:BottomSheetView.SheetContent>
+            <cmc:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource DetailStack}">
                     <Grid Style="{StaticResource DetailTitleGrid}"
                           ColumnDefinitions="Auto,*">
@@ -397,7 +397,7 @@
                         <Label Grid.Column="0"
                                Style="{StaticResource DetailIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Group}" />
-                        <mcc:AvatarGroup Grid.Column="1"
+                        <cmc:AvatarGroup Grid.Column="1"
                                          Style="{StaticResource DetailMembers}"
                                          ItemsSource="{Binding SelectedEvent.Members}" />
                         <Label Grid.Column="2"
@@ -412,8 +412,8 @@
                             Command="{Binding CloseDetailCommand}"
                             Text="閉じる" />
                 </VerticalStackLayout>
-            </mcc:BottomSheetView.SheetContent>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetContent>
+        </cmc:BottomSheetView>
 
     </Grid>
 

@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:font="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Modules.UI.UIVisitView"
              x:DataType="{x:Type module:UIVisitViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIVisitViewModel}"
@@ -34,8 +34,8 @@
                                     TrueValue="{StaticResource BlueLighten5}"
                                     FalseValue="{StaticResource GrayDarken1}" />
             <s:BoolToTextConverter x:Key="DirectionGlyphConverter"
-                                   TrueValue="{x:Static font:MaterialIcons.Arrow_downward}"
-                                   FalseValue="{x:Static font:MaterialIcons.Arrow_upward}" />
+                                   TrueValue="{x:Static fonts:MaterialIcons.Arrow_downward}"
+                                   FalseValue="{x:Static fonts:MaterialIcons.Arrow_upward}" />
             <s:BoolToTextConverter x:Key="DirectionMarkConverter"
                                    TrueValue="↓"
                                    FalseValue="↑" />
@@ -44,46 +44,46 @@
             <!-- 状態の文言と色 (バッジ / 左端の帯 / 行の背景) -->
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Planned}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitStatus.Planned}"
                                       Value="⏳ 未訪問" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Visited}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitStatus.Visited}"
                                       Value="✅ 訪問済" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Revisit}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitStatus.Revisit}"
                                       Value="🔁 再訪問" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Absent}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitStatus.Absent}"
                                       Value="🚫 不在" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="StatusChipColorConverter"
                                    DefaultValue="{StaticResource BlueGrayDefault}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Visited}"
                                        Value="{StaticResource GreenDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Revisit}"
                                        Value="{StaticResource OrangeDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Absent}"
                                        Value="{StaticResource RedDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToColorConverter x:Key="StatusStripColorConverter"
                                    DefaultValue="{StaticResource BlueGrayLighten2}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Visited}"
                                        Value="{StaticResource GreenDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Revisit}"
                                        Value="{StaticResource OrangeDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Absent}"
                                        Value="{StaticResource RedDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToColorConverter x:Key="StatusRowColorConverter"
                                    DefaultValue="White">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Visited}"
                                        Value="{StaticResource GreenLighten5}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Revisit}"
                                        Value="{StaticResource AmberLighten5}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitStatus.Absent}"
                                        Value="{StaticResource RedLighten5}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -91,35 +91,35 @@
             <!-- 区分の文言と色 (バッジの背景 / 文字) -->
             <s:MapToTextConverter x:Key="CategoryTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Regular}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitCategory.Regular}"
                                       Value="🗓 定期" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.New}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitCategory.New}"
                                       Value="✨ 新規" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Inspection}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitCategory.Inspection}"
                                       Value="🔧 点検" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Collection}"
+                    <s:MapToTextEntry Key="{x:Static sample:VisitCategory.Collection}"
                                       Value="💰 集金" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="CategoryChipColorConverter"
                                    DefaultValue="{StaticResource LightBlueLighten4}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitCategory.New}"
                                        Value="{StaticResource PurpleLighten4}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitCategory.Inspection}"
                                        Value="{StaticResource TealLighten4}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitCategory.Collection}"
                                        Value="{StaticResource AmberLighten4}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToColorConverter x:Key="CategoryTextColorConverter"
                                    DefaultValue="{StaticResource LightBlueDarken2}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitCategory.New}"
                                        Value="{StaticResource PurpleDarken2}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitCategory.Inspection}"
                                        Value="{StaticResource TealDarken2}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}"
+                    <s:MapToColorEntry Key="{x:Static sample:VisitCategory.Collection}"
                                        Value="{StaticResource AmberDarken2}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -229,7 +229,7 @@
 
             <!-- 並替シート -->
             <Style x:Key="SortSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -265,6 +265,7 @@
             <Style x:Key="SortKeyChip"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,8,8" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="10,6" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
@@ -419,6 +420,7 @@
             <Style x:Key="Chip"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,6,4" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="6,1" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 2" />
@@ -561,7 +563,7 @@
             <Button Grid.Column="3"
                     Style="{StaticResource ToolButton}"
                     Command="{Binding ReloadCommand}"
-                    Text="{x:Static font:MaterialIcons.Refresh}" />
+                    Text="{x:Static fonts:MaterialIcons.Refresh}" />
         </Grid>
 
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -672,10 +674,10 @@
         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
         <!-- 並替シート: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
-        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+        <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource SortSheet}"
                              IsOpen="{Binding IsSortPanelOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIVisitViewModel">
                     <VerticalStackLayout Style="{StaticResource SortSheetStack}">
                         <Grid Style="{StaticResource SortPanelGrid}"
@@ -714,8 +716,8 @@
                         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                     </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
     </Grid>
 

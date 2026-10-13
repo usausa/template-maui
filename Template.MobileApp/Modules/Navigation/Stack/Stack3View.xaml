@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Stack"
              x:Class="Template.MobileApp.Modules.Navigation.Stack.Stack3View"
              x:DataType="{x:Type module:Stack3ViewModel}"
@@ -33,7 +33,7 @@
             </Style>
 
             <Style x:Key="LevelStepIndicator"
-                   TargetType="mcc:StepIndicator">
+                   TargetType="cmc:StepIndicator">
                 <Setter Property="AccentColor" Value="{StaticResource DeepPurpleDefault}" />
             </Style>
 
@@ -55,7 +55,7 @@
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Stack Level 3" />
 
-                <mcc:StepIndicator Style="{StaticResource LevelStepIndicator}"
+                <cmc:StepIndicator Style="{StaticResource LevelStepIndicator}"
                                    CurrentStep="3" TotalSteps="3" />
 
                 <BoxView Style="{StaticResource CardDivider}" />

@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceCommunicationView"
              x:DataType="{x:Type module:DeviceCommunicationViewModel}"
@@ -169,9 +169,9 @@
             </Border>
 
             <Grid Style="{StaticResource ActionGrid}"
+                  ColumnDefinitions="*,*,*"
                   behaviors:AnimationOption.EnterAnimation="FadeUp"
-                  behaviors:AnimationOption.EnterDelay="160"
-                  ColumnDefinitions="*,*,*">
+                  behaviors:AnimationOption.EnterDelay="160">
                 <VerticalStackLayout Grid.Column="0"
                                      Style="{StaticResource ActionStack}">
                     <Button Style="{StaticResource DialButton}"

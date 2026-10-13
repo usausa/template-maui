@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIWheelView"
              x:DataType="{x:Type module:UIWheelViewModel}"
@@ -97,6 +97,7 @@
             <Style x:Key="HistoryBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,6,6" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="10,4" />
                 <Setter Property="BackgroundColor" Value="#26FFFFFF" />
                 <Setter Property="StrokeThickness" Value="0" />
@@ -118,6 +119,7 @@
             <Style x:Key="ItemChipBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,6,6" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="10,0,4,0" />
                 <Setter Property="HeightRequest" Value="32" />
                 <Setter Property="BackgroundColor" Value="#1FFFFFFF" />
@@ -282,9 +284,9 @@
                                        Text="{Binding Item.Label}" />
                                 <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <Button Style="{StaticResource ItemRemoveButton}"
-                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIWheelViewModel}}, Path=CanRemove, x:DataType={x:Type module:UIWheelViewModel}}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIWheelViewModel}}, Path=RemoveCommand, x:DataType={x:Type module:UIWheelViewModel}}"
-                                        CommandParameter="{Binding .}" />
+                                        CommandParameter="{Binding .}"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIWheelViewModel}}, Path=CanRemove, x:DataType={x:Type module:UIWheelViewModel}}" />
                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                             </HorizontalStackLayout>
                         </Border>

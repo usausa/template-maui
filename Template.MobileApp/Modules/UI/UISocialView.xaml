@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:model="clr-namespace:Template.MobileApp.Models.Sample"
              x:Class="Template.MobileApp.Modules.UI.UISocialView"
              x:DataType="{x:Type module:UISocialViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UISocialViewModel}"
@@ -201,7 +201,7 @@
                                  Style="{StaticResource LayoutVerticalStack}"
                                  BindableLayout.ItemsSource="{Binding Notifications}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type model:SocialNotificationInfo}">
+                    <DataTemplate x:DataType="{x:Type sample:SocialNotificationInfo}">
                         <controls:SocialNotification Style="{StaticResource Notification}"
                                                      behaviors:AnimationOption.EnterAnimation="FadeUp"
                                                      behaviors:AnimationOption.EnterDelay="{Binding Delay}"

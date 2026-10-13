@@ -1,9 +1,11 @@
 namespace Template.MobileApp.Modules.Sample;
 
+using Template.MobileApp.Services;
+
 public sealed partial class SampleMap2ViewModel : AppViewModelBase
 {
-    private const double InitialLatitude = 139.767052;
-    private const double InitialLongitude = 35.681167;
+    private const double InitialLongitude = 139.767052;
+    private const double InitialLatitude = 35.681167;
 
     private static readonly MapsuiSpot[] Spots =
     [
@@ -37,7 +39,7 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
 
     private MapsuiClusterManager ClusterManager { get; } = new(139.75, 35.68, 240);
 
-    public MapsuiController Controller { get; } = new(InitialLatitude, InitialLongitude, 9);
+    public MapsuiController Controller { get; }
 
     [ObservableProperty]
     public partial bool WidgetsEnabled { get; set; }
@@ -72,12 +74,14 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
     // Constructor
     //--------------------------------------------------------------------------------
 
-    public SampleMap2ViewModel()
+    public SampleMap2ViewModel(IHttpClientFactory httpClientFactory)
     {
+        Controller = new MapsuiController(httpClientFactory.CreateClient(ApiNames.MapTile), InitialLongitude, InitialLatitude, 9);
+
         LayerCommand = MakeDelegateCommand(() => IsLayerOpen = true);
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
         ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
-        HomeCommand = MakeDelegateCommand(() => Controller.MoveTo(InitialLatitude, InitialLongitude));
+        HomeCommand = MakeDelegateCommand(() => Controller.MoveTo(InitialLongitude, InitialLatitude));
 
         Disposables.Add(SpotManager);
         Disposables.Add(ShapeManager);
@@ -132,7 +136,7 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction4()
     {
-        Controller.MoveTo(InitialLatitude, InitialLongitude);
+        Controller.MoveTo(InitialLongitude, InitialLatitude);
         return Task.CompletedTask;
     }
 }

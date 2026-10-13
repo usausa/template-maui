@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:models="clr-namespace:Template.MobileApp.Models"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIGraph2View"
              x:DataType="{x:Type module:UIGraph2ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGraph2ViewModel}"
@@ -129,7 +129,7 @@
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="holder:Selectable(models:GraphRow)">
+                <DataTemplate x:DataType="models:Selectable(sample:GraphRow)">
                     <Grid RowDefinitions="56,Auto"
                           ColumnDefinitions="Auto,*">
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -167,7 +167,7 @@
                                      behaviors:LazyViewOption.Load="{Binding IsSelected}"
                                      IsVisible="{Binding IsSelected}">
                             <behaviors:LazyViewOption.Template>
-                                <DataTemplate x:DataType="holder:Selectable(models:GraphRow)">
+                                <DataTemplate x:DataType="models:Selectable(sample:GraphRow)">
                                     <Border Style="{StaticResource DetailBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
                                             <Label Style="{StaticResource DetailSummaryLabel}"

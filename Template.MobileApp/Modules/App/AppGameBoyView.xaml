@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
+             x:Class="Template.MobileApp.Modules.App.AppGameBoyView"
+             x:DataType="{x:Type module:AppGameBoyViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:AppGameBoyViewModel}"
+             shell:ShellProperty.Title="Game Boy"
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False"
+             shell:ShellProperty.StatusBarColor="#2B2E35" shell:ShellProperty.StatusBarStyle="LightContent">
+
+    <!-- Game Boy。エミュレーターは Models/App/GameBoyEmulator、画面とパッドは Controls/GameBoyControls -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+            <Color x:Key="GameBoyTopColor">#2B2E35</Color>
+            <Color x:Key="GameBoyTextColor">#FFFFFF</Color>
+            <Color x:Key="GameBoySubTextColor">#B8BCC6</Color>
+            <Color x:Key="GameBoyIconBackColor">#26FFFFFF</Color>
+            <Color x:Key="GameBoyFrameColor">#5B5F6A</Color>
+            <Color x:Key="GameBoyBezelColor">#202429</Color>
+
+            <!-- Converter -->
+            <s:BoolToTextConverter x:Key="MuteGlyphConverter"
+                                   TrueValue="{x:Static fonts:MaterialIcons.Volume_off}"
+                                   FalseValue="{x:Static fonts:MaterialIcons.Volume_up}" />
+
+            <!-- Page -->
+            <Style x:Key="GameBoyRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GameBoyTopColor}" />
+            </Style>
+
+            <Style x:Key="TopBarGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource GameBoyTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GameBoyIconBackColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="TopTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GameBoyTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="FpsLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GameBoySubTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Screen -->
+            <Style x:Key="ScreenBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,0,12,12" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Stroke" Value="{StaticResource GameBoyFrameColor}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GameBoyBezelColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource GameBoyRootGrid}"
+          RowDefinitions="Auto,Auto,*">
+
+        <!-- 上の帯 (戻る・名前・FPS・消音) -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource TopBarGrid}"
+              ColumnDefinitions="Auto,*,Auto,Auto">
+            <Button Grid.Column="0"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding BackCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource TopTitleLabel}"
+                   Text="Game Boy" />
+            <Label Grid.Column="2"
+                   Style="{StaticResource FpsLabel}"
+                   Text="{Binding Fps, StringFormat='{0:F1} fps'}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource TopIconButton}"
+                    Command="{Binding MuteCommand}"
+                    Text="{Binding IsMuted, Converter={StaticResource MuteGlyphConverter}}" />
+        </Grid>
+
+        <!-- 画面 -->
+        <Border Grid.Row="1"
+                Style="{StaticResource ScreenBorder}">
+            <controls:GameBoyScreen Frames="{Binding Frames}" />
+        </Border>
+
+        <!-- パッド -->
+        <controls:GameBoyPad Grid.Row="2"
+                             Buttons="{Binding Buttons}"
+                             ChangeCommand="{Binding ButtonCommand}" />
+
+    </Grid>
+
+</ContentView>

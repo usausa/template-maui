@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewBottomSheetView"
              x:DataType="{x:Type module:ViewBottomSheetViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewBottomSheetViewModel}"
@@ -32,7 +32,7 @@
             </Style>
 
             <Style x:Key="CustomSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="16" />
                 <Setter Property="HalfExpandedRatio" Value="0.45" />
             </Style>
@@ -252,9 +252,9 @@
 
         </sf:SfBottomSheet>
 
-        <mcc:BottomSheetView Style="{StaticResource CustomSheet}"
+        <cmc:BottomSheetView Style="{StaticResource CustomSheet}"
                              IsOpen="{Binding IsCustomSheetOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:ViewBottomSheetViewModel">
                     <VerticalStackLayout Style="{StaticResource SheetStack}">
                         <Label Style="{StaticResource SheetTitleLabel}"
@@ -289,8 +289,8 @@
                                 Text="Close" />
                     </VerticalStackLayout>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
     </Grid>
 

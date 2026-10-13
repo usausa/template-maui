@@ -2,14 +2,14 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:models="clr-namespace:Template.MobileApp.Models"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIHomeView"
              x:DataType="{x:Type module:UIHomeViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIHomeViewModel}"
@@ -43,11 +43,11 @@
             <s:MapToColorConverter x:Key="DeviceColorConverter"
                                    DefaultValue="{StaticResource CyanAccent3}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceKind.Light}"
+                    <s:MapToColorEntry Key="{x:Static sample:HomeDeviceKind.Light}"
                                        Value="{StaticResource AmberDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceKind.Lamp}"
+                    <s:MapToColorEntry Key="{x:Static sample:HomeDeviceKind.Lamp}"
                                        Value="{StaticResource AmberDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceKind.Lock}"
+                    <s:MapToColorEntry Key="{x:Static sample:HomeDeviceKind.Lock}"
                                        Value="{StaticResource GreenAccent3}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -55,18 +55,18 @@
             <s:MapToColorConverter x:Key="StatusColorConverter"
                                    DefaultValue="{StaticResource GreenAccent3}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceStatus.Active}"
+                    <s:MapToColorEntry Key="{x:Static sample:HomeDeviceStatus.Active}"
                                        Value="{StaticResource AmberDarken1}" />
-                    <s:MapToColorEntry Key="{x:Static models:HomeDeviceStatus.Issue}"
+                    <s:MapToColorEntry Key="{x:Static sample:HomeDeviceStatus.Issue}"
                                        Value="{StaticResource RedAccent2}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <s:MapToBoolConverter x:Key="SliderKindConverter">
                 <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Light}"
+                    <s:MapToBoolEntry Key="{x:Static sample:HomeDeviceKind.Light}"
                                       Value="True" />
-                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Lamp}"
+                    <s:MapToBoolEntry Key="{x:Static sample:HomeDeviceKind.Lamp}"
                                       Value="True" />
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
@@ -74,20 +74,20 @@
             <s:MapToBoolConverter x:Key="TextKindConverter"
                                   DefaultValue="True">
                 <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Light}"
+                    <s:MapToBoolEntry Key="{x:Static sample:HomeDeviceKind.Light}"
                                       Value="False" />
-                    <s:MapToBoolEntry Key="{x:Static models:HomeDeviceKind.Lamp}"
+                    <s:MapToBoolEntry Key="{x:Static sample:HomeDeviceKind.Lamp}"
                                       Value="False" />
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
 
             <s:MapToTextConverter x:Key="RoomIconConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:HomeRoomKind.LivingRoom}"
+                    <s:MapToTextEntry Key="{x:Static sample:HomeRoomKind.LivingRoom}"
                                       Value="{x:Static fonts:MaterialIcons.Weekend}" />
-                    <s:MapToTextEntry Key="{x:Static models:HomeRoomKind.Bedroom}"
+                    <s:MapToTextEntry Key="{x:Static sample:HomeRoomKind.Bedroom}"
                                       Value="{x:Static fonts:MaterialIcons.Bed}" />
-                    <s:MapToTextEntry Key="{x:Static models:HomeRoomKind.Kitchen}"
+                    <s:MapToTextEntry Key="{x:Static sample:HomeRoomKind.Kitchen}"
                                       Value="{x:Static fonts:MaterialIcons.Kitchen}" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -477,10 +477,10 @@
                 <Grid Style="{StaticResource DialGrid}">
                     <controls:HomeThermostatDial Style="{StaticResource Dial}"
                                                  Value="{Binding Home.Room.SetTemperature}"
-                                                 Minimum="{x:Static models:SmartHome.MinTemperature}"
-                                                 Maximum="{x:Static models:SmartHome.MaxTemperature}"
+                                                 Minimum="{x:Static sample:SmartHome.MinTemperature}"
+                                                 Maximum="{x:Static sample:SmartHome.MaxTemperature}"
                                                  IsActive="{Binding Home.Room.IsThermostatActive}"
-                                                 Step="{x:Static models:SmartHome.TemperatureStep}" />
+                                                 Step="{x:Static sample:SmartHome.TemperatureStep}" />
                     <VerticalStackLayout Style="{StaticResource DialCenterStack}">
                         <Label Style="{StaticResource CenterSubLabel}"
                                Text="設定温度" />
@@ -533,7 +533,7 @@
                                      HorizontalItemSpacing="8" Span="3" VerticalItemSpacing="8" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:HomeDevice">
+                    <DataTemplate x:DataType="sample:HomeDevice">
                         <Border Style="{StaticResource TileBorder}">
                             <Grid Style="{StaticResource TileGrid}"
                                   RowDefinitions="Auto,Auto,*,Auto"
@@ -631,7 +631,7 @@
                                          HorizontalItemSpacing="8" Span="3" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:HomeBattery">
+                        <DataTemplate x:DataType="sample:HomeBattery">
                             <Grid Style="{StaticResource BatteryGrid}"
                                   RowDefinitions="Auto,Auto,Auto"
                                   ColumnDefinitions="*,Auto">
@@ -666,7 +666,7 @@
                                          Span="3" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="holder:Selectable(models:HomeRoom)">
+                        <DataTemplate x:DataType="models:Selectable(sample:HomeRoom)">
                             <VerticalStackLayout Style="{StaticResource TabStack}">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->

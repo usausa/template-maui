@@ -2,6 +2,7 @@
 namespace Template.MobileApp;
 
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -70,7 +71,7 @@ public static partial class MauiProgram
             .UseSkiaSharp()
             .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
-            .UseMauiCommunityToolkitMediaElement(true)
+            .UseMauiCommunityToolkitMediaElement(false)
             .UseMauiMaps()
             .UseBarcodeScanning()
             .UseShiny()
@@ -235,9 +236,6 @@ public static partial class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // Fallback fonts
-        FallbackFonts.Languages = ["ja"];
-
         // Crash dump
         CrashReport.Start();
 
@@ -394,6 +392,9 @@ public static partial class MauiProgram
             .AddHttpClient(ApiNames.Transfer, SetupTransferHttpClient)
             .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)
             .AddHttpMessageHandler<ApiDelegatingHandler>();
+        services
+            .AddHttpClient(ApiNames.MapTile, SetupMapTileHttpClient)
+            .ConfigurePrimaryHttpMessageHandler(CreateMapTileHttpMessageHandler);
         services.AddTransient<ApiDelegatingHandler>();
         services.AddSingleton<ApiContext>();
 
@@ -452,12 +453,44 @@ public static partial class MauiProgram
         client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
     }
 
+    private static void SetupMapTileHttpClient(IServiceProvider provider, HttpClient client)
+    {
+        client.Timeout = TimeSpan.FromSeconds(30);
+        client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Template.MobileApp", provider.GetRequiredService<IAppInfo>().VersionString));
+    }
+
     private static HttpMessageHandler CreateHttpMessageHandler() =>
         new SocketsHttpHandler
         {
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             PooledConnectionLifetime = TimeSpan.FromMinutes(1)
         };
+
+    private static HttpMessageHandler CreateMapTileHttpMessageHandler() =>
+        new SocketsHttpHandler
+        {
+            ConnectCallback = ConnectIPv4Async,
+            PooledConnectionLifetime = TimeSpan.FromMinutes(1)
+        };
+
+    private static async ValueTask<Stream> ConnectIPv4Async(SocketsHttpConnectionContext context, CancellationToken cancellationToken)
+    {
+        var addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, AddressFamily.InterNetwork, cancellationToken).ConfigureAwait(false);
+#pragma warning disable CA2000
+        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+#pragma warning restore CA2000
+        try
+        {
+            socket.NoDelay = true;
+            await socket.ConnectAsync(addresses, context.DnsEndPoint.Port, cancellationToken).ConfigureAwait(false);
+            return new NetworkStream(socket, true);
+        }
+        catch
+        {
+            socket.Dispose();
+            throw;
+        }
+    }
 
     // ------------------------------------------------------------
     // Build

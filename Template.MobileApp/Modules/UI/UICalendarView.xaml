@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:clam="clr-namespace:ClamCalendar;assembly=ClamCalendar"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:clam="clr-namespace:ClamCalendar;assembly=ClamCalendar"
              x:Class="Template.MobileApp.Modules.UI.UICalendarView"
              x:DataType="{x:Type module:UICalendarViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UICalendarViewModel}"
@@ -28,7 +28,7 @@
             </Style>
 
             <Style x:Key="ModeSheet"
-                   TargetType="mcc:BottomSheetView">
+                   TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -71,9 +71,9 @@
                                Stamps="{Binding Stamps}" />
 
         <!-- 選択モード切替 -->
-        <mcc:BottomSheetView Style="{StaticResource ModeSheet}"
+        <cmc:BottomSheetView Style="{StaticResource ModeSheet}"
                              IsOpen="{Binding IsSettingOpen}">
-            <mcc:BottomSheetView.SheetTemplate>
+            <cmc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UICalendarViewModel">
                     <Grid Style="{StaticResource ModeSheetGrid}"
                           ColumnDefinitions="*,*,*,*">
@@ -135,8 +135,8 @@
                         </Button>
                     </Grid>
                 </DataTemplate>
-            </mcc:BottomSheetView.SheetTemplate>
-        </mcc:BottomSheetView>
+            </cmc:BottomSheetView.SheetTemplate>
+        </cmc:BottomSheetView>
 
     </Grid>
 

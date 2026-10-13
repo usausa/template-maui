@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.App"
+             xmlns:app="clr-namespace:Template.MobileApp.Models.App"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppTodoEditView"
              x:DataType="{x:Type module:AppTodoEditViewModel}"
@@ -290,12 +290,12 @@
                             <Button Grid.Column="0"
                                     Style="{StaticResource ChipButton}"
                                     Command="{Binding DueCommand}"
-                                    CommandParameter="{x:Static models:TodoDue.Today}"
+                                    CommandParameter="{x:Static app:TodoDue.Today}"
                                     Text="📅 今日">
                                 <Button.Triggers>
                                     <DataTrigger TargetType="Button"
                                                  Binding="{Binding Context.Draft.Due}"
-                                                 Value="{x:Static models:TodoDue.Today}">
+                                                 Value="{x:Static app:TodoDue.Today}">
                                         <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
                                         <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
                                         <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
@@ -305,12 +305,12 @@
                             <Button Grid.Column="1"
                                     Style="{StaticResource ChipButton}"
                                     Command="{Binding DueCommand}"
-                                    CommandParameter="{x:Static models:TodoDue.Tomorrow}"
+                                    CommandParameter="{x:Static app:TodoDue.Tomorrow}"
                                     Text="🌤️ 明日">
                                 <Button.Triggers>
                                     <DataTrigger TargetType="Button"
                                                  Binding="{Binding Context.Draft.Due}"
-                                                 Value="{x:Static models:TodoDue.Tomorrow}">
+                                                 Value="{x:Static app:TodoDue.Tomorrow}">
                                         <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
                                         <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
                                         <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
@@ -327,14 +327,14 @@
                                     <Button.Triggers>
                                         <DataTrigger TargetType="Button"
                                                      Binding="{Binding Context.Draft.Due}"
-                                                     Value="{x:Static models:TodoDue.Later}">
+                                                     Value="{x:Static app:TodoDue.Later}">
                                             <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
                                             <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
                                             <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
                                         </DataTrigger>
                                         <DataTrigger TargetType="Button"
                                                      Binding="{Binding Context.Draft.Due}"
-                                                     Value="{x:Static models:TodoDue.Overdue}">
+                                                     Value="{x:Static app:TodoDue.Overdue}">
                                             <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
                                             <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
                                             <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
@@ -345,12 +345,12 @@
                             <Button Grid.Column="3"
                                     Style="{StaticResource ChipButton}"
                                     Command="{Binding DueCommand}"
-                                    CommandParameter="{x:Static models:TodoDue.None}"
+                                    CommandParameter="{x:Static app:TodoDue.None}"
                                     Text="✖️ なし">
                                 <Button.Triggers>
                                     <DataTrigger TargetType="Button"
                                                  Binding="{Binding Context.Draft.Due}"
-                                                 Value="{x:Static models:TodoDue.None}">
+                                                 Value="{x:Static app:TodoDue.None}">
                                         <Setter Property="BackgroundColor" Value="{StaticResource TodoAccentSoftColor}" />
                                         <Setter Property="BorderColor" Value="{StaticResource TodoAccentColor}" />
                                         <Setter Property="TextColor" Value="{StaticResource TodoAccentColor}" />
