@@ -614,9 +614,9 @@
         <cmc:TabStrip Grid.Row="0"
                       Style="{StaticResource NewsTabStrip}"
                       ItemsSource="{Binding Context.Pages}"
+                      SelectedIndex="{Binding SelectedIndex}"
                       IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
-                      PagePosition="{Binding PagePosition}"
-                      SelectedIndex="{Binding SelectedIndex}">
+                      PagePosition="{Binding PagePosition}">
             <cmc:TabStrip.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type module:UINewsPage}">
                     <Label Style="{StaticResource TabLabel}"
@@ -669,8 +669,8 @@
                         <RefreshView Style="{StaticResource NewsRefresh}"
                                      Command="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsViewModel}}, Path=RefreshCommand, x:DataType={x:Type module:UINewsViewModel}}"
                                      CommandParameter="{Binding .}"
-                                     IsRefreshEnabled="{Binding IsSaved, Converter={StaticResource ReverseConverter}}"
-                                     IsRefreshing="{Binding IsRefreshing}">
+                                     IsRefreshing="{Binding IsRefreshing}"
+                                     IsRefreshEnabled="{Binding IsSaved, Converter={StaticResource ReverseConverter}}">
                             <CollectionView Style="{StaticResource NewsCollection}"
                                             ItemsSource="{Binding Items}"
                                             ItemTemplate="{StaticResource ArticleRowTemplate}"

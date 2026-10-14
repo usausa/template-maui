@@ -106,9 +106,9 @@
         <CarouselView x:Name="OnboardCarousel"
                       Grid.Row="0" Grid.RowSpan="3"
                       ItemsSource="{Binding Pages}"
+                      Position="{Binding Position}"
                       IndicatorView="{x:Reference Indicators}"
-                      Loop="False"
-                      Position="{Binding Position}">
+                      Loop="False">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="module:UIKitOnboardPage">
                     <Grid Style="{StaticResource OnboardPageGrid}"

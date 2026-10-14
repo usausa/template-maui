@@ -379,9 +379,9 @@
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
                           behaviors:AnimationOption.EnterDelay="80"
                           ItemsSource="{Binding Featured}"
-                          CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
+                          Position="{Binding FeaturedPosition}"
                           IndicatorView="{x:Reference FeaturedIndicator}"
-                          Position="{Binding FeaturedPosition}">
+                          CurrentItemChangedCommand="{Binding CurrentChangedCommand}">
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="sample:StreamItem">
                         <Grid>
@@ -410,10 +410,10 @@
                                     <Label.Text>
                                         <MultiBinding StringFormat="{}{0} · {1} · {2}">
                                             <Binding Path="Work.Year" />
-                                            <Binding Converter="{StaticResource GenreNameConverter}"
-                                                     Path="Work.Genre" />
-                                            <Binding Converter="{StaticResource RuntimeTextConverter}"
-                                                     Path="Work.Minutes" />
+                                            <Binding Path="Work.Genre"
+                                                     Converter="{StaticResource GenreNameConverter}" />
+                                            <Binding Path="Work.Minutes"
+                                                     Converter="{StaticResource RuntimeTextConverter}" />
                                         </MultiBinding>
                                     </Label.Text>
                                 </Label>

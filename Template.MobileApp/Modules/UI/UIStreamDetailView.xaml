@@ -345,10 +345,10 @@
                     <Label.Text>
                         <MultiBinding StringFormat="{}{0} · {1} · {2} · {3}">
                             <Binding Path="Context.Selected.Work.Year" />
-                            <Binding Converter="{StaticResource GenreNameConverter}"
-                                     Path="Context.Selected.Work.Genre" />
-                            <Binding Converter="{StaticResource RuntimeTextConverter}"
-                                     Path="Context.Selected.Work.Minutes" />
+                            <Binding Path="Context.Selected.Work.Genre"
+                                     Converter="{StaticResource GenreNameConverter}" />
+                            <Binding Path="Context.Selected.Work.Minutes"
+                                     Converter="{StaticResource RuntimeTextConverter}" />
                             <Binding Path="Context.Selected.Work.Rated" />
                         </MultiBinding>
                     </Label.Text>
@@ -484,8 +484,8 @@
                                     <Label Style="{StaticResource TrailerMetaLabel}">
                                         <Label.Text>
                                             <MultiBinding StringFormat="{}{0} · {1:m'm 'ss's'}">
-                                                <Binding Converter="{StaticResource TrailerKindConverter}"
-                                                         Path="Kind" />
+                                                <Binding Path="Kind"
+                                                         Converter="{StaticResource TrailerKindConverter}" />
                                                 <Binding Path="Length" />
                                             </MultiBinding>
                                         </Label.Text>

@@ -706,9 +706,9 @@
                         <CarouselView Grid.Row="1"
                                       behaviors:CarouselOption.PageSnap="True"
                                       ItemsSource="{Binding Photos}"
+                                      Position="{Binding PhotoPosition}"
                                       IndicatorView="{x:Reference PhotoIndicatorView}"
-                                      IsScrollAnimated="False" Loop="False"
-                                      Position="{Binding PhotoPosition}">
+                                      Loop="False" IsScrollAnimated="False">
                             <CarouselView.ItemTemplate>
                                 <DataTemplate x:DataType="module:UIProfilePhoto">
                                     <Image Style="{StaticResource PhotoViewerImage}"

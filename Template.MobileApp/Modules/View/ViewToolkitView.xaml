@@ -42,8 +42,8 @@
                    TargetType="sf:SfSegmentedControl">
                 <Setter Property="SelectionIndicatorSettings">
                     <Setter.Value>
-                        <sf:SelectionIndicatorSettings TextColor="White"
-                                                       Background="{StaticResource BlueDefault}" />
+                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
+                                                       TextColor="White" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -103,8 +103,8 @@
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
                             <sf:SfSegmentedControl Style="{StaticResource SegmentedControl}"
                                                    ItemsSource="{Binding Segments}"
-                                                   SegmentHeight="40"
-                                                   SelectedIndex="{Binding SegmentIndex, Mode=TwoWay}" />
+                                                   SelectedIndex="{Binding SegmentIndex, Mode=TwoWay}"
+                                                   SegmentHeight="40" />
                             <Label Style="{StaticResource CardAccentLabel}"
                                    Text="{Binding SegmentIndex, StringFormat='Index: {0}'}" />
                         </VerticalStackLayout>

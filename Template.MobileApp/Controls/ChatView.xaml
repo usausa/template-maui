@@ -228,9 +228,9 @@
 
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}"
                         ItemsUpdatingScrollMode="KeepLastItemInView"
-                        VerticalScrollBarVisibility="Default"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}" />
+                        VerticalScrollBarVisibility="Default" />
 
         <Grid Grid.Row="1"
               Style="{StaticResource InputBarGrid}"

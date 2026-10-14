@@ -354,10 +354,10 @@
                                     Style="{StaticResource SendBubbleBorder}">
                                 <Border.IsVisible>
                                     <MultiBinding Converter="{StaticResource AllConverter}">
-                                        <Binding Converter="{StaticResource EmptyConverter}"
-                                                 Path="Item.StampSource" />
-                                        <Binding Converter="{StaticResource NotEmptyConverter}"
-                                                 Path="Item.TextContent" />
+                                        <Binding Path="Item.StampSource"
+                                                 Converter="{StaticResource EmptyConverter}" />
+                                        <Binding Path="Item.TextContent"
+                                                 Converter="{StaticResource NotEmptyConverter}" />
                                     </MultiBinding>
                                 </Border.IsVisible>
                                 <Label Style="{StaticResource SendBubbleLabel}"
@@ -412,10 +412,10 @@
                                     Style="{StaticResource ReceiveBubbleBorder}">
                                 <Border.IsVisible>
                                     <MultiBinding Converter="{StaticResource AllConverter}">
-                                        <Binding Converter="{StaticResource EmptyConverter}"
-                                                 Path="Item.StampSource" />
-                                        <Binding Converter="{StaticResource NotEmptyConverter}"
-                                                 Path="Item.TextContent" />
+                                        <Binding Path="Item.StampSource"
+                                                 Converter="{StaticResource EmptyConverter}" />
+                                        <Binding Path="Item.TextContent"
+                                                 Converter="{StaticResource NotEmptyConverter}" />
                                     </MultiBinding>
                                 </Border.IsVisible>
                                 <Label Style="{StaticResource ReceiveBubbleLabel}"
@@ -493,9 +493,9 @@
         <CollectionView Grid.Row="0"
                         behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}"
                         ItemsUpdatingScrollMode="KeepLastItemInView"
-                        VerticalScrollBarVisibility="Default"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}">
+                        VerticalScrollBarVisibility="Default">
             <CollectionView.Behaviors>
                 <s:CollectionControlBehavior Controller="{Binding Controller}" />
             </CollectionView.Behaviors>

@@ -14,7 +14,8 @@
              shell:ShellProperty.Title="2048"
              shell:ShellProperty.HeaderVisible="False"
              shell:ShellProperty.FunctionVisible="False"
-             shell:ShellProperty.StatusBarColor="#FBF6EC" shell:ShellProperty.StatusBarStyle="DarkContent">
+             shell:ShellProperty.StatusBarColor="#FBF6EC"
+             shell:ShellProperty.StatusBarStyle="DarkContent">
 
     <!-- 2048。ゲームは Models/App/Puzzle2048Game、盤面は Controls/Puzzle2048Board (1 手の結果から動かす) -->
     <!-- ReSharper disable Xaml.RedundantResource -->
@@ -324,18 +325,18 @@
         <Grid Grid.Row="3"
               Style="{StaticResource SwipeAreaGrid}">
             <Grid.GestureRecognizers>
-                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static app:Puzzle2048Direction.Up}"
-                                        Direction="Up" Threshold="30" />
-                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static app:Puzzle2048Direction.Down}"
-                                        Direction="Down" Threshold="30" />
-                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static app:Puzzle2048Direction.Left}"
-                                        Direction="Left" Threshold="30" />
-                <SwipeGestureRecognizer Command="{Binding SwipeCommand}"
-                                        CommandParameter="{x:Static app:Puzzle2048Direction.Right}"
-                                        Direction="Right" Threshold="30" />
+                <SwipeGestureRecognizer Direction="Up" Threshold="30"
+                                        Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Up}" />
+                <SwipeGestureRecognizer Direction="Down" Threshold="30"
+                                        Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Down}" />
+                <SwipeGestureRecognizer Direction="Left" Threshold="30"
+                                        Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Left}" />
+                <SwipeGestureRecognizer Direction="Right" Threshold="30"
+                                        Command="{Binding SwipeCommand}"
+                                        CommandParameter="{x:Static app:Puzzle2048Direction.Right}" />
             </Grid.GestureRecognizers>
 
             <Grid Style="{StaticResource BoardGrid}">

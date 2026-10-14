@@ -45,12 +45,12 @@
                             <Entry Style="{StaticResource BasicFieldEntry}">
                                 <Entry.Behaviors>
                                     <s:DefaultFocusBehavior />
-                                    <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
-                                                              CommandParameter="Entry1"
-                                                              EventName="Focused" />
-                                    <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
-                                                              CommandParameter="Entry1"
-                                                              EventName="Unfocused" />
+                                    <s:EventToCommandBehavior EventName="Focused"
+                                                              Command="{Binding FocusedCommand}"
+                                                              CommandParameter="Entry1" />
+                                    <s:EventToCommandBehavior EventName="Unfocused"
+                                                              Command="{Binding UnfocusedCommand}"
+                                                              CommandParameter="Entry1" />
                                 </Entry.Behaviors>
                             </Entry>
                         </Border>
@@ -62,12 +62,12 @@
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource GreenFocusEntry}">
                                 <Entry.Behaviors>
-                                    <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
-                                                              CommandParameter="Entry2"
-                                                              EventName="Focused" />
-                                    <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
-                                                              CommandParameter="Entry2"
-                                                              EventName="Unfocused" />
+                                    <s:EventToCommandBehavior EventName="Focused"
+                                                              Command="{Binding FocusedCommand}"
+                                                              CommandParameter="Entry2" />
+                                    <s:EventToCommandBehavior EventName="Unfocused"
+                                                              Command="{Binding UnfocusedCommand}"
+                                                              CommandParameter="Entry2" />
                                 </Entry.Behaviors>
                             </Entry>
                         </Border>
@@ -145,8 +145,8 @@
                               ColumnDefinitions="Auto,*">
                             <Switch Grid.Column="0">
                                 <Switch.Behaviors>
-                                    <s:EventToCommandBehavior Command="{Binding SwitchToggledCommand}"
-                                                              EventName="Toggled" />
+                                    <s:EventToCommandBehavior EventName="Toggled"
+                                                              Command="{Binding SwitchToggledCommand}" />
                                 </Switch.Behaviors>
                             </Switch>
                             <Label Grid.Column="1"

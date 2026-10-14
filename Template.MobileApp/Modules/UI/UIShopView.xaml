@@ -588,9 +588,9 @@
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="120"
                                   ItemsSource="{Binding Popular}"
+                                  IndicatorView="{x:Reference PopularIndicator}"
                                   CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
-                                  CurrentItemChangedCommandParameter="{Binding Source={x:Reference PopularCarousel}, Path=CurrentItem, x:DataType=CarouselView}"
-                                  IndicatorView="{x:Reference PopularIndicator}">
+                                  CurrentItemChangedCommandParameter="{Binding Source={x:Reference PopularCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
                         <CarouselView.ItemTemplate>
                             <DataTemplate x:DataType="module:UIShopPopularItem">
                                 <Border Style="{StaticResource PopularCardBorder}">

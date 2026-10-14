@@ -32,8 +32,8 @@
                    TargetType="sf:SfSegmentedControl">
                 <Setter Property="SelectionIndicatorSettings">
                     <Setter.Value>
-                        <sf:SelectionIndicatorSettings TextColor="White"
-                                                       Background="{StaticResource BlueDefault}" />
+                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
+                                                       TextColor="White" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -194,9 +194,10 @@
 
         <drawer:SfNavigationDrawer IsOpen="{Binding IsSfDrawerOpen}">
             <drawer:SfNavigationDrawer.DrawerSettings>
-                <drawer:DrawerSettings DrawerFooterHeight="44" DrawerHeaderHeight="96" DrawerWidth="280"
+                <drawer:DrawerSettings Position="Left"
+                                       DrawerFooterHeight="44" DrawerHeaderHeight="96" DrawerWidth="280"
                                        EnableSwipeGesture="{Binding IsSfMode}"
-                                       Position="Left" Transition="SlideOnTop">
+                                       Transition="SlideOnTop">
                     <drawer:DrawerSettings.DrawerHeaderView>
                         <ContentView behaviors:LazyViewOption.Load="{Binding IsSfDrawerOpen}">
                             <behaviors:LazyViewOption.Template>
@@ -253,9 +254,8 @@
                             <VerticalStackLayout Style="{StaticResource CardContentStack}">
                                 <sf:SfSegmentedControl Style="{StaticResource SegmentedControl}"
                                                        ItemsSource="{Binding Modes}"
-                                                       SegmentHeight="40"
                                                        SelectedIndex="{Binding ModeIndex, Mode=TwoWay}"
-                                                       VisibleSegmentsCount="2" />
+                                                       SegmentHeight="40" VisibleSegmentsCount="2" />
                                 <Button Style="{StaticResource BasicFilledButton}"
                                         Command="{Binding OpenCommand}"
                                         Text="Open drawer" />
