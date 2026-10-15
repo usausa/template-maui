@@ -3,7 +3,6 @@ namespace Template.MobileApp.Behaviors;
 using Android.Content.Res;
 using Android.Text;
 using Android.Views;
-using Android.Views.InputMethods;
 using Android.Widget;
 
 using Java.Lang;
@@ -68,8 +67,10 @@ public static partial class EntryOption
 
     private static void UpdateHandleNoBorder(TextView editText, BindableObject element)
     {
-        var value = GetNoBorder(element);
-        editText.BackgroundTintList = value ? ColorStateList.ValueOf(Android.Graphics.Color.Transparent) : null;
+        if (GetNoBorder(element))
+        {
+            editText.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+        }
     }
 
     // SearchView の下線は入力欄ではなく、入力欄を囲む search_plate の背景
@@ -119,9 +120,10 @@ public static partial class EntryOption
         }
     }
 
+    // ハードキーの Enter では Android の既定の次の欄への移動をさせない(新しい Android では ActionId が ImeNull で来ない)
     private static void OnEditorAction(object? sender, TextView.EditorActionEventArgs e)
     {
-        if ((e.ActionId == ImeAction.ImeNull) && (e.Event?.KeyCode == Keycode.Enter))
+        if (e.Event?.KeyCode == Keycode.Enter)
         {
             e.Handled = true;
         }
