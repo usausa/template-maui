@@ -27,13 +27,15 @@ public static partial class ElementHelper
         var viewGroup = (ViewGroup)parent.ToPlatform(parent.Handler.MauiContext);
         var start = current is not null ? ResolveCurrentView(current) : viewGroup.FindFocus();
         var focused = start;
-        var visited = new HashSet<View>();
+        var checkpoint = start;
+        var limit = 1;
+        var steps = 0;
         while (true)
         {
             var next = ff.FindNextFocus(viewGroup, focused, forward ? FocusSearchDirection.Forward : FocusSearchDirection.Backward);
 
             // No more control
-            if ((next is null) || next.Equals(start) || !visited.Add(next))
+            if ((next is null) || next.Equals(start) || next.Equals(checkpoint))
             {
                 return false;
             }
@@ -46,6 +48,15 @@ public static partial class ElementHelper
 
             // Find next
             focused = next;
+
+            // Cycle check (Brent)
+            steps++;
+            if (steps == limit)
+            {
+                checkpoint = next;
+                limit *= 2;
+                steps = 0;
+            }
         }
     }
 
