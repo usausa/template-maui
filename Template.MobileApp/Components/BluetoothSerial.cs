@@ -9,7 +9,6 @@ public interface IBluetoothSerial : IDisposable
 
 public interface IBluetoothSerialFactory
 {
-    // 非搭載端末ではfalse。falseの場合ConnectAsyncは常にnullを返す
     bool IsSupported { get; }
 
     ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin = null);

@@ -12,9 +12,6 @@ public sealed class NoiseEventArgs : EventArgs
 
 public interface INoiseMonitor : IDisposable
 {
-    /// <summary>
-    /// UIスレッド以外から発火する。UI更新時はObserveOnCurrentContext等でマーシャリングすること。
-    /// </summary>
     event EventHandler<NoiseEventArgs>? Measured;
 
     bool IsRunning { get; }
@@ -47,7 +44,6 @@ public sealed partial class NoiseMonitor : INoiseMonitor
             return;
         }
 
-        // 失敗完了後の再開に備えた後始末
         cts?.Dispose();
 
         cts = new CancellationTokenSource();
@@ -61,7 +57,6 @@ public sealed partial class NoiseMonitor : INoiseMonitor
             return;
         }
 
-        // ループ完了を待ってから解放しないと、次回StartのバッファをArrayPoolへ二重返却する
         await cts!.CancelAsync().ConfigureAwait(false);
         try
         {

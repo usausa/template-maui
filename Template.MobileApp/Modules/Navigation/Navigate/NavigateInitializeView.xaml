@@ -46,7 +46,6 @@
 
     <Grid Style="{StaticResource RootGrid}">
 
-        <!-- 初期化中のスケルトン -->
         <VerticalStackLayout Style="{StaticResource SkeletonStack}"
                              IsVisible="{Binding Initialized, Converter={StaticResource ReverseConverter}}">
             <Border Style="{StaticResource BasicIconCircleBorder}"
@@ -61,7 +60,6 @@
             <BoxView Style="{StaticResource SkeletonShortBar}" />
         </VerticalStackLayout>
 
-        <!-- 初期化完了 -->
         <Border Style="{StaticResource CardCenterBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding Initialized}"
                 IsVisible="{Binding Initialized}">

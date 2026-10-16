@@ -30,7 +30,6 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
 
     public SampleMediaViewModel(IDispatcher dispatcher)
     {
-        // 再生が始まるまではローディング表示にする
         IsLoading = true;
 
         Controller.PlayingChanged = x => IsPlaying = x;
@@ -53,7 +52,6 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
             RestartHideTimer();
         });
 
-        // コントロールバーは表示から 3 秒後に自動で隠す
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(3);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ =>

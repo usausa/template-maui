@@ -6,15 +6,12 @@ public sealed partial class DragTask : ObservableObject
 
     public Color Accent { get; }
 
-    // ドラッグ中の元アイテム (半透明表示)
     [ObservableProperty]
     public partial bool IsSource { get; set; }
 
-    // ドラッグ中のアイテムがこの行に重なっている (行の強調)
     [ObservableProperty]
     public partial bool IsOver { get; set; }
 
-    // 挿入位置の線。上へ動かすときは行の上端、下へ動かすときは行の下端に出す
     [ObservableProperty]
     public partial bool IsOverAbove { get; set; }
 
@@ -63,7 +60,6 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         new("朝会", Purple)
     ];
 
-    // ドラッグ中は受け入れ先 (列・行・ゴミ箱) を全て示し、重なっている先だけ強調する
     [ObservableProperty]
     public partial bool IsDragging { get; set; }
 
@@ -130,8 +126,6 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         IsDragging = true;
     }
 
-    // 強調表示を全て戻す。対象外へ落とした場合は DropCompleted で呼ばれるが、ドロップ成功時は
-    // 元の行が再生成されて DropCompleted が届かないため、各ドロップ処理の最後でも呼ぶ
     private void EndDrag()
     {
         dragging = null;
@@ -157,7 +151,6 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         target.IsOverBelow = below;
     }
 
-    // 同じリスト内で下方向へ動かす場合はドロップ先の後ろに入る
     private bool IsMovingDown(DragTask item, DragTask target)
     {
         var list = FindList(item);
@@ -176,8 +169,6 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         }
     }
 
-    // ドロップ先アイテムの位置へ挿入する (同一リスト内=並べ替え / 別リスト=位置指定の移動)。
-    // 同じリスト内で下へ動かす場合はドロップ先の後ろに入る (隣の行へ落として入れ替わらないのを防ぐ)
     private void DropOnItem(DragTask target)
     {
         var item = dragging;
@@ -199,7 +190,6 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         EndDrag();
     }
 
-    // リストの空き領域へのドロップは末尾に追加する
     private void DropOnList(string name)
     {
         var item = dragging;

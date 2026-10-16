@@ -4,6 +4,22 @@ using Template.MobileApp.Graphics.Drawing;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Usecase;
 
+public enum CaptureState
+{
+    Preview,
+    Capturing,
+    Analyzing,
+    Result
+}
+
+public enum VisionFeature
+{
+    Objects,
+    Tags,
+    People,
+    Ocr
+}
+
 public sealed partial class SampleCvNetViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;

@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
 {
-    // 閉じるアニメーションを待ってから次のシートを開く
     private static readonly TimeSpan SwitchDelay = TimeSpan.FromMilliseconds(300);
 
     [ObservableProperty]

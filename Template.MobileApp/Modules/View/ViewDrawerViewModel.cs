@@ -18,10 +18,8 @@ public sealed partial class DrawerMenuItem : ObservableObject
     }
 }
 
-// Syncfusion の SfNavigationDrawer と自作の SideDrawer (MauiComponents.Controls) を切り替えて比べる
 public sealed partial class ViewDrawerViewModel : AppViewModelBase
 {
-    // 0 = Sf / 1 = 自作
     [ObservableProperty]
     public partial int ModeIndex { get; set; }
 

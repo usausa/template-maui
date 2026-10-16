@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
@@ -68,7 +68,6 @@
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
 
-            <!-- テレメトリの送信中 / 未送信のクラッシュ -->
             <s:BoolToTextConverter x:Key="TelemetryTextConverter"
                                    TrueValue="Sending"
                                    FalseValue="Stopped" />
@@ -88,7 +87,6 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
 
-            <!-- 直近の送信の成否 -->
             <s:BoolToTextConverter x:Key="SendResultTextConverter"
                                    TrueValue="Succeeded"
                                    FalseValue="Failed" />
@@ -101,7 +99,6 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
 
-            <!-- ログレベル -->
             <s:MapToColorConverter x:Key="LogLevelColorConverter"
                                    DefaultValue="{StaticResource RedDefault}">
                 <s:MapToColorConverter.Entries>
@@ -110,13 +107,11 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <!-- 無効時は文字と枠を薄くする -->
             <Style x:Key="EntryStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="4" />
             </Style>
 
-            <!-- ログファイル / 直近のログの行 -->
             <Style x:Key="EntryGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />

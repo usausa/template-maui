@@ -12,7 +12,6 @@ using Java.Security.Spec;
 
 using AndroidSettings = Android.Provider.Settings;
 
-// Android の BiometricPrompt / BiometricManager と Android Keystore を直接使う (minSdk 30 なので AndroidX は要らない)。ダイアログはシステムが出す
 public sealed partial class BiometricAuthenticator
 {
     private const string KeyStoreName = "AndroidKeyStore";
@@ -46,7 +45,6 @@ public sealed partial class BiometricAuthenticator
         return labels;
     }
 
-    // 記録は起動からの時間 (elapsedRealtime)
     private static partial TimeSpan? PlatformGetTimeSinceLastAuthentication(BiometricMethod method)
     {
         TimeSpan? elapsed = null;
@@ -112,7 +110,6 @@ public sealed partial class BiometricAuthenticator
         return location;
     }
 
-    // 使うたびに本人確認を求める鍵は、強い生体認証を使える (生体情報が登録されている) ときだけ作れる
     private static partial byte[]? PlatformCreateSigningKey() =>
         PlatformCheckAvailability(BiometricMethod.Biometric) == BiometricAvailability.Available ? GenerateSigningKey() : null;
 
@@ -124,7 +121,6 @@ public sealed partial class BiometricAuthenticator
         return publicKey?.GetEncoded();
     }
 
-    // 鍵と結び付けた本人確認に成功すると、初期化した Signature で 1 回だけ署名できる
     private static async partial ValueTask<BiometricSignResult> PlatformSignAsync(byte[] data, BiometricPromptText text, CancellationToken cancellationToken)
     {
         using var keyStore = LoadKeyStore();
@@ -174,7 +170,6 @@ public sealed partial class BiometricAuthenticator
     private static BiometricManager GetManager() =>
         (BiometricManager)Application.Context.GetSystemService(Context.BiometricService)!;
 
-    // crypto を付けると、その鍵の操作を認める本人確認になる
     private static async ValueTask<BiometricAuthenticationResult> PromptAsync(BiometricPromptText text, BiometricMethod method, BiometricPrompt.CryptoObject? crypto, CancellationToken cancellationToken)
     {
         var context = Application.Context;
@@ -195,7 +190,6 @@ public sealed partial class BiometricAuthenticator
 
         builder.SetConfirmationRequired(text.ConfirmationRequired);
         builder.SetAllowedAuthenticators(ToAuthenticators(method));
-        // 画面ロックを使わないときは取り消しのボタンが要る (使うときは付けられない)
         using var cancelListener = new CancelListener(completion);
         if (method is BiometricMethod.Biometric or BiometricMethod.WeakBiometric)
         {
@@ -242,7 +236,6 @@ public sealed partial class BiometricAuthenticator
         _ => BiometricSignStatus.Failed
     };
 
-    // Android 12 から置き場所を区別できる (それより前は安全な領域かどうかだけ)
     private static BiometricKeyLocation ToLocation(KeyInfo info) =>
         OperatingSystem.IsAndroidVersionAtLeast(31)
             ? info.SecurityLevel switch
@@ -261,7 +254,6 @@ public sealed partial class BiometricAuthenticator
         return keyStore;
     }
 
-    // StrongBox が無ければ TEE に作る
     private static byte[]? GenerateSigningKey()
     {
         try
@@ -274,7 +266,6 @@ public sealed partial class BiometricAuthenticator
         }
     }
 
-    // P-256、SHA-256。使うたびに強い生体認証を求め、生体情報の登録が変わると使えなくなる
     private static byte[]? GenerateSigningKey(bool strongBox)
     {
         using var curve = new ECGenParameterSpec("secp256r1");
@@ -301,7 +292,6 @@ public sealed partial class BiometricAuthenticator
         }
     }
 
-    // 生体情報の登録が変わった鍵は、署名の初期化で使えないと分かる
     private static bool TryInitSign(Signature signature, IPrivateKey key)
     {
         try
@@ -315,7 +305,6 @@ public sealed partial class BiometricAuthenticator
         }
     }
 
-    // 取り消しのボタン
     private sealed class CancelListener : Java.Lang.Object, IDialogInterfaceOnClickListener
     {
         private readonly TaskCompletionSource<BiometricAuthenticationResult> completion;
@@ -329,7 +318,6 @@ public sealed partial class BiometricAuthenticator
             completion.TrySetResult(new BiometricAuthenticationResult(BiometricResult.Canceled, BiometricAuthenticationType.Unknown));
     }
 
-    // 1 回の不一致ではダイアログが残るので扱わない (続くと OnAuthenticationError の Lockout になる)
     private sealed class AuthenticationCallback : BiometricPrompt.AuthenticationCallback
     {
         private readonly TaskCompletionSource<BiometricAuthenticationResult> completion;

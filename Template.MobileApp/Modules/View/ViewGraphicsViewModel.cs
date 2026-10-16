@@ -82,7 +82,6 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
             ShapeCount = 0;
         });
 
-        // Sketch (IInteractiveDrawing + PNG エクスポート)
         Sketch.StrokesChanged += (_, _) => SketchCount = Sketch.StrokeCount;
         UndoSketchCommand = MakeDelegateCommand(Sketch.Undo);
         ClearSketchCommand = MakeDelegateCommand(Sketch.Clear);
@@ -95,7 +94,6 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
             HasExport = true;
         });
 
-        // Countdown (完走時のみ通知される)
         StartCountdownCommand = MakeDelegateCommand(() =>
         {
             CountdownDone = false;

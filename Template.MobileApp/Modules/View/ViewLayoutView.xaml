@@ -16,10 +16,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!--
-        CommunityToolkit のレイアウトデモ (DockLayout / UniformItemsLayout) と、
-        自作レイアウト (CircularLayout=円弧 / 回転 / リング対応 / HoneycombLayout / StaggeredGrid / VariableSizeWrapPanel / OverlapPanel / CascadeStackLayout) のデモ
-    -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -101,14 +97,12 @@
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
-            <!-- VariableSizeWrapPanel のタイル (高さはセルに合わせて伸びるため HeightRequest を持たない) -->
             <Style x:Key="TileCell"
                    TargetType="Border">
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 6" />
             </Style>
 
-            <!-- OverlapPanel で重ねる円 (白枠で重なり順を見せる) -->
             <Style x:Key="OverlapCircle"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="40" />
@@ -118,7 +112,6 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
-            <!-- CircularLayout の回転 (扇のピル) とリング (中心 + 同心円の点) -->
             <Style x:Key="FanPill"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="56" />
@@ -152,7 +145,6 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <!-- HoneycombLayout の六角セル (100x110 の Path に中央のアイコン+ラベル、右上に選択バッジ) -->
             <Style x:Key="HexCell"
                    TargetType="Grid">
                 <Setter Property="WidthRequest" Value="100" />

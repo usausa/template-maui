@@ -89,7 +89,6 @@ public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 例外の属性 (exception.stacktrace) を確かめるため、投げて捕まえた例外を記録する
     private void LogError()
     {
         try
@@ -102,7 +101,6 @@ public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
         }
     }
 
-    // 親子のスパンと、スパンの中のログ (同じトレース ID が付く)
     private async Task RunSpanAsync()
     {
         // The parent is Activity.Current when the context is default
@@ -124,7 +122,6 @@ public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
         }
     }
 
-    // Throw on the UI thread outside of the command so that it is not handled
     private void ThrowOnMainThread() =>
         dispatcher.Dispatch(static () => throw new InvalidOperationException("Crash test."));
 }

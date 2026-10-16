@@ -15,9 +15,6 @@ public sealed class ActivityEventArgs : EventArgs
 
 public interface IActivityRecognizer
 {
-    /// <summary>
-    /// UIスレッド以外から発火する。UI更新時はObserveOnCurrentContext等でマーシャリングすること。
-    /// </summary>
     event EventHandler<ActivityEventArgs>? Changed;
 
     bool Enabled { get; set; }

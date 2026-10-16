@@ -29,7 +29,6 @@ public sealed partial class ActivityRecognizer : Java.Lang.Object, ISensorEventL
         base.Dispose(disposing);
     }
 
-    // 権限のCheck→Requestは呼び出し側で実施する (ActivityRecognitionPermission)
     private partial void Start()
     {
         sensorManager ??= (SensorManager)Application.Context.GetSystemService(Context.SensorService)!;

@@ -6,7 +6,7 @@ public sealed record SunburstEntry(string Category, string Item, double Value);
 
 public sealed class ViewSfChartViewModel : AppViewModelBase
 {
-    // 月別売上 (Cartesian ColumnSeries)
+    // Cartesian ColumnSeries
     public IReadOnlyList<ChartEntry> Monthly { get; } =
     [
         new("4月", 42),
@@ -17,7 +17,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
         new("9月", 81)
     ];
 
-    // カテゴリ構成比 (Circular DoughnutSeries)
+    // Circular DoughnutSeries
     public IReadOnlyList<ChartEntry> Share { get; } =
     [
         new("食品", 38),
@@ -27,7 +27,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
         new("その他", 9)
     ];
 
-    // スキルバランス (PolarAreaSeries)
+    // PolarAreaSeries
     public IReadOnlyList<ChartEntry> Skills { get; } =
     [
         new("攻撃", 82),
@@ -38,7 +38,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
         new("運", 45)
     ];
 
-    // 成約ファネル (SfFunnelChart / SfPyramidChart)
+    // SfFunnelChart / SfPyramidChart
     public IReadOnlyList<ChartEntry> Funnel { get; } =
     [
         new("訪問", 1000),
@@ -48,12 +48,12 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
         new("リピート", 90)
     ];
 
-    // 週間推移 (SparkCharts)
+    // SparkCharts
     public IReadOnlyList<double> Trend { get; } = [3, 6, 4, 8, 5, 9, 7, 11, 8, 12, 10, 14];
 
     public IReadOnlyList<double> WinLoss { get; } = [1, 1, -1, 1, -1, 1, 1, -1, 1, 1];
 
-    // 地域別売上の階層 (SfSunburstChart)
+    // SfSunburstChart
     public IReadOnlyList<SunburstEntry> Regions { get; } =
     [
         new("東日本", "東京", 48),

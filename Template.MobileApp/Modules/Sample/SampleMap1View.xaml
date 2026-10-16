@@ -95,14 +95,12 @@
             </maps:Map.ItemTemplate>
         </maps:Map>
 
-        <!-- Google Map 標準のズームボタン(右下)と重ならないよう右上に配置する -->
         <VerticalStackLayout Style="{StaticResource MapFabStack}">
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
 
-        <!-- 地図の種類と MapElements (経路 / 範囲 / 半径円) の切り替え -->
         <cmc:BottomSheetView Style="{StaticResource LayerSheet}"
                              IsOpen="{Binding IsLayerOpen}">
             <cmc:BottomSheetView.SheetTemplate>

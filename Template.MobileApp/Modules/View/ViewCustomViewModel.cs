@@ -58,7 +58,6 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
     [ObservableProperty]
     public partial TimeSpan Duration { get; set; } = new(1, 30, 0);
 
-    // AvatarGroup デモ (Add / Remove で「+N」の変化を見る)
     public ObservableCollection<string> Avatars { get; } = [.. AvatarPool.Take(5)];
 
     public IObserveCommand AddAvatarCommand { get; }

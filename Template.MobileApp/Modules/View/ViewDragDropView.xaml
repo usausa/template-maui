@@ -14,7 +14,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- 標準の DragGestureRecognizer / DropGestureRecognizer のデモ (長押しでドラッグ開始) -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -35,7 +34,6 @@
                 <Setter Property="Margin" Value="0,3" />
             </Style>
 
-            <!-- 挿入位置の線 (上へ動かすときは行の上端、下へ動かすときは行の下端) -->
             <Style x:Key="ReorderListBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="0" />
@@ -131,7 +129,6 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <!-- ドラッグ可能 + アイテム上へのドロップを受けるタスク行 (3 リスト共用) -->
             <DataTemplate x:Key="TaskTemplate"
                           x:DataType="{x:Type module:DragTask}">
                 <Border Style="{StaticResource TaskBorder}">

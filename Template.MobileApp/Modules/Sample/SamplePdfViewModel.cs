@@ -41,7 +41,6 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
     {
         this.fileSystem = fileSystem;
 
-        // ページ数の表示と前後の移動は、スライダーと同じ PageIndex から決める
         PageChangedCommand = MakeDelegateCommand<PageChangedEventArgs>(x =>
         {
             TotalPages = x.TotalPages;

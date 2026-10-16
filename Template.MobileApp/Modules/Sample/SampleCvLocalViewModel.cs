@@ -70,7 +70,6 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        // 推論中の再入でReplaceBitmapが使用中のビットマップを破棄しないようガードする
         if (IsProcessing)
         {
             return;

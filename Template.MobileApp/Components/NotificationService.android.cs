@@ -7,7 +7,6 @@ using AndroidX.Core.App;
 
 using AndroidNotificationManager = Android.App.NotificationManager;
 
-// スケジュールした通知を発火するレシーバ (アプリのプロセスが無くても起動される)
 [BroadcastReceiver(Name = "template.mobileapp.NotificationAlarmReceiver", Exported = false)]
 public sealed class NotificationAlarmReceiver : BroadcastReceiver
 {
@@ -48,7 +47,6 @@ public sealed partial class NotificationService
         }
     }
 
-    // MainActivity の起動 / 再起動 Intent に通知タップの情報があれば取り出す
     public static void HandleIntent(Intent? intent)
     {
         if ((intent is null) || !intent.HasExtra(ExtraId))
@@ -57,10 +55,8 @@ public sealed partial class NotificationService
         }
 
         var args = new NotificationTappedEventArgs(intent.GetIntExtra(ExtraId, 0), intent.GetStringExtra(ExtraAction), intent.GetStringExtra(ExtraPayload));
-        // 画面の再生成で同じ Intent が再処理されないよう消す
         intent.RemoveExtra(ExtraId);
 
-        // ボタンのタップは通知が残るため消す (本体のタップは AutoCancel)
         if (args.Action is not null)
         {
             using var compat = NotificationManagerCompat.From(Application.Context);
@@ -183,7 +179,6 @@ public sealed partial class NotificationService
         manager.CreateNotificationChannel(channel);
     }
 
-    // 通知本体とアクションボタンのタップで MainActivity を開く (requestCode で Intent の extras を分ける)
     private static PendingIntent CreateContentIntent(Context context, int id, int requestIndex, string? action, string? payload)
     {
         using var intent = new Intent(context, typeof(MainActivity));

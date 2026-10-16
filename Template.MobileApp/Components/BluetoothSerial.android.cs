@@ -14,7 +14,6 @@ public sealed partial class BluetoothSerialFactory
 
     private static readonly TimeSpan DiscoveryTimeout = TimeSpan.FromSeconds(30);
 
-    // ペアリング確認ダイアログのユーザー操作を考慮した値
     private static readonly TimeSpan BondTimeout = TimeSpan.FromSeconds(60);
 
     private readonly Context context;

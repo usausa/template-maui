@@ -102,14 +102,12 @@
                    Text="Cannot play" />
         </VerticalStackLayout>
 
-        <!-- タップでコントロールバーの表示を切り替える -->
         <BoxView Color="#01000000">
             <BoxView.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding ToggleControlBarCommand}" />
             </BoxView.GestureRecognizers>
         </BoxView>
 
-        <!-- 再生開始・バッファリング中のローディング表示 -->
         <ActivityIndicator Style="{StaticResource BasicLightLoadingIndicator}"
                            IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}" />

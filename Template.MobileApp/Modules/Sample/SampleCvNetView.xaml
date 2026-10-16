@@ -25,7 +25,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- 状態 → 表示 -->
             <s:MapToBoolConverter x:Key="PreviewVisibleConverter">
                 <s:MapToBoolConverter.Entries>
                     <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}"
@@ -53,7 +52,6 @@
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
 
-            <!-- 選択中の種類 → 色 -->
             <s:CompareToColorConverter x:Key="FeatureBackgroundConverter"
                                        TrueValue="{StaticResource BlueDefault}"
                                        FalseValue="White" />
@@ -128,7 +126,6 @@
                                 IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
                                 Drawing="{Binding Drawing}" />
 
-        <!-- 解析結果 (タグと信頼度) -->
         <Border Grid.Row="0"
                 Style="{StaticResource TagPanelBorder}"
                 IsVisible="{Binding TagsText, Converter={StaticResource NotEmptyConverter}}">
@@ -136,16 +133,13 @@
                    Text="{Binding TagsText}" />
         </Border>
 
-        <!-- 撮影ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0"
                                     IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
 
-        <!-- 撮影瞬間のシャッターフラッシュ -->
         <BoxView Grid.Row="0"
                  Style="{StaticResource ShutterFlashBoxView}"
                  behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
 
-        <!-- 解析の種類 -->
         <Grid Grid.Row="1"
               Style="{StaticResource FeatureGrid}"
               ColumnDefinitions="*,*,*,*"

@@ -133,7 +133,6 @@ public sealed partial class SettingViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 受け取りの切り替え (表示で設定の値を入れたときは何もしない)
     private void ChangePush(bool enabled)
     {
         if (settings.PushEnabled != enabled)
@@ -165,7 +164,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
                     settings.ApiEndPoint = apiEndPoint;
                     apiContext.BaseAddress = new Uri(apiEndPoint);
                     ApiEndPoint = apiEndPoint;
-                    // 受け取り中なら新しい接続先へ繋ぎ直す
+
                     if (settings.PushEnabled)
                     {
                         pushService.Connect();

@@ -147,7 +147,6 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
         }
     }
 
-    // 残りが少なくなったら次の範囲を読む (サーバーの offset / size)
     private async Task LoadMoreAsync()
     {
         if (Items.Count >= Total)

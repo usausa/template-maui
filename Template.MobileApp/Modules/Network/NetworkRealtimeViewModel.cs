@@ -107,7 +107,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        // 受信はバックグラウンドスレッドから来る。Rx の未処理 OnError はアプリを落とすため必ず処理する
         Receiving.Disposable = new CompositeDisposable(
             connection.ServerStatus.ObserveOnCurrentContext().Subscribe(OnServerStatus, OnError),
             connection.Notifications.ObserveOnCurrentContext().Subscribe(OnNotification, OnError));
@@ -143,7 +142,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     // Connection
     //--------------------------------------------------------------------------------
 
-    // 接続を始める (動作中なら繋ぎ直す)。購読が接続の維持そのもので、破棄が切断
     private void Connect()
     {
         Disconnect();
@@ -172,7 +170,6 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         ConnectionId = status.ConnectionId ?? "-";
         LastError = status.Error?.Message ?? string.Empty;
 
-        // 接続したら状態をすぐに報告する
         if (status.Kind == HubStatusKind.Connected)
         {
             _ = ReportAsync();

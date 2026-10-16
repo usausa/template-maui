@@ -97,7 +97,6 @@ public sealed partial class ViewChartViewModel : AppViewModelBase
         }
     }
 
-    // 乱数ウォークのダミーデータを生成する
     private List<double> CreateWalk(int count, double start, double step)
     {
         var values = new List<double>(count);

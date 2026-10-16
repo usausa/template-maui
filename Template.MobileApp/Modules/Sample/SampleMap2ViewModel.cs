@@ -93,7 +93,6 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         Controller.AddManager(GeoJsonManager);
         Controller.AddManager(ClusterManager);
 
-        // ウィジェットは初期表示から有効にする
         WidgetsEnabled = true;
         Controller.SetManagerEnabled(MapsuiWidgetManager.ManagerName, true);
 

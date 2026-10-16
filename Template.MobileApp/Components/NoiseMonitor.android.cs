@@ -28,7 +28,6 @@ public sealed partial class NoiseMonitor
         }
         catch (Java.Lang.Throwable ex)
         {
-            // 権限拒否・デバイス使用中等。呼び出し側は開始失敗として扱う
             Log.Error(nameof(NoiseMonitor), ex, "AudioRecord setup failed.");
             return false;
         }

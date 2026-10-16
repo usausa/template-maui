@@ -88,7 +88,6 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <!-- スクロール連動 / 長押し進行 (B-7) -->
             <Style x:Key="ScrubStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="6" />
@@ -144,7 +143,6 @@
                                    RepeatCount="-1" />
         </Border>
 
-        <!-- プレイヤーコントロール -->
         <Border Grid.Row="1"
                 Style="{StaticResource PlayerPanelBorder}">
             <VerticalStackLayout Style="{StaticResource PlayerStack}">
@@ -165,7 +163,6 @@
                     </Grid>
                 </VerticalStackLayout>
 
-                <!-- スクロール連動 / 長押し進行 -->
                 <VerticalStackLayout Style="{StaticResource ScrubStack}">
                     <ScrollView behaviors:Scroll.RatioCommand="{Binding ScrubCommand}"
                                 Orientation="Horizontal"

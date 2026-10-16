@@ -89,7 +89,6 @@
 
         <mapsui:MapControl behaviors:MapsuiBind.Controller="{Binding Controller}" />
 
-        <!-- SkiaSharp オーバーレイ (グラデーション経路) -->
         <skia:SKCanvasView behaviors:MapsuiBind.Overlay="{Binding Controller}"
                            InputTransparent="True" />
 
@@ -108,7 +107,6 @@
                          Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
 
-        <!-- 機能グループ別マネージャのトグル -->
         <cmc:BottomSheetView Style="{StaticResource LayerSheet}"
                              IsOpen="{Binding IsLayerOpen}">
             <cmc:BottomSheetView.SheetContent>
