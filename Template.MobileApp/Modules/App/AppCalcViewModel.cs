@@ -69,7 +69,6 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
         ErrorMessage = string.Empty;
     }
 
-    // 式が空のときは何もしない
     private void Evaluate()
     {
         if (!input.IsEmpty)

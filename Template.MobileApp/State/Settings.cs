@@ -31,32 +31,33 @@ public sealed class Settings
         set => preferences.Set(nameof(ApiEndPoint), value);
     }
 
-    // gRPC (チャット) の接続先。API と別ポート (h2c) のため別に持つ
+    // gRPC
+
     public string GrpcEndPoint
     {
         get => preferences.Get<string>(nameof(GrpcEndPoint), default!);
         set => preferences.Set(nameof(GrpcEndPoint), value);
     }
 
-    // OpenTelemetry (OTLP) の送信先
+    // Push
+    public bool PushEnabled
+    {
+        get => preferences.Get(nameof(PushEnabled), false);
+        set => preferences.Set(nameof(PushEnabled), value);
+    }
+
+    // OpenTelemetry
+
     public string OtelEndPoint
     {
         get => preferences.Get<string>(nameof(OtelEndPoint), default!);
         set => preferences.Set(nameof(OtelEndPoint), value);
     }
 
-    // テレメトリの送信 (設定画面で切り替える)
     public bool TelemetryEnabled
     {
         get => preferences.Get(nameof(TelemetryEnabled), false);
         set => preferences.Set(nameof(TelemetryEnabled), value);
-    }
-
-    // サーバーからの通知の受け取り (設定画面で切り替える。アプリを開いている間だけ接続する)
-    public bool PushEnabled
-    {
-        get => preferences.Get(nameof(PushEnabled), false);
-        set => preferences.Set(nameof(PushEnabled), value);
     }
 
     // AI Service
@@ -66,8 +67,6 @@ public sealed class Settings
         get => preferences.Get<string>(nameof(AIServiceEndPoint), default!);
         set => preferences.Set(nameof(AIServiceEndPoint), value);
     }
-
-    // Ollama (Chat)。接続先とモデル名は設定画面の QR で投入する
 
     public string OllamaEndPoint
     {
@@ -81,10 +80,8 @@ public sealed class Settings
         set => preferences.Set(nameof(OllamaModel), value);
     }
 
-    // キー類は平文のPreferencesではなくSecureStorageに保存する
     public async ValueTask<string?> GetAIServiceKeyAsync()
     {
-        // 旧バージョンがPreferencesに保存した値はSecureStorageへ移行する
         var legacy = preferences.Get<string?>(AIServiceKeyName, null);
         if (!String.IsNullOrEmpty(legacy))
         {
@@ -98,7 +95,6 @@ public sealed class Settings
 
     public ValueTask SetAIServiceKeyAsync(string value)
     {
-        // SetAsyncは空文字を受け付けないため、クリアは削除として扱う
         if (String.IsNullOrEmpty(value))
         {
             RemoveSecureValue(AIServiceKeyName);
@@ -108,7 +104,7 @@ public sealed class Settings
         return SetSecureValueAsync(AIServiceKeyName, value);
     }
 
-    // SSH (接続情報は設定画面のQRで投入する。パスワードはSecureStorageに保存する)
+    // SSH
 
     private const string SshPasswordName = "SshPassword";
 
@@ -147,8 +143,6 @@ public sealed class Settings
     // SecureStorage
     // ------------------------------------------------------------
 
-    // バックアップ復元や端末のロック設定変更でキーストアの鍵が無効になると、復号に失敗して Java 例外になる。
-    // 保存済みの値は取り戻せないため、保存領域ごと初期化して未設定として扱う
     private async ValueTask<string?> GetSecureValueAsync(string key)
     {
         try
@@ -190,12 +184,11 @@ public sealed class Settings
         }
     }
 
-    // Remove / RemoveAll も復号を伴って同じ例外になるため、暗号化層を通さずに実体の SharedPreferences を消す
     private static void ResetSecureStorage()
     {
 #if ANDROID
-        var context = global::Android.App.Application.Context;
-        using var preferences = context.GetSharedPreferences($"{context.PackageName}.microsoft.maui.essentials.preferences", global::Android.Content.FileCreationMode.Private)!;
+        var context = Android.App.Application.Context;
+        using var preferences = context.GetSharedPreferences($"{context.PackageName}.microsoft.maui.essentials.preferences", Android.Content.FileCreationMode.Private)!;
         using var editor = preferences.Edit()!;
         editor.Clear()!.Apply();
 #endif
@@ -203,36 +196,28 @@ public sealed class Settings
 }
 #pragma warning restore CA1724
 
-// 通信系の設定が投入済みかの判定 (未設定のときは各機能を実行させない)
 public static class SettingsExtensions
 {
-    // Web API / ストレージ / SignalR
     public static bool IsApiConfigured(this Settings settings) =>
         Uri.TryCreate(settings.ApiEndPoint, UriKind.Absolute, out _);
 
-    // gRPC (チャット)
     public static bool IsGrpcConfigured(this Settings settings) =>
         Uri.TryCreate(settings.GrpcEndPoint, UriKind.Absolute, out _);
 
-    // OpenTelemetry
     public static bool IsOtelConfigured(this Settings settings) =>
         Uri.TryCreate(settings.OtelEndPoint, UriKind.Absolute, out _);
 
-    // テレメトリの送信先 (有効、かつ送信先が設定済みのときだけ)
     public static Uri? GetTelemetryEndPoint(this Settings settings) =>
         settings.TelemetryEnabled && Uri.TryCreate(settings.OtelEndPoint, UriKind.Absolute, out var uri) ? uri : null;
 
-    // Azure AI Vision (キーは SecureStorage)
     public static async ValueTask<bool> IsAIServiceConfiguredAsync(this Settings settings) =>
         !String.IsNullOrEmpty(settings.AIServiceEndPoint) &&
         !String.IsNullOrEmpty(await settings.GetAIServiceKeyAsync().ConfigureAwait(false));
 
-    // Ollama (チャット)
     public static bool IsOllamaConfigured(this Settings settings) =>
         !String.IsNullOrEmpty(settings.OllamaModel) &&
         Uri.TryCreate(settings.OllamaEndPoint, UriKind.Absolute, out _);
 
-    // SSH
     public static bool IsSshConfigured(this Settings settings) =>
         !String.IsNullOrEmpty(settings.SshHost) && !String.IsNullOrEmpty(settings.SshUser);
 }

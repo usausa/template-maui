@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// 周波数 (MHz) を帯域の文言へ
 public sealed class WiFiBandConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch

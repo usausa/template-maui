@@ -4,7 +4,6 @@ using Smart.Maui.Animations;
 
 using Template.MobileApp.Controls;
 
-// EasingCurveView の丸を、時間に比例して始点から終点まで動かす(縦の位置は曲線の Easing の値)
 public sealed class EasingDemoAnimation : AnimationBase
 {
     protected override Task BeginAnimation(VisualElement target)

@@ -2,7 +2,6 @@ namespace Template.MobileApp.Services;
 
 using ClamCalendar;
 
-// カレンダー画面 (UICalendar / UISchedule) のイベント・スタンプ・祝日の供給元 (サンプルデータ生成器。VM からの new 直生成を避け DI 注入の見本とする)
 public interface ICalendarService
 {
     IReadOnlyList<CalendarEvent> GetEvents(DateOnly startDate, DateOnly endDate);
@@ -11,13 +10,11 @@ public interface ICalendarService
 
     IReadOnlyList<DateOnly> GetHolidays(DateOnly startDate, DateOnly endDate);
 
-    // 時刻のある予定 (Schedule のタイムテーブル)
     IReadOnlyList<TimetableEvent> GetSchedule(DateOnly day);
 }
 
 public sealed class CalendarService : ICalendarService
 {
-    // サンプルデータ生成の下限 (過去 2 ヶ月の月初より前は生成しない)
     private const int LimitMonths = 2;
 
     private static readonly Color DarkRed = Color.FromArgb("#8B1538");
@@ -48,7 +45,6 @@ public sealed class CalendarService : ICalendarService
         "avatar_person05.jpg"
     ];
 
-    // 平日の予定。先頭 (朝会) は毎日入る
     private static readonly (TimeSpan Start, TimeSpan End, string Title, string Place, int Members, string Memo, Color Color)[] WorkScheduleTemplates =
     [
         (new(9, 0, 0), new(9, 30, 0), "朝会", "オンライン", 5, "今日の作業と、困っていることを共有する。", Blue),
@@ -320,7 +316,7 @@ public sealed class CalendarService : ICalendarService
             set.Add(new(year, 12, 23));
         }
 
-        // 振替休日
+        // Substitute holiday
         var substitutes = new List<DateOnly>();
         foreach (var h in set)
         {
@@ -338,7 +334,7 @@ public sealed class CalendarService : ICalendarService
             set.Add(s);
         }
 
-        // 国民の休日(挟まれ日)
+        // National holiday
         var sandwiched = new List<DateOnly>();
         foreach (var h in set)
         {
@@ -382,7 +378,6 @@ public sealed class CalendarService : ICalendarService
     // Schedule
     //--------------------------------------------------------------------------------
 
-    // 日付で決まる予定 (平日は朝会と、ほかの約半分。土日と祝日は 3 件)
     public IReadOnlyList<TimetableEvent> GetSchedule(DateOnly day)
     {
         var seed = day.DayNumber;

@@ -64,7 +64,6 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
         State = BluetoothPrintState.Connecting;
         Detail = "Connecting to \"DummyPrinter\"...";
 
-        // 外部IFのIO例外は発生が予期されるため個別にcatchし、Stateを確実に復帰させる
         try
         {
             using var port = await bluetoothSerialFactory.ConnectAsync("DummyPrinter");
@@ -106,7 +105,6 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
         }
         finally
         {
-            // 上記以外の例外が抜けてもコマンドが永久に無効化されないよう状態を戻す
             if (State is BluetoothPrintState.Connecting or BluetoothPrintState.Printing)
             {
                 State = BluetoothPrintState.Failed;

@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// 今日・昨日、それより前は「10/06 (月)」
 public sealed class RelativeDayConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

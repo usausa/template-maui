@@ -38,7 +38,6 @@ public sealed class AndroidNfcF : INfc
         }
         catch (Java.IO.IOException)
         {
-            // TagLostExceptionを含む。タグ喪失・接続失敗は応答なしとして扱い、購読側のシーケンスに例外を伝播させない
             return [];
         }
     }
@@ -148,7 +147,6 @@ public sealed partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCall
                 }
                 finally
                 {
-                    // タグはイベントハンドラ内でのみ有効な契約とし、検出ごとの接続リークを防ぐ
                     try
                     {
                         nfc.Close();

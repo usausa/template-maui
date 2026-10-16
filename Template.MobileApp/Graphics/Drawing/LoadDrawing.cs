@@ -6,10 +6,8 @@ public sealed class LoadDrawing : DrawingObject
 
     private const int MaxBars = 60;
 
-    // 左へ流れ出る途中の棒も描くため 1 本多く持つ
     private const int Capacity = MaxBars + 1;
 
-    // 測定の間隔 (NoiseMonitor の 200 ms) の間に 1 本ぶん流れる
     private const uint FlowLength = 200;
 
     private const float Gap = 2f;
@@ -26,7 +24,6 @@ public sealed class LoadDrawing : DrawingObject
 
     private static readonly Color ScaleTextColor = Color.FromArgb("#9FA3C3");
 
-    // 目安の線(DecibelToColorConverter と同じ 50 / 70 dB)。線の上の帯の名前と、50 の線の下に QUIET
     private static readonly (float Value, string Label, Color Color)[] Guides =
     [
         (50f, "NORMAL", Colors.Gold),
@@ -162,7 +159,6 @@ public sealed class LoadDrawing : DrawingObject
             canvas.FillRectangle(fullRect);
             canvas.RestoreState();
 
-            // 値より上を地の色で隠す
             var maskRect = new RectF(x, plot.Top, barWidth, ToY(plot, range, buffer[idx]) - plot.Top);
             canvas.FillColor = BackgroundColor;
             canvas.FillRectangle(maskRect);

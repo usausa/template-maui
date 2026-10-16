@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// 音量 (0〜1) をアイコンへ。境目は表示の % と同じく四捨五入した値で見る
 public sealed class VolumeIconConverter : IValueConverter
 {
     public string? Off { get; set; }

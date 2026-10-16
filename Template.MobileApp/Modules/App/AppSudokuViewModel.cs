@@ -5,12 +5,10 @@ using System.Security.Cryptography;
 using Template.MobileApp.Models.App;
 using Template.MobileApp.Services;
 
-// 数字のキー (答えの位置に置いていない残りの数)
 public sealed partial class SudokuDigit : ObservableObject
 {
     public int Value { get; }
 
-    // キーを並べる列
     public int Column => Value - 1;
 
     [ObservableProperty]
@@ -45,11 +43,9 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     [ObservableProperty]
     public partial SudokuLevel Level { get; set; }
 
-    // 盤面 (数字を入れたマスや、そろったマスがあればコントロールが動かす)
     [ObservableProperty]
     public partial SudokuFrame? Board { get; set; }
 
-    // 数字のキーでメモを切り替える
     [ObservableProperty]
     public partial bool IsNoteMode { get; set; }
 
@@ -59,7 +55,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int HintsLeft { get; set; }
 
-    // 答えになっていないマスの数
     [ObservableProperty]
     public partial int Remaining { get; set; }
 
@@ -72,7 +67,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsCompleted { get; set; }
 
-    // 今の難易度のベストタイム (記録なしは null)
     [ObservableProperty]
     public partial TimeSpan? BestTime { get; set; }
 
@@ -113,7 +107,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         Disposables.Add(ticker.TickAsObservable().Subscribe(_ => UpdateElapsed()));
         Disposables.Add(new DelegateDisposable(ticker.Stop));
 
-        // 背面では経過時間を数えない (止めた時点の経過時間を残す)
         Disposables.Add(session.AsObservable(nameof(Session.IsForeground)).Subscribe(_ =>
         {
             UpdateClock();
@@ -170,10 +163,9 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 遊んでいる途中なら確かめてから始める
     private async Task NewGameAsync(SudokuLevel level)
     {
-        if (game.IsCompleted || !game.HasProgress || await dialog.ConfirmAsync("今のゲームをやめて、新しいゲームを始めますか?"))
+        if (game.IsCompleted || !game.HasProgress || await dialog.ConfirmAsync("新しいゲームを始めますか?"))
         {
             game.NewGame(level);
             ShowGame();
@@ -188,7 +180,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         Refresh(null, []);
     }
 
-    // メモのときはメモを切り替え、そうでなければ数字を入れる
     private void Input(int value)
     {
         if (selected is { } cell)
@@ -220,7 +211,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         }
     }
 
-    // 選んだマス (答えになっていれば置ける数字のいちばん少ないマス) に答えを入れる
     private void Hint()
     {
         if (game.Hint(selected, timeProvider.GetUtcNow()) is { } cell)
@@ -234,7 +224,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    // 入れたマスを弾ませ、そろった行・列・ブロックを光らせる。完成したら選んだマスを外す
     private void Place(SudokuCell cell)
     {
         var flash = game.GetCompletedCells(cell);
@@ -248,7 +237,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         Save();
     }
 
-    // 始めたゲーム、または読み込んだゲームを表示する
     private void ShowGame()
     {
         selected = null;
@@ -273,7 +261,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         }
     }
 
-    // 前の続き (読めなければ新しいゲーム)
     private void Load()
     {
         var snapshot = store.Load(AppJsonContext.Default.SudokuSnapshot);
@@ -289,7 +276,6 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     private void Save() =>
         store.Save(game.Export(timeProvider.GetUtcNow()), AppJsonContext.Default.SudokuSnapshot);
 
-    // 表示中で前面、完成していない間だけ経過時間を数える
     private void UpdateClock()
     {
         var now = timeProvider.GetUtcNow();
@@ -307,7 +293,5 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         UpdateElapsed();
     }
 
-    // 秒の単位で表示する
-    private void UpdateElapsed() =>
-        Elapsed = TimeSpan.FromSeconds(Math.Floor(game.GetElapsed(timeProvider.GetUtcNow()).TotalSeconds));
+    private void UpdateElapsed() => Elapsed = TimeSpan.FromSeconds(Math.Floor(game.GetElapsed(timeProvider.GetUtcNow()).TotalSeconds));
 }

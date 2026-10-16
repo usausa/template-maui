@@ -9,7 +9,6 @@ using Template.MobileApp.Services;
 // Input
 //--------------------------------------------------------------------------------
 
-// 編集の入力 (新規は Id が null)。期限の区分けは Today から見る
 public sealed partial class TodoDraft : ObservableObject
 {
     public DateTime Today { get; init; }
@@ -41,7 +40,6 @@ public sealed partial class TodoDraft : ObservableObject
 
     public bool CanSave => !String.IsNullOrWhiteSpace(Title);
 
-    // 期限のチップ (今日 / 明日 / 期限なし)
     public void SetDue(TodoDue due) =>
         DueDate = due switch
         {
@@ -50,7 +48,6 @@ public sealed partial class TodoDraft : ObservableObject
             _ => null
         };
 
-    // 前後の空白を除き、期限は日付だけにする
     public void Normalize()
     {
         Title = Title.Trim();
@@ -86,14 +83,12 @@ public static partial class AppTodoContextMapper
 // Context
 //--------------------------------------------------------------------------------
 
-// 一覧と編集が共有する (一覧を開いている間)
 public sealed partial class AppTodoContext : ObservableObject
 {
     private readonly TimeProvider timeProvider;
 
     private readonly DataService dataService;
 
-    // 編集している行 (新規は null)
     private TodoItem? editing;
 
     public TodoList List { get; } = new();
@@ -104,7 +99,6 @@ public sealed partial class AppTodoContext : ObservableObject
     [ObservableProperty]
     public partial TodoDraft Draft { get; set; } = new();
 
-    // 消した行 (元に戻せる間)
     [ObservableProperty]
     public partial TodoItem? DeletedItem { get; set; }
 
@@ -129,7 +123,6 @@ public sealed partial class AppTodoContext : ObservableObject
         List.UpdateSummary();
     }
 
-    // 行を完了 (または元) のグループへ動かすのは呼び出し側 (List.Move)
     public async Task ToggleDoneAsync(TodoItem item)
     {
         item.IsDone = !item.IsDone;
@@ -145,7 +138,6 @@ public sealed partial class AppTodoContext : ObservableObject
         await dataService.UpdateTodoAsync(item.ToEntity());
     }
 
-    // すぐに DB から消し、元に戻せるように残す
     public async Task DeleteAsync(TodoItem item)
     {
         await dataService.DeleteTodoAsync(item.Id);
@@ -154,7 +146,6 @@ public sealed partial class AppTodoContext : ObservableObject
         DeletedItem = item;
     }
 
-    // 消した行を同じ Id で入れ直す
     public async Task UndoAsync()
     {
         if (DeletedItem is { } item)
@@ -168,7 +159,6 @@ public sealed partial class AppTodoContext : ObservableObject
 
     public void ClearDeleted() => DeletedItem = null;
 
-    // 新規は期限を今日にする
     public void BeginEdit(TodoItem? item)
     {
         editing = item;
@@ -177,7 +167,6 @@ public sealed partial class AppTodoContext : ObservableObject
         Draft = draft;
     }
 
-    // 編集の入力を一覧と DB に反映する
     public async Task SaveAsync()
     {
         Draft.Normalize();

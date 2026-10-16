@@ -2,7 +2,6 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class DrawingControl : GraphicsView
 {
-    // タップとみなす指の移動の上限
     private const float TapSlop = 10f;
 
     public static readonly BindableProperty DrawingProperty = BindableProperty.Create(
@@ -21,7 +20,6 @@ public sealed partial class DrawingControl : GraphicsView
 
     public DrawingControl()
     {
-        // Drawing が IInteractiveDrawing のときはタッチ操作を、ITapDrawing のときはタップを転送する
         StartInteraction += (_, e) =>
         {
             if (e.Touches.Length > 0)
@@ -56,7 +54,6 @@ public sealed partial class DrawingControl : GraphicsView
         HandlerChanged += (_, _) => AttachPlatformTouch();
     }
 
-    // スクロールの中で縦になぞると親のスクロールに指を取られるため、プラットフォーム側で描いている間は止める
     partial void AttachPlatformTouch();
 
     partial void DetachPlatformTouch(object? platformView);
@@ -76,7 +73,6 @@ public sealed partial class DrawingControl : GraphicsView
         if (oldValue is not null)
         {
             oldValue.Detach();
-            // 解除時のクリアの null 代入はコンパイラ上有効 (ReSharper のみ non-null 違反と誤検知)
             // ReSharper disable once AssignNullToNotNullAttribute
             Drawable = null;
         }

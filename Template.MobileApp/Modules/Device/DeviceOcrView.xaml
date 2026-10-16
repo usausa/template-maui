@@ -86,10 +86,8 @@
         <mct:CameraView Grid.Row="0"
                         behaviors:CameraBind.Controller="{Binding Controller}" />
 
-        <!-- 読取ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0" />
 
-        <!-- OCR 実行中の表示 -->
         <Grid Grid.Row="0"
               Style="{StaticResource ProcessingOverlayGrid}"
               IsVisible="{Binding IsProcessing}">
@@ -101,7 +99,6 @@
             </VerticalStackLayout>
         </Grid>
 
-        <!-- 認識結果パネル -->
         <Border Grid.Row="1"
                 Style="{StaticResource ResultPanelBorder}">
             <VerticalStackLayout Style="{StaticResource ResultPanelStack}">

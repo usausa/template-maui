@@ -10,7 +10,6 @@ public sealed partial class EditListViewModel : AppViewModelBase
 
     public ObservableCollection<WorkEntity> Items { get; } = [];
 
-    // CollectionView.SelectedItems は IList<object> のため object で受ける (選択変更で中身が更新される)
     public ObservableCollection<object> SelectedItems { get; } = [];
 
     [ObservableProperty(NotifyAlso = [nameof(SelectionMode)])]

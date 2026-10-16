@@ -2,8 +2,6 @@ namespace Template.MobileApp.Graphics.Scene;
 
 using SkiaSharp.Views.Maui;
 
-// DrawingControl の Skia 版。ISceneObject をバインドし、Attach/Detach で結線、
-// PaintSurface で Scene.Render を呼ぶだけの共通ビュー。
 public sealed class SceneControl : SKCanvasView
 {
     public static readonly BindableProperty SceneProperty = BindableProperty.Create(
@@ -26,7 +24,6 @@ public sealed class SceneControl : SKCanvasView
         Touch += OnTouch;
     }
 
-    // タップをシーンへ転送する (座標は Render と同じピクセル座標系)
     private void OnTouch(object? sender, SKTouchEventArgs e)
     {
         if ((e.ActionType == SKTouchAction.Pressed) && (Scene is { } scene))

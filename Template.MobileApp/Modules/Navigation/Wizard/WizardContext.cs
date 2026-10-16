@@ -17,7 +17,6 @@ public sealed partial class WizardContext : ObservableObject, IScopeLifecycle
 
     public void OnScopeInitialize()
     {
-        // TODO Extension
 #pragma warning disable CA1848
         log.LogInformation("**** WizardContext OnScopeInitialize ****");
 #pragma warning restore CA1848

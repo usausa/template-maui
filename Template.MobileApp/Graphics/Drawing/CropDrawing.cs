@@ -2,8 +2,6 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 using IImage = Microsoft.Maui.Graphics.IImage;
 
-// 画像トリミング (C-6)。枠のドラッグ移動と四隅ハンドルのリサイズに対応し、
-// 書き出しは表示と同じ OnDraw を使う (ExportPng 共用構成)
 public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposable
 {
     private const float Padding = 12f;
@@ -56,7 +54,6 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
         image = null;
     }
 
-    // 表示中の枠を画像ピクセルへ換算して PNG 書き出しする
     public Result<(int Width, int Height)> ExportCrop(Stream stream)
     {
         if ((image is null) || !cropInitialized || (imageRect.Width <= 0))
@@ -207,20 +204,19 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
         }
         else
         {
-            // リレイアウトで画像枠が変わった場合に収まるよう寄せる
             cropRect = ClampToImage(cropRect);
         }
 
         canvas.DrawImage(image, imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height);
 
-        // 枠外の減光
+        // Dim outside the crop area
         canvas.FillColor = DimColor;
         canvas.FillRectangle(dirtyRect.Left, dirtyRect.Top, dirtyRect.Width, cropRect.Top - dirtyRect.Top);
         canvas.FillRectangle(dirtyRect.Left, cropRect.Top, cropRect.Left - dirtyRect.Left, cropRect.Height);
         canvas.FillRectangle(cropRect.Right, cropRect.Top, dirtyRect.Right - cropRect.Right, cropRect.Height);
         canvas.FillRectangle(dirtyRect.Left, cropRect.Bottom, dirtyRect.Width, dirtyRect.Bottom - cropRect.Bottom);
 
-        // トリミング枠と三分割線
+        // Crop rectangle and rule of thirds lines
         canvas.StrokeColor = Colors.White;
         canvas.StrokeSize = 2f;
         canvas.DrawRectangle(cropRect);
@@ -235,7 +231,7 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
             canvas.DrawLine(cropRect.Left, y, cropRect.Right, y);
         }
 
-        // 四隅のハンドル
+        // Corners
         canvas.FillColor = Colors.White;
         canvas.StrokeColor = AccentColor;
         canvas.StrokeSize = 2f;
@@ -261,7 +257,7 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
             return;
         }
 
-        // 枠内が出力全体になるよう画像全体を拡大配置する
+        // Scale the entire image so that the crop area fills the output
         var scale = dirtyRect.Width / cropRect.Width;
         canvas.DrawImage(
             image,

@@ -67,12 +67,10 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="240,*">
 
-        <!-- 現在地マップ(タイル表示には Google Maps API キーの設定が必要) -->
         <maps:Map Grid.Row="0"
                   behaviors:MapBind.Controller="{Binding Controller}"
                   IsShowingUser="True" />
 
-        <!-- 測位待ちの空状態 -->
         <VerticalStackLayout Grid.Row="1"
                              Style="{StaticResource BasicEmptyStack}"
                              IsVisible="{Binding Location, Converter={StaticResource EmptyConverter}}">
@@ -96,7 +94,6 @@
                    Text="Location service is disabled" />
         </VerticalStackLayout>
 
-        <!-- 測位結果 -->
         <ScrollView Grid.Row="1"
                     IsVisible="{Binding Location, Converter={StaticResource NotEmptyConverter}}">
             <VerticalStackLayout Style="{StaticResource PageStack}">

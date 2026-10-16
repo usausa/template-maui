@@ -39,7 +39,6 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        // CameraViewがプレビューを自動開始するため事前に権限を要求しておく
         IsCameraEnabled = await Permissions.RequestCameraAsync();
     }
 

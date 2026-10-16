@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
-// ボタン背面のカウントダウンリング (mallibone の Countdown button 相当)。
-// 単発アニメーション (AnimateValue) で残量を減らし、完走時のみ completed を通知する
 public sealed class ProgressArcDrawing : DrawingObject
 {
     private const string AnimationName = "CountdownArc";
@@ -58,11 +56,11 @@ public sealed class ProgressArcDrawing : DrawingObject
         canvas.StrokeSize = 6f;
         canvas.StrokeLineCap = LineCap.Round;
 
-        // トラック
+        // Track
         canvas.StrokeColor = TrackColor;
         canvas.DrawCircle(cx, cy, radius);
 
-        // 残量 (上 90 度から時計回りに減っていく)
+        // Remaining Arc
         if (remaining > 0f)
         {
             canvas.StrokeColor = ArcColor;

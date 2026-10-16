@@ -9,11 +9,9 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
     [ObservableProperty]
     public partial Location? Location { get; set; }
 
-    // 端末の位置情報サービスが無効 (測位待ちの空状態に理由を出す)
     [ObservableProperty]
     public partial bool ServiceDisabled { get; set; }
 
-    // 初期表示は東京駅周辺(測位後に現在地へ移動)
     public MapController Controller { get; } = new(35.681236, 139.767125, 3);
 
     //--------------------------------------------------------------------------------

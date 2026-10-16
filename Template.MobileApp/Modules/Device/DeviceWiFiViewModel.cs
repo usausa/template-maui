@@ -2,21 +2,16 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 {
-    // 最後のスキャン要求または結果からこの時間が経ったら自前でスキャンする (他者のスキャン結果が届いていれば撃たない)。
-    // 前面アプリのスキャンは 2 分に 4 回まで
     private static readonly TimeSpan ScanInterval = TimeSpan.FromSeconds(30);
 
-    // 更新時に検出されなかったアクセスポイントを消すまでの猶予
     private static readonly TimeSpan RemoveAfter = TimeSpan.FromSeconds(60);
 
     private static readonly TimeSpan ExpireInterval = TimeSpan.FromSeconds(5);
 
     private readonly IWiFiManager wifiManager;
 
-    // 直近に処理したスキャン結果 (同じ結果の再通知では未検出の判定をしない)
     private IReadOnlyList<WiFiAccessPoint>? lastResults;
 
-    // 自前スキャンの予約と未検出の期限切れ (表示中だけ)。破棄は Disposables に任せる
     private SerialDisposable ScanTimer { get; } = new();
 
     private SerialDisposable ExpireTimer { get; } = new();
@@ -30,7 +25,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsConnected { get; set; }
 
-    // 位置情報 (+ Android 13 以降は NEARBY_WIFI_DEVICES) の権限が無いと SSID とスキャン結果は取得できない
     [ObservableProperty]
     public partial bool HasPermission { get; set; }
 
@@ -40,11 +34,9 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string StateText { get; set; } = string.Empty;
 
-    // 接続情報 (未接続は null)。項目は XAML から直接バインドする
     [ObservableProperty]
     public partial WiFiConnection? Connection { get; set; }
 
-    // 検出したアクセスポイント (接続中 → 検出中を電波の強い順 → 未検出)。更新は行を差し替えず、その場で値を更新して並べ替える
     public ObservableCollection<WiFiAccessPointItem> AccessPoints { get; } = [];
 
     [ObservableProperty]
@@ -125,7 +117,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 表示中は未検出のアクセスポイントを猶予を過ぎたら消し、結果が途絶えたら自前でスキャンする
     private void StartTimers()
     {
         StopTimers();
@@ -139,7 +130,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         ExpireTimer.Disposable = null;
     }
 
-    // 自動スキャンを ScanInterval 後に予約し直す (スキャン要求と結果の受信のたびに延期される)
     private void ScheduleScan()
     {
         if (ExpireTimer.Disposable is null)
@@ -150,7 +140,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         ScanTimer.Disposable = Observable.Timer(ScanInterval).ObserveOnCurrentContext().Subscribe(_ => Scan());
     }
 
-    // 結果は StateChanged 経由で反映。前面アプリのスキャンは 2 分に 4 回までで、超えると要求が拒否される (次回に回す)
     private void Scan()
     {
         if (wifiManager.StartScan())
@@ -178,7 +167,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         var results = wifiManager.AccessPoints;
         if (!ReferenceEquals(results, lastResults))
         {
-            // 新しいスキャン結果: 既存の行はその場で更新し、含まれない行は未検出にする
             lastResults = results;
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var result in results)
@@ -219,7 +207,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     private WiFiAccessPointItem? Find(string bssid) =>
         AccessPoints.FirstOrDefault(x => String.Equals(x.AccessPoint.Bssid, bssid, StringComparison.OrdinalIgnoreCase));
 
-    // 猶予を過ぎた未検出の行を消し、並び順と内訳を更新する
     private void Expire(DateTime now)
     {
         for (var i = AccessPoints.Count - 1; i >= 0; i--)
@@ -251,10 +238,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     }
 }
 
-// 検出したアクセスポイントの行。値は AccessPoint の差し替えで更新し、項目は XAML から直接バインドする (文言はコンバーター)
 public sealed partial class WiFiAccessPointItem : ObservableObject
 {
-    // 更新で検出されなくなった時刻 (検出中は null)
     public DateTime? MissedSince { get; private set; }
 
     [ObservableProperty]

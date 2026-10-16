@@ -11,7 +11,6 @@ public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
 
     private readonly Puzzle2048Game game = new(static x => RandomNumberGenerator.GetInt32(x));
 
-    // 盤面 (直前の 1 手があればコントロールが動かす)
     [ObservableProperty]
     public partial Puzzle2048Frame? Board { get; set; }
 
@@ -21,7 +20,6 @@ public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int BestScore { get; set; }
 
-    // 2048 に届いて、続けるかを聞いている
     [ObservableProperty]
     public partial bool IsWon { get; set; }
 
@@ -105,7 +103,6 @@ public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
         IsOver = game.IsOver;
     }
 
-    // 前の続き (読めなければ新しいゲーム)
     private void Load()
     {
         var snapshot = store.Load(AppJsonContext.Default.Puzzle2048Snapshot);

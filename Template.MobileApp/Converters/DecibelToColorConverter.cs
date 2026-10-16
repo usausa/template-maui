@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// 騒音レベルを段階色に変換する(〜50 安全 / 〜70 注意 / 70〜 警告)
 public sealed class DecibelToColorConverter : IValueConverter
 {
     public double WarningThreshold { get; set; } = 50d;

@@ -17,7 +17,6 @@ public sealed partial class MainPage
     {
         if (BindingContext is MainPageViewModel { BusyState.IsBusy: false } context)
         {
-            // fire-and-forgetだが例外だけは観測してログに残す
             context.Navigator.NotifyAsync(ShellEvent.Back).ContinueWith(
                 t => log.WarnUnhandledNavigationError(t.Exception!),
                 CancellationToken.None,

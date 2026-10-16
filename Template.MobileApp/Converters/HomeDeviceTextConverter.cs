@@ -9,7 +9,6 @@ public enum HomeDeviceTextPart
     Detail
 }
 
-// 値は Kind・IsOn・Level の順
 public sealed class HomeDeviceTextConverter : IMultiValueConverter
 {
     public HomeDeviceTextPart Part { get; set; }

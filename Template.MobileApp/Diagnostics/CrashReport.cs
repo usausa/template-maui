@@ -106,7 +106,6 @@ public static partial class CrashReport
 #pragma warning restore CA1031
     }
 
-    // 未表示のクラッシュを表示して表示済みにする (起動時)
     public static async ValueTask ShowReport()
     {
         if (Load() is not { Shown: false } info)

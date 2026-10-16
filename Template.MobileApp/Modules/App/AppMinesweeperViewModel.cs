@@ -28,7 +28,6 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
     [ObservableProperty]
     public partial MinesweeperLevel Level { get; set; }
 
-    // 盤面 (直前に見せたマスがあればコントロールが覆いを消す)
     [ObservableProperty]
     public partial MinesweeperFrame? Board { get; set; }
 
@@ -41,11 +40,9 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int ElapsedSeconds { get; set; }
 
-    // タップで旗を立てる
     [ObservableProperty]
     public partial bool IsFlagMode { get; set; }
 
-    // 今の難易度のベストタイム (秒。0 は記録なし)
     [ObservableProperty]
     public partial int BestSeconds { get; set; }
 
@@ -148,7 +145,6 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    // 旗と負けは振動で知らせ、ベストタイムを更新したら保存する
     private void Apply(MinesweeperMove move)
     {
         if (move.Type == MinesweeperMoveType.Flagged)
@@ -171,7 +167,6 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
         }
     }
 
-    // 難易度ごとのベストタイム
     private void Load()
     {
         if (store.Load(AppJsonContext.Default.MinesweeperSnapshot) is { } snapshot)
@@ -191,12 +186,8 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
         UpdateTicker();
     }
 
-    private void UpdateElapsed() => ElapsedSeconds = GetSeconds();
+    private void UpdateElapsed() => ElapsedSeconds = (int)Math.Ceiling(game.GetElapsed(timeProvider.GetUtcNow()).TotalSeconds);
 
-    // 始まったら 1 秒から数える
-    private int GetSeconds() => (int)Math.Ceiling(game.GetElapsed(timeProvider.GetUtcNow()).TotalSeconds);
-
-    // 表示中で、始まってから終わるまでの間だけ経過時間を更新する
     private void UpdateTicker()
     {
         if (visible && (game.State == MinesweeperState.Playing))

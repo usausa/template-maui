@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// バッジ件数の表示文字列に変換する(0 以下は空文字、上限超えは "99+")
 public sealed class BadgeCountConverter : IValueConverter
 {
     public int MaxCount { get; set; } = 99;

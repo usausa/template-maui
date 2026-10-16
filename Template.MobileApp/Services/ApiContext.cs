@@ -2,8 +2,6 @@ namespace Template.MobileApp.Services;
 
 using System.Text.Json;
 
-// UIスレッドからの書き込みを通信スレッド(ApiDelegatingHandler)が読むため、参照の可視性をvolatileで保証する
-// 401 の再ログインは NetworkUsecase が LoginId で行う (サーバーは Id のみで JWT を発行する契約)
 public sealed class ApiContext
 {
     private volatile Uri? baseAddress;
@@ -20,14 +18,12 @@ public sealed class ApiContext
 
     public string Token => token;
 
-    // 最後にログインした Id (空なら未ログイン)
     public string LoginId
     {
         get => loginId;
         set => loginId = value;
     }
 
-    // トークンの有効期限 (JWT の exp。ローカル時刻)
     public DateTime? TokenExpires { get; private set; }
 
     public bool IsAuthenticated => token.Length > 0;

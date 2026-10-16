@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// 信号レベル (0〜4。負数は未接続) をアイコンへ
 public sealed class WiFiSignalIconConverter : IValueConverter
 {
     public string? Off { get; set; }

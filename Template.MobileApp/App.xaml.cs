@@ -28,7 +28,6 @@ public sealed partial class App
     {
         var window = new Window(serviceProvider.GetRequiredService<MainPage>());
 
-        // 前面かどうかを Session に持つ
         var session = serviceProvider.GetRequiredService<Session>();
         window.Resumed += (_, _) => session.IsForeground = true;
         window.Stopped += (_, _) => session.IsForeground = false;

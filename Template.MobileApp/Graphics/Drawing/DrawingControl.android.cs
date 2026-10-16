@@ -25,7 +25,6 @@ public sealed partial class DrawingControl
             (sender as Android.Views.View)?.Parent?.RequestDisallowInterceptTouchEvent(true);
         }
 
-        // GraphicsView のタッチ処理にはそのまま渡す
         e.Handled = false;
     }
 }

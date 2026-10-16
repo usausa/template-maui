@@ -14,7 +14,6 @@ public sealed partial class ViewLayoutHex : ObservableObject
 
 public sealed class ViewLayoutViewModel : AppViewModelBase
 {
-    // HoneycombLayout のセル (3 列 7 個で中央 1 + 周囲 6 の花形。Delay は中央→外周の順に入場させる)
     public IReadOnlyList<ViewLayoutHex> Hexes { get; } =
     [
         new() { Label = "Calm", Icon = Fonts.MaterialIcons.Self_improvement, Fill = Color.FromArgb("#B2DFDB"), Accent = Color.FromArgb("#00695C"), Delay = 80 },

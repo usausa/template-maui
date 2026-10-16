@@ -51,7 +51,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int LapNo { get; set; }
 
-    // 1 分で 1 周
     [ObservableProperty]
     public partial double StopwatchProgress { get; set; }
 
@@ -71,14 +70,12 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial TimeSpan Remaining { get; set; }
 
-    // 残りの割合 (減っていく)
     [ObservableProperty]
     public partial double CountdownProgress { get; set; }
 
     [ObservableProperty]
     public partial bool IsWarning { get; set; }
 
-    // 計測中に終わる時刻 (端末の時刻)
     [ObservableProperty]
     public partial DateTime? EndTime { get; set; }
 
@@ -123,7 +120,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         Disposables.Add(ticker.TickAsObservable().Subscribe(_ => Refresh()));
         Disposables.Add(new DelegateDisposable(ticker.Stop));
 
-        // 背面では表示の更新を止め、前面に戻ったら今の時刻で計算し直す
         Disposables.Add(session.AsObservable(nameof(Session.IsForeground)).Subscribe(_ =>
         {
             Refresh();
@@ -210,7 +206,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         ApplyStopwatch();
     }
 
-    // 背面やアプリの終了の後でも、終わる時刻に通知で知らせる
     private void StartCountdown()
     {
         var now = timeProvider.GetUtcNow();
@@ -271,7 +266,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         Save();
     }
 
-    // 刻みを数えず、今の時刻で計算し直す。表示中に終わったら振動で知らせ、予約の通知は取り消す
     private void Refresh()
     {
         var now = timeProvider.GetUtcNow();
@@ -300,7 +294,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         EndTime = countdown.EndAt is { } end ? TimeZoneInfo.ConvertTime(end, timeProvider.LocalTimeZone).DateTime : null;
     }
 
-    // 画面を表示していて前面で、計測中の間だけ表示を更新し、画面を消灯させない
     private void UpdateTicker()
     {
         var running = (stopwatch.State == TimerStopwatchState.Running) || (countdown.State == TimerCountdownState.Running);
@@ -316,7 +309,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         screen.KeepScreenOn(visible && running);
     }
 
-    // 状態は JSON で持つ (初めては 3 分)
     private void Load()
     {
         if (store.Load(AppJsonContext.Default.TimerSnapshot) is { } snapshot)
@@ -337,7 +329,5 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     }
 
     private void Save() =>
-        store.Save(
-            new TimerSnapshot { Stopwatch = stopwatch.Export(), Countdown = countdown.Export() },
-            AppJsonContext.Default.TimerSnapshot);
+        store.Save(new TimerSnapshot { Stopwatch = stopwatch.Export(), Countdown = countdown.Export() }, AppJsonContext.Default.TimerSnapshot);
 }

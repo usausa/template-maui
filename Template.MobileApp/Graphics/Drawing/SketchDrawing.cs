@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
-// フリーハンド描画 (IInteractiveDrawing の実装例)。
-// ストロークは色ごとに保持し、Undo は末尾削除・Export は表示と同じ OnDraw を使う
 public sealed class SketchDrawing : DrawingObject, IInteractiveDrawing
 {
     private static readonly Color[] Palette =

@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
-// アイコンの周囲に波紋リングを広げる演出 (AlohaKit の PulseIcon 相当)。
-// 単発アニメーション (AnimateValue) の完了時に再開始する形でループさせる
 public sealed class PulseRingDrawing : DrawingObject
 {
     private const string AnimationName = "PulseRing";
@@ -58,7 +56,7 @@ public sealed class PulseRingDrawing : DrawingObject
 
         canvas.Antialias = true;
 
-        // 波紋 (位相をずらした複数リングが外へ広がりながら消える)
+        // Pulse
         for (var i = 0; i < RingCount; i++)
         {
             var p = (phase + ((float)i / RingCount)) % 1f;
@@ -68,7 +66,7 @@ public sealed class PulseRingDrawing : DrawingObject
             canvas.DrawCircle(cx, cy, radius);
         }
 
-        // 中心のアイコン円
+        // Center circle
         canvas.FillColor = AccentColor;
         canvas.FillCircle(cx, cy, coreRadius);
         canvas.FillColor = Colors.White;

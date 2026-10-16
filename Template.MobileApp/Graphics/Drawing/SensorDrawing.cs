@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
-// 方位磁針(固定ダイヤル+磁北を指す針。色は BlueGray/Red パレット相当)
 public sealed class CompassDrawing : DrawingObject
 {
     private static readonly Color DialColor = Color.FromArgb("#B0BEC5");
@@ -20,7 +19,7 @@ public sealed class CompassDrawing : DrawingObject
             return;
         }
 
-        // 外周と 30° 目盛
+        // Outer circle and 30° marks
         canvas.StrokeColor = DialColor;
         canvas.StrokeSize = 2f;
         canvas.DrawCircle(cx, cy, radius);
@@ -39,7 +38,7 @@ public sealed class CompassDrawing : DrawingObject
                 cy - (radius * cos));
         }
 
-        // 方位文字
+        // Center circle
         canvas.FontSize = 12f;
         canvas.FontColor = NorthColor;
         canvas.DrawString("N", cx, cy - radius + 18f, HorizontalAlignment.Center);
@@ -48,7 +47,7 @@ public sealed class CompassDrawing : DrawingObject
         canvas.DrawString("S", cx, cy + radius - 10f, HorizontalAlignment.Center);
         canvas.DrawString("W", cx - radius + 14f, cy + 4f, HorizontalAlignment.Center);
 
-        // 針(磁北を指す=端末方位の逆回転)
+        // Needle
         canvas.SaveState();
         canvas.Translate(cx, cy);
         canvas.Rotate(-Heading);
@@ -78,7 +77,6 @@ public sealed class CompassDrawing : DrawingObject
     }
 }
 
-// 水準器(加速度の X/Y に応じて気泡が移動。水平に近いと緑)
 public sealed class LevelDrawing : DrawingObject
 {
     private static readonly Color RingColor = Color.FromArgb("#B0BEC5");
@@ -100,7 +98,7 @@ public sealed class LevelDrawing : DrawingObject
             return;
         }
 
-        // 外周・十字線・中心ターゲット
+        // Outer circle, cross lines, and center target
         canvas.StrokeColor = CrossColor;
         canvas.StrokeSize = 1f;
         canvas.DrawLine(cx - radius, cy, cx + radius, cy);
@@ -112,7 +110,7 @@ public sealed class LevelDrawing : DrawingObject
         canvas.StrokeSize = 1f;
         canvas.DrawCircle(cx, cy, 10f);
 
-        // 気泡(傾けた方向と逆側=高い側へ移動、円内にクランプ)
+        // Bubble
         var px = -GravityX * radius;
         var py = GravityY * radius;
         var max = radius - 10f;

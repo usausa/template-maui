@@ -55,7 +55,6 @@ public sealed class MapController : IMapController
 
     private Circle? circleElement;
 
-    // 経路 (null で消去)
     public void SetRoute(IEnumerable<Location>? points)
     {
         if (map is null)

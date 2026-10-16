@@ -8,11 +8,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
     private readonly IAudioManager audioManager;
 
-    // 再生状態のポーリング (表示中だけ)。破棄は Disposables に任せる
     private SerialDisposable Polling { get; } = new();
 
-    // 再生していない MediaPlayer にシークを重ねると後のシークが効かずに前の位置から鳴ることがあるので、
-    // 再生していないときのシークは位置だけ覚え、再生を始めた直後にシークする
     private double? pendingPosition;
 
     [ObservableProperty]
@@ -70,10 +67,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
         }
     }
 
-    // IAudioPlayer は変更通知を持たないため再生位置・状態をポーリングで反映する (スタック退避中は停止)
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        // 二重呼び出しでも前回の購読は SerialDisposable が解除する
         Polling.Disposable = Observable.Interval(TimeSpan.FromMilliseconds(250))
             .ObserveOnCurrentContext()
             .Subscribe(_ => UpdateState());

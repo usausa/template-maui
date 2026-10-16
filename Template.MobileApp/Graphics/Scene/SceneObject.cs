@@ -19,9 +19,7 @@ public interface ISceneObject
 //--------------------------------------------------------------------------------
 // Base
 //--------------------------------------------------------------------------------
-// DrawingObject の Skia(SKCanvas)版。ビューから切り離した描画モデル基底で、
-// アニメーション用のランループ(Start/Stop)を自身に内包する。
-// 画面の VM がこの派生クラスをメンバとして保持し、ナビゲーションで Start/Stop を制御する。
+
 #pragma warning disable CA1033
 public abstract class SceneObject : ISceneObject, IDisposable
 {

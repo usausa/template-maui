@@ -1,6 +1,5 @@
 namespace Template.MobileApp.State;
 
-// 起動時の初期化の完了。MainPage の起動オーバーレイは IsCompleted で消える
 public sealed partial class StartupState : ObservableObject
 {
     private readonly TaskCompletionSource completedSource = new(TaskCreationOptions.RunContinuationsAsynchronously);

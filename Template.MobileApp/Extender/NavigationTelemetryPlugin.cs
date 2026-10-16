@@ -7,7 +7,6 @@ using Smart.Navigation.Plugins;
 
 using Template.MobileApp.Diagnostics;
 
-// 画面遷移のスパン (遷移の開始から表示まで)。テレメトリの送信中だけ記録される
 public sealed class NavigationTelemetryPlugin : PluginBase
 {
     private DateTimeOffset navigatingAt;

@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Converters;
 
-// 残量(0〜1)の言葉は 85% 以上 十分・60% 以上 良好・30% 以上 普通・それ未満 少ない、色は 60% 以上・30% 以上・それ未満の 3 段
 public sealed class HomeBatteryLevelConverter : IValueConverter
 {
     public bool IsColor { get; set; }

@@ -4,8 +4,6 @@ using System.Diagnostics;
 
 using Smart.Navigation.Plugins;
 
-// 画面遷移の時間と画面の要素の数をデバッグ出力に書く (MauiProgram.cs の先頭で NAVIGATION_PERFORMANCE を定義して使う)。
-// 時間は遷移の始まりからの ms。frame は表示の後の最初の処理で、画面を開く時間の目安
 public sealed class NavigationPerformancePlugin : PluginBase
 {
     private const string Tag = "[NavigationPerformance]";

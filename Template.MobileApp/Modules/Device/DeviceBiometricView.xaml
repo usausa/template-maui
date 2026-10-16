@@ -112,7 +112,6 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
-            <!-- サーバーの検証。署名は受け付け、1 バイト変えたチャレンジと同じチャレンジの 2 回目は断るのが正しい -->
             <s:MapToTextConverter x:Key="AcceptTextConverter"
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
@@ -138,7 +137,6 @@
 
             <converters:DurationConverter x:Key="DurationConverter" />
 
-            <!-- 見出しと値を縦に並べたタイルを 2 列か 3 列に置き、スクロールしない高さに収める -->
             <Style x:Key="TileGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -173,7 +171,6 @@
     <Grid Style="{StaticResource RootGrid}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <!-- 使えるかどうか (強い生体認証・弱い生体認証・画面ロック)、最後の本人確認からの時間、未登録のときは設定の登録の画面へ -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Availability"
                                Icon="{x:Static fonts:MaterialIcons.Verified_user}">
@@ -227,7 +224,6 @@
                 </Grid>
             </controls:InfoCard>
 
-            <!-- 本人確認 (強い生体認証だけ / 弱い生体認証 / 強い生体認証か画面ロック)。結果には使われた方式を添える -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
                                Title="Authenticate"
@@ -275,7 +271,6 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <!-- 鍵でのログイン (サーバーの役は端末の中。登録 = 鍵を作って公開鍵を登録、ログイン = チャレンジに生体認証付きで署名して検証) -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
                                Title="Key sign in"

@@ -11,7 +11,6 @@ using Xamarin.Google.MLKit.Vision.Text.Japanese;
 #pragma warning disable CA1822
 public sealed partial class OcrReader
 {
-    // Android.Gms.Tasks.CancellationTokenとの衝突を避けるため完全修飾
     public async partial Task<string?> ReadTextAsync(Stream stream, System.Threading.CancellationToken cancellationToken)
     {
         using var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
@@ -47,7 +46,6 @@ public sealed partial class OcrReader
 
         public void OnFailure(Java.Lang.Exception e)
         {
-            // 失敗は「文字なし」と同じnull返却とするが、障害解析のためログには残す
             Log.Warn(nameof(OcrReader), e, "OCR process failed.");
             tcs.TrySetResult(null);
         }

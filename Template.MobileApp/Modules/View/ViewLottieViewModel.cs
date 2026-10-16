@@ -67,7 +67,6 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    // 繰り返す SKLottieView は、止めたまま最後の位置にすると、先頭に戻す値と最後の値を交互に設定し続けて固まる。最後の 1 tick 手前までにする
     private void Seek(TimeSpan value) =>
         Progress = TimeSpan.FromTicks(Math.Clamp(value.Ticks, 0, Math.Max(0, Duration.Ticks - 1)));
 }

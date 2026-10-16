@@ -107,7 +107,6 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        // 非搭載センサーはFeatureNotSupportedExceptionになるため開始しない (表示は初期値のまま)
         if (accelerometer.IsSupported)
         {
             accelerometer.Start(SensorSpeed.Default);

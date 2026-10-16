@@ -153,7 +153,6 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         Navigator.Exit();
         await Navigator.ForwardAsync(ViewId.Menu);
 
-        // 通知のタップ (起動前に届いた分も含む) はどの画面でもトーストで示す。初期遷移の完了後に受け付ける
         // ReSharper disable AsyncVoidLambda
         Disposables.Add(notification.TappedAsObservable().ObserveOnCurrentContext().Subscribe(async x => await dialog.Toast(FormatNotificationTap(x), true)));
         // ReSharper restore AsyncVoidLambda
@@ -162,7 +161,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
             await dialog.Toast(FormatNotificationTap(pending), true);
         }
 
-        // サーバーからの通知はアプリを開いている間だけ受け取る
+        // Receive push notifications in the foreground
         ConnectPush();
     }
 

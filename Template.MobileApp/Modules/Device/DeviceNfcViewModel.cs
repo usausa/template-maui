@@ -31,7 +31,6 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         this.dialog = dialog;
         this.nfcReader = nfcReader;
 
-        // OnErrorはシーケンスを終了させるため、変換失敗はnullで握って読み取りを継続する
         Disposables.Add(nfcReader.DetectedAsObservable().Select(ConvertResult).WhereNotNull().ObserveOnCurrentContext().Subscribe(
             x =>
             {
@@ -83,8 +82,6 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
 
     private (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ConvertResult(NfcEventArgs args)
     {
-        // 破損データの解析失敗は外部入力として予期されるため、nullを返して読み取りを継続する
-        // (ここで例外を漏らすとRxシーケンスが終了しNFCが無反応になる)
         try
         {
             return SuicaHelper.ParseTag(args.Tag);

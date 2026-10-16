@@ -23,7 +23,7 @@ public sealed class MainActivity : MauiAppCompatActivity
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
-        // アプリ全体のオーバースクロールを無効にする
+        // Disable overscroll effect
         Theme?.ApplyStyle(_Microsoft.Android.Resource.Designer.ResourceConstant.Style.NoOverScrollTheme, true);
 
         base.OnCreate(savedInstanceState);
@@ -31,11 +31,10 @@ public sealed class MainActivity : MauiAppCompatActivity
         backPressedCallback = new BackPressedCallback(this);
         OnBackPressedDispatcher.AddCallback(this, backPressedCallback);
 
-        // 通知タップからの起動
+        // Handle launch from notification tap
         Components.NotificationService.HandleIntent(Intent);
     }
 
-    // 起動中の通知タップ (LaunchMode = SingleInstance のため OnNewIntent に届く)
     protected override void OnNewIntent(Intent? intent)
     {
         base.OnNewIntent(intent);

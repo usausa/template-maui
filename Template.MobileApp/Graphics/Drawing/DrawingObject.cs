@@ -7,8 +7,6 @@ public interface IDrawingObject : IDrawable
     void Detach();
 }
 
-// DrawingControl のタッチ操作 (GraphicsView の Start/Drag/EndInteraction) を受け取る Drawing。
-// 座標は DrawingControl の論理座標 (OnDraw の dirtyRect と同じ空間)
 public interface IInteractiveDrawing
 {
     void OnInteractionStart(PointF point);
@@ -18,8 +16,6 @@ public interface IInteractiveDrawing
     void OnInteractionEnd(PointF point);
 }
 
-// DrawingControl のタップ (指をほとんど動かさずに離す) を受け取る Drawing。
-// IInteractiveDrawing と違い、スクロールの中で親のスクロールを止めない
 public interface ITapDrawing
 {
     void OnTap(PointF point);
@@ -64,10 +60,6 @@ public abstract class DrawingObject : IDrawingObject
     // Animation
     //--------------------------------------------------------------------------------
 
-    // 単発アニメーションの共通機構。値を Easing 付きで進めて毎フレーム再描画し、
-    // 完走時のみ completed を呼ぶ (中断時は呼ばない)。同名で再開始すると前の実行は中断される。
-    // ChartDrawing の自前タイマー(定周期)や SceneObject の無限ループとは別の、
-    // 「1回走って完了を通知する」型のアニメーションに使う。
     protected void AnimateValue(string name, double start, double end, uint length, Easing easing, Action<double> frame, Action? completed = null)
     {
         if (control is null)
@@ -109,7 +101,6 @@ public abstract class DrawingObject : IDrawingObject
 
     protected abstract void OnDraw(ICanvas canvas, RectF dirtyRect);
 
-    // 画面表示と同じ OnDraw を使って PNG を書き出す (スプライトエディタ記事の Render 共用構成)
     public void ExportPng(Stream stream, int width, int height)
     {
         using var context = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(width, height);

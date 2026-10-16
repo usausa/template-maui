@@ -2,8 +2,7 @@ namespace Template.MobileApp.Markup;
 
 using Fonts;
 
-// XAML から x:Static で参照するアイコン。FontImageSource をここで生成して共有し、
-// 同じ指定の組み合わせは 1 つにまとめる。全て MaterialIcons のグリフ
+// ReSharper disable IdentifierTypo
 public static class AppIcons
 {
     private const double SmallSize = 18d;
@@ -45,7 +44,6 @@ public static class AppIcons
     public static readonly FontImageSource Brush = Create(MaterialIcons.Brush, MenuSize, Colors.White);
     public static readonly FontImageSource Calculate = Create(MaterialIcons.Calculate, MenuSize, Colors.White);
     public static readonly FontImageSource CalendarMonth = Create(MaterialIcons.Calendar_month, MenuSize, Colors.White);
-    public static readonly FontImageSource Category = Create(MaterialIcons.Category, MenuSize, Colors.White);
     public static readonly FontImageSource CellTower = Create(MaterialIcons.Cell_tower, MenuSize, Colors.White);
     public static readonly FontImageSource Chat = Create(MaterialIcons.Chat, MenuSize, Colors.White);
     public static readonly FontImageSource Checklist = Create(MaterialIcons.Checklist, MenuSize, Colors.White);
@@ -57,7 +55,6 @@ public static class AppIcons
     public static readonly FontImageSource Devices = Create(MaterialIcons.Devices, MenuSize, Colors.White);
     public static readonly FontImageSource DirectionsRun = Create(MaterialIcons.Directions_run, MenuSize, Colors.White);
     public static readonly FontImageSource DocumentScanner = Create(MaterialIcons.Document_scanner, MenuSize, Colors.White);
-    public static readonly FontImageSource Download = Create(MaterialIcons.Download, MenuSize, Colors.White);
     public static readonly FontImageSource DragIndicator = Create(MaterialIcons.Drag_indicator, MenuSize, Colors.White);
     public static readonly FontImageSource Draw = Create(MaterialIcons.Draw, MenuSize, Colors.White);
     public static readonly FontImageSource Explore = Create(MaterialIcons.Explore, MenuSize, Colors.White);
@@ -94,7 +91,6 @@ public static class AppIcons
     public static readonly FontImageSource Mail = Create(MaterialIcons.Mail, MenuSize, Colors.White);
     public static readonly FontImageSource Map = Create(MaterialIcons.Map, MenuSize, Colors.White);
     public static readonly FontImageSource Memory = Create(MaterialIcons.Memory, MenuSize, Colors.White);
-    public static readonly FontImageSource Mood = Create(MaterialIcons.Mood, MenuSize, Colors.White);
     public static readonly FontImageSource MoreHoriz = Create(MaterialIcons.More_horiz, MenuSize, Colors.White);
     public static readonly FontImageSource Movie = Create(MaterialIcons.Movie, MenuSize, Colors.White);
     public static readonly FontImageSource MenuOpen = Create(MaterialIcons.Menu_open, MenuSize, Colors.White);
@@ -104,7 +100,6 @@ public static class AppIcons
     public static readonly FontImageSource Nfc = Create(MaterialIcons.Nfc, MenuSize, Colors.White);
     public static readonly FontImageSource Opacity = Create(MaterialIcons.Opacity, MenuSize, Colors.White);
     public static readonly FontImageSource Palette = Create(MaterialIcons.Palette, MenuSize, Colors.White);
-    public static readonly FontImageSource People = Create(MaterialIcons.People, MenuSize, Colors.White);
     public static readonly FontImageSource Pets = Create(MaterialIcons.Pets, MenuSize, Colors.White);
     public static readonly FontImageSource PhotoCamera = Create(MaterialIcons.Photo_camera, MenuSize, Colors.White);
     public static readonly FontImageSource PictureAsPdf = Create(MaterialIcons.Picture_as_pdf, MenuSize, Colors.White);
@@ -115,7 +110,6 @@ public static class AppIcons
     public static readonly FontImageSource RotateRight = Create(MaterialIcons.Rotate_right, MenuSize, Colors.White);
     public static readonly FontImageSource Schedule = Create(MaterialIcons.Schedule, MenuSize, Colors.White);
     public static readonly FontImageSource Science = Create(MaterialIcons.Science, MenuSize, Colors.White);
-    public static readonly FontImageSource Sell = Create(MaterialIcons.Sell, MenuSize, Colors.White);
     public static readonly FontImageSource Sensors = Create(MaterialIcons.Sensors, MenuSize, Colors.White);
     public static readonly FontImageSource Settings = Create(MaterialIcons.Settings, MenuSize, Colors.White);
     public static readonly FontImageSource ShowChart = Create(MaterialIcons.Show_chart, MenuSize, Colors.White);
@@ -136,7 +130,6 @@ public static class AppIcons
     public static readonly FontImageSource Troubleshoot = Create(MaterialIcons.Troubleshoot, MenuSize, Colors.White);
     public static readonly FontImageSource TableChart = Create(MaterialIcons.Table_chart, MenuSize, Colors.White);
     public static readonly FontImageSource Tune = Create(MaterialIcons.Tune, MenuSize, Colors.White);
-    public static readonly FontImageSource Upload = Create(MaterialIcons.Upload, MenuSize, Colors.White);
     public static readonly FontImageSource VerticalAlignBottom = Create(MaterialIcons.Vertical_align_bottom, MenuSize, Colors.White);
     public static readonly FontImageSource VideogameAsset = Create(MaterialIcons.Videogame_asset, MenuSize, Colors.White);
     public static readonly FontImageSource ViewAgenda = Create(MaterialIcons.View_agenda, MenuSize, Colors.White);
@@ -234,7 +227,7 @@ public static class AppIcons
     public static readonly FontImageSource LargeQrCode = Create(MaterialIcons.Qr_code, LargeSize, Colors.White);
 
     //--------------------------------------------------------------------------------
-    // Screen (画面固有の指定)
+    // Screen specific
     //--------------------------------------------------------------------------------
 
     public static readonly FontImageSource AnimationFade = Create(MaterialIcons.Opacity, SmallSize, Colors.White);
@@ -261,16 +254,9 @@ public static class AppIcons
     public static readonly FontImageSource LoginVisibility = Create(MaterialIcons.Visibility, MenuSize, ResourceColor("GrayDefault"));
     public static readonly FontImageSource LoginVisibilityOff = Create(MaterialIcons.Visibility_off, MenuSize, ResourceColor("LightBlueDarken1"));
     public static readonly FontImageSource MapAdd = Create(MaterialIcons.Add, MenuSize, ResourceColor("GrayDarken3"));
-    public static readonly FontImageSource MapCircle = Create(MaterialIcons.Circle, MenuSize, ResourceColor("RedDefault"));
-    public static readonly FontImageSource MapCircleWhite = Create(MaterialIcons.Circle, MenuSize, Colors.White);
     public static readonly FontImageSource MapHome = Create(MaterialIcons.Home, MenuSize, ResourceColor("GrayDarken3"));
     public static readonly FontImageSource MapLayers = Create(MaterialIcons.Layers, MenuSize, ResourceColor("GrayDarken3"));
-    public static readonly FontImageSource MapLayersWhite = Create(MaterialIcons.Layers, MenuSize, Colors.White);
-    public static readonly FontImageSource MapPentagon = Create(MaterialIcons.Pentagon, MenuSize, ResourceColor("GreenDefault"));
-    public static readonly FontImageSource MapPentagonWhite = Create(MaterialIcons.Pentagon, MenuSize, Colors.White);
     public static readonly FontImageSource MapRemove = Create(MaterialIcons.Remove, MenuSize, ResourceColor("GrayDarken3"));
-    public static readonly FontImageSource MapRoute = Create(MaterialIcons.Route, MenuSize, ResourceColor("BlueDefault"));
-    public static readonly FontImageSource MapRouteWhite = Create(MaterialIcons.Route, MenuSize, Colors.White);
     public static readonly FontImageSource NetworkCancel = Create(MaterialIcons.Cancel, SmallSize, ResourceColor("RedDefault"));
     public static readonly FontImageSource NetworkDelete = Create(MaterialIcons.Delete, SmallSize, ResourceColor("RedDefault"));
     public static readonly FontImageSource TelemetryCrash = Create(MaterialIcons.Bug_report, SmallSize, ResourceColor("RedDefault"));

@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewEffectViewModel : AppViewModelBase
 {
-    // バッジは (空)/通常/上限超え の 3 状態を巡回して確認する
     private static readonly int[] BadgeSteps = [0, 5, 120];
 
     private int badgeIndex;

@@ -30,7 +30,6 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
     {
         root = value;
 
-        // タイルを中心からスケールインさせる
         progress = 0f;
         animationStart = Environment.TickCount64;
         animationTimer.Start();
@@ -58,7 +57,6 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
 
         if (root is not null)
         {
-            // CubicOut で減速しながら広がる
             var t = progress;
             var scale = 1f - ((1f - t) * (1f - t) * (1f - t));
             DrawNode(canvas, root, dirtyRect, (float)root.Area, scale, progress >= 1f);
@@ -71,7 +69,7 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
     {
         if (node.IsLeaf)
         {
-            // タイル間 2px のギャップ+角丸
+            // Gap of 2px between tiles + rounded corners
             var tileRect = rect;
             tileRect = tileRect.Inflate(-1f, -1f);
 
@@ -90,7 +88,7 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
             canvas.FillColor = new Color(node.Value.R, node.Value.G, node.Value.B);
             canvas.FillRoundedRectangle(tileRect, 4f);
 
-            // 面積上位のタイルに HEX と比率を表示(輝度で文字色を自動切替)
+            // Display HEX and ratio on top area tiles
             if (showLabel && (node.Area / totalArea >= LabelAreaRatio) && (tileRect.Width >= 72f) && (tileRect.Height >= 40f))
             {
                 var luminance = ((0.299f * node.Value.R) + (0.587f * node.Value.G) + (0.114f * node.Value.B)) / 255f;

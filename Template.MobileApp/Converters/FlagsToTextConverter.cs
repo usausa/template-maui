@@ -7,7 +7,6 @@ public sealed class FlagsTextEntry
     public string Value { get; set; } = string.Empty;
 }
 
-// [Flags] の列挙値を、立っているビットの文言を Entries の順につないだ文字列へ
 public sealed class FlagsToTextConverter : IValueConverter
 {
     public IList<FlagsTextEntry> Entries { get; } = [];
