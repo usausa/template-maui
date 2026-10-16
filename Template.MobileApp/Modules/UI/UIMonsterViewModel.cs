@@ -25,7 +25,6 @@ public sealed partial class UIMonsterViewModel : AppViewModelBase
         new() { Label = "甘えん坊", BackgroundColor = Color.FromArgb("#FCE4EC"), TextColor = Color.FromArgb("#C2185B") }
     ];
 
-    // Heart で HP が増えるデモ(バーは HP/400 の比率で伸長)
     [ObservableProperty(NotifyAlso = [nameof(HpProgress)])]
     public partial int Hp { get; set; } = 320;
 

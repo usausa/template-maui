@@ -26,7 +26,6 @@
             <Color x:Key="NewsLineColor">#EEEEEE</Color>
             <Color x:Key="NewsSkeletonColor">#ECEFF1</Color>
 
-            <!-- カテゴリの名前・色・アイコン (カテゴリの無いページは保存した記事) -->
             <s:MapToTextConverter x:Key="CategoryTextConverter"
                                   DefaultValue="🔖 保存">
                 <s:MapToTextConverter.Entries>
@@ -85,7 +84,6 @@
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
-            <!-- タブ (選んだ見出しはカテゴリの色) -->
             <Style x:Key="NewsTabStrip"
                    TargetType="cmc:TabStrip">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -107,7 +105,6 @@
                 <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
             </Style>
 
-            <!-- 速報の帯 -->
             <Style x:Key="BreakingGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,0" />
@@ -145,10 +142,6 @@
                 <Setter Property="Speed" Value="70" />
             </Style>
 
-            <!--
-                ページ。Loop は既定で有効なので止め、タブのタップでは間のページを流さずに移る。
-                スワイプが途中で止まったときはいちばん近いページに合わせ、一度作ったページは作り直さずに残す
-            -->
             <Style x:Key="NewsCarousel"
                    TargetType="CarouselView">
                 <Setter Property="BackgroundColor" Value="#F5F6F8" />
@@ -169,7 +162,6 @@
                 <Setter Property="RemainingItemsThreshold" Value="3" />
             </Style>
 
-            <!-- 新着の件数 (引っ張って更新の後に少しの間だけ出す) -->
             <Style x:Key="NewArrivalsBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,12,0,0" />
@@ -196,11 +188,6 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- トップの記事 (カテゴリの色の面に模様とアイコン) -->
-            <!--
-                一覧の見出しは最初に測った高さのまま変わらないので、どのページも同じ高さにし、
-                読み込み中は形だけ、保存のページは件数の面を出す
-            -->
             <Style x:Key="HeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="12,12,12,6" />
@@ -345,7 +332,6 @@
                 <Setter Property="TextColor" Value="#DDFFFFFF" />
             </Style>
 
-            <!-- 記事の行 (既読は薄く) -->
             <Style x:Key="ArticleRow"
                    TargetType="VerticalStackLayout">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -397,7 +383,6 @@
                 <Setter Property="HorizontalOptions" Value="End" />
             </Style>
 
-            <!-- サムネイル (カテゴリの色の面にアイコン、新しい記事は NEW) -->
             <Style x:Key="ThumbnailBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="96" />
@@ -451,7 +436,6 @@
                 <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
             </Style>
 
-            <!-- 読み込み中のスケルトン -->
             <Style x:Key="SkeletonShimmer"
                    TargetType="cmc:ShimmerView">
                 <Setter Property="IsActive" Value="True" />
@@ -491,7 +475,6 @@
                 <Setter Property="Color" Value="{StaticResource NewsSkeletonColor}" />
             </Style>
 
-            <!-- 保存した記事が無いとき -->
             <Style x:Key="EmptyStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="24,32,24,0" />
@@ -515,7 +498,6 @@
                 <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
             </Style>
 
-            <!-- 一覧の最後 -->
             <Style x:Key="FooterGrid"
                    TargetType="Grid">
                 <Setter Property="HeightRequest" Value="64" />
@@ -537,7 +519,6 @@
                 <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
             </Style>
 
-            <!-- 記事の行 -->
             <DataTemplate x:Key="ArticleRowTemplate"
                           x:DataType="{x:Type module:UINewsItem}">
                 <VerticalStackLayout Style="{StaticResource ArticleRow}">
@@ -610,7 +591,6 @@
 
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
-        <!-- タブ (見出しのタップと、ページのスワイプの両方で SelectedIndex が変わる。下線はスワイプに合わせて動く) -->
         <cmc:TabStrip Grid.Row="0"
                       Style="{StaticResource NewsTabStrip}"
                       ItemsSource="{Binding Context.Pages}"
@@ -640,7 +620,6 @@
         <BoxView Grid.Row="1"
                  Style="{StaticResource TabLine}" />
 
-        <!-- 速報 (タップで記事を開く) -->
         <Grid Grid.Row="2"
               Style="{StaticResource BreakingGrid}"
               ColumnDefinitions="Auto,*">
@@ -657,7 +636,6 @@
                               Text="{Binding Context.Breaking.Title}" />
         </Grid>
 
-        <!-- カテゴリごとのページと、保存した記事のページ -->
         <CarouselView Grid.Row="3"
                       Style="{StaticResource NewsCarousel}"
                       behaviors:CarouselOption.PagePosition="{Binding PagePosition}"
@@ -678,10 +656,9 @@
                                             RemainingItemsThresholdReachedCommandParameter="{Binding .}">
                                 <CollectionView.Header>
                                     <Grid Style="{StaticResource HeaderGrid}">
-                                        <!-- 読み込み中 -->
                                         <BoxView Style="{StaticResource HeaderPlaceholder}"
                                                  IsVisible="{Binding IsLoading}" />
-                                        <!-- 保存した記事の数 -->
+
                                         <Border Style="{StaticResource SavedBorder}"
                                                 IsVisible="{Binding IsSaved}">
                                             <Grid>
@@ -701,7 +678,7 @@
                                                 </VerticalStackLayout>
                                             </Grid>
                                         </Border>
-                                        <!-- トップの記事 -->
+
                                         <ContentView BindingContext="{Binding Top}"
                                                      IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UINewsPage}}, Path=Top, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type module:UINewsPage}}">
                                             <Border x:DataType="{x:Type module:UINewsItem}"
@@ -755,7 +732,6 @@
                                 </CollectionView.Header>
                                 <CollectionView.EmptyView>
                                     <Grid>
-                                        <!-- 読み込み中 -->
                                         <cmc:ShimmerView Style="{StaticResource SkeletonShimmer}"
                                                          IsVisible="{Binding IsLoading}">
                                             <VerticalStackLayout Style="{StaticResource SkeletonStack}">
@@ -781,7 +757,7 @@
                                                 </Grid>
                                             </VerticalStackLayout>
                                         </cmc:ShimmerView>
-                                        <!-- 保存した記事が無い -->
+
                                         <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                                              IsVisible="{Binding IsSaved}">
                                             <Label Style="{StaticResource EmptyIconLabel}"
@@ -803,7 +779,7 @@
                                 </CollectionView.Footer>
                             </CollectionView>
                         </RefreshView>
-                        <!-- 新着の件数 -->
+
                         <Border Style="{StaticResource NewArrivalsBorder}"
                                 behaviors:AnimationOption.EnterTrigger="{Binding NewArrivals}"
                                 IsVisible="{Binding HasNewArrivals}">

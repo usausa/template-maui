@@ -57,7 +57,6 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    // 本文の画面から戻ったときは読み込まない
     // ReSharper disable once ArrangeModifiersOrder
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

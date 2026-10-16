@@ -24,7 +24,6 @@ public sealed partial class UIKitOnboardViewModel : AppViewModelBase
 
     public IObserveCommand NextCommand { get; }
 
-    // スキップ / 始める はどちらもダッシュボードへ
     public IObserveCommand CompleteCommand { get; }
 
     //--------------------------------------------------------------------------------

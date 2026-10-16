@@ -100,7 +100,6 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             return;
         }
 
-        // 追加直後はレイアウト前のため次のループでスクロールする
         dispatcher.Dispatch(() => Controller.ScrollRequest(Messages.Count - 1, position: ScrollToPosition.End, animate: animate));
     }
 
@@ -124,7 +123,6 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         }
     }
 
-    // 同じメッセージをもう一度押すと閉じる
     private void SelectMessage(Selectable<ChatMessage> message)
     {
         var select = !message.IsSelected;
@@ -134,7 +132,6 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             message.IsSelected = true;
             reactionTarget = message;
 
-            // 下に出す帯が隠れないよう、選んだメッセージが見える位置までスクロールする
             var index = Messages.IndexOf(message);
             dispatcher.Dispatch(() => Controller.ScrollRequest(index, position: ScrollToPosition.MakeVisible));
         }

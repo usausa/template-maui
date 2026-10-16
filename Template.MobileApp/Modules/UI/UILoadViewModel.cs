@@ -85,7 +85,6 @@ public sealed partial class UILoadViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 直近 3 秒間の最大値を保持する
     private double CalcPeak(double value)
     {
         var now = DateTime.Now;

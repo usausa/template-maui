@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:fonts="clr-namespace:Fonts"
@@ -120,7 +120,7 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- 送信 (無効時は灰色) -->
+            <!-- Send -->
             <Style x:Key="SendButton"
                    TargetType="Button"
                    BasedOn="{StaticResource InputBarButton}">
@@ -142,7 +142,7 @@
                 </Setter>
             </Style>
 
-            <!-- 応答の中断 -->
+            <!-- Cancel -->
             <Style x:Key="CancelButton"
                    TargetType="Button"
                    BasedOn="{StaticResource InputBarButton}">
@@ -182,7 +182,6 @@
                             <Label Style="{StaticResource RoleNameLabel}"
                                    Text="Assistant" />
                         </HorizontalStackLayout>
-                        <!-- タイピングインジケータ(3 点バウンス) -->
                         <HorizontalStackLayout Style="{StaticResource TypingStack}"
                                                IsVisible="{Binding IsTyping}">
                             <Ellipse Style="{StaticResource TypingDot}"
@@ -249,7 +248,7 @@
                     </Entry.Triggers>
                 </Entry>
             </Border>
-            <!-- 音声入力 (VoiceCommand が設定されたときだけ表示。認識中は停止ボタン) -->
+
             <Grid Grid.Column="1"
                   IsVisible="{Binding Source={x:Reference Root}, Path=VoiceCommand, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type controls:ChatView}}">
                 <Ellipse Style="{StaticResource VoiceRing}"
@@ -271,7 +270,7 @@
                     </Button.Triggers>
                 </Button>
             </Grid>
-            <!-- 送信 (応答中は中断ボタンに入れ替わる) -->
+
             <Button Grid.Column="2"
                     Style="{StaticResource SendButton}"
                     Command="{Binding Source={x:Reference Root}, Path=SendCommand, x:DataType={x:Type controls:ChatView}}"

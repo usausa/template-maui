@@ -10,7 +10,6 @@ public enum DeckButtonType
     Image
 }
 
-// 押したときの動き
 public enum DeckAction
 {
     Execute,
@@ -24,7 +23,6 @@ public enum DeckAction
 // Data
 //--------------------------------------------------------------------------------
 
-// ボタンの定義 (画像は DeckButtons フォルダーのファイル名)
 public sealed class DeckButton
 {
     public required int Row { get; init; }
@@ -48,10 +46,8 @@ public sealed class DeckButton
     public required string Parameter { get; init; }
 }
 
-// フォルダーと中のボタン
 public sealed record DeckFolder(string Name, IReadOnlyList<DeckButton> Buttons);
 
-// 盤に並べるボタン (定義に VM がコマンドと画像を付ける)
 #pragma warning disable CA1819
 public sealed partial class DeckButtonInfo : ObservableObject
 {
@@ -89,7 +85,6 @@ public sealed partial class DeckButtonInfo : ObservableObject
 // Sample
 //--------------------------------------------------------------------------------
 
-// ボタンの盤の見本 (4 列 8 段)。色のボタン 16・フォルダー 2・音・音量・ミュート・タイマー・ロック・設定・終了・CPU とメモリ
 public static class DeckSample
 {
     public const int TimerSeconds = 30;
@@ -128,7 +123,6 @@ public static class DeckSample
         new("#FF5722", "#FF9E80")
     ];
 
-    // フォルダーは左上に戻るのボタン、2 段目から中のボタン
     public static IReadOnlyList<DeckFolder> LoadFolders() =>
     [
         CreateFolder(

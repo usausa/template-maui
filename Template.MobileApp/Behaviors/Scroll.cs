@@ -4,7 +4,11 @@ using System.Collections;
 
 public static partial class Scroll
 {
-    // ------------------------------------------------------------------ DisableOverScroll
+    public static partial void UseCustomMapper(BehaviorOptions options);
+
+    //--------------------------------------------------------------------------------
+    // DisableOverScroll
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty DisableOverScrollProperty = BindableProperty.CreateAttached(
         "DisableOverScroll",
@@ -16,9 +20,9 @@ public static partial class Scroll
 
     public static void SetDisableOverScroll(BindableObject bindable, bool value) => bindable.SetValue(DisableOverScrollProperty, value);
 
-    public static partial void UseCustomMapper(BehaviorOptions options);
-
-    // ------------------------------------------------------------------ HideOnScrollTarget
+    //--------------------------------------------------------------------------------
+    // HideOnScrollTarget
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty HideOnScrollTargetProperty = BindableProperty.CreateAttached(
         "HideOnScrollTarget",
@@ -61,7 +65,6 @@ public static partial class Scroll
             return;
         }
 
-        // 下方向スクロールで隠し、上方向で戻す
         if ((e.VerticalDelta > 8) && (target.Scale > 0.5))
         {
             _ = target.ScaleToAsync(0, 200, Easing.CubicIn);
@@ -72,7 +75,9 @@ public static partial class Scroll
         }
     }
 
-    // ------------------------------------------------------------------ ParallaxTarget
+    //--------------------------------------------------------------------------------
+    // ParallaxTarget
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ParallaxTargetProperty = BindableProperty.CreateAttached(
         "ParallaxTarget",
@@ -111,13 +116,13 @@ public static partial class Scroll
 
         var target = GetParallaxTarget(scrollView);
 
-        // スクロールの半分の速度で追従させて奥行きを出す
         target?.TranslationY = Math.Max(0, e.ScrollY) * 0.5;
     }
 
-    // ------------------------------------------------------------------ RatioCommand
+    //--------------------------------------------------------------------------------
+    // RatioCommand
+    //--------------------------------------------------------------------------------
 
-    // スクロール位置を 0-1 の比率へ正規化してコマンドに渡す (スクロール連動アニメーション用)
     public static readonly BindableProperty RatioCommandProperty = BindableProperty.CreateAttached(
         "RatioCommand",
         typeof(ICommand),
@@ -159,7 +164,6 @@ public static partial class Scroll
             return;
         }
 
-        // スクロール可能量の大きい方の軸を比率化する
         var extentX = scrollView.ContentSize.Width - scrollView.Width;
         var extentY = scrollView.ContentSize.Height - scrollView.Height;
         var ratio = extentX > extentY
@@ -173,7 +177,9 @@ public static partial class Scroll
         }
     }
 
-    // ------------------------------------------------------------------ ShowOnAwayFromLastTarget
+    //--------------------------------------------------------------------------------
+    // ShowOnAwayFromLastTarget
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ShowOnAwayFromLastTargetProperty = BindableProperty.CreateAttached(
         "ShowOnAwayFromLastTarget",
@@ -216,7 +222,6 @@ public static partial class Scroll
             return;
         }
 
-        // 末尾の 1 つ手前より上を表示しているときに出す
         var away = e.LastVisibleItemIndex < collection.Count - 2;
         if (away && (target.Scale < 0.5))
         {
@@ -228,10 +233,10 @@ public static partial class Scroll
         }
     }
 
-    // ------------------------------------------------------------------ CollapseTarget
+    //--------------------------------------------------------------------------------
+    // CollapseTarget
+    //--------------------------------------------------------------------------------
 
-    // 見出し (CollapseTarget) をスクロールに合わせて小さく薄くし、見出しが消える前から上に残す小さな見出し (CollapsedTarget) を出す。
-    // 見出しの高さのぶんスクロールすると畳み終わる
     public static readonly BindableProperty CollapseTargetProperty = BindableProperty.CreateAttached(
         "CollapseTarget",
         typeof(VisualElement),
@@ -277,7 +282,6 @@ public static partial class Scroll
             return;
         }
 
-        // 見出しは流れる量の 4 割だけ遅らせて残り、小さく薄くなる
         var scrollY = Math.Max(0, e.ScrollY);
         var progress = Math.Clamp(scrollY / target.Height, 0, 1);
         target.TranslationY = scrollY * 0.4;
@@ -293,9 +297,10 @@ public static partial class Scroll
         }
     }
 
-    // ------------------------------------------------------------------ TopTrigger
+    //--------------------------------------------------------------------------------
+    // TopTrigger
+    //--------------------------------------------------------------------------------
 
-    // 値が変わったら先頭まで戻す (最初の設定では動かさない)
     public static readonly BindableProperty TopTriggerProperty = BindableProperty.CreateAttached(
         "TopTrigger",
         typeof(object),

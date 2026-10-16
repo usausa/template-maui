@@ -62,7 +62,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
-            <!-- 日合計サマリー -->
             <Style x:Key="SummaryBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12,0,12,8" />
@@ -98,7 +97,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
-            <!-- 終日の予定 -->
             <Style x:Key="AllDayScroll"
                    TargetType="ScrollView">
                 <Setter Property="Margin" Value="12,0,12,8" />
@@ -134,7 +132,6 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- 予定の詳細のシート -->
             <Style x:Key="DetailSheet"
                    TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
@@ -248,7 +245,6 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,Auto,Auto,*">
 
-        <!-- 7 日チップ -->
         <CollectionView Grid.Row="0"
                         Style="{StaticResource DayChipCollection}"
                         ItemsSource="{Binding Days}"
@@ -296,7 +292,6 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 日合計サマリー (件数 / 所要時間合計 / 空き時間) -->
         <Border Grid.Row="1"
                 Style="{StaticResource SummaryBorder}">
             <Grid ColumnDefinitions="*,*,*">
@@ -346,7 +341,6 @@
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- タイムテーブル -->
         <ScrollView Grid.Row="3">
             <controls:DayTimetableView CurrentTime="{Binding CurrentTime}"
                                        EventTappedCommand="{Binding EventTappedCommand}"
@@ -354,7 +348,6 @@
                                        ShowCurrentTime="{Binding ShowCurrentTime}" />
         </ScrollView>
 
-        <!-- 予定の詳細 -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
                              Style="{StaticResource DetailSheet}"
                              IsOpen="{Binding IsDetailOpen}">

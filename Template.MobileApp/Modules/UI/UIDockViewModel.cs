@@ -252,7 +252,6 @@ public sealed class UIDockViewModel : AppViewModelBase
         }
     }
 
-    // 診断のパネル(DiagnosticSampler)と同じ取り方。CPU は前回からの CPU 時間の増分、メモリは WorkingSet
     private void UpdateUsage()
     {
         var statistics = deviceInformation.ReadProcessStatistics();

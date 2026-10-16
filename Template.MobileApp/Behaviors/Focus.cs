@@ -2,12 +2,13 @@ namespace Template.MobileApp.Behaviors;
 
 using Smart.Maui.Interactivity;
 
-// 同一名前空間の static class Border(attached property)と区別する
 using MauiBorder = Microsoft.Maui.Controls.Border;
 
 public static class Focus
 {
-    // ------------------------------------------------------------------ SuppressDefaultFocus
+    //--------------------------------------------------------------------------------
+    // SuppressDefaultFocus
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty SuppressDefaultFocusProperty = BindableProperty.CreateAttached(
         "SuppressDefaultFocus",
@@ -19,7 +20,9 @@ public static class Focus
 
     public static void SetSuppressDefaultFocus(BindableObject bindable, bool value) => bindable.SetValue(SuppressDefaultFocusProperty, value);
 
-    // ------------------------------------------------------------------ Default
+    //--------------------------------------------------------------------------------
+    // Default
+    //--------------------------------------------------------------------------------
 
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty DefaultProperty = BindableProperty.CreateAttached(
@@ -33,9 +36,10 @@ public static class Focus
 
     public static void SetDefault(BindableObject bindable, bool value) => bindable.SetValue(DefaultProperty, value);
 
-    // ------------------------------------------------------------------ FocusedStroke / FocusedThickness (フォーカス枠)
+    //--------------------------------------------------------------------------------
+    // FocusedStroke / FocusedThickness
+    //--------------------------------------------------------------------------------
 
-    // FocusedStroke を設定すると、親 Border の枠線をフォーカス連動でアニメーションする FocusBorderBehavior を自動付与する
     public static readonly BindableProperty FocusedStrokeProperty = BindableProperty.CreateAttached(
         "FocusedStroke",
         typeof(Color),
@@ -47,7 +51,6 @@ public static class Focus
 
     public static void SetFocusedStroke(BindableObject bindable, Color? value) => bindable.SetValue(FocusedStrokeProperty, value);
 
-    // 既定(NaN)は枠の太さを変えない
     public static readonly BindableProperty FocusedThicknessProperty = BindableProperty.CreateAttached(
         "FocusedThickness",
         typeof(double),
@@ -58,9 +61,10 @@ public static class Focus
 
     public static void SetFocusedThickness(BindableObject bindable, double value) => bindable.SetValue(FocusedThicknessProperty, value);
 
-    // ------------------------------------------------------------------ ErrorStroke / HasError (エラーの枠)
+    //--------------------------------------------------------------------------------
+    // ErrorStroke / HasError
+    //--------------------------------------------------------------------------------
 
-    // HasError の間は、フォーカス中も枠を ErrorStroke にする(FocusedStroke と併せて使う)
     public static readonly BindableProperty ErrorStrokeProperty = BindableProperty.CreateAttached(
         "ErrorStroke",
         typeof(Color),
@@ -111,15 +115,10 @@ public static class Focus
         }
     }
 
-    // FocusedStroke に応じて、親 Border の枠線の色をアニメーション付きで強調する。
-    // FocusedThickness を指定したときは太さも変える。太さは Border の大きさに含まれるため、
-    // 太くした分だけ Margin を外へ広げ、周りの位置と大きさを変えない。
-    // XAML から直接は使わず、上記の添付プロパティ経由で自動付与される。
     private sealed class FocusBorderBehavior : BehaviorBase<VisualElement>
     {
         private const string AnimationName = "FocusBorderAnimation";
 
-        // 通常時の枠は初回フォーカス時に親 Border から取り込む
         private Color normalStroke = Colors.Transparent;
 
         private double normalThickness;
@@ -188,7 +187,6 @@ public static class Focus
 
             border.AbortAnimation(AnimationName);
 
-            // フレームごとのBrush生成を避け、単一インスタンスのColorのみ更新する
             var brush = new SolidColorBrush(fromColor);
             border.Stroke = brush;
             border.Animate(
@@ -221,7 +219,6 @@ public static class Focus
             border.Margin = new Thickness(normalMargin.Left - grow, normalMargin.Top - grow, normalMargin.Right - grow, normalMargin.Bottom - grow);
         }
 
-        // ブラシの色を変えただけでは枠が描き直されないため、ハンドラーに反映させる
         private static void UpdateStroke(MauiBorder border, SolidColorBrush brush, Color color)
         {
             brush.Color = color;
@@ -243,10 +240,6 @@ public static class Focus
         }
 
         private static Color LerpColor(Color from, Color to, double t) =>
-            new(
-                (float)(from.Red + ((to.Red - from.Red) * t)),
-                (float)(from.Green + ((to.Green - from.Green) * t)),
-                (float)(from.Blue + ((to.Blue - from.Blue) * t)),
-                (float)(from.Alpha + ((to.Alpha - from.Alpha) * t)));
+            new((float)(from.Red + ((to.Red - from.Red) * t)), (float)(from.Green + ((to.Green - from.Green) * t)), (float)(from.Blue + ((to.Blue - from.Blue) * t)), (float)(from.Alpha + ((to.Alpha - from.Alpha) * t)));
     }
 }

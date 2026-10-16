@@ -56,7 +56,6 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     {
         this.calendarService = calendarService;
 
-        // 月が変わるたびにコントロールから表示範囲が通知される (初回は遷移の途中に来る)
         DisplayDateChangedCommand = MakeDelegateCommand<CalendarDisplayDateChangedEventArgs>(CommandMode.Simple, Load);
         DayTappedCommand = MakeAsyncCommand<CalendarDayEventArgs>(x => dialog.Toast($"{x.Date:yyyy/MM/dd}").AsTask());
         EventTappedCommand = MakeAsyncCommand<CalendarEventEventArgs>(x => dialog.Toast(x.Event.Title).AsTask());
@@ -107,7 +106,6 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     {
         SelectionMode = mode;
 
-        // モード切替時は選択状態をリセットする
         SelectedDate = null;
         SelectedDates.Clear();
         SelectedStartDate = null;

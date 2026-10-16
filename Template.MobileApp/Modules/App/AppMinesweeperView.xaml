@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -17,7 +17,6 @@
              shell:ShellProperty.StatusBarColor="#F1F8E9"
              shell:ShellProperty.StatusBarStyle="DarkContent">
 
-    <!-- マインスイーパー。ゲームは Models/App/MinesweeperGame、盤面は Controls/MinesweeperBoard (タップ・長押しの判定と覆いを消す動き) -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -87,7 +86,7 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <!-- Pill (難易度と操作の切り替え。選んでいる方を塗る) -->
+            <!-- Pill -->
             <Style x:Key="PillBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="4" />
@@ -108,7 +107,7 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
-            <!-- Status (残りの地雷・顔・経過時間) -->
+            <!-- Status -->
             <Style x:Key="StatusBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="16,8" />
@@ -255,7 +254,6 @@
     <Grid Style="{StaticResource MineRootGrid}"
           RowDefinitions="Auto,Auto,Auto,*,Auto">
 
-        <!-- 上の帯 (戻る・名前) -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*">
@@ -268,7 +266,6 @@
                    Text="Minesweeper" />
         </Grid>
 
-        <!-- 難易度 -->
         <Border Grid.Row="1"
                 Style="{StaticResource PillBorder}">
             <Grid ColumnDefinitions="*,*">
@@ -303,7 +300,6 @@
             </Grid>
         </Border>
 
-        <!-- 残りの地雷・顔 (新しいゲーム)・経過時間 -->
         <Border Grid.Row="2"
                 Style="{StaticResource StatusBorder}">
             <Grid ColumnDefinitions="*,Auto,*">
@@ -329,17 +325,14 @@
             </Grid>
         </Border>
 
-        <!-- 盤面 (タップで開く、長押しで旗、開いた数字のタップで周りを開く) -->
         <controls:MinesweeperBoard Grid.Row="3"
                                    Style="{StaticResource Board}"
                                    Board="{Binding Board}"
                                    LongPressCommand="{Binding LongPressCommand}"
                                    TapCommand="{Binding TapCommand}" />
 
-        <!-- 下の領域は、操作の切り替えと結果で同じ高さにする (結果が出ても盤面が動かない) -->
         <Grid Grid.Row="4"
               Style="{StaticResource BottomGrid}">
-            <!-- 遊んでいる間は操作の切り替え (タップで開く / 旗) -->
             <VerticalStackLayout Style="{StaticResource BottomStack}"
                                  IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.LessThan}}, ConverterParameter={x:Static app:MinesweeperState.Won}}">
                 <Border Style="{StaticResource PillBorder}">
@@ -376,7 +369,6 @@
                 </Border>
             </VerticalStackLayout>
 
-            <!-- 終わったら結果 (盤面は見えたまま) -->
             <Border Style="{StaticResource ResultBorder}"
                     behaviors:AnimationOption.FadeInTrigger="{Binding State}"
                     IsVisible="{Binding State, Converter={s:CompareToBool Expression={x:Static s:CompareExpressions.GreaterThanOrEqual}}, ConverterParameter={x:Static app:MinesweeperState.Won}}">

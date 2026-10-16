@@ -2,10 +2,6 @@ namespace Template.MobileApp.Behaviors;
 
 using CommunityToolkit.Maui.Views;
 
-// CommunityToolkit の LazyView は LoadViewAsync() 呼び出しで初めて中身を生成する。
-// code-behind を使わず VM のフラグから起動できるよう添付プロパティで橋渡しする
-// ContentView には Template (DataTemplate) を渡すと、Load が初めて true になったときに中身を作る (以後は残す)。
-// Deferred を付けると、画面を表示した後 (最初の描画の後) に中身を作る
 public static partial class LazyViewOption
 {
     public static readonly BindableProperty LoadProperty = BindableProperty.CreateAttached(
@@ -78,7 +74,6 @@ public static partial class LazyViewOption
         }
     }
 
-    // 最初の描画の後に実行する
     private static partial void RunAfterDraw(ContentView view, Action action);
 
     private static void LoadTemplate(ContentView view)

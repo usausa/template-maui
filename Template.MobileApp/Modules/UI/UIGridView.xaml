@@ -20,15 +20,10 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!--
-        ClamGrid: 列は XAML で宣言し、値は OrderInfo.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
-        状態・目印・ランク・受付の絵文字は列の Converter、セルの色は UIGridStyles
-    -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- 列の文言 (値は列挙や数値のまま渡され、並べ替えも値で行う) -->
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Open}"
@@ -139,7 +134,6 @@
                    Text="{Binding SelectedCount, StringFormat='{0:N0}'}" />
         </Grid>
 
-        <!-- グリッドは自前でスクロールするため * 行に置く。先頭 2 列は固定、見出しの長押しで列設定 -->
         <clam:ClamGridView Grid.Row="1"
                            ItemsSource="{Binding Rows}"
                            SelectionMode="MultipleToggle"

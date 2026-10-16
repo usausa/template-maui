@@ -37,7 +37,6 @@ public sealed partial class HabitItem : ObservableObject
     public bool IsCompleted => Done >= Steps;
 }
 
-// 今日は全部の習慣が終わったときに達成になる
 public sealed partial class HabitDay : ObservableObject
 {
     public DateTime Date { get; set; }
@@ -52,7 +51,6 @@ public sealed partial class HabitDay : ObservableObject
 // Service
 //--------------------------------------------------------------------------------
 
-// 習慣を 1 つ進めると今日の進みも進み、目標に届いた習慣は連続日数が 1 増える
 public sealed partial class HabitTracker : ObservableObject
 {
     public ObservableCollection<HabitItem> Habits { get; } = [];
@@ -94,7 +92,6 @@ public sealed partial class HabitTracker : ObservableObject
 // Sample
 //--------------------------------------------------------------------------------
 
-// 習慣の見本 (4 つの習慣と、今週の達成)
 public static class HabitSample
 {
     public static IReadOnlyList<HabitItem> LoadHabits() =>

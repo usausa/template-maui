@@ -55,7 +55,6 @@
 
     <Grid Style="{StaticResource CalendarGrid}">
 
-        <!-- ClamCalendar: 表示範囲が変わるたびに DisplayDateChangedCommand で範囲のイベント・スタンプ・祝日を渡す -->
         <clam:ClamCalendarView SelectionMode="{Binding SelectionMode}"
                                DayTappedCommand="{Binding DayTappedCommand}"
                                DisplayDate="{Binding DisplayDate, Mode=TwoWay}"
@@ -70,7 +69,6 @@
                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
                                Stamps="{Binding Stamps}" />
 
-        <!-- 選択モード切替 -->
         <cmc:BottomSheetView Style="{StaticResource ModeSheet}"
                              IsOpen="{Binding IsSettingOpen}">
             <cmc:BottomSheetView.SheetTemplate>

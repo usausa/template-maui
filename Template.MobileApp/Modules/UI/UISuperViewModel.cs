@@ -25,7 +25,6 @@ public sealed partial class UISuperViewModel : AppViewModelBase
 
     public UISuperViewModel(IDispatcher dispatcher)
     {
-        // バナーは 5 秒毎に自動スライドする
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(5);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => BannerPosition = (BannerPosition + 1) % Banners.Count));

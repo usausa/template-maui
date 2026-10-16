@@ -32,7 +32,6 @@ public sealed partial class UIKitSettingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double TextSize { get; set; } = 14;
 
-    // 画面のアイコンとスイッチの色
     [ObservableProperty]
     public partial Color ThemeColor { get; set; } = Color.FromArgb("#2196F3");
 
@@ -72,7 +71,6 @@ public sealed partial class UIKitSettingViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // ログアウトしたら、はじめにの画面へ
     private async Task LogoutAsync()
     {
         if (await dialog.ConfirmAsync("ログアウトしますか?"))

@@ -6,7 +6,6 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial UIStreamContext Context { get; set; } = default!;
 
-    // 視聴中のフレンド (AvatarGroup が MaxDisplayed を超えた分を「+N」にする)
     public IReadOnlyList<string> Friends { get; } =
     [
         "avatar_person01.jpg",
@@ -50,7 +49,6 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    // 一覧は Push の前の状態 (トップの位置とマイリスト) のまま残っている
     protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
@@ -63,6 +61,5 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
 
     private void ToggleDownload() => Context.Selected.IsDownloaded = !Context.Selected.IsDownloaded;
 
-    // 同じ画面で作品を入れ替える (画面は先頭へ戻る)
     private void ShowRelated(StreamItem item) => Context.Open(item);
 }

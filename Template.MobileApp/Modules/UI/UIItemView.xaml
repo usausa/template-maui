@@ -388,12 +388,10 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <!-- 商品は文脈 (UIShopContext) の Selected。カートに入れるとバッジの数が増える -->
     <Grid Style="{StaticResource ItemDetailGrid}"
           RowDefinitions="*,Auto">
 
         <ScrollView Grid.Row="0">
-            <!-- Rows 0-1: product backdrop / rows 1-2: sheet. The shared 40px row makes the sheet overlap the backdrop -->
             <Grid RowDefinitions="300,40,Auto">
 
                 <Grid Grid.Row="0" Grid.RowSpan="2">
@@ -451,7 +449,6 @@
                                    Text="{Binding Context.Selected.Product.ReviewCount, StringFormat='({0} 件のレビュー)'}" />
                         </HorizontalStackLayout>
 
-                        <!-- 種類 (無い商品は出さない) -->
                         <VerticalStackLayout Style="{StaticResource VariantStack}"
                                              IsVisible="{Binding Context.Selected.Product.VariantName, Converter={StaticResource NotEmptyConverter}}">
                             <Label Style="{StaticResource VariantCaption}"
@@ -538,7 +535,6 @@
             </Grid>
         </Grid>
 
-        <!-- Footer: quantity + add to cart -->
         <Border Grid.Row="1"
                 Style="{StaticResource FooterBorder}">
             <Grid Style="{StaticResource FooterGrid}"

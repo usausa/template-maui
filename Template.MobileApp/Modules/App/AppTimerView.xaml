@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -17,7 +17,6 @@
              shell:ShellProperty.FunctionVisible="False"
              shell:ShellProperty.StatusBarColor="#0F172A">
 
-    <!-- ストップウォッチとカウントダウン。時間の計算はモデル (Models/App/TimerApplication)、文字盤は Controls/TimerDial、書式は ClockTextConverter、数字は 7 セグメントのフォント (DSEG7) -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -156,7 +155,6 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <!-- 消えているセグメント (DSEG7 の 8) -->
             <Style x:Key="DialUnlitLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource DialTimeLabel}">
@@ -358,7 +356,6 @@
     <Grid Style="{StaticResource TimerRootGrid}"
           RowDefinitions="Auto,Auto,*">
 
-        <!-- 上の帯 (戻る・名前) -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*">
@@ -371,7 +368,7 @@
                    Text="Timer" />
         </Grid>
 
-        <!-- モードの切り替え (選んでいる方を塗る) -->
+        <!-- Mode -->
         <Border Grid.Row="1"
                 Style="{StaticResource ModePillBorder}">
             <Grid ColumnDefinitions="*,*">
@@ -415,13 +412,12 @@
                     <Grid Style="{StaticResource ModeContentGrid}"
                           RowDefinitions="*,Auto,Auto">
 
-                        <!-- 文字盤 (1 分で 1 周)。中央に経過時間と今のラップ -->
+                        <!-- Dial -->
                         <Grid Grid.Row="0"
                               Style="{StaticResource DialGrid}">
                             <controls:TimerDial Style="{StaticResource StopwatchDial}"
                                                 Progress="{Binding StopwatchProgress}" />
                             <VerticalStackLayout Style="{StaticResource DialCenterStack}">
-                                <!-- 消えているセグメントを後ろに薄く重ねる -->
                                 <Grid>
                                     <Label Style="{StaticResource DialUnlitLabel}">
                                         <Label.FormattedText>
@@ -453,7 +449,7 @@
                             </VerticalStackLayout>
                         </Grid>
 
-                        <!-- ラップ (取ると文字盤とボタンの間に出す。新しい順。長さの比のバー、最速 🐇 / 最遅 🐢) -->
+                        <!-- Lap -->
                         <CollectionView Grid.Row="1"
                                         Style="{StaticResource LapCollection}"
                                         ItemsSource="{Binding Laps}"
@@ -503,7 +499,7 @@
                             </CollectionView.ItemTemplate>
                         </CollectionView>
 
-                        <!-- 計測中は ラップ / ストップ、止まっている間は リセット / スタート -->
+                        <!-- Action -->
                         <Grid Grid.Row="2"
                               Style="{StaticResource ActionGrid}"
                               ColumnDefinitions="*,*">
@@ -558,7 +554,7 @@
                     <Grid Style="{StaticResource ModeContentGrid}"
                           RowDefinitions="*,Auto,Auto">
 
-                        <!-- 文字盤 (残りの割合)。残り 10 秒で警告の色、終わったら脈打つ -->
+                        <!-- Dial -->
                         <Grid Grid.Row="0"
                               Style="{StaticResource DialGrid}">
                             <controls:TimerDial Style="{StaticResource CountdownDial}"
@@ -574,7 +570,6 @@
                                 </controls:TimerDial.Triggers>
                             </controls:TimerDial>
                             <VerticalStackLayout Style="{StaticResource DialCenterStack}">
-                                <!-- 消えているセグメントを後ろに薄く重ねる -->
                                 <Grid behaviors:AnimationOption.Blink="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static app:TimerCountdownState.Paused}}"
                                       behaviors:AnimationOption.Heartbeat="{Binding IsWarning}"
                                       behaviors:AnimationOption.HeartbeatRate="120">
@@ -600,7 +595,7 @@
                             </VerticalStackLayout>
                         </Grid>
 
-                        <!-- よく使う時間 (選んでいる時間を縁取る) と任意の分。計測中は変えられない -->
+                        <!-- Preset -->
                         <FlexLayout Grid.Row="1"
                                     Style="{StaticResource ChipFlex}">
                             <Button Style="{StaticResource ChipButton}"
@@ -660,7 +655,7 @@
                                     Text="✏️ 入力" />
                         </FlexLayout>
 
-                        <!-- リセット / スタート (計測中は ストップ) -->
+                        <!-- Action -->
                         <Grid Grid.Row="2"
                               Style="{StaticResource ActionGrid}"
                               ColumnDefinitions="*,*">

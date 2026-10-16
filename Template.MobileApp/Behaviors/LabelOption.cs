@@ -4,31 +4,33 @@ public static partial class LabelOption
 {
     public static partial void UseCustomMapper(BehaviorOptions options);
 
-    // ReSharper disable InconsistentNaming
+    //--------------------------------------------------------------------------------
+    // Size
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty AutoSizeProperty = BindableProperty.CreateAttached(
         "AutoSize",
         typeof(bool),
         typeof(LabelOption),
         false);
-    // ReSharper restore InconsistentNaming
 
     public static bool GetAutoSize(BindableObject bindable) => (bool)bindable.GetValue(AutoSizeProperty);
 
     public static void SetAutoSize(BindableObject bindable, bool value) => bindable.SetValue(AutoSizeProperty, value);
 
-    // ReSharper disable InconsistentNaming
     public static readonly BindableProperty MaxSizeProperty = BindableProperty.CreateAttached(
         "MaxSize",
         typeof(double),
         typeof(LabelOption),
         144d);
-    // ReSharper restore InconsistentNaming
 
     public static double GetMaxSize(BindableObject bindable) => (double)bindable.GetValue(MaxSizeProperty);
 
     public static void SetMaxSize(BindableObject bindable, double value) => bindable.SetValue(MaxSizeProperty, value);
 
-    // ------------------------------------------------------------------ CountUp (数値カウントアップ表示)
+    //--------------------------------------------------------------------------------
+    // CountUp
+    //--------------------------------------------------------------------------------
 
     private const string CountUpAnimationName = "LabelOptionCountUpAnimation";
 
@@ -42,7 +44,6 @@ public static partial class LabelOption
 
     public static void SetCountUpDuration(BindableObject bindable, int value) => bindable.SetValue(CountUpDurationProperty, value);
 
-    // 既定値は NaN (最初の値が 0 でも変更として表示する)
     public static readonly BindableProperty CountUpValueProperty = BindableProperty.CreateAttached(
         "CountUpValue",
         typeof(double),
@@ -64,7 +65,6 @@ public static partial class LabelOption
 
     public static void SetCountUpFormat(BindableObject bindable, string value) => bindable.SetValue(CountUpFormatProperty, value);
 
-    // 現在表示中の値(アニメーション中の中間値を保持し、次のアニメーションの開始点にする)
     private static readonly BindableProperty CountUpDisplayValueProperty = BindableProperty.CreateAttached(
         "CountUpDisplayValue",
         typeof(double),
@@ -84,7 +84,6 @@ public static partial class LabelOption
         }
         else
         {
-            // 表示前に値が確定した場合は Loaded 時に 0 から数え上げる
             label.Loaded -= OnCountUpLabelLoaded;
             label.Loaded += OnCountUpLabelLoaded;
         }

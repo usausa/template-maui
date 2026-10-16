@@ -6,21 +6,18 @@ public sealed partial class UINewsItem : ObservableObject
 {
     public required NewsArticle Article { get; init; }
 
-    // 1 時間以内の記事
     public required bool IsNew { get; init; }
 
     [ObservableProperty]
     public partial bool IsRead { get; set; }
 }
 
-// カテゴリごとのページと、保存した記事のページ (Category が null)。記事は初めて表示したときに読み込む
 public sealed partial class UINewsPage : ObservableObject
 {
     public required NewsCategory? Category { get; init; }
 
     public bool IsSaved => Category is null;
 
-    // 先頭の大きな記事
     [ObservableProperty]
     public partial UINewsItem? Top { get; set; }
 
@@ -40,14 +37,12 @@ public sealed partial class UINewsPage : ObservableObject
     [ObservableProperty]
     public partial bool IsEnd { get; set; }
 
-    // 引っ張って更新で増えた数 (しばらくして 0 に戻す)
     [ObservableProperty(NotifyAlso = [nameof(HasNewArrivals)])]
     public partial int NewArrivals { get; set; }
 
     public bool HasNewArrivals => NewArrivals > 0;
 }
 
-// 一覧と記事が共有する (一覧を開いている間)
 public sealed partial class UINewsContext : ObservableObject
 {
     private const int PageSize = 10;
@@ -67,7 +62,6 @@ public sealed partial class UINewsContext : ObservableObject
     [ObservableProperty]
     public partial NewsArticle Breaking { get; set; }
 
-    // 記事の画面の記事 (Push の前に設定する)
     [ObservableProperty]
     public partial NewsArticle Article { get; set; } = default!;
 
@@ -88,7 +82,6 @@ public sealed partial class UINewsContext : ObservableObject
         Breaking = sample.LoadBreaking(timeProvider.GetLocalNow().DateTime);
     }
 
-    // 初めて表示したページの記事を、取得に見立てて少し待ってから入れる
     public async Task LoadAsync(UINewsPage page)
     {
         if (!page.IsLoaded && (page.Category is { } category))
@@ -105,7 +98,6 @@ public sealed partial class UINewsContext : ObservableObject
         }
     }
 
-    // 取得に見立てて少し待ってから、新しい記事をトップにし、今のトップを一覧の先頭へ送る (増えた数は NewArrivals)
     public async Task RefreshAsync(UINewsPage page)
     {
         await Task.Delay(800).ConfigureAwait(true);
@@ -132,7 +124,6 @@ public sealed partial class UINewsContext : ObservableObject
         page.IsRefreshing = false;
     }
 
-    // 一覧の最後の記事より古い記事を足す
     public async Task LoadMoreAsync(UINewsPage page)
     {
         if ((page.Category is { } category) && page.IsLoaded && !page.IsLoading && !page.IsLoadingMore && !page.IsEnd && (page.Items.Count > 0))
@@ -154,11 +145,9 @@ public sealed partial class UINewsContext : ObservableObject
     public void OpenBreaking() =>
         Show(Breaking, sample.LoadRelated(Breaking, RelatedCount));
 
-    // 今の記事は関連記事の先頭に回す
     public void ShowRelated(NewsArticle article) =>
         Show(article, Related.Where(x => x.Id != article.Id).Prepend(Article).Take(RelatedCount).ToArray());
 
-    // 保存した記事のページは保存した順 (新しい順)
     public void ToggleSave()
     {
         var saved = Pages[^1].Items;
@@ -186,7 +175,6 @@ public sealed partial class UINewsContext : ObservableObject
     private UINewsItem? FindItem(int id) =>
         EnumerateItems().FirstOrDefault(x => x.Article.Id == id);
 
-    // 一覧に出ている同じ記事は既読にする
     private void Show(NewsArticle article, IReadOnlyList<NewsArticle> related)
     {
         Article = article;

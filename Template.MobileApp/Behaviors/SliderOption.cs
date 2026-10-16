@@ -4,7 +4,9 @@ using Smart.Maui.Interactivity;
 
 public static class SliderOption
 {
-    // ------------------------------------------------------------------ DragCompletedCommand
+    //--------------------------------------------------------------------------------
+    // DragCompletedCommand
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty DragCompletedCommandProperty = BindableProperty.CreateAttached(
         "DragCompletedCommand",
@@ -41,9 +43,10 @@ public static class SliderOption
         }
     }
 
-    // ------------------------------------------------------------------ Step
+    //--------------------------------------------------------------------------------
+    // Step
+    //--------------------------------------------------------------------------------
 
-    // 値を Minimum からの刻みにそろえる (0 はそろえない)
     public static readonly BindableProperty StepProperty = BindableProperty.CreateAttached(
         "Step",
         typeof(double),

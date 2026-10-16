@@ -46,9 +46,9 @@ public static partial class ButtonOption
 
     public static void SetDisableRippleEffect(BindableObject bindable, bool value) => bindable.SetValue(DisableRippleEffectProperty, value);
 
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
     // Pressed
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty IsPressedProperty = BindableProperty.CreateAttached(
         "IsPressed",
@@ -169,9 +169,9 @@ public static partial class ButtonOption
         }
     }
 
-    // ------------------------------------------------------------
-    // LongPress (押したまま LongPressDuration ミリ秒でコマンドを実行)
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    // LongPress
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty LongPressCommandProperty = BindableProperty.CreateAttached(
         "LongPressCommand",
@@ -232,9 +232,9 @@ public static partial class ButtonOption
         }
     }
 
-    // ------------------------------------------------------------
-    // HapticFeedback (押下時にクリックのハプティクスを発生)
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    // HapticFeedback
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty HapticFeedbackProperty = BindableProperty.CreateAttached(
         "HapticFeedback",

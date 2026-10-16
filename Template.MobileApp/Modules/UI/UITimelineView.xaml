@@ -22,7 +22,6 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <!-- Header -->
             <Style x:Key="TimelineHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="16,16,16,12" />
@@ -144,7 +143,6 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <!-- Dot fill/stroke are set per-item via bindings (status-driven) -->
             <Style x:Key="TimelineDot"
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="16" />
@@ -205,7 +203,6 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
-            <!-- Badge background is set per-item via DotColor binding -->
             <Style x:Key="NowBadgeBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="7,2" />
@@ -315,7 +312,6 @@
     <Grid Style="{StaticResource TimelineGrid}"
           RowDefinitions="Auto,Auto,Auto,*">
 
-        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource TimelineHeaderGrid}"
               ColumnDefinitions="Auto,*"
@@ -350,7 +346,6 @@
         <BoxView Grid.Row="2"
                  Style="{StaticResource TimelineHeaderDivider}" />
 
-        <!-- Timeline list -->
         <CollectionView Grid.Row="3"
                         Style="{StaticResource TimelineCollection}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -362,13 +357,11 @@
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="Auto,Auto,*">
 
-                        <!-- Time -->
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource EventTimeLabel}"
                                Text="{Binding Start, StringFormat='{0:HH:mm}'}"
                                Opacity="{Binding RowOpacity}" />
 
-                        <!-- Dot + line (done: check / current: halo / upcoming: hollow) -->
                         <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                                  Style="{StaticResource TimelineLine}"
                                  Opacity="{Binding RowOpacity}" />
@@ -387,7 +380,6 @@
                                    Text="{x:Static fonts:MaterialIcons.Check}" />
                         </Grid>
 
-                        <!-- Flat box with title, status badge, description, tags -->
                         <Border Grid.Row="0" Grid.Column="2"
                                 Style="{StaticResource EventBoxBorder}"
                                 Opacity="{Binding RowOpacity}">

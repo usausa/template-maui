@@ -11,7 +11,6 @@ public sealed class UIStreamSection
 
 public sealed partial class UIStreamViewModel : AppViewModelBase
 {
-    // トップの作品を次へ送るまでの秒数 (手で送った後も数え直す)
     private const int AdvanceSeconds = 5;
 
     private readonly IDispatcherTimer timer;
@@ -59,7 +58,6 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    // 詳細から戻ったときは、トップの位置とマイリストを残したまま
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
@@ -100,7 +98,6 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 送りの途中で画面を離れると、戻ったときに位置と表示がずれるので先に止める
     private Task OpenAsync(StreamItem item)
     {
         timer.Stop();

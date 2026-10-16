@@ -13,6 +13,7 @@ public static partial class PdfOption
 
     private static readonly ConditionalWeakTable<RecyclerView, LastPageListener> Listeners = [];
 
+    // ReSharper disable once UnusedParameterInPartialMethod
     public static partial void UseCustomMapper(BehaviorOptions options)
     {
         PdfViewHandler.PropertyMapper.AppendToMapping(LastPageKey, UpdateLastPage);
@@ -31,10 +32,6 @@ public static partial class PdfOption
         }
     }
 
-    // Maui.PDFView は上から見て最初に全部見えているページを今のページにするため、最後の数ページが 1 画面に収まると、
-    // 指で最後まで送っても最後のページにならない。指で送ってこれ以上送れなくなったら最後のページを今のページにする
-    // (ページの指定での移動は位置が飛ぶだけで dx / dy が 0 なので対象外。最後のページの手前へ戻すのを妨げない)。
-    // RecyclerView は後から加えたリスナーを先に呼ぶので、ライブラリのリスナーが今のページを決めた後に上書きするよう Post する
     private sealed class LastPageListener : RecyclerView.OnScrollListener
     {
         private readonly PdfView view;

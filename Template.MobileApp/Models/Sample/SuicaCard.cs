@@ -40,7 +40,6 @@ public partial class SuicaLogData : ObservableObject
 // Helper
 //--------------------------------------------------------------------------------
 
-// Suica の読み取り (ポーリングで IDm を取り、残高と履歴のブロックを読んで解析する)
 public static class SuicaHelper
 {
     public static (string Idm, SuicaAccessData Access, List<SuicaLogData> Logs)? ParseTag(INfc nfcF)
@@ -80,7 +79,6 @@ public static class SuicaHelper
             })
             .ToList();
 
-        // 履歴は新しい順なので、次の行が 1 つ前の履歴
         for (var i = 0; i < logs.Count - 1; i++)
         {
             logs[i].Difference = logs[i].Balance - logs[i + 1].Balance;

@@ -2,12 +2,10 @@ namespace Template.MobileApp.Modules.UI;
 
 using System.Security.Cryptography;
 
-// 時間ごとの項目。折れ線の区間は前後の値と、24 時間の範囲から描く
 public sealed class UIWeatherHour
 {
     public required WeatherHour Hour { get; init; }
 
-    // 線を描き込む順番。CollectionView ではインデックスが取れないためモデル側で持つ
     public required int Index { get; init; }
 
     public required bool IsCurrent { get; init; }
@@ -21,7 +19,6 @@ public sealed class UIWeatherHour
     public required double Maximum { get; init; }
 }
 
-// 週間の項目。バーは週全体の範囲に合わせ、今日だけ今の気温の点を出す
 public sealed class UIWeatherDay
 {
     public required WeatherDay Day { get; init; }
@@ -51,7 +48,6 @@ public sealed partial class UIWeatherViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsRefreshing { get; set; }
 
-    // 注意報の説明を開いている
     [ObservableProperty]
     public partial bool IsAlertExpanded { get; set; }
 
@@ -86,7 +82,6 @@ public sealed partial class UIWeatherViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 取得に見立てて少し待ってから、ダミーのデータを作り直す
     private async Task RefreshAsync()
     {
         await Task.Delay(800).ConfigureAwait(true);

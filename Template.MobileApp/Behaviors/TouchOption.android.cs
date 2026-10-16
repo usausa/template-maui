@@ -19,7 +19,6 @@ public static partial class TouchOption
         ViewHandler.ViewMapper.AppendToMapping(ClickCommandProperty.PropertyName, UpdateClickCommand);
     }
 
-    // 付けたビューだけを変える (ほかのビューの前景には触れない)
     private static void UpdateRipple(IViewHandler handler, IView view)
     {
         if ((handler.PlatformView is Android.Views.View platformView) &&
@@ -28,7 +27,6 @@ public static partial class TouchOption
         {
             if (GetRipple(bindable))
             {
-                // 波紋は付けたビューの四角の中だけに描く (マスク)
                 using var color = ColorStateList.ValueOf(GetRippleColor(bindable).ToPlatform());
                 using var mask = new ColorDrawable(Android.Graphics.Color.White);
                 platformView.Foreground = new RippleDrawable(color, null, mask);

@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UINewsViewModel : AppViewModelBase
 {
-    // 引っ張って更新で増えた数を出しておく時間
     private static readonly TimeSpan NewArrivalsDuration = TimeSpan.FromSeconds(3);
 
     private readonly IDispatcher dispatcher;
@@ -11,15 +10,12 @@ public sealed partial class UINewsViewModel : AppViewModelBase
     [ObservableProperty]
     public partial UINewsContext Context { get; set; } = default!;
 
-    // タブとページの両方から変わる
     [ObservableProperty]
     public partial int SelectedIndex { get; set; }
 
-    // 表示の前 (OnNavigatingToAsync) に設定する
     [ObservableProperty]
     public partial UINewsPage SelectedPage { get; set; } = default!;
 
-    // ページのスクロールの位置 (タブの下線が追う)
     [ObservableProperty]
     public partial double PagePosition { get; set; }
 
@@ -39,7 +35,6 @@ public sealed partial class UINewsViewModel : AppViewModelBase
     {
         this.dispatcher = dispatcher;
 
-        // ページの中身はスワイプの間には作らず、選んだ後に読み込む (作る処理が重いとスワイプが止まる)
         SubscribeSelectedIndex(_ => Select());
 
         RefreshCommand = MakeAsyncCommand<UINewsPage>(RefreshAsync);
@@ -62,7 +57,6 @@ public sealed partial class UINewsViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    // 記事から戻ったときは、文脈が既読と保存を一覧に反映している
     public override Task OnNavigatedToAsync(INavigationContext context) =>
         Context.LoadAsync(Context.Pages[SelectedIndex]);
 
@@ -74,7 +68,6 @@ public sealed partial class UINewsViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 増えた数はしばらくして消す
     private async Task RefreshAsync(UINewsPage page)
     {
         await Context.RefreshAsync(page);

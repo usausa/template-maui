@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 using ClamGrid;
 
-// 列設定画面の行 (表示の有無はチェックで編集する)
 public static class ColumnOptionAccessors
 {
     public static GridValueAccessorCollection<GridColumnOption> Option { get; } = new()
@@ -12,7 +11,6 @@ public static class ColumnOptionAccessors
     };
 }
 
-// 列の表示 / 順序の設定。一覧画面から編集用のコピー (GridColumnEditSession) を受け取り、Apply で結果を返す
 public sealed partial class UIGridColumnViewModel : AppViewModelBase
 {
     private GridColumnEditSession session = default!;
@@ -20,7 +18,6 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
     [ObservableProperty]
     public partial GridDataView<GridColumnOption>? Rows { get; set; }
 
-    // 行ヘッダのドラッグで順序を入れ替える (編集セッションのコレクションに反映)
     [ObservableProperty]
     public partial IGridRowMover? RowMover { get; set; }
 

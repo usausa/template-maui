@@ -13,7 +13,6 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
     [ObservableProperty]
     public partial GraphRow? Selected { get; set; }
 
-    // シートの内容 (閉じる途中も残す)
     [ObservableProperty]
     public partial GraphRow Detail { get; private set; } = default!;
 
@@ -68,7 +67,6 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         }
     }
 
-    // 閉じたら選択を外す (同じ行をもう一度押しても開く)
     private void ClearSelection(bool open)
     {
         if (!open)

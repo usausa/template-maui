@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -17,7 +17,6 @@
              shell:ShellProperty.StatusBarColor="#FBF6EC"
              shell:ShellProperty.StatusBarStyle="DarkContent">
 
-    <!-- 2048。ゲームは Models/App/Puzzle2048Game、盤面は Controls/Puzzle2048Board (1 手の結果から動かす) -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -268,7 +267,6 @@
     <Grid Style="{StaticResource Puzzle2048RootGrid}"
           RowDefinitions="Auto,Auto,Auto,*,Auto">
 
-        <!-- 上の帯 (戻る・名前) -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*">
@@ -281,7 +279,6 @@
                    Text="2048" />
         </Grid>
 
-        <!-- ロゴとスコア (スコアは増えると弾む) -->
         <Grid Grid.Row="1"
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="Auto,*,Auto,Auto">
@@ -311,7 +308,6 @@
             </Border>
         </Grid>
 
-        <!-- 説明と新しいゲーム -->
         <Grid Grid.Row="2"
               Style="{StaticResource GuideGrid}"
               ColumnDefinitions="*,Auto">
@@ -321,7 +317,6 @@
                     Text="↻ 新しいゲーム" />
         </Grid>
 
-        <!-- 盤面 (上下左右のスワイプか、下の十字キーで動かす)。2048 の到達とゲームオーバーは盤面に重ねる -->
         <Grid Grid.Row="3"
               Style="{StaticResource SwipeAreaGrid}">
             <Grid.GestureRecognizers>
@@ -375,7 +370,6 @@
             </Grid>
         </Grid>
 
-        <!-- 十字キー (スワイプと同じ動き) -->
         <Grid Grid.Row="4"
               Style="{StaticResource PadGrid}"
               RowDefinitions="Auto,Auto,Auto"

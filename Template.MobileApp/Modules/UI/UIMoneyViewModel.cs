@@ -34,7 +34,6 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double Balance { get; set; }
 
-    // 1 日あたりの平均残高の前月比
     public double BalanceRate { get; }
 
     public bool IsBalanceUp => BalanceRate >= 0;
@@ -72,7 +71,6 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string SearchText { get; set; } = string.Empty;
 
-    // 検索とお知らせの一覧は、そのタブを開いたときに作る
     [ObservableProperty]
     public partial IReadOnlyList<MoneyDay> SearchResults { get; set; } = [];
 

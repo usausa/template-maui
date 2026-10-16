@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Graphics.Drawing;
 
-// 全幅の歩数のカード (VariableSizeWrapPanel の ColumnSpan=2)
 public sealed class UIKitDashHero
 {
     public int Steps { get; init; }
@@ -18,11 +17,9 @@ public sealed class UIKitDashMetric
     public string Unit { get; init; } = string.Empty;
     public string Icon { get; init; } = string.Empty;
 
-    // 入場アニメの段差 (ms)。BindableLayout ではインデックスが取れないためモデル側で持つ
     public int EnterDelay { get; init; }
 }
 
-// 歩数のカード (UIKitDashHero) とメトリクス (UIKitDashMetric) をタイルの種類で振り分ける
 public sealed class UIKitDashTileTemplateSelector : DataTemplateSelector
 {
     public DataTemplate HeroTemplate { get; set; } = default!;
@@ -40,7 +37,6 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
     public string Greeting { get; } = "おはようございます";
     public string UserName { get; } = "うさうささん";
 
-    // 先頭の歩数のカード + メトリクス 4 件を 1 つのタイルパネルへ流し込む (件数は可変)
     public IReadOnlyList<object> Tiles { get; }
 
     public IReadOnlyList<string> Periods { get; } = ["日", "週", "月"];

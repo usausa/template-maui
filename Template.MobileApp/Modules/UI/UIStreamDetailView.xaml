@@ -153,10 +153,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <!--
-                Friends watching: overlapping avatars (from UI3Camp's participants row).
-                重ね配置と「+N」は AvatarGroup (OverlapPanel ベースの自作部品) が描く
-            -->
             <Style x:Key="FriendsRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="16,0,16,12" />
@@ -212,7 +208,6 @@
                 <Setter Property="Color" Value="Transparent" />
             </Style>
 
-            <!-- Trailers tab content -->
             <Style x:Key="TrailerStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Margin" Value="16,4,16,16" />
@@ -410,7 +405,6 @@
                 </Label.Text>
             </Label>
 
-            <!-- Friends watching (overlapping avatars) -->
             <HorizontalStackLayout Style="{StaticResource FriendsRow}">
                 <cmc:AvatarGroup Style="{StaticResource FriendsAvatars}"
                                  ItemsSource="{Binding Friends}" />
@@ -454,7 +448,6 @@
                 </VerticalStackLayout>
             </Grid>
 
-            <!-- Trailers tab -->
             <VerticalStackLayout Style="{StaticResource TrailerStack}"
                                  behaviors:AnimationOption.FadeInTrigger="{Binding TrailersSelected}"
                                  BindableLayout.ItemsSource="{Binding Context.Selected.Work.Trailers}"
@@ -497,7 +490,6 @@
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
 
-            <!-- More Like This tab -->
             <CollectionView Style="{StaticResource RelatedCollection}"
                             behaviors:AnimationOption.FadeInTrigger="{Binding RelatedSelected}"
                             ItemsSource="{Binding Context.Related}"
@@ -513,7 +505,6 @@
                             <Grid behaviors:TouchOption.ClickCommand="{Binding RelatedCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamDetailViewModel}}, x:DataType={x:Type module:UIStreamDetailViewModel}}"
                                   behaviors:TouchOption.ClickCommandParameter="{Binding .}"
                                   behaviors:TouchOption.Ripple="True">
-                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                 <Image Style="{StaticResource RelatedImage}"
                                        Source="{Binding Work.Image}" />
                                 <Border Style="{StaticResource RelatedOverlay}">
@@ -527,6 +518,7 @@
                                     </Grid>
                                 </Border>
                             </Grid>
+                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

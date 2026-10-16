@@ -11,7 +11,6 @@ public sealed partial class UIKitNotifyItem : ObservableObject
     public partial bool IsUnread { get; set; }
 }
 
-// 日ごとの区切り (今日・昨日・それより前)
 public sealed class UIKitNotifyGroup : ObservableCollection<UIKitNotifyItem>
 {
     public DateTime Date { get; }
@@ -27,7 +26,6 @@ public sealed class UIKitNotifyViewModel : AppViewModelBase
 {
     public ObservableCollection<UIKitNotifyGroup> Groups { get; }
 
-    // タップと右へのスワイプで既読、左へのスワイプで削除
     public IObserveCommand ReadCommand { get; }
 
     public IObserveCommand DeleteCommand { get; }
@@ -64,7 +62,6 @@ public sealed class UIKitNotifyViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    // すべて既読
     protected override Task OnNotifyFunction4()
     {
         foreach (var item in Groups.SelectMany(static x => x))
@@ -78,7 +75,6 @@ public sealed class UIKitNotifyViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // 空になった日の区切りも消す
     private void Delete(UIKitNotifyItem item)
     {
         var group = Groups.FirstOrDefault(x => x.Contains(item));

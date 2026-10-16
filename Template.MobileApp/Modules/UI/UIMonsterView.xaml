@@ -30,13 +30,11 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 40,40,0,0" />
             </Style>
 
-            <!-- Padding lives on the stack (not the card) so the Heart bounce is not clipped at the content edge -->
             <Style x:Key="DetailStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="20,16,20,8" />
             </Style>
 
-            <!-- Name + level -->
             <Style x:Key="NameRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -75,7 +73,6 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- Type tags -->
             <Style x:Key="TagRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="6" />
@@ -95,7 +92,6 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <!-- Base stats: fill ratio is expressed by star-sized columns (e.g. 80*/20*) -->
             <Style x:Key="StatStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="8" />
@@ -202,7 +198,6 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <!-- Rows 0-1: hero image / rows 1-2: sheet card. The shared 40px row makes the card overlap the image without negative margins -->
     <Grid RowDefinitions="*,40,Auto">
         <Image Grid.Row="0" Grid.RowSpan="2"
                Style="{StaticResource HeroImage}"
@@ -228,7 +223,6 @@
                     </Border>
                 </Grid>
 
-                <!-- Type tags -->
                 <HorizontalStackLayout Style="{StaticResource TagRow}"
                                        BindableLayout.ItemsSource="{Binding Tags}">
                     <BindableLayout.ItemTemplate>
@@ -243,7 +237,6 @@
                     </BindableLayout.ItemTemplate>
                 </HorizontalStackLayout>
 
-                <!-- Base stats (bars animate 0 → value on load) -->
                 <VerticalStackLayout Style="{StaticResource StatStack}">
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">

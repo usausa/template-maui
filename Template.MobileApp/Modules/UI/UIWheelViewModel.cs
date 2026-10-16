@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Graphics.Drawing;
 
-// 項目のチップ (Index は削除する位置)
 public sealed record UIWheelEntry(int Index, WheelItem Item, Color Color);
 
 public sealed record UIWheelResult(string Label, bool IsJackpot);
@@ -16,10 +15,8 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
 
     private const int HistoryCount = 5;
 
-    // ホイールの中心に届かない長さ
     private const int MaxLabelLength = 8;
 
-    // 寿司と焼肉は当たり枠 (停止時に紙吹雪)。それ以外はきらめきの演出
     private static readonly WheelItem[] MenuItems =
     [
         new("ラーメン"),
@@ -56,7 +53,6 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool CanRemove { get; private set; }
 
-    // 新しい順
     public ObservableCollection<UIWheelResult> History { get; } = [];
 
     public WheelDrawing Drawing { get; } = new();
@@ -93,7 +89,6 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    // 項目を足す (回っている間は変えない)
     protected override async Task OnNotifyFunction3()
     {
         if (CanAdd && !Drawing.IsSpinning)

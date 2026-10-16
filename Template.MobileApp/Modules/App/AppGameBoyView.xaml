@@ -16,7 +16,6 @@
              shell:ShellProperty.StatusBarColor="#2B2E35"
              shell:ShellProperty.StatusBarStyle="LightContent">
 
-    <!-- Game Boy。エミュレーターは Models/App/GameBoyEmulator、画面とパッドは Controls/GameBoyControls -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -94,7 +93,6 @@
     <Grid Style="{StaticResource GameBoyRootGrid}"
           RowDefinitions="Auto,Auto,*">
 
-        <!-- 上の帯 (戻る・名前・FPS・消音) -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*,Auto,Auto">
@@ -114,13 +112,11 @@
                     Text="{Binding IsMuted, Converter={StaticResource MuteGlyphConverter}}" />
         </Grid>
 
-        <!-- 画面 -->
         <Border Grid.Row="1"
                 Style="{StaticResource ScreenBorder}">
             <controls:GameBoyScreen Frames="{Binding Frames}" />
         </Border>
 
-        <!-- パッド -->
         <controls:GameBoyPad Grid.Row="2"
                              Buttons="{Binding Buttons}"
                              ChangeCommand="{Binding ButtonCommand}" />

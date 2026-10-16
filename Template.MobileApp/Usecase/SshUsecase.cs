@@ -14,7 +14,6 @@ public sealed record SftpUploadResult(string FileName, long Size, SftpTransferRe
 
 public sealed record SftpDownloadResult(string Path, long Size, SftpTransferResult Transfer);
 
-// 設定の SSH の接続先を使う処理 (SFTP での送受信)
 public sealed class SshUsecase
 {
     private readonly Settings settings;

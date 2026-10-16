@@ -43,7 +43,6 @@ public static class MapsuiBind
         }
     }
 
-    // SkiaSharp オーバーレイ (SKCanvasView) を同じコントローラへ結線する
     public static readonly BindableProperty OverlayProperty = BindableProperty.CreateAttached(
         "Overlay",
         typeof(IMapsuiController),
@@ -59,7 +58,7 @@ public static class MapsuiBind
 
     private static void OverlayChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        if (bindable is not SkiaSharp.Views.Maui.Controls.SKCanvasView view)
+        if (bindable is not SKCanvasView view)
         {
             return;
         }
@@ -79,11 +78,11 @@ public static class MapsuiBind
         }
     }
 
-    private sealed class MapsuiOverlayBehavior : BehaviorBase<SkiaSharp.Views.Maui.Controls.SKCanvasView>
+    private sealed class MapsuiOverlayBehavior : BehaviorBase<SKCanvasView>
     {
         private IMapsuiController? controller;
 
-        protected override void OnAttachedTo(SkiaSharp.Views.Maui.Controls.SKCanvasView bindable)
+        protected override void OnAttachedTo(SKCanvasView bindable)
         {
             base.OnAttachedTo(bindable);
 
@@ -91,7 +90,7 @@ public static class MapsuiBind
             controller?.AttachOverlay(bindable);
         }
 
-        protected override void OnDetachingFrom(SkiaSharp.Views.Maui.Controls.SKCanvasView bindable)
+        protected override void OnDetachingFrom(SKCanvasView bindable)
         {
             controller?.DetachOverlay(bindable);
             controller = null;

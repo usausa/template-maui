@@ -22,7 +22,6 @@ public sealed partial class CharacterItem : ObservableObject
 // Sample
 //--------------------------------------------------------------------------------
 
-// キャラクターの一覧の見本 (顔と全身の絵はアプリの中の画像)
 public static class CharacterSample
 {
     public static IReadOnlyList<CharacterItem> LoadCharacters() =>

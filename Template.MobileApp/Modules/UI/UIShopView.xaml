@@ -16,10 +16,6 @@
              shell:ShellProperty.Function1Enabled="True"
              behaviors:Focus.SuppressDefaultFocus="True">
 
-    <!--
-        一覧・商品・カートは文脈 (UIShopContext) を共有する。
-        上の部分は CollectionView の Header にして、商品の一覧と一緒にスクロールする
-    -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -197,7 +193,6 @@
                 </Setter>
             </Style>
 
-            <!-- 並び順か価格を指定しているときの印 -->
             <Style x:Key="FilterDot"
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="12" />
@@ -246,7 +241,6 @@
                 <Setter Property="Wrap" Value="True" />
             </Style>
 
-            <!-- シートの中は折り返す -->
             <!-- Section title -->
             <Style x:Key="SectionTitleGrid"
                    TargetType="Grid">
@@ -278,7 +272,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Popular: のぞきと中央の強調のあるカルーセル -->
+            <!-- Popular -->
             <Style x:Key="PopularCarousel"
                    TargetType="CarouselView">
                 <Setter Property="HeightRequest" Value="168" />
@@ -541,7 +535,6 @@
             <CollectionView.Header>
                 <VerticalStackLayout Style="{StaticResource ShopHeaderStack}">
 
-                    <!-- Header -->
                     <Grid Style="{StaticResource ShopHeaderGrid}"
                           ColumnDefinitions="Auto,*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -571,7 +564,6 @@
                         </Grid>
                     </Grid>
 
-                    <!-- Popular -->
                     <Grid Style="{StaticResource SectionTitleGrid}"
                           ColumnDefinitions="Auto,*"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -635,7 +627,6 @@
                     <IndicatorView x:Name="PopularIndicator"
                                    Style="{StaticResource PopularIndicator}" />
 
-                    <!-- Search + filter -->
                     <Grid Style="{StaticResource SearchRowGrid}"
                           ColumnDefinitions="*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -662,7 +653,6 @@
                         </Grid>
                     </Grid>
 
-                    <!-- Category -->
                     <ScrollView Style="{StaticResource ChipScroll}"
                                 behaviors:AnimationOption.EnterAnimation="FadeUp"
                                 behaviors:AnimationOption.EnterDelay="200">
@@ -677,7 +667,6 @@
                         </cmc:ChipGroup>
                     </ScrollView>
 
-                    <!-- All items -->
                     <Grid Style="{StaticResource SectionTitleGrid}"
                           ColumnDefinitions="Auto,*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -722,7 +711,6 @@
                                     </DataTrigger>
                                 </Button.Triggers>
                             </Button>
-                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                             <Label Grid.Row="1"
                                    Style="{StaticResource ItemKindLabel}"
                                    Text="{Binding Product.Kind}" />
@@ -741,6 +729,7 @@
                                    Text="{Binding Product.Price, StringFormat='¥{0:N0}'}" />
                         </Grid>
                     </Border>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
@@ -755,7 +744,6 @@
             </CollectionView.EmptyView>
         </CollectionView>
 
-        <!-- 並び順と価格のシート -->
         <cmc:BottomSheetView Style="{StaticResource FilterSheet}"
                              IsOpen="{Binding IsFilterOpen}">
             <cmc:BottomSheetView.SheetContent>

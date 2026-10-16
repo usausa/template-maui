@@ -4,7 +4,6 @@ using ClamCalendar;
 
 using Template.MobileApp.Services;
 
-// 終日の予定 (カレンダーの予定の名前と色)
 public sealed record UIScheduleAllDay(string Title, Color Color);
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
@@ -35,7 +34,6 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool ShowCurrentTime { get; set; }
 
-    // 日合計 (件数 / 所要時間合計 / 空き時間)
     [ObservableProperty]
     public partial int EventCount { get; private set; }
 
@@ -45,7 +43,6 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string FreeTimeText { get; private set; } = string.Empty;
 
-    // 詳細のシートの予定 (開く前に設定する)
     [ObservableProperty]
     public partial TimetableEvent SelectedEvent { get; private set; } = default!;
 
@@ -81,7 +78,6 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         });
         CloseDetailCommand = MakeDelegateCommand(() => IsDetailOpen = false);
 
-        // 現在時刻ラインは 1 分毎に更新する
         CurrentTime = DateTime.Now.TimeOfDay;
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromMinutes(1);
@@ -139,7 +135,6 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
             return;
         }
 
-        // 終日の予定はカレンダーと同じ予定、時刻のある予定はタイムテーブルに置く
         AllDayEvents = calendarService.GetEvents(day.Date, day.Date)
             .Select(static x => new UIScheduleAllDay(x.Title, x.Style == CalendarEventStyle.Filled ? x.BackgroundColor : x.TextColor))
             .ToArray();
@@ -153,7 +148,6 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         EventCount = Events.Count;
         TotalTimeText = TimetableCalculator.FormatDuration(TimeSpan.FromTicks(Events.Sum(static x => (x.End - x.Start).Ticks)));
 
-        // 空き時間は表示範囲のうちイベントで埋まっていない時間
         FreeTimeText = TimetableCalculator.FormatDuration(EndTime - StartTime - TimetableCalculator.GetBusyTotal(Events, StartTime, EndTime));
     }
 }

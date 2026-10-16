@@ -43,7 +43,6 @@ public sealed class ChatMessage : ObservableObject
 
     public ObservableCollection<MessageReaction> Reactions { get; init; } = [];
 
-    // 同じ絵文字があれば数を足し、無ければ 1 で加える
     public void AddReaction(string emoji)
     {
         var reaction = Reactions.FirstOrDefault(x => x.Emoji == emoji);
@@ -62,7 +61,6 @@ public sealed class ChatMessage : ObservableObject
 // Service
 //--------------------------------------------------------------------------------
 
-// トーク。自分のメッセージ・写真・スタンプを作る
 public static class ChatTalk
 {
     private const string Me = "自分";
@@ -111,7 +109,6 @@ public static class ChatTalk
 // Sample
 //--------------------------------------------------------------------------------
 
-// トークの見本 (昨日と今日の会話・スタンプの一覧)
 public static class ChatSample
 {
     private const string AvatarAlice = "avatar_person01.jpg";
@@ -165,7 +162,6 @@ public static class ChatSample
         ];
     }
 
-    // 日付の区切り (文言は画面で日付から作る)
     private static ChatMessage DateDivider(DateTime date) =>
         new()
         {

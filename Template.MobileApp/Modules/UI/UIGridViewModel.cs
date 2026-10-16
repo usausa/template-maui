@@ -12,14 +12,11 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 
     private readonly IDialog dialog;
 
-    // 行・選択・ソート状態をまとめて持つ (グリッドの ItemsSource)
     public GridDataView<OrderInfo> Rows { get; }
 
-    // 列の表示 / 順序。TwoWay で結び、グリッドが正規化した値を書き戻す (null は既定へ戻す)
     [ObservableProperty]
     public partial IReadOnlyList<GridColumnOrder>? ColumnOrders { get; set; }
 
-    // ソートキーと方向。見出しタップ後にグリッドが書き戻す
     [ObservableProperty]
     public partial IReadOnlyList<GridSortOrder>? SortOrders { get; set; }
 
@@ -32,10 +29,8 @@ public sealed partial class UIGridViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string Message { get; set; } = string.Empty;
 
-    // 行の長押し: true なら未処理だけを選択、false なら全解除
     public IObserveCommand SelectAllCommand { get; }
 
-    // 見出しの長押し: 列設定画面へ (編集用のコピーを渡し、戻りで反映する)
     public IObserveCommand ColumnEditCommand { get; }
 
     public IObserveCommand CellValueChangedCommand { get; }
@@ -112,7 +107,6 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction3()
     {
-        // 列設定とソートを既定へ (null を渡すとグリッドが既定を適用して正規化した値を書き戻す)
         ColumnOrders = null;
         SortOrders = DefaultSortOrders;
         Message = "列設定とソートを既定に戻しました";
@@ -144,7 +138,6 @@ public sealed partial class UIGridViewModel : AppViewModelBase
         Message = $"確定: {selected.Count} 件 / {String.Join(", ", selected.Take(3).Select(static x => x.OrderNo))}{(selected.Count > 3 ? " …" : string.Empty)}";
     }
 
-    // 選択行の状態を進める。行ごとの変更通知で並べ替えないよう監視を止めてまとめて更新し、Resume で消える選択は選び直す
     private void Advance()
     {
         var selected = Rows.SelectedItems.Cast<OrderInfo>().ToHashSet();

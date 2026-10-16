@@ -4,7 +4,6 @@ using ClamGrid;
 
 using Template.MobileApp.Models.Sample;
 
-// ClamGrid の見た目 (XAML から x:Static で参照)。罫線は横だけ、見出しは白地。状態・フラグ・ランク・受付・金額・数量・納期は値に応じて色を付ける
 internal static class UIGridStyles
 {
     private static readonly Color HeaderText = Color.FromArgb("#607D8B");
@@ -41,7 +40,6 @@ internal static class UIGridStyles
 
     private static readonly Color FaxText = Color.FromArgb("#6D4C41");
 
-    // 一覧画面 / 列設定画面 (色のフィールドより後に初期化する)
     public static GridStyle ListStyle { get; } = CreateList();
 
     public static GridStyle SettingsStyle { get; } = CreateSettings();
@@ -58,7 +56,6 @@ internal static class UIGridStyles
         CellColors = SelectCellColors
     };
 
-    // 行ヘッダはドラッグの取っ手 (AllowRowDragging のときライブラリが描く)
     private static GridStyle CreateSettings() => CreateBase() with
     {
         RowHeadersVisible = true,
@@ -85,7 +82,6 @@ internal static class UIGridStyles
         SelectedTextColor = Color.FromArgb("#0D47A1")
     };
 
-    // 選択中は選択色を優先する
     private static GridColors SelectCellColors(GridCellColorContext context)
     {
         if (context.IsSelected || context.Item is not OrderInfo order)

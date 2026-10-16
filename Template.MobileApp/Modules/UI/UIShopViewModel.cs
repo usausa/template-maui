@@ -6,7 +6,6 @@ public sealed record UIShopSortOption(ShopSort Sort, string Name);
 
 public sealed record UIShopPriceOption(int? MaxPrice, string Name);
 
-// 人気の商品のカルーセルの項目 (中央の項目を強調する)
 public sealed partial class UIShopPopularItem : ObservableObject
 {
     public required ShopItem Item { get; init; }
@@ -69,7 +68,6 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     [ObservableProperty(NotifyAlso = [nameof(IsFiltered)])]
     public partial UIShopPriceOption SelectedPrice { get; set; } = PriceOptions[0];
 
-    // 並び順か価格を指定している (絞り込みのボタンに印)
     public bool IsFiltered => (SelectedSort != SortOptions[0]) || (SelectedPrice != PriceOptions[0]);
 
     [ObservableProperty]
@@ -129,7 +127,6 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    // 商品とカートから戻ったときは、お気に入りとカートの数を文脈が反映している
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
@@ -163,7 +160,6 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    // 一覧を入れ替えたり途中で空にしたりすると見出しまで作り直されて動きが出直すので、先に足して並べ、残りを外す
     private void Filter()
     {
         var items = Context.Store.Find(SelectedCategory.Category, SearchText, SelectedSort.Sort, SelectedPrice.MaxPrice);

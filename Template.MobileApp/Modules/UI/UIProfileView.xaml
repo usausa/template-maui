@@ -133,7 +133,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- SNS action buttons (all toggle: OFF=白地+色アイコン / ON=色地+白アイコン) -->
+            <!-- SNS action buttons -->
             <Style x:Key="ActionRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -424,7 +424,6 @@
 
     <Grid>
 
-        <!-- カバーはスクロールでパララックス(旧 Profile から移植) -->
         <ScrollView Style="{StaticResource ProfileScroll}"
                     behaviors:Scroll.ParallaxTarget="{x:Reference CoverImage}">
             <VerticalStackLayout Style="{StaticResource ProfileStack}">
@@ -436,7 +435,6 @@
                            Source="profile_cover.jpg" />
                 </Grid>
 
-                <!-- カバーより下は不透明ブロック(パララックスしたカバーが透けないように) -->
                 <VerticalStackLayout Style="{StaticResource ProfileBodyStack}">
 
                     <!-- Avatar (overlaps cover) -->
@@ -596,7 +594,6 @@
                             </cmc:TabStrip>
                             <BoxView Style="{StaticResource TabLine}" />
 
-                            <!-- 件数固定の一覧のため、縦ScrollView内で仮想化が無効になるCollectionViewは使わずBindableLayoutで並べる -->
                             <FlexLayout Style="{StaticResource TabPhotoLayout}"
                                         BindableLayout.ItemsSource="{Binding Photos}"
                                         IsVisible="{Binding SelectedTab, Converter={StaticResource PhotosTabConverter}}">

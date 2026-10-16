@@ -25,7 +25,6 @@ public sealed partial class UIMailDetailViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    // 削除して一覧へ
     protected override Task OnNotifyFunction4()
     {
         Context.Delete(Context.Selected);

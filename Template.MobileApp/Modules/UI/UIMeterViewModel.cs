@@ -97,10 +97,8 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    // スタック退避中もループが回り続けないよう、画面表示中のみ実行する
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        // 二重呼び出しで前回のループを停止できなくなるのを防ぐ
         if (loopTask is null)
         {
             timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000d / 60));
@@ -122,7 +120,6 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
             }
             finally
             {
-                // ループが想定外の例外で落ちても解放を確実に行う
                 cancellationTokenSource.Dispose();
                 cancellationTokenSource = null;
                 timer!.Dispose();

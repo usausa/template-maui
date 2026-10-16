@@ -65,7 +65,6 @@ public static partial class EntryOption
     public static bool GetHandleEnterKey(BindableObject bindable) => (bool)bindable.GetValue(HandleEnterKeyProperty);
     public static void SetHandleEnterKey(BindableObject bindable, bool value) => bindable.SetValue(HandleEnterKeyProperty, value);
 
-    // 入力が止まってから TypingStoppedDelay ミリ秒後に、入力中の文字列を引数にしてコマンドを実行する
     public static readonly BindableProperty TypingStoppedCommandProperty = BindableProperty.CreateAttached(
         "TypingStoppedCommand",
         typeof(ICommand),

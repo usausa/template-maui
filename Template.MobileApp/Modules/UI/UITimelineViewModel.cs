@@ -7,7 +7,6 @@ public enum TimelineStatus
     Done
 }
 
-// Tag が null でブックマークでもないものはすべて
 public sealed record UITimelineFilterOption(string? Tag, bool Bookmarked, string Name);
 
 public sealed partial class UITimelineEvent : ObservableObject
@@ -26,7 +25,6 @@ public sealed partial class UITimelineEvent : ObservableObject
     [ObservableProperty]
     public partial bool IsBookmarked { get; set; }
 
-    // 今の時刻の線をこの行の下に出す
     [ObservableProperty]
     public partial bool IsNowAfter { get; set; }
 
@@ -44,7 +42,6 @@ public sealed partial class UITimelineEvent : ObservableObject
 
 public sealed partial class UITimelineViewModel : AppViewModelBase
 {
-    // 90 分ごとに 75 分のセッション。4 番目が今の 30 分の区切りに始まる
     private const int SessionInterval = 90;
 
     private const int SessionLength = 75;
@@ -199,7 +196,6 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
     // Event
     //--------------------------------------------------------------------------------
 
-    // 分が変わったら終わった・進行中を見直す
     private void UpdateStatus()
     {
         var now = DateTime.Now;
@@ -230,7 +226,6 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
         MarkNow();
     }
 
-    // 表示している中で最後に始まったセッションの下に今の時刻の線
     private void MarkNow()
     {
         var last = Events.LastOrDefault(x => x.Start <= Now);

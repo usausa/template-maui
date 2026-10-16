@@ -23,11 +23,8 @@ public static partial class CarouselOption
         var recyclerView = handler.PlatformView;
         if (GetPageSnap(view))
         {
-            // ページの中にフォーカスがあると、位置を変えた後のレイアウトがフォーカスのあるページを基準にして前のページに戻る
-            // (画面に戻ったときにページの中の一覧がフォーカスを受ける) ので、ViewPager2 と同じくページより先に自分が受ける
             recyclerView.DescendantFocusability = DescendantFocusability.BeforeDescendants;
 
-            // 無ければ作って、スクロールの通知に加える
             Listeners.GetValue(recyclerView, x =>
             {
                 var listener = new PageSnapListener(view);
@@ -43,7 +40,6 @@ public static partial class CarouselOption
         }
     }
 
-    // 画面の外のページを作り直さずに残す数 (負の値は既定の 2 のまま)
     private static void UpdateCacheSize(CarouselViewHandler handler, CarouselView view)
     {
         var size = GetCacheSize(view);
@@ -53,9 +49,6 @@ public static partial class CarouselOption
         }
     }
 
-    // 標準のスナップ (MandatorySingle) は、最初のフリングの前や位置の変更の後に、指を止めてから離したり、
-    // 処理が重くてフリングにならなかったりすると、ページの途中で止まったままになる。
-    // 標準の処理が終わった後 (Post) にまだ止まっていれば、中央にいちばん近いページを中央に合わせる
     private sealed class PageSnapListener : RecyclerView.OnScrollListener
     {
         private readonly WeakReference<CarouselView> view;
@@ -65,7 +58,6 @@ public static partial class CarouselOption
             this.view = new WeakReference<CarouselView>(view);
         }
 
-        // 先頭に見えているページとそのずれから、スクロールの位置を出す
         public override void OnScrolled(RecyclerView recyclerView, int dx, int dy)
         {
             base.OnScrolled(recyclerView, dx, dy);

@@ -40,7 +40,6 @@ public sealed class OnnxVisionUsecase : IDisposable
             return;
         }
 
-        // 並行初期化によるInferenceSessionリークを防ぐ
         await initLock.WaitAsync();
         try
         {
@@ -98,7 +97,6 @@ public sealed class OnnxVisionUsecase : IDisposable
         }
         finally
         {
-            // 出力values読み取り完了までは入力バッファを返却しない
             ArrayPool<float>.Shared.Return(buffer);
         }
     }

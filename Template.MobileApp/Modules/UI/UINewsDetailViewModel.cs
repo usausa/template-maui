@@ -15,7 +15,6 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
 
     public double BodyFontSize => FontSizes[FontSizeIndex];
 
-    // 読んだ量 (0〜1)
     [ObservableProperty]
     public partial double ReadProgress { get; set; }
 
@@ -53,7 +52,6 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    // 一覧は Push の前の状態 (タブと位置) のまま残っている
     protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

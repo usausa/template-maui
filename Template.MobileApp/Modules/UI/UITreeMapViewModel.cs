@@ -98,7 +98,6 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             ImageHelper.ReplaceBitmap(Image, bitmap);
             Drawing.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
 
-            // シャッターフラッシュのトリガー
             CaptureCount++;
         }
         else

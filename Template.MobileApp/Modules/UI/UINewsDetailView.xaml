@@ -25,7 +25,6 @@
             <Color x:Key="NewsLineColor">#EEEEEE</Color>
             <Color x:Key="NewsButtonColor">#F1F3F5</Color>
 
-            <!-- カテゴリの名前・色・アイコン -->
             <s:MapToTextConverter x:Key="CategoryTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:NewsCategory.Top}"
@@ -77,7 +76,6 @@
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
-            <!-- 読んだ量のバー -->
             <Style x:Key="ReadProgressBar"
                    TargetType="ProgressBar">
                 <Setter Property="VerticalOptions" Value="Start" />
@@ -90,7 +88,6 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <!-- 絵 (カテゴリの色の面に模様とアイコン。スクロールでゆっくり動く) -->
             <Style x:Key="HeroGrid"
                    TargetType="Grid">
                 <Setter Property="HeightRequest" Value="240" />
@@ -171,7 +168,6 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- 本文 (絵の上に重なって流れるように白く塗る) -->
             <Style x:Key="ArticleStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="16,20,16,32" />
@@ -230,7 +226,6 @@
                 <Setter Property="TextColor" Value="{StaticResource NewsBodyColor}" />
             </Style>
 
-            <!-- 関連記事 -->
             <Style x:Key="RelatedTitleLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,12,0,0" />
@@ -276,7 +271,6 @@
     </ContentView.Resources>
 
     <Grid>
-        <!-- 絵はスクロールの半分の速さで動き、別の記事に移ると先頭に戻る -->
         <ScrollView Style="{StaticResource DetailScroll}"
                     behaviors:Scroll.ParallaxTarget="{x:Reference Hero}"
                     behaviors:Scroll.RatioCommand="{Binding ProgressCommand}"
@@ -322,7 +316,6 @@
                         </Label.FormattedText>
                     </Label>
 
-                    <!-- 保存・共有・文字の大きさ -->
                     <Grid Style="{StaticResource ActionGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto">
                         <Button Grid.Column="0"
@@ -377,7 +370,6 @@
                            Text="{Binding Context.Article.Body}"
                            FontSize="{Binding BodyFontSize}" />
 
-                    <!-- 関連記事 (タップでこの画面のまま切り替える) -->
                     <Label Style="{StaticResource RelatedTitleLabel}"
                            Text="関連記事" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Context.Related}">

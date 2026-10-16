@@ -25,7 +25,9 @@ public static class AnimationOption
     private const string FloatAnimationName = "AnimationOptionFloat";
     private const string EnterAnimationName = "AnimationOptionEnter";
 
-    // ------------------------------------------------------------------ Pulse
+    //--------------------------------------------------------------------------------
+    // Pulse
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty PulseProperty = BindableProperty.CreateAttached(
         "Pulse",
@@ -83,7 +85,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(PulseAnimationName);
 
-        // 正弦カーブで 1.0 → 1.05 → 1.0 を繰り返す
         element.Animate(
             PulseAnimationName,
             v => element.Scale = 1.0 + (0.05 * Math.Sin(v * Math.PI)),
@@ -93,7 +94,9 @@ public static class AnimationOption
             repeat: () => GetPulse(element));
     }
 
-    // ------------------------------------------------------------------ Bounce
+    //--------------------------------------------------------------------------------
+    // Bounce
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty BounceTriggerProperty = BindableProperty.CreateAttached(
         "BounceTrigger",
@@ -118,13 +121,11 @@ public static class AnimationOption
 
     private static void OnBounceTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドでは跳ねない
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
         }
 
-        // BounceValue 指定時は一致した要素のみ跳ねる
         var expected = GetBounceValue(bindable);
         if ((expected is null) || Equals(newValue, expected))
         {
@@ -136,7 +137,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(BounceAnimationName);
 
-        // 正弦カーブで 1.0 → 1.15 → 1.0 と跳ねる
         element.Animate(
             BounceAnimationName,
             v => element.Scale = 1.0 + (0.15 * Math.Sin(v * Math.PI)),
@@ -146,7 +146,9 @@ public static class AnimationOption
             (_, _) => element.Scale = 1.0);
     }
 
-    // ------------------------------------------------------------------ FadeIn
+    //--------------------------------------------------------------------------------
+    // FadeIn
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty FadeInTriggerProperty = BindableProperty.CreateAttached(
         "FadeInTrigger",
@@ -161,7 +163,6 @@ public static class AnimationOption
 
     private static void OnFadeInTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドではフェードしない
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
@@ -179,7 +180,9 @@ public static class AnimationOption
             (_, _) => element.Opacity = 1.0);
     }
 
-    // ------------------------------------------------------------------ Wave
+    //--------------------------------------------------------------------------------
+    // Wage
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty WaveProperty = BindableProperty.CreateAttached(
         "Wave",
@@ -234,7 +237,6 @@ public static class AnimationOption
             var delay = GetWaveDelay(element);
             if (delay > 0)
             {
-                // 要素毎に位相をずらして波を作る
                 element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
                 {
                     if (element.IsLoaded && GetWave(element))
@@ -263,7 +265,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(WaveAnimationName);
 
-        // 正弦カーブで上下に揺れ続ける
         element.Animate(
             WaveAnimationName,
             v => element.TranslationY = -5.0 * Math.Sin(v * Math.PI),
@@ -273,7 +274,9 @@ public static class AnimationOption
             repeat: () => GetWave(element));
     }
 
-    // ------------------------------------------------------------------ Ripple
+    //--------------------------------------------------------------------------------
+    // Ripple
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty RippleProperty = BindableProperty.CreateAttached(
         "Ripple",
@@ -341,7 +344,6 @@ public static class AnimationOption
         var delay = GetRippleDelay(element);
         if (delay > 0)
         {
-            // 要素毎に位相をずらして輪を重ねる
             element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
             {
                 if (element.IsLoaded && GetRipple(element))
@@ -360,7 +362,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(RippleAnimationName);
 
-        // 元の大きさから 1.5 倍へ広がりながら消える
         element.Animate(
             RippleAnimationName,
             v =>
@@ -381,7 +382,9 @@ public static class AnimationOption
         element.Opacity = 0;
     }
 
-    // ------------------------------------------------------------------ Spin (回り続ける。止めると 0 度に戻す)
+    //--------------------------------------------------------------------------------
+    // Spin
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty SpinProperty = BindableProperty.CreateAttached(
         "Spin",
@@ -440,7 +443,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(SpinAnimationName);
 
-        // 1 周 1.2 秒で回り続ける
         element.Animate(
             SpinAnimationName,
             v => element.Rotation = 360 * v,
@@ -450,7 +452,9 @@ public static class AnimationOption
             repeat: () => GetSpin(element));
     }
 
-    // ------------------------------------------------------------------ Blink (透明度の点滅)
+    //--------------------------------------------------------------------------------
+    // Blink
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty BlinkProperty = BindableProperty.CreateAttached(
         "Blink",
@@ -509,7 +513,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(BlinkAnimationName);
 
-        // 1 → 0.3 → 1 を 1 秒で繰り返す
         element.Animate(
             BlinkAnimationName,
             v => element.Opacity = 0.65 + (0.35 * Math.Cos(v * 2 * Math.PI)),
@@ -519,7 +522,9 @@ public static class AnimationOption
             repeat: () => GetBlink(element));
     }
 
-    // ------------------------------------------------------------------ Heartbeat (2 段に大きくなる鼓動)
+    //--------------------------------------------------------------------------------
+    // Heartbeat
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty HeartbeatProperty = BindableProperty.CreateAttached(
         "Heartbeat",
@@ -532,7 +537,6 @@ public static class AnimationOption
 
     public static void SetHeartbeat(BindableObject bindable, bool value) => bindable.SetValue(HeartbeatProperty, value);
 
-    // 毎分の回数 (72 回で 1 拍 833 ms)
     public static readonly BindableProperty HeartbeatRateProperty = BindableProperty.CreateAttached(
         "HeartbeatRate",
         typeof(int),
@@ -592,7 +596,6 @@ public static class AnimationOption
 
     private static void OnHeartbeatRateChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        // 回数が変わったら新しい間隔で打ち直す
         if ((bindable is VisualElement element) && GetHeartbeat(element) && element.IsLoaded)
         {
             StartHeartbeat(element);
@@ -620,7 +623,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(HeartbeatAnimationName);
 
-        // 1 拍の前半で 2 段に打ち、後半は休む
         element.Animate(
             HeartbeatAnimationName,
             v => element.Scale = v < 0.5 ? BeatScale(v / 0.5) : 1.0,
@@ -632,7 +634,6 @@ public static class AnimationOption
 
     private static void OnHeartbeatTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドでは打たない。HeartbeatValue の指定時は一致したときだけ 1 回打つ
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
@@ -654,11 +655,12 @@ public static class AnimationOption
             (_, _) => element.Scale = 1.0);
     }
 
-    // 1.0 → 1.18 → 1.0 → 1.1 → 1.0 (v は 0〜1)
     private static double BeatScale(double v) =>
         v < 0.5 ? 1.0 + (0.18 * Math.Sin(v / 0.5 * Math.PI)) : 1.0 + (0.1 * Math.Sin((v - 0.5) / 0.5 * Math.PI));
 
-    // ------------------------------------------------------------------ Jump (上へ跳ねて落ち、着地で縦につぶれて戻る)
+    //--------------------------------------------------------------------------------
+    // Jump
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty JumpTriggerProperty = BindableProperty.CreateAttached(
         "JumpTrigger",
@@ -683,7 +685,6 @@ public static class AnimationOption
 
     private static void OnJumpTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドでは跳ねない。JumpValue の指定時は一致したときだけ跳ねる
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
@@ -695,7 +696,6 @@ public static class AnimationOption
             return;
         }
 
-        // 途中で打ち切ると完了の処理で元の位置へ戻るので、その後の値を基準にする
         element.AbortAnimation(JumpAnimationName);
         var baseTranslationY = element.TranslationY;
         var baseAnchorY = element.AnchorY;
@@ -706,13 +706,11 @@ public static class AnimationOption
             {
                 if (v < 0.7)
                 {
-                    // 放物線で 14 上がって落ちる
                     var p = v / 0.7;
                     element.TranslationY = baseTranslationY - (56 * p * (1 - p));
                 }
                 else
                 {
-                    // 下の端を起点に縦につぶれて戻る
                     var s = Math.Sin((v - 0.7) / 0.3 * Math.PI);
                     element.TranslationY = baseTranslationY;
                     element.ScaleY = 1 - (0.18 * s);
@@ -731,7 +729,9 @@ public static class AnimationOption
             });
     }
 
-    // ------------------------------------------------------------------ Float (ゆっくり上下に漂う)
+    //--------------------------------------------------------------------------------
+    // Float
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty FloatProperty = BindableProperty.CreateAttached(
         "Float",
@@ -790,7 +790,6 @@ public static class AnimationOption
     {
         element.AbortAnimation(FloatAnimationName);
 
-        // 3 秒で 6 上がって戻る
         element.Animate(
             FloatAnimationName,
             v => element.TranslationY = -3 * (1 - Math.Cos(v * 2 * Math.PI)),
@@ -800,7 +799,9 @@ public static class AnimationOption
             repeat: () => GetFloat(element));
     }
 
-    // ------------------------------------------------------------------ Flash
+    //--------------------------------------------------------------------------------
+    // Flash
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty FlashTriggerProperty = BindableProperty.CreateAttached(
         "FlashTrigger",
@@ -815,7 +816,6 @@ public static class AnimationOption
 
     private static void OnFlashTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドでは光らせない
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
@@ -833,7 +833,9 @@ public static class AnimationOption
             (_, _) => element.Opacity = 0);
     }
 
-    // ------------------------------------------------------------------ Highlight
+    //--------------------------------------------------------------------------------
+    // Highlight
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty HighlightTriggerProperty = BindableProperty.CreateAttached(
         "HighlightTrigger",
@@ -858,7 +860,6 @@ public static class AnimationOption
 
     private static void OnHighlightTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドではハイライトしない
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
@@ -882,7 +883,9 @@ public static class AnimationOption
             (_, _) => element.BackgroundColor = original);
     }
 
-    // ------------------------------------------------------------------ ProgressTo (ProgressBar の伸長アニメーション)
+    //--------------------------------------------------------------------------------
+    // ProgressTo
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ProgressToProperty = BindableProperty.CreateAttached(
         "ProgressTo",
@@ -908,7 +911,6 @@ public static class AnimationOption
         }
         else
         {
-            // 表示前に値が確定した場合は Loaded 時に 0 から伸ばす
             bar.Loaded -= OnProgressBarLoaded;
             bar.Loaded += OnProgressBarLoaded;
         }
@@ -923,7 +925,9 @@ public static class AnimationOption
         }
     }
 
-    // ------------------------------------------------------------------ Hold (長押しで 0-1 を進める)
+    //--------------------------------------------------------------------------------
+    // Hold
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty HoldCommandProperty = BindableProperty.CreateAttached(
         "HoldCommand",
@@ -946,7 +950,6 @@ public static class AnimationOption
 
     public static void SetHoldDuration(BindableObject bindable, int value) => bindable.SetValue(HoldDurationProperty, value);
 
-    // 進行中の値 (0-1)。途中で離したときの巻き戻しに使う
     private static readonly BindableProperty HoldProgressProperty = BindableProperty.CreateAttached(
         "HoldProgress",
         typeof(double),
@@ -981,7 +984,6 @@ public static class AnimationOption
 
         button.AbortAnimation(HoldAnimationName);
 
-        // 完走済みなら先頭から、途中なら続きから進める
         var progress = (double)button.GetValue(HoldProgressProperty);
         if (progress >= 1d)
         {
@@ -1012,7 +1014,6 @@ public static class AnimationOption
 
         button.AbortAnimation(HoldAnimationName);
 
-        // 完走前に離したら素早く巻き戻す
         var progress = (double)button.GetValue(HoldProgressProperty);
         if (progress is <= 0d or >= 1d)
         {
@@ -1042,7 +1043,9 @@ public static class AnimationOption
         }
     }
 
-    // ------------------------------------------------------------------ Enter
+    //--------------------------------------------------------------------------------
+    // Enter
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty EnterAnimationProperty = BindableProperty.CreateAttached(
         "EnterAnimation",
@@ -1076,14 +1079,12 @@ public static class AnimationOption
 
     public static void SetEnterTrigger(BindableObject bindable, object? value) => bindable.SetValue(EnterTriggerProperty, value);
 
-    // 演出で TranslationY を動かすため、要素が元々持っていた値(Style 等の静的オフセット)を退避しておく
     private static readonly BindableProperty EnterBaseTranslationYProperty = BindableProperty.CreateAttached(
         "EnterBaseTranslationY",
         typeof(double?),
         typeof(AnimationOption),
         null);
 
-    // 初回呼び出し時のみ現在値を基準として記憶する(2回目以降は演出中の値を拾わないようにする)
     private static double GetEnterBaseTranslationY(VisualElement element)
     {
         if (element.GetValue(EnterBaseTranslationYProperty) is double baseTranslationY)
@@ -1124,7 +1125,6 @@ public static class AnimationOption
 
     private static void OnEnterTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        // 初回バインドでは再生しない(表示時の再生は Loaded 側が担う)
         if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
         {
             return;
@@ -1143,7 +1143,6 @@ public static class AnimationOption
     {
         if (sender is VisualElement element)
         {
-            // 遅延中に見えてしまわないよう先に初期状態へ
             PrepareEnter(element);
             StartEnterDelayed(element);
         }
@@ -1169,14 +1168,12 @@ public static class AnimationOption
         }
         else if (GetEnterAnimation(element) == EnterAnimationType.Grow)
         {
-            // 上の端を起点に縦に伸ばす
             GetEnterBaseTranslationY(element);
             element.AnchorY = 0;
             element.ScaleY = 0;
         }
         else
         {
-            // Pop は TranslationY を使わないが、基準値の取得漏れを防ぐためここで確定させる
             GetEnterBaseTranslationY(element);
             element.Opacity = 0;
             element.Scale = 0;
@@ -1188,7 +1185,6 @@ public static class AnimationOption
         var delay = GetEnterDelay(element);
         if (delay > 0)
         {
-            // 要素毎に開始をずらして時間差表示を作る
             element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
             {
                 if (element.IsLoaded && (GetEnterAnimation(element) != EnterAnimationType.None))
@@ -1209,7 +1205,6 @@ public static class AnimationOption
 
         if (GetEnterAnimation(element) == EnterAnimationType.FadeUp)
         {
-            // 下から浮き上がりながらフェードイン
             var baseTranslationY = GetEnterBaseTranslationY(element);
             element.Animate(
                 EnterAnimationName,
@@ -1235,7 +1230,6 @@ public static class AnimationOption
         }
         else
         {
-            // 0 → 1.15 → 1.0 と弾んで出現
             element.Animate(
                 EnterAnimationName,
                 v =>
@@ -1253,16 +1247,15 @@ public static class AnimationOption
     private static void ResetEnter(VisualElement element)
     {
         element.Opacity = 1;
-        // 0 固定にすると Style 等で指定された静的な TranslationY を壊すため、退避した基準値へ戻す
         element.TranslationY = GetEnterBaseTranslationY(element);
         element.Scale = 1;
         element.ScaleY = 1;
     }
 
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
     private static Color LerpColor(Color from, Color to, double t) =>
-        new(
-            (float)(from.Red + ((to.Red - from.Red) * t)),
-            (float)(from.Green + ((to.Green - from.Green) * t)),
-            (float)(from.Blue + ((to.Blue - from.Blue) * t)),
-            (float)(from.Alpha + ((to.Alpha - from.Alpha) * t)));
+        new((float)(from.Red + ((to.Red - from.Red) * t)), (float)(from.Green + ((to.Green - from.Green) * t)), (float)(from.Blue + ((to.Blue - from.Blue) * t)), (float)(from.Alpha + ((to.Alpha - from.Alpha) * t)));
 }

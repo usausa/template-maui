@@ -10,7 +10,6 @@ public sealed partial class UICartViewModel : AppViewModelBase
 
     public string Points { get; } = "12,540 pt 利用可能";
 
-    // 確定した注文 (IsCompleted の後に表示する)
     [ObservableProperty]
     public partial ShopOrder Order { get; set; } = default!;
 
@@ -46,7 +45,6 @@ public sealed partial class UICartViewModel : AppViewModelBase
             Order = Context.Checkout();
             IsCompleted = true;
         });
-        // 一覧の画面まで戻る
         ContinueCommand = MakeAsyncCommand(() => Navigator.PopAsync(Navigator.StackedCount - 1));
     }
 

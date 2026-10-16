@@ -5,12 +5,10 @@ using Azure.AI.Vision.ImageAnalysis;
 
 public sealed record TagResult(string Name, float Confidence);
 
-// Azure AI Vision (Image Analysis 4.0)。接続先とキーは設定から呼び出しのたびに取得する。失敗は Result の Error (例外のメッセージ)
 public sealed class AzureVisionUsecase
 {
     private const int JpegQuality = 90;
 
-    // 枠を描く物体 / 人物の信頼度の下限
     private const float MinConfidence = 0.5f;
 
     private readonly Settings settings;
@@ -20,27 +18,23 @@ public sealed class AzureVisionUsecase
         this.settings = settings;
     }
 
-    // 物体 (枠 + ラベル + 信頼度)
     public Task<Result<DetectResult[]>> DetectObjectsAsync(SKBitmap bitmap) =>
         AnalyzeAsync(bitmap, VisualFeatures.Objects, default, result => result.Objects.Values
             .Where(static x => (x.Tags.Count > 0) && (x.Tags[0].Confidence >= MinConfidence))
             .Select(x => ToDetectResult(x.BoundingBox, bitmap, x.Tags[0].Confidence, x.Tags[0].Name))
             .ToArray());
 
-    // 人物 (枠 + 信頼度)
     public Task<Result<DetectResult[]>> DetectPeopleAsync(SKBitmap bitmap) =>
         AnalyzeAsync(bitmap, VisualFeatures.People, default, result => result.People.Values
             .Where(static x => x.Confidence >= MinConfidence)
             .Select(x => ToDetectResult(x.BoundingBox, bitmap, x.Confidence, "person"))
             .ToArray());
 
-    // タグ (画像全体の内容。日本語)
     public Task<Result<TagResult[]>> DetectTagsAsync(SKBitmap bitmap) =>
         AnalyzeAsync(bitmap, VisualFeatures.Tags, new ImageAnalysisOptions { Language = "ja" }, static result => result.Tags.Values
             .Select(x => new TagResult(x.Name, x.Confidence))
             .ToArray());
 
-    // 文字 (行ごとの外接矩形 + テキスト)
     public Task<Result<DetectResult[]>> ReadTextAsync(SKBitmap bitmap) =>
         AnalyzeAsync(bitmap, VisualFeatures.Read, default, result => result.Read.Blocks
             .SelectMany(static x => x.Lines)

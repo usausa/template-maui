@@ -73,7 +73,6 @@ public static partial class EntryOption
         }
     }
 
-    // SearchView の下線は入力欄ではなく、入力欄を囲む search_plate の背景
     private static void UpdateSearchBarNoBorder(View searchView, BindableObject element)
     {
         var plate = searchView.FindViewById(_Microsoft.Android.Resource.Designer.ResourceConstant.Id.search_plate);
@@ -112,7 +111,6 @@ public static partial class EntryOption
     {
         var value = GetHandleEnterKey(element);
 
-        // Mapper再実行時の多重購読を防ぐため一度解除してから購読する
         editText.EditorAction -= OnEditorAction;
         if (value)
         {
@@ -120,7 +118,6 @@ public static partial class EntryOption
         }
     }
 
-    // ハードキーの Enter では Android の既定の次の欄への移動をさせない(新しい Android では ActionId が ImeNull で来ない)
     private static void OnEditorAction(object? sender, TextView.EditorActionEventArgs e)
     {
         if (e.Event?.KeyCode == Keycode.Enter)

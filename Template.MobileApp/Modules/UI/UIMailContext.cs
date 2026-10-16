@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Modules.UI;
 
-// 一覧と本文が共有する (一覧を開いている間)
 public sealed partial class UIMailContext : ObservableObject
 {
     private readonly MailBox box = new(MailSample.LoadMails(DateTime.Now));
@@ -13,7 +12,6 @@ public sealed partial class UIMailContext : ObservableObject
     [ObservableProperty]
     public partial IReadOnlyList<MailGroup> Groups { get; set; } = [];
 
-    // 本文の画面のメール (Push の前に設定する)
     [ObservableProperty]
     public partial MailMessage Selected { get; set; } = default!;
 

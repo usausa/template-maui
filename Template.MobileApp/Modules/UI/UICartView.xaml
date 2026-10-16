@@ -448,7 +448,6 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <!-- カートの行と合計は文脈 (UIShopContext)。レジに進むと注文を確定して完了を出す -->
     <Grid Style="{StaticResource CartGrid}"
           RowDefinitions="*,Auto">
 
@@ -475,7 +474,7 @@
                            Text="カートは空です" />
                 </VerticalStackLayout>
 
-                <!-- Cart items (swipe left to delete) -->
+                <!-- Cart items -->
                 <Border Style="{StaticResource ItemsBorder}"
                         IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Context.Store.Cart}">

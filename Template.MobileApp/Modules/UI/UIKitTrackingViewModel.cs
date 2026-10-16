@@ -8,7 +8,6 @@ public sealed class UIKitTrackingStep
     public bool Current { get; init; }
     public int Delay { get; init; }
 
-    // 済んだ段階の線を伸ばし始める時間 (ms)。上から順に伸ばす
     public int LineDelay { get; init; }
     public bool IsComplete => Done;
     public bool IsCurrent => Current;
@@ -25,11 +24,9 @@ public sealed partial class UIKitTrackingViewModel : AppViewModelBase
 
     public IReadOnlyList<UIKitTrackingStep> Steps { get; }
 
-    // 到着までの分
     [ObservableProperty]
     public partial int RemainMinutes { get; set; }
 
-    // 配達を始めてから到着の予定までの進み具合
     [ObservableProperty]
     public partial double DeliveryProgress { get; set; }
 

@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Models.Sample;
 
-// CollectionView による訪問先一覧。行タップで選択、右端で展開、並替パネルで複数キーのソート
 public sealed partial class UIVisitViewModel : AppViewModelBase
 {
     private const int VisitCount = 40;
@@ -13,7 +12,6 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
 
     private readonly List<VisitCard> source = [];
 
-    // 並替パネルで選んだ順 (先頭が第 1 キー)
     private readonly List<VisitSortKey> activeKeys = [];
 
     public ObservableCollection<VisitCard> Cards { get; } = [];
@@ -127,7 +125,6 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    // 未訪問を一括選択 (すべて選択済みなら解除)
     protected override Task OnNotifyFunction3()
     {
         var planned = source.Where(static x => x.Status == VisitStatus.Planned).ToList();
@@ -172,7 +169,6 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
         ApplySort();
     }
 
-    // 第 1 キーの再選択は昇降の反転、それ以外は先頭に積む (最大 3 キー)
     private void SelectSortKey(VisitSortKey key)
     {
         if ((activeKeys.Count > 0) && ReferenceEquals(activeKeys[0], key))
@@ -205,7 +201,6 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
         ApplySort();
     }
 
-    // 並べ替えを解除する (コード順)
     private void ClearSort()
     {
         activeKeys.Clear();
@@ -240,7 +235,6 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
         SortText = activeKeys.Count > 0 ? String.Join(" › ", activeKeys.Select(static x => x.Name + (x.Descending ? " ↓" : " ↑"))) : "なし";
     }
 
-    // 選択・展開の状態はカードが持つため、並べ替えでは順番だけを差し替える
     private void ApplySort()
     {
         var comparer = Comparer<VisitCard>.Create((x, y) =>
@@ -267,7 +261,6 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
     private void UpdateSelectedCount() => SelectedCount = source.Count(static x => x.IsSelected);
 }
 
-// 文言と色は XAML 側のコンバーター (MapToText / MapToColor) で決める
 public sealed partial class VisitCard : ObservableObject
 {
     public VisitInfo Info { get; }
@@ -316,7 +309,6 @@ public sealed partial class VisitSortKey : ObservableObject
 
     public Comparison<VisitInfo> Compare { get; }
 
-    // 並替パネルに出す順位 (0 = 未使用)
     [ObservableProperty]
     public partial int Priority { get; set; }
 

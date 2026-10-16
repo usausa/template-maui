@@ -21,7 +21,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- 天気と昼夜の空 -->
             <LinearGradientBrush x:Key="ClearSkyBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Offset="0" Color="#0D5BB8" />
                 <GradientStop Offset="0.5" Color="#2383DE" />
@@ -58,7 +57,6 @@
                 <GradientStop Offset="1" Color="#2B4478" />
             </LinearGradientBrush>
 
-            <!-- 空の光 (昼は日差し、夜は月明かり) -->
             <RadialGradientBrush x:Key="DayGlowBrush">
                 <GradientStop Offset="0" Color="#99FFF3C2" />
                 <GradientStop Offset="0.45" Color="#33FFF3C2" />
@@ -70,7 +68,6 @@
                 <GradientStop Offset="1" Color="#00BFD0FF" />
             </RadialGradientBrush>
 
-            <!-- 注意報は橙、警報は赤 -->
             <LinearGradientBrush x:Key="AdvisoryBrush" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Offset="0" Color="#F59E0B" />
                 <GradientStop Offset="1" Color="#EA580C" />
@@ -80,7 +77,6 @@
                 <GradientStop Offset="1" Color="#B91C1C" />
             </LinearGradientBrush>
 
-            <!-- ゲージの色 (円弧の始まりから終わり) -->
             <LinearGradientBrush x:Key="UvBrush">
                 <GradientStop Offset="0" Color="#4ADE80" />
                 <GradientStop Offset="0.3" Color="#FACC15" />
@@ -106,7 +102,6 @@
             <Color x:Key="WeatherSaturdayColor">#A5CCFF</Color>
             <Color x:Key="WeatherSundayColor">#FFABAB</Color>
 
-            <!-- 天気の絵文字 (夜は月と雲) と名前 -->
             <s:MapToTextConverter x:Key="DayIconConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:WeatherCondition.Clear}"
@@ -156,7 +151,6 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
-            <!-- UV の段階の名前と色 -->
             <s:MapToTextConverter x:Key="UvLevelTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:WeatherUvLevel.Low}"
@@ -186,7 +180,6 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <!-- 生活指数の名前・絵文字・色と、段階の文言 -->
             <s:MapToTextConverter x:Key="IndexNameConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:WeatherIndexKind.Laundry}"
@@ -237,7 +230,6 @@
             </s:MapToColorConverter>
             <converters:WeatherIndexTextConverter x:Key="IndexTextConverter" />
 
-            <!-- 注意報・警報の名前と説明 -->
             <s:MapToTextConverter x:Key="AlertKindConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:WeatherAlertKind.HeavyRain}"
@@ -275,7 +267,6 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
-            <!-- 気圧の傾向と月の名前 -->
             <s:MapToTextConverter x:Key="PressureTrendConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:WeatherPressureTrend.Falling}"
@@ -309,7 +300,6 @@
 
             <converters:CompassPointConverter x:Key="CompassPointConverter" />
 
-            <!-- 全体 -->
             <Style x:Key="WeatherRootGrid"
                    TargetType="Grid">
                 <Setter Property="Background" Value="{StaticResource ClearSkyBrush}" />
@@ -338,7 +328,6 @@
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <!-- 現在 -->
             <Style x:Key="CurrentStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,8,0,4" />
@@ -402,7 +391,6 @@
                 <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
             </Style>
 
-            <!-- 上に残る小さな見出し -->
             <Style x:Key="CompactBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,8,0,0" />
@@ -436,7 +424,6 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <!-- 注意報・警報 -->
             <Style x:Key="AlertBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="14,12" />
@@ -539,7 +526,6 @@
                 <Setter Property="Color" Value="{StaticResource WeatherLineColor}" />
             </Style>
 
-            <!-- 時間ごと -->
             <Style x:Key="HourCollection"
                    TargetType="CollectionView">
                 <Setter Property="HeightRequest" Value="160" />
@@ -589,7 +575,6 @@
                 <Setter Property="TextColor" Value="{StaticResource WeatherRainColor}" />
             </Style>
 
-            <!-- 週間 -->
             <Style x:Key="DayGrid"
                    TargetType="Grid">
                 <Setter Property="HeightRequest" Value="48" />
@@ -654,7 +639,6 @@
                 <Setter Property="EndColor" Value="#FDBA74" />
             </Style>
 
-            <!-- 生活指数 -->
             <Style x:Key="IndexGrid"
                    TargetType="cmc:StaggeredGrid">
                 <Setter Property="Columns" Value="3" />
@@ -703,7 +687,6 @@
                 <Setter Property="HeightRequest" Value="6" />
             </Style>
 
-            <!-- 詳細 -->
             <Style x:Key="DetailGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -831,7 +814,6 @@
     </ContentView.Resources>
 
     <Grid Style="{StaticResource WeatherRootGrid}">
-        <!-- 背景は天気で変え、夜は天気によらず夜の空にする (後の方が優先) -->
         <Grid.Triggers>
             <DataTrigger TargetType="Grid"
                          Binding="{Binding Forecast.Condition}"
@@ -865,7 +847,6 @@
             </DataTrigger>
         </Grid.Triggers>
 
-        <!-- 空の光 -->
         <Ellipse Style="{StaticResource SkyGlowEllipse}">
             <Ellipse.Triggers>
                 <DataTrigger TargetType="Ellipse"
@@ -879,12 +860,10 @@
         <RefreshView Style="{StaticResource WeatherRefresh}"
                      Command="{Binding RefreshCommand}"
                      IsRefreshing="{Binding IsRefreshing}">
-            <!-- スクロールすると大きな見出しが小さく薄くなり、上に小さな見出しが残る -->
             <ScrollView behaviors:Scroll.CollapseTarget="{x:Reference CurrentHeader}"
                         behaviors:Scroll.CollapsedTarget="{x:Reference CompactHeader}">
                 <VerticalStackLayout Style="{StaticResource WeatherStack}">
 
-                    <!-- 現在 -->
                     <VerticalStackLayout x:Name="CurrentHeader"
                                          Style="{StaticResource CurrentStack}">
                         <Label Style="{StaticResource LocationLabel}"
@@ -922,7 +901,6 @@
                         </Label>
                     </VerticalStackLayout>
 
-                    <!-- 注意報・警報 (タップで説明を開く) -->
                     <Border Style="{StaticResource AlertBorder}"
                             IsVisible="{Binding Forecast.HasAlerts}">
                         <Border.Triggers>
@@ -999,7 +977,6 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- 時間ごと (線は項目の間を空けずに並べてつなぐ) -->
                     <Border Style="{StaticResource WeatherCardBorder}">
                         <VerticalStackLayout Style="{StaticResource CardStack}">
                             <Label Style="{StaticResource CardTitleLabel}"
@@ -1068,7 +1045,6 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- 週間 (バーの位置と幅は週全体の範囲に合わせる) -->
                     <Border Style="{StaticResource WeatherCardBorder}">
                         <VerticalStackLayout Style="{StaticResource CardStack}">
                             <Label Style="{StaticResource CardTitleLabel}"
@@ -1132,7 +1108,6 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- 生活指数 (5 段階) -->
                     <ContentView behaviors:LazyViewOption.Deferred="True">
                         <behaviors:LazyViewOption.Template>
                             <DataTemplate x:DataType="module:UIWeatherViewModel">
@@ -1166,7 +1141,6 @@
                         </behaviors:LazyViewOption.Template>
                     </ContentView>
 
-                    <!-- 詳細 -->
                     <ContentView behaviors:LazyViewOption.Deferred="True">
                         <behaviors:LazyViewOption.Template>
                             <DataTemplate x:DataType="module:UIWeatherViewModel">
@@ -1174,7 +1148,6 @@
                                       RowDefinitions="Auto,Auto,Auto"
                                       ColumnDefinitions="*,*">
 
-                                    <!-- 風 (矢印は風下を向く) -->
                                     <Border Grid.Row="0" Grid.Column="0"
                                             Style="{StaticResource WeatherCardBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
@@ -1194,7 +1167,6 @@
                                         </VerticalStackLayout>
                                     </Border>
 
-                                    <!-- UV (段階の色の円弧に今の値の印) -->
                                     <Border Grid.Row="0" Grid.Column="1"
                                             Style="{StaticResource WeatherCardBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
@@ -1216,7 +1188,6 @@
                                         </VerticalStackLayout>
                                     </Border>
 
-                                    <!-- 湿度 -->
                                     <Border Grid.Row="1" Grid.Column="0"
                                             Style="{StaticResource WeatherCardBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
@@ -1237,7 +1208,6 @@
                                         </VerticalStackLayout>
                                     </Border>
 
-                                    <!-- 気圧 (針は今の値、目盛りは 10 hPa ごと) -->
                                     <Border Grid.Row="1" Grid.Column="1"
                                             Style="{StaticResource WeatherCardBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
@@ -1258,7 +1228,6 @@
                                         </VerticalStackLayout>
                                     </Border>
 
-                                    <!-- 日の出・日の入り (太陽は今の位置) -->
                                     <Border Grid.Row="2" Grid.Column="0"
                                             Style="{StaticResource WeatherCardBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
@@ -1283,7 +1252,6 @@
                                         </VerticalStackLayout>
                                     </Border>
 
-                                    <!-- 月の満ち欠け -->
                                     <Border Grid.Row="2" Grid.Column="1"
                                             Style="{StaticResource WeatherCardBorder}">
                                         <VerticalStackLayout Style="{StaticResource DetailStack}">
@@ -1308,7 +1276,6 @@
             </ScrollView>
         </RefreshView>
 
-        <!-- 上に残る小さな見出し -->
         <Border x:Name="CompactHeader"
                 Style="{StaticResource CompactBorder}">
             <HorizontalStackLayout Style="{StaticResource CompactRow}">

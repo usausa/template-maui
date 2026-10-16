@@ -14,7 +14,6 @@ public static partial class CarouselOption
 
     public static void SetPageSnap(BindableObject bindable, bool value) => bindable.SetValue(PageSnapProperty, value);
 
-    // PageSnap のときのスクロールの位置 (ページの単位。2.5 は 2 ページ目と 3 ページ目の真ん中)
     public static readonly BindableProperty PagePositionProperty = BindableProperty.CreateAttached(
         "PagePosition",
         typeof(double),

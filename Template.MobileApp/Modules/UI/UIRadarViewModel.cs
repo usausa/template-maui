@@ -17,7 +17,6 @@ public sealed class UIRadarViewModel : AppViewModelBase
     {
         UpdateTargets();
 
-        // 一定間隔でターゲットを入れ替えるデモ駆動
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(5);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => UpdateTargets()));
