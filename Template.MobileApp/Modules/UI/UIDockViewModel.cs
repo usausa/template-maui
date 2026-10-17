@@ -37,7 +37,7 @@ public sealed class UIDockViewModel : AppViewModelBase
     {
         this.dialog = dialog;
         this.screen = screen;
-        loader = new DeckButtonLoader(fileSystem, dialog, deviceInformation);
+        loader = new DeckButtonLoader(fileSystem, dialog, deviceInformation, CreateCommand);
 
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(1);
@@ -89,7 +89,7 @@ public sealed class UIDockViewModel : AppViewModelBase
         {
             foreach (var button in DeckSample.LoadButtons())
             {
-                rootButtons.Add(await CreateButtonAsync(button));
+                rootButtons.Add(await loader.LoadAsync(button));
             }
 
             foreach (var folder in DeckSample.LoadFolders())
@@ -97,7 +97,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 var buttons = new List<DeckButtonInfo>();
                 foreach (var button in folder.Buttons)
                 {
-                    buttons.Add(await CreateButtonAsync(button));
+                    buttons.Add(await loader.LoadAsync(button));
                 }
 
                 folderButtons[folder.Name] = buttons;
@@ -105,13 +105,6 @@ public sealed class UIDockViewModel : AppViewModelBase
 
             ShowButtons(rootButtons);
         });
-    }
-
-    private async ValueTask<DeckButtonInfo> CreateButtonAsync(DeckButton button)
-    {
-        var info = await loader.LoadAsync(button);
-        info.Command = CreateCommand(button.Action, info);
-        return info;
     }
 
     private async Task ExecuteAsync(string parameter)
