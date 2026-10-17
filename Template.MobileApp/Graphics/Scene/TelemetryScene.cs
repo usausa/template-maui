@@ -178,7 +178,6 @@ public sealed class TelemetryScene : SceneObject
 
     private readonly CarSim sim = new();
 
-    // 縦の配置。下の 6 項目は横長の枠にし、余った高さを回転計・ブーストとギアの行に回す
     private readonly record struct DashLayout(float GaugeY, float GaugeR, float GearY, float GearH, float SideR, float MiniTop, float CellH);
 
     private SKShader? glow;
@@ -218,7 +217,6 @@ public sealed class TelemetryScene : SceneObject
         var cellH = Math.Clamp(vh * 0.12f, 72f, 90f);
         var miniTop = vh - 12f - (cellH * 2f) - 8f;
 
-        // 回転計の行は目盛りと上下の文字を含めて 2r + 20 程度の高さ
         var gaugeR = Math.Clamp(((miniTop - speedBottom) * 0.48f) - 23f, 52f, 70f);
         var gaugeY = speedBottom + 12f + gaugeR + 19f;
 
@@ -274,7 +272,6 @@ public sealed class TelemetryScene : SceneObject
         DrawText(canvas, "POS", 352f, 28f, 8f, Dim);
         DrawGlowText(canvas, "P04", 352f, 46f, 14f, White, 3f, bold: true);
 
-        // ダブルバッファ試験 (D8) の現在モード
         DrawText(canvas, UseDoubleBuffer ? "MODE BUFFER" : "MODE DIRECT", 16f, 60f, 8f, Dim);
     }
 
@@ -330,7 +327,6 @@ public sealed class TelemetryScene : SceneObject
         var frac = Math.Clamp(sim.Rpm / maxRpm, 0f, 1f);
         var inRed = sim.Rpm >= redlineRpm;
 
-        // 不変の盤面 (レッドライン帯 / トラック / 目盛) はキャッシュから再生
         DrawCachedLayer(canvas, "tacho", BaseWidth, cy + r + 16f, (Scene: this, X: cx, Y: cy, Radius: r), static (c, state) => state.Scene.DrawTachometerChrome(c, state.X, state.Y, state.Radius, start, sweep, maxRpm, redlineRpm));
 
         Stroke.StrokeCap = SKStrokeCap.Butt;
@@ -423,7 +419,7 @@ public sealed class TelemetryScene : SceneObject
 
         canvas.Restore();
 
-        // Segment ring (左下始まりの時計回り)
+        // Segment ring
         const int segments = 22;
         var litSegments = (int)(sim.BoostCharge * segments);
         var ringColor = sim.BoostActive
@@ -542,7 +538,6 @@ public sealed class TelemetryScene : SceneObject
         const float cx = 334f;
         var r = layout.SideR;
 
-        // 不変の盤面 (外円 / 十字 / 破線円) はキャッシュから再生
         DrawCachedLayer(canvas, "gforce", BaseWidth, cy + r + 16f, (Scene: this, X: cx, Y: cy, Radius: r), static (c, state) => state.Scene.DrawGForceChrome(c, state.X, state.Y, state.Radius));
 
         var total = MathF.Sqrt((sim.LatG * sim.LatG) + (sim.LonG * sim.LonG));
@@ -599,7 +594,6 @@ public sealed class TelemetryScene : SceneObject
         DrawMiniGauge(canvas, t, 332f, cy2, cellH, "TURBO", sim.TurboBar, 0f, 3f, "bar", Amber, sim.TurboBar > 2.6f);
     }
 
-    // 半円アークの中に数値を描く小型計器
     private void DrawMiniGauge(SKCanvas canvas, float t, float cx, float cy, float h, string label, float value, float min, float max, string unit, SKColor accent, bool warning)
     {
         const float w = 124f;
@@ -610,14 +604,14 @@ public sealed class TelemetryScene : SceneObject
 
         DrawCutPanel(canvas, x, y, w, h, 10f, Panel, warning ? Red.WithAlpha((byte)(flash ? 200 : 90)) : PanelLine, warning ? 1.8f : 1.4f);
 
-        // 角のアクセント
+        // Corner accents
         Fill.Color = color.WithAlpha(160);
         canvas.DrawRect(x + 4f, y + 8f, 2f, 14f, Fill);
         canvas.DrawRect(x + w - 6f, y + h - 22f, 2f, 14f, Fill);
 
         DrawText(canvas, label, cx, y + 15f, 8.5f, Dim, align: SKTextAlign.Center);
 
-        // Half arc (横長の枠の下寄りに置き、上の余白を減らす)
+        // Half arc
         var gy = y + (h * 0.7f);
         var r = MathF.Min(30f, h * 0.34f);
         Stroke.StrokeCap = SKStrokeCap.Round;
@@ -632,11 +626,11 @@ public sealed class TelemetryScene : SceneObject
             canvas.DrawArc(new SKPoint(cx, gy), r, 180f, 180f * norm, false, Stroke);
         }
 
-        // 針先ドット
+        // Needle
         Fill.Color = White;
         canvas.DrawCircle(AngleHelper.GetPoint(new SKPoint(cx, gy), r, 180f + (180f * norm)), 2.6f, Fill);
 
-        // 目盛
+        // Ticks
         Stroke.StrokeCap = SKStrokeCap.Butt;
         Stroke.Color = Dim.WithAlpha(150);
         Stroke.StrokeWidth = 1.4f;
@@ -646,7 +640,7 @@ public sealed class TelemetryScene : SceneObject
             canvas.DrawLine(AngleHelper.GetPoint(new SKPoint(cx, gy), r + 5f, tickAngle), AngleHelper.GetPoint(new SKPoint(cx, gy), r + 9f, tickAngle), Stroke);
         }
 
-        // アークの中に値と単位
+        // Unit
         var text = max <= 20f ? $"{value:0.0}" : $"{(int)value}";
         DrawGlowText(canvas, text, cx, gy + 4f, 18f, flash ? Red : White, 4f, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, unit, cx, gy + 18f, 8f, Dim, align: SKTextAlign.Center);

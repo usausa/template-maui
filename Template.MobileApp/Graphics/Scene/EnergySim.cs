@@ -107,7 +107,6 @@ internal static class EnergyMath
         }
     }
 
-    // -1 から 1 の滑らかな値の雑音 (同じ入力なら同じ値になる)
     public static float Noise(float x, int seed)
     {
         var i = (int)MathF.Floor(x);
@@ -121,7 +120,6 @@ internal static class EnergyMath
 //--------------------------------------------------------------------------------
 // Simulation
 //--------------------------------------------------------------------------------
-// 工場の 1 日の電力と熱のモデル。時刻は端末の時計で、起動時は 0 時から今までを 1 分ごとに計算し直す
 internal sealed class EnergySim
 {
     public const float Target = 1300f;
@@ -238,7 +236,6 @@ internal sealed class EnergySim
 
     public float TodaySelfRatio => TodayLoad > 1f ? (todayEnergy[(int)EnergyNode.Solar] + todayEnergy[(int)EnergyNode.Cgs]) / TodayLoad : 0f;
 
-    // 系統の電気 0.441 kg/kWh、都市ガス 2.23 kg/m3
     public float TodayCo2 => (todayEnergy[(int)EnergyNode.Grid] * 0.000441f) + (todayGas * 0.00223f);
 
     public float TodayCost => (todayEnergy[(int)EnergyNode.Grid] * 24f) + (todayGas * 95f);
@@ -399,7 +396,6 @@ internal sealed class EnergySim
         Soc = Math.Clamp(Soc + ((((BatteryIn * 0.95f) - (BatteryOut / 0.95f)) * dt / 3600f) / BatteryCapacity), 0f, 1f);
         Grid = gridWithoutBattery + BatteryIn - BatteryOut;
 
-        // CGS は発電 40%・熱回収 34%、ボイラーは効率 90%
         GasCgs = Cgs / 0.4f;
         CgsHeat = Cgs * 0.85f;
         CgsLoss = GasCgs - Cgs - CgsHeat;
@@ -434,7 +430,6 @@ internal sealed class EnergySim
         todayGas += GasFlow * hours;
         TodayLoad += Load * hours;
 
-        // 30 分ごとの平均の買電がデマンド。今の電力が続くとしたときの時限の終わりの値を予測する
         var index = (int)(seconds / PeriodSeconds);
         if (index != period)
         {
@@ -489,7 +484,6 @@ internal sealed class EnergySim
         return new EnergyProfile(lineA, lineB, hvac, utility, clear * cloud, clear, cgs, steam, cloud, press * work, n6);
     }
 
-    // 雲で太陽光が落ちる割合。数十秒の雲が時々かかる
     private static float Cloud(float seconds, int seed)
     {
         var slow = (EnergyMath.Noise(seconds / 40f, seed + 9) * 0.5f) + 0.5f;

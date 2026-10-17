@@ -162,7 +162,6 @@ public sealed class MechHudScene : SceneObject
 
     private static readonly string[] Channels = ["CH1 OPEN", "CH2 SECURE", "CH3 COMMAND"];
 
-    // 部位の枠 (機体の中心と上端からの位置)。PartHp と同じ順 (HEAD / CORE / L-ARM / R-ARM / L-LEG / R-LEG)
     private static readonly SKRect[] PartRects =
     [
         new(-7f, 0f, 7f, 12f),
@@ -173,7 +172,6 @@ public sealed class MechHudScene : SceneObject
         new(5f, 59f, 17f, 91f)
     ];
 
-    // 関節 (L-JU / R-JU) の中心
     private static readonly SKPoint[] JointPoints = [new(-9f, 52f), new(9f, 52f)];
 
     private readonly record struct TacticalLayout(SKRect Header, SKRect Comm, SKRect Mech, SKRect Map, SKRect Footer);
@@ -242,7 +240,7 @@ public sealed class MechHudScene : SceneObject
         canvas.DrawRect(0f, 0f, BaseWidth, vh, paint);
         paint.Shader = null;
 
-        // Header: 部隊の記章と名前
+        // Header
         var header = layout.Header;
         var ex = header.Left + 20f;
         var ey = header.MidY;
@@ -281,7 +279,6 @@ public sealed class MechHudScene : SceneObject
         Stroke.Color = Main.WithAlpha(60);
         canvas.DrawLine(layout.Comm.Left + 10f, layout.Comm.Top + 27f, layout.Comm.Right - 10f, layout.Comm.Top + 27f, Stroke);
 
-        // 波形の枠
         var scope = ScopeRect(layout.Comm);
         Fill.Color = SKColors.Black.WithAlpha(110);
         canvas.DrawRoundRect(scope, 4f, 4f, Fill);
@@ -402,7 +399,6 @@ public sealed class MechHudScene : SceneObject
             DrawText(canvas, Channels[i], panel.Left + 18f, y, 10.5f, active ? Amber : Main.WithAlpha(150), bold: active);
         }
 
-        // 波形 (送信中は大きく揺れる)
         var scope = ScopeRect(panel);
         var amp = sim.Transmitting ? (scope.Height * 0.38f) : (scope.Height * 0.08f);
         const int points = 48;
@@ -433,7 +429,6 @@ public sealed class MechHudScene : SceneObject
             canvas.DrawPath(wavePath, Stroke);
         }
 
-        // 信号の強さ
         var rowY = panel.Top + 108f;
         DrawText(canvas, "SIG", panel.Left + 12f, rowY, 10f, Main.WithAlpha(180));
         Fill.Color = Main.WithAlpha(200);
@@ -518,7 +513,6 @@ public sealed class MechHudScene : SceneObject
         }
     }
 
-    // 部位の色は残りの耐久で決め、いちばん傷んだ部位は枠を点滅させる
     private void SetPartPaint(int index, int worst, float t)
     {
         var hp = sim.PartHp[index];
@@ -540,7 +534,6 @@ public sealed class MechHudScene : SceneObject
         canvas.Save();
         canvas.ClipPath(frame, SKClipOperation.Intersect, true);
 
-        // 標高を色と陰影で塗った地形
         const int cols = 120;
         var rows = (int)(cols * map.Height / map.Width);
         using (var bitmap = new SKBitmap(cols + 1, rows + 1))
@@ -596,7 +589,6 @@ public sealed class MechHudScene : SceneObject
             DrawText(canvas, (i + 1).ToString(), map.Left + 8f, map.Top + (map.Height * (i + 0.5f) / gridRows) + 3.5f, 9f, Main.WithAlpha(130));
         }
 
-        // 縮尺と北
         var scale = MapScale(map);
         var barLeft = map.Left + 14f;
         var barY = map.Bottom - 14f;
@@ -622,7 +614,6 @@ public sealed class MechHudScene : SceneObject
 
         DrawText(canvas, "N", nx, ny + 16f, 9f, Bright.WithAlpha(210), bold: true, align: SKTextAlign.Center);
 
-        // 目標 (位置は固定)
         var objective = ToMap(map, 250f, -350f);
         pathBuilder.MoveTo(objective.X, objective.Y - 7f);
         pathBuilder.LineTo(objective.X + 7f, objective.Y);
@@ -673,7 +664,6 @@ public sealed class MechHudScene : SceneObject
             canvas.ClipPath(clip, SKClipOperation.Intersect, true);
         }
 
-        // センサーの走査 (自機の周りを回る)
         var sweep = (t * 50f) % 360f;
         canvas.Save();
         canvas.Translate(own.X, own.Y);
@@ -697,7 +687,6 @@ public sealed class MechHudScene : SceneObject
         canvas.DrawLine(0f, 0f, sweepR, 0f, Stroke);
         canvas.Restore();
 
-        // 目標への経路と目標の輪
         var objective = ToMap(map, 250f, -350f);
         using var dash = SKPathEffect.CreateDash([5f, 4f], -((t * 12f) % 9f));
         Stroke.PathEffect = dash;
@@ -712,7 +701,6 @@ public sealed class MechHudScene : SceneObject
         DrawText(canvas, "OBJ-A", objective.X, objective.Y - 13f, 9.5f, Amber, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, $"{Distance(250f, -350f):0}M {Bearing(250f, -350f):000}°", objective.X, objective.Y + 22f, 9f, Amber.WithAlpha(210), align: SKTextAlign.Center);
 
-        // 視界 (進む向きの扇)
         canvas.Save();
         canvas.Translate(own.X, own.Y);
         canvas.RotateDegrees(sim.HeadingDeg - 90f);
@@ -730,7 +718,7 @@ public sealed class MechHudScene : SceneObject
 
         canvas.Restore();
 
-        // Hostiles (足跡・脅威の範囲・印)
+        // Hostiles
         using var ringDash = SKPathEffect.CreateDash([3f, 4f], 0f);
         foreach (var contact in sim.Contacts)
         {
@@ -768,7 +756,7 @@ public sealed class MechHudScene : SceneObject
             DrawText(canvas, contact.Label, p.X + 9f, p.Y + 3.5f, 9.5f, Red.WithAlpha(alpha), bold: true);
         }
 
-        // Squad (小隊 2・3 は最初の 1 人の横に名前を出す)
+        // Squad
         var labeled = 0;
         foreach (var unit in sim.Squad)
         {
@@ -823,7 +811,6 @@ public sealed class MechHudScene : SceneObject
         DrawThreats(canvas, map);
     }
 
-    // 近い順に 3 つの脅威の距離と方位
     private void DrawThreats(SKCanvas canvas, SKRect map)
     {
         var count = Math.Min(threatOrder.Length, sim.Contacts.Length);
@@ -846,7 +833,6 @@ public sealed class MechHudScene : SceneObject
             threatOrder[j + 1] = key;
         }
 
-        // 地図の右下 (北の印の上) に半透明で重ねる
         var rows = Math.Min(3, count);
         var height = 22f + (rows * 14f);
         var box = new SKRect(map.Right - 124f, map.Bottom - 40f - height, map.Right - 12f, map.Bottom - 40f);

@@ -153,7 +153,6 @@ public sealed class FlightHudScene : SceneObject
 
     private static readonly int[] RollMarks = [-60, -45, -30, -20, -10, 10, 20, 30, 45, 60];
 
-    // 縦の配置。上から見出し、姿勢の表示 (PFD)、レーダーと兵装、下の状態の行
     private readonly record struct FlightLayout(SKRect Header, SKRect Pfd, SKRect Radar, SKRect Stores, SKRect Footer, float AttitudeY, float PxPerDeg, SKPoint RadarCenter, float RadarR);
 
     private readonly FlightHudSim sim = new();
@@ -167,7 +166,6 @@ public sealed class FlightHudScene : SceneObject
     {
         sim.Update(t, dt);
 
-        // 6 秒後の速度の見込み (加速度を滑らかにして使う)
         if ((lastSpeed >= 0f) && (dt > 0f))
         {
             var accel = (sim.SpeedKt - lastSpeed) / dt;
@@ -177,7 +175,6 @@ public sealed class FlightHudScene : SceneObject
         lastSpeed = sim.SpeedKt;
     }
 
-    // レーダー上のブリップをタップで選択する (SceneControl → OnTouch のヒットテスト例)
     protected override bool OnTouch(SKPoint location, int width, int height)
     {
         var s = width / BaseWidth;
@@ -212,7 +209,6 @@ public sealed class FlightHudScene : SceneObject
             }
         }
 
-        // 同じブリップの再タップは選択解除
         selectedContact = ReferenceEquals(selectedContact, nearest) ? null : nearest;
         return true;
     }
@@ -305,7 +301,6 @@ public sealed class FlightHudScene : SceneObject
             DrawChip(canvas, new SKRect(x, footer.Top, x + chipWidth, footer.Bottom), items[i], i == 3 ? Dim : Main, false);
         }
 
-        // 周辺を少し暗くする
         using var vignette = SKShader.CreateRadialGradient(
             new SKPoint(200f, vh * 0.45f),
             MathF.Max(BaseWidth, vh) * 0.72f,
@@ -377,7 +372,6 @@ public sealed class FlightHudScene : SceneObject
             canvas.ClipRoundRect(round, SKClipOperation.Intersect, true);
         }
 
-        // 空と地面は機体の傾き (ロール) で回し、ピッチで上下に動かす
         canvas.Save();
         canvas.Translate(cx, cy);
         canvas.RotateDegrees(-sim.RollDeg);
@@ -385,7 +379,6 @@ public sealed class FlightHudScene : SceneObject
         DrawSkyGround(canvas);
         canvas.Restore();
 
-        // ピッチの目盛りはロールの目盛りの内側だけに出す
         var rollR = cy - pfd.Top - 64f;
         canvas.Save();
         canvas.ClipRect(new SKRect(cx - 112f, cy - rollR + 16f, cx + 112f, cy + rollR - 16f));
@@ -472,7 +465,6 @@ public sealed class FlightHudScene : SceneObject
             canvas.DrawLine(AngleHelper.GetPoint(new SKPoint(cx, cy), r, angle), AngleHelper.GetPoint(new SKPoint(cx, cy), r + len, angle), Stroke);
         }
 
-        // 固定の目印 (上) と、傾きに合わせて回る目印 (下)
         pathBuilder.MoveTo(cx, cy - r - 1f);
         pathBuilder.LineTo(cx - 6f, cy - r - 11f);
         pathBuilder.LineTo(cx + 6f, cy - r - 11f);
@@ -575,7 +567,6 @@ public sealed class FlightHudScene : SceneObject
 
         canvas.Restore();
 
-        // 6 秒後の速度の見込み
         var trend = Math.Clamp(speedTrend * pxPerKt, -half + 14f, half - 14f);
         if (MathF.Abs(trend) > 3f)
         {
@@ -627,7 +618,6 @@ public sealed class FlightHudScene : SceneObject
         DrawText(canvas, "BARO 29.92", tape.MidX, tape.Bottom + 32f, 10f, Main.WithAlpha(200), align: SKTextAlign.Center);
     }
 
-    // 目盛りの帯の上の、内側を指す読み取りの枠
     private void DrawReadout(SKCanvas canvas, float left, float right, float cy, bool pointRight, string text, float size)
     {
         const float h = 13f;
@@ -661,7 +651,6 @@ public sealed class FlightHudScene : SceneObject
 
     private void DrawFlightPath(SKCanvas canvas, float cx, float cy)
     {
-        // 機首の向きの印 (固定)
         Stroke.StrokeCap = SKStrokeCap.Round;
         Stroke.Color = SKColors.Black.WithAlpha(150);
         Stroke.StrokeWidth = 4f;
@@ -674,7 +663,6 @@ public sealed class FlightHudScene : SceneObject
         Fill.Color = Amber;
         canvas.DrawCircle(cx, cy, 2.4f, Fill);
 
-        // 飛んでいく向きの印 (少し揺れる)
         var fx = cx + (6f * MathF.Sin(Time * 0.40f));
         var fy = cy + (5f * MathF.Cos(Time * 0.31f)) - 14f;
         for (var pass = 0; pass < 2; pass++)
@@ -766,7 +754,7 @@ public sealed class FlightHudScene : SceneObject
         canvas.DrawLine(0f, 0f, r, 0f, Stroke);
         canvas.Restore();
 
-        // Contacts (向きの線は 10 秒後の位置)
+        // Contacts
         foreach (var contact in sim.Contacts)
         {
             if (contact.RangeNm > 40f)
@@ -915,7 +903,7 @@ public sealed class FlightHudScene : SceneObject
         var t = Time;
         DrawChip(canvas, new SKRect(stores.Right - 78f, stores.Top + 7f, stores.Right - 10f, stores.Top + 23f), "ARM ON", Amber, true);
 
-        // 翼の下の 6 本のミサイル (左右で外側から撃つ)
+        // Missiles
         var cx = stores.MidX;
         var top = stores.Top + 32f;
         for (var i = 0; i < 6; i++)

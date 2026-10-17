@@ -5,6 +5,7 @@ using System.Diagnostics;
 //--------------------------------------------------------------------------------
 // Interface
 //--------------------------------------------------------------------------------
+
 public interface ISceneObject
 {
     void Attach(SceneControl view);
@@ -48,7 +49,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     protected SKPaint Fill { get; } = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
 
-    // 直近の Update で確定した経過時間。OnRender はこの値を参照する。
     protected float Time { get; private set; }
 
     void ISceneObject.Attach(SceneControl view) => control = view;
@@ -57,20 +57,14 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     public void Invalidate() => control?.InvalidateSurface();
 
-    // UI スレッドへ依頼して待たない (Stop は UI スレッドで loopTask を待つため、待つとデッドロックになる)
     private void Post(Action action) => control?.Dispatcher.Dispatch(action);
 
     //--------------------------------------------------------------------------------
     // Render / Touch
     //--------------------------------------------------------------------------------
 
-    // 論理解像度の固定 (opt-in / Breakout の RescalingCanvas 相当)。
-    // 設定すると uniform scale + レターボックスで描画され、OnRender / OnTouch には仮想解像度が渡る。
-    // 既存 4 シーンは「幅基準 + 高さ追従」のデザインのため未使用 (ゲーム的シーン向けの基盤)
     protected SKSize? VirtualSize { get; set; }
 
-    // ダブルバッファ (D8 で本採用・既定 ON)。ループスレッドでオフスクリーンサーフェスへ描画し、UI スレッドは転写のみ行う。
-    // Release 実測 (Pixel/Telemetry) で約 30fps→約 60fps に倍増したため既定とした。Telemetry の Function2 で比較切替できる
     public bool UseDoubleBuffer { get; set; } = true;
 
     private readonly Lock bufferSync = new();
@@ -103,7 +97,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
                 }
             }
 
-            // ループ稼働中の直接描画は行わない (ループスレッドと共有ペイントを同時使用しないため。初回バッファ完成までは空描画)
             if (cts is not null)
             {
                 canvas.Clear();
@@ -146,7 +139,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
         }
     }
 
-    // タップ入力。処理した場合は true を返す (ジェスチャを consume する)
     protected virtual bool OnTouch(SKPoint location, int width, int height) => false;
 
     //--------------------------------------------------------------------------------
@@ -175,14 +167,13 @@ public abstract class SceneObject : ISceneObject, IDisposable
         clock.Stop();
         cts.Cancel();
 
-        // 進行中のフレーム描画の完了を待ってから破棄する (後続の Dispose が使用中の Skia リソースを壊さないように)
         try
         {
             loopTask?.Wait(TimeSpan.FromSeconds(2));
         }
         catch (AggregateException)
         {
-            // キャンセルによる例外は無視
+            // Ignore
         }
 
         loopTask = null;
@@ -198,12 +189,12 @@ public abstract class SceneObject : ISceneObject, IDisposable
             var invalidate = InvalidateFrame;
             var update = UpdateFrame;
 
-            // UI スレッドの SynchronizationContext へ戻さずスレッドプールで回す (UI スレッドでは描画しない)
+            // Run on the thread pool without returning to the UI thread's SynchronizationContext (do not render on the UI thread)
             while (await timer.WaitForNextTickAsync(token).ConfigureAwait(false))
             {
                 if (UseDoubleBuffer && (lastWidth > 0))
                 {
-                    // ダブルバッファ: ループスレッド上で更新とオフスクリーン描画まで行い、UI スレッドは転写のみ
+                    // Double buffer: update and off-screen rendering on the loop thread
                     var t = (float)clock.Elapsed.TotalSeconds;
                     var dt = Math.Clamp(t - lastTime, 0f, 0.1f);
                     lastTime = t;
@@ -280,8 +271,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
     // Frame stats
     //--------------------------------------------------------------------------------
 
-    // Release ビルドでの実測用 (Console 出力は logcat の mono-stdout に出る)。
-    // ダブルバッファ試験 (D8) の対象画面が滞在中のみ有効化する
     public static bool FrameStatsEnabled { get; set; }
 
     private double statTotal;
@@ -310,7 +299,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
         }
         else if (now - statLastReport >= 3000)
         {
-            // Console 出力は Release では logcat に出ないため Android の Log を直接使う
             var message = $"{GetType().Name} {mode} avg={statTotal / statCount:F2}ms max={statMax:F2}ms frames={statCount}";
 #if ANDROID
             Android.Util.Log.Debug("SceneStats", message);
@@ -385,9 +373,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     private readonly Dictionary<string, CachedLayer> layerCache = [];
 
-    // 静的レイヤ (背景グリッド・目盛り・パネル枠等の不変描画) を SKPicture として記録し、
-    // 以降のフレームでは再生のみ行う。サイズが変わったときだけ draw を再実行する。
-    // 呼び出し時点のキャンバス変換 (Scale 等) の中で再生されるため、記録は仮想座標系で行うこと。
     protected void DrawCachedLayer<TState>(SKCanvas canvas, string key, float width, float height, TState state, Action<SKCanvas, TState> draw)
     {
         if (!layerCache.TryGetValue(key, out var layer))
@@ -416,9 +401,6 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     private int staticHeight;
 
-    // 背景・パネルの枠・見出しのような変わらない部分を、端末の解像度の画像に一度だけ描いて写す。
-    // オフスクリーンは CPU で描くため、全画面のグラデーションなどを毎フレーム描く (DrawCachedLayer の再生を含む) より軽い。
-    // draw には仮想座標 (scale を掛けた) のキャンバスが渡る
     protected void DrawStaticImage<TState>(SKCanvas canvas, int width, int height, float scale, TState state, Action<SKCanvas, TState> draw)
     {
         if ((staticImage is null) || (staticWidth != width) || (staticHeight != height))

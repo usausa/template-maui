@@ -139,7 +139,6 @@ public sealed class EnergyFlowScene : SceneObject
         wheelAngle = (wheelAngle + (dt * 520f * (sim.Cgs / 410f))) % 360f;
     }
 
-    // 流れの節点・表示の切り替え・設備のタイルをタップで選ぶ
     protected override bool OnTouch(SKPoint location, int width, int height)
     {
         var s = width / BaseWidth;
@@ -332,7 +331,6 @@ public sealed class EnergyFlowScene : SceneObject
         DrawTitle(canvas, TileRect(layout.Equipment, 2).Left + 9f, layout.Equipment.Top + 17f, "BOILER", BoilerColor);
         DrawTitle(canvas, TileRect(layout.Equipment, 3).Left + 9f, layout.Equipment.Top + 17f, "COOLING", HvacColor);
 
-        // 推移のグラフの目盛り
         var plot = TrendPlot(layout.Trend);
         Stroke.StrokeCap = SKStrokeCap.Butt;
         Stroke.StrokeWidth = 0.7f;
@@ -445,7 +443,6 @@ public sealed class EnergyFlowScene : SceneObject
         DrawText(canvas, $"{start:HH:mm}-{start.AddMinutes(EnergySim.PeriodMinutes):HH:mm}", panel.Left + 122f, panel.Top + 18f, 9f, TextSub);
         DrawText(canvas, $"REMAIN {remain / 60:00}:{remain % 60:00}", panel.Right - 12f, panel.Top + 18f, 9.5f, TextMain, bold: true, align: SKTextAlign.Right);
 
-        // 予測デマンドの輪
         var cx = panel.Left + 60f;
         var cy = panel.Top + 70f;
         const float r = 36f;
@@ -477,7 +474,6 @@ public sealed class EnergyFlowScene : SceneObject
         DrawGaugeTick(canvas, cx, cy, r, startAngle + targetAngle, TextMain);
         DrawGaugeTick(canvas, cx, cy, r, startAngle + contractAngle, AlarmColor);
 
-        // 今の買電の位置
         var nowAngle = DegToRad(startAngle + (sweep * Math.Clamp(sim.Grid / max, 0f, 1f)));
         Fill.Color = TextMain;
         canvas.DrawCircle(cx + ((r - 9f) * MathF.Cos(nowAngle)), cy + ((r - 9f) * MathF.Sin(nowAngle)), 2f, Fill);
@@ -486,7 +482,6 @@ public sealed class EnergyFlowScene : SceneObject
         DrawText(canvas, $"{sim.Predicted:#,0}", cx, cy + 6f, 16.5f, TextMain, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, "kW", cx, cy + 17f, 7.5f, TextDim, align: SKTextAlign.Center);
 
-        // 時限の 1 分ごとの平均
         var left = panel.Left + 122f;
         var right = panel.Right - 12f;
         var top = panel.Top + 28f;
@@ -523,7 +518,6 @@ public sealed class EnergyFlowScene : SceneObject
         canvas.DrawLine(left, contractY, right, contractY, Stroke);
         Stroke.PathEffect = null;
 
-        // 数値の行
         var columnWidth = (right - left) / 4f;
         DrawStat(canvas, left, panel.Top + 95f, "NOW", $"{sim.Grid:#,0}", DemandColor(sim.Grid) == Accent ? TextMain : DemandColor(sim.Grid));
         DrawStat(canvas, left + columnWidth, panel.Top + 95f, "LAST", sim.LastDemand > 0f ? $"{sim.LastDemand:#,0}" : "--", TextMain);
@@ -725,7 +719,6 @@ public sealed class EnergyFlowScene : SceneObject
         return extent + (gap * MathF.Max(0, count - 1));
     }
 
-    // 各列の高さ (値 × 倍率と最小の高さの大きい方の合計 + 隙間) が height に収まる最大の倍率
     private static float FitScale(FlowGraph graph, float height, float gap, float minSlot)
     {
         var scale = float.MaxValue;
@@ -752,13 +745,11 @@ public sealed class EnergyFlowScene : SceneObject
         return scale;
     }
 
-    // 帯の太さは値に比例させ、小さい節点も見出しが重ならない高さを確保する
     private static void LayoutGraph(FlowGraph graph, SKRect area, float time)
     {
         const float gap = 8f;
         const float minSlot = 28f;
 
-        // 値の揺れで図全体の大きさが跳ねないよう、収まる倍率に少し余裕を持たせてゆっくり追う (縮めるときは速く)
         var target = FitScale(graph, area.Height * 0.97f, gap, minSlot);
         var dt = Math.Clamp(time - graph.ScaleTime, 0f, 0.5f);
         graph.ScaleTime = time;
@@ -805,7 +796,6 @@ public sealed class EnergyFlowScene : SceneObject
         }
     }
 
-    // 選んだ節点に直接つながる帯と、中央を通って先へ流れる分 (按分) を求める
     private static void ApplySelection(FlowGraph graph, FlowNode? node)
     {
         foreach (var link in graph.Links)
@@ -885,7 +875,6 @@ public sealed class EnergyFlowScene : SceneObject
 
             if (dim && (link.Band > 0.4f) && (selectedNode is not null))
             {
-                // 選んだ節点を通った分を帯の上側に重ねる
                 paint.Color = selectedNode.Color.WithAlpha(150);
                 using var band = CreateRibbon(x0, x1, link.Y0, link.Y1, link.Band);
                 canvas.DrawPath(band, paint);
@@ -899,7 +888,6 @@ public sealed class EnergyFlowScene : SceneObject
         return (v * v * v * p0) + (3f * v * v * u * p1) + (3f * v * u * u * p2) + (u * u * u * p3);
     }
 
-    // 帯の上を流れる光の粒。速さは流れの大きさに合わせる
     private void DrawParticles(SKCanvas canvas, FlowGraph graph, bool hasSelection)
     {
         var maxValue = 1f;
@@ -1170,7 +1158,6 @@ public sealed class EnergyFlowScene : SceneObject
             paint.Shader = null;
             if (layer == 0)
             {
-                // 目標と比べる買電の層だけ縁を引く
                 Stroke.Color = color;
                 canvas.DrawPath(edge, Stroke);
             }
@@ -1181,7 +1168,6 @@ public sealed class EnergyFlowScene : SceneObject
             }
         }
 
-        // 使った電力 (実線) と今からの見込み (破線)
         pathBuilder.MoveTo(plot.Left, TrendY(plot, sim.LoadHistory(0)));
         for (var slot = 0; slot < count; slot++)
         {

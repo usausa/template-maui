@@ -17,7 +17,6 @@ public enum ChartKind
 
 public readonly record struct CandlePoint(double Open, double High, double Low, double Close);
 
-// 値の目盛りの範囲と間隔
 public readonly record struct ChartScale(double Min, double Max, double Step);
 
 public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
@@ -26,7 +25,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     private const float Padding = 12f;
 
-    // 左の値の目盛りの幅と、下のラベルの高さ
     private const float AxisWidth = 40f;
 
     private const float LabelHeight = 22f;
@@ -41,13 +39,10 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     private const float TooltipLineHeight = 16f;
 
-    // 折れ線の点(半径 4・枠線 2)とにじみが収まる幅
     private const float PointExtent = 6f;
 
-    // 選んでいない棒・区画の濃さ
     private const float DimAlpha = 0.4f;
 
-    // 散布図で点を選べる距離
     private const float HitDistance = 24f;
 
     private const float DonutThickness = 32f;
@@ -79,7 +74,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     private double[] values = [];
 
-    // 前の値から動かすときの開始の値と目盛り
     private double[] startValues = [];
 
     private ChartScale startScale = DefaultScale;
@@ -108,7 +102,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     private long animationStart;
 
-    // 最後に描いた位置 (タップの判定に使う)
     private RectF lastRect;
 
     private RectF plotArea;
@@ -121,27 +114,22 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     public Color LineColor { get; set; } = Color.FromArgb("#2196F3");
 
-    // 値の高い所の線の色。LineColor と同じなら 1 色
     public Color LineHighColor { get; set; } = Color.FromArgb("#E53935");
 
-    // 棒の上と下の色
     public Color BarColor { get; set; } = Color.FromArgb("#64B5F6");
 
     public Color BarEndColor { get; set; } = Color.FromArgb("#1E88E5");
 
-    // 棒の後ろの、目盛りの最大までの溝
     public Color TrackColor { get; set; } = Color.FromArgb("#EEF1F5");
 
     public bool ShowTrack { get; set; } = true;
 
-    // 左の値の目盛りと横の線
     public bool ShowAxis { get; set; } = true;
 
     public string AxisFormat { get; set; } = "{0:N0}";
 
     public string ValueFormat { get; set; } = "{0:N0}";
 
-    // 積み上げ棒の系列の名前 (上の凡例)
     public IReadOnlyList<string> SeriesNames { get; set; } = [];
 
     public int SelectedIndex { get; private set; } = -1;
@@ -166,7 +154,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
     public void ShowBar(IReadOnlyList<double> data, IReadOnlyList<string>? names = null) =>
         ShowValues(ChartKind.Bar, data, names);
 
-    // 名前は下の凡例
     public void ShowDonut(IReadOnlyList<double> data, IReadOnlyList<string>? names = null) =>
         ShowValues(ChartKind.Donut, data, names);
 
@@ -177,7 +164,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         Start(ChartKind.Candle, names, false);
     }
 
-    // 積み上げ棒。data[カテゴリ][系列]
     public void ShowStacked(IReadOnlyList<double[]> data, IReadOnlyList<string>? names = null)
     {
         series = [.. data];
@@ -193,7 +179,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         Start(ChartKind.Scatter, null, false);
     }
 
-    // ヒートマップ。data[行][列]。行の名前は左、列の名前は下
     public void ShowHeat(double[][] data, IReadOnlyList<string>? rows = null, IReadOnlyList<string>? columns = null)
     {
         heatCells = data;
@@ -216,7 +201,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     private void ShowValues(ChartKind next, IReadOnlyList<double> data, IReadOnlyList<string>? names)
     {
-        // 同じ種類・同じ数の値に変えるときは、今の表示の値と目盛りから動かす
         var follow = (next == kind) && (next is ChartKind.Line or ChartKind.Bar) && (data.Count == values.Length) && (data.Count > 0);
         if (follow)
         {
@@ -242,7 +226,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         morph = follow;
         SelectedIndex = -1;
 
-        // ディレイ出現系は要素ごとの開始ずらし分だけ全体を長くする
         animationDuration = kind is ChartKind.Stacked or ChartKind.Scatter or ChartKind.Heat ? 1000f : AnimationDuration;
         progress = 0f;
         animationStart = Environment.TickCount64;
@@ -262,7 +245,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         SafeInvalidate();
     }
 
-    // 表示する値 (前の値から動かしているときは途中の値。棒は 0 から伸ばす)
     private double ValueAt(int index, float eased)
     {
         if (morph)
@@ -309,7 +291,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
                 DrawDonutChart(canvas, dirtyRect, eased);
                 break;
             case ChartKind.Stacked:
-                // 要素ごとにディレイをかけるため未イージングの進行値を渡す
                 DrawStackedChart(canvas, dirtyRect, t);
                 break;
             case ChartKind.Scatter:
@@ -356,11 +337,9 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         canvas.SaveState();
         if (!morph)
         {
-            // 左から右へ描画をクリップして伸ばす (両端の点が切れないよう、点の大きさの分だけ左右に広げる)
             canvas.ClipRectangle(area.Left - PointExtent, rect.Top, (area.Width * eased) + (PointExtent * 2), rect.Height);
         }
 
-        // 線下のグラデーション
         using (var fillPath = new PathF())
         {
             fillPath.MoveTo(area.Left, area.Bottom);
@@ -384,8 +363,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             canvas.RestoreState();
         }
 
-        // 折れ線 (値の高さで色を補間し、線分ごとに塗り分けるグラデーション線。
-        // ICanvas のストロークは単色のみのため、シェーダの代わりに区間単位の色補間で表現する)
         canvas.StrokeSize = 3f;
         canvas.StrokeLineJoin = LineJoin.Round;
         canvas.StrokeLineCap = LineCap.Round;
@@ -397,7 +374,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             canvas.DrawLine(p0.X, p0.Y, p1.X, p1.Y);
         }
 
-        // 点 (枠線も値の色に合わせる)
         canvas.FillColor = Colors.White;
         canvas.StrokeSize = 2f;
         for (var i = 0; i < values.Length; i++)
@@ -461,7 +437,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             var height = area.Bottom - top;
             if (height > 0.5f)
             {
-                // 上から下へのグラデーション。選んだ棒があるときは、ほかの棒を薄くする
                 var alpha = (SelectedIndex < 0) || (i == SelectedIndex) ? 1f : DimAlpha;
                 var paint = new LinearGradientPaint(
                     [
@@ -472,7 +447,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
                     endPoint: new Point(0, 1));
                 var bar = new RectF(x, top, barWidth, height);
 
-                // グラデーションは FillColor を変えても残るため、状態ごと戻す
                 canvas.SaveState();
                 canvas.SetFillPaint(paint, bar);
                 canvas.FillRoundedRectangle(bar, Math.Min(4f, height / 2f));
@@ -501,7 +475,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             return;
         }
 
-        // 凡例は下に 2 列
         var legendRows = labels.Length > 0 ? (values.Length + 1) / 2 : 0;
         var legendHeight = legendRows > 0 ? (legendRows * LegendRowHeight) + Padding : 0f;
         var chart = new RectF(rect.Left, rect.Top, rect.Width, rect.Height - legendHeight);
@@ -512,7 +485,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         donutRadius = radius;
         var arc = new RectF(cx - radius, cy - radius, radius * 2, radius * 2);
 
-        // 上(90 度)から時計回りに全体の eased 分までスイープ。選んだ区画は太く、ほかは薄く
         var startAngle = 90f;
         var remaining = 360f * eased;
         for (var i = 0; i < values.Length; i++)
@@ -532,7 +504,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             remaining -= draw;
         }
 
-        // 中央は合計。区画を選んだときは、その名前・値・割合
         var inner = radius - (DonutThickness / 2f);
         if (IsSelected(values.Length))
         {
@@ -543,7 +514,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             DrawCenterText(canvas, cx, cy, inner, string.Empty, Format(ValueFormat, total * eased), "TOTAL");
         }
 
-        // 凡例: 色・名前・割合
         if (legendRows > 0)
         {
             var columnWidth = (rect.Width - (Padding * 2)) / 2f;
@@ -604,7 +574,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         var step = area.Width / candles.Length;
         var bodyWidth = step * 0.55f;
 
-        // 左から順に出現させる
         var visible = (int)Math.Ceiling(candles.Length * eased);
         for (var i = 0; i < visible; i++)
         {
@@ -639,7 +608,7 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
     }
 
     //--------------------------------------------------------------------------------
-    // Stacked / Scatter / Heat (要素ごとのディレイ出現)
+    // Stacked / Scatter / Heat
     //--------------------------------------------------------------------------------
 
     private void DrawStackedChart(ICanvas canvas, RectF rect, float t)
@@ -666,7 +635,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
         for (var i = 0; i < series.Length; i++)
         {
-            // カテゴリ (棒) ごとに開始を遅らせる
             var eased = Ease(ElementProgress(t, i, series.Length));
             if (eased <= 0f)
             {
@@ -713,7 +681,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
         for (var i = 0; i < points.Length; i++)
         {
-            // 点ごとに開始を遅らせて拡大しながら出現させる
             var eased = Ease(ElementProgress(t, i, points.Length));
             if (eased <= 0f)
             {
@@ -741,9 +708,7 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
     }
 
     private PointF ScatterPoint(RectF area, int index) =>
-        new(
-            area.Left + (float)((points[index].X - xScale.Min) / (xScale.Max - xScale.Min) * area.Width),
-            ToY(area, scale, points[index].Y));
+        new(area.Left + (float)((points[index].X - xScale.Min) / (xScale.Max - xScale.Min) * area.Width), ToY(area, scale, points[index].Y));
 
     private void DrawHeatChart(ICanvas canvas, RectF rect, float t)
     {
@@ -764,7 +729,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
         for (var r = 0; r < rows; r++)
         {
-            // 行ごとに開始を遅らせてフェードイン
             var alpha = Ease(ElementProgress(t, r, rows));
             if (alpha <= 0f)
             {
@@ -788,7 +752,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             }
         }
 
-        // 左の行の名前
         canvas.FontSize = FontSize;
         canvas.FontColor = TextColor;
         for (var r = 0; r < Math.Min(rows, rowLabels.Length); r++)
@@ -812,10 +775,8 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         }
     }
 
-    // 全体の進行 0..1 を、要素 index の開始をずらした 0..1 に変換する (LiveCharts2 の Delayed animations 相当)
     private static float ElementProgress(float t, int index, int count)
     {
-        // 各要素は全体の 60% の長さで動き、残り 40% を開始のずらしに使う
         const float span = 0.6f;
         if (count <= 1)
         {
@@ -840,7 +801,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         return plotArea;
     }
 
-    // 横の線と左の値
     private void DrawValueAxis(ICanvas canvas, RectF area, ChartScale current)
     {
         canvas.StrokeColor = GridColor;
@@ -860,7 +820,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         }
     }
 
-    // 散布図の下の値
     private void DrawHorizontalAxis(ICanvas canvas, RectF area)
     {
         canvas.StrokeColor = GridColor;
@@ -878,7 +837,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         }
     }
 
-    // 下のラベル。重なるときは間引く。選んだ項目は太字
     private void DrawLabels(ICanvas canvas, RectF area, int count, bool centered)
     {
         if ((labels.Length == 0) || (count == 0))
@@ -920,7 +878,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         }
     }
 
-    // 点の上の吹き出し (上に入らないときは下)
     private void DrawTooltip(ICanvas canvas, PointF anchor, List<string> lines)
     {
         const float pointer = 6f;
@@ -947,7 +904,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         canvas.FontColor = Colors.White;
         for (var i = 0; i < lines.Count; i++)
         {
-            // 1 行目は名前、2 行目からは値 (太字)
             canvas.Font = i == 0 ? Font.Default : Font.DefaultBold;
             canvas.DrawString(lines[i], x, y + 4f + (i * TooltipLineHeight), width, TooltipLineHeight, HorizontalAlignment.Center, VerticalAlignment.Center);
         }
@@ -1009,7 +965,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             return -1;
         }
 
-        // 上から時計回りの角度
         var angle = ((MathF.Atan2(dx, -dy) * 180f / MathF.PI) + 360f) % 360f;
         var end = 0d;
         for (var i = 0; i < values.Length; i++)
@@ -1066,7 +1021,6 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
     private static float ToY(RectF area, ChartScale s, double value) =>
         area.Bottom - (float)((value - s.Min) / Math.Max(1e-9, s.Max - s.Min) * area.Height);
 
-    // 目盛りが切りのよい値になる範囲 (目盛りは 4 本前後)
     private static ChartScale NiceScale(double min, double max, bool fromZero)
     {
         if (fromZero)

@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
-// 停止時に再生する演出の種類 (項目ごとに指定する)
 public enum WheelEffect
 {
     None,
@@ -10,8 +9,6 @@ public enum WheelEffect
 
 public sealed record WheelItem(string Label, WheelEffect Effect = WheelEffect.Sparkle);
 
-// 抽選ホイール。扇形+回転テキストを描画し、Spin() で減速回転して停止時に当選項目を通知する。
-// アニメーションは DrawingObject.AnimateValue (単発+完了通知) を使用する
 public sealed class WheelDrawing : DrawingObject
 {
     private const string SpinAnimationName = "WheelSpin";
@@ -36,7 +33,6 @@ public sealed class WheelDrawing : DrawingObject
         Color.FromArgb("#EC407A")
     ];
 
-    // 扇形は中心が明るく外周に向けて本来の色になる放射グラデーション (SetFillPaint でホイール矩形に対して塗る)
     private static readonly RadialGradientPaint[] SegmentPaints = SegmentColors
         .Select(static c => new RadialGradientPaint(
             [
@@ -68,16 +64,13 @@ public sealed class WheelDrawing : DrawingObject
 
     private IReadOnlyList<WheelItem> items = [];
 
-    // 画面上の回転角。0 で項目 0 の先頭が真上、時計回りに増加
     private float rotation;
 
-    // 停止時の演出 (0〜1 で進行。対象は winnerIndex の項目)
     private float effectProgress;
     private int winnerIndex = -1;
 
     public bool IsSpinning { get; private set; }
 
-    // 項目の色 (扇形と同じ)
     public static Color ColorOf(int index, int count) => SegmentColors[ColorIndex(index, count)];
 
     public void SetItems(IReadOnlyList<WheelItem> values)
@@ -89,7 +82,6 @@ public sealed class WheelDrawing : DrawingObject
         Invalidate();
     }
 
-    // extraRotation (度) だけ減速回転し、停止時に当選項目を通知する。実行中は false
     public bool Spin(float extraRotation, uint length, Action<WheelItem>? completed = null)
     {
         if (IsSpinning || (items.Count == 0))
@@ -120,7 +112,6 @@ public sealed class WheelDrawing : DrawingObject
         return true;
     }
 
-    // 画面離脱時などに回転を中断する (完了通知は行われない)
     public void CancelSpin()
     {
         AbortAnimation(EffectAnimationName);
@@ -175,7 +166,6 @@ public sealed class WheelDrawing : DrawingObject
         DrawEffect(canvas, dirtyRect, cx, cy, radius);
     }
 
-    // 外輪: 影付きの暗い環に金縁と電球。電球は回転中に流れ、演出中は点滅する
     private void DrawRim(ICanvas canvas, float cx, float cy, float radius)
     {
         var outer = radius + RimWidth;
@@ -215,8 +205,6 @@ public sealed class WheelDrawing : DrawingObject
         }
     }
 
-    // 扇形 (screenStart: 真上を起点とした時計回りの画面角度。AddArc は反時計回り正のため符号反転して渡す)
-    // グラデーションのシェーダは FillColor の変更では解除されないため、SaveState / RestoreState で囲んで後続の塗りに残さない
     private void DrawSegments(ICanvas canvas, float cx, float cy, float radius)
     {
         var sweep = 360f / items.Count;
@@ -236,7 +224,6 @@ public sealed class WheelDrawing : DrawingObject
         }
         canvas.RestoreState();
 
-        // 当選セグメントは演出中に明滅させる
         if ((winnerIndex >= 0) && (effectProgress > 0f))
         {
             using var path = CreateSegmentPath(cx, cy, rect, winnerIndex, sweep);
@@ -249,7 +236,6 @@ public sealed class WheelDrawing : DrawingObject
         }
     }
 
-    // 最後の項目が先頭と同じ色で隣り合わないようにする
     private static int ColorIndex(int index, int count) =>
         ((index > 0) && (index == count - 1) && ((index % SegmentColors.Length) == 0)) ? 1 : (index % SegmentColors.Length);
 
@@ -263,7 +249,6 @@ public sealed class WheelDrawing : DrawingObject
         return path;
     }
 
-    // ラベル (セグメント中央の角度に合わせてキャンバスごと回転し、半径方向に沿って描く)
     private void DrawLabels(ICanvas canvas, float cx, float cy, float radius)
     {
         var sweep = 360f / items.Count;
@@ -277,7 +262,6 @@ public sealed class WheelDrawing : DrawingObject
         {
             var screenMid = rotation - 90f + ((i + 0.5f) * sweep);
 
-            // 左半分のセグメントは 180 度回し、外周から中心へ向けて描いて読める向きにする
             var flip = Normalize(screenMid) is > 90f and < 270f;
             canvas.SaveState();
             canvas.Rotate(flip ? screenMid + 180f : screenMid, cx, cy);
@@ -314,7 +298,6 @@ public sealed class WheelDrawing : DrawingObject
         canvas.FillCircle(cx, cy, 5f);
     }
 
-    // ポインタ (真上・下向き)
     private static void DrawPointer(ICanvas canvas, float cx, float cy, float radius)
     {
         var top = cy - radius - RimWidth - 6f;
@@ -339,7 +322,6 @@ public sealed class WheelDrawing : DrawingObject
         canvas.FillCircle(cx, top + 6f, 3.5f);
     }
 
-    // 停止後の演出。Sparkle=ポインタ周辺のきらめき / Confetti=上から舞い落ちる紙吹雪
     private void DrawEffect(ICanvas canvas, RectF dirtyRect, float cx, float cy, float radius)
     {
         if ((winnerIndex < 0) || (effectProgress <= 0f))
@@ -370,7 +352,6 @@ public sealed class WheelDrawing : DrawingObject
                 continue;
             }
 
-            // ポインタを中心とした扇状に散らす
             var angle = (-90f + ((Frac(seed * 7.13f) - 0.5f) * 80f)) * MathF.PI / 180f;
             var distance = radius + 20f + (Frac(seed * 3.71f) * 60f);
             var x = cx + (distance * MathF.Cos(angle));
@@ -381,7 +362,6 @@ public sealed class WheelDrawing : DrawingObject
         }
     }
 
-    // 紙吹雪: 画面上端から落ちる小さな長方形。落下速度・横揺れ・回転は seed から決めて毎フレーム同じ軌道を描く
     private void DrawConfetti(ICanvas canvas, RectF dirtyRect)
     {
         for (var i = 0; i < ConfettiCount; i++)
@@ -427,7 +407,6 @@ public sealed class WheelDrawing : DrawingObject
         canvas.DrawLine(x - half, y + half, x + half, y - half);
     }
 
-    // ポインタ (真上 = 画面角度 270°) が指しているセグメント
     private int GetWinnerIndex()
     {
         var sweep = 360f / items.Count;
@@ -437,7 +416,6 @@ public sealed class WheelDrawing : DrawingObject
 
     private static float Normalize(float value) => ((value % 360f) + 360f) % 360f;
 
-    // 演出の散らばりに使う決定的な疑似乱数 (毎フレーム同じ配置になるよう seed から計算する)
     private static float Hash(int seed)
     {
         var value = unchecked((uint)seed * 2654435761u);
