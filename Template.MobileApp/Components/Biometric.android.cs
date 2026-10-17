@@ -211,6 +211,7 @@ public sealed partial class BiometricAuthenticator
 
         return await completion.Task.ConfigureAwait(true);
     }
+
     private static int ToAuthenticators(BiometricMethod method) => method switch
     {
         BiometricMethod.Biometric => (int)BiometricManagerAuthenticators.BiometricStrong,

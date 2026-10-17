@@ -30,6 +30,7 @@ public static partial class StepperOption
     {
         StepperHandler.Mapper.AppendToMapping(OutlinedProperty.PropertyName, static (handler, _) => UpdateOutlined(handler.PlatformView, (Stepper)handler.VirtualView));
     }
+
     private static void UpdateOutlined(LinearLayout stepper, BindableObject element)
     {
         if (!GetOutlined(element))

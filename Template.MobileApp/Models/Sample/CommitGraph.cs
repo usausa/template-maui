@@ -89,6 +89,7 @@ public sealed class GraphRow
 
     public int LaneCount { get; init; }
 }
+
 public sealed class GraphRepository
 {
     public IReadOnlyList<GraphCommit> Commits { get; init; } = [];

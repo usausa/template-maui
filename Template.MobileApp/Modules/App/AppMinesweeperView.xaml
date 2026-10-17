@@ -22,6 +22,7 @@
         <ResourceDictionary>
 
             <!-- Color -->
+
             <Color x:Key="MineTopColor">#F1F8E9</Color>
             <Color x:Key="MineBottomColor">#DCEDC8</Color>
             <Color x:Key="MineTextColor">#33691E</Color>
@@ -36,6 +37,7 @@
             <Color x:Key="MineRedColor">#D32F2F</Color>
 
             <!-- Converter -->
+
             <s:MapToTextConverter x:Key="FaceConverter"
                                   DefaultValue="🙂">
                 <s:MapToTextConverter.Entries>
@@ -47,6 +49,7 @@
             </s:MapToTextConverter>
 
             <!-- Page -->
+
             <Style x:Key="MineRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
@@ -59,6 +62,8 @@
                     </LinearGradientBrush>
                 </Setter>
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="TopBarGrid"
                    TargetType="Grid">
@@ -87,6 +92,7 @@
             </Style>
 
             <!-- Pill -->
+
             <Style x:Key="PillBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="4" />
@@ -108,6 +114,7 @@
             </Style>
 
             <!-- Status -->
+
             <Style x:Key="StatusBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="16,8" />
@@ -162,6 +169,7 @@
             </Style>
 
             <!-- Board -->
+
             <Style x:Key="Board"
                    TargetType="controls:MinesweeperBoard">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -169,6 +177,7 @@
             </Style>
 
             <!-- Bottom -->
+
             <Style x:Key="BottomGrid"
                    TargetType="Grid">
                 <Setter Property="MinimumHeightRequest" Value="120" />
@@ -255,6 +264,7 @@
     <Grid Style="{StaticResource MineRootGrid}"
           RowDefinitions="Auto,Auto,Auto,*,Auto">
 
+        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*">
@@ -267,6 +277,7 @@
                    Text="Minesweeper" />
         </Grid>
 
+        <!-- Level -->
         <Border Grid.Row="1"
                 Style="{StaticResource PillBorder}">
             <Grid ColumnDefinitions="*,*">
@@ -301,6 +312,7 @@
             </Grid>
         </Border>
 
+        <!-- Status -->
         <Border Grid.Row="2"
                 Style="{StaticResource StatusBorder}">
             <Grid ColumnDefinitions="*,Auto,*">
@@ -326,12 +338,14 @@
             </Grid>
         </Border>
 
+        <!-- Board -->
         <controls:MinesweeperBoard Grid.Row="3"
                                    Style="{StaticResource Board}"
                                    Board="{Binding Board}"
                                    LongPressCommand="{Binding LongPressCommand}"
                                    TapCommand="{Binding TapCommand}" />
 
+        <!-- Bottom -->
         <Grid Grid.Row="4"
               Style="{StaticResource BottomGrid}">
             <VerticalStackLayout Style="{StaticResource BottomStack}"

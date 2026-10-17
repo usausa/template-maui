@@ -1,4 +1,5 @@
 namespace Template.MobileApp.Components;
+
 public enum BiometricMethod
 {
     Biometric,

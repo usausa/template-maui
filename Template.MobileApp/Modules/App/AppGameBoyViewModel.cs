@@ -11,6 +11,8 @@ public sealed partial class AppGameBoyViewModel : AppViewModelBase
 
     private const string RomName = "USAGI QUEST";
 
+    // Field
+
     private static readonly TimeSpan TickInterval = TimeSpan.FromMilliseconds(100);
 
     private readonly Session session;
@@ -20,6 +22,8 @@ public sealed partial class AppGameBoyViewModel : AppViewModelBase
     private readonly IDispatcherTimer ticker;
 
     private GameBoyEmulator? emulator;
+
+    // Property
 
     [ObservableProperty]
     public partial FrameExchange? Frames { get; set; }
@@ -32,6 +36,8 @@ public sealed partial class AppGameBoyViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsMuted { get; set; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand MuteCommand { get; }

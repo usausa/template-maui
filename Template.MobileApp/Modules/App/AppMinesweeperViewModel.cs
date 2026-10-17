@@ -7,6 +7,8 @@ using Template.MobileApp.Services;
 
 public sealed partial class AppMinesweeperViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan TickInterval = TimeSpan.FromMilliseconds(250);
 
     private static readonly TimeSpan FlagVibration = TimeSpan.FromMilliseconds(30);
@@ -24,6 +26,8 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
     private readonly MinesweeperGame game = new(static x => RandomNumberGenerator.GetInt32(x));
 
     private bool visible;
+
+    // Property
 
     [ObservableProperty]
     public partial MinesweeperLevel Level { get; set; }
@@ -48,6 +52,8 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsNewBest { get; set; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand NewGameCommand { get; }
