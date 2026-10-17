@@ -11,7 +11,6 @@ public sealed class ActivityDrawing : DrawingObject
 
     private const float CircleWidth = 24f;
 
-    // 進んだ分の弧を短い弧に分けて、始まりの色から今の位置の色へ少しずつ変える(Timer の文字盤と同じ色)
     private const int Segments = 90;
 
     private static readonly Color StartColor = Color.FromArgb("#22D3EE");
@@ -21,7 +20,6 @@ public sealed class ActivityDrawing : DrawingObject
 
     private float shownStep;
 
-    // 値が変わると、輪は今の長さから新しい値まで伸びる
     public int Step
     {
         get;
@@ -69,8 +67,5 @@ public sealed class ActivityDrawing : DrawingObject
     }
 
     private static Color Blend(Color from, Color to, float amount) =>
-        new(
-            from.Red + ((to.Red - from.Red) * amount),
-            from.Green + ((to.Green - from.Green) * amount),
-            from.Blue + ((to.Blue - from.Blue) * amount));
+        new(from.Red + ((to.Red - from.Red) * amount), from.Green + ((to.Green - from.Green) * amount), from.Blue + ((to.Blue - from.Blue) * amount));
 }

@@ -4,7 +4,6 @@ namespace Template.MobileApp.Models.Sample;
 // Enum
 //--------------------------------------------------------------------------------
 
-// Top は全カテゴリの記事を集めたもの
 public enum NewsCategory
 {
     Top,
@@ -34,7 +33,6 @@ public sealed record NewsArticle(
 // Sample
 //--------------------------------------------------------------------------------
 
-// 記事の見本 (取得の代わり)。random は 0 以上 n 未満を返す
 public sealed class NewsSample
 {
     private const string Notice = "※ この記事は画面の見本のためのダミーです。実在の人物・団体・出来事とは関係ありません。";
@@ -110,7 +108,6 @@ public sealed class NewsSample
 
     private readonly Func<int, int> random;
 
-    // カテゴリごとの、これから使う見出しの順
     private readonly Dictionary<NewsCategory, Queue<(NewsCategory Category, int Index)>> headlines =
         Enum.GetValues<NewsCategory>().ToDictionary(static x => x, static _ => new Queue<(NewsCategory Category, int Index)>());
 
@@ -121,25 +118,21 @@ public sealed class NewsSample
         this.random = random;
     }
 
-    // 新しい順。時刻は now から少しずつさかのぼる
     public IReadOnlyList<NewsArticle> LoadArticles(NewsCategory category, DateTime now, int count) =>
         CreateArticles(Enumerable.Range(0, count).Select(_ => NextHeadline(category)).ToArray(), now);
 
-    // 今の時刻の記事
     public NewsArticle LoadLatest(NewsCategory category, DateTime now)
     {
         var (actual, index) = NextHeadline(category);
         return CreateArticle(actual, index, now);
     }
 
-    // 速報 (数分前の記事)
     public NewsArticle LoadBreaking(DateTime now)
     {
         var category = (NewsCategory)(1 + random(Seeds.Count));
         return CreateArticle(category, random(Seeds[category].Headlines.Count), now.AddMinutes(-(1 + random(10))), true);
     }
 
-    // 同じカテゴリの別の記事 (一覧の見出しの順は進めない)
     public IReadOnlyList<NewsArticle> LoadRelated(NewsArticle article, int count) =>
         CreateArticles(
             Shuffle(article.Category)
@@ -148,8 +141,6 @@ public sealed class NewsSample
                 .ToArray(),
             article.PublishedAt);
 
-    // 見出しはカテゴリごとに混ぜた順に使い切ってから繰り返す。
-    // 周の変わり目で同じ見出しが続かないように、残りが 1 つのときに次の周を足し、その先頭が残りと同じなら最後と入れ替える
     private (NewsCategory Category, int Index) NextHeadline(NewsCategory category)
     {
         var queue = headlines[category];
@@ -170,7 +161,6 @@ public sealed class NewsSample
         return queue.Dequeue();
     }
 
-    // Top は各カテゴリから集める
     private (NewsCategory Category, int Index)[] Shuffle(NewsCategory category)
     {
         var candidates = Seeds
@@ -199,7 +189,6 @@ public sealed class NewsSample
         return articles;
     }
 
-    // 速報はまれに、コメントの数は少ない記事が多い
     private NewsArticle CreateArticle(NewsCategory category, int index, DateTime time, bool? breaking = null)
     {
         var seed = Seeds[category];

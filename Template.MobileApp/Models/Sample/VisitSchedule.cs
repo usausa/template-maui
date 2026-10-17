@@ -24,7 +24,6 @@ public enum VisitCategory
 // Data
 //--------------------------------------------------------------------------------
 
-// 訪問先 1 件
 public sealed record VisitInfo(
     string Code,
     string Name,

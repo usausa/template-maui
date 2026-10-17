@@ -23,16 +23,12 @@ public enum CalcErrorType
     NotComputable   // NaN / Infinity
 }
 
-// 表示する文言は画面で作る。Text は原因の数値・名前・文字・演算子・関数
 public sealed record CalcError(CalcErrorType Type, string? Text = null) : Error($"Calc error. type=[{Type}], text=[{Text}]");
 
 //--------------------------------------------------------------------------------
 // Engine
 //--------------------------------------------------------------------------------
 
-// 科学電卓の式評価エンジン (純モデル・UI/MAUI 非依存)。
-// トークナイザ → 操車場アルゴリズム (中置→RPN) → RPN 評価器 の 3 段構成。
-// 対応: 四則演算 / % (百分率) / 括弧 / 単項マイナス / 三角関数 (DEG) / log / ln / exp / √ / 累乗 / 階乗 / π / e / 暗黙の乗算
 public static class CalcEngine
 {
     public const int MaxFactorial = 170;
@@ -67,7 +63,6 @@ public static class CalcEngine
         "sin", "cos", "tan", "asin", "acos", "atan", "log", "ln", "exp", "sqrt"
     ];
 
-    // 失敗は理由 (CalcError) で返す
     public static Result<double> Evaluate(string expression) =>
         Tokenize(expression)
             .Ensure(static x => x.Count > 0, new CalcError(CalcErrorType.Empty))
@@ -110,7 +105,6 @@ public static class CalcEngine
                 continue;
             }
 
-            // 記号 (電卓ボタンの表示文字も受け付ける)
             switch (c)
             {
                 case '+' or '-' or '*' or '/' or '^' or '%' or '!':
@@ -178,7 +172,6 @@ public static class CalcEngine
         return tokens;
     }
 
-    // 直前トークンが値の終端なら暗黙の乗算 (2π, 3(1+2), (1+2)(3+4) など) を挿入する
     private static void AddWithImplicitMultiply(List<Token> tokens, Token token)
     {
         if (tokens.Count > 0)
@@ -196,7 +189,6 @@ public static class CalcEngine
         tokens.Add(token);
     }
 
-    // '-' が単項マイナスかどうかを直前トークンで判定する
     private static Token MakeOperator(List<Token> tokens, string text)
     {
         if (text == "-")
@@ -219,7 +211,7 @@ public static class CalcEngine
     }
 
     //--------------------------------------------------------------------------------
-    // Shunting-yard (中置記法 → 逆ポーランド記法)
+    // Shunting-yard
     //--------------------------------------------------------------------------------
 
     private static Result<List<Token>> ToRpn(List<Token> tokens)
@@ -370,7 +362,6 @@ public static class CalcEngine
         _ => new CalcError(CalcErrorType.UnknownOperator, op)
     };
 
-    // 三角関数は度 (DEG) で受け取る
     private static Result<double> ApplyFunction(string name, double value) => name switch
     {
         "sin" => Math.Sin(value * Math.PI / 180d),
@@ -407,7 +398,6 @@ public static class CalcEngine
 // Input
 //--------------------------------------------------------------------------------
 
-// 式の入力。計算の後に演算子を入れると前の結果から続け、ほかは新しい式にする
 public sealed class CalcInput
 {
     private const string ContinueOperators = "+−×÷^%!";
@@ -458,7 +448,6 @@ public sealed class CalcInput
         return result;
     }
 
-    // 末尾ゼロを出さない (極端な値は指数表記)
     public static string Format(double value)
     {
         var abs = Math.Abs(value);

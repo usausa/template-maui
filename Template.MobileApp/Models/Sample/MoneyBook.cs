@@ -53,7 +53,6 @@ public sealed record MoneyTransaction(DateTime Date, string Shop, MoneyShopKind 
     public MoneyCategory Category => MoneyBook.CategoryOf(Kind);
 }
 
-// 日ごとの取引 (一覧の日付の区切りにそのまま使う)
 public sealed class MoneyDay : ReadOnlyCollection<MoneyTransaction>
 {
     public DateTime Date { get; }
@@ -89,15 +88,12 @@ public sealed partial class MoneyNotice : ObservableObject
 // Service
 //--------------------------------------------------------------------------------
 
-// 決済アプリの取引と集計 (残高の推移・月の支出・分類・検索)
 public sealed class MoneyBook
 {
     private readonly DateTime now;
 
-    // 新しい順
     private readonly List<MoneyTransaction> transactions = [];
 
-    // 日ごとの終わりの残高 (古い順)
     private readonly List<MoneyBalance> balances = [];
 
     public int Balance { get; }
@@ -142,7 +138,6 @@ public sealed class MoneyBook
     // Balance
     //--------------------------------------------------------------------------------
 
-    // 今月と前月の 1 日あたりの平均残高の比 (0.024 = +2.4%)
     public double BalanceRate()
     {
         var month = new DateTime(now.Year, now.Month, 1);
@@ -151,14 +146,12 @@ public sealed class MoneyBook
         return previous > 0 ? (current - previous) / previous : 0;
     }
 
-    // 最近の日ごとの終わりの残高 (古い順)
     public IReadOnlyList<MoneyBalance> BalanceHistory(int days) => balances.TakeLast(days).ToList();
 
     //--------------------------------------------------------------------------------
     // Expense
     //--------------------------------------------------------------------------------
 
-    // 新しい順の月 (初日) と支出の合計
     public IReadOnlyList<MoneyMonth> Months(int count)
     {
         var month = new DateTime(now.Year, now.Month, 1);
@@ -167,14 +160,12 @@ public sealed class MoneyBook
 
     public int MonthTotal(DateTime month) => -Payments(month).Sum(static x => x.Amount);
 
-    // 1 週間あたりの支出 (今月は今日までの日数で割る)
     public int WeeklyAverage(DateTime month)
     {
         var days = (month.Year == now.Year) && (month.Month == now.Month) ? now.Day : DateTime.DaysInMonth(month.Year, month.Month);
         return (int)Math.Round(MonthTotal(month) * 7d / days);
     }
 
-    // 1〜7 日、8〜14 日 ... の週ごとの支出
     public IReadOnlyList<int> WeeklyTotals(DateTime month)
     {
         var weeks = (DateTime.DaysInMonth(month.Year, month.Month) + 6) / 7;
@@ -186,7 +177,6 @@ public sealed class MoneyBook
         return totals;
     }
 
-    // 分類ごとの支出 (多い順)
     public IReadOnlyList<MoneyCategoryTotal> CategoryTotals(DateTime month)
     {
         var total = (double)Math.Max(1, MonthTotal(month));
@@ -206,7 +196,6 @@ public sealed class MoneyBook
 
     public IReadOnlyList<MoneyDay> Recent(int count) => GroupByDay(transactions.Take(count));
 
-    // 店の名前の一部で探す (空なら最近のもの)
     public IReadOnlyList<MoneyDay> Search(string keyword, int count)
     {
         var text = keyword.Trim();
@@ -217,23 +206,12 @@ public sealed class MoneyBook
         source.GroupBy(static x => x.Date.Date)
             .Select(static x => new MoneyDay(x.Key, x.ToList()))
             .ToList();
-
-    //--------------------------------------------------------------------------------
-    // Notice
-    //--------------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------------
-    // Sample
-    //--------------------------------------------------------------------------------
-
-    // 曜日と日付で決まる 1 日の支払い。金額は日ごとの値でずらす
 }
 
 //--------------------------------------------------------------------------------
 // Sample
 //--------------------------------------------------------------------------------
 
-// 決済の見本 (半年前から今日までの取引。残高が下回るとオートチャージする)
 public static class MoneySample
 {
     private const int Days = 186;
@@ -347,7 +325,6 @@ public static class MoneySample
         ];
     }
 
-    // 支払いのコード (4 桁ずつ区切った 20 桁)
     public static string LoadPaymentCode() =>
         String.Join(' ', Enumerable.Range(0, 5).Select(static _ => RandomNumberGenerator.GetInt32(10000).ToString("D4", CultureInfo.InvariantCulture)));
 

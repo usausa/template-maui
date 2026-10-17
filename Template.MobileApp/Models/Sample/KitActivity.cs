@@ -29,7 +29,6 @@ public sealed record KitSleepSpan(DateTime Start, TimeSpan Length, KitSleepStage
 
 public sealed record KitSleepTotal(KitSleepStage Stage, TimeSpan Length);
 
-// 今日の活動 (歩数・心拍・消費・配達中の注文・昨夜の睡眠)
 public sealed class KitActivity
 {
     public required DateTime Today { get; init; }
@@ -71,18 +70,14 @@ public sealed class KitActivity
 // Sample
 //--------------------------------------------------------------------------------
 
-// 活動の見本 (今日の値・昨夜の睡眠・1 日 / 週 / 月の歩数と心拍)。日時は今日からの相対
 public static class KitSample
 {
     private const int MonthDays = 30;
 
-    // 1 時間ごとの歩数の割合 (0 時〜23 時)
     private static readonly int[] HourWeights = [0, 0, 0, 0, 0, 0, 2, 9, 12, 4, 3, 4, 10, 6, 3, 3, 4, 8, 11, 7, 5, 3, 1, 0];
 
-    // 1 時間ごとの心拍の目安 (0 時〜23 時)
     private static readonly int[] HourHeart = [56, 55, 54, 54, 55, 57, 63, 78, 82, 72, 70, 71, 76, 73, 70, 69, 72, 80, 96, 84, 76, 70, 64, 60];
 
-    // 昨夜の睡眠の段階 (寝てからの分と段階)
     private static readonly (int Minutes, KitSleepStage Stage)[] SleepPlan =
     [
         (18, KitSleepStage.Light), (42, KitSleepStage.Deep), (24, KitSleepStage.Light), (16, KitSleepStage.Rem),
@@ -104,7 +99,6 @@ public static class KitSample
             start = start.AddMinutes(minutes);
         }
 
-        // 配達の予定は次の 30 分の区切りの 30 分後
         var slot = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute >= 30 ? 30 : 0, 0);
         return new KitActivity
         {
@@ -123,7 +117,6 @@ public static class KitSample
     {
         if (period == KitPeriod.Day)
         {
-            // 割合で分けた端数は、いちばん多い時間に足して合計を今日の歩数にそろえる
             var total = HourWeights.Sum();
             var hours = HourWeights.Select(x => Math.Floor((double)activity.Steps * x / total)).ToArray();
             hours[Array.IndexOf(HourWeights, HourWeights.Max())] += activity.Steps - hours.Sum();
@@ -145,7 +138,6 @@ public static class KitSample
         return DailySeries(activity.Today, period, x => HeartOf(activity, x));
     }
 
-    // 週は曜日、月は日付の名前
     private static KitSeries DailySeries(DateTime today, KitPeriod period, Func<DateTime, int> valueOf)
     {
         var count = period == KitPeriod.Week ? 7 : MonthDays;
@@ -156,7 +148,6 @@ public static class KitSample
             days.Select(x => x.ToString(format, CultureInfo.CurrentCulture)).ToList());
     }
 
-    // 日ごとの値は周期の違う波を重ねて日付でずらす (今日は今の値)
     private static int StepsOf(KitActivity activity, DateTime date) =>
         date == activity.Today ? activity.Steps : 7400 + (int)((2600 * Math.Sin(date.DayOfYear * 1.37)) + (1400 * Math.Sin(date.DayOfYear * 0.53)));
 

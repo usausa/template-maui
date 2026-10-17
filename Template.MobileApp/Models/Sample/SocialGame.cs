@@ -4,7 +4,6 @@ namespace Template.MobileApp.Models.Sample;
 // Enum
 //--------------------------------------------------------------------------------
 
-// 見出しのアイコンとメニューの新着の印
 [Flags]
 public enum SocialBadges
 {
@@ -44,27 +43,21 @@ public sealed class SocialNotificationInfo
 
     public required double Percent { get; init; }
 
-    // 表示時の時間差スライドイン用ディレイ(ms)
     public int Delay { get; init; }
 }
 
-// プレイヤーの状況 (エピソード・経験値・所持数)
 public sealed record SocialPlayer(string Episode, double ExpPercent, int Parts, int Gem, int Money);
 
-// 警報
 public sealed record SocialAlert(string Title, string Message);
 
-// 状態 (回復・強化・弱体)
 public sealed record SocialStatus(string Name, string Form, int Heal, int Buff, int Debuff);
 
-// 投入戦力
 public sealed record SocialInformation(string Title, IReadOnlyList<SocialUnit> Units);
 
 //--------------------------------------------------------------------------------
 // Sample
 //--------------------------------------------------------------------------------
 
-// ソーシャルゲームのホームの見本
 public static class SocialSample
 {
     public static SocialBadges LoadBadges() =>

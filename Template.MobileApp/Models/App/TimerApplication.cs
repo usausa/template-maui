@@ -10,7 +10,6 @@ public enum TimerMode
     Countdown
 }
 
-// 保存する状態 (ストップウォッチとカウントダウン)
 public sealed class TimerSnapshot
 {
     public TimerStopwatchSnapshot Stopwatch { get; set; } = new();
@@ -29,10 +28,8 @@ public enum TimerStopwatchState
     Paused
 }
 
-// ラップ (No は 1 から。Lap は前のラップからの時間、Split は通算)
 public sealed record TimerLap(int No, TimeSpan Lap, TimeSpan Split);
 
-// ラップの行 (最速と最遅の印、一番遅いラップに対する長さの比)
 public sealed partial class TimerLapItem : ObservableObject
 {
     public int No { get; }
@@ -58,7 +55,6 @@ public sealed partial class TimerLapItem : ObservableObject
     }
 }
 
-// ラップの一覧 (新しい順)
 public sealed class TimerLapList : ObservableCollection<TimerLapItem>
 {
     public void AddLatest(TimerLap lap)
@@ -67,7 +63,6 @@ public sealed class TimerLapList : ObservableCollection<TimerLapItem>
         UpdateMarks();
     }
 
-    // 古い順のラップから作り直す
     public void Rebuild(IEnumerable<TimerLap> laps)
     {
         Clear();
@@ -79,7 +74,6 @@ public sealed class TimerLapList : ObservableCollection<TimerLapItem>
         UpdateMarks();
     }
 
-    // 最速と最遅の印はラップが 2 つ以上のとき (同じ長さなら古いラップ)
     private void UpdateMarks()
     {
         var laps = this.Reverse().ToList();
@@ -95,7 +89,6 @@ public sealed class TimerLapList : ObservableCollection<TimerLapItem>
     }
 }
 
-// 保存する状態
 public sealed class TimerStopwatchSnapshot
 {
     public TimerStopwatchState State { get; set; }
@@ -107,10 +100,8 @@ public sealed class TimerStopwatchSnapshot
     public IReadOnlyList<TimeSpan> Splits { get; set; } = [];
 }
 
-// ストップウォッチ。経過時間は刻みを数えず、開始時刻と止めた時点までの時間から計算する (時刻は呼び出し側が渡す)
 public sealed class TimerStopwatch
 {
-    // ラップを取った時点の通算の時間
     private readonly List<TimeSpan> splits = [];
 
     private DateTimeOffset? startedAt;
@@ -124,11 +115,9 @@ public sealed class TimerStopwatch
     public TimeSpan GetElapsed(DateTimeOffset now) =>
         accumulated + (startedAt is { } start ? now - start : TimeSpan.Zero);
 
-    // 今のラップ (最後にラップを取ってからの時間)
     public TimeSpan GetCurrentLap(DateTimeOffset now) =>
         GetElapsed(now) - (splits.Count > 0 ? splits[^1] : TimeSpan.Zero);
 
-    // 1 分で 1 周 (0〜1)
     public double GetMinuteProgress(DateTimeOffset now) => (GetElapsed(now).TotalSeconds % 60) / 60;
 
     public void Start(DateTimeOffset now)
@@ -150,7 +139,6 @@ public sealed class TimerStopwatch
         }
     }
 
-    // 計測中だけ取れる
     public TimerLap? Lap(DateTimeOffset now)
     {
         TimerLap? lap = null;
@@ -173,7 +161,6 @@ public sealed class TimerStopwatch
         State = TimerStopwatchState.Stopped;
     }
 
-    // 古い順
     public IReadOnlyList<TimerLap> GetLaps()
     {
         var laps = new List<TimerLap>(splits.Count);
@@ -217,7 +204,6 @@ public enum TimerCountdownState
     Finished
 }
 
-// 保存する状態
 public sealed class TimerCountdownSnapshot
 {
     public TimerCountdownState State { get; set; }
@@ -229,10 +215,8 @@ public sealed class TimerCountdownSnapshot
     public DateTimeOffset? EndAt { get; set; }
 }
 
-// カウントダウン。残り時間は終わる時刻から計算する (時刻は呼び出し側が渡す)
 public sealed class TimerCountdown
 {
-    // 残りがこれ以下になると警告
     private static readonly TimeSpan WarningTime = TimeSpan.FromSeconds(10);
 
     private TimeSpan remaining;
@@ -241,21 +225,17 @@ public sealed class TimerCountdown
 
     public TimeSpan Duration { get; private set; }
 
-    // 計測中に終わる時刻
     public DateTimeOffset? EndAt { get; private set; }
 
     public TimeSpan GetRemaining(DateTimeOffset now) =>
         EndAt is { } end ? (end > now ? end - now : TimeSpan.Zero) : remaining;
 
-    // 残りの割合 (減っていく)
     public double GetProgress(DateTimeOffset now) =>
         Duration > TimeSpan.Zero ? GetRemaining(now) / Duration : 0;
 
-    // 計測中で残りが少ない
     public bool IsWarning(DateTimeOffset now) =>
         (State == TimerCountdownState.Running) && (GetRemaining(now) <= WarningTime);
 
-    // 計測中は変えられない
     public void SetDuration(TimeSpan duration)
     {
         if (State != TimerCountdownState.Running)
@@ -267,7 +247,6 @@ public sealed class TimerCountdown
         }
     }
 
-    // 終わった後は最初から
     public void Start(DateTimeOffset now)
     {
         if (State == TimerCountdownState.Finished)
@@ -299,7 +278,6 @@ public sealed class TimerCountdown
         State = TimerCountdownState.Stopped;
     }
 
-    // 計測中に終わる時刻を過ぎていれば終了にして true
     public bool CheckFinished(DateTimeOffset now)
     {
         if ((State == TimerCountdownState.Running) && (EndAt <= now))

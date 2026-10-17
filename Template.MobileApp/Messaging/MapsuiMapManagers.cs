@@ -18,8 +18,6 @@ using MapsuiColor = Mapsui.Styles.Color;
 using MapsuiMap = Mapsui.Map;
 using MapsuiPen = Mapsui.Styles.Pen;
 
-// Mapsui の機能を「機能グループ別マネージャ」に分割し、コントローラの辞書 (Mapper) に登録して
-// 個別に有効/無効化する。MPowerKit/GoogleMaps のマネージャ分割設計を参考にした構成
 public interface IMapsuiMapManager
 {
     string Name { get; }
@@ -47,7 +45,6 @@ public sealed class MapsuiWidgetManager : IMapsuiMapManager
 
     public void Attach(MapsuiMap map)
     {
-        // Map.Widgets はキューのため取り外しできない。生成済みなら Enabled を戻すだけにする
         if (scaleBar is null)
         {
             scaleBar = new ScaleBarWidget(map)
@@ -143,7 +140,6 @@ public sealed class MapsuiSpotManager : IMapsuiMapManager, IDisposable
         map.Layers.Remove(layer);
     }
 
-    // タップしたピンのコールアウトをトグルする (他のピンは閉じる)
     private void OnMapTapped(object? sender, Mapsui.MapEventArgs e)
     {
         var info = e.GetMapInfo([layer]);
@@ -256,7 +252,6 @@ public sealed class MapsuiGeoJsonManager : IMapsuiMapManager, IDisposable
         return options;
     }
 
-    // GeoJSON (EPSG:4326) を NetTopologySuite で読み、球面メルカトルへ再投影して表示する
     public void SetGeoJson(string json)
     {
         var collection = JsonSerializer.Deserialize<NetTopologySuite.Features.FeatureCollection>(json, GeoJsonOptions);
@@ -318,7 +313,6 @@ public sealed class MapsuiGeoJsonManager : IMapsuiMapManager, IDisposable
         attachedMap?.RefreshData();
     }
 
-    // 座標を EPSG:4326 → EPSG:3857 に書き換えるフィルタ
     private sealed class ToMercatorFilter : ICoordinateFilter
     {
         public static readonly ToMercatorFilter Instance = new();
@@ -333,7 +327,7 @@ public sealed class MapsuiGeoJsonManager : IMapsuiMapManager, IDisposable
 }
 
 //--------------------------------------------------------------------------------
-// Cluster (ズームレベルに応じたグリッドクラスタリング)
+// Cluster
 //--------------------------------------------------------------------------------
 
 #pragma warning disable CA5394
@@ -357,7 +351,6 @@ public sealed class MapsuiClusterManager : IMapsuiMapManager, IDisposable
 
     public MapsuiClusterManager(double centerLongitude, double centerLatitude, int count)
     {
-        // 疑似乱数 (固定シード) で中心周辺に点群を作る
         var random = new Random(42);
         for (var i = 0; i < count; i++)
         {
@@ -385,7 +378,6 @@ public sealed class MapsuiClusterManager : IMapsuiMapManager, IDisposable
 
     private void OnViewportChanged(object? sender, EventArgs e) => Rebuild();
 
-    // 解像度 (ズーム) が変わったときだけ、画面上おおよそ CellPixels 四方のグリッドへまとめ直す
     private void Rebuild()
     {
         var map = attachedMap;

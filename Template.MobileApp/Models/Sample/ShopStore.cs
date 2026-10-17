@@ -27,7 +27,6 @@ public enum ShopSort
 
 public sealed record ShopSpec(string Name, string Value);
 
-// Variants が空の商品は種類を選ばない
 public sealed record ShopProduct(
     int Id,
     ShopCategory Category,
@@ -43,7 +42,6 @@ public sealed record ShopProduct(
     string VariantName,
     IReadOnlyList<string> Variants);
 
-// 商品とお気に入り
 public sealed partial class ShopItem : ObservableObject
 {
     public required ShopProduct Product { get; init; }
@@ -70,7 +68,6 @@ public sealed record ShopOrder(string Number, DateTime DeliveryDate, int Count, 
 // Service
 //--------------------------------------------------------------------------------
 
-// お店 (絞り込みと並べ替え・お気に入り・カート・注文)
 public sealed partial class ShopStore : ObservableObject
 {
     private const int MaxQuantity = 99;
@@ -106,7 +103,6 @@ public sealed partial class ShopStore : ObservableObject
         }
     }
 
-    // カテゴリ (null はすべて)・名前の部分一致・価格の上限 (null は上限なし) で絞り込み、並べる
     public IReadOnlyList<ShopItem> Find(ShopCategory? category, string text, ShopSort sort, int? maxPrice)
     {
         var query = Items.Where(x =>
@@ -122,7 +118,6 @@ public sealed partial class ShopStore : ObservableObject
         };
     }
 
-    // 同じ商品と種類の行があれば数を足す
     public void AddToCart(ShopItem item, string variant, int quantity)
     {
         var line = Cart.FirstOrDefault(x => (x.Product.Id == item.Product.Id) && (x.Variant == variant));
@@ -144,7 +139,6 @@ public sealed partial class ShopStore : ObservableObject
         Update();
     }
 
-    // 1 より減らさない (行を消すのはスワイプ)
     public void Decrease(ShopCartItem item)
     {
         item.Quantity = Math.Max(1, item.Quantity - 1);
@@ -157,7 +151,6 @@ public sealed partial class ShopStore : ObservableObject
         Update();
     }
 
-    // 注文を確定してカートを空にする
     public ShopOrder Checkout(DateTime today)
     {
         var order = new ShopOrder($"A{orderNumber++}", today.AddDays(DeliveryDays), CartCount, Total);
@@ -179,7 +172,6 @@ public sealed partial class ShopStore : ObservableObject
 // Sample
 //--------------------------------------------------------------------------------
 
-// お店の見本 (商品とカート)
 public static class ShopSample
 {
     public static IReadOnlyList<ShopProduct> LoadProducts() =>

@@ -19,12 +19,10 @@ public enum SudokuLevel
 
 public readonly record struct SudokuCell(int Row, int Column);
 
-// 描く盤面 (Placed は直前に数字を入れたマス、Flash はそろった行・列・ブロックや完成で光らせるマス)
 #pragma warning disable CA1819
 public sealed record SudokuFrame(SudokuGame Game, SudokuCell? Selected, SudokuCell? Placed, SudokuCell[] Flash);
 #pragma warning restore CA1819
 
-// 保存する状態 (マスは行ごとに並べる。値の 0 は空き、メモは数字のビット。ベストタイムは難易度の順の秒で、0 は記録なし)
 public sealed class SudokuSnapshot
 {
     public SudokuLevel Level { get; set; }
@@ -50,8 +48,6 @@ public sealed class SudokuSnapshot
 // Game
 //--------------------------------------------------------------------------------
 
-// 数独。答えが 1 つだけの問題を作り、答えと違う数字はミスとして数える (答えと同じ数字は変えられない)。完成したら難易度ごとのベストタイムを残す。
-// 経過時間は数え始めた時刻と止めた時点までの時間から計算する (時刻は呼び出し側が渡す)。乱数は 0 以上 n 未満を返す関数で受け取る
 public sealed class SudokuGame
 {
     public const int Size = 9;
@@ -62,28 +58,22 @@ public sealed class SudokuGame
 
     private const int CellCount = Size * Size;
 
-    // 1 から 9 の数字のビット
     private const int AllDigits = 0b11_1111_1110;
 
-    // マスごとの、同じ行・列・ブロックのほかのマス
     private static readonly int[][] Peers = CreatePeers();
 
     private readonly Func<int, int> random;
 
-    // 行ごとに並べたマス (Row * Size + Column)。値の 0 は空き
     private readonly int[] solution = new int[CellCount];
 
     private readonly int[] cells = new int[CellCount];
 
     private readonly bool[] given = new bool[CellCount];
 
-    // メモ (数字のビット。1 << 数字)
     private readonly int[] notes = new int[CellCount];
 
-    // 取り消しのための変更前の状態 (1 回の操作で変わったマスをまとめる)
     private readonly Stack<CellState[]> history = new();
 
-    // 難易度の順のベストタイム (秒。0 は記録なし)
     private readonly int[] bestSeconds = new int[Enum.GetValues<SudokuLevel>().Length];
 
     private TimeSpan elapsed;
@@ -92,25 +82,20 @@ public sealed class SudokuGame
 
     public SudokuLevel Level { get; private set; }
 
-    // 答えと違う数字を入れた回数
     public int Mistakes { get; private set; }
 
     public int HintsLeft { get; private set; }
 
     public bool CanUndo => history.Count > 0;
 
-    // 今の難易度のベストタイム (秒。0 は記録なし)
     public int BestSeconds => bestSeconds[(int)Level];
 
-    // 完成してベストタイムを更新した
     public bool IsNewBest { get; private set; }
 
-    // 答えになっていないマスの数
     public int RemainingCount => Enumerable.Range(0, CellCount).Count(x => cells[x] != solution[x]);
 
     public bool IsCompleted => RemainingCount == 0;
 
-    // 問題のマスのほかに、数字かメモを入れている
     public bool HasProgress => Enumerable.Range(0, CellCount).Any(x => !given[x] && ((cells[x] != 0) || (notes[x] != 0)));
 
     public SudokuGame(Func<int, int> random)
@@ -118,7 +103,6 @@ public sealed class SudokuGame
         this.random = random;
     }
 
-    // 残すマスの数 (答えが 1 つに決まらなくなるマスは残すので、これより多くなることがある)
     private static int GetGivenCount(SudokuLevel level) => level switch
     {
         SudokuLevel.Easy => 40,
@@ -130,7 +114,6 @@ public sealed class SudokuGame
     // Game
     //--------------------------------------------------------------------------------
 
-    // 答えを作り、消しても答えが 1 つのままのマスだけを消して問題にする
     public void NewGame(SudokuLevel level)
     {
         Array.Clear(solution);
@@ -172,7 +155,6 @@ public sealed class SudokuGame
         IsNewBest = false;
     }
 
-    // 空きのマスに、置ける数字をランダムな順で入れていく (バックトラッキング)
     private bool Fill(int index)
     {
         if (index >= CellCount)
@@ -197,7 +179,6 @@ public sealed class SudokuGame
         return false;
     }
 
-    // 答えの数を上限まで数える (置ける数字のいちばん少ない空きのマスから試し、試した数字は戻す)
     private static int CountSolutions(int[] board, int limit)
     {
         var rows = new int[Size];
@@ -274,14 +255,12 @@ public sealed class SudokuGame
 
     public bool IsGiven(SudokuCell cell) => given[ToIndex(cell)];
 
-    // 答えと違う数字
     public bool IsWrong(SudokuCell cell)
     {
         var index = ToIndex(cell);
         return (cells[index] != 0) && (cells[index] != solution[index]);
     }
 
-    // 同じ行・列・ブロックに同じ数字がある
     public bool HasConflict(SudokuCell cell)
     {
         var index = ToIndex(cell);
@@ -300,14 +279,12 @@ public sealed class SudokuGame
 
     public bool HasNote(SudokuCell cell, int value) => (notes[ToIndex(cell)] & (1 << value)) != 0;
 
-    // 答えの位置にまだ置いていない数
     public int CountRemaining(int value) => Size - Enumerable.Range(0, CellCount).Count(x => (cells[x] == value) && (solution[x] == value));
 
     //--------------------------------------------------------------------------------
     // Input
     //--------------------------------------------------------------------------------
 
-    // 数字を入れ、同じ行・列・ブロックのメモからその数字を消す。答えと違えばミスを数え、完成したら時間を止める
     public bool SetValue(SudokuCell cell, int value, DateTimeOffset now)
     {
         var index = ToIndex(cell);
@@ -336,7 +313,6 @@ public sealed class SudokuGame
         return changed;
     }
 
-    // 入れた数字とメモを消す
     public bool Clear(SudokuCell cell)
     {
         var index = ToIndex(cell);
@@ -351,7 +327,6 @@ public sealed class SudokuGame
         return changed;
     }
 
-    // 空きのマスのメモを切り替える
     public bool ToggleNote(SudokuCell cell, int value)
     {
         var index = ToIndex(cell);
@@ -365,7 +340,6 @@ public sealed class SudokuGame
         return changed;
     }
 
-    // 答えを入れたマスを返す。選んだマスが答えになっていなければそのマス、そうでなければ置ける数字のいちばん少ないマスに入れる
     public SudokuCell? Hint(SudokuCell? selected, DateTimeOffset now)
     {
         SudokuCell? hint = null;
@@ -388,7 +362,6 @@ public sealed class SudokuGame
         return hint;
     }
 
-    // 直前の操作を取り消し、その操作のマスを返す (ミスとヒントの回数は戻さない。完成した後は取り消さない)
     public SudokuCell? Undo()
     {
         SudokuCell? cell = null;
@@ -406,7 +379,6 @@ public sealed class SudokuGame
         return cell;
     }
 
-    // マスを含む、すべて答えになった行・列・ブロックのマス (完成したら盤面のすべてのマス)
     public SudokuCell[] GetCompletedCells(SudokuCell cell)
     {
         var index = ToIndex(cell);
@@ -434,7 +406,6 @@ public sealed class SudokuGame
     public TimeSpan GetElapsed(DateTimeOffset now) =>
         elapsed + (resumedAt is { } start ? now - start : TimeSpan.Zero);
 
-    // 数え始める (完成していれば数えない)
     public void Resume(DateTimeOffset now)
     {
         if ((resumedAt is null) && !IsCompleted)
@@ -449,7 +420,6 @@ public sealed class SudokuGame
         resumedAt = null;
     }
 
-    // 時間を止め、経過時間 (秒は切り捨て) が短ければベストタイムにする
     private void Finish(DateTimeOffset now)
     {
         Pause(now);
@@ -479,7 +449,6 @@ public sealed class SudokuGame
         BestSeconds = [.. bestSeconds]
     };
 
-    // 盤面として読めない状態は盤面を読み込まずに false (ベストタイムは読む。経過時間は止めた状態で読む)
     public bool Import(SudokuSnapshot snapshot)
     {
         for (var i = 0; i < Math.Min(bestSeconds.Length, snapshot.BestSeconds.Count); i++)
@@ -534,10 +503,8 @@ public sealed class SudokuGame
             .ToArray())
     ];
 
-    // 問題のマスと、答えを入れたマスは変えない
     private bool IsFixed(int index) => given[index] || (cells[index] == solution[index]);
 
-    // 同じ行・列・ブロックの数字から見た、置ける数字の数
     private int CountCandidates(int index) =>
         BitOperations.PopCount((uint)(AllDigits & ~Peers[index].Aggregate(0, (mask, x) => mask | (1 << cells[x]))));
 

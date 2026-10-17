@@ -414,8 +414,7 @@ public static class GraphBuilder
 // Sample
 //--------------------------------------------------------------------------------
 
-// コミットの履歴の見本 (アプリの中の Graph/repository.json)
-public static class GraphSample
+spublic static class GraphSample
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 

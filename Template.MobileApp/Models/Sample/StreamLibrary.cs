@@ -29,7 +29,6 @@ public enum StreamTrailerKind
     Extra
 }
 
-// 棚 (高評価・オリジナル・急上昇・アクション & アドベンチャー)
 public enum StreamShelf
 {
     TopRated,
@@ -44,7 +43,6 @@ public enum StreamShelf
 
 public sealed record StreamTrailer(string Image, string Title, StreamTrailerKind Kind, TimeSpan Length);
 
-// Minutes は上映時間 (分)、Match は好みとの一致 (%)
 public sealed record StreamWork(
     int Id,
     string Title,
@@ -63,12 +61,10 @@ public sealed record StreamWork(
     string Director,
     IReadOnlyList<StreamTrailer> Trailers);
 
-// 作品と見る人の状態
 public sealed partial class StreamItem : ObservableObject
 {
     public required StreamWork Work { get; init; }
 
-    // 見た割合 (0 は未視聴)
     public double Progress { get; init; }
 
     public bool HasProgress => Progress > 0;
@@ -89,7 +85,6 @@ public sealed partial class StreamItem : ObservableObject
 // Service
 //--------------------------------------------------------------------------------
 
-// 見る人の作品の一覧 (トップ・続きを見る・棚・関連)
 public sealed class StreamLibrary
 {
     private const int RelatedCount = 4;
@@ -113,7 +108,6 @@ public sealed class StreamLibrary
         _ => Items.Where(static x => x.Work.Genre is StreamGenre.Action or StreamGenre.Sf or StreamGenre.Fantasy).ToArray()
     };
 
-    // 関連は同じジャンルの作品を先に
     public IReadOnlyList<StreamItem> Related(StreamItem item) =>
         Items
             .Where(x => x != item)
@@ -126,7 +120,6 @@ public sealed class StreamLibrary
 // Sample
 //--------------------------------------------------------------------------------
 
-// 作品の見本 (見ている途中の作品は見た割合も)
 public static class StreamSample
 {
     private static readonly IReadOnlyList<StreamWork> Works =
@@ -175,7 +168,6 @@ public static class StreamSample
     public static IReadOnlyList<StreamItem> LoadItems() =>
         [.. Works.Select(static x => new StreamItem { Work = x, Progress = ProgressOf(x.Id) })];
 
-    // 見本の視聴の進み具合
     private static double ProgressOf(int id) => id switch
     {
         1 => 0.4,

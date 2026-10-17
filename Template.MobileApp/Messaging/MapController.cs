@@ -85,7 +85,6 @@ public sealed class MapController : IMapController
         }
     }
 
-    // 範囲 (null で消去。先頭と末尾は自動で接続される)
     public void SetArea(IEnumerable<Location>? points)
     {
         if (map is null)
@@ -117,7 +116,6 @@ public sealed class MapController : IMapController
         }
     }
 
-    // 半径円 (null で消去)
     public void SetCircle(Location? center, double radiusKilometers = 1d)
     {
         if (map is null)

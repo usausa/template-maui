@@ -12,7 +12,6 @@ public enum MailFolder
     Trash
 }
 
-// 一覧で見るフォルダー (スター付きは、ゴミ箱以外のスターの付いたメール)
 public enum MailView
 {
     Inbox,
@@ -38,7 +37,6 @@ public sealed partial class MailMessage : ObservableObject
 {
     public DateTime DateTime { get; set; }
 
-    // 差出人の画像のファイル名 (無いときは頭文字のアイコン)
     public string? Avatar { get; set; }
 
     public string From { get; set; } = default!;
@@ -47,12 +45,10 @@ public sealed partial class MailMessage : ObservableObject
 
     public string Body { get; set; } = default!;
 
-    // 添付のファイル名
     public string? Attachment { get; set; }
 
     public bool HasAttachment => Attachment is not null;
 
-    // 一覧の要約 (改行を詰める)
     public string Preview => string.Join(' ', Body.Split('\n', StringSplitOptions.RemoveEmptyEntries));
 
     [ObservableProperty]
@@ -65,7 +61,6 @@ public sealed partial class MailMessage : ObservableObject
     public partial bool IsStarred { get; set; }
 }
 
-// 日付の区切り (今日・昨日・今週・それ以前) ごとのメール
 public sealed class MailGroup : ReadOnlyCollection<MailMessage>
 {
     public MailDay Day { get; }
@@ -77,7 +72,6 @@ public sealed class MailGroup : ReadOnlyCollection<MailMessage>
     }
 }
 
-// フォルダーの件数 (受信トレイは未読の数)
 public sealed partial class MailViewCount : ObservableObject
 {
     public required MailView View { get; init; }
@@ -90,7 +84,6 @@ public sealed partial class MailViewCount : ObservableObject
 // Service
 //--------------------------------------------------------------------------------
 
-// メールボックス (フォルダーごとの一覧と数、既読・スター・削除・アーカイブ)
 public sealed class MailBox
 {
     private readonly List<MailMessage> messages;
@@ -104,7 +97,6 @@ public sealed class MailBox
         UpdateCounts();
     }
 
-    // フォルダーのメールを新しい順に、日付で区切る
     public IReadOnlyList<MailGroup> Find(MailView view, DateTime now) =>
         messages
             .Where(x => Match(x, view))
@@ -125,7 +117,6 @@ public sealed class MailBox
         UpdateCounts();
     }
 
-    // ゴミ箱の中では消す。ほかはゴミ箱へ
     public void Delete(MailMessage message)
     {
         if (message.Folder == MailFolder.Trash)
@@ -164,7 +155,6 @@ public sealed class MailBox
         _ => message.Folder == MailFolder.Trash
     };
 
-    // 今日・昨日・今週 (7 日以内)・それ以前
     private static MailDay DayOf(DateTime date, DateTime now) =>
         (now.Date - date.Date).Days switch
         {
@@ -179,7 +169,6 @@ public sealed class MailBox
 // Sample
 //--------------------------------------------------------------------------------
 
-// メールの見本 (日時は今からの相対)
 public static class MailSample
 {
     // ReSharper disable StringLiteralTypo

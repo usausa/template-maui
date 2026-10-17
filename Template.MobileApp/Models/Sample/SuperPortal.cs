@@ -64,7 +64,6 @@ public sealed class SuperShop
 // Sample
 //--------------------------------------------------------------------------------
 
-// スーパーアプリのホームの見本 (ポイント・バナー・サービス・クーポン・近くのお店)
 public static class SuperSample
 {
     public static int LoadPoint() => 1250;

@@ -14,7 +14,6 @@ public enum OrderStatus
     Completed
 }
 
-// 受注の受付経路
 public enum OrderChannel
 {
     Store,
@@ -23,7 +22,6 @@ public enum OrderChannel
     Fax
 }
 
-// 目印 (期限切れ / 期限間近 / 高額 / 大口 / 最近更新)
 [Flags]
 public enum OrderMarks
 {
@@ -39,8 +37,6 @@ public enum OrderMarks
 // Data
 //--------------------------------------------------------------------------------
 
-// 受注一覧の 1 行。状態と確認は画面から変更されるため変更通知を持つ (グリッドが並べ替えと色を追従させる)。
-// 状態・目印・ランク・受付は値のまま渡し、文言は列の Converter で決める
 public sealed partial class OrderInfo : ObservableObject
 {
     private const int DueSoonDays = 3;
@@ -51,7 +47,6 @@ public sealed partial class OrderInfo : ObservableObject
 
     private const int RecentDays = 3;
 
-    // 列キーで値を取り出すアクセサ (XAML で宣言した GridColumn に Key で結び付く)
     public static GridValueAccessorCollection<OrderInfo> Accessors { get; } = new()
     {
         { nameof(Status), static x => x.Status },
@@ -75,7 +70,6 @@ public sealed partial class OrderInfo : ObservableObject
 
     public string Customer { get; }
 
-    // 顧客ランク 1〜3
     public int Rank { get; }
 
     public string Product { get; }
@@ -131,7 +125,6 @@ public sealed partial class OrderInfo : ObservableObject
         Status = status;
     }
 
-    // 未処理 → 処理中 → 完了 → 未処理 (保留は処理中へ)
     public void AdvanceStatus()
     {
         Status = Status switch
@@ -145,11 +138,11 @@ public sealed partial class OrderInfo : ObservableObject
     }
 }
 
-#pragma warning disable CA5394
 //--------------------------------------------------------------------------------
 // Sample
 //--------------------------------------------------------------------------------
 
+#pragma warning disable CA5394
 public static class OrderSample
 {
     private static readonly string[] Customers =
@@ -167,7 +160,6 @@ public static class OrderSample
 
     private static readonly string[] Staffs = ["佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村"];
 
-    // 同じ並びを再現できるよう seed 固定。顧客ランクは顧客ごとに固定
     public static OrderInfo[] LoadOrders(int count, int seed = 20260913)
     {
         var random = new Random(seed);

@@ -16,13 +16,10 @@ public enum Puzzle2048Direction
 // Data
 //--------------------------------------------------------------------------------
 
-// 盤面のタイル (Id で動きを追う。合体すると新しい Id になる)
 public sealed record Puzzle2048Tile(int Id, int Value, int Row, int Column);
 
-// タイルの動き (合体して消えるタイルも合体先へ動く)
 public sealed record Puzzle2048Slide(int Value, int FromRow, int FromColumn, int ToRow, int ToColumn);
 
-// 1 手の結果
 public sealed class Puzzle2048Move
 {
     public static Puzzle2048Move None { get; } = new([], [], null, 0);
@@ -30,14 +27,11 @@ public sealed class Puzzle2048Move
 #pragma warning disable CA1819
     public Puzzle2048Slide[] Slides { get; }
 
-    // 合体でできたタイル
     public Puzzle2048Tile[] Merged { get; }
 #pragma warning restore CA1819
 
-    // 新しく置いたタイル
     public Puzzle2048Tile? Spawned { get; }
 
-    // 加点
     public int Gained { get; }
 
     public bool Moved => (Merged.Length > 0) || Slides.Any(static x => (x.FromRow != x.ToRow) || (x.FromColumn != x.ToColumn));
@@ -51,12 +45,10 @@ public sealed class Puzzle2048Move
     }
 }
 
-// 描く盤面 (Move は直前の 1 手。無ければ動かさずに描く)
 #pragma warning disable CA1819
 public sealed record Puzzle2048Frame(Puzzle2048Tile[] Tiles, Puzzle2048Move? Move);
 #pragma warning restore CA1819
 
-// 保存する状態 (値は行ごとに並べる。0 は空き)
 public sealed class Puzzle2048Snapshot
 {
     public IReadOnlyList<int> Cells { get; set; } = [];
@@ -74,7 +66,6 @@ public sealed class Puzzle2048Snapshot
 // Game
 //--------------------------------------------------------------------------------
 
-// 2048。最高点は新しいゲームでも残す。乱数は 0 以上 n 未満を返す関数で受け取る
 public sealed class Puzzle2048Game
 {
     public const int Size = 4;
@@ -83,26 +74,20 @@ public sealed class Puzzle2048Game
 
     private readonly Func<int, int> random;
 
-    // 行ごとに並べたマス (Row * Size + Column)
     private Puzzle2048Tile?[] cells = new Puzzle2048Tile?[Size * Size];
 
     private int nextId = 1;
 
     public int Score { get; private set; }
 
-    // 今までの最高点 (新しいゲームでも残す)
     public int BestScore { get; private set; }
 
-    // 2048 に届いた (一度届けば、その後も true)
     public bool IsWon { get; private set; }
 
-    // 届いた後も続ける
     public bool KeepPlaying { get; set; }
 
-    // 届いて、続けるかを選ぶ前 (結果を出している)
     public bool IsWinPending => IsWon && !KeepPlaying;
 
-    // 動ける方向が無い
     public bool IsOver { get; private set; }
 
 #pragma warning disable CA1819
@@ -125,7 +110,6 @@ public sealed class Puzzle2048Game
         IsOver = false;
     }
 
-    // 動けない方向と、結果を出している間は何もしない (None を返す)。動いたら新しいタイルを置く
     public Puzzle2048Move Move(Puzzle2048Direction direction)
     {
         var result = Puzzle2048Move.None;
@@ -137,7 +121,6 @@ public sealed class Puzzle2048Game
             var gained = 0;
             for (var line = 0; line < Size; line++)
             {
-                // 動く先の端から順に並べ、同じ値が続けば 1 回だけ合体する
                 var positions = GetLine(direction, line);
                 var tiles = positions.Select(x => cells[Index(x.Row, x.Column)]).OfType<Puzzle2048Tile>().ToList();
                 var target = 0;
@@ -191,7 +174,6 @@ public sealed class Puzzle2048Game
         KeepPlaying = KeepPlaying
     };
 
-    // 盤面として読めない状態は読み込まずに false
     public bool Import(Puzzle2048Snapshot snapshot)
     {
         var valid = (snapshot.Cells.Count == Size * Size) && snapshot.Cells.Any(static x => x > 0);
@@ -216,7 +198,6 @@ public sealed class Puzzle2048Game
         return valid;
     }
 
-    // 動く先の端から並べた 1 列の位置
     private static (int Row, int Column)[] GetLine(Puzzle2048Direction direction, int line)
     {
         var positions = new (int Row, int Column)[Size];
@@ -239,7 +220,6 @@ public sealed class Puzzle2048Game
     private static Puzzle2048Slide ToSlide(Puzzle2048Tile tile, int row, int column) =>
         new(tile.Value, tile.Row, tile.Column, row, column);
 
-    // 空いたマスに 2 (1 割は 4) を置く
     private Puzzle2048Tile? Spawn()
     {
         var empties = new List<(int Row, int Column)>();
@@ -265,7 +245,6 @@ public sealed class Puzzle2048Game
         return tile;
     }
 
-    // 空きがあるか、隣り合う同じ値がある
     private bool CanMove()
     {
         var movable = false;

@@ -17,7 +17,6 @@ public sealed class MapSpot
 // Sample
 //--------------------------------------------------------------------------------
 
-// 地図に置く地点の見本 (東京の名所)
 public static class MapSample
 {
     public static IReadOnlyList<MapSpot> LoadSpots() =>

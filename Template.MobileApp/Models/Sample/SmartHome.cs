@@ -45,11 +45,9 @@ public sealed partial class HomeDevice : ObservableObject
     [ObservableProperty]
     public partial bool IsOn { get; set; }
 
-    // 明るさと開き具合は %、Fan は風量の段、AirConditioner は設定の温度
     [ObservableProperty]
     public partial double Level { get; set; }
 
-    // 明るさの変わる機器は消すと 0% にして、点けると消す前の明るさに戻す
     public void Toggle()
     {
         IsOn = !IsOn;
@@ -134,7 +132,6 @@ public sealed partial class SmartHome : ObservableObject
 // Sample
 //--------------------------------------------------------------------------------
 
-// 部屋と機器の見本 (リビング・寝室・キッチン)
 public static class HomeSample
 {
     public static IReadOnlyList<HomeRoom> LoadRooms() =>

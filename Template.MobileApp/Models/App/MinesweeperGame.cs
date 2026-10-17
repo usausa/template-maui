@@ -38,7 +38,6 @@ public enum MinesweeperMoveType
 
 public readonly record struct MinesweeperCell(int Row, int Column);
 
-// 1 手の結果 (Revealed は見せるマス。負けたときは地雷を踏んだマスから近い順)
 public sealed record MinesweeperMove(MinesweeperMoveType Type, IReadOnlyList<MinesweeperCell> Revealed)
 {
     public static MinesweeperMove None { get; } = new(MinesweeperMoveType.None, []);
@@ -46,10 +45,8 @@ public sealed record MinesweeperMove(MinesweeperMoveType Type, IReadOnlyList<Min
     public static MinesweeperMove Flagged { get; } = new(MinesweeperMoveType.Flagged, []);
 }
 
-// 描く盤面 (Revealed は直前に見せたマス。見せた順に覆いを消す動きに使う)
 public sealed record MinesweeperFrame(MinesweeperGame Game, IReadOnlyList<MinesweeperCell> Revealed);
 
-// 保存する状態 (ベストタイムは難易度の順の秒で、0 は記録なし)
 public sealed class MinesweeperSnapshot
 {
     public IReadOnlyList<int> BestSeconds { get; set; } = [];
@@ -59,15 +56,12 @@ public sealed class MinesweeperSnapshot
 // Game
 //--------------------------------------------------------------------------------
 
-// マインスイーパー。勝ったら難易度ごとのベストタイムを残す。乱数は 0 以上 n 未満を返す関数、時刻は引数で受け取る
 public sealed class MinesweeperGame
 {
     private readonly Func<int, int> random;
 
-    // 難易度の順のベストタイム (秒。0 は記録なし)
     private readonly int[] bestSeconds = new int[Enum.GetValues<MinesweeperLevel>().Length];
 
-    // マスは行ごとに並べる (Row * Columns + Column)
     private bool[] mines = [];
 
     private int[] numbers = [];
@@ -90,17 +84,14 @@ public sealed class MinesweeperGame
 
     public int RemainingMines => MineCount - FlagCount;
 
-    // 踏んだ地雷
     public MinesweeperCell? Exploded { get; private set; }
 
     public DateTimeOffset? StartedAt { get; private set; }
 
     public DateTimeOffset? EndedAt { get; private set; }
 
-    // 今の難易度のベストタイム (秒。0 は記録なし)
     public int BestSeconds => bestSeconds[(int)Level];
 
-    // 勝ってベストタイムを更新した
     public bool IsNewBest { get; private set; }
 
     private bool IsActive => State is MinesweeperState.Ready or MinesweeperState.Playing;
@@ -111,7 +102,6 @@ public sealed class MinesweeperGame
         NewGame(MinesweeperLevel.Beginner);
     }
 
-    // 初級 9×9・10 個、中級 16×16・40 個
     public void NewGame(MinesweeperLevel level)
     {
         (Rows, Columns, MineCount) = level == MinesweeperLevel.Intermediate ? (16, 16, 40) : (9, 9, 10);
@@ -130,16 +120,13 @@ public sealed class MinesweeperGame
 
     public bool IsMine(MinesweeperCell cell) => mines[Index(cell)];
 
-    // 周りの地雷の数
     public int GetNumber(MinesweeperCell cell) => numbers[Index(cell)];
 
     public MinesweeperCellState GetState(MinesweeperCell cell) => states[Index(cell)];
 
-    // 最初の 1 手から (終わったら終わった時点まで)
     public TimeSpan GetElapsed(DateTimeOffset now) =>
         StartedAt is { } start ? (EndedAt ?? now) - start : TimeSpan.Zero;
 
-    // 閉じたマスを開く。開いた数字のマスは周りを開く
     public MinesweeperMove Open(MinesweeperCell cell, DateTimeOffset now) =>
         GetState(cell) switch
         {
@@ -148,7 +135,6 @@ public sealed class MinesweeperGame
             _ => MinesweeperMove.None
         };
 
-    // 閉じたマスの旗を立てる / 外す。開いた数字のマスには旗を立てられないので、周りを開く
     public MinesweeperMove ToggleFlag(MinesweeperCell cell, DateTimeOffset now)
     {
         var state = GetState(cell);
@@ -168,7 +154,6 @@ public sealed class MinesweeperGame
         return move;
     }
 
-    // 最初の 1 手は、そのマスと周りに地雷を置かない。開いたマスを近い順に返す
     private List<MinesweeperCell> OpenHidden(MinesweeperCell cell, DateTimeOffset now)
     {
         var opened = new List<MinesweeperCell>();
@@ -187,7 +172,6 @@ public sealed class MinesweeperGame
         return opened;
     }
 
-    // 開いた数字のマスで、周りの旗の数が数字と同じなら、周りの閉じたマスを開く
     private List<MinesweeperCell> Chord(MinesweeperCell cell, DateTimeOffset now)
     {
         var opened = new List<MinesweeperCell>();
@@ -213,7 +197,6 @@ public sealed class MinesweeperGame
             ? MinesweeperMove.None
             : new MinesweeperMove(MinesweeperMoveType.Opened, State == MinesweeperState.Lost ? GetMines() : opened);
 
-    // 地雷のマス (踏んだマスから近い順)
     private IReadOnlyList<MinesweeperCell> GetMines()
     {
         var origin = Exploded ?? new MinesweeperCell(0, 0);
@@ -265,7 +248,6 @@ public sealed class MinesweeperGame
         }
     }
 
-    // 最初に開くマスとその周りを避けて置く (選ぶマスを前から順に入れ替える)
     private void PlaceMines(MinesweeperCell safe)
     {
         var candidates = EnumerateCells()
@@ -284,7 +266,6 @@ public sealed class MinesweeperGame
         }
     }
 
-    // 地雷なら負け。それ以外は 0 のマスが続く範囲を幅優先でまとめて開き、地雷以外をすべて開いたら勝ち
     private void OpenFrom(MinesweeperCell start, List<MinesweeperCell> opened, DateTimeOffset now)
     {
         states[Index(start)] = MinesweeperCellState.Opened;
@@ -322,7 +303,6 @@ public sealed class MinesweeperGame
             {
                 State = MinesweeperState.Won;
                 EndedAt = now;
-                // 残りの地雷に旗を立てる
                 foreach (var cell in EnumerateCells().Where(IsMine))
                 {
                     states[Index(cell)] = MinesweeperCellState.Flagged;
@@ -334,7 +314,6 @@ public sealed class MinesweeperGame
         }
     }
 
-    // 始まってからの秒 (切り上げ) が短ければベストタイムにする
     private void UpdateBest(DateTimeOffset now)
     {
         var seconds = (int)Math.Ceiling(GetElapsed(now).TotalSeconds);

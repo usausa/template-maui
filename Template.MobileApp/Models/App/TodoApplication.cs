@@ -6,7 +6,6 @@ using System.Collections.Specialized;
 // Enum
 //--------------------------------------------------------------------------------
 
-// 期限の区分け (日付で比べる)
 public enum TodoDue
 {
     None,
@@ -16,7 +15,6 @@ public enum TodoDue
     Later
 }
 
-// 一覧のグループ (並びの順)
 public enum TodoGroup
 {
     Overdue,
@@ -43,7 +41,6 @@ public static class TodoDueRule
             _ => TodoDue.Later
         };
 
-    // 完了した行は期限によらず完了のグループ
     public static TodoGroup ToGroup(TodoDue due, bool isDone) =>
         isDone
             ? TodoGroup.Done
@@ -61,7 +58,6 @@ public static class TodoDueRule
 // Data
 //--------------------------------------------------------------------------------
 
-// 一覧の行
 public sealed partial class TodoItem : ObservableObject
 {
     public long Id { get; set; }
@@ -81,7 +77,6 @@ public sealed partial class TodoItem : ObservableObject
     [ObservableProperty]
     public partial DateTime? DueDate { get; set; }
 
-    // 今日から見た期限の区分け
     [ObservableProperty]
     public partial TodoDue Due { get; set; }
 
@@ -94,7 +89,6 @@ public sealed partial class TodoItem : ObservableObject
     public void UpdateDue(DateTime today) => Due = TodoDueRule.Classify(DueDate, today);
 }
 
-// グループの行。一覧に出す行 (列挙と Count) は、畳んでいる間は空。全部の行は Items、見出しの件数は Total
 public sealed class TodoSection : IReadOnlyList<TodoItem>, INotifyCollectionChanged, INotifyPropertyChanged
 {
     private static readonly PropertyChangedEventArgs IsExpandedChangedEventArgs = new(nameof(IsExpanded));
@@ -130,7 +124,6 @@ public sealed class TodoSection : IReadOnlyList<TodoItem>, INotifyCollectionChan
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    // 畳む・開く
     public void ToggleExpanded()
     {
         IsExpanded = !IsExpanded;
@@ -171,14 +164,11 @@ public sealed class TodoSection : IReadOnlyList<TodoItem>, INotifyCollectionChan
 // Service
 //--------------------------------------------------------------------------------
 
-// 一覧。行を期限と完了でグループに分けて並べ、件数と完了の割合を数える
 public sealed partial class TodoList : ObservableObject
 {
-    // すべてのグループ (行の無いグループと、隠している完了も持つ)
     private readonly Dictionary<TodoGroup, TodoSection> sections =
         Enum.GetValues<TodoGroup>().ToDictionary(static x => x, static x => new TodoSection(x));
 
-    // 表示するグループ (並びは Group の順)
     public ObservableCollection<TodoSection> Sections { get; } = [];
 
     [ObservableProperty]
@@ -193,7 +183,6 @@ public sealed partial class TodoList : ObservableObject
     [ObservableProperty]
     public partial int RemainingCount { get; set; }
 
-    // 完了の割合
     [ObservableProperty]
     public partial double Progress { get; set; }
 
@@ -203,7 +192,6 @@ public sealed partial class TodoList : ObservableObject
         UpdateVisibility(sections[TodoGroup.Done]);
     }
 
-    // グループの中の並びの位置に入れる
     public void Place(TodoItem item)
     {
         var section = sections[TodoDueRule.ToGroup(item.Due, item.IsDone)];
@@ -228,7 +216,6 @@ public sealed partial class TodoList : ObservableObject
         }
     }
 
-    // 消されていなければ、今の状態のグループの位置へ動かす
     public void Move(TodoItem item)
     {
         if (sections.Values.Any(x => x.Items.Contains(item)))
@@ -246,7 +233,6 @@ public sealed partial class TodoList : ObservableObject
         Progress = TotalCount > 0 ? (double)DoneCount / TotalCount : 0;
     }
 
-    // 行があり、隠している完了でなければ、グループの順の位置に出す
     private void UpdateVisibility(TodoSection section)
     {
         var visible = (section.Total > 0) && ((section.Group != TodoGroup.Done) || ShowDone);
@@ -267,7 +253,6 @@ public sealed partial class TodoList : ObservableObject
         }
     }
 
-    // 完了は新しく完了した順、ほかは期限・作った順
     private static int Compare(TodoItem x, TodoItem y)
     {
         var result = x.IsDone ? y.UpdatedAt.CompareTo(x.UpdatedAt) : Nullable.Compare(x.DueDate, y.DueDate);

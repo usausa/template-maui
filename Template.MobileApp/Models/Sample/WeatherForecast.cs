@@ -14,7 +14,6 @@ public enum WeatherCondition
     Snow
 }
 
-// UV の段階 (0〜2 / 3〜5 / 6〜7 / 8〜10 / 11〜)
 public enum WeatherUvLevel
 {
     Low,
@@ -72,20 +71,16 @@ public enum WeatherAlertLevel
 // Data
 //--------------------------------------------------------------------------------
 
-// Level は 1〜5
 public sealed record WeatherIndex(WeatherIndexKind Kind, int Level);
 
 public sealed record WeatherAlert(WeatherAlertKind Kind, WeatherAlertLevel Level);
 
-// 気温は ℃、降水確率は %
 public sealed record WeatherHour(DateTime Time, WeatherCondition Condition, bool IsNight, int Temperature, int PrecipitationChance);
 
 public sealed record WeatherDay(DateTime Date, WeatherCondition Condition, int Low, int High, int PrecipitationChance);
 
-// 現在・今から 24 時間・今日から 7 日の予報
 public sealed class WeatherForecast
 {
-    // 月の満ち欠けの周期 (日)
     public const double SynodicMonth = 29.530588853;
 
     public required string Location { get; init; }
@@ -104,13 +99,10 @@ public sealed class WeatherForecast
 
     public required int Low { get; init; }
 
-    // %
     public required int Humidity { get; init; }
 
-    // m/s
     public required double WindSpeed { get; init; }
 
-    // 風が吹いてくる向き (度。北 = 0 で時計回り)
     public required int WindDirection { get; init; }
 
     public required int UvIndex { get; init; }
@@ -126,7 +118,6 @@ public sealed class WeatherForecast
 
     public required int DewPoint { get; init; }
 
-    // hPa
     public required int Pressure { get; init; }
 
     public required WeatherPressureTrend PressureTrend { get; init; }
@@ -137,12 +128,10 @@ public sealed class WeatherForecast
 
     public TimeSpan DayLength => Sunset - Sunrise;
 
-    // 新月からの日数
     public required double MoonAge { get; init; }
 
     public WeatherMoonPhase MoonPhase => (WeatherMoonPhase)((int)Math.Floor((MoonAge / SynodicMonth * 8) + 0.5) % 8);
 
-    // 光っている割合 (0〜1)
     public double MoonIllumination => (1 - Math.Cos(2 * Math.PI * MoonAge / SynodicMonth)) / 2;
 
     public required IReadOnlyList<WeatherIndex> Indices { get; init; }
@@ -155,10 +144,8 @@ public sealed class WeatherForecast
 
     public required DateTime AlertIssuedAt { get; init; }
 
-    // 先頭は今
     public required IReadOnlyList<WeatherHour> Hours { get; init; }
 
-    // 先頭は今日
     public required IReadOnlyList<WeatherDay> Days { get; init; }
 }
 
@@ -166,33 +153,28 @@ public sealed class WeatherForecast
 // Sample
 //--------------------------------------------------------------------------------
 
-// 予報の見本。日ごとの天気と気温は前の日から少しずつ変える (random は 0 以上 n 未満を返す)
 public static class WeatherSample
 {
     private const int HourCount = 24;
 
     private const int DayCount = 7;
 
-    // 最低・最高の時刻
     private const double LowHour = 5;
 
     private const double HighHour = 14;
 
-    // 露点の近似 (Magnus の式) の係数
     private const double MagnusB = 17.62;
 
     private const double MagnusC = 243.12;
 
     private static readonly DateTime NewMoon = new(2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
 
-    // 月ごとの平均気温と、晴れの日の UV の最大
     private static readonly double[] MonthlyTemperature = [5.4, 6.1, 9.4, 14.3, 18.8, 21.9, 25.7, 26.9, 23.3, 18.0, 12.5, 7.7];
 
     private static readonly int[] MonthlyUv = [2, 3, 5, 6, 8, 8, 9, 9, 7, 5, 3, 2];
 
     public static WeatherForecast LoadForecast(DateTime now, Func<int, int> random)
     {
-        // 日ごとの天気と平均気温は前の日から少しずつ変える
         var conditions = new WeatherCondition[DayCount];
         var lows = new int[DayCount];
         var highs = new int[DayCount];
@@ -228,7 +210,6 @@ public static class WeatherSample
                 PrecipitationChance(hourCondition, random));
         }
 
-        // 今の気温は今日の最低・最高に含める
         var current = hours[0];
         lows[0] = Math.Min(lows[0], current.Temperature);
         highs[0] = Math.Max(highs[0], current.Temperature);
@@ -243,11 +224,9 @@ public static class WeatherSample
         var windSpeed = Math.Round(1 + (random(50) / 10d) + (current.Condition is WeatherCondition.Rain or WeatherCondition.Thunder ? 2 : 0), 1);
         var (sunrise, sunset) = SunTimes(now.Date);
 
-        // 今日の残りの時間の降水確率のいちばん高い値と、南中の UV
         var chance = Math.Max(days[0].PrecipitationChance, hours.Where(x => x.Time.Date == now.Date).Max(static x => x.PrecipitationChance));
         var uvMax = CalculateUvIndex(sunrise + ((sunset - sunrise) / 2), conditions[0], sunrise, sunset);
 
-        // 次の日の天気が良くなるなら気圧は上がる
         var trend = ((int)conditions[1]).CompareTo((int)conditions[0]) switch
         {
             < 0 => WeatherPressureTrend.Rising,
@@ -283,7 +262,6 @@ public static class WeatherSample
         };
     }
 
-    // 隣の天気に移ることがある (雷は雨の日だけ)
     private static WeatherCondition NextCondition(WeatherCondition condition, Func<int, int> random)
     {
         var roll = random(10);
@@ -296,7 +274,6 @@ public static class WeatherSample
         };
     }
 
-    // 時間ごとは、日の天気から少しだけ変える
     private static WeatherCondition VaryCondition(WeatherCondition condition, Func<int, int> random)
     {
         var roll = random(10);
@@ -311,7 +288,6 @@ public static class WeatherSample
         };
     }
 
-    // 1 日の気温の幅
     private static int TemperatureRange(WeatherCondition condition) => condition switch
     {
         WeatherCondition.Clear => 9,
@@ -347,14 +323,12 @@ public static class WeatherSample
         _ => 1005
     };
 
-    // 最低 (5 時) と最高 (14 時) の間をなめらかにつなぐ。day は today からの日数
     private static double TemperatureAt(DateTime time, DateTime today, int[] lows, int[] highs)
     {
         var day = Math.Min((time.Date - today).Days, lows.Length - 1);
         var hour = time.TimeOfDay.TotalHours;
         if (hour < LowHour)
         {
-            // 前の日の最高から今日の最低へ
             var previousHigh = highs[Math.Max(day - 1, 0)];
             return Ease(previousHigh, lows[day], (hour + 24 - HighHour) / (24 - HighHour + LowHour));
         }
@@ -364,7 +338,6 @@ public static class WeatherSample
             return Ease(lows[day], highs[day], (hour - LowHour) / (HighHour - LowHour));
         }
 
-        // 今日の最高から次の日の最低へ
         var nextLow = lows[Math.Min(day + 1, lows.Length - 1)];
         return Ease(highs[day], nextLow, (hour - HighHour) / (24 - HighHour + LowHour));
     }
@@ -372,7 +345,6 @@ public static class WeatherSample
     private static double Ease(double from, double to, double t) =>
         from + ((to - from) * (1 - Math.Cos(Math.PI * t)) / 2);
 
-    // 東京に近い値 (昼の長さは 1 年の正弦、南中は 11:35)
     private static (DateTime Sunrise, DateTime Sunset) SunTimes(DateTime date)
     {
         var length = 12.2 + (2.4 * Math.Sin(2 * Math.PI * (date.DayOfYear - 80) / 365.25));
@@ -386,7 +358,6 @@ public static class WeatherSample
         return (time < sunrise) || (time >= sunset);
     }
 
-    // 風が強いと低く、蒸し暑いと高く感じる
     private static int CalculateFeelsLike(int temperature, int humidity, double windSpeed)
     {
         var value = temperature - (Math.Max(windSpeed - 2, 0) * 0.6);
@@ -410,7 +381,6 @@ public static class WeatherSample
         return ((days % WeatherForecast.SynodicMonth) + WeatherForecast.SynodicMonth) % WeatherForecast.SynodicMonth;
     }
 
-    // 洗濯・傘・服装・熱中症・紫外線・花粉 (値が大きいほど、よく乾く・必要・厚着・危険・強い・多い)
     private static WeatherIndex[] CreateIndices(DateTime now, WeatherDay today, int chance, int humidity, double windSpeed, int uvMax)
     {
         var laundry = today.Condition switch
@@ -423,7 +393,6 @@ public static class WeatherSample
         laundry -= (humidity >= 75 ? 1 : 0) + (chance >= 50 ? 1 : 0);
         laundry += (windSpeed >= 4) && (laundry is > 1 and < 5) ? 1 : 0;
 
-        // 暑さ指数 (WBGT) の近似
         var wbgt = (0.725 * today.High) + (0.0368 * humidity) + (0.00364 * today.High * humidity) - 3.246;
 
         var pollen = now.Month switch
@@ -510,7 +479,6 @@ public static class WeatherSample
         return alerts;
     }
 
-    // 昼の高さに合わせる (夜は 0)
     private static int CalculateUvIndex(DateTime now, WeatherCondition condition, DateTime sunrise, DateTime sunset)
     {
         var ratio = (now - sunrise).TotalHours / (sunset - sunrise).TotalHours;
