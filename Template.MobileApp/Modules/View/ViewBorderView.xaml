@@ -64,9 +64,11 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
+    <!-- Content -->
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="Auto,*">
 
+        <!-- Preview -->
         <controls:InfoCard Grid.Row="0"
                            Style="{StaticResource PreviewCard}"
                            behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -104,6 +106,7 @@
                     Style="{StaticResource RootScroll}">
             <VerticalStackLayout Style="{StaticResource PageStack}">
 
+                <!-- Shape and color -->
                 <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                    Title="Shape and color"
                                    Icon="{x:Static fonts:MaterialIcons.Palette}">
@@ -158,6 +161,7 @@
                     </VerticalStackLayout>
                 </controls:InfoCard>
 
+                <!-- Stroke -->
                 <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                    Title="Stroke"
                                    Icon="{x:Static fonts:MaterialIcons.Line_weight}">
@@ -239,6 +243,7 @@
                     </VerticalStackLayout>
                 </controls:InfoCard>
 
+                <!-- Corner radius -->
                 <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                    IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}"
                                    Title="Corner radius"

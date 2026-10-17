@@ -185,6 +185,7 @@
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content -->
     <Grid>
 
         <drawer:SfNavigationDrawer IsOpen="{Binding IsSfDrawerOpen}">
@@ -240,9 +241,11 @@
             </drawer:SfNavigationDrawer.DrawerSettings>
 
             <drawer:SfNavigationDrawer.ContentView>
+                <!-- Content -->
                 <ScrollView Style="{StaticResource RootScroll}">
                     <VerticalStackLayout Style="{StaticResource PageStack}">
 
+                        <!-- Implementation -->
                         <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                            Title="Implementation"
                                            Icon="{x:Static fonts:MaterialIcons.Menu_open}">
@@ -257,6 +260,7 @@
                             </VerticalStackLayout>
                         </controls:InfoCard>
 
+                        <!-- Selected -->
                         <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                            behaviors:AnimationOption.EnterDelay="100"
                                            Title="Selected"

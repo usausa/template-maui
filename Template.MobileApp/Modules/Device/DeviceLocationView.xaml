@@ -64,6 +64,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content -->
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="240,*">
 
@@ -98,6 +99,7 @@
                     IsVisible="{Binding Location, Converter={StaticResource NotEmptyConverter}}">
             <VerticalStackLayout Style="{StaticResource PageStack}">
 
+                <!-- Position -->
                 <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                    Title="Position"
                                    Icon="{x:Static fonts:MaterialIcons.My_location}">
@@ -136,6 +138,7 @@
                     </VerticalStackLayout>
                 </controls:InfoCard>
 
+                <!-- Motion -->
                 <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                    behaviors:AnimationOption.EnterDelay="100"
                                    Title="Motion"

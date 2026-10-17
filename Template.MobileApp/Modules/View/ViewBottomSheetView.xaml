@@ -24,6 +24,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Bottom sheet -->
             <Style x:Key="SfSheet"
                    TargetType="sf:SfBottomSheet">
                 <Setter Property="CornerRadius" Value="16" />
@@ -77,6 +78,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Action converters -->
             <s:MapToTextConverter x:Key="ActionIconConverter"
                                   DefaultValue="{x:Static fonts:MaterialIcons.Chevron_right}">
                 <s:MapToTextConverter.Entries>
@@ -111,6 +113,7 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
+            <!-- Result -->
             <Style x:Key="ResultRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -149,8 +152,10 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content -->
     <Grid>
 
+        <!-- Sf bottom sheet -->
         <sf:SfBottomSheet Style="{StaticResource SfSheet}"
                           IsOpen="{Binding IsSfSheetOpen}"
                           IsModal="True">
@@ -196,9 +201,11 @@
                 </ContentView>
             </sf:SfBottomSheet.BottomSheetContent>
 
+            <!-- Content -->
             <ScrollView Style="{StaticResource RootScroll}">
                 <VerticalStackLayout Style="{StaticResource PageStack}">
 
+                    <!-- SfBottomSheet -->
                     <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        Title="SfBottomSheet"
                                        Icon="{x:Static fonts:MaterialIcons.Vertical_align_top}">
@@ -209,6 +216,7 @@
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
+                    <!-- BottomSheetView -->
                     <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        behaviors:AnimationOption.EnterDelay="100"
                                        Title="BottomSheetView"
@@ -220,6 +228,7 @@
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
+                    <!-- Result -->
                     <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        behaviors:AnimationOption.EnterDelay="200"
                                        Title="Result"

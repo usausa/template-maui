@@ -75,13 +75,16 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content -->
     <sf:SfTabView x:Name="ToolkitTabs"
                   IndicatorBackground="{StaticResource BlueDefault}"
                   TabBarBackground="White">
         <sf:SfTabItem Header="Input">
+            <!-- Content -->
             <ScrollView Style="{StaticResource RootScroll}">
                 <VerticalStackLayout Style="{StaticResource PageStack}">
 
+                    <!-- SfOtpInput -->
                     <controls:InfoCard Title="SfOtpInput"
                                        Icon="{x:Static fonts:MaterialIcons.Pin}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
@@ -93,6 +96,7 @@
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
+                    <!-- SfSegmentedControl -->
                     <controls:InfoCard Title="SfSegmentedControl"
                                        Icon="{x:Static fonts:MaterialIcons.View_week}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
@@ -105,6 +109,7 @@
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
+                    <!-- SfChipGroup -->
                     <controls:InfoCard Title="SfChipGroup"
                                        Icon="{x:Static fonts:MaterialIcons.Sell}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
@@ -127,9 +132,11 @@
                          behaviors:LazyViewOption.Load="{Binding SelectedIndex, Source={x:Reference ToolkitTabs}, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Int32 1}}">
                 <behaviors:LazyViewOption.Template>
                     <DataTemplate x:DataType="module:ViewToolkitViewModel">
+                        <!-- Content -->
                         <ScrollView Style="{StaticResource RootScroll}">
                             <VerticalStackLayout Style="{StaticResource PageStack}">
 
+                                <!-- AvatarView / RatingView -->
                                 <controls:InfoCard Title="AvatarView / RatingView"
                                                    Icon="{x:Static fonts:MaterialIcons.Person}">
                                     <VerticalStackLayout Style="{StaticResource CardLargeContentStack}">
@@ -163,6 +170,7 @@
                                     </VerticalStackLayout>
                                 </controls:InfoCard>
 
+                                <!-- Expander (CommunityToolkit) -->
                                 <controls:InfoCard Title="Expander (CommunityToolkit)"
                                                    Icon="{x:Static fonts:MaterialIcons.Unfold_more}">
                                     <mct:Expander x:Name="SampleExpander">
@@ -183,6 +191,7 @@
                                     </mct:Expander>
                                 </controls:InfoCard>
 
+                                <!-- SfAccordion -->
                                 <controls:InfoCard Title="SfAccordion"
                                                    Icon="{x:Static fonts:MaterialIcons.List}">
                                     <sf:SfAccordion>
