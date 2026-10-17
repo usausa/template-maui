@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -41,9 +41,11 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
+    <!-- Content root -->
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
+            <!-- Notification -->
             <controls:InfoCard Style="{StaticResource NotificationCard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Notification"
@@ -54,6 +56,7 @@
                         ImageSource="{x:Static markup:AppIcons.SmallInfo}" />
             </controls:InfoCard>
 
+            <!-- Confirm / Select / Input -->
             <controls:InfoCard Style="{StaticResource ConfirmCard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
@@ -85,6 +88,7 @@
                 </Grid>
             </controls:InfoCard>
 
+            <!-- Progress -->
             <controls:InfoCard Style="{StaticResource ProgressCard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
@@ -116,6 +120,7 @@
                 </Grid>
             </controls:InfoCard>
 
+            <!-- Feedback -->
             <controls:InfoCard Style="{StaticResource FeedbackCard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240"

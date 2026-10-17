@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -57,9 +57,11 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content root -->
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
+            <!-- Current culture -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Current culture"
                                Icon="{x:Static fonts:MaterialIcons.Language}">
@@ -82,6 +84,7 @@
                 </Grid>
             </controls:InfoCard>
 
+            <!-- Localized resources -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100"
                                Title="Localized resources"
@@ -132,6 +135,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Culture formats -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="200"
                                Title="Culture formats"

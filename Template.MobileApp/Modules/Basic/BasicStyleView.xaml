@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -50,9 +50,11 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content root -->
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
+            <!-- Action button -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Action button"
                                Icon="{x:Static fonts:MaterialIcons.Touch_app}">
@@ -82,6 +84,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Information button -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
                                Title="Information button"
@@ -116,6 +119,7 @@
                 </Grid>
             </controls:InfoCard>
 
+            <!-- Last action -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
                                Title="Last action"
@@ -133,6 +137,7 @@
                 </Grid>
             </controls:InfoCard>
 
+            <!-- Input button -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240"
                                Title="Input button"

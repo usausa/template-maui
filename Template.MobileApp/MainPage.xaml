@@ -59,14 +59,15 @@
                                StatusBarStyle="LightContent" />
     </ContentPage.Behaviors>
 
+    <!-- Content -->
     <Grid Style="{StaticResource MainGrid}"
           RowDefinitions="Auto,*,Auto">
-        <!-- overlay -->
+        <!-- Overlay -->
         <Rectangle Grid.Row="0" Grid.RowSpan="3"
                    shell:ShellProperty.BusyOverlay="True"
                    IsVisible="{Binding BusyState.IsBusy}" />
 
-        <!-- header -->
+        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="96,*,48,48"
@@ -87,13 +88,13 @@
                     Text="📈" />
         </Grid>
 
-        <!-- diagnostic -->
+        <!-- Diagnostic -->
         <shell:DiagnosticPanel Grid.Row="1"
                                Style="{StaticResource DiagnosticPanel}"
                                IsVisible="{Binding DiagnosticVisible}"
                                Sampler="{Binding DiagnosticSampler}" />
 
-        <!-- view container -->
+        <!-- View container -->
         <AbsoluteLayout Grid.Row="1"
                         Style="{StaticResource ContainerLayout}"
                         IsClippedToBounds="True">
@@ -102,7 +103,7 @@
             </AbsoluteLayout.Behaviors>
         </AbsoluteLayout>
 
-        <!-- function -->
+        <!-- Footer -->
         <Grid Grid.Row="2"
               Style="{StaticResource FunctionGrid}"
               ColumnDefinitions="*,*,*,*"
@@ -125,7 +126,7 @@
                     Text="{Binding Function4.Text.Value}" />
         </Grid>
 
-        <!-- startup -->
+        <!-- Startup -->
         <Grid Grid.Row="0" Grid.RowSpan="3"
               Style="{StaticResource StartupGrid}"
               IsVisible="{Binding Startup.IsCompleted, Converter={StaticResource ReverseConverter}}">

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -46,9 +46,11 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content root -->
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
+            <!-- Validate on Unfocused -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Validate on Unfocused"
                                Icon="{x:Static fonts:MaterialIcons.Fact_check}">
@@ -71,6 +73,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Manual Validation -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100"
                                Title="Manual Validation"
@@ -106,6 +109,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Focus Request -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="200"
                                Title="Focus Request"
@@ -120,6 +124,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Correlation (Compare) -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="260"
                                Title="Correlation (Compare)"
@@ -150,6 +155,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Toolkit Validation Behaviors -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320"
                                Title="Toolkit Validation Behaviors"

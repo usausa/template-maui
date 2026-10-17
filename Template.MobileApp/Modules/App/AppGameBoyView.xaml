@@ -90,9 +90,11 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- Content root -->
     <Grid Style="{StaticResource GameBoyRootGrid}"
           RowDefinitions="Auto,Auto,*">
 
+        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*,Auto,Auto">
@@ -112,11 +114,13 @@
                     Text="{Binding IsMuted, Converter={StaticResource MuteGlyphConverter}}" />
         </Grid>
 
+        <!-- Screen -->
         <Border Grid.Row="1"
                 Style="{StaticResource ScreenBorder}">
             <controls:GameBoyScreen Frames="{Binding Frames}" />
         </Border>
 
+        <!-- Pad -->
         <controls:GameBoyPad Grid.Row="2"
                              Buttons="{Binding Buttons}"
                              ChangeCommand="{Binding ButtonCommand}" />
