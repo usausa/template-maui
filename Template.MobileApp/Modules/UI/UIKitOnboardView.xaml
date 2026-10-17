@@ -116,7 +116,6 @@
                         <VerticalStackLayout Style="{StaticResource OnboardPageStack}">
                             <Image Style="{StaticResource PageImage}"
                                    Source="{Binding Image}" />
-                            <!-- ページ切替でテキストをフェードイン -->
                             <VerticalStackLayout behaviors:AnimationOption.FadeInTrigger="{Binding Source={x:Reference OnboardCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
                                 <Label Style="{StaticResource PageTitle}"
                                        Text="{Binding Title}" />

@@ -4,9 +4,17 @@ using System.Timers;
 
 public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
 {
+    //--------------------------------------------------------------------------------
+    // Resources
+    //--------------------------------------------------------------------------------
+
     private const float AnimationDuration = 500f;
 
     private const float LabelAreaRatio = 0.05f;
+
+    //--------------------------------------------------------------------------------
+    // State
+    //--------------------------------------------------------------------------------
 
     private readonly System.Timers.Timer animationTimer = new(1000d / 60);
 
@@ -15,6 +23,10 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
     private float progress = 1f;
 
     private long animationStart;
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public ColorTreeMapDrawing()
     {
@@ -25,6 +37,10 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
     {
         animationTimer.Dispose();
     }
+
+    //--------------------------------------------------------------------------------
+    // Update
+    //--------------------------------------------------------------------------------
 
     public void Update(TreeMapNode<ColorCount>? value)
     {
@@ -48,6 +64,10 @@ public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
 
         SafeInvalidate();
     }
+
+    //--------------------------------------------------------------------------------
+    // Drawing
+    //--------------------------------------------------------------------------------
 
     protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {

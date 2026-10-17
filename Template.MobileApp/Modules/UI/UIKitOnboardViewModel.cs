@@ -5,8 +5,6 @@ public sealed class UIKitOnboardPage
     public string Image { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
-
-    // 絵の地と同じ色で、ページ全体を塗る
     public Color Background { get; init; } = Colors.White;
 }
 

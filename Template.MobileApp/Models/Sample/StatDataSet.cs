@@ -3,6 +3,10 @@ namespace Template.MobileApp.Models.Sample;
 #pragma warning disable IDE0032
 public sealed class StatDataSet
 {
+    //--------------------------------------------------------------------------------
+    // State
+    //--------------------------------------------------------------------------------
+
     public event EventHandler<EventArgs>? Updated;
 
     private readonly int capacity;
@@ -10,6 +14,10 @@ public sealed class StatDataSet
     private readonly float[] buffer;
 
     private int head;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public int Capacity => capacity;
 
@@ -21,6 +29,10 @@ public sealed class StatDataSet
             return buffer[actualIndex];
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Operations
+    //--------------------------------------------------------------------------------
 
     public StatDataSet(int capacity)
     {

@@ -8,6 +8,10 @@ using Smart.Maui.Interactivity;
 
 public static class MapsuiBind
 {
+    //--------------------------------------------------------------------------------
+    // Controller
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
         typeof(IMapsuiController),
@@ -43,6 +47,10 @@ public static class MapsuiBind
         }
     }
 
+    //--------------------------------------------------------------------------------
+    // Overlay
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty OverlayProperty = BindableProperty.CreateAttached(
         "Overlay",
         typeof(IMapsuiController),
@@ -77,6 +85,10 @@ public static class MapsuiBind
             view.Behaviors.Add(new MapsuiOverlayBehavior());
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Behaviors
+    //--------------------------------------------------------------------------------
 
     private sealed class MapsuiOverlayBehavior : BehaviorBase<SKCanvasView>
     {

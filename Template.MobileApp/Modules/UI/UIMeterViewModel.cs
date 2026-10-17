@@ -84,7 +84,6 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     {
         if (disposing)
         {
-            // 通常はOnNavigatingFromAsyncで解放済み。ここは保険
             cancellationTokenSource?.Cancel();
             cancellationTokenSource?.Dispose();
             timer?.Dispose();

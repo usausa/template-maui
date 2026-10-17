@@ -13,10 +13,18 @@ using AColor = Android.Graphics.Color;
 
 public static partial class StepperOption
 {
+    //--------------------------------------------------------------------------------
+    // Resources
+    //--------------------------------------------------------------------------------
+
     private static readonly AColor OutlinedBackgroundColor = AColor.White;
     private static readonly AColor OutlinedStrokeColor = AColor.ParseColor("#BDBDBD");
     private static readonly int OutlinedTextColor = AColor.ParseColor("#455A64").ToArgb();
     private static readonly int OutlinedDisabledTextColor = AColor.ParseColor("#BDBDBD").ToArgb();
+
+    //--------------------------------------------------------------------------------
+    // Mapper
+    //--------------------------------------------------------------------------------
 
     public static partial void UseCustomMapper(BehaviorOptions options)
     {

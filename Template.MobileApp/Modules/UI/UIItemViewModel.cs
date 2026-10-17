@@ -3,8 +3,6 @@ namespace Template.MobileApp.Modules.UI;
 public sealed partial class UIItemViewModel : AppViewModelBase
 {
     private const int MaxQuantity = 99;
-
-    // カートに入れた後の表示を出しておく時間
     private static readonly TimeSpan AddedDuration = TimeSpan.FromSeconds(1.5);
 
     private readonly IDispatcher dispatcher;
@@ -12,8 +10,6 @@ public sealed partial class UIItemViewModel : AppViewModelBase
     [Scope]
     [ObservableProperty]
     public partial UIShopContext Context { get; set; } = default!;
-
-    // 表示の前 (OnNavigatingToAsync) に設定する
     [ObservableProperty]
     public partial string SelectedVariant { get; set; } = string.Empty;
 

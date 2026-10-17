@@ -418,7 +418,7 @@ public abstract class SceneObject : ISceneObject, IDisposable
     }
 
     //--------------------------------------------------------------------------------
-    // Helpers
+    // Helper
     //--------------------------------------------------------------------------------
 
     protected static float DegToRad(float degrees) => degrees * (MathF.PI / 180f);

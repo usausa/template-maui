@@ -1452,7 +1452,7 @@ public sealed class EnergyFlowScene : SceneObject
     }
 
     //--------------------------------------------------------------------------------
-    // Helpers
+    // Helper
     //--------------------------------------------------------------------------------
 
     private void AddHit(SKRect rect, HitKind kind, EnergyNode node, EnergyFlowMode hitMode)

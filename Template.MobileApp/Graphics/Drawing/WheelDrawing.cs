@@ -11,6 +11,10 @@ public sealed record WheelItem(string Label, WheelEffect Effect = WheelEffect.Sp
 
 public sealed class WheelDrawing : DrawingObject
 {
+    //--------------------------------------------------------------------------------
+    // Resources
+    //--------------------------------------------------------------------------------
+
     private const string SpinAnimationName = "WheelSpin";
     private const string EffectAnimationName = "WheelEffect";
 
@@ -62,12 +66,20 @@ public sealed class WheelDrawing : DrawingObject
     private static readonly Color PointerEdgeColor = Color.FromArgb("#B71C1C");
     private static readonly Color SparkleColor = Color.FromArgb("#FFEE58");
 
+    //--------------------------------------------------------------------------------
+    // State
+    //--------------------------------------------------------------------------------
+
     private IReadOnlyList<WheelItem> items = [];
 
     private float rotation;
 
     private float effectProgress;
     private int winnerIndex = -1;
+
+    //--------------------------------------------------------------------------------
+    // Operations
+    //--------------------------------------------------------------------------------
 
     public bool IsSpinning { get; private set; }
 
@@ -140,6 +152,10 @@ public sealed class WheelDrawing : DrawingObject
             v => effectProgress = (float)v,
             () => effectProgress = 0f);
     }
+
+    //--------------------------------------------------------------------------------
+    // Drawing
+    //--------------------------------------------------------------------------------
 
     protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {

@@ -238,8 +238,6 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
             Notices = MoneySample.LoadNotices(book, now);
         }
     }
-
-    // 支払いのコードは残り時間が無くなると作り直す
     private void TickPayment()
     {
         if (IsPaymentOpen)

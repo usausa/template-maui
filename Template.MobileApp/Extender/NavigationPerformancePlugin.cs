@@ -48,7 +48,6 @@ public sealed class NavigationPerformancePlugin : PluginBase
 
     private static int Count(IVisualTreeElement element) => 1 + element.GetVisualChildren().Sum(Count);
 
-    // 種類ごとの数、隠れている要素 (IsVisible が False の要素とその中) の数と種類、一覧 (ItemsView) の中の要素の数
     private static void Analyze(IVisualTreeElement root, string id)
     {
         var types = new Dictionary<string, int>();

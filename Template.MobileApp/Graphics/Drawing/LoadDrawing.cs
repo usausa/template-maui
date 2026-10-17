@@ -2,6 +2,10 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 public sealed class LoadDrawing : DrawingObject
 {
+    //--------------------------------------------------------------------------------
+    // Resources
+    //--------------------------------------------------------------------------------
+
     private const string AnimationName = "LoadFlow";
 
     private const int MaxBars = 60;
@@ -39,6 +43,10 @@ public sealed class LoadDrawing : DrawingObject
         startPoint: new Point(0, 1),
         endPoint: new Point(0, 0));
 
+    //--------------------------------------------------------------------------------
+    // State
+    //--------------------------------------------------------------------------------
+
     private readonly float[] buffer = new float[Capacity];
 
     private int writeIndex;
@@ -46,6 +54,10 @@ public sealed class LoadDrawing : DrawingObject
     private int count;
 
     private float phase = 1f;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public int Min
     {
@@ -66,6 +78,10 @@ public sealed class LoadDrawing : DrawingObject
             Invalidate();
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Operations
+    //--------------------------------------------------------------------------------
 
     public LoadDrawing()
     {
@@ -122,6 +138,10 @@ public sealed class LoadDrawing : DrawingObject
         phase = 0f;
         AnimateValue(AnimationName, 0d, 1d, FlowLength, Easing.Linear, v => phase = (float)v);
     }
+
+    //--------------------------------------------------------------------------------
+    // Drawing
+    //--------------------------------------------------------------------------------
 
     protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
