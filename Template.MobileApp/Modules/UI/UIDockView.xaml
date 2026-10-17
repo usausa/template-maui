@@ -22,7 +22,6 @@
         </RadialGradientBrush>
     </ContentView.Background>
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -31,18 +30,6 @@
             <Style x:Key="DeckButtonLayout"
                    TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="DeckButton"
-                   TargetType="Button">
-                <Setter Property="WidthRequest" Value="72" />
-                <Setter Property="HeightRequest" Value="72" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="LineBreakMode" Value="WordWrap" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
             <Style x:Key="DeckImageButton"
@@ -61,64 +48,73 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- Template -->
-
-            <DataTemplate x:Key="TextTemplate"
-                          x:DataType="{x:Type sample:DeckButtonInfo}">
-                <VerticalStackLayout Grid.Row="{Binding Row}"
-                                     Grid.Column="{Binding Column}"
-                                     Style="{StaticResource DeckButtonLayout}">
-                    <Button Style="{StaticResource DeckButton}"
-                            Command="{Binding Command}"
-                            CommandParameter="{Binding Parameter}"
-                            Text="{Binding Text}"
-                            TextColor="{Binding TextColor}">
-                        <Button.Background>
-                            <LinearGradientBrush>
-                                <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
-                                <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
-                            </LinearGradientBrush>
-                        </Button.Background>
-                    </Button>
-                    <Label Style="{StaticResource DeckButtonLabel}"
-                           Text="{Binding Label}" />
-                </VerticalStackLayout>
-            </DataTemplate>
-
-            <DataTemplate x:Key="ImageTemplate"
-                          x:DataType="{x:Type sample:DeckButtonInfo}">
-                <VerticalStackLayout Grid.Row="{Binding Row}"
-                                     Grid.Column="{Binding Column}"
-                                     Style="{StaticResource DeckButtonLayout}">
-                    <ImageButton Style="{StaticResource DeckImageButton}"
-                                 Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
-                                 Command="{Binding Command}"
-                                 CommandParameter="{Binding Parameter}">
-                        <ImageButton.Background>
-                            <LinearGradientBrush>
-                                <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
-                                <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
-                            </LinearGradientBrush>
-                        </ImageButton.Background>
-                    </ImageButton>
-                    <Label Style="{StaticResource DeckButtonLabel}"
-                           Text="{Binding Label}" />
-                </VerticalStackLayout>
-            </DataTemplate>
-
-            <controls:DeckButtonTemplateSelector x:Key="DeckButtonTemplateSelector"
-                                                 ImageTemplate="{StaticResource ImageTemplate}"
-                                                 TextTemplate="{StaticResource TextTemplate}" />
+            <Style x:Key="DeckButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*,*,*"
-          BindableLayout.ItemsSource="{Binding Buttons}"
-          BindableLayout.ItemTemplateSelector="{StaticResource DeckButtonTemplateSelector}" />
+          BindableLayout.ItemsSource="{Binding Buttons}">
+        <BindableLayout.ItemTemplateSelector>
+            <controls:DeckButtonTemplateSelector>
+                <controls:DeckButtonTemplateSelector.ImageTemplate>
+                    <DataTemplate x:DataType="{x:Type sample:DeckButtonInfo}">
+                        <VerticalStackLayout Grid.Row="{Binding Row}"
+                                             Grid.Column="{Binding Column}"
+                                             Style="{StaticResource DeckButtonLayout}">
+                            <ImageButton Style="{StaticResource DeckImageButton}"
+                                         Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                         Command="{Binding Command}"
+                                         CommandParameter="{Binding Parameter}">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
+                                        <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label Style="{StaticResource DeckButtonLabel}"
+                                   Text="{Binding Label}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </controls:DeckButtonTemplateSelector.ImageTemplate>
+                <controls:DeckButtonTemplateSelector.TextTemplate>
+                    <DataTemplate x:DataType="{x:Type sample:DeckButtonInfo}">
+                        <VerticalStackLayout Grid.Row="{Binding Row}"
+                                             Grid.Column="{Binding Column}"
+                                             Style="{StaticResource DeckButtonLayout}">
+                            <Button Style="{StaticResource DeckButton}"
+                                    Command="{Binding Command}"
+                                    CommandParameter="{Binding Parameter}"
+                                    Text="{Binding Text}"
+                                    TextColor="{Binding TextColor}">
+                                <Button.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
+                                        <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                            <Label Style="{StaticResource DeckButtonLabel}"
+                                   Text="{Binding Label}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </controls:DeckButtonTemplateSelector.TextTemplate>
+            </controls:DeckButtonTemplateSelector>
+        </BindableLayout.ItemTemplateSelector>
+    </Grid>
 
 </ContentView>

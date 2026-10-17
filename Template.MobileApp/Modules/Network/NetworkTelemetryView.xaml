@@ -15,11 +15,24 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Send -->
+
+            <Style x:Key="CrashButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
             <!-- Custom value -->
+
+            <Style x:Key="BlueSlider"
+                   TargetType="Slider">
+                <Setter Property="MinimumTrackColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource BlueDefault}" />
+            </Style>
 
             <Style x:Key="CustomValueLabel"
                    TargetType="Label"
@@ -33,10 +46,10 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="BlueSlider"
+            <Style x:Key="GreenSlider"
                    TargetType="Slider">
-                <Setter Property="MinimumTrackColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="ThumbColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="MinimumTrackColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
             <Style x:Key="GreenValueLabel"
@@ -45,10 +58,10 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
-            <Style x:Key="GreenSlider"
+            <Style x:Key="OrangeSlider"
                    TargetType="Slider">
-                <Setter Property="MinimumTrackColor" Value="{StaticResource GreenDefault}" />
-                <Setter Property="ThumbColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="MinimumTrackColor" Value="{StaticResource OrangeDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource OrangeDefault}" />
             </Style>
 
             <Style x:Key="OrangeValueLabel"
@@ -57,10 +70,10 @@
                 <Setter Property="TextColor" Value="{StaticResource OrangeDefault}" />
             </Style>
 
-            <Style x:Key="OrangeSlider"
+            <Style x:Key="PurpleSlider"
                    TargetType="Slider">
-                <Setter Property="MinimumTrackColor" Value="{StaticResource OrangeDefault}" />
-                <Setter Property="ThumbColor" Value="{StaticResource OrangeDefault}" />
+                <Setter Property="MinimumTrackColor" Value="{StaticResource PurpleDefault}" />
+                <Setter Property="ThumbColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
             <Style x:Key="PurpleValueLabel"
@@ -69,23 +82,8 @@
                 <Setter Property="TextColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
-            <Style x:Key="PurpleSlider"
-                   TargetType="Slider">
-                <Setter Property="MinimumTrackColor" Value="{StaticResource PurpleDefault}" />
-                <Setter Property="ThumbColor" Value="{StaticResource PurpleDefault}" />
-            </Style>
-
-            <!-- Send -->
-
-            <Style x:Key="CrashButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource BasicIconOutlinedButton}">
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

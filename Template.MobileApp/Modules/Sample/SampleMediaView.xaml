@@ -16,7 +16,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -60,6 +59,11 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
+            <Style x:Key="ControlBarGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="PlayPauseButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="44" />
@@ -83,14 +87,8 @@
                 <Setter Property="MaximumTrackColor" Value="#66FFFFFF" />
             </Style>
 
-            <Style x:Key="ControlBarGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource DarkRootGrid}">

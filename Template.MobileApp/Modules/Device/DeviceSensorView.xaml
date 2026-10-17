@@ -16,18 +16,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Barometer -->
-
-            <Style x:Key="UnitLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="Margin" Value="0,0,0,6" />
-                <Setter Property="VerticalOptions" Value="End" />
-            </Style>
 
             <!-- Converter -->
 
@@ -40,12 +30,7 @@
             <converters:CenteredRatioConverter x:Key="QuatRatio"
                                                Range="1" />
 
-            <!-- Axis -->
-
-            <Style x:Key="AxisRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="10" />
-            </Style>
+            <!-- Common -->
 
             <Style x:Key="AxisBadgeBorder"
                    TargetType="Border">
@@ -53,30 +38,6 @@
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 6" />
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="AxisXBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource AxisBadgeBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <Style x:Key="AxisYBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource AxisBadgeBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
-            </Style>
-
-            <Style x:Key="AxisZBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource AxisBadgeBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="AxisWBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource AxisBadgeBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
             <Style x:Key="AxisBadgeLabel"
@@ -97,28 +58,29 @@
                 <Setter Property="Thickness" Value="8" />
             </Style>
 
-            <Style x:Key="AxisXRange"
-                   TargetType="controls:RangeBar"
-                   BasedOn="{StaticResource AxisRange}">
-                <Setter Property="TrackColor" Value="{StaticResource RedLighten4}" />
-                <Setter Property="StartColor" Value="{StaticResource RedDefault}" />
-                <Setter Property="EndColor" Value="{StaticResource RedDefault}" />
+            <Style x:Key="AxisValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="AxisYRange"
-                   TargetType="controls:RangeBar"
-                   BasedOn="{StaticResource AxisRange}">
-                <Setter Property="TrackColor" Value="{StaticResource GreenLighten4}" />
-                <Setter Property="StartColor" Value="{StaticResource GreenDefault}" />
-                <Setter Property="EndColor" Value="{StaticResource GreenDefault}" />
+            <Style x:Key="BigValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
             </Style>
 
-            <Style x:Key="AxisZRange"
-                   TargetType="controls:RangeBar"
-                   BasedOn="{StaticResource AxisRange}">
-                <Setter Property="TrackColor" Value="{StaticResource BlueLighten4}" />
-                <Setter Property="StartColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="EndColor" Value="{StaticResource BlueDefault}" />
+            <!-- Orientation (Quaternion) -->
+
+            <Style x:Key="AxisWBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
             <Style x:Key="AxisWRange"
@@ -129,35 +91,7 @@
                 <Setter Property="EndColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
-            <Style x:Key="CenterTick"
-                   TargetType="BoxView">
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="WidthRequest" Value="2" />
-                <Setter Property="HeightRequest" Value="12" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="AxisValueLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="BigValueLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="32" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
-            </Style>
-
-            <!-- Dial -->
+            <!-- Compass -->
 
             <Style x:Key="SensorRowGrid"
                    TargetType="Grid">
@@ -177,9 +111,75 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Barometer -->
+
+            <Style x:Key="UnitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,0,0,6" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="AxisRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="AxisXBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="AxisXRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource RedLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="CenterTick"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="WidthRequest" Value="2" />
+                <Setter Property="HeightRequest" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AxisYBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="AxisYRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource GreenLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <Style x:Key="AxisZBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AxisBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="AxisZRange"
+                   TargetType="controls:RangeBar"
+                   BasedOn="{StaticResource AxisRange}">
+                <Setter Property="TrackColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StartColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="EndColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

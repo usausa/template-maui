@@ -47,13 +47,6 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
             </Style>
 
-            <Style x:Key="EtaLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,4,0,0" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
             <Style x:Key="RemainStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="HorizontalOptions" Value="End" />
@@ -86,6 +79,13 @@
                    TargetType="ProgressBar">
                 <Setter Property="Margin" Value="0,12,0,0" />
                 <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="EtaLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,4,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
             <!-- Courier -->
@@ -163,29 +163,25 @@
                 <Setter Property="HeightRequest" Value="80" />
             </Style>
 
+            <Style x:Key="TimelineLine"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="2" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,18,0,0" />
+            </Style>
+
+            <Style x:Key="TimelineDoneLine"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource TimelineLine}">
+                <Setter Property="Color" Value="{StaticResource GreenDefault}" />
+            </Style>
+
             <Style x:Key="DotComplete"
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="18" />
                 <Setter Property="HeightRequest" Value="18" />
                 <Setter Property="Fill" Value="{StaticResource GreenDefault}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Start" />
-            </Style>
-
-            <Style x:Key="DotPending"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="18" />
-                <Setter Property="HeightRequest" Value="18" />
-                <Setter Property="Fill" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Start" />
-            </Style>
-
-            <Style x:Key="DotCurrent"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="18" />
-                <Setter Property="HeightRequest" Value="18" />
-                <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
@@ -201,18 +197,22 @@
                 <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
             </Style>
 
-            <Style x:Key="TimelineLine"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="2" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            <Style x:Key="DotCurrent"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="Margin" Value="0,18,0,0" />
+                <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
-            <Style x:Key="TimelineDoneLine"
-                   TargetType="BoxView"
-                   BasedOn="{StaticResource TimelineLine}">
-                <Setter Property="Color" Value="{StaticResource GreenDefault}" />
+            <Style x:Key="DotPending"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="Fill" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
             <Style x:Key="StepTextStack"

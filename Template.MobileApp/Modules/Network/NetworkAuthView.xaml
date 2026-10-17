@@ -19,6 +19,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
+            <converters:MapToToneConverter x:Key="LoginToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
+                                               Value="Success" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+
             <!-- Log in -->
 
             <Style x:Key="LoginStateGrid"
@@ -44,13 +53,6 @@
                    TargetType="controls:StatusChip">
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
-
-            <converters:MapToToneConverter x:Key="LoginToneConverter">
-                <converters:MapToToneConverter.Entries>
-                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
-                                               Value="Success" />
-                </converters:MapToToneConverter.Entries>
-            </converters:MapToToneConverter>
 
         </ResourceDictionary>
     </ContentView.Resources>

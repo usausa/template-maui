@@ -14,7 +14,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -69,14 +68,6 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
             </Style>
 
-            <Style x:Key="VolumeValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicMonoLabel}">
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
             <Style x:Key="TransportRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -121,9 +112,16 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="VolumeValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicMonoLabel}">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}"

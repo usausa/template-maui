@@ -74,7 +74,7 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
-            <!-- Header -->
+            <!-- Header1 -->
 
             <Style x:Key="MailHeaderRowLayout"
                    TargetType="FlexLayout">
@@ -122,6 +122,8 @@
                 <Setter Property="FontSize" Value="28" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
+
+            <!-- Header2 -->
 
             <Style x:Key="MailHeaderToggle"
                    TargetType="controls:TextToggle">
@@ -182,6 +184,17 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <Style x:Key="MessageImage"
+                   TargetType="Image">
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Aspect" Value="AspectFill" />
+                <Setter Property="Clip">
+                    <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                </Setter>
+            </Style>
+
             <Style x:Key="MessageFromLayout"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="4" />
@@ -194,6 +207,73 @@
                 <Setter Property="HeightRequest" Value="8" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="MessageFromLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+            <Style x:Key="MessageDateTimeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="MessageTitleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="MessageAttachmentLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Attach_file}" />
+            </Style>
+
+            <Style x:Key="MessageBodyLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="MessageStarButton"
+                   TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star_border}" />
+            </Style>
+
+            <Style x:Key="EmptyLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
             <!-- Empty state -->
@@ -221,86 +301,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
-            <!-- Messages -->
-
-            <Style x:Key="MessageImage"
-                   TargetType="Image">
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HeightRequest" Value="48" />
-                <Setter Property="Aspect" Value="AspectFill" />
-                <Setter Property="Clip">
-                    <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
-                </Setter>
-            </Style>
-
-            <Style x:Key="MessageFromLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="FontSize" Value="16" />
-            </Style>
-
-            <Style x:Key="MessageTitleLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="TextColor" Value="Black" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="LineBreakMode" Value="TailTruncation" />
-            </Style>
-
-            <Style x:Key="MessageBodyLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="MaxLines" Value="2" />
-                <Setter Property="LineBreakMode" Value="TailTruncation" />
-            </Style>
-
-            <Style x:Key="MessageDateTimeLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="FontSize" Value="12" />
-            </Style>
-
-            <Style x:Key="MessageAttachmentLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Attach_file}" />
-            </Style>
-
-            <Style x:Key="MessageStarButton"
-                   TargetType="Button">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="WidthRequest" Value="32" />
-                <Setter Property="HeightRequest" Value="32" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star_border}" />
-            </Style>
-
-            <Style x:Key="EmptyLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,48" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
             <!-- Indicator -->
 
             <Style x:Key="LoadingIndicator"
@@ -310,7 +310,7 @@
                 <Setter Property="Color" Value="{StaticResource BlueDarken2}" />
             </Style>
 
-            <!-- Floating button -->
+            <!-- Floating -->
 
             <Style x:Key="FloatingButton"
                    TargetType="Button">
@@ -423,6 +423,7 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 

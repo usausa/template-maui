@@ -71,6 +71,15 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Common -->
+
+            <Style x:Key="StreamSectionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="StreamScroll"
@@ -79,13 +88,6 @@
             </Style>
 
             <!-- Top -->
-
-            <Style x:Key="TopIconButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource HeaderIconButton}">
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-            </Style>
 
             <Style x:Key="TopBar"
                    TargetType="Grid">
@@ -97,6 +99,13 @@
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource RedAccent3}" />
+            </Style>
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource HeaderIconButton}">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
             <!-- Featured -->
@@ -237,34 +246,6 @@
                 </Setter>
             </Style>
 
-            <!-- Section -->
-
-            <Style x:Key="SectionHeaderGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="16,16,16,8" />
-            </Style>
-
-            <Style x:Key="StreamSectionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <Style x:Key="SeeAllLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <!-- Shelf -->
-
-            <Style x:Key="RowCollection"
-                   TargetType="CollectionView">
-                <Setter Property="HeightRequest" Value="170" />
-            </Style>
-
             <!-- Continue -->
 
             <Style x:Key="ContinueCollection"
@@ -318,7 +299,19 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <!-- Poster -->
+            <!-- Shelf -->
+
+            <Style x:Key="SeeAllLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RowCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="170" />
+            </Style>
 
             <Style x:Key="PosterBorder"
                    TargetType="Border">
@@ -327,11 +320,6 @@
                 <Setter Property="HeightRequest" Value="160" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <Style x:Key="PosterImage"
-                   TargetType="Image">
-                <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
             <Style x:Key="PosterBadgeBorder"
@@ -367,6 +355,20 @@
                    TargetType="Label">
                 <Setter Property="FontSize" Value="9" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Section -->
+
+            <Style x:Key="SectionHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="16,16,16,8" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="PosterImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
         </ResourceDictionary>

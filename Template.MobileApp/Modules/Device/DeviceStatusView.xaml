@@ -18,9 +18,106 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <!-- Brush -->
+
+            <SolidColorBrush x:Key="BatteryBrush"
+                             Color="{StaticResource GreenDefault}" />
+
+            <SolidColorBrush x:Key="BatteryLowBrush"
+                             Color="{StaticResource RedDefault}" />
+
+            <!-- Converter -->
+
+            <s:MapToTextConverter x:Key="BatteryStateTextConverter"
+                                  DefaultValue="Unknown">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Charging}"
+                                      Value="Charging" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Full}"
+                                      Value="Full" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Discharging}"
+                                      Value="Discharging" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotCharging}"
+                                      Value="Not charging" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotPresent}"
+                                      Value="No battery" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:MapToToneConverter x:Key="BatteryStateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static devices:BatteryState.Charging}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static devices:BatteryState.Full}"
+                                               Value="Success" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+
+            <s:MapToTextConverter x:Key="PowerSourceTextConverter"
+                                  DefaultValue="Unknown">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.AC}"
+                                      Value="AC" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Usb}"
+                                      Value="USB" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Wireless}"
+                                      Value="Wireless" />
+                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Battery}"
+                                      Value="Battery" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="NetworkAccessTextConverter"
+                                  DefaultValue="Unknown">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Internet}"
+                                      Value="Internet" />
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
+                                      Value="Limited" />
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Local}"
+                                      Value="Local" />
+                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.None}"
+                                      Value="None" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:MapToToneConverter x:Key="NetworkAccessToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.Internet}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.Local}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.None}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+
+            <s:MapToTextConverter x:Key="NetworkStateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
+                                      Value="High speed" />
+                    <s:MapToTextEntry Key="{x:Static state:NetworkState.Connected}"
+                                      Value="Connected" />
+                    <s:MapToTextEntry Key="{x:Static state:NetworkState.Disconnected}"
+                                      Value="Disconnected" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:MapToToneConverter x:Key="NetworkStateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.Connected}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.Disconnected}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <!-- Battery -->
 
@@ -29,11 +126,6 @@
                 <Setter Property="Padding" Value="0,4" />
                 <Setter Property="ColumnSpacing" Value="16" />
             </Style>
-
-            <SolidColorBrush x:Key="BatteryBrush"
-                             Color="{StaticResource GreenDefault}" />
-            <SolidColorBrush x:Key="BatteryLowBrush"
-                             Color="{StaticResource RedDefault}" />
 
             <Style x:Key="BatteryRingGrid"
                    TargetType="Grid">
@@ -88,94 +180,8 @@
                 <Setter Property="FlexLayout.Shrink" Value="0" />
             </Style>
 
-            <s:MapToTextConverter x:Key="BatteryStateTextConverter"
-                                  DefaultValue="Unknown">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Charging}"
-                                      Value="Charging" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Full}"
-                                      Value="Full" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.Discharging}"
-                                      Value="Discharging" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotCharging}"
-                                      Value="Not charging" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotPresent}"
-                                      Value="No battery" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-            <converters:MapToToneConverter x:Key="BatteryStateToneConverter">
-                <converters:MapToToneConverter.Entries>
-                    <converters:MapToToneEntry Key="{x:Static devices:BatteryState.Charging}"
-                                               Value="Success" />
-                    <converters:MapToToneEntry Key="{x:Static devices:BatteryState.Full}"
-                                               Value="Success" />
-                </converters:MapToToneConverter.Entries>
-            </converters:MapToToneConverter>
-            <s:MapToTextConverter x:Key="PowerSourceTextConverter"
-                                  DefaultValue="Unknown">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.AC}"
-                                      Value="AC" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Usb}"
-                                      Value="USB" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Wireless}"
-                                      Value="Wireless" />
-                    <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Battery}"
-                                      Value="Battery" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-
-            <!-- Network -->
-
-            <s:MapToTextConverter x:Key="NetworkAccessTextConverter"
-                                  DefaultValue="Unknown">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Internet}"
-                                      Value="Internet" />
-                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
-                                      Value="Limited" />
-                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Local}"
-                                      Value="Local" />
-                    <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.None}"
-                                      Value="None" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-            <converters:MapToToneConverter x:Key="NetworkAccessToneConverter">
-                <converters:MapToToneConverter.Entries>
-                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.Internet}"
-                                               Value="Success" />
-                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
-                                               Value="Warning" />
-                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.Local}"
-                                               Value="Warning" />
-                    <converters:MapToToneEntry Key="{x:Static networking:NetworkAccess.None}"
-                                               Value="Error" />
-                </converters:MapToToneConverter.Entries>
-            </converters:MapToToneConverter>
-            <s:MapToTextConverter x:Key="NetworkStateTextConverter">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
-                                      Value="High speed" />
-                    <s:MapToTextEntry Key="{x:Static state:NetworkState.Connected}"
-                                      Value="Connected" />
-                    <s:MapToTextEntry Key="{x:Static state:NetworkState.Disconnected}"
-                                      Value="Disconnected" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-            <converters:MapToToneConverter x:Key="NetworkStateToneConverter">
-                <converters:MapToToneConverter.Entries>
-                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
-                                               Value="Success" />
-                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.Connected}"
-                                               Value="Warning" />
-                    <converters:MapToToneEntry Key="{x:Static state:NetworkState.Disconnected}"
-                                               Value="Error" />
-                </converters:MapToToneConverter.Entries>
-            </converters:MapToToneConverter>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

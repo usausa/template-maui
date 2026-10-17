@@ -19,22 +19,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Action -->
-
-            <Style x:Key="PrintButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource BasicFilledButton}">
-                <Setter Property="Margin" Value="16,0,16,16" />
-                <Setter Property="HeightRequest" Value="48" />
-            </Style>
-
-            <!-- Status -->
-
-            <Style x:Key="StateChip"
-                   TargetType="controls:StatusChip">
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
             <!-- Converter -->
 
             <converters:MapToIntConverter x:Key="StepConverter">
@@ -47,6 +31,22 @@
                                               Value="3" />
                 </converters:MapToIntConverter.Entries>
             </converters:MapToIntConverter>
+
+            <!-- Status -->
+
+            <Style x:Key="StateChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <!-- Action -->
+
+            <Style x:Key="PrintButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicFilledButton}">
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>

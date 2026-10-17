@@ -8,7 +8,6 @@
              x:Class="Template.MobileApp.Controls.ChatView"
              x:Name="Root">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -34,13 +33,6 @@
                                 Radius="6" />
                     </Setter.Value>
                 </Setter>
-            </Style>
-
-            <Style x:Key="UserCardBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource MessageCardBorder}">
-                <Setter Property="Margin" Value="48,6,12,6" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
             </Style>
 
             <Style x:Key="RoleHeaderStack"
@@ -75,12 +67,9 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="MessageTextLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,6,0,0" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="LineBreakMode" Value="WordWrap" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            <Style x:Key="TypingStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,12,0,4" />
             </Style>
 
             <Style x:Key="TypingDot"
@@ -91,9 +80,21 @@
                 <Setter Property="Fill" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style x:Key="TypingStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Margin" Value="0,12,0,4" />
+            <Style x:Key="MessageTextLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <!-- User -->
+
+            <Style x:Key="UserCardBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource MessageCardBorder}">
+                <Setter Property="Margin" Value="48,6,12,6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
             </Style>
 
             <!-- Input -->
@@ -113,6 +114,18 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 22" />
             </Style>
 
+            <Style x:Key="VoiceRing"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="{StaticResource RedDefault}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
             <Style x:Key="InputBarButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -122,6 +135,14 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="VoiceButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource InputBarButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
             </Style>
 
             <!-- Send -->
@@ -155,79 +176,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
             </Style>
 
-            <Style x:Key="VoiceButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource InputBarButton}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
-            </Style>
-
-            <Style x:Key="VoiceRing"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="44" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Stroke" Value="{StaticResource RedDefault}" />
-                <Setter Property="StrokeThickness" Value="2" />
-                <Setter Property="Opacity" Value="0" />
-                <Setter Property="InputTransparent" Value="True" />
-            </Style>
-
-            <!-- Assistant -->
-
-            <DataTemplate x:Key="AssistantTemplate"
-                          x:DataType="{x:Type sample:AiChatMessage}">
-                <Border Style="{StaticResource MessageCardBorder}">
-                    <VerticalStackLayout>
-                        <HorizontalStackLayout Style="{StaticResource RoleHeaderStack}">
-                            <Border Style="{StaticResource RoleIconBorder}">
-                                <Label Style="{StaticResource RoleIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
-                            </Border>
-                            <Label Style="{StaticResource RoleNameLabel}"
-                                   Text="Assistant" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Style="{StaticResource TypingStack}"
-                                               IsVisible="{Binding IsTyping}">
-                            <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" />
-                            <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True"
-                                     behaviors:AnimationOption.WaveDelay="180" />
-                            <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True"
-                                     behaviors:AnimationOption.WaveDelay="360" />
-                        </HorizontalStackLayout>
-                        <Label Style="{StaticResource MessageTextLabel}"
-                               IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}"
-                               Text="{Binding Text}" />
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-
-            <!-- User -->
-
-            <DataTemplate x:Key="UserTemplate"
-                          x:DataType="{x:Type sample:AiChatMessage}">
-                <Border Style="{StaticResource UserCardBorder}">
-                    <VerticalStackLayout>
-                        <Label Style="{StaticResource RoleNameLabel}"
-                               Text="You" />
-                        <Label Style="{StaticResource MessageTextLabel}"
-                               Text="{Binding Text}" />
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-
-            <controls:AiChatTemplateSelector x:Key="MessageTemplateSelector"
-                                             AssistantTemplate="{StaticResource AssistantTemplate}"
-                                             UserTemplate="{StaticResource UserTemplate}" />
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
     <!-- Content -->
@@ -237,9 +187,55 @@
         <!-- Message -->
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}"
                         ItemsUpdatingScrollMode="KeepLastItemInView"
-                        VerticalScrollBarVisibility="Default" />
+                        VerticalScrollBarVisibility="Default">
+            <CollectionView.ItemTemplate>
+                <controls:AiChatTemplateSelector>
+                    <controls:AiChatTemplateSelector.AssistantTemplate>
+                        <DataTemplate x:DataType="{x:Type sample:AiChatMessage}">
+                            <Border Style="{StaticResource MessageCardBorder}">
+                                <VerticalStackLayout>
+                                    <HorizontalStackLayout Style="{StaticResource RoleHeaderStack}">
+                                        <Border Style="{StaticResource RoleIconBorder}">
+                                            <Label Style="{StaticResource RoleIconLabel}"
+                                                   Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
+                                        </Border>
+                                        <Label Style="{StaticResource RoleNameLabel}"
+                                               Text="Assistant" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Style="{StaticResource TypingStack}"
+                                                           IsVisible="{Binding IsTyping}">
+                                        <Ellipse Style="{StaticResource TypingDot}"
+                                                 behaviors:AnimationOption.Wave="True" />
+                                        <Ellipse Style="{StaticResource TypingDot}"
+                                                 behaviors:AnimationOption.Wave="True"
+                                                 behaviors:AnimationOption.WaveDelay="180" />
+                                        <Ellipse Style="{StaticResource TypingDot}"
+                                                 behaviors:AnimationOption.Wave="True"
+                                                 behaviors:AnimationOption.WaveDelay="360" />
+                                    </HorizontalStackLayout>
+                                    <Label Style="{StaticResource MessageTextLabel}"
+                                           IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}"
+                                           Text="{Binding Text}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </controls:AiChatTemplateSelector.AssistantTemplate>
+                    <controls:AiChatTemplateSelector.UserTemplate>
+                        <DataTemplate x:DataType="{x:Type sample:AiChatMessage}">
+                            <Border Style="{StaticResource UserCardBorder}">
+                                <VerticalStackLayout>
+                                    <Label Style="{StaticResource RoleNameLabel}"
+                                           Text="You" />
+                                    <Label Style="{StaticResource MessageTextLabel}"
+                                           Text="{Binding Text}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </controls:AiChatTemplateSelector.UserTemplate>
+                </controls:AiChatTemplateSelector>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <!-- Input -->
         <Grid Grid.Row="1"

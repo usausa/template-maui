@@ -16,18 +16,10 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Pane -->
-
-            <Style x:Key="DockPane"
-                   TargetType="Border">
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
-                <Setter Property="Padding" Value="8" />
-            </Style>
+            <!-- Common -->
 
             <Style x:Key="DockPaneLabel"
                    TargetType="Label">
@@ -36,6 +28,25 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
+
+            <Style x:Key="UniformCell"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="HeightRequest" Value="56" />
+            </Style>
+
+            <Style x:Key="UniformCellLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- DockLayout -->
 
             <Style x:Key="DockFillLabel"
                    TargetType="Label"
@@ -48,15 +59,6 @@
             <Style x:Key="UniformItems"
                    TargetType="mct:UniformItemsLayout">
                 <Setter Property="Margin" Value="-3,0" />
-            </Style>
-
-            <Style x:Key="UniformCell"
-                   TargetType="Border">
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
-                <Setter Property="Margin" Value="3" />
-                <Setter Property="HeightRequest" Value="56" />
             </Style>
 
             <!-- CircularLayout -->
@@ -79,56 +81,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
-            <!-- StaggeredGrid -->
-
-            <Style x:Key="StaggeredCell"
-                   TargetType="Border"
-                   BasedOn="{StaticResource UniformCell}">
-                <Setter Property="Margin" Value="0" />
-            </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="UniformCellLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <!-- StaggeredGrid -->
-
-            <Style x:Key="StaggeredLayout"
-                   TargetType="cmc:StaggeredGrid">
-                <Setter Property="Spacing" Value="6" />
-            </Style>
-
-            <!-- VariableSizeWrapPanel -->
-
-            <Style x:Key="TileLayout"
-                   TargetType="cmc:VariableSizeWrapPanel">
-                <Setter Property="Spacing" Value="6" />
-            </Style>
-
-            <Style x:Key="TileCell"
-                   TargetType="Border">
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
-            </Style>
-
-            <!-- OverlapPanel -->
-
-            <Style x:Key="OverlapCircle"
-                   TargetType="Border">
-                <Setter Property="WidthRequest" Value="40" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="Stroke" Value="White" />
-                <Setter Property="StrokeThickness" Value="2" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
-            </Style>
-
-            <!-- CircularLayout -->
+            <!-- CircularLayout rotation / ring -->
 
             <Style x:Key="FanPill"
                    TargetType="Border">
@@ -220,9 +173,54 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- StaggeredGrid -->
+
+            <Style x:Key="StaggeredLayout"
+                   TargetType="cmc:StaggeredGrid">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="StaggeredCell"
+                   TargetType="Border"
+                   BasedOn="{StaticResource UniformCell}">
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <!-- VariableSizeWrapPanel -->
+
+            <Style x:Key="TileLayout"
+                   TargetType="cmc:VariableSizeWrapPanel">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="TileCell"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+            </Style>
+
+            <!-- OverlapPanel -->
+
+            <Style x:Key="OverlapCircle"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="DockPane"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+                <Setter Property="Padding" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

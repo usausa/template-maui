@@ -14,26 +14,22 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Task -->
+            <!-- Common -->
+
+            <Style x:Key="InsertLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="3" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
 
             <Style x:Key="TaskLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource CardRowLabel}">
                 <Setter Property="Padding" Value="10,12" />
-            </Style>
-
-            <Style x:Key="TaskBorder"
-                   TargetType="Border">
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="0,3" />
             </Style>
 
             <!-- Reorder -->
@@ -56,12 +52,6 @@
                 <Setter Property="StrokeShape" Value="Rectangle" />
             </Style>
 
-            <Style x:Key="RowDivider"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
-            </Style>
-
             <Style x:Key="HandleLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,0,8,0" />
@@ -71,132 +61,11 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
-            <!-- Move between lists -->
-
-            <Style x:Key="ColumnBadgeBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8,2" />
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-            </Style>
-
-            <Style x:Key="TodoBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource ColumnBadgeBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="DoneBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource ColumnBadgeBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
-            </Style>
-
-            <Style x:Key="ColumnBadgeLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <!-- Task -->
-
-            <Style x:Key="InsertLine"
+            <Style x:Key="RowDivider"
                    TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="3" />
-                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
-                <Setter Property="IsVisible" Value="False" />
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
-
-            <!-- Move between lists -->
-
-            <Style x:Key="ColumnBorder"
-                   TargetType="Border">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-                <Setter Property="Stroke" Value="Transparent" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-                <Setter Property="Padding" Value="8" />
-                <Setter Property="MinimumHeightRequest" Value="200" />
-            </Style>
-
-            <!-- Trash -->
-
-            <Style x:Key="TrashBorder"
-                   TargetType="Border">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeDashArray" Value="4,4" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-                <Setter Property="Padding" Value="0,10" />
-            </Style>
-
-            <Style x:Key="TrashLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="28" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
-            <!-- Template -->
-
-            <DataTemplate x:Key="TaskTemplate"
-                          x:DataType="{x:Type module:DragTask}">
-                <Border Style="{StaticResource TaskBorder}">
-                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border"
-                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=IsDragging, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                     Value="True">
-                            <Setter Property="Stroke" Value="{StaticResource BlueLighten2}" />
-                            <Setter Property="StrokeDashArray" Value="4,3" />
-                        </DataTrigger>
-                        <DataTrigger TargetType="Border"
-                                     Binding="{Binding IsOver}"
-                                     Value="True">
-                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
-                            <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
-                            <Setter Property="StrokeThickness" Value="2" />
-                        </DataTrigger>
-                        <DataTrigger TargetType="Border"
-                                     Binding="{Binding IsSource}"
-                                     Value="True">
-                            <Setter Property="Opacity" Value="0.35" />
-                        </DataTrigger>
-                    </Border.Triggers>
-                    <Border.GestureRecognizers>
-                        <DragGestureRecognizer CanDrag="True"
-                                               DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DragStartingCommandParameter="{Binding .}"
-                                               DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:ViewDragDropViewModel}}" />
-                        <DropGestureRecognizer AllowDrop="True"
-                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemOverCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DragOverCommandParameter="{Binding .}"
-                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemLeaveCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DragLeaveCommandParameter="{Binding .}"
-                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
-                                               DropCommandParameter="{Binding .}" />
-                    </Border.GestureRecognizers>
-                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    <Grid RowDefinitions="Auto,*,Auto"
-                          ColumnDefinitions="4,*">
-                        <BoxView Grid.Row="0" Grid.ColumnSpan="2"
-                                 Style="{StaticResource InsertLine}"
-                                 IsVisible="{Binding IsOverAbove}" />
-                        <BoxView Grid.Row="2" Grid.ColumnSpan="2"
-                                 Style="{StaticResource InsertLine}"
-                                 IsVisible="{Binding IsOverBelow}" />
-                        <BoxView Grid.Row="1" Grid.Column="0"
-                                 Color="{Binding Accent}" />
-                        <Label Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource TaskLabel}"
-                               Text="{Binding Text}" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
 
             <DataTemplate x:Key="ReorderTemplate"
                           x:DataType="{x:Type module:DragTask}">
@@ -266,9 +135,130 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
+            <Style x:Key="ColumnBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="MinimumHeightRequest" Value="200" />
+            </Style>
+
+            <Style x:Key="ColumnBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="TodoBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ColumnBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="ColumnBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TaskBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0,3" />
+            </Style>
+
+            <DataTemplate x:Key="TaskTemplate"
+                          x:DataType="{x:Type module:DragTask}">
+                <Border Style="{StaticResource TaskBorder}">
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=IsDragging, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                     Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource BlueLighten2}" />
+                            <Setter Property="StrokeDashArray" Value="4,3" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsOver}"
+                                     Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                            <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsSource}"
+                                     Value="True">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Border.GestureRecognizers>
+                        <DragGestureRecognizer CanDrag="True"
+                                               DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragStartingCommandParameter="{Binding .}"
+                                               DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:ViewDragDropViewModel}}" />
+                        <DropGestureRecognizer AllowDrop="True"
+                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemOverCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragOverCommandParameter="{Binding .}"
+                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=ItemLeaveCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DragLeaveCommandParameter="{Binding .}"
+                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDragDropViewModel}}, Path=DropOnItemCommand, x:DataType={x:Type module:ViewDragDropViewModel}}"
+                                               DropCommandParameter="{Binding .}" />
+                    </Border.GestureRecognizers>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                    <Grid RowDefinitions="Auto,*,Auto"
+                          ColumnDefinitions="4,*">
+                        <BoxView Grid.Row="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource InsertLine}"
+                                 IsVisible="{Binding IsOverAbove}" />
+                        <BoxView Grid.Row="2" Grid.ColumnSpan="2"
+                                 Style="{StaticResource InsertLine}"
+                                 IsVisible="{Binding IsOverBelow}" />
+                        <BoxView Grid.Row="1" Grid.Column="0"
+                                 Color="{Binding Accent}" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource TaskLabel}"
+                               Text="{Binding Text}" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+            <Style x:Key="DoneBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ColumnBadgeBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
+            <!-- Trash -->
+
+            <Style x:Key="TrashBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeDashArray" Value="4,4" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="Padding" Value="0,10" />
+            </Style>
+
+            <Style x:Key="TrashLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">
@@ -292,6 +282,8 @@
                                Title="Move between lists / Trash"
                                Icon="{x:Static fonts:MaterialIcons.Move_up}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
+
+                    <!-- Move between lists -->
                     <Grid Style="{StaticResource BoardGrid}"
                           ColumnDefinitions="*,*">
                         <Border Grid.Column="0"
@@ -369,6 +361,8 @@
                             </VerticalStackLayout>
                         </Border>
                     </Grid>
+
+                    <!-- Trash -->
                     <Border Style="{StaticResource TrashBorder}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
@@ -394,6 +388,7 @@
                         <Label Style="{StaticResource TrashLabel}"
                                Text="{x:Static fonts:MaterialIcons.Delete}" />
                     </Border>
+
                 </VerticalStackLayout>
             </controls:InfoCard>
 

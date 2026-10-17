@@ -12,19 +12,10 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Page -->
-
-            <Style x:Key="MixerGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
-            <!-- Label -->
+            <!-- Common -->
 
             <Style x:Key="MixerValueLabel"
                    TargetType="Label">
@@ -34,46 +25,12 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="KnobNameLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="Margin" Value="0,8,0,0" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="12" />
-            </Style>
+            <!-- Page -->
 
-            <Style x:Key="ChannelLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="Margin" Value="0,4,0,8" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
-            </Style>
-
-            <Style x:Key="ScaleGrid"
+            <Style x:Key="MixerGrid"
                    TargetType="Grid">
-                <Setter Property="Padding" Value="8,12,0,12" />
-            </Style>
-
-            <Style x:Key="ScaleLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="10" />
-            </Style>
-
-            <Style x:Key="FreqLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="Margin" Value="0,2,0,8" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="10" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
             <!-- Knob -->
@@ -97,6 +54,32 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="KnobNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <!-- Scale -->
+
+            <Style x:Key="ScaleGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,12,0,12" />
+            </Style>
+
+            <Style x:Key="ScaleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+
             <!-- Slider -->
 
             <Style x:Key="MixerSlider"
@@ -109,6 +92,17 @@
                 <Setter Property="ThumbWidth" Value="64" />
                 <Setter Property="ThumbHeight" Value="24" />
                 <Setter Property="TickMarkLength" Value="40" />
+            </Style>
+
+            <!-- Channel -->
+
+            <Style x:Key="ChannelLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,4,0,8" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
             </Style>
 
             <!-- Equalizer -->
@@ -124,9 +118,19 @@
                 <Setter Property="InactiveColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
+            <!-- Frequency -->
+
+            <Style x:Key="FreqLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,2,0,8" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource MixerGrid}"
@@ -173,7 +177,7 @@
                Style="{StaticResource MixerValueLabel}"
                Text="{Binding KnobValue3, StringFormat='{0:F1}'}" />
 
-        <!-- dB scale -->
+        <!-- Scale -->
         <Grid Grid.Row="1" Grid.Column="0"
               Style="{StaticResource ScaleGrid}"
               RowDefinitions="*,*,*,*,*,*,*">

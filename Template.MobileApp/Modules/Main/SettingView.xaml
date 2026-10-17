@@ -14,18 +14,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Setting panel -->
-
-            <Style x:Key="PanelDivider"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="Margin" Value="0,2" />
-            </Style>
 
             <!-- Scan guide -->
 
@@ -94,18 +84,6 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="AiHeaderIcon"
-                   TargetType="Label"
-                   BasedOn="{StaticResource SectionHeaderIcon}">
-                <Setter Property="TextColor" Value="{StaticResource PurpleDefault}" />
-            </Style>
-
-            <Style x:Key="SshHeaderIcon"
-                   TargetType="Label"
-                   BasedOn="{StaticResource SectionHeaderIcon}">
-                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
-            </Style>
-
             <Style x:Key="SettingRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
@@ -145,9 +123,27 @@
                 <Setter Property="OffColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
+            <Style x:Key="PanelDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="Margin" Value="0,2" />
+            </Style>
+
+            <Style x:Key="AiHeaderIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionHeaderIcon}">
+                <Setter Property="TextColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="SshHeaderIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionHeaderIcon}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource DarkRootGrid}"

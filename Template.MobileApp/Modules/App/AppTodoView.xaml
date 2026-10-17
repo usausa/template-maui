@@ -16,7 +16,6 @@
              shell:ShellProperty.FunctionVisible="False"
              shell:ShellProperty.StatusBarColor="#059669">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -274,6 +273,36 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
+            <!-- Swipe -->
+
+            <Style x:Key="DeleteSwipeItem"
+                   TargetType="SwipeItemView">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TodoDangerColor}" />
+            </Style>
+
+            <Style x:Key="SwipeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SwipeIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SwipeTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
             <!-- Row -->
 
             <Style x:Key="TodoRowGrid"
@@ -364,34 +393,12 @@
                 <Setter Property="Color" Value="{StaticResource TodoLineColor}" />
             </Style>
 
-            <!-- Swipe -->
+            <!-- Footer -->
 
-            <Style x:Key="DeleteSwipeItem"
-                   TargetType="SwipeItemView">
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="BackgroundColor" Value="{StaticResource TodoDangerColor}" />
-            </Style>
-
-            <Style x:Key="SwipeStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="2" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SwipeIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="SwipeTextLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Style x:Key="ListFooterBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="104" />
+                <Setter Property="Color" Value="Transparent" />
             </Style>
 
             <!-- Empty -->
@@ -416,14 +423,6 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource TodoTextColor}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
-            <!-- List -->
-
-            <Style x:Key="ListFooterBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="104" />
-                <Setter Property="Color" Value="Transparent" />
             </Style>
 
             <!-- Undo -->
@@ -493,7 +492,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource TodoRootGrid}"
@@ -554,6 +552,7 @@
             <CollectionView ItemsSource="{Binding Context.List.Sections}"
                             IsGrouped="True">
 
+                <!-- Group -->
                 <CollectionView.GroupHeaderTemplate>
                     <DataTemplate x:DataType="{x:Type app:TodoSection}">
                         <Grid Style="{StaticResource GroupHeaderGrid}"
@@ -583,6 +582,8 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type app:TodoItem}">
                         <SwipeView>
+
+                            <!-- Swipe -->
                             <SwipeView.RightItems>
                                 <SwipeItems Mode="Execute">
                                     <SwipeItemView Style="{StaticResource DeleteSwipeItem}"
@@ -597,6 +598,8 @@
                                     </SwipeItemView>
                                 </SwipeItems>
                             </SwipeView.RightItems>
+
+                            <!-- Row -->
                             <Grid Style="{StaticResource TodoRowGrid}"
                                   RowDefinitions="Auto,Auto"
                                   ColumnDefinitions="Auto,*,Auto">
@@ -694,6 +697,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
 
+                <!-- Footer -->
                 <CollectionView.Footer>
                     <BoxView Style="{StaticResource ListFooterBoxView}" />
                 </CollectionView.Footer>

@@ -15,17 +15,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Localized -->
-
-            <Style x:Key="CurrentValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource CardStrongValueLabel}">
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
 
             <!-- Common -->
 
@@ -35,6 +26,14 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Localized -->
+
+            <Style x:Key="CurrentValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardStrongValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <!-- Culture -->
@@ -61,7 +60,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

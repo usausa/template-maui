@@ -18,7 +18,6 @@
              shell:ShellProperty.FunctionVisible="False"
              shell:ShellProperty.StatusBarColor="#101418">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -96,15 +95,7 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
-            <!-- Page -->
-
-            <Style x:Key="HomeContentGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="12,8,12,10" />
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
-
-            <!-- Card -->
+            <!-- Common -->
 
             <Style x:Key="GlassBorder"
                    TargetType="Border">
@@ -113,22 +104,6 @@
                 <Setter Property="Stroke" Value="{StaticResource HomeCardLineColor}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
-            </Style>
-
-            <Style x:Key="TileBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource GlassBorder}">
-                <Setter Property="Padding" Value="10,8" />
-                <Setter Property="HeightRequest" Value="116" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-            </Style>
-
-            <!-- Header -->
-
-            <Style x:Key="HeaderGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="2" />
-                <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
             <Style x:Key="GlassIconButton"
@@ -146,16 +121,48 @@
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
-            <Style x:Key="HeaderTextStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="0" />
-            </Style>
-
             <Style x:Key="CenterSubLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DotBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="10" />
+                <Setter Property="HeightRequest" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 5" />
+            </Style>
+
+            <!-- Page -->
+
+            <Style x:Key="HomeContentGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8,12,10" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <!-- Header -->
+
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="2" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HeaderTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="0" />
             </Style>
 
             <Style x:Key="RoomNameLabel"
@@ -164,13 +171,6 @@
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <Style x:Key="StatusLineLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource CyanAccent3}" />
             </Style>
 
             <Style x:Key="HeaderIconStack"
@@ -187,48 +187,14 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- Section -->
-
-            <Style x:Key="SectionGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="SectionLabel"
+            <Style x:Key="StatusLineLabel"
                    TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <Style x:Key="ThermostatLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource SectionLabel}">
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource CyanAccent3}" />
             </Style>
 
             <!-- Thermostat -->
-
-            <Style x:Key="ActiveStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="Spacing" Value="0" />
-            </Style>
-
-            <Style x:Key="ActiveSwitch"
-                   TargetType="Switch">
-                <Setter Property="OnColor" Value="{StaticResource GreenAccent3}" />
-                <Setter Property="ThumbColor" Value="White" />
-            </Style>
-
-            <Style x:Key="ActiveLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
-            </Style>
 
             <Style x:Key="DialGrid"
                    TargetType="Grid">
@@ -274,7 +240,39 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <Style x:Key="ThermostatLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionLabel}">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="ActiveStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="ActiveSwitch"
+                   TargetType="Switch">
+                <Setter Property="OnColor" Value="{StaticResource GreenAccent3}" />
+                <Setter Property="ThumbColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ActiveLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
+            </Style>
+
             <!-- Device legend -->
+
+            <Style x:Key="SectionGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
 
             <Style x:Key="LegendStack"
                    TargetType="HorizontalStackLayout">
@@ -282,19 +280,18 @@
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
-            <Style x:Key="DotBorder"
-                   TargetType="Border">
-                <Setter Property="WidthRequest" Value="10" />
-                <Setter Property="HeightRequest" Value="10" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 5" />
-            </Style>
-
             <Style x:Key="OnlineDotBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource DotBorder}">
                 <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
+            </Style>
+
+            <Style x:Key="LegendLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,6,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
             </Style>
 
             <Style x:Key="ActiveDotBorder"
@@ -309,15 +306,15 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource RedAccent2}" />
             </Style>
 
-            <Style x:Key="LegendLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,0,6,0" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
-            </Style>
-
             <!-- Device -->
+
+            <Style x:Key="TileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource GlassBorder}">
+                <Setter Property="Padding" Value="10,8" />
+                <Setter Property="HeightRequest" Value="116" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
 
             <Style x:Key="TileGrid"
                    TargetType="Grid">
@@ -412,7 +409,7 @@
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
-            <!-- Tab bar -->
+            <!-- Tab -->
 
             <Style x:Key="TabBorder"
                    TargetType="Border"
@@ -451,7 +448,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid>

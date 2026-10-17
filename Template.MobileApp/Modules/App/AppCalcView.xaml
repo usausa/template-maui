@@ -12,7 +12,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -60,6 +59,13 @@
                 <Setter Property="Margin" Value="4,8,4,0" />
             </Style>
 
+            <Style x:Key="EqualsSignLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="#5E8CA8" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
             <Style x:Key="CalcResultLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
@@ -68,13 +74,6 @@
                 <Setter Property="HorizontalTextAlignment" Value="End" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="LineBreakMode" Value="NoWrap" />
-            </Style>
-
-            <Style x:Key="EqualsSignLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="TextColor" Value="#5E8CA8" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="ErrorLabel"
@@ -104,12 +103,12 @@
                 <Setter Property="TextColor" Value="#9FB2C4" />
             </Style>
 
-            <Style x:Key="KeyButton"
+            <Style x:Key="ClearButton"
                    TargetType="Button"
                    BasedOn="{StaticResource CalcButtonBase}">
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="BackgroundColor" Value="#222B36" />
-                <Setter Property="TextColor" Value="#E6EDF3" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="BackgroundColor" Value="#2C3240" />
+                <Setter Property="TextColor" Value="#FF8A65" />
             </Style>
 
             <Style x:Key="OpButton"
@@ -120,12 +119,12 @@
                 <Setter Property="TextColor" Value="#7FC4FF" />
             </Style>
 
-            <Style x:Key="ClearButton"
+            <Style x:Key="KeyButton"
                    TargetType="Button"
                    BasedOn="{StaticResource CalcButtonBase}">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="BackgroundColor" Value="#2C3240" />
-                <Setter Property="TextColor" Value="#FF8A65" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="BackgroundColor" Value="#222B36" />
+                <Setter Property="TextColor" Value="#E6EDF3" />
             </Style>
 
             <Style x:Key="EqualsButton"
@@ -138,7 +137,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource CalcRootGrid}"

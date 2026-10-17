@@ -80,13 +80,12 @@
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
-            <!-- Progress -->
+            <!-- Common -->
 
-            <Style x:Key="ReadProgressBar"
-                   TargetType="ProgressBar">
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="HeightRequest" Value="4" />
-                <Setter Property="ZIndex" Value="1" />
+            <Style x:Key="ArticleLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
             </Style>
 
             <!-- Page -->
@@ -187,6 +186,8 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <!-- Title -->
+
             <Style x:Key="TitleLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="22" />
@@ -229,12 +230,6 @@
             </Style>
 
             <!-- Body -->
-
-            <Style x:Key="ArticleLine"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
-            </Style>
 
             <Style x:Key="BodyLabel"
                    TargetType="Label">
@@ -283,6 +278,15 @@
                 <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
                 <Setter Property="MaxLines" Value="2" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- Progress -->
+
+            <Style x:Key="ReadProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HeightRequest" Value="4" />
+                <Setter Property="ZIndex" Value="1" />
             </Style>
 
         </ResourceDictionary>

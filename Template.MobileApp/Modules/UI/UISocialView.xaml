@@ -16,31 +16,8 @@
              shell:ShellProperty.FunctionVisible="False"
              shell:ShellProperty.StatusBarColor="Black">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Shared -->
-
-            <Style x:Key="LayoutGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="2" />
-                <Setter Property="ColumnSpacing" Value="2" />
-                <Setter Property="RowSpacing" Value="2" />
-            </Style>
-
-            <Style x:Key="LayoutVerticalStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="End" />
-                <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="NotificationBadge"
-                   TargetType="controls:SocialNotificationBadge">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
-            </Style>
 
             <!-- Background -->
 
@@ -49,7 +26,7 @@
                 <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
-            <!-- Icon -->
+            <!-- Header -->
 
             <Style x:Key="Icon"
                    TargetType="controls:SocialIcon">
@@ -58,8 +35,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Episode -->
-
             <Style x:Key="Episode"
                    TargetType="controls:SocialEpisode">
                 <Setter Property="HeightRequest" Value="24" />
@@ -67,8 +42,6 @@
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="Color" Value="{StaticResource BlueDefault}" />
             </Style>
-
-            <!-- Player -->
 
             <Style x:Key="Player"
                    TargetType="controls:SocialPlayer">
@@ -115,8 +88,6 @@
                 <Setter Property="Color3" Value="{StaticResource OrangeAccent2}" />
             </Style>
 
-            <!-- Information -->
-
             <Style x:Key="Information"
                    TargetType="controls:SocialInformation">
                 <Setter Property="HeightRequest" Value="120" />
@@ -131,9 +102,30 @@
                 <Setter Property="Color" Value="{StaticResource OrangeDefault}" />
             </Style>
 
+            <!-- Component -->
+
+            <Style x:Key="LayoutGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="ColumnSpacing" Value="2" />
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="NotificationBadge"
+                   TargetType="controls:SocialNotificationBadge">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
+            </Style>
+
+            <Style x:Key="LayoutVerticalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- ReSharper disable MarkupAttributeTypo -->
     <!-- Content -->

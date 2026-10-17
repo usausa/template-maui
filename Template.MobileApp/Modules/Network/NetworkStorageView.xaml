@@ -17,11 +17,18 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- File -->
+
+            <Style x:Key="PathIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource AmberDarken2}" />
+            </Style>
 
             <Style x:Key="PathLabel"
                    TargetType="Label">
@@ -67,18 +74,19 @@
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
+            <Style x:Key="SizeBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
             <Style x:Key="RowSizeLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource RowInfoLabel}">
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="PathIconLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="TextColor" Value="{StaticResource AmberDarken2}" />
             </Style>
 
             <Style x:Key="ChevronLabel"
@@ -89,20 +97,16 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
-            <Style x:Key="SizeBadgeBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="6,1" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
-            </Style>
-
             <!-- Transfer -->
 
             <Style x:Key="ProgressGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TransferProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="ProgressValueLabel"
@@ -117,14 +121,8 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
-            <Style x:Key="TransferProgressBar"
-                   TargetType="ProgressBar">
-                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

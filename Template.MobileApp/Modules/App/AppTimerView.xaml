@@ -17,7 +17,6 @@
              shell:ShellProperty.FunctionVisible="False"
              shell:ShellProperty.StatusBarColor="#0F172A">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -97,13 +96,6 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <!-- Page -->
-
-            <Style x:Key="ModeContentGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="16" />
-            </Style>
-
             <!-- Mode -->
 
             <Style x:Key="ModePillBorder"
@@ -126,6 +118,13 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
+            <!-- Stopwatch -->
+
+            <Style x:Key="ModeContentGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="16" />
+            </Style>
+
             <!-- Dial -->
 
             <Style x:Key="DialGrid"
@@ -140,13 +139,6 @@
                    TargetType="controls:TimerDial">
                 <Setter Property="ArcStartColor" Value="{StaticResource TimerCyanColor}" />
                 <Setter Property="ArcEndColor" Value="{StaticResource TimerBlueColor}" />
-            </Style>
-
-            <Style x:Key="CountdownDial"
-                   TargetType="controls:TimerDial">
-                <Setter Property="ArcStartColor" Value="{StaticResource TimerVioletColor}" />
-                <Setter Property="ArcEndColor" Value="{StaticResource TimerPinkColor}" />
-                <Setter Property="AlertColor" Value="{StaticResource TimerAlertColor}" />
             </Style>
 
             <Style x:Key="DialCenterStack"
@@ -182,6 +174,28 @@
                 <Setter Property="TextColor" Value="{StaticResource TimerUnlitColor}" />
             </Style>
 
+            <Style x:Key="DialLapStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapNoBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapNoLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+            </Style>
+
             <Style x:Key="DialLapTimeLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
@@ -190,25 +204,53 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="DialSubLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <!-- Lap -->
+
+            <Style x:Key="LapCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="200" />
+                <Setter Property="ItemsUpdatingScrollMode" Value="KeepScrollOffset" />
             </Style>
 
-            <Style x:Key="DialLapStack"
+            <Style x:Key="LapRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="4,8" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="6" />
+            </Style>
+
+            <Style x:Key="LapTimeStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="8" />
-                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="DialAlertLabel"
+            <Style x:Key="LapTimeLabel"
                    TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource TimerAlertColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapSplitLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="DSEG7" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LapRatioBar"
+                   TargetType="ProgressBar">
+                <Setter Property="HeightRequest" Value="4" />
+                <Setter Property="ProgressColor" Value="{StaticResource TimerCyanColor}" />
             </Style>
 
             <!-- Action -->
@@ -241,18 +283,6 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="StartRoundButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource RoundButton}">
-                <Setter Property="BackgroundColor" Value="{StaticResource TimerGreenColor}" />
-            </Style>
-
-            <Style x:Key="StopRoundButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource RoundButton}">
-                <Setter Property="BackgroundColor" Value="{StaticResource TimerRedColor}" />
-            </Style>
-
             <Style x:Key="SubRoundButton"
                    TargetType="Button"
                    BasedOn="{StaticResource RoundButton}">
@@ -268,72 +298,43 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <!-- Lap -->
-
-            <Style x:Key="LapCollection"
-                   TargetType="CollectionView">
-                <Setter Property="HeightRequest" Value="200" />
-                <Setter Property="ItemsUpdatingScrollMode" Value="KeepScrollOffset" />
+            <Style x:Key="StartRoundButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RoundButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerGreenColor}" />
             </Style>
 
-            <Style x:Key="LapRowGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="4,8" />
-                <Setter Property="ColumnSpacing" Value="12" />
-                <Setter Property="RowSpacing" Value="6" />
+            <Style x:Key="StopRoundButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RoundButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource TimerRedColor}" />
             </Style>
 
-            <Style x:Key="LapNoBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8,2" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="BackgroundColor" Value="{StaticResource TimerSurfaceColor}" />
-                <Setter Property="VerticalOptions" Value="Center" />
+            <!-- Countdown -->
+
+            <Style x:Key="CountdownDial"
+                   TargetType="controls:TimerDial">
+                <Setter Property="ArcStartColor" Value="{StaticResource TimerVioletColor}" />
+                <Setter Property="ArcEndColor" Value="{StaticResource TimerPinkColor}" />
+                <Setter Property="AlertColor" Value="{StaticResource TimerAlertColor}" />
             </Style>
 
-            <Style x:Key="LapNoLabel"
+            <Style x:Key="DialSubLabel"
                    TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="LapTimeLabel"
+            <Style x:Key="DialAlertLabel"
                    TargetType="Label">
-                <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="18" />
-                <Setter Property="TextColor" Value="{StaticResource TimerTextColor}" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TimerAlertColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="LapSplitLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="DSEG7" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource TimerDimColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="LapTimeStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="LapBadgeLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="LapRatioBar"
-                   TargetType="ProgressBar">
-                <Setter Property="HeightRequest" Value="4" />
-                <Setter Property="ProgressColor" Value="{StaticResource TimerCyanColor}" />
-            </Style>
-
-            <!-- Chip -->
+            <!-- Preset -->
 
             <Style x:Key="ChipFlex"
                    TargetType="FlexLayout">
@@ -363,7 +364,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource TimerRootGrid}"

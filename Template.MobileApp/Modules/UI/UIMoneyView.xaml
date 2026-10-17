@@ -20,7 +20,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -152,11 +151,168 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <!-- Background -->
+            <!-- Common -->
 
-            <Style x:Key="BackgroundGrid"
+            <Style x:Key="DetailNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="DetailValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="DetailNextLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="DetailSeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="MoneyCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="CardTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="CategoryIconBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,0,4" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+            </Style>
+
+            <Style x:Key="CategoryIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DayHeaderLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,10,0,2" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="TransactionGrid"
                    TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+                <Setter Property="Padding" Value="0,8,0,0" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ShopIconCircle"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="ShopIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="TransactionShopLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="TransactionTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="TransactionAmountLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="RowLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="TransactionLine"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource RowLine}">
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
+            <DataTemplate x:Key="TransactionTemplate"
+                          x:DataType="sample:MoneyTransaction">
+                <Grid Style="{StaticResource TransactionGrid}"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="Auto,*,Auto">
+                    <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                             Style="{StaticResource ShopIconCircle}" />
+                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                           Style="{StaticResource ShopIconLabel}"
+                           Text="{Binding Kind, Converter={StaticResource ShopEmojiConverter}}" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource TransactionShopLabel}"
+                           Text="{Binding Shop}" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource TransactionTimeLabel}"
+                           Text="{Binding Date, StringFormat='{0:HH:mm}'}" />
+                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                           Style="{StaticResource TransactionAmountLabel}"
+                           Text="{Binding Amount, StringFormat='{0:+#,0;−#,0;0} 円'}"
+                           TextColor="{Binding Amount, Converter={StaticResource AmountColorConverter}, ConverterParameter={s:Int32 0}}" />
+                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                             Style="{StaticResource TransactionLine}" />
+                </Grid>
+            </DataTemplate>
+
+            <Style x:Key="MoneySheet"
+                   TargetType="cmc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="SheetTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
             <!-- Header -->
@@ -238,6 +394,23 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
+            <Style x:Key="RateBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,0,0,0" />
+                <Setter Property="Padding" Value="6,2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+            </Style>
+
+            <Style x:Key="RateBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
             <Style x:Key="MoneyHeaderPointLayout"
                    TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -282,6 +455,7 @@
                             Radius="12" />
                 </Setter>
             </Style>
+
             <Style x:Key="RankBadgeBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="2" />
@@ -359,55 +533,10 @@
 
             <!-- Detail -->
 
-            <Style x:Key="DetailLayout"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Margin" Value="16,0,16,16" />
-            </Style>
-
-            <Style x:Key="DetailBorder"
-                   TargetType="Border">
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-                <Setter Property="StrokeThickness" Value="0" />
-            </Style>
-
-            <Style x:Key="DetailSeparatorBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="0.5" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
-            </Style>
-
-            <Style x:Key="DetailGridWithLink"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="8,8,0,8" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
             <Style x:Key="DetailGridWithoutLink"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <Style x:Key="DetailNameLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-            </Style>
-
-            <Style x:Key="DetailValueLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-            </Style>
-
-            <Style x:Key="DetailNextLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="18" />
             </Style>
 
             <Style x:Key="DetailButton"
@@ -417,141 +546,6 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="CornerRadius" Value="4" />
-            </Style>
-
-            <!-- Bottom select -->
-
-            <Style x:Key="BottomSelectSeparatorBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="0.5" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="BottomSelectGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <Style x:Key="BottomSelectImage"
-                   TargetType="Image">
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HeightRequest" Value="48" />
-            </Style>
-
-            <Style x:Key="BottomSelectLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
-            </Style>
-
-            <!-- Bottom select badge -->
-
-            <Style x:Key="BottomSelectBadgeBorder"
-                   TargetType="Border">
-                <Setter Property="WidthRequest" Value="20" />
-                <Setter Property="HeightRequest" Value="20" />
-                <Setter Property="TranslationX" Value="20" />
-                <Setter Property="TranslationY" Value="4" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
-                <Setter Property="StrokeShape" Value="Ellipse" />
-                <Setter Property="StrokeThickness" Value="0" />
-            </Style>
-
-            <Style x:Key="BottomSelectBadgeLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-            <Style x:Key="NotificationBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource BottomSelectBadgeBorder}">
-                <Setter Property="WidthRequest" Value="28" />
-                <Setter Property="TranslationX" Value="24" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-            </Style>
-
-            <!-- Center -->
-
-            <Style x:Key="CenterButton"
-                   TargetType="Button">
-                <Setter Property="WidthRequest" Value="72" />
-                <Setter Property="HeightRequest" Value="72" />
-                <Setter Property="Padding" Value="0,6,0,0" />
-                <Setter Property="TranslationY" Value="-12" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="End" />
-                <Setter Property="CornerRadius" Value="36" />
-                <Setter Property="BorderWidth" Value="0" />
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="ContentLayout" Value="Top, 0" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <!-- Header -->
-
-            <Style x:Key="RateBadgeBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="8,0,0,0" />
-                <Setter Property="Padding" Value="6,2" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
-            </Style>
-
-            <Style x:Key="RateBadgeLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
-            </Style>
-
-            <!-- Card -->
-
-            <Style x:Key="MoneyCardBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="16,0,16,16" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="Padding" Value="16,14" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-                <Setter Property="StrokeThickness" Value="0" />
-            </Style>
-
-            <Style x:Key="SearchResultBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource MoneyCardBorder}">
-                <Setter Property="VerticalOptions" Value="Fill" />
-                <Setter Property="Padding" Value="16,0" />
-            </Style>
-
-            <Style x:Key="CardTitleLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
-            <Style x:Key="CardHeaderGrid"
-                   TargetType="Grid">
-                <Setter Property="MinimumHeightRequest" Value="32" />
-            </Style>
-
-            <Style x:Key="CardChevronLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
             <!-- Expense -->
@@ -614,7 +608,20 @@
                 <Setter Property="HeightRequest" Value="190" />
             </Style>
 
-            <!-- Category -->
+            <!-- Category summary -->
+
+            <Style x:Key="CardHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="MinimumHeightRequest" Value="32" />
+            </Style>
+
+            <Style x:Key="CardChevronLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
 
             <Style x:Key="CategoryScroll"
                    TargetType="ScrollView">
@@ -632,25 +639,6 @@
                    TargetType="VerticalStackLayout">
                 <Setter Property="WidthRequest" Value="80" />
                 <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="CategoryIconBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="0,0,0,4" />
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HeightRequest" Value="48" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="Ellipse" />
-            </Style>
-
-            <Style x:Key="CategoryIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="TextColor" Value="White" />
             </Style>
 
             <Style x:Key="CategoryNameLabel"
@@ -677,66 +665,15 @@
 
             <!-- Transaction -->
 
-            <Style x:Key="DayHeaderLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,10,0,2" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-            </Style>
-
-            <Style x:Key="TransactionGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="0,8,0,0" />
-                <Setter Property="ColumnSpacing" Value="12" />
-            </Style>
-
-            <Style x:Key="ShopIconCircle"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="36" />
-                <Setter Property="HeightRequest" Value="36" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="CornerRadius" Value="18" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten4}" />
-            </Style>
-
-            <Style x:Key="ShopIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="18" />
-            </Style>
-
-            <Style x:Key="TransactionShopLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
-            <Style x:Key="TransactionTimeLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="11" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-            </Style>
-
-            <Style x:Key="TransactionAmountLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-            </Style>
-
-            <Style x:Key="RowLine"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
-            </Style>
-
-            <Style x:Key="TransactionLine"
-                   TargetType="BoxView"
-                   BasedOn="{StaticResource RowLine}">
-                <Setter Property="Margin" Value="0,8,0,0" />
-            </Style>
+            <DataTemplate x:Key="DayTemplate"
+                          x:DataType="sample:MoneyDay">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource DayHeaderLabel}"
+                           Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding .}"
+                                         BindableLayout.ItemTemplate="{StaticResource TransactionTemplate}" />
+                </VerticalStackLayout>
+            </DataTemplate>
 
             <!-- Search -->
 
@@ -767,6 +704,13 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="SearchResultBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource MoneyCardBorder}">
+                <Setter Property="VerticalOptions" Value="Fill" />
+                <Setter Property="Padding" Value="16,0" />
+            </Style>
+
             <Style x:Key="EmptyLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,16" />
@@ -776,12 +720,6 @@
             </Style>
 
             <!-- Notification -->
-
-            <Style x:Key="NoticeScroll"
-                   TargetType="ScrollView">
-                <Setter Property="Padding" Value="0,16,0,0" />
-                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
-            </Style>
 
             <Style x:Key="NoticeRowGrid"
                    TargetType="Grid">
@@ -839,11 +777,6 @@
             </Style>
 
             <!-- Account -->
-
-            <Style x:Key="AccountStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="0,16,0,0" />
-            </Style>
 
             <Style x:Key="AccountProfileGrid"
                    TargetType="Grid">
@@ -940,41 +873,89 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
             </Style>
 
-            <!-- Sheet -->
+            <!-- Bottom select -->
 
-            <Style x:Key="MoneySheet"
-                   TargetType="cmc:BottomSheetView">
-                <Setter Property="CornerRadius" Value="20" />
-                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            <Style x:Key="BottomSelectSeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
+
+            <Style x:Key="BottomSelectGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="BottomSelectImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
+
+            <Style x:Key="BottomSelectLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="BottomSelectBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="20" />
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="TranslationX" Value="20" />
+                <Setter Property="TranslationY" Value="4" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="NotificationBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BottomSelectBadgeBorder}">
+                <Setter Property="WidthRequest" Value="28" />
+                <Setter Property="TranslationX" Value="24" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="BottomSelectBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Center -->
+
+            <Style x:Key="CenterButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Padding" Value="0,6,0,0" />
+                <Setter Property="TranslationY" Value="-12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Payment -->
 
             <Style x:Key="PaymentSheet"
                    TargetType="cmc:BottomSheetView"
                    BasedOn="{StaticResource MoneySheet}">
                 <Setter Property="HalfExpandedRatio" Value="0.8" />
             </Style>
-
-            <Style x:Key="SheetStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="20,8,20,24" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="SheetTitleLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
-            <Style x:Key="SheetCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,-8,0,0" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-            </Style>
-
-            <!-- Payment -->
 
             <Style x:Key="PaymentCodeBorder"
                    TargetType="Border">
@@ -1037,6 +1018,13 @@
             </Style>
 
             <!-- Balance -->
+
+            <Style x:Key="SheetCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,-8,0,0" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
 
             <Style x:Key="BalanceChartControl"
                    TargetType="drawing:DrawingControl">
@@ -1107,6 +1095,11 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
+            <Style x:Key="CategoryRowProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="CategoryRowRatioLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
@@ -1115,51 +1108,45 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
-            <Style x:Key="CategoryRowProgressBar"
-                   TargetType="ProgressBar">
-                <Setter Property="VerticalOptions" Value="Center" />
+            <!-- Component -->
+
+            <Style x:Key="BackgroundGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
             </Style>
 
-            <!-- Template -->
+            <Style x:Key="DetailLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="16,0,16,16" />
+            </Style>
 
-            <DataTemplate x:Key="TransactionTemplate"
-                          x:DataType="sample:MoneyTransaction">
-                <Grid Style="{StaticResource TransactionGrid}"
-                      RowDefinitions="Auto,Auto,Auto"
-                      ColumnDefinitions="Auto,*,Auto">
-                    <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                             Style="{StaticResource ShopIconCircle}" />
-                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                           Style="{StaticResource ShopIconLabel}"
-                           Text="{Binding Kind, Converter={StaticResource ShopEmojiConverter}}" />
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource TransactionShopLabel}"
-                           Text="{Binding Shop}" />
-                    <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource TransactionTimeLabel}"
-                           Text="{Binding Date, StringFormat='{0:HH:mm}'}" />
-                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
-                           Style="{StaticResource TransactionAmountLabel}"
-                           Text="{Binding Amount, StringFormat='{0:+#,0;−#,0;0} 円'}"
-                           TextColor="{Binding Amount, Converter={StaticResource AmountColorConverter}, ConverterParameter={s:Int32 0}}" />
-                    <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                             Style="{StaticResource TransactionLine}" />
-                </Grid>
-            </DataTemplate>
+            <Style x:Key="DetailBorder"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
 
-            <DataTemplate x:Key="DayTemplate"
-                          x:DataType="sample:MoneyDay">
-                <VerticalStackLayout>
-                    <Label Style="{StaticResource DayHeaderLabel}"
-                           Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding .}"
-                                         BindableLayout.ItemTemplate="{StaticResource TransactionTemplate}" />
-                </VerticalStackLayout>
-            </DataTemplate>
+            <Style x:Key="DetailGridWithLink"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,8,0,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="NoticeScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Padding" Value="0,16,0,0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+            </Style>
+
+            <Style x:Key="SheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,24" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid RowDefinitions="*,Auto,Auto">
@@ -1413,7 +1400,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Category -->
+                <!-- Category summary -->
                 <Border Grid.Row="5"
                         Style="{StaticResource MoneyCardBorder}">
                     <VerticalStackLayout>

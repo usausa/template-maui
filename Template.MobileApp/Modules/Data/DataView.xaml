@@ -15,7 +15,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -23,13 +22,6 @@
                    TargetType="Button"
                    BasedOn="{StaticResource BasicIconOutlinedButton}">
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <Style x:Key="CountUnitLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="Margin" Value="0,0,0,6" />
-                <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
             <Style x:Key="CountValueLabel"
@@ -40,9 +32,15 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
             </Style>
 
+            <Style x:Key="CountUnitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,0,0,6" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

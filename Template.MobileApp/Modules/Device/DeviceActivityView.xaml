@@ -13,7 +13,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -67,18 +66,6 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource OrangeLighten5}" />
             </Style>
 
-            <Style x:Key="DistanceTileBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource TileBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
-            </Style>
-
-            <Style x:Key="TimeTileBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource TileBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
-            </Style>
-
             <Style x:Key="TileStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="4" />
@@ -112,9 +99,20 @@
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
+            <Style x:Key="DistanceTileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource TileBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="TimeTileBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource TileBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid RowDefinitions="18,*,*">

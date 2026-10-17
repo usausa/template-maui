@@ -18,65 +18,13 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Log -->
-
-            <Style x:Key="SectionNameLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource NameLabel}">
-                <Setter Property="Margin" Value="0,8,0,0" />
-            </Style>
-
-            <!-- Telemetry -->
-
-            <Style x:Key="LastSendStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="0,6" />
-                <Setter Property="Spacing" Value="4" />
-            </Style>
-
-            <Style x:Key="LastSendRowStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="LastSendTimeLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-            </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="EmptyNoteLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicFieldCaptionLabel}">
-                <Setter Property="Margin" Value="0,4" />
-            </Style>
-
-            <Style x:Key="ActionRowGrid"
-                   TargetType="Grid"
-                   BasedOn="{StaticResource BasicButtonGrid}">
-                <Setter Property="Margin" Value="0,8,0,0" />
-            </Style>
-
-            <Style x:Key="DeleteButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource BasicIconOutlinedButton}">
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
 
             <!-- Converter -->
 
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
-
-            <!-- Telemetry -->
 
             <s:BoolToTextConverter x:Key="TelemetryTextConverter"
                                    TrueValue="Sending"
@@ -109,8 +57,6 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
 
-            <!-- Log -->
-
             <s:MapToColorConverter x:Key="LogLevelColorConverter"
                                    DefaultValue="{StaticResource RedDefault}">
                 <s:MapToColorConverter.Entries>
@@ -119,10 +65,36 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <Style x:Key="EntryStack"
+            <!-- Common -->
+
+            <Style x:Key="EmptyNoteLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicFieldCaptionLabel}">
+                <Setter Property="Margin" Value="0,4" />
+            </Style>
+
+            <!-- Telemetry -->
+
+            <Style x:Key="LastSendStack"
                    TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,6" />
                 <Setter Property="Spacing" Value="4" />
             </Style>
+
+            <Style x:Key="LastSendRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LastSendTimeLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <!-- Log -->
 
             <Style x:Key="EntryGrid"
                    TargetType="Grid">
@@ -145,10 +117,10 @@
                 <Setter Property="HorizontalTextAlignment" Value="End" />
             </Style>
 
-            <Style x:Key="LogTimeLabel"
+            <Style x:Key="SectionNameLabel"
                    TargetType="Label"
-                   BasedOn="{StaticResource EntryValueLabel}">
-                <Setter Property="HorizontalTextAlignment" Value="Start" />
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
 
             <Style x:Key="LogLevelLabel"
@@ -156,6 +128,12 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="LogTimeLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource EntryValueLabel}">
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
             </Style>
 
             <Style x:Key="LogMessageLabel"
@@ -180,9 +158,27 @@
                 <Setter Property="LineBreakMode" Value="CharacterWrap" />
             </Style>
 
+            <!-- Component -->
+
+            <Style x:Key="EntryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource BasicButtonGrid}">
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
+            <Style x:Key="DeleteButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

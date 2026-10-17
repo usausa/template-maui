@@ -25,6 +25,40 @@
                                    TrueValue="{x:Static fonts:MaterialIcons.Favorite}"
                                    FalseValue="{x:Static fonts:MaterialIcons.Favorite_outline}" />
 
+            <!-- Common -->
+
+            <Style x:Key="SectionTitle"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="ShopChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type cmc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style x:Key="ShopChipGroup"
+                   TargetType="cmc:ChipGroup">
+                <Setter Property="ChipTextSize" Value="14" />
+                <Setter Property="ChipCornerRadius" Value="18" />
+                <Setter Property="ChipPadding" Value="14,0" />
+                <Setter Property="ChipBackground" Value="White" />
+                <Setter Property="ChipStroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedChipTextColor" Value="White" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="ItemStyle" Value="{StaticResource ShopChipLabel}" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="ShopGrid"
@@ -81,8 +115,6 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
             </Style>
 
-            <!-- Cart button with badge -->
-
             <Style x:Key="CartButtonArea"
                    TargetType="Grid">
                 <Setter Property="WidthRequest" Value="48" />
@@ -128,155 +160,6 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <!-- Search -->
-
-            <Style x:Key="SearchRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="12" />
-            </Style>
-
-            <Style x:Key="SearchBorder"
-                   TargetType="Border">
-                <Setter Property="HeightRequest" Value="48" />
-                <Setter Property="Padding" Value="16,0" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 24" />
-                <Setter Property="Shadow">
-                    <Shadow Offset="0,2"
-                            Brush="Black"
-                            Opacity="0.08"
-                            Radius="8" />
-                </Setter>
-            </Style>
-
-            <Style x:Key="SearchRowLayout"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SearchIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="SearchEntry"
-                   TargetType="Entry">
-                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
-                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
-                <Setter Property="Placeholder" Value="商品を検索" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="FilterButtonArea"
-                   TargetType="Grid">
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HeightRequest" Value="48" />
-            </Style>
-
-            <Style x:Key="FilterButton"
-                   TargetType="Button">
-                <Setter Property="WidthRequest" Value="48" />
-                <Setter Property="HeightRequest" Value="48" />
-                <Setter Property="CornerRadius" Value="24" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="Shadow">
-                    <Shadow Offset="0,2"
-                            Brush="Black"
-                            Opacity="0.15"
-                            Radius="6" />
-                </Setter>
-            </Style>
-
-            <Style x:Key="FilterDot"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="12" />
-                <Setter Property="HeightRequest" Value="12" />
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="Fill" Value="{StaticResource AmberDefault}" />
-                <Setter Property="Stroke" Value="White" />
-                <Setter Property="StrokeThickness" Value="2" />
-                <Setter Property="InputTransparent" Value="True" />
-            </Style>
-
-            <!-- Category chips -->
-
-            <Style x:Key="ChipScroll"
-                   TargetType="ScrollView">
-                <Setter Property="Orientation" Value="Horizontal" />
-                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
-            </Style>
-
-            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-            <Style x:Key="ShopChipLabel"
-                   TargetType="Label">
-                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
-                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
-                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type cmc:ChipGroup}}" />
-                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
-            </Style>
-            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-
-            <Style x:Key="ShopChipGroup"
-                   TargetType="cmc:ChipGroup">
-                <Setter Property="ChipTextSize" Value="14" />
-                <Setter Property="ChipCornerRadius" Value="18" />
-                <Setter Property="ChipPadding" Value="14,0" />
-                <Setter Property="ChipBackground" Value="White" />
-                <Setter Property="ChipStroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
-                <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
-                <Setter Property="SelectedChipTextColor" Value="White" />
-                <Setter Property="Spacing" Value="8" />
-                <Setter Property="ItemStyle" Value="{StaticResource ShopChipLabel}" />
-            </Style>
-            <Style x:Key="ShopWrapChipGroup"
-                   TargetType="cmc:ChipGroup"
-                   BasedOn="{StaticResource ShopChipGroup}">
-                <Setter Property="Wrap" Value="True" />
-            </Style>
-
-            <!-- Section title -->
-
-            <Style x:Key="SectionTitleGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="6" />
-                <Setter Property="Margin" Value="0,4,0,0" />
-            </Style>
-
-            <Style x:Key="SectionAccent"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="3" />
-                <Setter Property="HeightRequest" Value="14" />
-                <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SectionTitle"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SectionCountLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
@@ -373,6 +256,103 @@
                 <Setter Property="IndicatorSize" Value="7" />
                 <Setter Property="IndicatorColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <!-- Search -->
+
+            <Style x:Key="SearchRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SearchBorder"
+                   TargetType="Border">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black"
+                            Opacity="0.08"
+                            Radius="8" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="SearchRowLayout"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SearchIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SearchEntry"
+                   TargetType="Entry">
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+                <Setter Property="Placeholder" Value="商品を検索" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FilterButtonArea"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
+
+            <Style x:Key="FilterButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="6" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="FilterDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="12" />
+                <Setter Property="HeightRequest" Value="12" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Fill" Value="{StaticResource AmberDefault}" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <!-- Category -->
+
+            <Style x:Key="ChipScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+            </Style>
+
+            <!-- All -->
+
+            <Style x:Key="SectionCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <!-- Item -->
@@ -505,6 +485,12 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDefault}" />
             </Style>
 
+            <Style x:Key="ShopWrapChipGroup"
+                   TargetType="cmc:ChipGroup"
+                   BasedOn="{StaticResource ShopChipGroup}">
+                <Setter Property="Wrap" Value="True" />
+            </Style>
+
             <Style x:Key="FilterButtonGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="0,8,0,0" />
@@ -530,6 +516,23 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="SectionTitleGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="6" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+            </Style>
+
+            <Style x:Key="SectionAccent"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="3" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
@@ -752,6 +755,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
+            <!-- Empty -->
             <CollectionView.EmptyView>
                 <VerticalStackLayout Style="{StaticResource EmptyStack}">
                     <Label Style="{StaticResource EmptyIconLabel}"

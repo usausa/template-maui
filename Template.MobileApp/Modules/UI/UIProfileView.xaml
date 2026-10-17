@@ -18,15 +18,70 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Page -->
+            <!-- Converter -->
 
-            <Style x:Key="ProfileBodyStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
+
+            <s:MapToBoolConverter x:Key="PhotosTabConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Int32 0}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="PostsTabConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Int32 1}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="LikesTabConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Int32 2}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <!-- Common -->
+
+            <Style x:Key="CardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,6" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black"
+                            Opacity="0.1"
+                            Radius="10" />
+                </Setter>
             </Style>
+
+            <Style x:Key="SectionTitle"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Page -->
 
             <Style x:Key="ProfileScroll"
                    TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="ProfileStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,0,0,12" />
+            </Style>
+
+            <Style x:Key="ProfileBodyStack"
+                   TargetType="VerticalStackLayout">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
@@ -187,44 +242,6 @@
 
             <!-- Card -->
 
-            <Style x:Key="CardBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="12,6" />
-                <Setter Property="Padding" Value="14" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-                <Setter Property="Shadow">
-                    <Shadow Offset="0,2"
-                            Brush="Black"
-                            Opacity="0.1"
-                            Radius="10" />
-                </Setter>
-            </Style>
-
-            <Style x:Key="SectionTitleRow"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="6" />
-                <Setter Property="Margin" Value="0,0,0,8" />
-            </Style>
-
-            <Style x:Key="SectionAccent"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="3" />
-                <Setter Property="HeightRequest" Value="14" />
-                <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SectionTitle"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
             <Style x:Key="BioLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -232,7 +249,7 @@
                 <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
-            <!-- Interests -->
+            <!-- Tags -->
 
             <Style x:Key="InterestsLayout"
                    TargetType="FlexLayout">
@@ -254,46 +271,6 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
-
-            <!-- Photos -->
-
-            <Style x:Key="PhotoBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="2" />
-                <Setter Property="HeightRequest" Value="90" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <Style x:Key="PhotoImage"
-                   TargetType="Image">
-                <Setter Property="Aspect" Value="AspectFill" />
-            </Style>
-
-            <!-- Converter -->
-
-            <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
-
-            <s:MapToBoolConverter x:Key="PhotosTabConverter">
-                <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Int32 0}"
-                                      Value="True" />
-                </s:MapToBoolConverter.Entries>
-            </s:MapToBoolConverter>
-
-            <s:MapToBoolConverter x:Key="PostsTabConverter">
-                <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Int32 1}"
-                                      Value="True" />
-                </s:MapToBoolConverter.Entries>
-            </s:MapToBoolConverter>
-
-            <s:MapToBoolConverter x:Key="LikesTabConverter">
-                <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Int32 2}"
-                                      Value="True" />
-                </s:MapToBoolConverter.Entries>
-            </s:MapToBoolConverter>
 
             <!-- Tab -->
 
@@ -324,10 +301,25 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
+            <!-- Photos -->
+
             <Style x:Key="TabPhotoLayout"
                    TargetType="FlexLayout">
                 <Setter Property="Margin" Value="10,10,10,0" />
                 <Setter Property="Wrap" Value="Wrap" />
+            </Style>
+
+            <Style x:Key="PhotoBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="HeightRequest" Value="90" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="PhotoImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
             <!-- Post -->
@@ -432,11 +424,21 @@
                 <Setter Property="IndicatorSize" Value="8" />
             </Style>
 
-            <!-- Page -->
+            <!-- Component -->
 
-            <Style x:Key="ProfileStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="0,0,0,12" />
+            <Style x:Key="SectionTitleRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+
+            <Style x:Key="SectionAccent"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="3" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>
@@ -616,6 +618,7 @@
                             </cmc:TabStrip>
                             <BoxView Style="{StaticResource TabLine}" />
 
+                            <!-- Photos -->
                             <FlexLayout Style="{StaticResource TabPhotoLayout}"
                                         BindableLayout.ItemsSource="{Binding Photos}"
                                         IsVisible="{Binding SelectedTab, Converter={StaticResource PhotosTabConverter}}">
@@ -635,6 +638,7 @@
                                 </BindableLayout.ItemTemplate>
                             </FlexLayout>
 
+                            <!-- Post -->
                             <ContentView behaviors:LazyViewOption.Load="{Binding SelectedTab, Converter={StaticResource PostsTabConverter}}"
                                          IsVisible="{Binding SelectedTab, Converter={StaticResource PostsTabConverter}}">
                                 <behaviors:LazyViewOption.Template>
@@ -667,6 +671,7 @@
                                 </behaviors:LazyViewOption.Template>
                             </ContentView>
 
+                            <!-- Like -->
                             <ContentView behaviors:LazyViewOption.Load="{Binding SelectedTab, Converter={StaticResource LikesTabConverter}}"
                                          IsVisible="{Binding SelectedTab, Converter={StaticResource LikesTabConverter}}">
                                 <behaviors:LazyViewOption.Template>

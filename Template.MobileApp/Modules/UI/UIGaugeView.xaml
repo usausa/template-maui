@@ -21,7 +21,6 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -81,6 +80,26 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Common -->
+
+            <Style x:Key="GaugeBase"
+                   TargetType="clam:ClamGaugeView">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+
+            <Style x:Key="GaugeSliderBase"
+                   TargetType="Slider">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="MaximumTrackColor" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="SwatchLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="GaugeGrid"
@@ -109,92 +128,6 @@
                 <Setter Property="SelectedBackground" Value="{StaticResource BlueDefault}" />
                 <Setter Property="SelectedTextColor" Value="White" />
                 <Setter Property="ItemStyle" Value="{StaticResource KindSegmentLabel}" />
-            </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="KindGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="0" />
-            </Style>
-
-            <!-- Slider -->
-
-            <Style x:Key="GaugeSliderBase"
-                   TargetType="Slider">
-                <Setter Property="Margin" Value="16,0" />
-                <Setter Property="MaximumTrackColor" Value="{StaticResource GrayLighten2}" />
-            </Style>
-            <Style x:Key="SliderPressure"
-                   TargetType="Slider"
-                   BasedOn="{StaticResource GaugeSliderBase}">
-                <Setter Property="ThumbColor" Value="#CC0000" />
-                <Setter Property="MinimumTrackColor" Value="#CC0000" />
-            </Style>
-            <Style x:Key="SliderHumidity"
-                   TargetType="Slider"
-                   BasedOn="{StaticResource GaugeSliderBase}">
-                <Setter Property="ThumbColor" Value="#2880FF" />
-                <Setter Property="MinimumTrackColor" Value="#2880FF" />
-            </Style>
-            <Style x:Key="SliderTemperature"
-                   TargetType="Slider"
-                   BasedOn="{StaticResource GaugeSliderBase}">
-                <Setter Property="ThumbColor" Value="#DD6010" />
-                <Setter Property="MinimumTrackColor" Value="#DD6010" />
-            </Style>
-            <Style x:Key="SliderWind"
-                   TargetType="Slider"
-                   BasedOn="{StaticResource GaugeSliderBase}">
-                <Setter Property="ThumbColor" Value="#CC2020" />
-                <Setter Property="MinimumTrackColor" Value="#606060" />
-            </Style>
-            <Style x:Key="SliderSpeed"
-                   TargetType="Slider"
-                   BasedOn="{StaticResource GaugeSliderBase}">
-                <Setter Property="ThumbColor" Value="#CC1818" />
-                <Setter Property="MinimumTrackColor" Value="#CC1818" />
-            </Style>
-            <Style x:Key="SliderRpm"
-                   TargetType="Slider"
-                   BasedOn="{StaticResource GaugeSliderBase}">
-                <Setter Property="ThumbColor" Value="#CC4400" />
-                <Setter Property="MinimumTrackColor" Value="#CC4400" />
-            </Style>
-
-            <!-- Swatch -->
-
-            <Style x:Key="SwatchGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="6,3" />
-                <Setter Property="ColumnSpacing" Value="6" />
-                <Setter Property="HeightRequest" Value="44" />
-            </Style>
-            <Style x:Key="SwatchLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
-            </Style>
-            <Style x:Key="SwatchLayout"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="6" />
-            </Style>
-            <Style x:Key="SwatchButton"
-                   TargetType="Button">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="52" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="CornerRadius" Value="4" />
-            </Style>
-
-            <!-- Gauge -->
-
-            <Style x:Key="GaugeBase"
-                   TargetType="clam:ClamGaugeView">
-                <Setter Property="Margin" Value="8" />
             </Style>
 
             <!-- Pressure -->
@@ -230,6 +163,13 @@
                 <Setter Property="NeedleEndExtent" Value="0.84" />
                 <Setter Property="NeedleStartWidth" Value="8" />
                 <Setter Property="PivotRadius" Value="8" />
+            </Style>
+
+            <Style x:Key="SliderPressure"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC0000" />
+                <Setter Property="MinimumTrackColor" Value="#CC0000" />
             </Style>
 
             <!-- Humidity -->
@@ -273,6 +213,13 @@
                 <Setter Property="PivotColor" Value="#1848C0" />
             </Style>
 
+            <Style x:Key="SliderHumidity"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#2880FF" />
+                <Setter Property="MinimumTrackColor" Value="#2880FF" />
+            </Style>
+
             <!-- Temperature -->
 
             <Style x:Key="GaugeTemperature"
@@ -314,6 +261,13 @@
                 <Setter Property="PivotColor" Value="#CC5000" />
             </Style>
 
+            <Style x:Key="SliderTemperature"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#DD6010" />
+                <Setter Property="MinimumTrackColor" Value="#DD6010" />
+            </Style>
+
             <!-- Wind -->
 
             <Style x:Key="GaugeWind"
@@ -353,6 +307,13 @@
                 <Setter Property="NeedleRightColor" Value="#E03030" />
                 <Setter Property="PivotRadius" Value="10" />
                 <Setter Property="PivotColor" Value="#CC2020" />
+            </Style>
+
+            <Style x:Key="SliderWind"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC2020" />
+                <Setter Property="MinimumTrackColor" Value="#606060" />
             </Style>
 
             <!-- Speed -->
@@ -410,6 +371,13 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="SliderSpeed"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC1818" />
+                <Setter Property="MinimumTrackColor" Value="#CC1818" />
+            </Style>
+
             <!-- RPM -->
 
             <Style x:Key="GaugeRpm"
@@ -464,9 +432,44 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="SliderRpm"
+                   TargetType="Slider"
+                   BasedOn="{StaticResource GaugeSliderBase}">
+                <Setter Property="ThumbColor" Value="#CC4400" />
+                <Setter Property="MinimumTrackColor" Value="#CC4400" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="KindGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="SwatchGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="6,3" />
+                <Setter Property="ColumnSpacing" Value="6" />
+                <Setter Property="HeightRequest" Value="44" />
+            </Style>
+
+            <Style x:Key="SwatchLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="SwatchButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="CornerRadius" Value="4" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource GaugeGrid}"

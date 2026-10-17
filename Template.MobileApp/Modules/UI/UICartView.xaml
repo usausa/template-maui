@@ -18,6 +18,45 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Common -->
+
+            <Style x:Key="CouponDivider"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="0,10" />
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="TotalsCaption"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="TotalsValue"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="TotalCaption"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TotalValue"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="CartGrid"
@@ -31,7 +70,7 @@
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <!-- Header banner -->
+            <!-- Header -->
 
             <Style x:Key="BannerBorder"
                    TargetType="Border">
@@ -56,7 +95,31 @@
                 <Setter Property="Opacity" Value="0.9" />
             </Style>
 
-            <!-- Cart items (flat rows) -->
+            <!-- Empty -->
+
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,48" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="56" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+            </Style>
+
+            <!-- Cart items -->
 
             <Style x:Key="ItemsBorder"
                    TargetType="Border">
@@ -192,30 +255,6 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
-            <!-- Empty -->
-
-            <Style x:Key="EmptyStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="0,48" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="EmptyIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="56" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="EmptyTitleLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
-            </Style>
-
             <!-- Coupon / points -->
 
             <Style x:Key="CouponBorder"
@@ -265,13 +304,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
             </Style>
 
-            <Style x:Key="CouponDivider"
-                   TargetType="BoxView">
-                <Setter Property="Margin" Value="0,10" />
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
-            </Style>
-
             <Style x:Key="PointsIcon"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
@@ -304,43 +336,13 @@
                 <Setter Property="Spacing" Value="8" />
             </Style>
 
-            <Style x:Key="TotalsCaption"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
-            <Style x:Key="TotalsValue"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-            </Style>
-
             <Style x:Key="DiscountValue"
                    TargetType="Label"
                    BasedOn="{StaticResource TotalsValue}">
                 <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
             </Style>
 
-            <Style x:Key="TotalCaption"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="TotalValue"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-            </Style>
-
-            <!-- Checkout footer -->
+            <!-- Checkout -->
 
             <Style x:Key="FooterBorder"
                    TargetType="Border">
@@ -355,28 +357,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="CheckoutButton"
-                   TargetType="Button">
-                <Setter Property="HeightRequest" Value="52" />
-                <Setter Property="CornerRadius" Value="26" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="Shadow">
-                    <Shadow Offset="0,3"
-                            Brush="Black"
-                            Opacity="0.2"
-                            Radius="6" />
-                </Setter>
-                <Style.Triggers>
-                    <Trigger TargetType="Button" Property="IsEnabled" Value="False">
-                        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
-            <!-- Order completed -->
+            <!-- Order -->
 
             <Style x:Key="CompletedGrid"
                    TargetType="Grid">
@@ -451,6 +432,29 @@
                    TargetType="Label"
                    BasedOn="{StaticResource TotalsValue}">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="CheckoutButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,3"
+                            Brush="Black"
+                            Opacity="0.2"
+                            Radius="6" />
+                </Setter>
+                <Style.Triggers>
+                    <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
         </ResourceDictionary>

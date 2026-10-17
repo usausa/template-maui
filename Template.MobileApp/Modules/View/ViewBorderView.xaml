@@ -21,6 +21,11 @@
 
             <!-- Preview -->
 
+            <Style x:Key="PreviewCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="Margin" Value="12,12,12,0" />
+            </Style>
+
             <Style x:Key="SharedBorderStyle"
                    TargetType="Border">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -36,18 +41,7 @@
                 <Setter Property="StrokeLineCap" Value="{Binding StrokeLineCap}" />
             </Style>
 
-            <Style x:Key="PreviewCard"
-                   TargetType="controls:InfoCard">
-                <Setter Property="Margin" Value="12,12,12,0" />
-            </Style>
-
             <!-- Form -->
-
-            <Style x:Key="BorderValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource CardRowValueLabel}">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-            </Style>
 
             <Style x:Key="BorderPickerBorder"
                    TargetType="Border"
@@ -63,6 +57,12 @@
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="Ellipse" />
                 <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="BorderValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowValueLabel}">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
             </Style>
 
         </ResourceDictionary>

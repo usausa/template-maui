@@ -1,13 +1,9 @@
 namespace Template.MobileApp.Modules.UI;
 
-using System.Diagnostics;
-
 using Template.MobileApp.Components;
 
 public sealed class UIDockViewModel : AppViewModelBase
 {
-    private const double MegaByte = 1024 * 1024;
-
     // Field
 
     private readonly IDialog dialog;
@@ -20,31 +16,11 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private readonly IDispatcherTimer timer;
 
-    private readonly int processorCount = Environment.ProcessorCount;
-
     private readonly List<DeckButtonInfo> rootButtons = [];
 
     private readonly Dictionary<string, List<DeckButtonInfo>> folderButtons = [];
 
     private bool folderOpened;
-
-    private ProcessStatistics previous;
-
-    private DeckButtonInfo? cpuButton;
-
-    private DeckButtonInfo? memButton;
-
-    private DeckButtonInfo? timerButton;
-
-    private DeckButtonInfo? muteButton;
-
-    private byte[] muteImage = [];
-
-    private byte[] mutedImage = [];
-
-    private bool muted;
-
-    private int remainSeconds;
 
     // Property
 
@@ -83,7 +59,6 @@ public sealed class UIDockViewModel : AppViewModelBase
         }
 
         screen.SetFullscreen(true);
-        previous = deviceInformation.ReadProcessStatistics();
         timer.Start();
     }
 
@@ -131,32 +106,24 @@ public sealed class UIDockViewModel : AppViewModelBase
                 folderButtons[folder.Name] = buttons;
             }
 
-            muteButton = rootButtons.First(static x => x.Parameter == DeckSample.Mute);
-            muteImage = muteButton.ImageBytes;
-            mutedImage = await LoadImageAsync(DeckSample.MutedImage);
-            timerButton = rootButtons.First(static x => x.Parameter == DeckSample.Timer);
-            timerButton.Label = FormatTimer(DeckSample.TimerSeconds);
-            cpuButton = rootButtons.First(static x => x.Parameter == DeckSample.Cpu);
-            memButton = rootButtons.First(static x => x.Parameter == DeckSample.Memory);
-
             ShowButtons(rootButtons);
         });
     }
 
-    private async ValueTask<DeckButtonInfo> CreateButtonAsync(DeckButton button) =>
-        new()
+    private async ValueTask<DeckButtonInfo> CreateButtonAsync(DeckButton button)
+    {
+        var image = await LoadImageAsync(button.Image);
+        var info = button switch
         {
-            Row = button.Row,
-            Column = button.Column,
-            ButtonType = button.Type,
-            Label = button.Label,
-            Text = button.Text,
-            BackColor1 = button.Color1,
-            BackColor2 = button.Color2,
-            ImageBytes = await LoadImageAsync(button.Image),
-            Command = CreateCommand(button.Action),
-            Parameter = button.Parameter
+            { Action: DeckAction.ToggleMute } => new MuteDeckButtonInfo(button, image, await LoadImageAsync(DeckSample.MutedImage)),
+            { Action: DeckAction.ToggleTimer } => new TimerDeckButtonInfo(button, image, dialog),
+            { Parameter: DeckSample.Cpu } => new CpuDeckButtonInfo(button, image, deviceInformation),
+            { Parameter: DeckSample.Memory } => new MemoryDeckButtonInfo(button, image, deviceInformation),
+            _ => new DeckButtonInfo(button, image)
         };
+        info.Command = CreateCommand(button.Action, info);
+        return info;
+    }
 
     private async ValueTask<byte[]> LoadImageAsync(string image)
     {
@@ -196,40 +163,15 @@ public sealed class UIDockViewModel : AppViewModelBase
         ShowButtons(rootButtons);
     }
 
-    private void ToggleMute()
-    {
-        muted = !muted;
-        if (muteButton is not null)
-        {
-            muteButton.ImageBytes = muted ? mutedImage : muteImage;
-            muteButton.Label = muted ? "Muted" : "Mute";
-        }
-    }
-
-    private async Task NotifyTimeUpAsync() => await dialog.InformationAsync("Time's up");
-
-    private void ToggleTimer()
-    {
-        remainSeconds = remainSeconds > 0 ? 0 : DeckSample.TimerSeconds;
-        timerButton?.Label = FormatTimer(remainSeconds > 0 ? remainSeconds : DeckSample.TimerSeconds);
-    }
-
     //--------------------------------------------------------------------------------
     // Event
     //--------------------------------------------------------------------------------
 
     private void Tick()
     {
-        UpdateUsage();
-
-        if ((remainSeconds > 0) && (timerButton is not null))
+        foreach (var button in rootButtons.Concat(folderButtons.Values.SelectMany(static x => x)))
         {
-            remainSeconds--;
-            timerButton.Label = FormatTimer(remainSeconds > 0 ? remainSeconds : DeckSample.TimerSeconds);
-            if (remainSeconds == 0)
-            {
-                _ = NotifyTimeUpAsync();
-            }
+            button.Update();
         }
     }
 
@@ -237,13 +179,13 @@ public sealed class UIDockViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private ICommand CreateCommand(DeckAction action) =>
-        action switch
+    private ICommand CreateCommand(DeckAction action, DeckButtonInfo button) =>
+        (action, button) switch
         {
-            DeckAction.OpenFolder => MakeDelegateCommand<string>(OpenFolder),
-            DeckAction.CloseFolder => MakeDelegateCommand(CloseFolder),
-            DeckAction.ToggleMute => MakeDelegateCommand(ToggleMute),
-            DeckAction.ToggleTimer => MakeDelegateCommand(ToggleTimer),
+            (DeckAction.OpenFolder, _) => MakeDelegateCommand<string>(OpenFolder),
+            (DeckAction.CloseFolder, _) => MakeDelegateCommand(CloseFolder),
+            (DeckAction.ToggleMute, MuteDeckButtonInfo mute) => MakeDelegateCommand(mute.Toggle),
+            (DeckAction.ToggleTimer, TimerDeckButtonInfo timer) => MakeDelegateCommand(timer.Toggle),
             _ => MakeAsyncCommand<string>(ExecuteAsync)
         };
 
@@ -255,19 +197,4 @@ public sealed class UIDockViewModel : AppViewModelBase
             Buttons.Add(button);
         }
     }
-
-    private void UpdateUsage()
-    {
-        var statistics = deviceInformation.ReadProcessStatistics();
-        var elapsed = Stopwatch.GetElapsedTime(previous.Timestamp, statistics.Timestamp).TotalSeconds;
-        if ((elapsed > 0) && (cpuButton is not null) && (memButton is not null))
-        {
-            var cpuUsage = (statistics.CpuTime - previous.CpuTime).TotalSeconds / elapsed * 100 / processorCount;
-            previous = statistics;
-            cpuButton.Text = String.Join(Environment.NewLine, "CPU", $"{cpuUsage:F1}%");
-            memButton.Text = String.Join(Environment.NewLine, "MEM", $"{statistics.WorkingSet / MegaByte:F0} MB");
-        }
-    }
-
-    private static string FormatTimer(int seconds) => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss", CultureInfo.InvariantCulture);
 }

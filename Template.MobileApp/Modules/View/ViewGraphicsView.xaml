@@ -16,9 +16,34 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <!-- Common -->
+
+            <Style x:Key="CanvasBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="280" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <!-- Sketch -->
+
+            <Style x:Key="LargeCanvasBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CanvasBorder}">
+                <Setter Property="HeightRequest" Value="240" />
+            </Style>
+
+            <Style x:Key="SmallCanvasBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CanvasBorder}">
+                <Setter Property="HeightRequest" Value="160" />
+            </Style>
 
             <!-- Countdown -->
 
@@ -56,29 +81,7 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <!-- Common -->
-
-            <Style x:Key="CanvasBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="HeightRequest" Value="280" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <Style x:Key="LargeCanvasBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource CanvasBorder}">
-                <Setter Property="HeightRequest" Value="240" />
-            </Style>
-
-            <Style x:Key="SmallCanvasBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource CanvasBorder}">
-                <Setter Property="HeightRequest" Value="160" />
-            </Style>
+            <!-- Component -->
 
             <Style x:Key="CountChip"
                    TargetType="controls:StatusChip">
@@ -87,7 +90,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

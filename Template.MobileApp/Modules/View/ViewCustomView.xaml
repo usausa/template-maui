@@ -15,18 +15,10 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- MarqueeLabel -->
-
-            <Style x:Key="MarqueeTextLabel"
-                   TargetType="cmc:MarqueeLabel">
-                <Setter Property="HeightRequest" Value="24" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="#7DF36B" />
-            </Style>
 
             <Style x:Key="MarqueeBorder"
                    TargetType="Border">
@@ -34,6 +26,13 @@
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
                 <Setter Property="Padding" Value="8,6" />
+            </Style>
+
+            <Style x:Key="MarqueeTextLabel"
+                   TargetType="cmc:MarqueeLabel">
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="#7DF36B" />
             </Style>
 
             <!-- TreeView -->
@@ -77,7 +76,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

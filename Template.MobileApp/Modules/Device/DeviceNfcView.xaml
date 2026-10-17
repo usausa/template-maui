@@ -17,29 +17,8 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Empty -->
-
-            <Style x:Key="NfcIconBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource BasicIconCircleBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
-            </Style>
-
-            <Style x:Key="NfcRippleRing"
-                   TargetType="Ellipse"
-                   BasedOn="{StaticResource BasicRippleRing}">
-                <Setter Property="Stroke" Value="{StaticResource MetroGreen}" />
-            </Style>
-
-            <Style x:Key="NfcIconLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicIconCircleLabel}">
-                <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
-            </Style>
 
             <!-- Converter -->
 
@@ -187,6 +166,24 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
             </Style>
 
+            <Style x:Key="NfcRippleRing"
+                   TargetType="Ellipse"
+                   BasedOn="{StaticResource BasicRippleRing}">
+                <Setter Property="Stroke" Value="{StaticResource MetroGreen}" />
+            </Style>
+
+            <Style x:Key="NfcIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BasicIconCircleBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+            </Style>
+
+            <Style x:Key="NfcIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
+            </Style>
+
             <Style x:Key="LogRowGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0" />
@@ -237,17 +234,17 @@
                 <Setter Property="WidthRequest" Value="76" />
             </Style>
 
-            <Style x:Key="LogProcessBadgeBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource LogBadgeBorder}">
-                <Setter Property="MinimumWidthRequest" Value="88" />
-            </Style>
-
             <Style x:Key="LogBadgeLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LogProcessBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource LogBadgeBorder}">
+                <Setter Property="MinimumWidthRequest" Value="88" />
             </Style>
 
             <Style x:Key="LogBalanceLabel"
@@ -275,7 +272,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource FillGrid}"

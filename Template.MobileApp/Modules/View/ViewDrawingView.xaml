@@ -18,30 +18,8 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Preview -->
-
-            <Style x:Key="PreviewEmptyStack"
-                   TargetType="VerticalStackLayout"
-                   BasedOn="{StaticResource BasicEmptyStack}">
-                <Setter Property="Spacing" Value="6" />
-            </Style>
-
-            <Style x:Key="PreviewEmptyIconLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicIconCircleLabel}">
-                <Setter Property="FontSize" Value="36" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="PreviewEmptyHintLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCenterHintLabel}">
-                <Setter Property="FontSize" Value="14" />
-            </Style>
 
             <!-- Canvas -->
 
@@ -198,9 +176,27 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
 
+            <Style x:Key="PreviewEmptyStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicEmptyStack}">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="PreviewEmptyIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="PreviewEmptyHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCenterHintLabel}">
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}"

@@ -13,50 +13,15 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Page -->
-
-            <Style x:Key="BackgroundGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
-            </Style>
-
-            <!-- Row -->
+            <!-- Common -->
 
             <Style x:Key="ValueRowGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="16,8,0,8" />
                 <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <Style x:Key="GroupRowGrid"
-                   TargetType="Grid"
-                   BasedOn="{StaticResource ValueRowGrid}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
-            </Style>
-
-            <Style x:Key="SeparatorBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="SubSeparatorBoxView"
-                   TargetType="BoxView">
-                <Setter Property="Margin" Value="16,0,0,0" />
-                <Setter Property="HeightRequest" Value="0.5" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="IconLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
             <Style x:Key="PosNameLabel"
@@ -66,12 +31,61 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="PosSubNameLabel"
+            <Style x:Key="PosValueLabel"
                    TargetType="Label">
-                <Setter Property="VerticalOptions" Value="End" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SubSeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="16,0,0,0" />
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="LinkLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="SeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <!-- Page -->
+
+            <Style x:Key="BackgroundGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <!-- Order -->
+
+            <Style x:Key="QuantityButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="QuantityValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource PosValueLabel}">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="PosNameWithSubLabel"
@@ -92,19 +106,19 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="PosValueLabel"
+            <Style x:Key="PosHugeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="36" />
             </Style>
 
-            <Style x:Key="QuantityValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource PosValueLabel}">
-                <Setter Property="WidthRequest" Value="56" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Style x:Key="PosSubNameLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
             <Style x:Key="PosSubValueLabel"
@@ -114,25 +128,27 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
+            <!-- Payment -->
+
+            <Style x:Key="GroupRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource ValueRowGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="IconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
+
             <Style x:Key="PosLargeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="28" />
-            </Style>
-
-            <Style x:Key="PosHugeValueLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
-                <Setter Property="FontSize" Value="36" />
-            </Style>
-
-            <Style x:Key="LinkLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="FontSize" Value="18" />
             </Style>
 
             <!-- Option -->
@@ -172,29 +188,6 @@
 
             <!-- Checkout -->
 
-            <FontImageSource x:Key="CheckIcon"
-                             Glyph="{x:Static fonts:MaterialIcons.Check_circle_outline}"
-                             Size="24"
-                             FontFamily="MaterialIcons"
-                             Color="White" />
-
-            <!-- Order -->
-
-            <Style x:Key="QuantityButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="32" />
-                <Setter Property="HeightRequest" Value="32" />
-                <Setter Property="CornerRadius" Value="16" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="18" />
-            </Style>
-
-            <!-- Checkout -->
-
             <Style x:Key="ExecuteButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -214,9 +207,14 @@
                 </Setter>
             </Style>
 
+            <FontImageSource x:Key="CheckIcon"
+                             Glyph="{x:Static fonts:MaterialIcons.Check_circle_outline}"
+                             Size="24"
+                             FontFamily="MaterialIcons"
+                             Color="White" />
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource BackgroundGrid}"

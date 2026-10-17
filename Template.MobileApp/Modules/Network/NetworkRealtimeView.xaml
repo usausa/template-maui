@@ -17,16 +17,10 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Connection -->
-
-            <Style x:Key="StateChip"
-                   TargetType="controls:StatusChip">
-                <Setter Property="HorizontalOptions" Value="Start" />
-            </Style>
+            <!-- Converter -->
 
             <s:MapToTextConverter x:Key="StateTextConverter">
                 <s:MapToTextConverter.Entries>
@@ -65,6 +59,13 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
 
+            <!-- Connection -->
+
+            <Style x:Key="StateChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
             <!-- Chart -->
 
             <Style x:Key="StatGraph"
@@ -74,7 +75,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

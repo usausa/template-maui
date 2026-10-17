@@ -14,7 +14,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -37,23 +36,6 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style x:Key="SeparatorWideBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="2" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="SeparatorNarrowBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="MarginBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="9" />
-            </Style>
-
             <Style x:Key="DeviceIdLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="OpenSansSemibold" />
@@ -72,6 +54,17 @@
                    TargetType="Label"
                    BasedOn="{StaticResource TimestampLabel}">
                 <Setter Property="TextColor" Value="{StaticResource LcdUnlitColor}" />
+            </Style>
+
+            <Style x:Key="SeparatorWideBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="2" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="MarginBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="9" />
             </Style>
 
             <Style x:Key="BleScanValueHorizontalStack"
@@ -106,9 +99,14 @@
                 <Setter Property="VerticalTextAlignment" Value="End" />
             </Style>
 
+            <Style x:Key="SeparatorNarrowBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}">

@@ -33,48 +33,6 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <!-- Filter -->
-
-            <Style x:Key="FilterScroll"
-                   TargetType="ScrollView">
-                <Setter Property="Padding" Value="16,0,16,12" />
-                <Setter Property="Orientation" Value="Horizontal" />
-                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-            <Style x:Key="FilterChipLabel"
-                   TargetType="Label">
-                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
-                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
-                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type cmc:ChipGroup}}" />
-                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
-            </Style>
-            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-
-            <Style x:Key="FilterChipGroup"
-                   TargetType="cmc:ChipGroup">
-                <Setter Property="ChipTextSize" Value="14" />
-                <Setter Property="ChipCornerRadius" Value="16" />
-                <Setter Property="ChipPadding" Value="12,0" />
-                <Setter Property="ChipBackground" Value="White" />
-                <Setter Property="ChipStroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
-                <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
-                <Setter Property="SelectedChipTextColor" Value="White" />
-                <Setter Property="Spacing" Value="8" />
-                <Setter Property="ItemStyle" Value="{StaticResource FilterChipLabel}" />
-            </Style>
-
-            <!-- Header -->
-
-            <Style x:Key="TimelineHeaderDivider"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
-            </Style>
-
             <Style x:Key="CalendarIconBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="44" />
@@ -117,6 +75,46 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
+            <!-- Filter -->
+
+            <Style x:Key="FilterScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Padding" Value="16,0,16,12" />
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="FilterChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type cmc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type cmc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style x:Key="FilterChipGroup"
+                   TargetType="cmc:ChipGroup">
+                <Setter Property="ChipTextSize" Value="14" />
+                <Setter Property="ChipCornerRadius" Value="16" />
+                <Setter Property="ChipPadding" Value="12,0" />
+                <Setter Property="ChipBackground" Value="White" />
+                <Setter Property="ChipStroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
+                <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedChipTextColor" Value="White" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="ItemStyle" Value="{StaticResource FilterChipLabel}" />
+            </Style>
+
+            <Style x:Key="TimelineHeaderDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
             <!-- Timeline items -->
 
             <Style x:Key="TimelineCollection"
@@ -140,15 +138,24 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <Style x:Key="TimelineLine"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="2" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="TimelineDotGrid"
                    TargetType="Grid">
                 <Setter Property="WidthRequest" Value="22" />
             </Style>
 
-            <Style x:Key="TimelineLine"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="2" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            <Style x:Key="TimelineDotHalo"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="22" />
+                <Setter Property="HeightRequest" Value="22" />
+                <Setter Property="Opacity" Value="0.25" />
+                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
@@ -157,15 +164,6 @@
                 <Setter Property="WidthRequest" Value="16" />
                 <Setter Property="HeightRequest" Value="16" />
                 <Setter Property="StrokeThickness" Value="2" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="TimelineDotHalo"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="22" />
-                <Setter Property="HeightRequest" Value="22" />
-                <Setter Property="Opacity" Value="0.25" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
@@ -474,6 +472,8 @@
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
+            <!-- Empty -->
             <CollectionView.EmptyView>
                 <Label Style="{StaticResource EmptyLabel}"
                        Text="該当するセッションはありません" />

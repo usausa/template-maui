@@ -15,25 +15,8 @@
              shell:ShellProperty.Title="Toolkit"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Expander -->
-
-            <Style x:Key="ExpanderHeaderGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="0,8" />
-                <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="ExpanderGlyphLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
 
             <!-- SfOtpInput -->
 
@@ -54,7 +37,28 @@
                 </Setter>
             </Style>
 
-            <!-- Expander -->
+            <!-- AvatarView / RatingView -->
+
+            <Style x:Key="AvatarRowStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <!-- Expander (CommunityToolkit) -->
+
+            <Style x:Key="ExpanderHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ExpanderGlyphLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
 
             <Style x:Key="ExpanderContentLabel"
                    TargetType="Label"
@@ -76,16 +80,8 @@
                 <Setter Property="Padding" Value="4,4,4,10" />
             </Style>
 
-            <!-- AvatarView -->
-
-            <Style x:Key="AvatarRowStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <sf:SfTabView x:Name="ToolkitTabs"

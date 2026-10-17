@@ -18,41 +18,10 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Chat -->
-
-            <Style x:Key="ChatEmptyStack"
-                   TargetType="VerticalStackLayout"
-                   BasedOn="{StaticResource BasicEmptyStack}">
-                <Setter Property="Padding" Value="24,0" />
-            </Style>
-
-            <!-- Page -->
-
-            <Style x:Key="PageGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="RowSpacing" Value="12" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <!-- Connection -->
-
-            <Style x:Key="AddressLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
-                <Setter Property="LineBreakMode" Value="CharacterWrap" />
-            </Style>
-
-            <Style x:Key="StateChip"
-                   TargetType="controls:StatusChip">
-                <Setter Property="HorizontalOptions" Value="Start" />
-            </Style>
+            <!-- Converter -->
 
             <s:MapToTextConverter x:Key="StateTextConverter">
                 <s:MapToTextConverter.Entries>
@@ -87,6 +56,30 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
 
+            <!-- Page -->
+
+            <Style x:Key="PageGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <!-- Connection -->
+
+            <Style x:Key="AddressLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="StateChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
             <!-- Chat -->
 
             <Style x:Key="ChatBorder"
@@ -96,6 +89,12 @@
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="ChatEmptyStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicEmptyStack}">
+                <Setter Property="Padding" Value="24,0" />
             </Style>
 
             <Style x:Key="ChatCollection"
@@ -158,7 +157,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource PageGrid}"

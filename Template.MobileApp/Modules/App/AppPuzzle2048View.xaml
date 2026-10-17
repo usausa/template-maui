@@ -17,7 +17,6 @@
              shell:ShellProperty.StatusBarColor="#FBF6EC"
              shell:ShellProperty.StatusBarStyle="DarkContent">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -26,7 +25,6 @@
             <Color x:Key="Puzzle2048TopColor">#FBF6EC</Color>
             <Color x:Key="Puzzle2048BottomColor">#F3E3C3</Color>
             <Color x:Key="Puzzle2048TextColor">#776E65</Color>
-            <Color x:Key="Puzzle2048SubTextColor">#A39485</Color>
             <Color x:Key="Puzzle2048IconBackColor">#1F776E65</Color>
             <Color x:Key="Puzzle2048CardColor">#BBADA0</Color>
             <Color x:Key="Puzzle2048CardTextColor">#EEE4DA</Color>
@@ -150,18 +148,6 @@
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
-            <Style x:Key="PillButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="18,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="CornerRadius" Value="22" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048ButtonColor}" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
             <!-- Board -->
 
             <Style x:Key="SwipeAreaGrid"
@@ -188,23 +174,11 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048WinOverlayColor}" />
             </Style>
 
-            <Style x:Key="OverOverlayBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource OverlayBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048OverOverlayColor}" />
-            </Style>
-
             <Style x:Key="OverlayStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="16" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="OverlayButtonStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="12" />
-                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="WinTitleLabel"
@@ -213,6 +187,18 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="OverlayButtonStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="OverOverlayBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource OverlayBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048OverOverlayColor}" />
             </Style>
 
             <Style x:Key="OverTitleLabel"
@@ -269,9 +255,22 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048CardColor}" />
             </Style>
 
+            <!-- Pill -->
+
+            <Style x:Key="PillButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="18,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Puzzle2048ButtonColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource Puzzle2048RootGrid}"

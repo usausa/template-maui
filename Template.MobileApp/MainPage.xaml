@@ -13,9 +13,21 @@
              s:BindingContextResolver.Type="{x:Type application:MainPageViewModel}"
              SafeAreaEdges="Default">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentPage.Resources>
         <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <s:MapToTextConverter x:Key="PushStatusTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static services:PushStatus.Connected}"
+                                      Value="↔️" />
+                    <s:MapToTextEntry Key="{x:Static services:PushStatus.Connecting}"
+                                      Value="🔄" />
+                    <s:MapToTextEntry Key="{x:Static services:PushStatus.Retrying}"
+                                      Value="⛔" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
             <!-- Startup -->
 
@@ -38,22 +50,8 @@
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
-            <!-- Header -->
-
-            <s:MapToTextConverter x:Key="PushStatusTextConverter">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static services:PushStatus.Connected}"
-                                      Value="↔️" />
-                    <s:MapToTextEntry Key="{x:Static services:PushStatus.Connecting}"
-                                      Value="🔄" />
-                    <s:MapToTextEntry Key="{x:Static services:PushStatus.Retrying}"
-                                      Value="⛔" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-
         </ResourceDictionary>
     </ContentPage.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <ContentPage.Behaviors>
         <s:AppLifecycleBehavior />

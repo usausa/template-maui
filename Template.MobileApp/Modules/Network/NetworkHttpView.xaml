@@ -17,25 +17,10 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- Data -->
-
-            <Style x:Key="ListCollection"
-                   TargetType="CollectionView">
-                <Setter Property="HeightRequest" Value="240" />
-                <Setter Property="SelectionMode" Value="Single" />
-            </Style>
-
-            <Style x:Key="ListRowGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
 
             <Style x:Key="CountBadgeBorder"
                    TargetType="Border">
@@ -51,6 +36,20 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="ListCollection"
+                   TargetType="CollectionView">
+                <Setter Property="HeightRequest" Value="240" />
+                <Setter Property="SelectionMode" Value="Single" />
+            </Style>
+
+            <Style x:Key="ListRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
             <Style x:Key="RowIdBorder"
@@ -69,16 +68,6 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
             </Style>
 
-            <!-- Common -->
-
-            <Style x:Key="RedButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource BasicIconOutlinedButton}">
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <!-- Data -->
-
             <Style x:Key="RowNameLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -87,9 +76,14 @@
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
             </Style>
 
+            <Style x:Key="RedButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

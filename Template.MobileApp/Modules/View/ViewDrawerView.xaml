@@ -19,71 +19,11 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Implementation -->
-
-            <Style x:Key="SegmentedControl"
-                   TargetType="sf:SfSegmentedControl">
-                <Setter Property="SelectionIndicatorSettings">
-                    <Setter.Value>
-                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
-                                                       TextColor="White" />
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <!-- Drawer -->
-
-            <Style x:Key="DrawerFooterLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCaptionLabel}">
-                <Setter Property="Padding" Value="16,12" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <!-- Selected -->
-
-            <Style x:Key="SelectedRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="12" />
-            </Style>
-
-            <Style x:Key="SelectedIconBorder"
-                   TargetType="Border">
-                <Setter Property="WidthRequest" Value="40" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
-            </Style>
-
-            <Style x:Key="SelectedIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SelectedNameLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <!-- Drawer -->
-
-            <Style x:Key="DrawerGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
+            <!-- SfNavigationDrawer -->
 
             <Style x:Key="DrawerHeaderGrid"
                    TargetType="Grid">
@@ -188,15 +128,74 @@
                     </Label>
                 </Grid>
             </DataTemplate>
+
+            <Style x:Key="DrawerFooterLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <!-- Implementation -->
+
+            <Style x:Key="SegmentedControl"
+                   TargetType="sf:SfSegmentedControl">
+                <Setter Property="SelectionIndicatorSettings">
+                    <Setter.Value>
+                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
+                                                       TextColor="White" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Selected -->
+
+            <Style x:Key="SelectedRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SelectedIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="SelectedIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SelectedNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- SideDrawer -->
+
+            <Style x:Key="DrawerGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid>
 
-        <!-- Drawer -->
+        <!-- SfNavigationDrawer -->
         <drawer:SfNavigationDrawer IsOpen="{Binding IsSfDrawerOpen}">
             <drawer:SfNavigationDrawer.DrawerSettings>
                 <drawer:DrawerSettings Position="Left"
@@ -290,7 +289,7 @@
             </drawer:SfNavigationDrawer.ContentView>
         </drawer:SfNavigationDrawer>
 
-        <!-- Drawer -->
+        <!-- SideDrawer -->
         <cmc:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
                         DrawerWidth="280"
                         EdgeSwipeEnabled="{Binding IsCustomMode}">

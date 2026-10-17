@@ -21,6 +21,11 @@
 
             <!-- Preview -->
 
+            <Style x:Key="PreviewCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="Margin" Value="12,12,12,0" />
+            </Style>
+
             <Style x:Key="ShadowTargetBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="20" />
@@ -30,24 +35,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
-            <Style x:Key="PreviewCard"
-                   TargetType="controls:InfoCard">
-                <Setter Property="Margin" Value="12,12,12,0" />
-            </Style>
-
             <!-- Shadow -->
-
-            <Style x:Key="ShadowValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource CardRowValueLabel}">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-            </Style>
-
-            <Style x:Key="ShadowPickerBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource CardFieldBorder}">
-                <Setter Property="WidthRequest" Value="200" />
-            </Style>
 
             <Style x:Key="ColorDotBorder"
                    TargetType="Border">
@@ -57,6 +45,18 @@
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="Ellipse" />
                 <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ShadowPickerBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CardFieldBorder}">
+                <Setter Property="WidthRequest" Value="200" />
+            </Style>
+
+            <Style x:Key="ShadowValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CardRowValueLabel}">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
             </Style>
 
             <!-- Neumorphism -->
@@ -117,6 +117,21 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="NeumorphGlyphLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+            </Style>
+
+            <Style x:Key="NeumorphCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
             <Style x:Key="NeumorphPressedLight"
                    TargetType="Border"
                    BasedOn="{StaticResource NeumorphTile}">
@@ -141,21 +156,6 @@
                                 Radius="12" />
                     </Setter.Value>
                 </Setter>
-            </Style>
-
-            <Style x:Key="NeumorphGlyphLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="28" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
-            </Style>
-
-            <Style x:Key="NeumorphCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
         </ResourceDictionary>

@@ -22,18 +22,8 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Flash -->
-
-            <Style x:Key="DetectFlashBoxView"
-                   TargetType="BoxView">
-                <Setter Property="Color" Value="White" />
-                <Setter Property="Opacity" Value="0" />
-                <Setter Property="InputTransparent" Value="True" />
-            </Style>
 
             <!-- Scan frame -->
 
@@ -44,6 +34,15 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="ShowGrid" Value="False" />
+            </Style>
+
+            <!-- Flash -->
+
+            <Style x:Key="DetectFlashBoxView"
+                   TargetType="BoxView">
+                <Setter Property="Color" Value="White" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
             </Style>
 
             <!-- Status -->
@@ -135,7 +134,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource DarkRootGrid}"

@@ -15,11 +15,27 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- StateContainer -->
+
+            <Style x:Key="StateButtonGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="6" />
+            </Style>
+
+            <Style x:Key="StateContainerGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="180" />
+            </Style>
+
+            <Style x:Key="StateTextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
 
             <Style x:Key="StateErrorIconBorder"
                    TargetType="Border"
@@ -33,26 +49,8 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
             </Style>
 
-            <Style x:Key="StateTextLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="StateContainerGrid"
-                   TargetType="Grid">
-                <Setter Property="HeightRequest" Value="180" />
-            </Style>
-
-            <Style x:Key="StateButtonGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="6" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

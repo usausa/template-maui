@@ -51,13 +51,13 @@ public sealed record DeckFolder(
     IReadOnlyList<DeckButton> Buttons);
 
 #pragma warning disable CA1819
-public sealed partial class DeckButtonInfo : ObservableObject
+public partial class DeckButtonInfo : ObservableObject
 {
-    public int Row { get; set; }
+    public int Row { get; }
 
-    public int Column { get; set; }
+    public int Column { get; }
 
-    public DeckButtonType ButtonType { get; set; }
+    public DeckButtonType ButtonType { get; }
 
     [ObservableProperty]
     public partial string Label { get; set; } = default!;
@@ -79,7 +79,24 @@ public sealed partial class DeckButtonInfo : ObservableObject
 
     public ICommand Command { get; set; } = default!;
 
-    public string Parameter { get; set; } = default!;
+    public string Parameter { get; }
+
+    public DeckButtonInfo(DeckButton button, byte[] image)
+    {
+        Row = button.Row;
+        Column = button.Column;
+        ButtonType = button.Type;
+        Label = button.Label;
+        Text = button.Text;
+        BackColor1 = button.Color1;
+        BackColor2 = button.Color2;
+        ImageBytes = image;
+        Parameter = button.Parameter;
+    }
+
+    public virtual void Update()
+    {
+    }
 }
 #pragma warning restore CA1819
 

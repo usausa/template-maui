@@ -20,7 +20,6 @@
              shell:ShellProperty.Function2Enabled="True"
              shell:ShellProperty.Function3Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -30,18 +29,6 @@
                    TargetType="sf:SfBottomSheet">
                 <Setter Property="CornerRadius" Value="16" />
                 <Setter Property="HalfExpandedRatio" Value="0.45" />
-            </Style>
-
-            <Style x:Key="CustomSheet"
-                   TargetType="cmc:BottomSheetView">
-                <Setter Property="CornerRadius" Value="16" />
-                <Setter Property="HalfExpandedRatio" Value="0.45" />
-            </Style>
-
-            <Style x:Key="SheetCloseButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource BasicFilledSecondaryButton}">
-                <Setter Property="Margin" Value="0,12,0,0" />
             </Style>
 
             <Style x:Key="SheetStack"
@@ -79,41 +66,17 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Action converters -->
+            <Style x:Key="SheetSeparator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
 
-            <s:MapToTextConverter x:Key="ActionIconConverter"
-                                  DefaultValue="{x:Static fonts:MaterialIcons.Chevron_right}">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="共有"
-                                      Value="{x:Static fonts:MaterialIcons.Share}" />
-                    <s:MapToTextEntry Key="リンクをコピー"
-                                      Value="{x:Static fonts:MaterialIcons.Link}" />
-                    <s:MapToTextEntry Key="お気に入りに追加"
-                                      Value="{x:Static fonts:MaterialIcons.Star}" />
-                    <s:MapToTextEntry Key="レポート"
-                                      Value="{x:Static fonts:MaterialIcons.Flag}" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-
-            <s:MapToColorConverter x:Key="ActionColorConverter"
-                                   DefaultValue="{StaticResource BlueGrayDarken1}">
-                <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="お気に入りに追加"
-                                       Value="{StaticResource AmberDarken3}" />
-                    <s:MapToColorEntry Key="レポート"
-                                       Value="{StaticResource RedDefault}" />
-                </s:MapToColorConverter.Entries>
-            </s:MapToColorConverter>
-
-            <s:MapToColorConverter x:Key="ActionTintConverter"
-                                   DefaultValue="{StaticResource BlueGrayLighten4}">
-                <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="お気に入りに追加"
-                                       Value="{StaticResource AmberLighten4}" />
-                    <s:MapToColorEntry Key="レポート"
-                                       Value="{StaticResource RedLighten4}" />
-                </s:MapToColorConverter.Entries>
-            </s:MapToColorConverter>
+            <Style x:Key="SheetCloseButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicFilledSecondaryButton}">
+                <Setter Property="Margin" Value="0,12,0,0" />
+            </Style>
 
             <!-- Result -->
 
@@ -146,16 +109,16 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Bottom sheet -->
+            <!-- Custom action sheet -->
 
-            <Style x:Key="SheetSeparator"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            <Style x:Key="CustomSheet"
+                   TargetType="cmc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="HalfExpandedRatio" Value="0.45" />
             </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid>
@@ -176,7 +139,7 @@
                                 <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Actions}">
                                     <BindableLayout.ItemTemplate>
-                                        <DataTemplate x:DataType="{x:Type x:String}">
+                                        <DataTemplate x:DataType="module:BottomSheetAction">
                                             <VerticalStackLayout>
                                                 <Grid Style="{StaticResource SheetItemGrid}"
                                                       ColumnDefinitions="Auto,*">
@@ -186,11 +149,11 @@
                                                     </Grid.GestureRecognizers>
                                                     <Label Grid.Column="0"
                                                            Style="{StaticResource SheetItemIcon}"
-                                                           Text="{Binding ., Converter={StaticResource ActionIconConverter}}"
-                                                           TextColor="{Binding ., Converter={StaticResource ActionColorConverter}}" />
+                                                           Text="{Binding Icon}"
+                                                           TextColor="{Binding Color}" />
                                                     <Label Grid.Column="1"
                                                            Style="{StaticResource SheetItemLabel}"
-                                                           Text="{Binding .}" />
+                                                           Text="{Binding Text}" />
                                                 </Grid>
                                                 <BoxView Style="{StaticResource SheetSeparator}" />
                                             </VerticalStackLayout>
@@ -248,14 +211,14 @@
                                   IsVisible="{Binding Selected, Converter={StaticResource NotEmptyConverter}}">
                                 <Border Grid.Column="0"
                                         Style="{StaticResource ResultIconBorder}"
-                                        BackgroundColor="{Binding Selected, Converter={StaticResource ActionTintConverter}}">
+                                        BackgroundColor="{Binding Selected.BackgroundColor}">
                                     <Label Style="{StaticResource ResultIconLabel}"
-                                           Text="{Binding Selected, Converter={StaticResource ActionIconConverter}}"
-                                           TextColor="{Binding Selected, Converter={StaticResource ActionColorConverter}}" />
+                                           Text="{Binding Selected.Icon}"
+                                           TextColor="{Binding Selected.Color}" />
                                 </Border>
                                 <Label Grid.Column="1"
                                        Style="{StaticResource ResultNameLabel}"
-                                       Text="{Binding Selected}" />
+                                       Text="{Binding Selected.Text}" />
                             </Grid>
                         </Grid>
                     </controls:InfoCard>
@@ -276,7 +239,7 @@
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding Actions}">
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="{x:Type x:String}">
+                                <DataTemplate x:DataType="module:BottomSheetAction">
                                     <VerticalStackLayout>
                                         <Grid Style="{StaticResource SheetItemGrid}"
                                               ColumnDefinitions="Auto,*">
@@ -286,11 +249,11 @@
                                             </Grid.GestureRecognizers>
                                             <Label Grid.Column="0"
                                                    Style="{StaticResource SheetItemIcon}"
-                                                   Text="{Binding ., Converter={StaticResource ActionIconConverter}}"
-                                                   TextColor="{Binding ., Converter={StaticResource ActionColorConverter}}" />
+                                                   Text="{Binding Icon}"
+                                                   TextColor="{Binding Color}" />
                                             <Label Grid.Column="1"
                                                    Style="{StaticResource SheetItemLabel}"
-                                                   Text="{Binding .}" />
+                                                   Text="{Binding Text}" />
                                         </Grid>
                                         <BoxView Style="{StaticResource SheetSeparator}" />
                                     </VerticalStackLayout>

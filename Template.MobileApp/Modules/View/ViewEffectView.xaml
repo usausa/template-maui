@@ -15,23 +15,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Focus border -->
-
-            <Style x:Key="BlueFocusEntry"
-                   TargetType="Entry"
-                   BasedOn="{StaticResource BasicFieldEntry}">
-                <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
-            </Style>
-
-            <Style x:Key="GreenFocusEntry"
-                   TargetType="Entry"
-                   BasedOn="{StaticResource BlueFocusEntry}">
-                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource GreenDefault}" />
-            </Style>
 
             <!-- Common -->
 
@@ -41,6 +26,16 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="SmallActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
             </Style>
 
             <Style x:Key="EffectCard"
@@ -59,126 +54,16 @@
                 </Setter>
             </Style>
 
-            <!-- Entrance -->
-
-            <Style x:Key="EnterCard"
-                   TargetType="Border"
-                   BasedOn="{StaticResource EffectCard}">
-                <Setter Property="Margin" Value="0,0,0,8" />
-            </Style>
-
-            <Style x:Key="EnterIconLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="EnterTextLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="12,0,0,0" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-            </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="SmallActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="16,0" />
-                <Setter Property="HeightRequest" Value="36" />
-                <Setter Property="CornerRadius" Value="18" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <!-- Badge -->
-
-            <Style x:Key="StepButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource SmallActionButton}">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="WidthRequest" Value="44" />
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="24" />
-            </Style>
-
-            <Style x:Key="BadgeBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="5,1" />
-                <Setter Property="MinimumWidthRequest" Value="20" />
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
-                <Setter Property="Stroke" Value="White" />
-                <Setter Property="StrokeThickness" Value="2" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-                <Setter Property="TranslationX" Value="10" />
-                <Setter Property="TranslationY" Value="-6" />
-            </Style>
-
-            <Style x:Key="BadgeLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="11" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <!-- Count up -->
-
-            <Style x:Key="AmountLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="28" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
-            </Style>
-
-            <!-- Focus border -->
-
-            <Style x:Key="FocusEntryBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="0,0,0,12" />
-                <Setter Property="Padding" Value="12,2" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <!-- Press feedback -->
-
-            <Style x:Key="PressCompareLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,6,0,0" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="11" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-            </Style>
-
-            <!-- Common -->
-
             <Style x:Key="EffectRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
-            <!-- Badge -->
-
-            <Style x:Key="BadgeCard"
-                   TargetType="Border"
-                   BasedOn="{StaticResource EffectCard}">
-                <Setter Property="Padding" Value="16,6,16,12" />
-            </Style>
-
-            <Style x:Key="BadgeRowGrid"
-                   TargetType="Grid"
-                   BasedOn="{StaticResource EffectRowGrid}">
-                <Setter Property="Padding" Value="0,6,0,0" />
+            <Style x:Key="EffectValueLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
             <!-- Page -->
@@ -214,7 +99,41 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="EnterCard"
+                   TargetType="Border"
+                   BasedOn="{StaticResource EffectCard}">
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+
+            <Style x:Key="EnterIconLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="EnterTextLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="12,0,0,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
             <!-- Badge -->
+
+            <Style x:Key="BadgeCard"
+                   TargetType="Border"
+                   BasedOn="{StaticResource EffectCard}">
+                <Setter Property="Padding" Value="16,6,16,12" />
+            </Style>
+
+            <Style x:Key="BadgeRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource EffectRowGrid}">
+                <Setter Property="Padding" Value="0,6,0,0" />
+            </Style>
 
             <Style x:Key="BadgeHostGrid"
                    TargetType="Grid">
@@ -229,13 +148,69 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <!-- Common -->
+            <Style x:Key="BadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="5,1" />
+                <Setter Property="MinimumWidthRequest" Value="20" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="TranslationX" Value="10" />
+                <Setter Property="TranslationY" Value="-6" />
+            </Style>
 
-            <Style x:Key="EffectValueLabel"
+            <Style x:Key="BadgeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="StepButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SmallActionButton}">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <!-- Count up -->
+
+            <Style x:Key="AmountLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <!-- Focus border -->
+
+            <Style x:Key="FocusEntryBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,0,12" />
+                <Setter Property="Padding" Value="12,2" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="BlueFocusEntry"
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BasicFieldEntry}">
+                <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
+            </Style>
+
+            <Style x:Key="GreenFocusEntry"
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BlueFocusEntry}">
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource GreenDefault}" />
             </Style>
 
             <!-- Press feedback -->
@@ -245,6 +220,14 @@
                    BasedOn="{StaticResource SmallActionButton}">
                 <Setter Property="HeightRequest" Value="44" />
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="PressCompareLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
             <Style x:Key="RippleButtonBorder"
@@ -262,13 +245,6 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="EffectCardStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="12" />
             </Style>
 
             <!-- Change feedback -->
@@ -291,18 +267,6 @@
                    TargetType="Grid">
                 <Setter Property="HeightRequest" Value="60" />
             </Style>
-
-            <!-- Common -->
-
-            <Style x:Key="DarkPreviewBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDarken4}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-            <!-- Change feedback -->
 
             <Style x:Key="PreviewCaptionLabel"
                    TargetType="Label">
@@ -365,9 +329,23 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
+            <!-- Component -->
+
+            <Style x:Key="EffectCardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="DarkPreviewBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource EffectPageScroll}">

@@ -14,7 +14,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -42,6 +41,16 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
+            <!-- Common -->
+
+            <Style x:Key="SuperSectionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="20,20,20,8" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="SuperPageStack"
@@ -50,6 +59,12 @@
             </Style>
 
             <!-- Search -->
+
+            <Style x:Key="SearchRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
 
             <Style x:Key="SearchBorder"
                    TargetType="Border">
@@ -135,16 +150,6 @@
                 <Setter Property="IndicatorSize" Value="8" />
                 <Setter Property="IndicatorColor" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <!-- Section -->
-
-            <Style x:Key="SuperSectionLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="20,20,20,8" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
             <!-- Service -->
@@ -332,17 +337,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- Search -->
-
-            <Style x:Key="SearchRowGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="16,0" />
-                <Setter Property="ColumnSpacing" Value="10" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView>

@@ -18,6 +18,17 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
+            <converters:MapToToneConverter x:Key="DeviceTypeToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{s:Bool Value=False}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
+                                               Value="Warning" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
+
             <!-- Device -->
 
             <Style x:Key="DeviceCard"
@@ -42,15 +53,6 @@
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="8" />
             </Style>
-
-            <converters:MapToToneConverter x:Key="DeviceTypeToneConverter">
-                <converters:MapToToneConverter.Entries>
-                    <converters:MapToToneEntry Key="{s:Bool Value=False}"
-                                               Value="Success" />
-                    <converters:MapToToneEntry Key="{s:Bool Value=True}"
-                                               Value="Warning" />
-                </converters:MapToToneConverter.Entries>
-            </converters:MapToToneConverter>
 
             <!-- Application -->
 

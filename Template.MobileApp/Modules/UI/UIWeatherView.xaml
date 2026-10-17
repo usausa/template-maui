@@ -21,6 +21,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Color -->
+
+            <Color x:Key="WeatherDimColor">#CCFFFFFF</Color>
+            <Color x:Key="WeatherRainColor">#9FD8FF</Color>
+            <Color x:Key="WeatherCardColor">#26FFFFFF</Color>
+            <Color x:Key="WeatherCardLineColor">#38FFFFFF</Color>
+            <Color x:Key="WeatherLineColor">#33FFFFFF</Color>
+            <Color x:Key="WeatherSaturdayColor">#A5CCFF</Color>
+            <Color x:Key="WeatherSundayColor">#FFABAB</Color>
+
             <!-- Brush -->
 
             <LinearGradientBrush x:Key="ClearSkyBrush" StartPoint="0,0" EndPoint="0,1">
@@ -95,16 +105,6 @@
                 <GradientStop Offset="0.5" Color="#38BDF8" />
                 <GradientStop Offset="1" Color="#34D399" />
             </LinearGradientBrush>
-
-            <!-- Color -->
-
-            <Color x:Key="WeatherDimColor">#CCFFFFFF</Color>
-            <Color x:Key="WeatherRainColor">#9FD8FF</Color>
-            <Color x:Key="WeatherCardColor">#26FFFFFF</Color>
-            <Color x:Key="WeatherCardLineColor">#38FFFFFF</Color>
-            <Color x:Key="WeatherLineColor">#33FFFFFF</Color>
-            <Color x:Key="WeatherSaturdayColor">#A5CCFF</Color>
-            <Color x:Key="WeatherSundayColor">#FFABAB</Color>
 
             <!-- Converter -->
 
@@ -306,23 +306,26 @@
 
             <converters:CompassPointConverter x:Key="CompassPointConverter" />
 
+            <!-- Common -->
+
+            <Style x:Key="CardTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
+            </Style>
+
+            <Style x:Key="CardLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource WeatherLineColor}" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="WeatherRootGrid"
                    TargetType="Grid">
                 <Setter Property="Background" Value="{StaticResource ClearSkyBrush}" />
-            </Style>
-
-            <Style x:Key="SkyGlowEllipse"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="440" />
-                <Setter Property="HeightRequest" Value="440" />
-                <Setter Property="HorizontalOptions" Value="End" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="TranslationX" Value="170" />
-                <Setter Property="TranslationY" Value="-190" />
-                <Setter Property="InputTransparent" Value="True" />
-                <Setter Property="Fill" Value="{StaticResource DayGlowBrush}" />
             </Style>
 
             <Style x:Key="WeatherRefresh"
@@ -336,7 +339,21 @@
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <!-- Current header -->
+            <!-- Sky -->
+
+            <Style x:Key="SkyGlowEllipse"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="440" />
+                <Setter Property="HeightRequest" Value="440" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TranslationX" Value="170" />
+                <Setter Property="TranslationY" Value="-190" />
+                <Setter Property="InputTransparent" Value="True" />
+                <Setter Property="Fill" Value="{StaticResource DayGlowBrush}" />
+            </Style>
+
+            <!-- Current -->
 
             <Style x:Key="CurrentStack"
                    TargetType="VerticalStackLayout">
@@ -401,41 +418,6 @@
                 <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
             </Style>
 
-            <!-- Compact header -->
-
-            <Style x:Key="CompactBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="0,8,0,0" />
-                <Setter Property="Padding" Value="16,6" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="BackgroundColor" Value="#8C0B1A33" />
-                <Setter Property="Stroke" Value="{StaticResource WeatherCardLineColor}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
-                <Setter Property="Opacity" Value="0" />
-                <Setter Property="InputTransparent" Value="True" />
-            </Style>
-
-            <Style x:Key="CompactRow"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="CompactLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <Style x:Key="CompactTemperatureLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource CompactLabel}">
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="FontAttributes" Value="Bold" />
-            </Style>
-
             <!-- Alert -->
 
             <Style x:Key="AlertBorder"
@@ -463,6 +445,11 @@
                 <Setter Property="FontSize" Value="28" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Warning}" />
+            </Style>
+
+            <Style x:Key="AlertDetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
             </Style>
 
             <Style x:Key="AlertTitleLabel"
@@ -501,44 +488,10 @@
                 <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
             </Style>
 
-            <Style x:Key="AlertDetailStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-            </Style>
-
             <Style x:Key="AlertDetailLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <!-- Card -->
-
-            <Style x:Key="WeatherCardBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="14,12" />
-                <Setter Property="BackgroundColor" Value="{StaticResource WeatherCardColor}" />
-                <Setter Property="Stroke" Value="{StaticResource WeatherCardLineColor}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
-            </Style>
-
-            <Style x:Key="CardStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="CardTitleLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
-            </Style>
-
-            <Style x:Key="CardLine"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource WeatherLineColor}" />
             </Style>
 
             <!-- Hourly -->
@@ -641,14 +594,6 @@
                 <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
             </Style>
 
-            <Style x:Key="DayHighLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
             <Style x:Key="DayRangeBar"
                    TargetType="controls:RangeBar">
                 <Setter Property="HeightRequest" Value="20" />
@@ -656,6 +601,14 @@
                 <Setter Property="TrackColor" Value="#33000000" />
                 <Setter Property="StartColor" Value="#7DD3FC" />
                 <Setter Property="EndColor" Value="#FDBA74" />
+            </Style>
+
+            <Style x:Key="DayHighLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
             </Style>
 
             <!-- Life -->
@@ -732,12 +685,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="GaugeBottomStack"
-                   TargetType="VerticalStackLayout"
-                   BasedOn="{StaticResource GaugeCenterStack}">
-                <Setter Property="VerticalOptions" Value="End" />
-            </Style>
-
             <Style x:Key="GaugeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -771,6 +718,27 @@
                 <Setter Property="Brush" Value="{StaticResource UvBrush}" />
             </Style>
 
+            <Style x:Key="GaugeBottomStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource GaugeCenterStack}">
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="UvBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Padding" Value="10,2" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="UvBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#1F2937" />
+            </Style>
+
             <Style x:Key="HumidityMeter"
                    TargetType="controls:ArcMeter">
                 <Setter Property="StartAngle" Value="-90" />
@@ -794,21 +762,6 @@
                 <Setter Property="Brush" Value="{StaticResource PressureBrush}" />
             </Style>
 
-            <Style x:Key="UvBadgeBorder"
-                   TargetType="Border">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="Padding" Value="10,2" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-            </Style>
-
-            <Style x:Key="UvBadgeLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="#1F2937" />
-            </Style>
-
             <Style x:Key="SunTimeGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="4" />
@@ -821,16 +774,67 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <Style x:Key="SunsetTimeLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SunTimeLabel}">
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+
             <Style x:Key="MoonNameLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource SunTimeLabel}">
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="SunsetTimeLabel"
+            <!-- Compact -->
+
+            <Style x:Key="CompactBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="Padding" Value="16,6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="#8C0B1A33" />
+                <Setter Property="Stroke" Value="{StaticResource WeatherCardLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="CompactRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CompactLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CompactTemperatureLabel"
                    TargetType="Label"
-                   BasedOn="{StaticResource SunTimeLabel}">
-                <Setter Property="HorizontalOptions" Value="End" />
+                   BasedOn="{StaticResource CompactLabel}">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="WeatherCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource WeatherCardColor}" />
+                <Setter Property="Stroke" Value="{StaticResource WeatherCardLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
             </Style>
 
         </ResourceDictionary>

@@ -1,10 +1,25 @@
 namespace Template.MobileApp.Modules.View;
 
+using Fonts;
+
+public sealed record BottomSheetAction(
+    string Icon,
+    string Text,
+    Color Color,
+    Color BackgroundColor);
+
 public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
 {
     // Field
 
     private static readonly TimeSpan SwitchDelay = TimeSpan.FromMilliseconds(300);
+
+    private static readonly Color NormalColor = Color.FromArgb("#546E7A");
+    private static readonly Color NormalBackgroundColor = Color.FromArgb("#CFD8DC");
+    private static readonly Color FavoriteColor = Color.FromArgb("#FF8F00");
+    private static readonly Color FavoriteBackgroundColor = Color.FromArgb("#FFECB3");
+    private static readonly Color ReportColor = Color.FromArgb("#F44336");
+    private static readonly Color ReportBackgroundColor = Color.FromArgb("#FFCDD2");
 
     // Property
 
@@ -15,9 +30,15 @@ public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
     public partial bool IsCustomSheetOpen { get; set; }
 
     [ObservableProperty]
-    public partial string? Selected { get; set; }
+    public partial BottomSheetAction? Selected { get; set; }
 
-    public IReadOnlyList<string> Actions { get; } = ["共有", "リンクをコピー", "お気に入りに追加", "レポート"];
+    public IReadOnlyList<BottomSheetAction> Actions { get; } =
+    [
+        new(MaterialIcons.Share, "共有", NormalColor, NormalBackgroundColor),
+        new(MaterialIcons.Link, "リンクをコピー", NormalColor, NormalBackgroundColor),
+        new(MaterialIcons.Star, "お気に入りに追加", FavoriteColor, FavoriteBackgroundColor),
+        new(MaterialIcons.Flag, "レポート", ReportColor, ReportBackgroundColor)
+    ];
 
     // Command
 
@@ -38,7 +59,7 @@ public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
         OpenSfSheetCommand = MakeDelegateCommand(() => IsSfSheetOpen = true);
         OpenCustomSheetCommand = MakeDelegateCommand(() => IsCustomSheetOpen = true);
         CloseCommand = MakeDelegateCommand(Close);
-        SelectCommand = MakeDelegateCommand<string>(x =>
+        SelectCommand = MakeDelegateCommand<BottomSheetAction>(x =>
         {
             Selected = x;
             Close();

@@ -19,6 +19,42 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Common -->
+
+            <Style x:Key="MotionCell"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="MotionIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="MotionNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <Style x:Key="MotionHeartLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource MotionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <Style x:Key="MotionEmojiLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="28" />
+            </Style>
+
             <!-- Click -->
 
             <Style x:Key="ClickGrid"
@@ -34,93 +70,7 @@
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="False" />
             </Style>
 
-            <!-- Tap -->
-
-            <Style x:Key="TileGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="AnimationBorder"
-                   TargetType="Border">
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="HeightRequest" Value="96" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape">
-                    <RoundRectangle CornerRadius="16" />
-                </Setter>
-            </Style>
-
-            <Style x:Key="TileContentStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="TileIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="28" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
-            <Style x:Key="AnimationLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-            </Style>
-
             <!-- Loop animation -->
-
-            <Style x:Key="LoopSwitch"
-                   TargetType="Switch">
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <!-- Motion -->
-
-            <Style x:Key="MotionGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="MotionCell"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-            </Style>
-
-            <Style x:Key="TriggerCell"
-                   TargetType="VerticalStackLayout"
-                   BasedOn="{StaticResource MotionCell}">
-                <Setter Property="Padding" Value="0,12,0,0" />
-            </Style>
-
-            <Style x:Key="MotionIconArea"
-                   TargetType="Grid">
-                <Setter Property="HeightRequest" Value="36" />
-            </Style>
-
-            <Style x:Key="MotionIconLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="32" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="MotionHeartLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource MotionIconLabel}">
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
 
             <Style x:Key="MotionLiveLabel"
                    TargetType="Label">
@@ -131,22 +81,6 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
-            <Style x:Key="MotionEmojiLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="28" />
-            </Style>
-
-            <Style x:Key="MotionNameLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
-            </Style>
-
-            <!-- Loop animation -->
-
             <Style x:Key="RippleRing"
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="24" />
@@ -156,6 +90,15 @@
                 <Setter Property="Fill" Value="{StaticResource BlueLighten2}" />
                 <Setter Property="Opacity" Value="0" />
                 <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="RippleDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="16" />
+                <Setter Property="HeightRequest" Value="16" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="WaveDotStack"
@@ -183,16 +126,38 @@
                 <Setter Property="Color" Value="{StaticResource RedDefault}" />
             </Style>
 
-            <Style x:Key="RippleDot"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="16" />
-                <Setter Property="HeightRequest" Value="16" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+            <Style x:Key="LoopSwitch"
+                   TargetType="Switch">
                 <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <!-- Tap animation -->
+            <!-- Trigger animation -->
+
+            <Style x:Key="TriggerCell"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource MotionCell}">
+                <Setter Property="Padding" Value="0,12,0,0" />
+            </Style>
+
+            <!-- Tap -->
+
+            <Style x:Key="TileGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="AnimationBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape">
+                    <RoundRectangle CornerRadius="16" />
+                </Setter>
+            </Style>
 
             <Style x:Key="OrangeTile"
                    TargetType="Border"
@@ -203,6 +168,29 @@
                         <GradientStop Offset="1" Color="{StaticResource OrangeDarken1}" />
                     </LinearGradientBrush>
                 </Setter>
+            </Style>
+
+            <Style x:Key="TileContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="TileIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="AnimationLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
             <Style x:Key="PurpleTile"
@@ -225,6 +213,18 @@
                         <GradientStop Offset="1" Color="{StaticResource PinkDarken1}" />
                     </LinearGradientBrush>
                 </Setter>
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="MotionGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="MotionIconArea"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="36" />
             </Style>
 
         </ResourceDictionary>

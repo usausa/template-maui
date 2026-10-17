@@ -14,14 +14,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <Style x:Key="SegmentRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="0" />
-            </Style>
 
             <Style x:Key="SelectGroupBorder"
                    TargetType="Border">
@@ -31,10 +25,9 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
 
-            <Style x:Key="SelectDivider"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            <Style x:Key="SegmentRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="0" />
             </Style>
 
             <Style x:Key="GroupSelectButton"
@@ -46,9 +39,14 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
             </Style>
 
+            <Style x:Key="SelectDivider"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">

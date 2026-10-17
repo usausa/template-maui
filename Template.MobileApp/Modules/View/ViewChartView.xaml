@@ -13,11 +13,17 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- Segment -->
+
+            <Style x:Key="SegmentGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="16,12" />
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
 
             <Style x:Key="SegmentButton"
                    TargetType="Button">
@@ -30,13 +36,6 @@
                 <Setter Property="BorderColor" Value="{StaticResource BlueLighten3}" />
                 <Setter Property="BorderWidth" Value="1" />
                 <Setter Property="ContentLayout" Value="Left,4" />
-            </Style>
-
-            <Style x:Key="SegmentGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="16,12" />
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
             <!-- Chart -->
@@ -53,7 +52,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}"

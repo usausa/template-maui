@@ -15,7 +15,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -59,15 +58,15 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
+            <Style x:Key="TransferProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
             <Style x:Key="ProgressValueLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicMonoLabel}">
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="TransferProgressBar"
-                   TargetType="ProgressBar">
-                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="RedButton"
@@ -129,7 +128,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource PageGrid}"

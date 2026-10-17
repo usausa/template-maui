@@ -20,6 +20,52 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
+            <s:MapToTextConverter x:Key="SleepStageNameConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Deep}"
+                                      Value="深い" />
+                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Light}"
+                                      Value="浅い" />
+                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Rem}"
+                                      Value="レム" />
+                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Awake}"
+                                      Value="覚醒" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="SleepStageColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Deep}"
+                                       Value="{StaticResource BlueDarken4}" />
+                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Light}"
+                                       Value="{StaticResource BlueDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Rem}"
+                                       Value="{StaticResource BlueLighten1}" />
+                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Awake}"
+                                       Value="{StaticResource BlueLighten3}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <!-- Common -->
+
+            <Style x:Key="ChartTitleLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="ChartSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
             <!-- Page -->
 
             <Style x:Key="KitDashScroll"
@@ -50,6 +96,13 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <Style x:Key="BellArea"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="KitIconButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -61,13 +114,6 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="20" />
-            </Style>
-
-            <Style x:Key="BellArea"
-                   TargetType="Grid">
-                <Setter Property="WidthRequest" Value="44" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="BellButton"
@@ -106,6 +152,40 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 14" />
             </Style>
 
+            <Style x:Key="StepCardGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="20" />
+            </Style>
+
+            <Style x:Key="StepRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="104" />
+                <Setter Property="HeightRequest" Value="104" />
+            </Style>
+
+            <Style x:Key="StepRing"
+                   TargetType="controls:GlowRing">
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="StartColor" Value="{StaticResource LightBlueLighten1}" />
+                <Setter Property="EndColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TrackColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="StepRateLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="StepTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="CardCaption"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -117,6 +197,19 @@
                 <Setter Property="FontSize" Value="28" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="StepGoalLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="StepRemainLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="MetricBorder"
@@ -153,107 +246,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="StepCardGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="20" />
-            </Style>
-
-            <Style x:Key="StepRingGrid"
-                   TargetType="Grid">
-                <Setter Property="WidthRequest" Value="104" />
-                <Setter Property="HeightRequest" Value="104" />
-            </Style>
-
-            <Style x:Key="StepRing"
-                   TargetType="controls:GlowRing">
-                <Setter Property="Thickness" Value="10" />
-                <Setter Property="StartColor" Value="{StaticResource LightBlueLighten1}" />
-                <Setter Property="EndColor" Value="{StaticResource BlueDefault}" />
-                <Setter Property="TrackColor" Value="{StaticResource BlueLighten5}" />
-            </Style>
-
-            <Style x:Key="StepRateLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
-            </Style>
-
-            <Style x:Key="StepTextStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="StepGoalLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
-            <Style x:Key="StepRemainLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <!-- Template -->
-
-            <DataTemplate x:Key="HeroTemplate"
-                          x:DataType="module:UIKitDashHero">
-                <Border Style="{StaticResource StepCardBorder}"
-                        cmc:VariableSizeWrapPanel.ColumnSpan="2"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp">
-                    <Grid Style="{StaticResource StepCardGrid}"
-                          ColumnDefinitions="Auto,*">
-                        <Grid Grid.Column="0"
-                              Style="{StaticResource StepRingGrid}">
-                            <controls:GlowRing Style="{StaticResource StepRing}"
-                                               Progress="{Binding Rate}" />
-                            <Label Style="{StaticResource StepRateLabel}"
-                                   Text="{Binding Rate, StringFormat='{0:P0}'}" />
-                        </Grid>
-                        <VerticalStackLayout Grid.Column="1"
-                                             Style="{StaticResource StepTextStack}">
-                            <Label Style="{StaticResource CardCaption}"
-                                   Text="今日の歩数" />
-                            <Label Style="{StaticResource CardValue}"
-                                   behaviors:LabelOption.CountUpFormat="{}{0:N0} 歩"
-                                   behaviors:LabelOption.CountUpValue="{Binding Steps}" />
-                            <Label Style="{StaticResource StepGoalLabel}"
-                                   Text="{Binding Goal, StringFormat='目標 {0:N0} 歩'}" />
-                            <Label Style="{StaticResource StepRemainLabel}"
-                                   Text="{Binding Remain, StringFormat='あと {0:N0} 歩'}" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Border>
-            </DataTemplate>
-
-            <DataTemplate x:Key="MetricTemplate"
-                          x:DataType="module:UIKitDashMetric">
-                <Border Style="{StaticResource MetricBorder}"
-                        behaviors:AnimationOption.EnterAnimation="Pop"
-                        behaviors:AnimationOption.EnterDelay="{Binding EnterDelay}">
-                    <VerticalStackLayout>
-                        <Label Style="{StaticResource MetricIcon}"
-                               Text="{Binding Icon}" />
-                        <Label Style="{StaticResource MetricTitle}"
-                               Text="{Binding Title}" />
-                        <Label Style="{StaticResource MetricValue}"
-                               Text="{Binding Value}" />
-                        <Label Style="{StaticResource MetricUnit}"
-                               Text="{Binding Unit}" />
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-
-            <module:UIKitDashTileTemplateSelector x:Key="TileTemplateSelector"
-                                                  HeroTemplate="{StaticResource HeroTemplate}"
-                                                  MetricTemplate="{StaticResource MetricTemplate}" />
-
             <!-- Period -->
 
             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -275,31 +267,6 @@
             </Style>
 
             <!-- Chart -->
-
-            <Style x:Key="ChartCardBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="16,0,16,12" />
-                <Setter Property="Padding" Value="16,14" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
-            </Style>
-
-            <Style x:Key="ChartTitleLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
-            </Style>
-
-            <Style x:Key="ChartSummaryLabel"
-                   TargetType="Label">
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
-            </Style>
 
             <Style x:Key="StepChartControl"
                    TargetType="drawing:DrawingControl">
@@ -369,32 +336,6 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
 
-            <s:MapToTextConverter x:Key="SleepStageNameConverter">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Deep}"
-                                      Value="深い" />
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Light}"
-                                      Value="浅い" />
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Rem}"
-                                      Value="レム" />
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Awake}"
-                                      Value="覚醒" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-
-            <s:MapToColorConverter x:Key="SleepStageColorConverter">
-                <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Deep}"
-                                       Value="{StaticResource BlueDarken4}" />
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Light}"
-                                       Value="{StaticResource BlueDarken2}" />
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Rem}"
-                                       Value="{StaticResource BlueLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Awake}"
-                                       Value="{StaticResource BlueLighten3}" />
-                </s:MapToColorConverter.Entries>
-            </s:MapToColorConverter>
-
             <!-- Link -->
 
             <Style x:Key="LinkCardBorder"
@@ -456,6 +397,17 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Component -->
+
+            <Style x:Key="ChartCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,12" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -489,8 +441,60 @@
 
             <!-- Tile -->
             <cmc:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
-                                       BindableLayout.ItemsSource="{Binding Tiles}"
-                                       BindableLayout.ItemTemplateSelector="{StaticResource TileTemplateSelector}" />
+                                       BindableLayout.ItemsSource="{Binding Tiles}">
+                <BindableLayout.ItemTemplateSelector>
+                    <module:UIKitDashTileTemplateSelector>
+                        <module:UIKitDashTileTemplateSelector.HeroTemplate>
+                            <DataTemplate x:DataType="module:UIKitDashHero">
+                                <Border Style="{StaticResource StepCardBorder}"
+                                        cmc:VariableSizeWrapPanel.ColumnSpan="2"
+                                        behaviors:AnimationOption.EnterAnimation="FadeUp">
+                                    <Grid Style="{StaticResource StepCardGrid}"
+                                          ColumnDefinitions="Auto,*">
+                                        <Grid Grid.Column="0"
+                                              Style="{StaticResource StepRingGrid}">
+                                            <controls:GlowRing Style="{StaticResource StepRing}"
+                                                               Progress="{Binding Rate}" />
+                                            <Label Style="{StaticResource StepRateLabel}"
+                                                   Text="{Binding Rate, StringFormat='{0:P0}'}" />
+                                        </Grid>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Style="{StaticResource StepTextStack}">
+                                            <Label Style="{StaticResource CardCaption}"
+                                                   Text="今日の歩数" />
+                                            <Label Style="{StaticResource CardValue}"
+                                                   behaviors:LabelOption.CountUpFormat="{}{0:N0} 歩"
+                                                   behaviors:LabelOption.CountUpValue="{Binding Steps}" />
+                                            <Label Style="{StaticResource StepGoalLabel}"
+                                                   Text="{Binding Goal, StringFormat='目標 {0:N0} 歩'}" />
+                                            <Label Style="{StaticResource StepRemainLabel}"
+                                                   Text="{Binding Remain, StringFormat='あと {0:N0} 歩'}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </module:UIKitDashTileTemplateSelector.HeroTemplate>
+                        <module:UIKitDashTileTemplateSelector.MetricTemplate>
+                            <DataTemplate x:DataType="module:UIKitDashMetric">
+                                <Border Style="{StaticResource MetricBorder}"
+                                        behaviors:AnimationOption.EnterAnimation="Pop"
+                                        behaviors:AnimationOption.EnterDelay="{Binding EnterDelay}">
+                                    <VerticalStackLayout>
+                                        <Label Style="{StaticResource MetricIcon}"
+                                               Text="{Binding Icon}" />
+                                        <Label Style="{StaticResource MetricTitle}"
+                                               Text="{Binding Title}" />
+                                        <Label Style="{StaticResource MetricValue}"
+                                               Text="{Binding Value}" />
+                                        <Label Style="{StaticResource MetricUnit}"
+                                               Text="{Binding Unit}" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </module:UIKitDashTileTemplateSelector.MetricTemplate>
+                    </module:UIKitDashTileTemplateSelector>
+                </BindableLayout.ItemTemplateSelector>
+            </cmc:VariableSizeWrapPanel>
 
             <!-- Period -->
             <cmc:SegmentedView Style="{StaticResource PeriodSegment}"

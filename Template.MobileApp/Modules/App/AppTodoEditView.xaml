@@ -16,7 +16,6 @@
              shell:ShellProperty.StatusBarColor="#FFFFFF"
              shell:ShellProperty.StatusBarStyle="DarkContent">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -38,6 +37,14 @@
             <s:BoolToTextConverter x:Key="TitleConverter"
                                    TrueValue="新しいタスク"
                                    FalseValue="タスクを編集" />
+
+            <!-- Common -->
+
+            <Style x:Key="CardDividerBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource TodoLineColor}" />
+            </Style>
 
             <!-- Page -->
 
@@ -106,19 +113,6 @@
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <Style x:Key="EditCardBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="16,8" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <Style x:Key="EditCardStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-            </Style>
-
             <Style x:Key="TitleEntry"
                    TargetType="Entry">
                 <Setter Property="FontSize" Value="20" />
@@ -133,12 +127,6 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource TodoMutedColor}" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
-            </Style>
-
-            <Style x:Key="CardDividerBoxView"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource TodoLineColor}" />
             </Style>
 
             <Style x:Key="NoteEditor"
@@ -178,6 +166,7 @@
                 <Setter Property="BorderColor" Value="{StaticResource TodoChipLineColor}" />
                 <Setter Property="BorderWidth" Value="1" />
             </Style>
+
             <Style x:Key="HiddenDatePicker"
                    TargetType="DatePicker">
                 <Setter Property="Opacity" Value="0" />
@@ -239,9 +228,23 @@
                 <Setter Property="BorderWidth" Value="1" />
             </Style>
 
+            <!-- Component -->
+
+            <Style x:Key="EditCardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="EditCardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource EditRootGrid}"

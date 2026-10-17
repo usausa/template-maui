@@ -20,20 +20,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Run -->
+            <!-- Page -->
 
-            <Style x:Key="RunStateStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="PlayIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+            <Style x:Key="EasingBoardGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
 
             <!-- Easing -->
@@ -63,6 +57,14 @@
                 <Setter Property="LineColor" Value="{StaticResource BlueGrayDefault}" />
             </Style>
 
+            <Style x:Key="EasingNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
             <Style x:Key="SinCurve"
                    TargetType="controls:EasingCurveView"
                    BasedOn="{StaticResource EasingCurve}">
@@ -87,22 +89,20 @@
                 <Setter Property="LineColor" Value="{StaticResource PurpleDefault}" />
             </Style>
 
-            <Style x:Key="EasingNameLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
+            <!-- Run -->
+
+            <Style x:Key="RunStateStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Page -->
-
-            <Style x:Key="EasingBoardGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            <Style x:Key="PlayIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
         </ResourceDictionary>

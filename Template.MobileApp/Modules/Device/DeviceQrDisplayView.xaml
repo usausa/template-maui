@@ -13,29 +13,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- QR code -->
-
-            <Style x:Key="QrPlaceholderIconLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicIconCircleLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="QrCardBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource CardCenterBorder}">
-                <Setter Property="Margin" Value="0" />
-            </Style>
-
-            <Style x:Key="QrEmptyStack"
-                   TargetType="VerticalStackLayout"
-                   BasedOn="{StaticResource BasicEmptyStack}">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
 
             <!-- Page -->
 
@@ -47,6 +26,12 @@
             </Style>
 
             <!-- QR code -->
+
+            <Style x:Key="QrCardBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource CardCenterBorder}">
+                <Setter Property="Margin" Value="0" />
+            </Style>
 
             <Style x:Key="QrFrameBorder"
                    TargetType="Border">
@@ -62,6 +47,18 @@
                 <Setter Property="HeightRequest" Value="280" />
             </Style>
 
+            <Style x:Key="QrEmptyStack"
+                   TargetType="VerticalStackLayout"
+                   BasedOn="{StaticResource BasicEmptyStack}">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="QrPlaceholderIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
             <Style x:Key="EncodedTextLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
@@ -73,7 +70,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource QrLayoutGrid}"

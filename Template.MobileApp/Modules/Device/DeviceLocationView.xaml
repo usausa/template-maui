@@ -15,30 +15,10 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- Common -->
-
-            <Style x:Key="CoordGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="12" />
-                <Setter Property="ColumnSpacing" Value="12" />
-            </Style>
-
-            <Style x:Key="ValueUnitStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-            </Style>
-
-            <Style x:Key="UnitLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,0,0,3" />
-                <Setter Property="VerticalOptions" Value="End" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
 
             <Style x:Key="CoordValueLabel"
                    TargetType="Label">
@@ -64,9 +44,31 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Motion -->
+
+            <Style x:Key="ValueUnitStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="UnitLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,0,3" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <!-- Component -->
+
+            <Style x:Key="CoordGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}"

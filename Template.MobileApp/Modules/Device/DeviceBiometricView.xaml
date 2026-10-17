@@ -17,7 +17,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
@@ -139,7 +138,29 @@
 
             <converters:DurationConverter x:Key="DurationConverter" />
 
-            <!-- Tile -->
+            <!-- Availability -->
+
+            <Style x:Key="TileChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <!-- Authenticate -->
+
+            <Style x:Key="ResultValueStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <!-- Key sign in -->
+
+            <Style x:Key="HexValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicMonoLabel}">
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <!-- Component -->
 
             <Style x:Key="TileGrid"
                    TargetType="Grid">
@@ -152,29 +173,8 @@
                 <Setter Property="Spacing" Value="2" />
             </Style>
 
-            <Style x:Key="TileChip"
-                   TargetType="controls:StatusChip">
-                <Setter Property="HorizontalOptions" Value="Start" />
-            </Style>
-
-            <!-- Key sign in -->
-
-            <Style x:Key="HexValueLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicMonoLabel}">
-                <Setter Property="FontSize" Value="12" />
-            </Style>
-
-            <!-- Authenticate -->
-
-            <Style x:Key="ResultValueStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}">

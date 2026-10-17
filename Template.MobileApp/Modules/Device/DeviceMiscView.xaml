@@ -15,38 +15,44 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Card -->
+            <!-- Common -->
+
+            <Style x:Key="SegmentDivider"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <!-- Screen -->
 
             <Style x:Key="ScreenCard"
                    TargetType="controls:InfoCard">
                 <Setter Property="IconColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <!-- Feedback -->
+
             <Style x:Key="FeedbackCard"
                    TargetType="controls:InfoCard">
                 <Setter Property="IconColor" Value="{StaticResource PurpleDefault}" />
             </Style>
+
+            <!-- Light -->
 
             <Style x:Key="LightCard"
                    TargetType="controls:InfoCard">
                 <Setter Property="IconColor" Value="{StaticResource AmberDarken2}" />
             </Style>
 
+            <!-- Speech -->
+
             <Style x:Key="SpeechCard"
                    TargetType="controls:InfoCard">
                 <Setter Property="IconColor" Value="{StaticResource GreenDefault}" />
             </Style>
-
-            <Style x:Key="NotificationCard"
-                   TargetType="controls:InfoCard">
-                <Setter Property="IconColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <!-- Speech -->
 
             <Style x:Key="SpeechRateLabel"
                    TargetType="Label"
@@ -82,7 +88,14 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Segment -->
+            <!-- Notification -->
+
+            <Style x:Key="NotificationCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="IconColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
+            <!-- Component -->
 
             <Style x:Key="SegmentBorder"
                    TargetType="Border">
@@ -97,12 +110,6 @@
                 <Setter Property="ColumnSpacing" Value="0" />
             </Style>
 
-            <Style x:Key="SegmentDivider"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
             <Style x:Key="SegmentButton"
                    TargetType="Button"
                    BasedOn="{StaticResource BasicIconOutlinedButton}">
@@ -115,7 +122,6 @@
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- Content -->
     <ScrollView Style="{StaticResource RootScroll}">
