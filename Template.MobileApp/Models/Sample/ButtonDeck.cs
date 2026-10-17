@@ -55,7 +55,7 @@ public sealed record DeckFolder(
     IReadOnlyList<DeckButton> Buttons);
 
 #pragma warning disable CA1819
-public partial class DeckButtonInfo : ObservableObject
+public abstract partial class DeckButtonInfo : ObservableObject
 {
     public int Row { get; }
 
@@ -85,7 +85,7 @@ public partial class DeckButtonInfo : ObservableObject
 
     public string Parameter { get; }
 
-    public DeckButtonInfo(DeckButton button, byte[] image)
+    protected DeckButtonInfo(DeckButton button, byte[] image)
     {
         Row = button.Row;
         Column = button.Column;
@@ -98,11 +98,21 @@ public partial class DeckButtonInfo : ObservableObject
         Parameter = button.Parameter;
     }
 
-    public virtual void Update()
+    public abstract void Update();
+}
+#pragma warning restore CA1819
+
+public sealed class DefaultDeckButtonInfo : DeckButtonInfo
+{
+    public DefaultDeckButtonInfo(DeckButton button, byte[] image)
+        : base(button, image)
+    {
+    }
+
+    public override void Update()
     {
     }
 }
-#pragma warning restore CA1819
 
 public sealed class CpuDeckButtonInfo : DeckButtonInfo
 {
@@ -210,6 +220,10 @@ public sealed class MuteDeckButtonInfo : DeckButtonInfo
         ImageBytes = muted ? mutedImage : muteImage;
         Label = muted ? "Muted" : "Mute";
     }
+
+    public override void Update()
+    {
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -224,24 +238,33 @@ public sealed class DeckButtonLoader
 
     private readonly DeviceInformation deviceInformation;
 
-    public DeckButtonLoader(IFileSystem fileSystem, IDialog dialog, DeviceInformation deviceInformation)
+    private readonly Func<DeckAction, DeckButtonInfo, ICommand> commandFactory;
+
+    public DeckButtonLoader(
+        IFileSystem fileSystem,
+        IDialog dialog,
+        DeviceInformation deviceInformation,
+        Func<DeckAction, DeckButtonInfo, ICommand> commandFactory)
     {
         this.fileSystem = fileSystem;
         this.dialog = dialog;
         this.deviceInformation = deviceInformation;
+        this.commandFactory = commandFactory;
     }
 
     public async ValueTask<DeckButtonInfo> LoadAsync(DeckButton button)
     {
         var image = await LoadImageAsync(button.Image);
-        return button switch
+        DeckButtonInfo info = button switch
         {
             { Action: DeckAction.ToggleMute } => new MuteDeckButtonInfo(button, image, await LoadImageAsync(DeckSample.MutedImage)),
             { Action: DeckAction.ToggleTimer } => new TimerDeckButtonInfo(button, image, dialog),
             { Parameter: DeckSample.Cpu } => new CpuDeckButtonInfo(button, image, deviceInformation),
             { Parameter: DeckSample.Memory } => new MemoryDeckButtonInfo(button, image, deviceInformation),
-            _ => new DeckButtonInfo(button, image)
+            _ => new DefaultDeckButtonInfo(button, image)
         };
+        info.Command = commandFactory(button.Action, info);
+        return info;
     }
 
     private async ValueTask<byte[]> LoadImageAsync(string image)
