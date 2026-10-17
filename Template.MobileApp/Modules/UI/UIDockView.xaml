@@ -72,6 +72,7 @@
             <controls:DeckButtonTemplateSelector>
                 <controls:DeckButtonTemplateSelector.ImageTemplate>
                     <DataTemplate x:DataType="{x:Type sample:DeckButtonInfo}">
+                        <!-- ReSharper disable Xaml.RedundantAttachedProperty -->
                         <VerticalStackLayout Grid.Row="{Binding Row}"
                                              Grid.Column="{Binding Column}"
                                              Style="{StaticResource DeckButtonLayout}">
@@ -89,10 +90,12 @@
                             <Label Style="{StaticResource DeckButtonLabel}"
                                    Text="{Binding Label}" />
                         </VerticalStackLayout>
+                        <!-- ReSharper restore Xaml.RedundantAttachedProperty -->
                     </DataTemplate>
                 </controls:DeckButtonTemplateSelector.ImageTemplate>
                 <controls:DeckButtonTemplateSelector.TextTemplate>
                     <DataTemplate x:DataType="{x:Type sample:DeckButtonInfo}">
+                        <!-- ReSharper disable Xaml.RedundantAttachedProperty -->
                         <VerticalStackLayout Grid.Row="{Binding Row}"
                                              Grid.Column="{Binding Column}"
                                              Style="{StaticResource DeckButtonLayout}">
@@ -111,6 +114,7 @@
                             <Label Style="{StaticResource DeckButtonLabel}"
                                    Text="{Binding Label}" />
                         </VerticalStackLayout>
+                        <!-- ReSharper restore Xaml.RedundantAttachedProperty -->
                     </DataTemplate>
                 </controls:DeckButtonTemplateSelector.TextTemplate>
             </controls:DeckButtonTemplateSelector>
