@@ -3,7 +3,11 @@ namespace Template.MobileApp.Modules.Basic;
 #pragma warning disable CA1002
 public sealed partial class BasicStyleViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
+
+    // Input button
 
     public List<SelectItem?> Items { get; }
 
@@ -14,8 +18,12 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int? Value3 { get; set; }
 
+    // Last action
+
     [ObservableProperty]
     public partial string LastAction { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand Select1Command { get; }
     public IObserveCommand Select2Command { get; }

@@ -21,6 +21,7 @@
         <ResourceDictionary>
 
             <!-- Shared -->
+
             <Style x:Key="LayoutGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="2" />
@@ -41,13 +42,15 @@
                 <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
             </Style>
 
-            <!-- background -->
+            <!-- Background -->
+
             <Style x:Key="BackgroundImage"
                    TargetType="Image">
                 <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
             <!-- Icon -->
+
             <Style x:Key="Icon"
                    TargetType="controls:SocialIcon">
                 <Setter Property="WidthRequest" Value="48" />
@@ -56,6 +59,7 @@
             </Style>
 
             <!-- Episode -->
+
             <Style x:Key="Episode"
                    TargetType="controls:SocialEpisode">
                 <Setter Property="HeightRequest" Value="24" />
@@ -64,7 +68,8 @@
                 <Setter Property="Color" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <!-- Episode -->
+            <!-- Player -->
+
             <Style x:Key="Player"
                    TargetType="controls:SocialPlayer">
                 <Setter Property="WidthRequest" Value="208" />
@@ -74,12 +79,14 @@
             </Style>
 
             <!-- Counter -->
+
             <Style x:Key="Counter"
                    TargetType="controls:SocialCounter">
                 <Setter Property="HeightRequest" Value="24" />
             </Style>
 
             <!-- Alert -->
+
             <Style x:Key="Alert"
                    TargetType="controls:SocialAlert">
                 <Setter Property="WidthRequest" Value="128" />
@@ -88,6 +95,7 @@
             </Style>
 
             <!-- Notification -->
+
             <Style x:Key="Notification"
                    TargetType="controls:SocialNotification">
                 <Setter Property="WidthRequest" Value="168" />
@@ -97,6 +105,7 @@
             </Style>
 
             <!-- Status -->
+
             <Style x:Key="Status"
                    TargetType="controls:SocialStatus">
                 <Setter Property="HeightRequest" Value="120" />
@@ -107,6 +116,7 @@
             </Style>
 
             <!-- Information -->
+
             <Style x:Key="Information"
                    TargetType="controls:SocialInformation">
                 <Setter Property="HeightRequest" Value="120" />
@@ -114,6 +124,7 @@
             </Style>
 
             <!-- Menu -->
+
             <Style x:Key="Menu"
                    TargetType="controls:SocialMenu">
                 <Setter Property="HeightRequest" Value="48" />
@@ -133,6 +144,7 @@
                Style="{StaticResource BackgroundImage}"
                Source="social_background.png" />
 
+        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource LayoutGrid}"
               RowDefinitions="Auto,Auto"
@@ -167,6 +179,7 @@
                                    Percent="{Binding PlayerExpPercent}" />
         </Grid>
 
+        <!-- Counter -->
         <Grid Grid.Row="1"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,*,*">
@@ -184,6 +197,7 @@
                                     Counter="{Binding CountMoney}" />
         </Grid>
 
+        <!-- Alert -->
         <Grid Grid.Row="2"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="Auto,*">
@@ -195,6 +209,7 @@
             </VerticalStackLayout>
         </Grid>
 
+        <!-- Notification -->
         <Grid Grid.Row="3"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,Auto">
@@ -215,6 +230,7 @@
             </VerticalStackLayout>
         </Grid>
 
+        <!-- Status and information -->
         <Grid Grid.Row="5"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,*">

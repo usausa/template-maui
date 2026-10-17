@@ -24,6 +24,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Open}"
@@ -73,6 +75,8 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Summary -->
+
             <Style x:Key="SummaryGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,8" />
@@ -94,6 +98,8 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
             </Style>
 
+            <!-- Message -->
+
             <Style x:Key="GridMessageLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="12,6" />
@@ -102,6 +108,8 @@
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
+
+            <!-- Action -->
 
             <Style x:Key="ActionGrid"
                    TargetType="Grid">
@@ -118,6 +126,7 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,*,Auto,Auto">
 
+        <!-- Summary -->
         <Grid Grid.Row="0"
               Style="{StaticResource SummaryGrid}"
               ColumnDefinitions="Auto,Auto,*,Auto,Auto">
@@ -135,6 +144,7 @@
                    Text="{Binding SelectedCount, StringFormat='{0:N0}'}" />
         </Grid>
 
+        <!-- Data grid -->
         <clam:ClamGridView Grid.Row="1"
                            ItemsSource="{Binding Rows}"
                            SelectionMode="MultipleToggle"
@@ -199,10 +209,12 @@
                              Format="MM/dd HH:mm" />
         </clam:ClamGridView>
 
+        <!-- Message -->
         <Label Grid.Row="2"
                Style="{StaticResource GridMessageLabel}"
                Text="{Binding Message}" />
 
+        <!-- Action -->
         <Grid Grid.Row="3"
               Style="{StaticResource ActionGrid}"
               ColumnDefinitions="*,*">

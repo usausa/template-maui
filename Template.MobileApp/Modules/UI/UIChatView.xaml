@@ -20,13 +20,20 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="ChatPageGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <!-- Converter -->
+
             <converters:ChatTimeConverter x:Key="ChatTimeConverter" />
             <converters:CollectionNotEmptyConverter x:Key="CollectionNotEmptyConverter" />
+
+            <!-- Color -->
+
             <Color x:Key="BubbleSend">#4CAF50</Color>
             <Color x:Key="BubbleSendText">#FFFFFF</Color>
             <Color x:Key="BubbleReceive">#F0F0F0</Color>
@@ -38,6 +45,8 @@
             <Color x:Key="InputBorder">#E0E0E0</Color>
             <Color x:Key="ReactionBackground">#FFFFFF</Color>
             <Color x:Key="ReactionBorder">#D0D0D0</Color>
+
+            <!-- Message -->
 
             <x:Double x:Key="BubbleMaxWidth">280</x:Double>
 
@@ -91,6 +100,8 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource MetaText}" />
             </Style>
+
+            <!-- Message and input -->
 
             <Style x:Key="AvatarBorder"
                    TargetType="Border">
@@ -241,6 +252,8 @@
                 <Setter Property="Color" Value="{StaticResource InputBorder}" />
             </Style>
 
+            <!-- Input -->
+
             <Style x:Key="InputBar"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8" />
@@ -257,6 +270,8 @@
                 <Setter Property="TextColor" Value="{StaticResource BubbleReceiveText}" />
             </Style>
 
+            <!-- Jump to latest -->
+
             <Style x:Key="JumpToLatestButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="16,0" />
@@ -271,6 +286,8 @@
                 <Setter Property="Scale" Value="0" />
             </Style>
 
+            <!-- Stamp tray -->
+
             <Style x:Key="StampTray"
                    TargetType="FlexLayout">
                 <Setter Property="Wrap" Value="Wrap" />
@@ -279,6 +296,8 @@
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="Padding" Value="8" />
             </Style>
+
+            <!-- Reaction band -->
 
             <Style x:Key="ReactionBand"
                    TargetType="Border">
@@ -301,6 +320,8 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
+            <!-- Stamp tray -->
+
             <Style x:Key="StampTrayButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="72" />
@@ -312,6 +333,8 @@
                 <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="FlexLayout.Basis" Value="25%" />
             </Style>
+
+            <!-- Template -->
 
             <!-- Reaction pill -->
             <DataTemplate x:Key="ReactionTemplate"
@@ -490,6 +513,7 @@
     <Grid Style="{StaticResource ChatPageGrid}"
           RowDefinitions="*,1,Auto,Auto">
 
+        <!-- Message -->
         <CollectionView Grid.Row="0"
                         behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
@@ -501,6 +525,7 @@
             </CollectionView.Behaviors>
         </CollectionView>
 
+        <!-- Jump to latest -->
         <Button x:Name="JumpToLatest"
                 Grid.Row="0"
                 Style="{StaticResource JumpToLatestButton}"
@@ -510,6 +535,7 @@
         <BoxView Grid.Row="1"
                  Style="{StaticResource InputDividerBoxView}" />
 
+        <!-- Input -->
         <Grid Grid.Row="2"
               Style="{StaticResource InputBar}"
               ColumnDefinitions="Auto,*,Auto">
@@ -547,6 +573,7 @@
             </ImageButton>
         </Grid>
 
+        <!-- Stamp tray -->
         <ContentView Grid.Row="3"
                      behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}"
                      behaviors:LazyViewOption.Load="{Binding IsStampTrayVisible}"
@@ -574,6 +601,7 @@
                 </DataTemplate>
             </behaviors:LazyViewOption.Template>
         </ContentView>
+
     </Grid>
 
 </ContentView>

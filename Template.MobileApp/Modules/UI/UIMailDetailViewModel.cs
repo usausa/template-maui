@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UIMailDetailViewModel : AppViewModelBase
 {
+    // Property
+
     [Scope]
     [ObservableProperty]
     public partial UIMailContext Context { get; set; } = default!;
+
+    // Command
 
     public IObserveCommand StarCommand { get; }
 

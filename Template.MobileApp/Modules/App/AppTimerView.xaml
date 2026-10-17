@@ -38,6 +38,7 @@
             <Color x:Key="TimerUnlitColor">#1AFFFFFF</Color>
 
             <!-- Converter -->
+
             <converters:ClockTextConverter x:Key="MainClockConverter"
                                            Part="Main" />
             <converters:ClockTextConverter x:Key="FractionClockConverter"
@@ -54,6 +55,7 @@
                                            Part="Main" RoundUp="True" Unlit="True" />
 
             <!-- Page -->
+
             <Style x:Key="TimerRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
@@ -66,6 +68,8 @@
                     </LinearGradientBrush>
                 </Setter>
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="TopBarGrid"
                    TargetType="Grid">
@@ -93,12 +97,15 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
+            <!-- Page -->
+
             <Style x:Key="ModeContentGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="16" />
             </Style>
 
             <!-- Mode -->
+
             <Style x:Key="ModePillBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="4" />
@@ -120,6 +127,7 @@
             </Style>
 
             <!-- Dial -->
+
             <Style x:Key="DialGrid"
                    TargetType="Grid">
                 <Setter Property="WidthRequest" Value="300" />
@@ -204,6 +212,7 @@
             </Style>
 
             <!-- Action -->
+
             <Style x:Key="ActionGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="24,0" />
@@ -260,6 +269,7 @@
             </Style>
 
             <!-- Lap -->
+
             <Style x:Key="LapCollection"
                    TargetType="CollectionView">
                 <Setter Property="HeightRequest" Value="200" />
@@ -324,6 +334,7 @@
             </Style>
 
             <!-- Chip -->
+
             <Style x:Key="ChipFlex"
                    TargetType="FlexLayout">
                 <Setter Property="Wrap" Value="Wrap" />
@@ -358,6 +369,7 @@
     <Grid Style="{StaticResource TimerRootGrid}"
           RowDefinitions="Auto,Auto,*">
 
+        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*">

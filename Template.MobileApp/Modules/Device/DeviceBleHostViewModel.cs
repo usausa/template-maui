@@ -7,11 +7,15 @@ using Template.MobileApp.Providers;
 
 public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly IBleHostingManager hostingManager;
 
     private readonly UserCharacteristic userCharacteristic;
+
+    // Property
 
     [ObservableProperty]
     public partial string UserId { get; set; }

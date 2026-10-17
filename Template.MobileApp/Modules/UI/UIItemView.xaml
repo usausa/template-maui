@@ -20,6 +20,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <s:BoolToTextConverter x:Key="FavoriteGlyphConverter"
                                    TrueValue="{x:Static fonts:MaterialIcons.Favorite}"
                                    FalseValue="{x:Static fonts:MaterialIcons.Favorite_outline}" />
@@ -28,11 +30,14 @@
                                    TrueValue="✓ カートに追加しました"
                                    FalseValue="カートに入れる" />
 
-            <!-- Root -->
+            <!-- Page -->
+
             <Style x:Key="ItemDetailGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
+
+            <!-- Product image -->
 
             <Style x:Key="PlateEllipse"
                    TargetType="Ellipse">
@@ -65,6 +70,8 @@
                 <Setter Property="Margin" Value="20" />
                 <Setter Property="Aspect" Value="AspectFit" />
             </Style>
+
+            <!-- Floating button -->
 
             <!-- Floating buttons (stay over the scroll) -->
             <Style x:Key="TopButtonsGrid"
@@ -130,6 +137,7 @@
             </Style>
 
             <!-- Sheet -->
+
             <Style x:Key="SheetBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="20,24,20,20" />
@@ -142,6 +150,8 @@
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="12" />
             </Style>
+
+            <!-- Category -->
 
             <Style x:Key="KindRowGrid"
                    TargetType="Grid">
@@ -169,6 +179,8 @@
                 <Setter Property="FontSize" Value="22" />
             </Style>
 
+            <!-- Title -->
+
             <Style x:Key="ItemTitleRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -190,6 +202,7 @@
             </Style>
 
             <!-- Rating -->
+
             <Style x:Key="RatingRowStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="8" />
@@ -222,6 +235,7 @@
             </Style>
 
             <!-- Variant chips -->
+
             <Style x:Key="VariantStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="6" />
@@ -257,6 +271,7 @@
             </Style>
 
             <!-- Accordion -->
+
             <Style x:Key="DetailAccordion"
                    TargetType="cmc:AccordionView">
                 <Setter Property="ExpandMode" Value="MultipleOrNone" />
@@ -323,6 +338,7 @@
             </Style>
 
             <!-- Footer -->
+
             <Style x:Key="FooterBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="16,10,16,14" />
@@ -395,6 +411,7 @@
         <ScrollView Grid.Row="0">
             <Grid RowDefinitions="300,40,Auto">
 
+                <!-- Product image -->
                 <Grid Grid.Row="0" Grid.RowSpan="2">
                     <Ellipse Style="{StaticResource PlateEllipse}"
                              behaviors:AnimationOption.EnterAnimation="Pop" />
@@ -406,10 +423,12 @@
                     </Border>
                 </Grid>
 
+                <!-- Sheet -->
                 <Border Grid.Row="1" Grid.RowSpan="2"
                         Style="{StaticResource SheetBorder}">
                     <VerticalStackLayout Style="{StaticResource SheetStack}">
 
+                        <!-- Category -->
                         <Grid Style="{StaticResource KindRowGrid}"
                               ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
@@ -431,6 +450,7 @@
                             </Button>
                         </Grid>
 
+                        <!-- Title -->
                         <Grid Style="{StaticResource ItemTitleRowGrid}"
                               ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
@@ -441,6 +461,7 @@
                                    Text="{Binding Context.Selected.Product.Price, StringFormat='¥{0:N0}'}" />
                         </Grid>
 
+                        <!-- Rating -->
                         <HorizontalStackLayout Style="{StaticResource RatingRowStack}">
                             <mct:RatingView Style="{StaticResource ProductRating}"
                                             Rating="{Binding Context.Selected.Product.Rating}" />
@@ -450,6 +471,7 @@
                                    Text="{Binding Context.Selected.Product.ReviewCount, StringFormat='({0} 件のレビュー)'}" />
                         </HorizontalStackLayout>
 
+                        <!-- Variant chips -->
                         <VerticalStackLayout Style="{StaticResource VariantStack}"
                                              IsVisible="{Binding Context.Selected.Product.VariantName, Converter={StaticResource NotEmptyConverter}}">
                             <Label Style="{StaticResource VariantCaption}"
@@ -459,6 +481,7 @@
                                            SelectedItem="{Binding SelectedVariant}" />
                         </VerticalStackLayout>
 
+                        <!-- Accordion -->
                         <cmc:AccordionView Style="{StaticResource DetailAccordion}">
                             <cmc:AccordionItem IsExpanded="True">
                                 <cmc:AccordionItem.Header>
@@ -515,6 +538,7 @@
             </Grid>
         </ScrollView>
 
+        <!-- Floating button -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopButtonsGrid}"
               ColumnDefinitions="Auto,*,Auto">
@@ -536,6 +560,7 @@
             </Grid>
         </Grid>
 
+        <!-- Footer -->
         <Border Grid.Row="1"
                 Style="{StaticResource FooterBorder}">
             <Grid Style="{StaticResource FooterGrid}"

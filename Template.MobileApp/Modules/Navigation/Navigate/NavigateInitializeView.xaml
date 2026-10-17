@@ -16,6 +16,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Skeleton -->
+
             <Style x:Key="SkeletonStack"
                    TargetType="VerticalStackLayout"
                    BasedOn="{StaticResource BasicEmptyStack}">
@@ -47,6 +49,7 @@
     <!-- Content -->
     <Grid Style="{StaticResource RootGrid}">
 
+        <!-- Skeleton -->
         <VerticalStackLayout Style="{StaticResource SkeletonStack}"
                              IsVisible="{Binding Initialized, Converter={StaticResource ReverseConverter}}">
             <Border Style="{StaticResource BasicIconCircleBorder}"
@@ -61,6 +64,7 @@
             <BoxView Style="{StaticResource SkeletonShortBar}" />
         </VerticalStackLayout>
 
+        <!-- Completed -->
         <Border Style="{StaticResource CardCenterBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding Initialized}"
                 IsVisible="{Binding Initialized}">

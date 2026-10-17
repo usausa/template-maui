@@ -21,6 +21,7 @@
         <ResourceDictionary>
 
             <!-- Color -->
+
             <Color x:Key="TodoAccentColor">#059669</Color>
             <Color x:Key="TodoAccentSoftColor">#D1FAE5</Color>
             <Color x:Key="TodoBackgroundColor">#F4F5FA</Color>
@@ -33,11 +34,13 @@
             <Color x:Key="TodoDangerLineColor">#FCA5A5</Color>
 
             <!-- Converter -->
+
             <s:BoolToTextConverter x:Key="TitleConverter"
                                    TrueValue="新しいタスク"
                                    FalseValue="タスクを編集" />
 
             <!-- Page -->
+
             <Style x:Key="EditRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
@@ -45,6 +48,7 @@
             </Style>
 
             <!-- Bar -->
+
             <Style x:Key="EditBarGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8,8,16,8" />
@@ -94,7 +98,8 @@
                 <Setter Property="Color" Value="{StaticResource TodoChipLineColor}" />
             </Style>
 
-            <!-- Content -->
+            <!-- Card -->
+
             <Style x:Key="EditContentStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="16,16,16,32" />
@@ -155,6 +160,7 @@
             </Style>
 
             <!-- Due -->
+
             <Style x:Key="ChipGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="0,8,0,0" />
@@ -186,6 +192,7 @@
             </Style>
 
             <!-- Switch -->
+
             <Style x:Key="SwitchRowGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="0,6" />
@@ -212,6 +219,7 @@
             </Style>
 
             <!-- Footer -->
+
             <Style x:Key="InfoLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -239,6 +247,7 @@
     <Grid Style="{StaticResource EditRootGrid}"
           RowDefinitions="Auto,Auto,*">
 
+        <!-- Bar -->
         <Grid Grid.Row="0"
               Style="{StaticResource EditBarGrid}"
               ColumnDefinitions="Auto,*,Auto">
@@ -261,6 +270,7 @@
         <ScrollView Grid.Row="2">
             <VerticalStackLayout Style="{StaticResource EditContentStack}">
 
+                <!-- Title -->
                 <Border Style="{StaticResource EditCardBorder}">
                     <VerticalStackLayout Style="{StaticResource EditCardStack}">
                         <Entry Style="{StaticResource TitleEntry}"
@@ -278,6 +288,7 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Due -->
                 <Label Style="{StaticResource SectionLabel}"
                        Text="期限" />
                 <Border Style="{StaticResource EditCardBorder}">
@@ -360,6 +371,7 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Switch -->
                 <Border Style="{StaticResource EditCardBorder}">
                     <VerticalStackLayout>
                         <Grid Style="{StaticResource SwitchRowGrid}"
@@ -392,6 +404,7 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Footer -->
                 <Label Style="{StaticResource InfoLabel}"
                        IsVisible="{Binding Context.Draft.IsNew, Converter={StaticResource ReverseConverter}}">
                     <Label.Text>

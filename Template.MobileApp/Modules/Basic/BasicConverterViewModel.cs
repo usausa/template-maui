@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Basic;
 
 public sealed partial class BasicConverterViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial bool ReverseChecked { get; set; }
 
@@ -12,6 +14,8 @@ public sealed partial class BasicConverterViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string Text { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand SwitchTextCommand { get; }
 

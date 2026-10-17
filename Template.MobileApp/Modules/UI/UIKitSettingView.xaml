@@ -18,10 +18,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Color -->
+
             <!-- ReSharper disable Xaml.RedundantResource -->
             <Color x:Key="SfAccordionFocusedHeaderBackground">Transparent</Color>
             <Color x:Key="SfAccordionFocusedItemStroke">Transparent</Color>
             <!-- ReSharper restore Xaml.RedundantResource -->
+
+            <!-- Page -->
 
             <Style x:Key="KitSettingScroll"
                    TargetType="ScrollView">
@@ -32,6 +36,8 @@
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,0,0,16" />
             </Style>
+
+            <!-- Section -->
 
             <Style x:Key="KitSettingSectionLabel"
                    TargetType="Label">
@@ -48,6 +54,8 @@
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
+
+            <!-- Row -->
 
             <Style x:Key="KitSettingRowGrid"
                    TargetType="Grid">
@@ -85,6 +93,8 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
+            <!-- Other -->
+
             <Style x:Key="LogoutIcon"
                    TargetType="Label"
                    BasedOn="{StaticResource RowIcon}">
@@ -97,6 +107,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
+
+            <!-- Display -->
 
             <Style x:Key="TextSizeStack"
                    TargetType="VerticalStackLayout">
@@ -122,6 +134,8 @@
                    TargetType="controls:ColorPicker">
                 <Setter Property="Margin" Value="14,0,14,14" />
             </Style>
+
+            <!-- FAQ -->
 
             <Style x:Key="FaqAccordion"
                    TargetType="cmc:AccordionView">
@@ -165,6 +179,7 @@
     <ScrollView Style="{StaticResource KitSettingScroll}">
         <VerticalStackLayout Style="{StaticResource KitSettingStack}">
 
+            <!-- Account -->
             <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                    Text="アカウント" />
@@ -193,6 +208,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Preference -->
             <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                    behaviors:AnimationOption.EnterDelay="160"
@@ -223,6 +239,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Display -->
             <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                    behaviors:AnimationOption.EnterDelay="320"
@@ -285,6 +302,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- FAQ -->
             <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                    behaviors:AnimationOption.EnterDelay="480"
@@ -326,6 +344,7 @@
                 </cmc:AccordionView>
             </Border>
 
+            <!-- Other -->
             <Label Style="{StaticResource KitSettingSectionLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                    behaviors:AnimationOption.EnterDelay="640"

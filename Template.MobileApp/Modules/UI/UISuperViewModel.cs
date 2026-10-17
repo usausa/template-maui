@@ -2,7 +2,11 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UISuperViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDispatcherTimer timer;
+
+    // Property
 
     [ObservableProperty]
     public partial int BannerPosition { get; set; }
@@ -16,6 +20,8 @@ public sealed partial class UISuperViewModel : AppViewModelBase
     public IReadOnlyList<SuperCoupon> Coupons { get; } = SuperSample.LoadCoupons();
 
     public IReadOnlyList<SuperShop> Shops { get; } = SuperSample.LoadShops();
+
+    // Command
 
     public IObserveCommand AcquireCommand { get; }
 

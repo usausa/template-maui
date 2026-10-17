@@ -18,14 +18,20 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:RelativeDayConverter x:Key="RelativeDayConverter" />
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
+
+            <!-- List -->
 
             <Style x:Key="NotifyList"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Group header -->
 
             <Style x:Key="GroupHeaderLabel"
                    TargetType="Label">
@@ -35,6 +41,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
+
+            <!-- Swipe -->
 
             <Style x:Key="ReadSwipeItem"
                    TargetType="SwipeItemView">
@@ -67,6 +75,8 @@
                    BasedOn="{StaticResource SwipeIcon}">
                 <Setter Property="TextColor" Value="{StaticResource RedDarken1}" />
             </Style>
+
+            <!-- Row -->
 
             <Style x:Key="RowStack"
                    TargetType="VerticalStackLayout">
@@ -141,6 +151,8 @@
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
+
+            <!-- Empty -->
 
             <Style x:Key="EmptyLabel"
                    TargetType="Label">

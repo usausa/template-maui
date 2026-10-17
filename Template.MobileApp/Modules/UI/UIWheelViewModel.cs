@@ -14,8 +14,6 @@ public sealed record UIWheelResult(
 #pragma warning disable CA5394
 public sealed partial class UIWheelViewModel : AppViewModelBase
 {
-    // Field
-
     private const int MinItems = 2;
 
     private const int MaxItems = 12;
@@ -23,6 +21,8 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     private const int HistoryCount = 5;
 
     private const int MaxLabelLength = 8;
+
+    // Field
 
     private static readonly WheelItem[] MenuItems =
     [

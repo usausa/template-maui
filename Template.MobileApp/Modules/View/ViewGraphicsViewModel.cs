@@ -5,7 +5,11 @@ using Template.MobileApp.Graphics.Drawing;
 #pragma warning disable CA5394
 public sealed partial class ViewGraphicsViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly Random random = new();
+
+    // Property
 
     public ShapeDrawing Drawing { get; } = new();
 
@@ -33,6 +37,8 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool CountdownDone { get; set; }
 
+    // Command
+
     public IObserveCommand AddLineCommand { get; }
     public IObserveCommand AddCircleCommand { get; }
     public IObserveCommand AddRectCommand { get; }
@@ -59,21 +65,21 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
 
         AddLineCommand = MakeDelegateCommand(() => AddShape(new Line
         {
-            Color = RandomColor(),
+            Color = NextRandomColor(),
             Width = 2,
-            Point1 = RandomPoint(),
-            Point2 = RandomPoint()
+            Point1 = NextRandomPoint(),
+            Point2 = NextRandomPoint()
         }));
         AddCircleCommand = MakeDelegateCommand(() => AddShape(new Circle
         {
-            Color = RandomColor(),
-            Center = RandomPoint(),
+            Color = NextRandomColor(),
+            Center = NextRandomPoint(),
             Radius = (float)((random.NextDouble() * 15) + 5)
         }));
         AddRectCommand = MakeDelegateCommand(() => AddShape(new Rectangle
         {
-            Color = RandomColor(),
-            Rect = new RectF(RandomPoint(), new SizeF((float)((random.NextDouble() * 20) + 10), (float)((random.NextDouble() * 20) + 10)))
+            Color = NextRandomColor(),
+            Rect = new RectF(NextRandomPoint(), new SizeF((float)((random.NextDouble() * 20) + 10), (float)((random.NextDouble() * 20) + 10)))
         }));
         ClearCommand = MakeDelegateCommand(() =>
         {
@@ -141,7 +147,7 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
         ShapeCount = Drawing.Shapes.Count;
     }
 
-    private PointF RandomPoint() => new((float)(random.NextDouble() * 100), (float)(random.NextDouble() * 100));
+    private PointF NextRandomPoint() => new((float)(random.NextDouble() * 100), (float)(random.NextDouble() * 100));
 
-    private Color RandomColor() => Color.FromHsla(random.NextDouble(), 0.7d, 0.5d);
+    private Color NextRandomColor() => Color.FromHsla(random.NextDouble(), 0.7d, 0.5d);
 }

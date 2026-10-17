@@ -2,8 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UIPosViewModel : AppViewModelBase
 {
-    // Field
-
     private const int UnitPrice = 296;
 
     // Order

@@ -8,6 +8,8 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
 {
     private const int NotificationId = 100;
 
+    // Field
+
     private static readonly TimeSpan TickInterval = TimeSpan.FromMilliseconds(50);
 
     private static readonly TimeSpan FinishVibration = TimeSpan.FromSeconds(1);
@@ -33,6 +35,8 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     private readonly TimerCountdown countdown = new();
 
     private bool visible;
+
+    // Mode
 
     [ObservableProperty]
     public partial TimerMode Mode { get; set; }
@@ -79,6 +83,8 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial DateTime? EndTime { get; set; }
 
+    // Command
+
     public IObserveCommand BackCommand { get; }
     public IObserveCommand ModeCommand { get; }
 
@@ -117,12 +123,12 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
 
         ticker = dispatcher.CreateTimer();
         ticker.Interval = TickInterval;
-        Disposables.Add(ticker.TickAsObservable().Subscribe(_ => Refresh()));
+        Disposables.Add(ticker.TickAsObservable().Subscribe(_ => UpdateTime()));
         Disposables.Add(new DelegateDisposable(ticker.Stop));
 
         Disposables.Add(session.AsObservable(nameof(Session.IsForeground)).Subscribe(_ =>
         {
-            Refresh();
+            UpdateTime();
             UpdateTicker();
         }));
 
@@ -151,7 +157,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         {
             Load();
             Laps.Rebuild(stopwatch.GetLaps());
-            Refresh();
+            UpdateTime();
         }
 
         return Task.CompletedTask;
@@ -194,7 +200,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         if (stopwatch.Lap(timeProvider.GetUtcNow()) is { } lap)
         {
             Laps.AddLatest(lap);
-            Refresh();
+            UpdateTime();
             Save();
         }
     }
@@ -251,7 +257,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     private void ApplyStopwatch()
     {
         StopwatchState = stopwatch.State;
-        Refresh();
+        UpdateTime();
         UpdateTicker();
         Save();
     }
@@ -261,12 +267,12 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         CountdownState = countdown.State;
         Duration = countdown.Duration;
         DurationMinutes = (int)countdown.Duration.TotalMinutes;
-        Refresh();
+        UpdateTime();
         UpdateTicker();
         Save();
     }
 
-    private void Refresh()
+    private void UpdateTime()
     {
         var now = timeProvider.GetUtcNow();
 

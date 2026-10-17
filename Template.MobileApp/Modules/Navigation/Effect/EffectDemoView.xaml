@@ -16,11 +16,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="EffectRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
                 <Setter Property="BackgroundColor" Value="{StaticResource IndigoLighten5}" />
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="EffectIconBorder"
                    TargetType="Border"
@@ -44,6 +48,7 @@
         <Border Style="{StaticResource CardCenterBorder}">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
+                <!-- Header -->
                 <Border Style="{StaticResource EffectIconBorder}">
                     <Label Style="{StaticResource EffectIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Auto_awesome}" />
@@ -52,6 +57,7 @@
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Effect Demo" />
 
+                <!-- Detail -->
                 <Grid Style="{StaticResource CardInfoGrid}"
                       RowDefinitions="Auto,Auto,Auto"
                       ColumnDefinitions="2*,3*">
@@ -77,6 +83,7 @@
 
                 <BoxView Style="{StaticResource CardDivider}" />
 
+                <!-- Action -->
                 <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"

@@ -16,11 +16,15 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     private const int BalanceDays = 30;
 
+    // Field
+
     private readonly IDispatcherTimer timer;
 
     private readonly DateTime now = DateTime.Now;
 
     private readonly MoneyBook book;
+
+    // Bottom select
 
     [ObservableProperty]
     public partial MoneyPage Selected { get; set; }
@@ -30,6 +34,8 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool HasAccountAlert { get; set; }
+
+    // Balance
 
     [ObservableProperty]
     public partial double Balance { get; set; }
@@ -44,6 +50,8 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         LineHighColor = Color.FromArgb("#E91E63"),
         ValueFormat = "{0:N0} 円"
     };
+
+    // Expense
 
     public IReadOnlyList<Selectable<MoneyMonth>> Months { get; }
 
@@ -66,7 +74,11 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         ValueFormat = "{0:N0} 円"
     };
 
+    // Transaction
+
     public IReadOnlyList<MoneyDay> RecentDays { get; }
+
+    // Search
 
     [ObservableProperty]
     public partial string SearchText { get; set; } = string.Empty;
@@ -74,8 +86,12 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<MoneyDay> SearchResults { get; set; } = [];
 
+    // Notification
+
     [ObservableProperty]
     public partial IReadOnlyList<MoneyNotice> Notices { get; set; } = [];
+
+    // Payment
 
     [ObservableProperty]
     public partial string PaymentCode { get; set; } = string.Empty;
@@ -85,6 +101,8 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial double PaymentProgress { get; set; }
+
+    // Sheet
 
     [ObservableProperty]
     public partial bool IsPaymentOpen { get; set; }
@@ -97,6 +115,8 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsCategoryOpen { get; set; }
+
+    // Command
 
     public ICommand PageCommand { get; }
 

@@ -8,11 +8,15 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
 
     private const int MaxSortKeys = 3;
 
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly List<VisitCard> source = [];
 
     private readonly List<VisitSortKey> activeKeys = [];
+
+    // Property
 
     public ObservableCollection<VisitCard> Cards { get; } = [];
 
@@ -52,6 +56,8 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string SortText { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand ToggleSelectCommand { get; }
     public IObserveCommand ToggleExpandCommand { get; }

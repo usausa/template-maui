@@ -17,6 +17,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- QR code -->
+
             <Style x:Key="QrPlaceholderIconLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicIconCircleLabel}">
@@ -35,12 +37,16 @@
                 <Setter Property="Spacing" Value="8" />
             </Style>
 
+            <!-- Page -->
+
             <Style x:Key="QrLayoutGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="RowSpacing" Value="16" />
             </Style>
+
+            <!-- QR code -->
 
             <Style x:Key="QrFrameBorder"
                    TargetType="Border">
@@ -73,6 +79,7 @@
     <Grid Style="{StaticResource QrLayoutGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- QR code -->
         <Border Grid.Row="0"
                 Style="{StaticResource QrCardBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -96,6 +103,7 @@
             </VerticalStackLayout>
         </Border>
 
+        <!-- Input -->
         <Border Grid.Row="1"
                 Style="{StaticResource QrCardBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">

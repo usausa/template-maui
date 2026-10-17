@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed class UIHomeViewModel : AppViewModelBase
 {
+    // Property
+
     public SmartHome Home { get; } = new(HomeSample.LoadRooms());
 
     public IReadOnlyList<Selectable<HomeRoom>> Rooms { get; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand RoomCommand { get; }

@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed class UIHabitViewModel : AppViewModelBase
 {
+    // Property
+
     public DateTime Today { get; } = DateTime.Today;
 
     public HabitTracker Tracker { get; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand StepCommand { get; }

@@ -17,6 +17,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
+            <!-- Message -->
+
             <Style x:Key="MessageCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12,6" />
@@ -94,6 +96,8 @@
                 <Setter Property="Margin" Value="0,12,0,4" />
             </Style>
 
+            <!-- Input -->
+
             <Style x:Key="InputBarGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,8" />
@@ -121,6 +125,7 @@
             </Style>
 
             <!-- Send -->
+
             <Style x:Key="SendButton"
                    TargetType="Button"
                    BasedOn="{StaticResource InputBarButton}">
@@ -143,6 +148,7 @@
             </Style>
 
             <!-- Cancel -->
+
             <Style x:Key="CancelButton"
                    TargetType="Button"
                    BasedOn="{StaticResource InputBarButton}">
@@ -170,6 +176,7 @@
             </Style>
 
             <!-- Assistant -->
+
             <DataTemplate x:Key="AssistantTemplate"
                           x:DataType="{x:Type sample:AiChatMessage}">
                 <Border Style="{StaticResource MessageCardBorder}">
@@ -201,6 +208,7 @@
             </DataTemplate>
 
             <!-- User -->
+
             <DataTemplate x:Key="UserTemplate"
                           x:DataType="{x:Type sample:AiChatMessage}">
                 <Border Style="{StaticResource UserCardBorder}">
@@ -222,15 +230,18 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <!-- Content -->
     <Grid Style="{StaticResource ChatRootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Message list -->
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
                         ItemTemplate="{StaticResource MessageTemplateSelector}"
                         ItemsUpdatingScrollMode="KeepLastItemInView"
                         VerticalScrollBarVisibility="Default" />
 
+        <!-- Input bar -->
         <Grid Grid.Row="1"
               Style="{StaticResource InputBarGrid}"
               ColumnDefinitions="*,Auto,Auto">

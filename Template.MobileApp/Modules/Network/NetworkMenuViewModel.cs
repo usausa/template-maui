@@ -7,9 +7,13 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
 {
     private const string ApiNotConfigured = "API end point is not configured.";
 
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly Settings settings;
+
+    // Command
 
     public IObserveCommand ForwardCommand { get; }
     public IObserveCommand ServerTimeCommand { get; }

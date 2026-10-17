@@ -6,9 +6,13 @@ using Template.MobileApp.Components;
 
 public sealed partial class DeviceBiometricViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IBiometricAuthenticator authenticator;
 
     private readonly BiometricSignInServer server = new();
+
+    // Availability
 
     [ObservableProperty]
     public partial BiometricAvailability BiometricStatus { get; set; }
@@ -22,11 +26,15 @@ public sealed partial class DeviceBiometricViewModel : AppViewModelBase
     [ObservableProperty]
     public partial TimeSpan? SinceLastAuthentication { get; set; }
 
+    // Authenticate
+
     [ObservableProperty]
     public partial BiometricResult? Result { get; set; }
 
     [ObservableProperty]
     public partial BiometricAuthenticationType AuthenticationType { get; set; }
+
+    // Key sign in
 
     [ObservableProperty]
     public partial BiometricKeyState KeyState { get; set; }
@@ -54,6 +62,8 @@ public sealed partial class DeviceBiometricViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool? ReplayVerified { get; set; }
+
+    // Command
 
     public IObserveCommand EnrollCommand { get; }
 

@@ -135,7 +135,7 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
     private void NewGame()
     {
         game.NewGame(Level);
-        Refresh([]);
+        UpdateBoard([]);
     }
 
     private void Tap(MinesweeperCell cell)
@@ -156,7 +156,7 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
         if (move.Type == MinesweeperMoveType.Flagged)
         {
             vibration.Vibrate(FlagVibration);
-            Refresh([]);
+            UpdateBoard([]);
         }
         else if (move.Type == MinesweeperMoveType.Opened)
         {
@@ -169,7 +169,7 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
                 store.Save(game.Export(), AppJsonContext.Default.MinesweeperSnapshot);
             }
 
-            Refresh(move.Revealed);
+            UpdateBoard(move.Revealed);
         }
     }
 
@@ -181,7 +181,7 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
         }
     }
 
-    private void Refresh(IReadOnlyList<MinesweeperCell> revealed)
+    private void UpdateBoard(IReadOnlyList<MinesweeperCell> revealed)
     {
         Board = new MinesweeperFrame(game, revealed);
         State = game.State;

@@ -18,6 +18,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:RuntimeTextConverter x:Key="RuntimeTextConverter" />
 
             <s:MapToTextConverter x:Key="GenreNameConverter">
@@ -69,6 +71,8 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Top bar -->
+
             <Style x:Key="TopIconButton"
                    TargetType="Button"
                    BasedOn="{StaticResource HeaderIconButton}">
@@ -76,10 +80,14 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
+            <!-- Page -->
+
             <Style x:Key="StreamScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
+
+            <!-- Top bar -->
 
             <Style x:Key="TopBar"
                    TargetType="Grid">
@@ -92,6 +100,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource RedAccent3}" />
             </Style>
+
+            <!-- Featured -->
 
             <Style x:Key="FeaturedCarousel"
                    TargetType="CarouselView">
@@ -229,6 +239,8 @@
                 </Setter>
             </Style>
 
+            <!-- Section header -->
+
             <Style x:Key="SectionHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="16,16,16,8" />
@@ -248,10 +260,14 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Shelf -->
+
             <Style x:Key="RowCollection"
                    TargetType="CollectionView">
                 <Setter Property="HeightRequest" Value="170" />
             </Style>
+
+            <!-- Continue watching -->
 
             <Style x:Key="ContinueCollection"
                    TargetType="CollectionView">
@@ -303,6 +319,8 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
+
+            <!-- Poster -->
 
             <Style x:Key="PosterBorder"
                    TargetType="Border">
@@ -360,6 +378,7 @@
     <ScrollView Style="{StaticResource StreamScroll}">
         <VerticalStackLayout>
 
+            <!-- Top bar -->
             <Grid Style="{StaticResource TopBar}"
                   ColumnDefinitions="*,Auto,Auto"
                   behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -376,6 +395,7 @@
                         Text="{x:Static fonts:MaterialIcons.Notifications}" />
             </Grid>
 
+            <!-- Featured -->
             <CarouselView Style="{StaticResource FeaturedCarousel}"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
                           behaviors:AnimationOption.EnterDelay="80"
@@ -453,6 +473,7 @@
                 </IndicatorView.IndicatorTemplate>
             </IndicatorView>
 
+            <!-- Continue watching -->
             <VerticalStackLayout behaviors:AnimationOption.EnterAnimation="FadeUp"
                                  behaviors:AnimationOption.EnterDelay="160">
                 <Grid Style="{StaticResource SectionHeaderGrid}">
@@ -489,6 +510,7 @@
                 </CollectionView>
             </VerticalStackLayout>
 
+            <!-- Shelf -->
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="module:UIStreamSection">

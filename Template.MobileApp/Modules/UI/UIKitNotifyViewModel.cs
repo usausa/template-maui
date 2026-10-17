@@ -24,7 +24,11 @@ public sealed class UIKitNotifyGroup : ObservableCollection<UIKitNotifyItem>
 
 public sealed class UIKitNotifyViewModel : AppViewModelBase
 {
+    // Property
+
     public ObservableCollection<UIKitNotifyGroup> Groups { get; }
+
+    // Command
 
     public IObserveCommand ReadCommand { get; }
 

@@ -6,6 +6,8 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
 {
     private const int MaxAvatars = 8;
 
+    // Field
+
     private static readonly string[] AvatarPool =
     [
         "usa1_face.jpg",
@@ -17,6 +19,8 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
         "usa7_face.jpg",
         "usa8_face.jpg"
     ];
+
+    // Property
 
     public IReadOnlyList<TreeNode> Nodes { get; } =
     [

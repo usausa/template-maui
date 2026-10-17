@@ -3,6 +3,8 @@ namespace Template.MobileApp.Modules.Basic;
 [GenerateAccessor]
 public sealed partial class BasicValidationViewModel : AppViewModelBase
 {
+    // Property
+
     public ValidationFocusRequest ValidationFocusRequest { get; } = new();
 
     [Required(ErrorMessage = "Required")]
@@ -24,6 +26,8 @@ public sealed partial class BasicValidationViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string Quantity { get; set; } = default!;
+
+    // Command
 
     public IObserveCommand ErrorCommand { get; }
     public IObserveCommand ClearCommand { get; }

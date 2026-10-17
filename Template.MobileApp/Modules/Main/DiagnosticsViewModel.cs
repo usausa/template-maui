@@ -12,6 +12,8 @@ public sealed record LogFileInfo(string Name, long Size, DateTime Modified);
 
 public sealed partial class DiagnosticsViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(1);
 
     private readonly IDialog dialog;
@@ -98,7 +100,7 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<DiagnosticLogEntry> RecentLogs { get; private set; } = [];
 
-    // Crash
+    // Crash report
 
     [ObservableProperty]
     public partial string? LastCrashReport { get; private set; }

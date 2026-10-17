@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UIStreamDetailViewModel : AppViewModelBase
 {
+    // Property
+
     [Scope]
     [ObservableProperty]
     public partial UIStreamContext Context { get; set; } = default!;
@@ -20,6 +22,8 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool RelatedSelected { get; set; }
+
+    // Command
 
     public IObserveCommand SelectTabCommand { get; }
 

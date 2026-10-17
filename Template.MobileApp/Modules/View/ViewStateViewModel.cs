@@ -2,11 +2,15 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewStateViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string? CurrentState { get; set; }
 
     [ObservableProperty]
     public partial bool PanelRequested { get; set; }
+
+    // Command
 
     public IObserveCommand StateCommand { get; }
 

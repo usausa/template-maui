@@ -26,6 +26,8 @@ public sealed record UIProfileLike(
 
 public sealed partial class UIProfileViewModel : AppViewModelBase
 {
+    // Profile
+
     public string UserName { get; } = "山奥 うさぎ, 29";
     public string Occupation { get; } = "C# / .NET エンジニア · AWS ソリューションアーキテクト";
     public string Location { get; } = "東京都 渋谷区";
@@ -64,6 +66,8 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
 
     public int Followers { get; } = 3812;
 
+    // State
+
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
@@ -81,6 +85,8 @@ public sealed partial class UIProfileViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial int PhotoPosition { get; set; }
+
+    // Command
 
     public IObserveCommand FollowCommand { get; }
 

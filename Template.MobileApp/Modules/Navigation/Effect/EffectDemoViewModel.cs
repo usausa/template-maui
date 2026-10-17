@@ -6,9 +6,13 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
 {
     private const string NoEffect = "(none)";
 
+    // Field
+
     private string? effect;
 
     private bool stacked;
+
+    // Property
 
     [ObservableProperty]
     public partial string PlayedEffect { get; private set; } = NoEffect;
@@ -18,6 +22,8 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string NavigationMode { get; private set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand ReplayCommand { get; }
@@ -29,7 +35,7 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
     public EffectDemoViewModel()
     {
         BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
-        ReplayCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.NavigationEffectDemo, MakeParameter(effect)));
+        ReplayCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.NavigationEffectDemo, CreateParameter(effect)));
     }
 
     //--------------------------------------------------------------------------------
@@ -53,7 +59,7 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
 
     protected override Task OnNotifyBackAsync()
     {
-        var parameter = MakeParameter(effect is null ? null : AppEffect.Reverse(effect));
+        var parameter = CreateParameter(effect is null ? null : AppEffect.Reverse(effect));
         return stacked
             ? Navigator.PopAsync(parameter)
             : Navigator.ForwardAsync(ViewId.NavigationEffectMenu, parameter);
@@ -65,7 +71,7 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static NavigationParameter MakeParameter(string? effect)
+    private static NavigationParameter CreateParameter(string? effect)
     {
         var parameter = new NavigationParameter();
         return effect is null ? parameter : parameter.WithEffect(effect);

@@ -2,7 +2,11 @@ namespace Template.MobileApp.Modules.Navigation.Navigate;
 
 public sealed partial class NavigateInitializeViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
+
+    // Property
 
     [ObservableProperty]
     public partial bool Initialized { get; set; }

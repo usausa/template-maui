@@ -19,11 +19,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <s:BoolToTextConverter x:Key="FavoriteGlyphConverter"
                                    TrueValue="{x:Static fonts:MaterialIcons.Favorite}"
                                    FalseValue="{x:Static fonts:MaterialIcons.Favorite_outline}" />
 
-            <!-- Root -->
+            <!-- Page -->
+
             <Style x:Key="ShopGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
@@ -41,6 +44,7 @@
             </Style>
 
             <!-- Header -->
+
             <Style x:Key="ShopHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -78,6 +82,7 @@
             </Style>
 
             <!-- Cart button with badge -->
+
             <Style x:Key="CartButtonArea"
                    TargetType="Grid">
                 <Setter Property="WidthRequest" Value="48" />
@@ -127,6 +132,7 @@
             </Style>
 
             <!-- Search -->
+
             <Style x:Key="SearchRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -206,6 +212,7 @@
             </Style>
 
             <!-- Category chips -->
+
             <Style x:Key="ChipScroll"
                    TargetType="ScrollView">
                 <Setter Property="Orientation" Value="Horizontal" />
@@ -242,6 +249,7 @@
             </Style>
 
             <!-- Section title -->
+
             <Style x:Key="SectionTitleGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="6" />
@@ -273,6 +281,7 @@
             </Style>
 
             <!-- Popular -->
+
             <Style x:Key="PopularCarousel"
                    TargetType="CarouselView">
                 <Setter Property="HeightRequest" Value="168" />
@@ -367,6 +376,7 @@
             </Style>
 
             <!-- All items: 2-column grid -->
+
             <Style x:Key="ItemCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="5" />
@@ -444,6 +454,7 @@
             </Style>
 
             <!-- Empty -->
+
             <Style x:Key="EmptyStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,40" />
@@ -466,6 +477,7 @@
             </Style>
 
             <!-- Filter sheet -->
+
             <Style x:Key="FilterSheet"
                    TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
@@ -526,6 +538,7 @@
     <!-- Content -->
     <Grid Style="{StaticResource ShopGrid}">
 
+        <!-- Item list -->
         <CollectionView Style="{StaticResource ItemsCollection}"
                         ItemsSource="{Binding Items}">
             <CollectionView.ItemsLayout>
@@ -536,6 +549,7 @@
             <CollectionView.Header>
                 <VerticalStackLayout Style="{StaticResource ShopHeaderStack}">
 
+                    <!-- Header -->
                     <Grid Style="{StaticResource ShopHeaderGrid}"
                           ColumnDefinitions="Auto,*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -565,6 +579,7 @@
                         </Grid>
                     </Grid>
 
+                    <!-- Popular -->
                     <Grid Style="{StaticResource SectionTitleGrid}"
                           ColumnDefinitions="Auto,*"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -628,6 +643,7 @@
                     <IndicatorView x:Name="PopularIndicator"
                                    Style="{StaticResource PopularIndicator}" />
 
+                    <!-- Search -->
                     <Grid Style="{StaticResource SearchRowGrid}"
                           ColumnDefinitions="*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -654,6 +670,7 @@
                         </Grid>
                     </Grid>
 
+                    <!-- Category chips -->
                     <ScrollView Style="{StaticResource ChipScroll}"
                                 behaviors:AnimationOption.EnterAnimation="FadeUp"
                                 behaviors:AnimationOption.EnterDelay="200">
@@ -668,6 +685,7 @@
                         </cmc:ChipGroup>
                     </ScrollView>
 
+                    <!-- All items -->
                     <Grid Style="{StaticResource SectionTitleGrid}"
                           ColumnDefinitions="Auto,*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -745,6 +763,7 @@
             </CollectionView.EmptyView>
         </CollectionView>
 
+        <!-- Filter sheet -->
         <cmc:BottomSheetView Style="{StaticResource FilterSheet}"
                              IsOpen="{Binding IsFilterOpen}">
             <cmc:BottomSheetView.SheetContent>

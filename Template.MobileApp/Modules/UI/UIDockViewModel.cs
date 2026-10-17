@@ -8,6 +8,8 @@ public sealed class UIDockViewModel : AppViewModelBase
 {
     private const double MegaByte = 1024 * 1024;
 
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly IScreen screen;
@@ -44,6 +46,8 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private int remainSeconds;
 
+    // Property
+
     public ObservableCollection<DeckButtonInfo> Buttons { get; } = [];
 
     //--------------------------------------------------------------------------------
@@ -64,7 +68,7 @@ public sealed class UIDockViewModel : AppViewModelBase
 
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(1);
-        Disposables.Add(timer.TickAsObservable().Subscribe(_ => OnTimerTick()));
+        Disposables.Add(timer.TickAsObservable().Subscribe(_ => Tick()));
     }
 
     //--------------------------------------------------------------------------------
@@ -150,7 +154,7 @@ public sealed class UIDockViewModel : AppViewModelBase
             BackColor1 = button.Color1,
             BackColor2 = button.Color2,
             ImageBytes = await LoadImageAsync(button.Image),
-            Command = CommandOf(button.Action),
+            Command = CreateCommand(button.Action),
             Parameter = button.Parameter
         };
 
@@ -214,7 +218,7 @@ public sealed class UIDockViewModel : AppViewModelBase
     // Event
     //--------------------------------------------------------------------------------
 
-    private void OnTimerTick()
+    private void Tick()
     {
         UpdateUsage();
 
@@ -233,7 +237,7 @@ public sealed class UIDockViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private ICommand CommandOf(DeckAction action) =>
+    private ICommand CreateCommand(DeckAction action) =>
         action switch
         {
             DeckAction.OpenFolder => MakeDelegateCommand<string>(OpenFolder),

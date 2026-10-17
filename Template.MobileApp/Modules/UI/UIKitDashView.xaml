@@ -20,10 +20,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="KitDashScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
+
+            <!-- Header -->
 
             <!-- Extra bottom padding keeps the header content clear of the overlapping steps card (-30 margin) -->
             <Style x:Key="KitDashHeaderGrid"
@@ -48,6 +52,7 @@
             </Style>
 
             <!-- Header hub buttons -->
+
             <Style x:Key="KitIconButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -86,6 +91,8 @@
                 <Setter Property="StrokeThickness" Value="2" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 6" />
             </Style>
+
+            <!-- Tile -->
 
             <!--
                 Tiles: steps card (ColumnSpan=2) + metrics are laid out by VariableSizeWrapPanel via BindableLayout.
@@ -200,6 +207,8 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <!-- Template -->
+
             <DataTemplate x:Key="HeroTemplate"
                           x:DataType="module:UIKitDashHero">
                 <Border Style="{StaticResource StepCardBorder}"
@@ -252,6 +261,8 @@
                                                   HeroTemplate="{StaticResource HeroTemplate}"
                                                   MetricTemplate="{StaticResource MetricTemplate}" />
 
+            <!-- Period -->
+
             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
             <Style x:Key="PeriodSegmentLabel"
                    TargetType="Label">
@@ -269,6 +280,8 @@
                 <Setter Property="SelectedTextColor" Value="White" />
                 <Setter Property="ItemStyle" Value="{StaticResource PeriodSegmentLabel}" />
             </Style>
+
+            <!-- Chart -->
 
             <Style x:Key="ChartCardBorder"
                    TargetType="Border">
@@ -306,6 +319,8 @@
                 <Setter Property="Margin" Value="-12,4,-12,-8" />
                 <Setter Property="HeightRequest" Value="170" />
             </Style>
+
+            <!-- Sleep -->
 
             <Style x:Key="SleepTimeLabel"
                    TargetType="Label">
@@ -387,6 +402,8 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
+            <!-- Quick links -->
+
             <!-- Quick link cards to other kit screens -->
             <Style x:Key="LinkCardBorder"
                    TargetType="Border">
@@ -453,6 +470,8 @@
     <!-- Content -->
     <ScrollView Style="{StaticResource KitDashScroll}">
         <VerticalStackLayout>
+
+            <!-- Header -->
             <Grid Style="{StaticResource KitDashHeaderGrid}"
                   ColumnDefinitions="*,Auto,Auto">
                 <VerticalStackLayout Grid.Column="0">
@@ -476,15 +495,17 @@
                         Text="{x:Static fonts:MaterialIcons.Settings}" />
             </Grid>
 
-            <!-- Steps card -->
+            <!-- Tile -->
             <cmc:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
                                        BindableLayout.ItemsSource="{Binding Tiles}"
                                        BindableLayout.ItemTemplateSelector="{StaticResource TileTemplateSelector}" />
 
+            <!-- Period -->
             <cmc:SegmentedView Style="{StaticResource PeriodSegment}"
                                ItemsSource="{Binding Periods}"
                                SelectedIndex="{Binding PeriodIndex, Mode=TwoWay}" />
 
+            <!-- Step chart -->
             <Border Style="{StaticResource ChartCardBorder}">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto">
@@ -500,6 +521,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Heart chart -->
             <Border Style="{StaticResource ChartCardBorder}">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto">
@@ -515,6 +537,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Sleep -->
             <Border Style="{StaticResource ChartCardBorder}">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto">
@@ -614,6 +637,7 @@
                            Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
                 </Grid>
             </Border>
+
         </VerticalStackLayout>
     </ScrollView>
 

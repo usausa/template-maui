@@ -13,7 +13,11 @@ public sealed partial class UIKitSettingItem : ObservableObject
 
 public sealed partial class UIKitSettingViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
+
+    // Property
 
     public IReadOnlyList<UIKitSettingItem> AccountItems { get; } =
     [

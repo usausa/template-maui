@@ -26,11 +26,15 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
 
     private const int ErrorStatusCode = 500;
 
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly NetworkUsecase networkUsecase;
 
     private Action? cancelDelay;
+
+    // Property
 
     [ObservableProperty]
     public partial DataListItem? SelectedItem { get; set; }
@@ -56,6 +60,8 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
     public ObservableCollection<DataListItem> Items { get; } = [];
 
     public ObservableCollection<string> Logs { get; } = [];
+
+    // Command
 
     public IObserveCommand ReloadCommand { get; }
     public IObserveCommand LoadMoreCommand { get; }

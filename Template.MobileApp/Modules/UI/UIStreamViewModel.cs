@@ -13,9 +13,13 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
 {
     private const int AdvanceSeconds = 5;
 
+    // Field
+
     private readonly IDispatcherTimer timer;
 
     private int idleSeconds;
+
+    // Property
 
     [Scope]
     [ObservableProperty]
@@ -32,6 +36,8 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial IReadOnlyList<UIStreamSection> Sections { get; set; } = [];
+
+    // Command
 
     public IObserveCommand DetailCommand { get; }
 

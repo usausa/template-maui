@@ -15,6 +15,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="DialogCardBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource CardCenterBorder}">
@@ -36,6 +38,7 @@
         <Border Style="{StaticResource DialogCardBorder}">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
+                <!-- Header -->
                 <Border Style="{StaticResource BasicWarningIconBorder}">
                     <Label Style="{StaticResource BasicWarningIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Extension}" />
@@ -44,6 +47,7 @@
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Dialog Demo" />
 
+                <!-- Detail -->
                 <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Column="0"
@@ -56,6 +60,7 @@
 
                 <BoxView Style="{StaticResource CardDivider}" />
 
+                <!-- Action -->
                 <Button Style="{StaticResource BasicFilledButton}"
                         Command="{Binding CloseCommand}"
                         Text="Close" />

@@ -21,6 +21,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Empty -->
+
             <Style x:Key="NfcIconBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource BasicIconCircleBorder}">
@@ -101,7 +103,7 @@
                                        TrueValue="{StaticResource BlueLighten1}"
                                        FalseValue="{StaticResource RedLighten1}" />
 
-            <!-- Style -->
+            <!-- Card -->
 
             <Style x:Key="IcCardBorder"
                    TargetType="Border">
@@ -177,6 +179,8 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Log -->
 
             <Style x:Key="LogCollectionView"
                    TargetType="CollectionView">
@@ -277,6 +281,7 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,*">
 
+        <!-- Card -->
         <Border Grid.Row="0"
                 Style="{StaticResource IcCardBorder}"
                 IsVisible="{Binding Access, Converter={StaticResource NotEmptyConverter}}">
@@ -308,6 +313,7 @@
             </Grid>
         </Border>
 
+        <!-- Log -->
         <CollectionView Grid.Row="1"
                         Style="{StaticResource LogCollectionView}"
                         ItemsSource="{Binding Logs}">

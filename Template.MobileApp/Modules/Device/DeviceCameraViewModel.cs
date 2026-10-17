@@ -2,12 +2,18 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed partial class DeviceCameraViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
+
+    // Property
 
     public CameraController Controller { get; } = new();
 
     [ObservableProperty]
     public partial bool IsPreview { get; set; }
+
+    // Command
 
     public IObserveCommand TorchCommand { get; }
     public IObserveCommand FlashModeCommand { get; }

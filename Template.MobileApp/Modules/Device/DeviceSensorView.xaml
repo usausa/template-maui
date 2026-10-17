@@ -20,12 +20,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Barometer -->
+
             <Style x:Key="UnitLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource NameLabel}">
                 <Setter Property="Margin" Value="0,0,0,6" />
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
+
+            <!-- Converter -->
 
             <converters:CenteredRatioConverter x:Key="AccelRatio"
                                                Range="2" />
@@ -35,6 +39,8 @@
                                                Range="100" />
             <converters:CenteredRatioConverter x:Key="QuatRatio"
                                                Range="1" />
+
+            <!-- Axis -->
 
             <Style x:Key="AxisRowGrid"
                    TargetType="Grid">
@@ -141,6 +147,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="BigValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
@@ -148,6 +156,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
             </Style>
+
+            <!-- Dial -->
 
             <Style x:Key="SensorRowGrid"
                    TargetType="Grid">

@@ -22,11 +22,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Chat -->
+
             <Style x:Key="ChatEmptyStack"
                    TargetType="VerticalStackLayout"
                    BasedOn="{StaticResource BasicEmptyStack}">
                 <Setter Property="Padding" Value="24,0" />
             </Style>
+
+            <!-- Page -->
 
             <Style x:Key="PageGrid"
                    TargetType="Grid">
@@ -34,6 +38,8 @@
                 <Setter Property="RowSpacing" Value="12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
+
+            <!-- Connection -->
 
             <Style x:Key="AddressLabel"
                    TargetType="Label">
@@ -80,6 +86,8 @@
                                                Value="Warning" />
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
+
+            <!-- Chat -->
 
             <Style x:Key="ChatBorder"
                    TargetType="Border">
@@ -132,6 +140,8 @@
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
+
+            <!-- Send -->
 
             <Style x:Key="SendButton"
                    TargetType="Button">
@@ -203,6 +213,7 @@
             </VerticalStackLayout>
         </controls:InfoCard>
 
+        <!-- Chat -->
         <Border Grid.Row="1"
                 Style="{StaticResource ChatBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -244,6 +255,7 @@
             </Grid>
         </Border>
 
+        <!-- Send -->
         <Grid Grid.Row="2"
               Style="{StaticResource BasicButtonGrid}"
               ColumnDefinitions="*,Auto">

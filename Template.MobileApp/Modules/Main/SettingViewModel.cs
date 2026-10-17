@@ -8,6 +8,8 @@ using Template.MobileApp.Services;
 
 public sealed partial class SettingViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan DetectInterval = TimeSpan.FromSeconds(3);
 
     private readonly ApiContext apiContext;
@@ -18,7 +20,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     private readonly PushService pushService;
 
+    // Camera
+
     public BarcodeController Controller { get; } = new();
+
+    // Network
 
     [ObservableProperty]
     public partial string? ApiEndPoint { get; set; }
@@ -35,6 +41,8 @@ public sealed partial class SettingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool PushEnabled { get; set; }
 
+    // AI Service
+
     [ObservableProperty]
     public partial string? AIServiceEndPoint { get; set; }
 
@@ -47,6 +55,8 @@ public sealed partial class SettingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string? OllamaModel { get; set; }
 
+    // SSH
+
     [ObservableProperty]
     public partial string? SshHost { get; set; }
 
@@ -55,6 +65,8 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string? SshPassword { get; set; }
+
+    // Command
 
     public IObserveCommand DetectCommand { get; }
 

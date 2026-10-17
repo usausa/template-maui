@@ -4,6 +4,8 @@ using Plugin.Maui.Audio;
 
 public sealed partial class DeviceAudioViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IFileSystem fileSystem;
 
     private readonly IAudioManager audioManager;
@@ -11,6 +13,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     private SerialDisposable Polling { get; } = new();
 
     private double? pendingPosition;
+
+    // Property
 
     [ObservableProperty]
     public partial IAudioPlayer? AudioPlayer { get; set; }
@@ -29,6 +33,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     public string PositionText => TimeSpan.FromSeconds(Position).ToString(@"m\:ss", CultureInfo.InvariantCulture);
 
     public string DurationText => TimeSpan.FromSeconds(Duration).ToString(@"m\:ss", CultureInfo.InvariantCulture);
+
+    // Command
 
     public IObserveCommand PlayCommand { get; }
     public IObserveCommand PauseCommand { get; }

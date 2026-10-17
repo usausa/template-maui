@@ -6,12 +6,16 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
 {
     private const int RangeCount = 16;
 
+    // Field
+
     private readonly IDispatcherTimer timer;
 
     private readonly Random random = new();
 
     private int[] currentValues;
     private int[] previousValues;
+
+    // Knob
 
     [ObservableProperty]
     public partial double KnobValue1 { get; set; } = 50;
@@ -22,6 +26,8 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double KnobValue2 { get; set; } = 50;
 
+    // Slider
+
     [ObservableProperty]
     public partial double SliderValue1 { get; set; } = 50;
 
@@ -30,6 +36,8 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial double SliderValue2 { get; set; } = 50;
+
+    // Equalizer
 
     [ObservableProperty]
     public partial int[] Values { get; set; }
@@ -46,7 +54,7 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
 
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromMilliseconds(50);
-        Disposables.Add(timer.TickAsObservable().Subscribe(_ => OnTimerTick()));
+        Disposables.Add(timer.TickAsObservable().Subscribe(_ => UpdateValues()));
     }
 
     //--------------------------------------------------------------------------------
@@ -73,7 +81,7 @@ public sealed partial class UIMixerViewModel : AppViewModelBase
     // Event
     //--------------------------------------------------------------------------------
 
-    private void OnTimerTick()
+    private void UpdateValues()
     {
         (currentValues, previousValues) = (previousValues, currentValues);
 

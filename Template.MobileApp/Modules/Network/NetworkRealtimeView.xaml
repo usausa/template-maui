@@ -21,6 +21,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Connection -->
+
             <Style x:Key="StateChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="HorizontalOptions" Value="Start" />
@@ -62,6 +64,8 @@
                                                Value="Error" />
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
+
+            <!-- Chart -->
 
             <Style x:Key="StatGraph"
                    TargetType="controls:StatControl">
@@ -140,6 +144,7 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- Server CPU -->
             <controls:StatControl Style="{StaticResource StatGraph}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="80"
@@ -147,6 +152,7 @@
                                   GraphColor="{StaticResource BlueDefault}"
                                   Label="Server CPU" />
 
+            <!-- Server memory -->
             <controls:StatControl Style="{StaticResource StatGraph}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="160"
@@ -154,6 +160,7 @@
                                   GraphColor="{StaticResource GreenDefault}"
                                   Label="Server memory" MaxValue="512" Unit="MB" />
 
+            <!-- Connections -->
             <controls:StatControl Style="{StaticResource StatGraph}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="240"

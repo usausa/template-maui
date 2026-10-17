@@ -16,7 +16,11 @@ public sealed class UIKitTrackingStep
 
 public sealed partial class UIKitTrackingViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDispatcherTimer timer;
+
+    // Property
 
     public string OrderNumber { get; }
 

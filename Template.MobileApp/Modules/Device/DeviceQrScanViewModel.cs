@@ -6,12 +6,16 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 {
+    // Property
+
     public BarcodeController Controller { get; } = new();
 
     public BarcodeDrawing Drawing { get; } = new();
 
     [ObservableProperty]
     public partial string Barcode { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand TorchCommand { get; }
     public IObserveCommand AimCommand { get; }

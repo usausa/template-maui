@@ -32,17 +32,27 @@ public sealed class UIKitDashTileTemplateSelector : DataTemplateSelector
 
 public sealed partial class UIKitDashViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly KitActivity activity = KitSample.LoadActivity(DateTime.Now);
+
+    // Header
 
     public string Greeting { get; } = "おはようございます";
     public string UserName { get; } = "うさうささん";
 
+    // Tile
+
     public IReadOnlyList<object> Tiles { get; }
+
+    // Period
 
     public IReadOnlyList<string> Periods { get; } = ["日", "週", "月"];
 
     [ObservableProperty]
     public partial int PeriodIndex { get; set; } = (int)KitPeriod.Week;
+
+    // Chart
 
     [ObservableProperty]
     public partial int StepTotal { get; set; }
@@ -62,6 +72,8 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
         ValueFormat = "{0:N0} bpm"
     };
 
+    // Sleep
+
     public IReadOnlyList<KitSleepSpan> Sleep => activity.Sleep;
 
     public IReadOnlyList<KitSleepTotal> SleepTotals { get; }
@@ -72,9 +84,13 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
 
     public TimeSpan SleepLength => activity.SleepLength;
 
+    // Quick links
+
     public string OrderNumber => activity.OrderNumber;
 
     public DateTime OrderEta => activity.OrderEta;
+
+    // Command
 
     public IObserveCommand NotifyCommand { get; }
 

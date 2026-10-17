@@ -2,7 +2,11 @@ namespace Template.MobileApp.Modules.Basic;
 
 public sealed class BasicDialogViewModel : AppViewModelBase
 {
+    // Field
+
     private int count;
+
+    // Command
 
     public IObserveCommand InformationCommand { get; }
     public IObserveCommand ConfirmCommand { get; }

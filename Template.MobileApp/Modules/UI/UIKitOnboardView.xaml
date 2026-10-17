@@ -15,10 +15,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="OnboardGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Carousel -->
 
             <Style x:Key="OnboardPageGrid"
                    TargetType="Grid">
@@ -53,6 +57,8 @@
                 <Setter Property="Margin" Value="32,0" />
             </Style>
 
+            <!-- Indicator -->
+
             <Style x:Key="OnboardIndicator"
                    TargetType="IndicatorView">
                 <Setter Property="Margin" Value="0,8,0,16" />
@@ -60,6 +66,8 @@
                 <Setter Property="IndicatorColor" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
             </Style>
+
+            <!-- Bottom bar -->
 
             <Style x:Key="BottomBar"
                    TargetType="Grid">
@@ -104,6 +112,7 @@
     <Grid Style="{StaticResource OnboardGrid}"
           RowDefinitions="*,Auto,Auto">
 
+        <!-- Carousel -->
         <CarouselView x:Name="OnboardCarousel"
                       Grid.Row="0" Grid.RowSpan="3"
                       ItemsSource="{Binding Pages}"
@@ -129,10 +138,12 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
+        <!-- Indicator -->
         <IndicatorView x:Name="Indicators"
                        Grid.Row="1"
                        Style="{StaticResource OnboardIndicator}" />
 
+        <!-- Bottom bar -->
         <Grid Grid.Row="2"
               Style="{StaticResource BottomBar}"
               ColumnDefinitions="*,Auto">

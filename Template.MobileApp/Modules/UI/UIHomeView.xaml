@@ -22,10 +22,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Color -->
+
             <Color x:Key="HomeCardColor">#26FFFFFF</Color>
             <Color x:Key="HomeCardLineColor">#38FFFFFF</Color>
             <Color x:Key="HomeSubTextColor">#B3FFFFFF</Color>
             <Color x:Key="HomeTrackColor">#40FFFFFF</Color>
+
+            <!-- Converter -->
 
             <converters:HomeDeviceTextConverter x:Key="DeviceIconConverter"
                                                 Part="Icon" />
@@ -92,11 +96,15 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Page -->
+
             <Style x:Key="HomeContentGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,8,12,10" />
                 <Setter Property="RowSpacing" Value="8" />
             </Style>
+
+            <!-- Card -->
 
             <Style x:Key="GlassBorder"
                    TargetType="Border">
@@ -114,6 +122,8 @@
                 <Setter Property="HeightRequest" Value="116" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="HeaderGrid"
                    TargetType="Grid">
@@ -177,6 +187,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Section -->
+
             <Style x:Key="SectionGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
@@ -195,6 +207,8 @@
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
+
+            <!-- Thermostat -->
 
             <Style x:Key="ActiveStack"
                    TargetType="VerticalStackLayout">
@@ -260,6 +274,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Device legend -->
+
             <Style x:Key="LegendStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -300,6 +316,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource HomeSubTextColor}" />
             </Style>
+
+            <!-- Device -->
 
             <Style x:Key="TileGrid"
                    TargetType="Grid">
@@ -353,6 +371,8 @@
                 <Setter Property="FontSize" Value="12" />
             </Style>
 
+            <!-- Battery -->
+
             <Style x:Key="BatteryBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource GlassBorder}">
@@ -391,6 +411,8 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
             </Style>
+
+            <!-- Tab bar -->
 
             <Style x:Key="TabBorder"
                    TargetType="Border"
@@ -433,12 +455,15 @@
 
     <!-- Content -->
     <Grid>
+
+        <!-- Background -->
         <controls:HomeBlurredImage Source="{Binding Home.Room.Background}"
                                    BlurRadius="18" Dim="0.55" MaxLuminance="0.08" />
 
         <Grid Style="{StaticResource HomeContentGrid}"
               RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
 
+            <!-- Header -->
             <Border Grid.Row="0"
                     Style="{StaticResource GlassBorder}">
                 <Grid Style="{StaticResource HeaderGrid}"
@@ -474,6 +499,7 @@
                 </Grid>
             </Border>
 
+            <!-- Thermostat -->
             <Grid Grid.Row="1">
                 <Grid Style="{StaticResource DialGrid}">
                     <controls:HomeThermostatDial Style="{StaticResource Dial}"
@@ -507,6 +533,7 @@
                 </VerticalStackLayout>
             </Grid>
 
+            <!-- Device legend -->
             <Grid Grid.Row="2"
                   Style="{StaticResource SectionGrid}"
                   ColumnDefinitions="*,Auto">
@@ -527,6 +554,7 @@
                 </HorizontalStackLayout>
             </Grid>
 
+            <!-- Device -->
             <CollectionView Grid.Row="3"
                             ItemsSource="{Binding Home.Room.Devices}">
                 <CollectionView.ItemsLayout>
@@ -624,6 +652,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+            <!-- Battery -->
             <Border Grid.Row="4"
                     Style="{StaticResource BatteryBorder}">
                 <CollectionView ItemsSource="{Binding Home.Room.Batteries}">
@@ -659,6 +688,7 @@
                 </CollectionView>
             </Border>
 
+            <!-- Tab bar -->
             <Border Grid.Row="6"
                     Style="{StaticResource TabBorder}">
                 <CollectionView ItemsSource="{Binding Rooms}">

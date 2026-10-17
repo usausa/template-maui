@@ -13,6 +13,8 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     private const double BrakeVelocity = 96d / 60;
     private const double DefaultVelocity = 32d / 60;
 
+    // Field
+
     private readonly IDispatcher dispatcher;
 
     private PeriodicTimer? timer;
@@ -29,11 +31,15 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     private readonly AtomicBoolean buttonX = new();
     private readonly AtomicBoolean buttonY = new();
 
+    // Meter
+
     [ObservableProperty]
     public partial int Fps { get; set; }
 
     [ObservableProperty]
     public partial int Speed { get; set; }
+
+    // Joystick
 
     public int StickX
     {
@@ -46,6 +52,8 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
         get => stickY.Value;
         set => stickY.Value = value;
     }
+
+    // Button
 
     public bool ButtonA
     {

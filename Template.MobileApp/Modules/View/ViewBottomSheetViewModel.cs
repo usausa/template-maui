@@ -2,7 +2,11 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan SwitchDelay = TimeSpan.FromMilliseconds(300);
+
+    // Property
 
     [ObservableProperty]
     public partial bool IsSfSheetOpen { get; set; }
@@ -14,6 +18,8 @@ public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
     public partial string? Selected { get; set; }
 
     public IReadOnlyList<string> Actions { get; } = ["共有", "リンクをコピー", "お気に入りに追加", "レポート"];
+
+    // Command
 
     public IObserveCommand OpenSfSheetCommand { get; }
 

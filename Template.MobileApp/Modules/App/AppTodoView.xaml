@@ -21,6 +21,7 @@
         <ResourceDictionary>
 
             <!-- Color -->
+
             <Color x:Key="TodoAccentColor">#059669</Color>
             <Color x:Key="TodoAccentEndColor">#0D9488</Color>
             <Color x:Key="TodoHeaderSubColor">#D1FAE5</Color>
@@ -49,6 +50,7 @@
             <Color x:Key="TodoDoneGroupSoftColor">#CCFBF1</Color>
 
             <!-- Converter -->
+
             <s:MapToTextConverter x:Key="GroupTitleConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static app:TodoGroup.Overdue}"
@@ -137,6 +139,7 @@
                                    FalseValue="{x:Static fonts:MaterialIcons.Star_border}" />
 
             <!-- Page -->
+
             <Style x:Key="TodoRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
@@ -144,6 +147,7 @@
             </Style>
 
             <!-- Header -->
+
             <Style x:Key="HeaderBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="16,8,16,20" />
@@ -233,6 +237,7 @@
             </Style>
 
             <!-- Group -->
+
             <Style x:Key="GroupHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="20,20,20,6" />
@@ -270,6 +275,7 @@
             </Style>
 
             <!-- Row -->
+
             <Style x:Key="TodoRowGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8,2,8,0" />
@@ -359,6 +365,7 @@
             </Style>
 
             <!-- Swipe -->
+
             <Style x:Key="DeleteSwipeItem"
                    TargetType="SwipeItemView">
                 <Setter Property="WidthRequest" Value="96" />
@@ -388,6 +395,7 @@
             </Style>
 
             <!-- Empty -->
+
             <Style x:Key="EmptyStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="32,72,32,0" />
@@ -410,6 +418,8 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
+            <!-- List -->
+
             <Style x:Key="ListFooterBoxView"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="104" />
@@ -417,6 +427,7 @@
             </Style>
 
             <!-- Undo -->
+
             <Style x:Key="UndoBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16,0,96,30" />
@@ -455,6 +466,7 @@
             </Style>
 
             <!-- Add -->
+
             <Style x:Key="AddFabButton"
                    TargetType="Button">
                 <Setter Property="Margin" Value="0,0,20,24" />
@@ -487,6 +499,7 @@
     <Grid Style="{StaticResource TodoRootGrid}"
           RowDefinitions="Auto,*">
 
+        <!-- Header -->
         <Border Grid.Row="0"
                 Style="{StaticResource HeaderBorder}">
             <VerticalStackLayout Style="{StaticResource HeaderStack}">
@@ -536,6 +549,7 @@
 
         <Grid Grid.Row="1">
 
+            <!-- List -->
             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
             <CollectionView ItemsSource="{Binding Context.List.Sections}"
                             IsGrouped="True">
@@ -686,6 +700,7 @@
             </CollectionView>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
+            <!-- Empty -->
             <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                  IsVisible="{Binding Context.List.Sections.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}">
                 <Label Style="{StaticResource EmptyEmojiLabel}"
@@ -704,6 +719,7 @@
                        Text="タスクはありません" />
             </VerticalStackLayout>
 
+            <!-- Undo -->
             <Border Style="{StaticResource UndoBorder}"
                     IsVisible="{Binding Context.DeletedItem, Converter={s:NullToBool Invert=True}}">
                 <Grid ColumnDefinitions="*,Auto">
@@ -717,6 +733,7 @@
                 </Grid>
             </Border>
 
+            <!-- Add -->
             <Button Style="{StaticResource AddFabButton}"
                     Command="{Binding AddCommand}"
                     Text="{x:Static fonts:MaterialIcons.Add}" />

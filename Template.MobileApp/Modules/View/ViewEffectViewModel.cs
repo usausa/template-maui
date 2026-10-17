@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewEffectViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly int[] BadgeSteps = [0, 5, 120];
 
     private int badgeIndex;
+
+    // Property
 
     [ObservableProperty]
     public partial int ReplayCount { get; set; }
@@ -23,6 +27,8 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial int LongPressCount { get; set; }
+
+    // Command
 
     public IObserveCommand ReplayCommand { get; }
 

@@ -25,6 +25,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:CompassDirectionConverter x:Key="CompassDirectionConverter" />
             <converters:DegreeTextConverter x:Key="DegreeTextConverter" />
 
@@ -79,11 +81,15 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Page -->
+
             <Style x:Key="GaugeGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Kind segment -->
 
             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
             <Style x:Key="KindSegmentLabel"
@@ -105,10 +111,14 @@
                 <Setter Property="ItemStyle" Value="{StaticResource KindSegmentLabel}" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="KindGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0" />
             </Style>
+
+            <!-- Slider -->
 
             <Style x:Key="GaugeSliderBase"
                    TargetType="Slider">
@@ -152,6 +162,8 @@
                 <Setter Property="MinimumTrackColor" Value="#CC4400" />
             </Style>
 
+            <!-- Swatch -->
+
             <Style x:Key="SwatchGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="6,3" />
@@ -178,12 +190,15 @@
                 <Setter Property="CornerRadius" Value="4" />
             </Style>
 
+            <!-- Gauge -->
+
             <Style x:Key="GaugeBase"
                    TargetType="clam:ClamGaugeView">
                 <Setter Property="Margin" Value="8" />
             </Style>
 
             <!-- Pressure -->
+
             <Style x:Key="GaugePressure"
                    TargetType="clam:ClamGaugeView"
                    BasedOn="{StaticResource GaugeBase}">
@@ -218,6 +233,7 @@
             </Style>
 
             <!-- Humidity -->
+
             <Style x:Key="GaugeHumidity"
                    TargetType="clam:ClamGaugeView"
                    BasedOn="{StaticResource GaugeBase}">
@@ -258,6 +274,7 @@
             </Style>
 
             <!-- Temperature -->
+
             <Style x:Key="GaugeTemperature"
                    TargetType="clam:ClamGaugeView"
                    BasedOn="{StaticResource GaugeBase}">
@@ -298,6 +315,7 @@
             </Style>
 
             <!-- Wind -->
+
             <Style x:Key="GaugeWind"
                    TargetType="clam:ClamGaugeView"
                    BasedOn="{StaticResource GaugeBase}">
@@ -338,6 +356,7 @@
             </Style>
 
             <!-- Speed -->
+
             <Style x:Key="GaugeSpeed"
                    TargetType="clam:ClamGaugeView"
                    BasedOn="{StaticResource GaugeBase}">
@@ -392,6 +411,7 @@
             </Style>
 
             <!-- RPM -->
+
             <Style x:Key="GaugeRpm"
                    TargetType="clam:ClamGaugeView"
                    BasedOn="{StaticResource GaugeBase}">
@@ -452,6 +472,7 @@
     <Grid Style="{StaticResource GaugeGrid}"
           RowDefinitions="Auto,*">
 
+        <!-- Kind segment -->
         <cmc:SegmentedView Grid.Row="0"
                            Style="{StaticResource KindSegment}"
                            ItemsSource="{Binding Kinds}"

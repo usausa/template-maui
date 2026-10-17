@@ -19,6 +19,9 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <!-- Converter -->
+
             <converters:RefKindBrushConverter x:Key="RefBackgroundConverter"
                                               Foreground="False" />
             <converters:RefKindBrushConverter x:Key="RefForegroundConverter"
@@ -26,6 +29,8 @@
             <converters:AlternateRowBackgroundConverter x:Key="RowBackgroundConverter"
                                                         EvenColor="Transparent"
                                                         OddColor="{StaticResource GrayLighten4}" />
+
+            <!-- Graph -->
 
             <Style x:Key="GraphHeaderLabel"
                    TargetType="Label">
@@ -92,6 +97,8 @@
                 <Setter Property="HeightRequest" Value="26" />
             </Style>
 
+            <!-- Template -->
+
             <DataTemplate x:Key="RefBadgeTemplate"
                           x:DataType="{x:Type sample:GraphRef}">
                 <Border Style="{StaticResource RefBadgeBorder}"
@@ -109,6 +116,8 @@
                            TextColor="{Binding Kind, Converter={StaticResource RefForegroundConverter}}" />
                 </Border>
             </DataTemplate>
+
+            <!-- Commit sheet -->
 
             <Style x:Key="CommitSheet"
                    TargetType="cmc:BottomSheetView">
@@ -169,12 +178,15 @@
     <!-- Content -->
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,*">
+
+        <!-- Header -->
         <Border Grid.Row="0"
                 Style="{StaticResource GraphHeaderBarBorder}">
             <Label Style="{StaticResource GraphHeaderLabel}"
                    Text="{Binding HeaderText}" />
         </Border>
 
+        <!-- Graph -->
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Rows}"
                         SelectedItem="{Binding Selected}"
@@ -226,6 +238,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <!-- Commit sheet -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="2"
                              Style="{StaticResource CommitSheet}"
                              IsOpen="{Binding IsDetailOpen}">

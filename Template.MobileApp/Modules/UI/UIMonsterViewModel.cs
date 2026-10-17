@@ -9,6 +9,8 @@ public sealed class UIMonsterTag
 
 public sealed partial class UIMonsterViewModel : AppViewModelBase
 {
+    // Profile
+
     public string MonsterName { get; } = "ぷるにゃ";
 
     public string Breed { get; } = "ゼリーキャット";
@@ -25,6 +27,8 @@ public sealed partial class UIMonsterViewModel : AppViewModelBase
         new() { Label = "甘えん坊", BackgroundColor = Color.FromArgb("#FCE4EC"), TextColor = Color.FromArgb("#C2185B") }
     ];
 
+    // State
+
     [ObservableProperty(NotifyAlso = [nameof(HpProgress)])]
     public partial int Hp { get; set; } = 320;
 
@@ -32,6 +36,8 @@ public sealed partial class UIMonsterViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool InParty { get; set; }
+
+    // Command
 
     public IObserveCommand HeartCommand { get; }
 

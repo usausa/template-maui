@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Action -->
+
             <Style x:Key="PrintButton"
                    TargetType="Button"
                    BasedOn="{StaticResource BasicFilledButton}">
@@ -26,10 +28,14 @@
                 <Setter Property="HeightRequest" Value="48" />
             </Style>
 
+            <!-- Status -->
+
             <Style x:Key="StateChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
+
+            <!-- Converter -->
 
             <converters:MapToIntConverter x:Key="StepConverter">
                 <converters:MapToIntConverter.Entries>
@@ -49,6 +55,7 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Status -->
         <Border Grid.Row="0"
                 Style="{StaticResource CardCenterBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -150,6 +157,7 @@
             </VerticalStackLayout>
         </Border>
 
+        <!-- Action -->
         <Button Grid.Row="1"
                 Style="{StaticResource PrintButton}"
                 Command="{Binding PrintCommand}"

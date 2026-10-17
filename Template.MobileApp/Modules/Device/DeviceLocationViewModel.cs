@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed partial class DeviceLocationViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly ILocationService locationService;
 
     private readonly IGeolocation geolocation;
+
+    // Property
 
     [ObservableProperty]
     public partial Location? Location { get; set; }

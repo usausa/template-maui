@@ -20,12 +20,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="WizardRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
                 <Setter Property="Padding" Value="12" />
                 <Setter Property="RowSpacing" Value="12" />
             </Style>
+
+            <!-- Form -->
 
             <Style x:Key="WizardCard"
                    TargetType="controls:InfoCard">
@@ -45,6 +49,7 @@
     <Grid Style="{StaticResource WizardRootGrid}"
           RowDefinitions="Auto,*">
 
+        <!-- Step -->
         <cmc:StepIndicator Grid.Row="0"
                            Style="{StaticResource BasicStepIndicator}"
                            behaviors:AnimationOption.EnterAnimation="FadeUp"

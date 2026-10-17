@@ -22,11 +22,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Log -->
+
             <Style x:Key="SectionNameLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource NameLabel}">
                 <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
+
+            <!-- Telemetry -->
 
             <Style x:Key="LastSendStack"
                    TargetType="VerticalStackLayout">
@@ -47,6 +51,8 @@
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="EmptyNoteLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicFieldCaptionLabel}">
@@ -65,8 +71,12 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
 
+            <!-- Converter -->
+
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
+
+            <!-- Telemetry -->
 
             <s:BoolToTextConverter x:Key="TelemetryTextConverter"
                                    TrueValue="Sending"
@@ -98,6 +108,8 @@
                                                Value="Error" />
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
+
+            <!-- Log -->
 
             <s:MapToColorConverter x:Key="LogLevelColorConverter"
                                    DefaultValue="{StaticResource RedDefault}">
@@ -157,6 +169,8 @@
                    TargetType="Span">
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
+
+            <!-- Crash report -->
 
             <Style x:Key="ReportLabel"
                    TargetType="Label">
@@ -518,7 +532,6 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <!-- Crash -->
             <!-- Crash report -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="420"

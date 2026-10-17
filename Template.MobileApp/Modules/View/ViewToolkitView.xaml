@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Expander -->
+
             <Style x:Key="ExpanderHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="0,8" />
@@ -33,10 +35,14 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- SfOtpInput -->
+
             <Style x:Key="OtpInput"
                    TargetType="sf:SfOtpInput">
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
+
+            <!-- SfSegmentedControl -->
 
             <Style x:Key="SegmentedControl"
                    TargetType="sf:SfSegmentedControl">
@@ -48,11 +54,15 @@
                 </Setter>
             </Style>
 
+            <!-- Expander -->
+
             <Style x:Key="ExpanderContentLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCaptionLabel}">
                 <Setter Property="Padding" Value="0,4,0,8" />
             </Style>
+
+            <!-- SfAccordion -->
 
             <Style x:Key="AccordionHeaderLabel"
                    TargetType="Label"
@@ -65,6 +75,8 @@
                    BasedOn="{StaticResource BasicCaptionLabel}">
                 <Setter Property="Padding" Value="4,4,4,10" />
             </Style>
+
+            <!-- AvatarView -->
 
             <Style x:Key="AvatarRowStack"
                    TargetType="HorizontalStackLayout">
@@ -79,6 +91,8 @@
     <sf:SfTabView x:Name="ToolkitTabs"
                   IndicatorBackground="{StaticResource BlueDefault}"
                   TabBarBackground="White">
+
+        <!-- Input tab -->
         <sf:SfTabItem Header="Input">
             <!-- Content -->
             <ScrollView Style="{StaticResource RootScroll}">
@@ -127,6 +141,7 @@
             </ScrollView>
         </sf:SfTabItem>
 
+        <!-- Display tab -->
         <sf:SfTabItem Header="Display">
             <ContentView x:DataType="{x:Type sf:SfTabView}"
                          behaviors:LazyViewOption.Load="{Binding SelectedIndex, Source={x:Reference ToolkitTabs}, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Int32 1}}">
@@ -234,6 +249,7 @@
                 </behaviors:LazyViewOption.Template>
             </ContentView>
         </sf:SfTabItem>
+
     </sf:SfTabView>
 
 </ContentView>

@@ -4,9 +4,13 @@ using Template.MobileApp.Services;
 
 public sealed partial class EditDetailViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly DataService dataService;
 
     private WorkEntity entity = default!;
+
+    // Property
 
     [ObservableProperty]
     public partial bool IsUpdate { get; set; }

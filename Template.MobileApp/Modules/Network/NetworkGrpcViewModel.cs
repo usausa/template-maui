@@ -6,6 +6,8 @@ using Template.MobileApp.Services;
 
 public sealed partial class NetworkGrpcViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDeviceInfo deviceInfo;
 
     private readonly IDispatcher dispatcher;
@@ -15,6 +17,8 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
     private readonly Uri address;
 
     private bool active;
+
+    // Property
 
     [ObservableProperty]
     public partial string AddressDisplay { get; set; }
@@ -38,6 +42,8 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
     public partial bool IsEmpty { get; set; } = true;
 
     public ObservableCollection<ChatMessageEntry> Messages { get; } = [];
+
+    // Command
 
     public IObserveCommand SendCommand { get; }
 

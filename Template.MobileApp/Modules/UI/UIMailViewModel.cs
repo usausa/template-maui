@@ -9,6 +9,8 @@ public enum MailPage
 
 public sealed partial class UIMailViewModel : AppViewModelBase
 {
+    // Property
+
     [Scope]
     [ObservableProperty]
     public partial UIMailContext Context { get; set; } = default!;
@@ -23,6 +25,8 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     public partial bool IsDrawerOpen { get; set; }
 
     public string OwnerName { get; } = "うさうささん";
+
+    // Command
 
     public ICommand ArchiveCommand { get; }
 

@@ -20,6 +20,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Header -->
+
             <Style x:Key="LevelIconBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource BasicIconCircleBorder}">
@@ -31,6 +33,8 @@
                    BasedOn="{StaticResource BasicIconCircleLabel}">
                 <Setter Property="TextColor" Value="{StaticResource TealDefault}" />
             </Style>
+
+            <!-- Step -->
 
             <Style x:Key="LevelStepIndicator"
                    TargetType="cmc:StepIndicator">
@@ -48,6 +52,7 @@
                 behaviors:AnimationOption.EnterAnimation="Pop">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
+                <!-- Header -->
                 <Border Style="{StaticResource LevelIconBorder}">
                     <Label Style="{StaticResource LevelIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_two}" />
@@ -56,11 +61,13 @@
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Stack Level 2" />
 
+                <!-- Step -->
                 <cmc:StepIndicator Style="{StaticResource LevelStepIndicator}"
                                    CurrentStep="2" TotalSteps="3" />
 
                 <BoxView Style="{StaticResource CardDivider}" />
 
+                <!-- Hint -->
                 <Label Style="{StaticResource BasicCenterHintLabel}"
                        Text="Push+1 → Level 3&#x0a;Pop-1 → Level 1" />
 

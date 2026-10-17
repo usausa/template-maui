@@ -5,7 +5,11 @@ using Template.MobileApp.Helpers;
 
 public sealed partial class UITreeMapViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
+
+    // Property
 
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;

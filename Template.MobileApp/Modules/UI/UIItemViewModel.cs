@@ -3,9 +3,13 @@ namespace Template.MobileApp.Modules.UI;
 public sealed partial class UIItemViewModel : AppViewModelBase
 {
     private const int MaxQuantity = 99;
+    // Field
+
     private static readonly TimeSpan AddedDuration = TimeSpan.FromSeconds(1.5);
 
     private readonly IDispatcher dispatcher;
+
+    // Property
 
     [Scope]
     [ObservableProperty]
@@ -18,6 +22,8 @@ public sealed partial class UIItemViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsAdded { get; set; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
 

@@ -8,9 +8,13 @@ using Template.MobileApp.Services;
 
 public sealed partial class UICalendarViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly DateOnly Today = DateOnly.FromDateTime(DateTime.Today);
 
     private readonly ICalendarService calendarService;
+
+    // Calendar
 
     [ObservableProperty]
     public partial DateOnly DisplayDate { get; set; } = Today;
@@ -23,6 +27,8 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial IReadOnlyList<DateOnly> Holidays { get; private set; } = [];
+
+    // Selection
 
     [ObservableProperty]
     public partial CalendarSelectionMode SelectionMode { get; set; } = CalendarSelectionMode.None;
@@ -38,8 +44,12 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     [ObservableProperty]
     public partial DateOnly? SelectedEndDate { get; set; }
 
+    // Mode sheet
+
     [ObservableProperty]
     public partial bool IsSettingOpen { get; set; }
+
+    // Command
 
     public IObserveCommand DisplayDateChangedCommand { get; }
     public IObserveCommand DayTappedCommand { get; }

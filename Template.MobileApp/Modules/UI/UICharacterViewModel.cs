@@ -2,10 +2,14 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UICharacterViewModel : AppViewModelBase
 {
+    // Property
+
     public ObservableCollection<CharacterItem> Characters { get; } = [.. CharacterSample.LoadCharacters()];
 
     [ObservableProperty]
     public partial string? SelectedImage { get; set; }
+
+    // Command
 
     public ICommand SelectCommand { get; }
 

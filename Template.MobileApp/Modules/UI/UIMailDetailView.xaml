@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="DetailScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -29,6 +31,8 @@
                 <Setter Property="Padding" Value="16,16,16,24" />
                 <Setter Property="Spacing" Value="14" />
             </Style>
+
+            <!-- Subject -->
 
             <Style x:Key="SubjectGrid"
                    TargetType="Grid">
@@ -55,6 +59,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
                 <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star_border}" />
             </Style>
+
+            <!-- Sender -->
 
             <Style x:Key="SenderGrid"
                    TargetType="Grid">
@@ -96,6 +102,8 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
+            <!-- Attachment -->
+
             <Style x:Key="AttachmentBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="12,10" />
@@ -125,6 +133,8 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
             </Style>
 
+            <!-- Body -->
+
             <Style x:Key="BodyLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
@@ -140,6 +150,7 @@
         <VerticalStackLayout Style="{StaticResource DetailStack}"
                              behaviors:AnimationOption.EnterAnimation="FadeUp">
 
+            <!-- Subject -->
             <Grid Style="{StaticResource SubjectGrid}"
                   ColumnDefinitions="*,Auto">
                 <Label Grid.Column="0"
@@ -160,6 +171,7 @@
                 </Button>
             </Grid>
 
+            <!-- Sender -->
             <Grid Style="{StaticResource SenderGrid}"
                   ColumnDefinitions="Auto,*">
                 <controls:MailAvatarImage Grid.Column="0"
@@ -177,6 +189,7 @@
 
             <BoxView Style="{StaticResource RowLine}" />
 
+            <!-- Attachment -->
             <Border Style="{StaticResource AttachmentBorder}"
                     IsVisible="{Binding Context.Selected.HasAttachment}">
                 <HorizontalStackLayout Style="{StaticResource AttachmentStack}">
@@ -187,6 +200,7 @@
                 </HorizontalStackLayout>
             </Border>
 
+            <!-- Body -->
             <Label Style="{StaticResource BodyLabel}"
                    Text="{Binding Context.Selected.Body}" />
 

@@ -5,6 +5,8 @@ using Template.MobileApp.Graphics.Drawing;
 #pragma warning disable CA5394
 public sealed partial class ViewChartViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly string[] Months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
 
     private static readonly string[] Regions = ["東京", "大阪", "名古屋", "福岡", "札幌"];
@@ -13,10 +15,14 @@ public sealed partial class ViewChartViewModel : AppViewModelBase
 
     private readonly Random random = new();
 
+    // Property
+
     [ObservableProperty]
     public partial ChartKind Kind { get; set; }
 
     public ChartDrawing Drawing { get; } = new();
+
+    // Command
 
     public ICommand SelectCommand { get; }
 

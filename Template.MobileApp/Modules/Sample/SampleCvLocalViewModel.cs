@@ -6,7 +6,11 @@ using Template.MobileApp.Usecase;
 
 public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly OnnxVisionUsecase onnxVisionUsecase;
+
+    // Property
 
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;

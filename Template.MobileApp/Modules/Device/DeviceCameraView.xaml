@@ -25,6 +25,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Status -->
+
             <Style x:Key="StateChipStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="12" />
@@ -47,6 +49,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Control -->
 
             <Style x:Key="OverlayButtonStack"
                    TargetType="HorizontalStackLayout">
@@ -76,8 +80,10 @@
     <!-- Content -->
     <Grid Style="{StaticResource DarkRootGrid}">
 
+        <!-- Preview -->
         <mct:CameraView behaviors:CameraBind.Controller="{Binding Controller}" />
 
+        <!-- Status -->
         <HorizontalStackLayout Style="{StaticResource StateChipStack}">
             <Border Style="{StaticResource StateChipBorder}">
                 <Label Style="{StaticResource StateChipLabel}"
@@ -116,6 +122,7 @@
             </Border>
         </HorizontalStackLayout>
 
+        <!-- Control -->
         <HorizontalStackLayout Style="{StaticResource OverlayButtonStack}">
             <Button Style="{StaticResource OverlayIconButton}"
                     Command="{Binding TorchCommand}"

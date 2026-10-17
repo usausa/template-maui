@@ -8,9 +8,13 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
     private const int ScheduledNotificationId = 2;
 
+    // Field
+
     private readonly IScreen screen;
 
     private readonly ISpeechService speech;
+
+    // Speech
 
     [ObservableProperty]
     public partial double SpeechRate { get; set; } = 1.0;
@@ -21,8 +25,12 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsListening { get; set; }
 
+    // Notification
+
     [ObservableProperty]
     public partial string NotificationText { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand KeepScreenOnCommand { get; }
     public IObserveCommand KeepScreenOffCommand { get; }

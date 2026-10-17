@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- User ID -->
+
             <Style x:Key="UserIdValueLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicMonoLabel}">
@@ -26,10 +28,14 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
+            <!-- Status -->
+
             <Style x:Key="StateChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
+
+            <!-- Radio -->
 
             <Style x:Key="RadioRingGrid"
                    TargetType="Grid">
@@ -66,6 +72,7 @@
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
+                <!-- Radio -->
                 <Grid Style="{StaticResource RadioRingGrid}">
                     <Ellipse Style="{StaticResource RadioRing}"
                              behaviors:AnimationOption.Ripple="{Binding Running}" />
@@ -93,6 +100,7 @@
                     </Border>
                 </Grid>
 
+                <!-- Status -->
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="BLE Peripheral" />
 
@@ -113,6 +121,7 @@
 
                 <BoxView Style="{StaticResource CardDivider}" />
 
+                <!-- User ID -->
                 <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                     <Label Style="{StaticResource BasicCenterFieldCaptionLabel}"
                            Text="UserId" />
@@ -120,6 +129,7 @@
                            Text="{Binding UserId}" />
                 </VerticalStackLayout>
 
+                <!-- Hint -->
                 <Label Style="{StaticResource BasicCenterHintLabel}"
                        Text="Toggle advertising with the ON/OFF key" />
 

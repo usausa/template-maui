@@ -17,6 +17,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Step -->
+
             <Style x:Key="ActivityVerticalStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -42,6 +44,8 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
+
+            <!-- Tile -->
 
             <Style x:Key="TileGrid"
                    TargetType="Grid">
@@ -115,6 +119,7 @@
     <!-- Content -->
     <Grid RowDefinitions="18,*,*">
 
+        <!-- Step -->
         <drawing:DrawingControl Grid.Row="1"
                                 Drawing="{Binding Drawing}" />
 
@@ -132,6 +137,7 @@
                Style="{StaticResource ActivityIconLabel}"
                Text="👟" />
 
+        <!-- Tile -->
         <Grid Grid.Row="2"
               Style="{StaticResource TileGrid}"
               ColumnDefinitions="*,*,*">

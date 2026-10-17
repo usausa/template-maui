@@ -4,11 +4,15 @@ using System.Collections.ObjectModel;
 
 public sealed partial class UIChatViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly string[] ReactionEmojis = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
 
     private readonly IDispatcher dispatcher;
 
     private Selectable<ChatMessage>? reactionTarget;
+
+    // Property
 
     public CollectionController Controller { get; } = new();
 
@@ -23,6 +27,8 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsStampTrayVisible { get; set; }
+
+    // Command
 
     public IObserveCommand SendCommand { get; }
     public IObserveCommand SendStampCommand { get; }

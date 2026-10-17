@@ -5,9 +5,13 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed class DeviceActivityViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly IActivityRecognizer activityRecognizer;
+
+    // Property
 
     public ActivityDrawing Drawing { get; } = new();
 

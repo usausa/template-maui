@@ -8,9 +8,13 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 {
     private const int RowCount = 2000;
 
+    // Field
+
     private static readonly GridSortOrder[] DefaultSortOrders = [new(nameof(OrderInfo.DueDate)), new(nameof(OrderInfo.OrderNo))];
 
     private readonly IDialog dialog;
+
+    // Data grid
 
     public GridDataView<OrderInfo> Rows { get; }
 
@@ -20,14 +24,20 @@ public sealed partial class UIGridViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<GridSortOrder>? SortOrders { get; set; }
 
+    // Summary
+
     [ObservableProperty]
     public partial int OpenCount { get; set; }
 
     [ObservableProperty]
     public partial int SelectedCount { get; set; }
 
+    // Message
+
     [ObservableProperty]
     public partial string Message { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand SelectAllCommand { get; }
 

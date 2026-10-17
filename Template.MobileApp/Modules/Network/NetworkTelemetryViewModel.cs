@@ -7,6 +7,8 @@ using Template.MobileApp.Usecase;
 
 public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly ILogger<NetworkTelemetryViewModel> log;
 
     private readonly IDialog dialog;
@@ -16,6 +18,8 @@ public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
     private readonly DiagnosticsInstrumentation instrumentation;
 
     private readonly ApplicationMetrics applicationMetrics;
+
+    // Property
 
     [ObservableProperty]
     public partial double Value1 { get; set; }
@@ -28,6 +32,8 @@ public sealed partial class NetworkTelemetryViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial double Value4 { get; set; }
+
+    // Command
 
     public IObserveCommand WarningCommand { get; }
     public IObserveCommand ErrorCommand { get; }

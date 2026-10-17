@@ -14,7 +14,11 @@ public enum BluetoothPrintState
 
 public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IBluetoothSerialFactory bluetoothSerialFactory;
+
+    // Property
 
     [ObservableProperty(NotifyAlso = [nameof(IsBusy)])]
     public partial BluetoothPrintState State { get; set; }
@@ -23,6 +27,8 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
     public partial string Detail { get; set; }
 
     public bool IsBusy => State is BluetoothPrintState.Connecting or BluetoothPrintState.Printing;
+
+    // Command
 
     public IObserveCommand PrintCommand { get; }
 

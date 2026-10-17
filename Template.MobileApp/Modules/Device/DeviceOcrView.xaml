@@ -21,6 +21,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Processing -->
+
             <Style x:Key="ProcessingOverlayGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="#80000000" />
@@ -38,6 +40,8 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
+
+            <!-- Result -->
 
             <Style x:Key="ResultPanelBorder"
                    TargetType="Border">
@@ -84,11 +88,14 @@
     <Grid Style="{StaticResource DarkRootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Preview -->
         <mct:CameraView Grid.Row="0"
                         behaviors:CameraBind.Controller="{Binding Controller}" />
 
+        <!-- Guide -->
         <controls:CameraOverlayView Grid.Row="0" />
 
+        <!-- Processing -->
         <Grid Grid.Row="0"
               Style="{StaticResource ProcessingOverlayGrid}"
               IsVisible="{Binding IsProcessing}">
@@ -100,6 +107,7 @@
             </VerticalStackLayout>
         </Grid>
 
+        <!-- Result -->
         <Border Grid.Row="1"
                 Style="{StaticResource ResultPanelBorder}">
             <VerticalStackLayout Style="{StaticResource ResultPanelStack}">

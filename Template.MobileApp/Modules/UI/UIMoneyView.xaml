@@ -515,6 +515,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
             </Style>
 
+            <!-- Card -->
+
             <Style x:Key="MoneyCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16,0,16,16" />
@@ -551,6 +553,8 @@
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
+
+            <!-- Expense -->
 
             <Style x:Key="MonthSelectStack"
                    TargetType="HorizontalStackLayout">
@@ -610,6 +614,8 @@
                 <Setter Property="HeightRequest" Value="190" />
             </Style>
 
+            <!-- Category -->
+
             <Style x:Key="CategoryScroll"
                    TargetType="ScrollView">
                 <Setter Property="Margin" Value="-16,8,-16,0" />
@@ -668,6 +674,8 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
+
+            <!-- Transaction -->
 
             <Style x:Key="DayHeaderLabel"
                    TargetType="Label">
@@ -730,6 +738,8 @@
                 <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
 
+            <!-- Search -->
+
             <Style x:Key="SearchBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16" />
@@ -764,6 +774,8 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
+
+            <!-- Notification -->
 
             <Style x:Key="NoticeScroll"
                    TargetType="ScrollView">
@@ -825,6 +837,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="Fill" Value="{StaticResource PinkAccent3}" />
             </Style>
+
+            <!-- Account -->
 
             <Style x:Key="AccountStack"
                    TargetType="VerticalStackLayout">
@@ -926,6 +940,8 @@
                 <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
             </Style>
 
+            <!-- Sheet -->
+
             <Style x:Key="MoneySheet"
                    TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
@@ -957,6 +973,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
+
+            <!-- Payment sheet -->
 
             <Style x:Key="PaymentCodeBorder"
                    TargetType="Border">
@@ -1018,11 +1036,15 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
+            <!-- Balance sheet -->
+
             <Style x:Key="BalanceChartControl"
                    TargetType="drawing:DrawingControl">
                 <Setter Property="Margin" Value="-12,0" />
                 <Setter Property="HeightRequest" Value="260" />
             </Style>
+
+            <!-- Month sheet -->
 
             <Style x:Key="MonthRowGrid"
                    TargetType="Grid">
@@ -1052,6 +1074,8 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
+
+            <!-- Category sheet -->
 
             <Style x:Key="CategoryRowGrid"
                    TargetType="Grid">
@@ -1096,6 +1120,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Template -->
+
             <DataTemplate x:Key="TransactionTemplate"
                           x:DataType="sample:MoneyTransaction">
                 <Grid Style="{StaticResource TransactionGrid}"
@@ -1138,6 +1164,7 @@
     <!-- Content -->
     <Grid RowDefinitions="*,Auto,Auto">
 
+        <!-- Home -->
         <ScrollView Grid.Row="0"
                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}">
 
@@ -1347,6 +1374,7 @@
                     </Border>
                 </VerticalStackLayout>
 
+                <!-- Expense -->
                 <Border Grid.Row="4"
                         Style="{StaticResource MoneyCardBorder}">
                     <VerticalStackLayout>
@@ -1385,6 +1413,7 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Category -->
                 <Border Grid.Row="5"
                         Style="{StaticResource MoneyCardBorder}">
                     <VerticalStackLayout>
@@ -1425,6 +1454,7 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Transaction -->
                 <Border Grid.Row="6"
                         Style="{StaticResource MoneyCardBorder}">
                     <VerticalStackLayout>
@@ -1439,6 +1469,7 @@
 
         </ScrollView>
 
+        <!-- Search -->
         <ContentView Grid.Row="0"
                      behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
                      IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}">
@@ -1479,6 +1510,7 @@
             </behaviors:LazyViewOption.Template>
         </ContentView>
 
+        <!-- Notification -->
         <ContentView Grid.Row="0"
                      behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}"
                      IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}">
@@ -1535,6 +1567,7 @@
             </behaviors:LazyViewOption.Template>
         </ContentView>
 
+        <!-- Account -->
         <ScrollView Grid.Row="0"
                     Style="{StaticResource NoticeScroll}"
                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}">
@@ -1796,6 +1829,7 @@
                 Text="支払い"
                 ImageSource="{x:Static markup:AppIcons.LargeQrCode}" />
 
+        <!-- Payment sheet -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource PaymentSheet}"
                              IsOpen="{Binding IsPaymentOpen}">
@@ -1831,6 +1865,7 @@
             </cmc:BottomSheetView.SheetTemplate>
         </cmc:BottomSheetView>
 
+        <!-- Balance sheet -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsBalanceOpen}">
@@ -1848,6 +1883,7 @@
             </cmc:BottomSheetView.SheetTemplate>
         </cmc:BottomSheetView>
 
+        <!-- Month sheet -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsMonthOpen}">
@@ -1896,6 +1932,7 @@
             </cmc:BottomSheetView.SheetTemplate>
         </cmc:BottomSheetView>
 
+        <!-- Category sheet -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsCategoryOpen}">

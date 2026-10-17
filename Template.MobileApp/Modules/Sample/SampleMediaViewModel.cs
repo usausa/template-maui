@@ -2,7 +2,11 @@ namespace Template.MobileApp.Modules.Sample;
 
 public sealed partial class SampleMediaViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDispatcherTimer timer;
+
+    // Property
 
     public MediaController Controller { get; } = new();
 
@@ -17,6 +21,8 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsControlBarVisible { get; set; }
+
+    // Command
 
     public ICommand TogglePlayCommand { get; }
 

@@ -7,9 +7,13 @@ public sealed partial class NetworkAuthViewModel : AppViewModelBase
 {
     private const string DummyLoginId = "user";
 
+    // Field
+
     private readonly ApiContext apiContext;
 
     private readonly NetworkUsecase networkUsecase;
+
+    // Property
 
     [ObservableProperty]
     public partial string LoginId { get; set; } = DummyLoginId;
@@ -22,6 +26,8 @@ public sealed partial class NetworkAuthViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial DateTime? TokenExpires { get; set; }
+
+    // Command
 
     public IObserveCommand LoginCommand { get; }
     public IObserveCommand LogoutCommand { get; }

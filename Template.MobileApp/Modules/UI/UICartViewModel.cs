@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UICartViewModel : AppViewModelBase
 {
+    // Property
+
     [Scope]
     [ObservableProperty]
     public partial UIShopContext Context { get; set; } = default!;
@@ -15,6 +17,8 @@ public sealed partial class UICartViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsCompleted { get; set; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
 

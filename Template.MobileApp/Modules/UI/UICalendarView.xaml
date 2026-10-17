@@ -21,11 +21,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="CalendarGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Mode sheet -->
 
             <Style x:Key="ModeSheet"
                    TargetType="cmc:BottomSheetView">
@@ -56,6 +60,7 @@
     <!-- Content -->
     <Grid Style="{StaticResource CalendarGrid}">
 
+        <!-- Calendar -->
         <clam:ClamCalendarView SelectionMode="{Binding SelectionMode}"
                                DayTappedCommand="{Binding DayTappedCommand}"
                                DisplayDate="{Binding DisplayDate, Mode=TwoWay}"
@@ -70,6 +75,7 @@
                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
                                Stamps="{Binding Stamps}" />
 
+        <!-- Mode sheet -->
         <cmc:BottomSheetView Style="{StaticResource ModeSheet}"
                              IsOpen="{Binding IsSettingOpen}">
             <cmc:BottomSheetView.SheetTemplate>

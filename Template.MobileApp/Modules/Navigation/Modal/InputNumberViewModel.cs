@@ -4,10 +4,14 @@ using Template.MobileApp.Modules;
 
 public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
 {
+    // Property
+
     [ObservableProperty]
     public partial string Title { get; set; } = default!;
 
     public NumberInputModel Input { get; } = new();
+
+    // Command
 
     public IObserveCommand ClearCommand { get; }
     public IObserveCommand PopCommand { get; }

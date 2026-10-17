@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Header -->
+
             <Style x:Key="NumberCircleBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource BasicIconCircleBorder}">
@@ -42,6 +44,8 @@
                 <Setter Property="TextColor" Value="{StaticResource IndigoDarken2}" />
             </Style>
 
+            <!-- Value -->
+
             <Style x:Key="NoValueLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="28" />
@@ -60,6 +64,7 @@
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
+                <!-- Header -->
                 <Border Style="{StaticResource NumberCircleBorder}">
                     <Label Style="{StaticResource NumberCircleLabel}"
                            Text="1" />
@@ -74,6 +79,7 @@
 
                 <BoxView Style="{StaticResource CardDivider}" />
 
+                <!-- Value -->
                 <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                     <Label Style="{StaticResource BasicCenterFieldCaptionLabel}"
                            Text="No" />
@@ -81,6 +87,7 @@
                            Text="{Binding No}" />
                 </VerticalStackLayout>
 
+                <!-- Hint -->
                 <Label Style="{StaticResource BasicCenterHintLabel}"
                        Text="◀️ → Shared input&#x0a;✔ → Menu" />
 

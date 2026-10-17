@@ -17,12 +17,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="ContactStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="24" />
                 <Setter Property="Spacing" Value="24" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
+
+            <!-- Contact -->
 
             <Style x:Key="ContactCardBorder"
                    TargetType="Border">
@@ -53,6 +57,8 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
+
+            <!-- Action -->
 
             <Style x:Key="ActionGrid"
                    TargetType="Grid">
@@ -122,12 +128,14 @@
     <Grid Style="{StaticResource RootGrid}">
         <VerticalStackLayout Style="{StaticResource ContactStack}">
 
+            <!-- Avatar -->
             <Border Style="{StaticResource BasicIconCircleBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <Label Style="{StaticResource BasicIconCircleLabel}"
                        Text="{x:Static fonts:MaterialIcons.Person}" />
             </Border>
 
+            <!-- Contact -->
             <Border Style="{StaticResource ContactCardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="80">
@@ -169,6 +177,7 @@
                 </Grid>
             </Border>
 
+            <!-- Action -->
             <Grid Style="{StaticResource ActionGrid}"
                   ColumnDefinitions="*,*,*"
                   behaviors:AnimationOption.EnterAnimation="FadeUp"

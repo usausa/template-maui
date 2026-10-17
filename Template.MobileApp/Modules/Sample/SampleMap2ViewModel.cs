@@ -4,10 +4,10 @@ using Template.MobileApp.Services;
 
 public sealed partial class SampleMap2ViewModel : AppViewModelBase
 {
-    // Field
-
     private const double InitialLongitude = 139.767052;
     private const double InitialLatitude = 35.681167;
+
+    // Field
 
     private static readonly MapsuiSpot[] Spots =
     [

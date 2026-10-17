@@ -3,9 +3,13 @@ namespace Template.MobileApp.Modules.UI;
 #pragma warning disable CA5394
 public sealed class UIRadarViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly Random random = new();
 
     private readonly IDispatcherTimer timer;
+
+    // Property
 
     public ObservableCollection<RadarTarget> Targets { get; } = [];
 

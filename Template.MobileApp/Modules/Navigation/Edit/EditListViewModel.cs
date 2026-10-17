@@ -4,9 +4,13 @@ using Template.MobileApp.Services;
 
 public sealed partial class EditListViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly DataService dataService;
+
+    // Property
 
     public ObservableCollection<WorkEntity> Items { get; } = [];
 
@@ -16,6 +20,8 @@ public sealed partial class EditListViewModel : AppViewModelBase
     public partial bool IsSelectionMode { get; set; }
 
     public SelectionMode SelectionMode => IsSelectionMode ? SelectionMode.Multiple : SelectionMode.None;
+
+    // Command
 
     public IObserveCommand SelectCommand { get; }
     public IObserveCommand DeleteCommand { get; }

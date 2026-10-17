@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan ScanInterval = TimeSpan.FromSeconds(30);
 
     private static readonly TimeSpan RemoveAfter = TimeSpan.FromSeconds(60);
@@ -15,6 +17,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     private SerialDisposable ScanTimer { get; } = new();
 
     private SerialDisposable ExpireTimer { get; } = new();
+
+    // Connection
 
     [ObservableProperty]
     public partial bool IsSupported { get; set; }
@@ -37,6 +41,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     [ObservableProperty]
     public partial WiFiConnection? Connection { get; set; }
 
+    // List
+
     public ObservableCollection<WiFiAccessPointItem> AccessPoints { get; } = [];
 
     [ObservableProperty]
@@ -56,6 +62,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool Scanning { get; set; }
+
+    // Command
 
     public IObserveCommand ToggleDetailCommand { get; }
 

@@ -2,12 +2,16 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed partial class DeviceInfoViewModel : AppViewModelBase
 {
+    // Device
+
     [ObservableProperty]
     public partial Version DeviceVersion { get; set; }
     [ObservableProperty]
     public partial string DeviceName { get; set; }
     [ObservableProperty]
     public partial bool IsDeviceEmulator { get; set; }
+
+    // Application
 
     [ObservableProperty]
     public partial string ApplicationName { get; set; }
@@ -17,6 +21,8 @@ public sealed partial class DeviceInfoViewModel : AppViewModelBase
     public partial Version ApplicationVersion { get; set; }
     [ObservableProperty]
     public partial string ApplicationBuild { get; set; }
+
+    // Display
 
     [ObservableProperty]
     public partial double DisplayWidth { get; set; }

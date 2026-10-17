@@ -4,7 +4,11 @@ using Shiny.BluetoothLE;
 
 public sealed class DeviceBleScanViewModel : AppViewModelBase
 {
+    // Field
+
     private IDisposable? scanning;
+
+    // Property
 
     public ObservableCollection<SwitchBotTemperature> Devices { get; } = [];
 

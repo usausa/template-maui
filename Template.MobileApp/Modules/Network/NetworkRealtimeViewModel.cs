@@ -20,6 +20,8 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     private const int HistorySize = 61;
 
+    // Field
+
     private static readonly TimeSpan ReportInterval = TimeSpan.FromSeconds(10);
 
     private readonly ILogger<NetworkRealtimeViewModel> log;
@@ -38,8 +40,12 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     private readonly DeviceState deviceState;
 
+    // Subscription
+
     private SerialDisposable Receiving { get; } = new();
     private SerialDisposable Connecting { get; } = new();
+
+    // Connection
 
     [ObservableProperty]
     public partial RealtimeState State { get; set; }
@@ -59,11 +65,17 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int ReportCount { get; set; }
 
+    // Chart
+
     public StatDataSet CpuLoadSet { get; } = new(HistorySize);
     public StatDataSet MemoryLoadSet { get; } = new(HistorySize);
     public StatDataSet ConnectionSet { get; } = new(HistorySize);
 
+    // Notifications
+
     public ObservableCollection<string> Notifications { get; } = [];
+
+    // Command
 
     public IObserveCommand ReconnectCommand { get; }
 

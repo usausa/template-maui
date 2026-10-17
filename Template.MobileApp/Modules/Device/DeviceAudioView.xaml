@@ -18,10 +18,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:VolumeIconConverter x:Key="VolumeIconConverter"
                                             High="{x:Static fonts:MaterialIcons.Volume_up}"
                                             Low="{x:Static fonts:MaterialIcons.Volume_down}"
                                             Off="{x:Static fonts:MaterialIcons.Volume_off}" />
+
+            <!-- Jacket -->
 
             <Style x:Key="JacketStack"
                    TargetType="VerticalStackLayout">
@@ -54,6 +58,8 @@
                 <Setter Property="FontSize" Value="96" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Player -->
 
             <Style x:Key="PlayerPanelBorder"
                    TargetType="Border">
@@ -123,6 +129,7 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Jacket -->
         <VerticalStackLayout Grid.Row="0"
                              Style="{StaticResource JacketStack}"
                              behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -135,6 +142,7 @@
                    Text="Sample.mp3" />
         </VerticalStackLayout>
 
+        <!-- Player -->
         <Border Grid.Row="1"
                 Style="{StaticResource PlayerPanelBorder}">
             <VerticalStackLayout Style="{StaticResource CardStack}">

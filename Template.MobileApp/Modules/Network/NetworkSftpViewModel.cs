@@ -4,14 +4,20 @@ using Template.MobileApp.Usecase;
 
 public sealed partial class NetworkSftpViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly Settings settings;
 
     private readonly SshUsecase sshUsecase;
 
     private Action? cancel;
 
+    // Server
+
     [ObservableProperty]
     public partial string HostDisplay { get; set; } = string.Empty;
+
+    // Transfer
 
     [ObservableProperty]
     public partial string RemoteFileName { get; set; } = string.Empty;
@@ -22,7 +28,11 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Busy { get; set; }
 
+    // Log
+
     public ObservableCollection<string> Logs { get; } = [];
+
+    // Command
 
     public IObserveCommand UploadCommand { get; }
 

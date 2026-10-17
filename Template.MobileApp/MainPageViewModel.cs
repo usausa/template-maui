@@ -11,6 +11,8 @@ using Template.MobileApp.Shell;
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
 {
+    // Field
+
     private readonly IScreen screen;
 
     private readonly IDialog dialog;
@@ -28,6 +30,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     private bool foreground;
 
     private IDisposable? navigatingBusy;
+
+    // Shell
 
     public StartupState Startup { get; }
 
@@ -50,13 +54,12 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public FunctionState Function3 => Functions[2];
     public FunctionState Function4 => Functions[3];
 
-    public IObserveCommand Function1Command { get; }
-    public IObserveCommand Function2Command { get; }
-    public IObserveCommand Function3Command { get; }
-    public IObserveCommand Function4Command { get; }
+    // Push
 
     [ObservableProperty]
     public partial PushStatus PushStatus { get; set; }
+
+    // Diagnostic
 
     [ObservableProperty]
     public partial bool DiagnosticEnabled { get; set; }
@@ -65,6 +68,13 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public partial bool DiagnosticVisible { get; set; }
 
     public DiagnosticSampler DiagnosticSampler { get; }
+
+    // Command
+
+    public IObserveCommand Function1Command { get; }
+    public IObserveCommand Function2Command { get; }
+    public IObserveCommand Function3Command { get; }
+    public IObserveCommand Function4Command { get; }
 
     public IObserveCommand DiagnosticCommand { get; }
 

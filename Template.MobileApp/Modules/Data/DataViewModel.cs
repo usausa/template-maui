@@ -8,12 +8,18 @@ using Template.MobileApp.Services;
 
 public sealed partial class DataViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly DataService dataService;
 
+    // Property
+
     [ObservableProperty]
     public partial int BulkDataCount { get; set; }
+
+    // Command
 
     public IObserveCommand InsertCommand { get; }
     public IObserveCommand UpdateCommand { get; }

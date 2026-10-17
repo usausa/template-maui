@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UINewsViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan NewArrivalsDuration = TimeSpan.FromSeconds(3);
 
     private readonly IDispatcher dispatcher;
+
+    // Property
 
     [Scope]
     [ObservableProperty]
@@ -18,6 +22,8 @@ public sealed partial class UINewsViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial double PagePosition { get; set; }
+
+    // Command
 
     public IObserveCommand RefreshCommand { get; }
 
@@ -35,7 +41,7 @@ public sealed partial class UINewsViewModel : AppViewModelBase
     {
         this.dispatcher = dispatcher;
 
-        SubscribeSelectedIndex(_ => Select());
+        SubscribeSelectedIndex(_ => SelectPage());
 
         RefreshCommand = MakeAsyncCommand<UINewsPage>(RefreshAsync);
         MoreCommand = MakeDelegateCommand<UINewsPage>(CommandMode.Simple, x => _ = Context.LoadMoreAsync(x));
@@ -90,7 +96,7 @@ public sealed partial class UINewsViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private void Select()
+    private void SelectPage()
     {
         SelectedPage = Context.Pages[SelectedIndex];
         _ = Context.LoadAsync(SelectedPage);

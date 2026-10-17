@@ -17,6 +17,8 @@
     <ContentPage.Resources>
         <ResourceDictionary>
 
+            <!-- Startup -->
+
             <Style x:Key="StartupGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -35,6 +37,8 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
+
+            <!-- Header -->
 
             <s:MapToTextConverter x:Key="PushStatusTextConverter">
                 <s:MapToTextConverter.Entries>
@@ -62,6 +66,7 @@
     <!-- Content -->
     <Grid Style="{StaticResource MainGrid}"
           RowDefinitions="Auto,*,Auto">
+
         <!-- Overlay -->
         <Rectangle Grid.Row="0" Grid.RowSpan="3"
                    shell:ShellProperty.BusyOverlay="True"

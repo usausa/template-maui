@@ -2,11 +2,15 @@ namespace Template.MobileApp.Modules.Basic;
 
 public sealed partial class BasicBehaviorViewModel : AppViewModelBase
 {
+    // Focus
+
     [ObservableProperty]
     public partial string Focused { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial string Unfocused { get; set; } = string.Empty;
+
+    // Behaviors
 
     [ObservableProperty]
     public partial string Phone { get; set; } = string.Empty;
@@ -19,6 +23,8 @@ public sealed partial class BasicBehaviorViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial int SwitchCount { get; set; }
+
+    // Command
 
     public IObserveCommand FocusedCommand { get; }
 

@@ -2,11 +2,15 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UILoginViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial bool PasswordVisible { get; set; }
 
     [ObservableProperty]
     public partial bool LoggingIn { get; set; }
+
+    // Command
 
     public ICommand TogglePasswordCommand { get; }
 

@@ -13,7 +13,11 @@ public static class ColumnOptionAccessors
 
 public sealed partial class UIGridColumnViewModel : AppViewModelBase
 {
+    // Field
+
     private GridColumnEditSession session = default!;
+
+    // Property
 
     [ObservableProperty]
     public partial GridDataView<GridColumnOption>? Rows { get; set; }
@@ -23,6 +27,8 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string Message { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand CellValueChangedCommand { get; }
 

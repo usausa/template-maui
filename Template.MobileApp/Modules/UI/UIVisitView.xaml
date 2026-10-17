@@ -27,6 +27,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <s:BoolToColorConverter x:Key="PrimaryTextColorConverter"
                                     TrueValue="White"
                                     FalseValue="{StaticResource GrayDarken3}" />
@@ -139,6 +141,8 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
+            <!-- Summary -->
+
             <Style x:Key="SummaryGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,8" />
@@ -195,7 +199,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- ツールバー -->
+            <!-- Toolbar -->
+
             <Style x:Key="ToolbarGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,0,12,8" />
@@ -227,7 +232,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <!-- 並替シート -->
+            <!-- Sort sheet -->
+
             <Style x:Key="SortSheet"
                    TargetType="cmc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
@@ -317,6 +323,8 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <!-- List -->
 
             <!-- 行 (角丸のカードにせず、区切り線で並べる。状態で背景色、選択でブルー) -->
             <Style x:Key="CardCollection"
@@ -546,6 +554,7 @@
                    Text="{Binding SelectedCount}" />
         </Grid>
 
+        <!-- Toolbar -->
         <Grid Grid.Row="1"
               Style="{StaticResource ToolbarGrid}"
               ColumnDefinitions="*,Auto,Auto,Auto">
@@ -567,6 +576,7 @@
                     Text="{x:Static fonts:MaterialIcons.Refresh}" />
         </Grid>
 
+        <!-- List -->
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
         <CollectionView Grid.Row="2"
                         Style="{StaticResource CardCollection}"

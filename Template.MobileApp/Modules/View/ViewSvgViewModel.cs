@@ -2,11 +2,15 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewSvgViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string SvgSource { get; set; } = Path.Combine("Svg", "dotnet_bot.svg");
 
     [ObservableProperty]
     public partial string Selected { get; set; } = "dotnet_bot";
+
+    // Command
 
     public IObserveCommand SelectCommand { get; }
 

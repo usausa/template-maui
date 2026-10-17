@@ -4,17 +4,23 @@ using Template.MobileApp.Models.App;
 
 public sealed partial class AppTodoViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan MoveDelay = TimeSpan.FromMilliseconds(400);
 
     private static readonly TimeSpan UndoDuration = TimeSpan.FromSeconds(4);
 
     private readonly IDispatcher dispatcher;
 
+    // Property
+
     private SerialDisposable UndoTimer { get; } = new();
 
     [Scope]
     [ObservableProperty]
     public partial AppTodoContext Context { get; set; } = default!;
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand ShowDoneCommand { get; }
@@ -81,7 +87,7 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
 
     private Task OpenEditAsync(TodoItem? item)
     {
-        CloseUndo();
+        HideUndo();
         Context.BeginEdit(item);
         return Navigator.PushAsync(ViewId.AppTodoEdit);
     }
@@ -118,7 +124,7 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
         }
     }
 
-    private void CloseUndo()
+    private void HideUndo()
     {
         UndoTimer.Disposable = null;
         Context.ClearDeleted();

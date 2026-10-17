@@ -5,11 +5,15 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class UILoadViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan PeakWindow = TimeSpan.FromSeconds(3);
 
     private readonly INoiseMonitor noiseMonitor;
 
     private readonly Queue<(DateTime Timestamp, double Value)> peakHistory = new();
+
+    // Property
 
     [ObservableProperty]
     public partial double Current { get; set; }

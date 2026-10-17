@@ -4,12 +4,16 @@ using Template.MobileApp.Models.App;
 
 public sealed partial class AppTodoEditViewModel : AppViewModelBase
 {
+    // Property
+
     [Scope]
     [ObservableProperty]
     public partial AppTodoContext Context { get; set; } = default!;
 
     [ObservableProperty]
     public partial bool IsDatePickerOpen { get; set; }
+
+    // Command
 
     public IObserveCommand CloseCommand { get; }
     public IObserveCommand SaveCommand { get; }

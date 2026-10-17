@@ -22,6 +22,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Animation -->
+
             <Style x:Key="FrameBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12" />
@@ -38,6 +40,8 @@
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
             </Style>
+
+            <!-- Player -->
 
             <Style x:Key="PlayerPanelBorder"
                    TargetType="Border">
@@ -135,6 +139,7 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Animation -->
         <Border Grid.Row="0"
                 Style="{StaticResource FrameBorder}">
             <extended:SKLottieView Source="Lottie/popping.json"
@@ -144,6 +149,7 @@
                                    RepeatCount="-1" />
         </Border>
 
+        <!-- Player -->
         <Border Grid.Row="1"
                 Style="{StaticResource PlayerPanelBorder}">
             <VerticalStackLayout Style="{StaticResource PlayerStack}">

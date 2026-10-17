@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Basic;
 
 public sealed partial class BasicSettingViewModel : AppViewModelBase
 {
+    // Account
+
     [ObservableProperty]
     public partial string UserName { get; set; } = "usausa";
 
@@ -11,6 +13,8 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string LastSearch { get; set; } = string.Empty;
 
+    // Display & Sound
+
     [ObservableProperty]
     public partial double CacheSize { get; set; } = 2;
 
@@ -19,6 +23,8 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool NotificationEnabled { get; set; } = true;
+
+    // Backup Schedule
 
     [ObservableProperty]
     public partial DateTime? BackupDate { get; set; }
@@ -32,6 +38,8 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool BackupTimeOpen { get; set; }
 
+    // Quality & Language
+
     [ObservableProperty]
     public partial bool LanguageOpen { get; set; }
 
@@ -42,6 +50,8 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
     public partial string Language { get; set; } = "日本語";
 
     public IReadOnlyList<string> Languages { get; } = ["日本語", "English", "中文", "한국어"];
+
+    // Command
 
     public IObserveCommand SearchCommand { get; }
 

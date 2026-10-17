@@ -4,8 +4,12 @@ using System.Text.Json;
 
 public sealed partial class UIGraph2ViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial IReadOnlyList<Selectable<GraphRow>> Rows { get; private set; } = [];
+
+    // Command
 
     public ICommand ToggleCommand { get; }
 

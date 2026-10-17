@@ -21,13 +21,19 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:DecibelToColorConverter x:Key="DecibelToColorConverter" />
+
+            <!-- Page -->
 
             <Style x:Key="LoadRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource FillGrid}">
                 <Setter Property="BackgroundColor" Value="#2E2F45" />
             </Style>
+
+            <!-- Gauge -->
 
             <Style x:Key="NoiseGauge"
                    TargetType="controls:NoiseGauge">
@@ -36,6 +42,8 @@
                 <Setter Property="NeedleCenterColor" Value="{StaticResource DeepOrangeDefault}" />
                 <Setter Property="PeakNeedleColor" Value="#B3FFD700" />
             </Style>
+
+            <!-- Recording -->
 
             <Style x:Key="RecordingDot"
                    TargetType="Ellipse">
@@ -46,6 +54,8 @@
                 <Setter Property="VerticalOptions" Value="Start" />
                 <Setter Property="Fill" Value="{StaticResource RedDefault}" />
             </Style>
+
+            <!-- Value -->
 
             <Style x:Key="LoadValueLabel"
                    TargetType="Label">
@@ -63,6 +73,8 @@
                    TargetType="Span">
                 <Setter Property="FontSize" Value="36" />
             </Style>
+
+            <!-- Summary -->
 
             <Style x:Key="SummaryNameLabel"
                    TargetType="Label">
@@ -96,15 +108,18 @@
     <Grid Style="{StaticResource LoadRootGrid}"
           RowDefinitions="*,Auto,*">
 
+        <!-- Gauge -->
         <controls:NoiseGauge Grid.Row="0"
                              Style="{StaticResource NoiseGauge}"
                              Value="{Binding Current}"
                              PeakValue="{Binding Peak}" />
 
+        <!-- Recording -->
         <Ellipse Grid.Row="0"
                  Style="{StaticResource RecordingDot}"
                  behaviors:AnimationOption.Blink="True" />
 
+        <!-- Value -->
         <Label Grid.Row="0"
                Style="{StaticResource LoadValueLabel}">
             <Label.FormattedText>
@@ -118,6 +133,7 @@
             </Label.FormattedText>
         </Label>
 
+        <!-- Summary -->
         <Grid Grid.Row="1"
               Style="{StaticResource FillGrid}"
               RowDefinitions="Auto,Auto"
@@ -166,6 +182,7 @@
             </Label>
         </Grid>
 
+        <!-- Chart -->
         <drawing:DrawingControl Grid.Row="2"
                                 Drawing="{Binding Drawing}" />
 

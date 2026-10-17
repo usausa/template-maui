@@ -16,11 +16,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="MeterRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource FillGrid}">
                 <Setter Property="BackgroundColor" Value="#2E2F45" />
             </Style>
+
+            <!-- Meter -->
 
             <Style x:Key="MeterGauge"
                    TargetType="controls:SpeedGauge">
@@ -52,6 +56,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- FPS -->
+
             <Style x:Key="FpsLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -59,6 +65,8 @@
                 <Setter Property="VerticalTextAlignment" Value="Start" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Joystick -->
 
             <Style x:Key="JoyStick"
                    TargetType="controls:JoyStickView">
@@ -87,6 +95,8 @@
                     </LinearGradientBrush>
                 </Setter>
             </Style>
+
+            <!-- Button -->
 
             <Style x:Key="JoyButton"
                    TargetType="Button">
@@ -152,6 +162,8 @@
                 </Setter>
             </Style>
 
+            <!-- Vignette -->
+
             <Style x:Key="VignetteBorder"
                    TargetType="Border">
                 <Setter Property="StrokeThickness" Value="0" />
@@ -166,6 +178,7 @@
           RowDefinitions="*,Auto,80"
           ColumnDefinitions="*,*">
 
+        <!-- Meter -->
         <controls:SpeedGauge Grid.Row="0" Grid.ColumnSpan="2"
                              Style="{StaticResource MeterGauge}"
                              MaxSpeed="255"
@@ -185,15 +198,18 @@
                    Text="km/h" />
         </VerticalStackLayout>
 
+        <!-- FPS -->
         <Label Grid.Row="0" Grid.Column="1"
                Style="{StaticResource FpsLabel}"
                Text="{Binding Fps, StringFormat='{0} fps'}" />
 
+        <!-- Joystick -->
         <controls:JoyStickView Grid.Row="1" Grid.Column="0"
                                Style="{StaticResource JoyStick}"
                                XValue="{Binding StickX}"
                                YValue="{Binding StickY}" />
 
+        <!-- Button -->
         <AbsoluteLayout Grid.Row="1" Grid.Column="1">
             <Button AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
                     Style="{StaticResource YButton}"
@@ -209,6 +225,7 @@
                     behaviors:ButtonOption.IsPressed="{Binding ButtonA}" />
         </AbsoluteLayout>
 
+        <!-- Vignette -->
         <Border Grid.RowSpan="3" Grid.ColumnSpan="2"
                 Style="{StaticResource VignetteBorder}">
             <Border.Background>

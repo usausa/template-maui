@@ -18,6 +18,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <s:MapToTextConverter x:Key="CrowdTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:SuperCrowd.Low}"
@@ -40,10 +42,14 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
+            <!-- Page -->
+
             <Style x:Key="SuperPageStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,12,0,24" />
             </Style>
+
+            <!-- Search -->
 
             <Style x:Key="SearchBorder"
                    TargetType="Border">
@@ -87,6 +93,8 @@
                 <Setter Property="TextColor" Value="{StaticResource OrangeDarken3}" />
             </Style>
 
+            <!-- Banner -->
+
             <Style x:Key="BannerCarouselView"
                    TargetType="CarouselView">
                 <Setter Property="Margin" Value="0,16,0,0" />
@@ -129,6 +137,8 @@
                 <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <!-- Section title -->
+
             <Style x:Key="SuperSectionLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="20,20,20,8" />
@@ -136,6 +146,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
+
+            <!-- Service -->
 
             <Style x:Key="AppFlex"
                    TargetType="FlexLayout">
@@ -169,6 +181,8 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
+
+            <!-- Coupon -->
 
             <Style x:Key="CouponCollection"
                    TargetType="CollectionView">
@@ -225,6 +239,8 @@
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
+
+            <!-- Shop -->
 
             <Style x:Key="ShopCollection"
                    TargetType="CollectionView">
@@ -316,6 +332,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Search -->
+
             <Style x:Key="SearchRowGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="16,0" />
@@ -330,6 +348,7 @@
     <ScrollView>
         <VerticalStackLayout Style="{StaticResource SuperPageStack}">
 
+            <!-- Search -->
             <Grid Style="{StaticResource SearchRowGrid}"
                   ColumnDefinitions="*,Auto">
                 <Border Grid.Column="0"
@@ -348,6 +367,7 @@
                 </Border>
             </Grid>
 
+            <!-- Banner -->
             <CarouselView x:Name="BannerCarousel"
                           Style="{StaticResource BannerCarouselView}"
                           ItemsSource="{Binding Banners}"
@@ -373,6 +393,7 @@
             <IndicatorView x:Name="BannerIndicator"
                            Style="{StaticResource BannerIndicatorView}" />
 
+            <!-- Service -->
             <Label Style="{StaticResource SuperSectionLabel}"
                    Text="サービス" />
             <FlexLayout Style="{StaticResource AppFlex}"
@@ -391,6 +412,7 @@
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
 
+            <!-- Coupon -->
             <Label Style="{StaticResource SuperSectionLabel}"
                    Text="クーポン・キャンペーン" />
             <CollectionView Style="{StaticResource CouponCollection}"
@@ -433,6 +455,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+            <!-- Shop -->
             <Label Style="{StaticResource SuperSectionLabel}"
                    Text="近くのお店" />
             <CollectionView Style="{StaticResource ShopCollection}"

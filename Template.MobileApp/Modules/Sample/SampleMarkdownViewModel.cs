@@ -2,8 +2,12 @@ namespace Template.MobileApp.Modules.Sample;
 
 public sealed partial class SampleMarkdownViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string Text { get; set; }
+
+    // Command
 
     public IObserveCommand LinkCommand { get; }
 

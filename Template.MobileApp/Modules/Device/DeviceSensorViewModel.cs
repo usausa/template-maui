@@ -8,6 +8,8 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class DeviceSensorViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IAccelerometer accelerometer;
     private readonly IBarometer barometer;
     private readonly ICompass compass;
@@ -15,9 +17,13 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
     private readonly IMagnetometer magnetometer;
     private readonly IOrientationSensor orientation;
 
+    // Drawing
+
     public CompassDrawing CompassDial { get; } = new();
 
     public LevelDrawing Level { get; } = new();
+
+    // Accelerometer
 
     [ObservableProperty(NotifyAlso = [nameof(AccelerationX), nameof(AccelerationY), nameof(AccelerationZ)])]
     public partial Vector3 AccelerationValue { get; set; }
@@ -26,8 +32,12 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
     public double AccelerationY => AccelerationValue.Y;
     public double AccelerationZ => AccelerationValue.Z;
 
+    // Barometer
+
     [ObservableProperty]
     public partial double BarometerValue { get; set; }
+
+    // Compass
 
     [ObservableProperty(NotifyAlso = [nameof(CompassDirection)])]
     public partial double MagneticValue { get; set; }
@@ -44,17 +54,23 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
         _ => "N"
     };
 
+    // Gyroscope
+
     [ObservableProperty(NotifyAlso = [nameof(GyroscopeX), nameof(GyroscopeY), nameof(GyroscopeZ)])]
     public partial Vector3 GyroscopeValue { get; set; }
     public double GyroscopeX => GyroscopeValue.X;
     public double GyroscopeY => GyroscopeValue.Y;
     public double GyroscopeZ => GyroscopeValue.Z;
 
+    // Magnetometer
+
     [ObservableProperty(NotifyAlso = [nameof(MagnetometerX), nameof(MagnetometerY), nameof(MagnetometerZ)])]
     public partial Vector3 MagnetometerValue { get; set; }
     public double MagnetometerX => MagnetometerValue.X;
     public double MagnetometerY => MagnetometerValue.Y;
     public double MagnetometerZ => MagnetometerValue.Z;
+
+    // Orientation
 
     [ObservableProperty(NotifyAlso = [nameof(OrientationX), nameof(OrientationY), nameof(OrientationZ), nameof(OrientationW)])]
     public partial Quaternion OrientationValue { get; set; }

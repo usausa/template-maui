@@ -19,12 +19,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="PageGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12" />
                 <Setter Property="RowSpacing" Value="12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
+
+            <!-- Server -->
 
             <Style x:Key="HostGrid"
                    TargetType="Grid">
@@ -48,6 +52,8 @@
                 <Setter Property="LineBreakMode" Value="CharacterWrap" />
             </Style>
 
+            <!-- Transfer -->
+
             <Style x:Key="ProgressGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
@@ -69,6 +75,8 @@
                    BasedOn="{StaticResource BasicIconOutlinedButton}">
                 <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
             </Style>
+
+            <!-- Log -->
 
             <Style x:Key="LogBorder"
                    TargetType="Border">
@@ -190,6 +198,7 @@
             </VerticalStackLayout>
         </controls:InfoCard>
 
+        <!-- Log -->
         <Border Grid.Row="2"
                 Style="{StaticResource LogBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp"

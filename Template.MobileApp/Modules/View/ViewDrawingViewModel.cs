@@ -4,12 +4,16 @@ using Template.MobileApp.Helpers;
 
 public sealed partial class ViewDrawingViewModel : AppViewModelBase
 {
+    // Property
+
     public DrawingController Controller { get; } = new();
 
     public SKBitmapImageSource Image { get; } = new();
 
     [ObservableProperty]
     public partial bool HasImage { get; set; }
+
+    // Command
 
     public IObserveCommand SelectColorCommand { get; }
 

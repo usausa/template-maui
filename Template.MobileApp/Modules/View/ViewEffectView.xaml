@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Focus border -->
+
             <Style x:Key="BlueFocusEntry"
                    TargetType="Entry"
                    BasedOn="{StaticResource BasicFieldEntry}">
@@ -30,6 +32,8 @@
                    BasedOn="{StaticResource BlueFocusEntry}">
                 <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource GreenDefault}" />
             </Style>
+
+            <!-- Common -->
 
             <Style x:Key="SectionLabel"
                    TargetType="Label">
@@ -55,6 +59,8 @@
                 </Setter>
             </Style>
 
+            <!-- Entrance -->
+
             <Style x:Key="EnterCard"
                    TargetType="Border"
                    BasedOn="{StaticResource EffectCard}">
@@ -77,6 +83,8 @@
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="SmallActionButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="16,0" />
@@ -86,6 +94,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Badge -->
 
             <Style x:Key="StepButton"
                    TargetType="Button"
@@ -118,6 +128,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Count up -->
+
             <Style x:Key="AmountLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -125,6 +137,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
             </Style>
+
+            <!-- Focus border -->
 
             <Style x:Key="FocusEntryBorder"
                    TargetType="Border">
@@ -136,6 +150,8 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
 
+            <!-- Press feedback -->
+
             <Style x:Key="PressCompareLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,6,0,0" />
@@ -144,10 +160,14 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="EffectRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
+
+            <!-- Badge -->
 
             <Style x:Key="BadgeCard"
                    TargetType="Border"
@@ -161,6 +181,8 @@
                 <Setter Property="Padding" Value="0,6,0,0" />
             </Style>
 
+            <!-- Page -->
+
             <Style x:Key="EffectPageScroll"
                    TargetType="ScrollView"
                    BasedOn="{StaticResource RootScroll}">
@@ -171,6 +193,8 @@
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="16,0,16,24" />
             </Style>
+
+            <!-- Entrance -->
 
             <Style x:Key="SectionHeaderGrid"
                    TargetType="Grid">
@@ -190,6 +214,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Badge -->
+
             <Style x:Key="BadgeHostGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="4,0,12,0" />
@@ -203,12 +229,16 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="EffectValueLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
+
+            <!-- Press feedback -->
 
             <Style x:Key="PressEffectButton"
                    TargetType="Button"
@@ -234,10 +264,14 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="EffectCardStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="12" />
             </Style>
+
+            <!-- Change feedback -->
 
             <Style x:Key="HeartIconLabel"
                    TargetType="Label">
@@ -258,6 +292,8 @@
                 <Setter Property="HeightRequest" Value="60" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="DarkPreviewBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="0" />
@@ -265,6 +301,8 @@
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
+
+            <!-- Change feedback -->
 
             <Style x:Key="PreviewCaptionLabel"
                    TargetType="Label">
@@ -281,6 +319,8 @@
                 <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="InputTransparent" Value="True" />
             </Style>
+
+            <!-- Effects -->
 
             <Style x:Key="ConfettiGrid"
                    TargetType="Grid">
@@ -333,6 +373,7 @@
     <ScrollView Style="{StaticResource EffectPageScroll}">
         <VerticalStackLayout Style="{StaticResource EffectPageStack}">
 
+            <!-- Entrance -->
             <Grid Style="{StaticResource SectionHeaderGrid}"
                   ColumnDefinitions="*,Auto">
                 <Label Grid.Column="0"
@@ -376,6 +417,7 @@
                 </HorizontalStackLayout>
             </Border>
 
+            <!-- Badge -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="Pop + badge" />
             <Border Style="{StaticResource BadgeCard}">
@@ -413,6 +455,7 @@
                 </Grid>
             </Border>
 
+            <!-- Count up -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="Count up" />
             <Border Style="{StaticResource EffectCard}">
@@ -428,6 +471,7 @@
                 </Grid>
             </Border>
 
+            <!-- Focus border -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="Focus border" />
             <Border Style="{StaticResource FocusEntryBorder}">
@@ -439,6 +483,7 @@
                        Placeholder="Email" />
             </Border>
 
+            <!-- Press feedback -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="Press feedback" />
             <Grid Style="{StaticResource EffectRowGrid}"
@@ -460,6 +505,7 @@
                 </VerticalStackLayout>
             </Grid>
 
+            <!-- Change feedback -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="Change feedback (Bounce / Flash / Highlight)" />
             <Border Style="{StaticResource EffectCard}">
@@ -491,6 +537,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Effects -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="Effects (Confetti / Long press / IconTint)" />
             <Border Style="{StaticResource EffectCard}">

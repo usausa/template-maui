@@ -4,11 +4,15 @@ using Template.MobileApp.Components;
 
 public sealed partial class DeviceNfcViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly ILogger<DeviceNfcViewModel> log;
 
     private readonly IDialog dialog;
 
     private readonly INfcReader nfcReader;
+
+    // Property
 
     [ObservableProperty]
     public partial string Idm { get; set; } = string.Empty;

@@ -34,7 +34,11 @@ public sealed class UIWeatherDay
 
 public sealed partial class UIWeatherViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly TimeProvider timeProvider;
+
+    // Property
 
     [ObservableProperty]
     public partial WeatherForecast Forecast { get; set; }
@@ -50,6 +54,8 @@ public sealed partial class UIWeatherViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsAlertExpanded { get; set; }
+
+    // Command
 
     public IObserveCommand RefreshCommand { get; }
 

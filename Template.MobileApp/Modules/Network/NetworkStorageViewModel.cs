@@ -33,6 +33,8 @@ public sealed class StorageEntryItem
 
 public sealed partial class NetworkStorageViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly IStorageManager storageManager;
@@ -40,6 +42,8 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     private readonly NetworkUsecase networkUsecase;
 
     private Action? cancel;
+
+    // Property
 
     [ObservableProperty(NotifyAlso = [nameof(PathDisplay)])]
     public partial string CurrentPath { get; private set; } = string.Empty;
@@ -64,6 +68,8 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     public ObservableCollection<StorageEntryItem> Entries { get; } = [];
 
     public ObservableCollection<string> Logs { get; } = [];
+
+    // Command
 
     public IObserveCommand ReloadCommand { get; }
     public IObserveCommand UpCommand { get; }

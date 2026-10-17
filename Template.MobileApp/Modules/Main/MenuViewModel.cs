@@ -2,11 +2,15 @@ namespace Template.MobileApp.Modules.Main;
 
 public sealed partial class MenuViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string Flavor { get; set; }
 
     [ObservableProperty]
     public partial Version Version { get; set; }
+
+    // Command
 
     public IObserveCommand ForwardCommand { get; }
 

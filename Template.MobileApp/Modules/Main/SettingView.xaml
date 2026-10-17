@@ -18,12 +18,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Setting panel -->
+
             <Style x:Key="PanelDivider"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="Margin" Value="0,2" />
             </Style>
+
+            <!-- Scan guide -->
 
             <Style x:Key="GuideBorder"
                    TargetType="Border">
@@ -55,6 +59,8 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
+
+            <!-- Setting panel -->
 
             <Style x:Key="SettingPanelBorder"
                    TargetType="Border">
@@ -147,11 +153,12 @@
     <Grid Style="{StaticResource DarkRootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Camera -->
         <scanner:CameraView Grid.Row="0"
                             behaviors:BarcodeBind.Controller="{Binding Controller}"
                             OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
-        <!-- Scan Guide -->
+        <!-- Scan guide -->
         <Border Grid.Row="0"
                 Style="{StaticResource GuideBorder}">
             <HorizontalStackLayout Style="{StaticResource GuideStack}">
@@ -162,7 +169,7 @@
             </HorizontalStackLayout>
         </Border>
 
-        <!-- Setting Panel -->
+        <!-- Setting panel -->
         <Border Grid.Row="1"
                 Style="{StaticResource SettingPanelBorder}">
             <VerticalStackLayout Style="{StaticResource SettingPanelStack}">

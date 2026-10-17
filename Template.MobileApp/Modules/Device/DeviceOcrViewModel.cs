@@ -4,9 +4,13 @@ using Template.MobileApp.Components;
 
 public sealed partial class DeviceOcrViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly IOcrReader ocrReader;
+
+    // Property
 
     public CameraController Controller { get; } = new();
 

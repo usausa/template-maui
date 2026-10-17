@@ -51,6 +51,8 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
 
     private const int CurrentIndex = 3;
 
+    // Field
+
     private static readonly UITimelineFilterOption AllFilter = new(null, false, "すべて");
 
     private readonly IDispatcherTimer timer;
@@ -58,6 +60,8 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
     private readonly IReadOnlyList<UITimelineEvent> sessions;
 
     private int minute = -1;
+
+    // Property
 
     public DateTime Today { get; }
 
@@ -71,6 +75,8 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial IReadOnlyList<UITimelineEvent> Events { get; set; } = [];
+
+    // Command
 
     public IObserveCommand BookmarkCommand { get; }
 
@@ -151,7 +157,7 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
             new(null, true, "☆ ブックマーク"),
             .. sessions.SelectMany(static x => new[] { x.Tag1, x.Tag2 }).Distinct().Select(static x => new UITimelineFilterOption(x, false, x))
         ];
-        SubscribeSelectedFilter(_ => Refresh());
+        SubscribeSelectedFilter(_ => UpdateEvents());
 
         BookmarkCommand = MakeDelegateCommand<UITimelineEvent>(ToggleBookmark);
 
@@ -159,7 +165,7 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
         timer.Interval = TimeSpan.FromSeconds(1);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => UpdateStatus()));
         UpdateStatus();
-        Refresh();
+        UpdateEvents();
     }
 
     //--------------------------------------------------------------------------------
@@ -191,7 +197,7 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
         session.IsBookmarked = !session.IsBookmarked;
         if (SelectedFilter.Bookmarked)
         {
-            Refresh();
+            UpdateEvents();
         }
     }
 
@@ -220,7 +226,7 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private void Refresh()
+    private void UpdateEvents()
     {
         var filter = SelectedFilter;
         Events = sessions

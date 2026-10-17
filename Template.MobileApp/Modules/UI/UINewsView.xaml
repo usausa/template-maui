@@ -20,11 +20,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Color -->
+
             <Color x:Key="NewsAccentColor">#E53935</Color>
             <Color x:Key="NewsTextColor">#212121</Color>
             <Color x:Key="NewsSubTextColor">#9E9E9E</Color>
             <Color x:Key="NewsLineColor">#EEEEEE</Color>
             <Color x:Key="NewsSkeletonColor">#ECEFF1</Color>
+
+            <!-- Converter -->
 
             <s:MapToTextConverter x:Key="CategoryTextConverter"
                                   DefaultValue="🔖 保存">
@@ -84,6 +88,8 @@
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
+            <!-- Tab bar -->
+
             <Style x:Key="NewsTabStrip"
                    TargetType="cmc:TabStrip">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -104,6 +110,8 @@
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
             </Style>
+
+            <!-- Breaking news -->
 
             <Style x:Key="BreakingGrid"
                    TargetType="Grid">
@@ -142,6 +150,8 @@
                 <Setter Property="Speed" Value="70" />
             </Style>
 
+            <!-- Article list -->
+
             <Style x:Key="NewsCarousel"
                    TargetType="CarouselView">
                 <Setter Property="BackgroundColor" Value="#F5F6F8" />
@@ -161,6 +171,8 @@
                    TargetType="CollectionView">
                 <Setter Property="RemainingItemsThreshold" Value="3" />
             </Style>
+
+            <!-- New arrivals -->
 
             <Style x:Key="NewArrivalsBorder"
                    TargetType="Border">
@@ -187,6 +199,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="HeaderGrid"
                    TargetType="Grid">
@@ -332,6 +346,8 @@
                 <Setter Property="TextColor" Value="#DDFFFFFF" />
             </Style>
 
+            <!-- Article -->
+
             <Style x:Key="ArticleRow"
                    TargetType="VerticalStackLayout">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -436,6 +452,8 @@
                 <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
             </Style>
 
+            <!-- Skeleton -->
+
             <Style x:Key="SkeletonShimmer"
                    TargetType="cmc:ShimmerView">
                 <Setter Property="IsActive" Value="True" />
@@ -475,6 +493,8 @@
                 <Setter Property="Color" Value="{StaticResource NewsSkeletonColor}" />
             </Style>
 
+            <!-- Empty -->
+
             <Style x:Key="EmptyStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="24,32,24,0" />
@@ -498,6 +518,8 @@
                 <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
             </Style>
 
+            <!-- Footer -->
+
             <Style x:Key="FooterGrid"
                    TargetType="Grid">
                 <Setter Property="HeightRequest" Value="64" />
@@ -518,6 +540,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
             </Style>
+
+            <!-- Template -->
 
             <DataTemplate x:Key="ArticleRowTemplate"
                           x:DataType="{x:Type module:UINewsItem}">
@@ -592,6 +616,7 @@
     <!-- Content -->
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
+        <!-- Tab bar -->
         <cmc:TabStrip Grid.Row="0"
                       Style="{StaticResource NewsTabStrip}"
                       ItemsSource="{Binding Context.Pages}"
@@ -621,6 +646,7 @@
         <BoxView Grid.Row="1"
                  Style="{StaticResource TabLine}" />
 
+        <!-- Breaking news -->
         <Grid Grid.Row="2"
               Style="{StaticResource BreakingGrid}"
               ColumnDefinitions="Auto,*">
@@ -637,6 +663,7 @@
                               Text="{Binding Context.Breaking.Title}" />
         </Grid>
 
+        <!-- Article list -->
         <CarouselView Grid.Row="3"
                       Style="{StaticResource NewsCarousel}"
                       behaviors:CarouselOption.PagePosition="{Binding PagePosition}"

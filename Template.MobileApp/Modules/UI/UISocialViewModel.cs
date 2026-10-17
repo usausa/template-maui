@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UISocialViewModel : AppViewModelBase
 {
-    // Notification
+    // Icon
 
     [ObservableProperty]
     public partial bool HasIconNotificationMail { get; set; }
@@ -92,6 +92,8 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool HasMenuNotificationLive { get; set; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
 

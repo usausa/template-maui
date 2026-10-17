@@ -22,6 +22,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:MailDateTimeStringConverter x:Key="MailDateTimeStringConverter" />
 
             <s:CompareToColorConverter x:Key="EqualToSelectColorConverter"
@@ -71,6 +73,8 @@
                                       Value="それ以前" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
+
+            <!-- Header -->
 
             <Style x:Key="MailHeaderRowLayout"
                    TargetType="FlexLayout">
@@ -145,6 +149,8 @@
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
+            <!-- Messages -->
+
             <Style x:Key="MessageCollection"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -190,6 +196,8 @@
                 <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <!-- Empty state -->
+
             <Style x:Key="EmptyStateLayout"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="12" />
@@ -212,6 +220,8 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
+
+            <!-- Messages -->
 
             <Style x:Key="MessageImage"
                    TargetType="Image">
@@ -291,12 +301,16 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
+            <!-- Indicator -->
+
             <Style x:Key="LoadingIndicator"
                    TargetType="ActivityIndicator">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="Color" Value="{StaticResource BlueDarken2}" />
             </Style>
+
+            <!-- Floating button -->
 
             <Style x:Key="FloatingButton"
                    TargetType="Button">
@@ -318,6 +332,8 @@
                 </Setter>
             </Style>
 
+            <!-- Tab -->
+
             <Style x:Key="MailMenuGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
@@ -332,6 +348,8 @@
                 <Setter Property="ContentLayout" Value="Top, 0" />
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
+
+            <!-- Drawer -->
 
             <Style x:Key="DrawerGrid"
                    TargetType="Grid">
@@ -574,7 +592,7 @@
                            Style="{StaticResource LoadingIndicator}"
                            IsRunning="{Binding IsLoading}" />
 
-        <!-- Floating Button -->
+        <!-- Floating button -->
         <Button x:Name="MailFab"
                 Grid.Row="2"
                 Style="{StaticResource FloatingButton}"
@@ -626,6 +644,7 @@
             </Button>
         </Grid>
 
+        <!-- Drawer -->
         <cmc:SideDrawer Grid.Row="0" Grid.RowSpan="4"
                         IsOpen="{Binding IsDrawerOpen}"
                         DrawerWidth="280" EdgeSwipeEnabled="False">

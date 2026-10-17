@@ -21,6 +21,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Brush -->
+
             <LinearGradientBrush x:Key="ClearSkyBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Offset="0" Color="#0D5BB8" />
                 <GradientStop Offset="0.5" Color="#2383DE" />
@@ -94,6 +96,8 @@
                 <GradientStop Offset="1" Color="#34D399" />
             </LinearGradientBrush>
 
+            <!-- Color -->
+
             <Color x:Key="WeatherDimColor">#CCFFFFFF</Color>
             <Color x:Key="WeatherRainColor">#9FD8FF</Color>
             <Color x:Key="WeatherCardColor">#26FFFFFF</Color>
@@ -101,6 +105,8 @@
             <Color x:Key="WeatherLineColor">#33FFFFFF</Color>
             <Color x:Key="WeatherSaturdayColor">#A5CCFF</Color>
             <Color x:Key="WeatherSundayColor">#FFABAB</Color>
+
+            <!-- Converter -->
 
             <s:MapToTextConverter x:Key="DayIconConverter">
                 <s:MapToTextConverter.Entries>
@@ -300,6 +306,8 @@
 
             <converters:CompassPointConverter x:Key="CompassPointConverter" />
 
+            <!-- Page -->
+
             <Style x:Key="WeatherRootGrid"
                    TargetType="Grid">
                 <Setter Property="Background" Value="{StaticResource ClearSkyBrush}" />
@@ -327,6 +335,8 @@
                 <Setter Property="Padding" Value="16,8,16,24" />
                 <Setter Property="Spacing" Value="12" />
             </Style>
+
+            <!-- Current header -->
 
             <Style x:Key="CurrentStack"
                    TargetType="VerticalStackLayout">
@@ -391,6 +401,8 @@
                 <Setter Property="TextColor" Value="{StaticResource WeatherDimColor}" />
             </Style>
 
+            <!-- Compact header -->
+
             <Style x:Key="CompactBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,8,0,0" />
@@ -423,6 +435,8 @@
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
+
+            <!-- Alert -->
 
             <Style x:Key="AlertBorder"
                    TargetType="Border">
@@ -497,6 +511,9 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Card -->
+
             <Style x:Key="WeatherCardBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="14,12" />
@@ -523,6 +540,8 @@
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource WeatherLineColor}" />
             </Style>
+
+            <!-- Hourly forecast -->
 
             <Style x:Key="HourCollection"
                    TargetType="CollectionView">
@@ -572,6 +591,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource WeatherRainColor}" />
             </Style>
+
+            <!-- Weekly forecast -->
 
             <Style x:Key="DayGrid"
                    TargetType="Grid">
@@ -637,6 +658,8 @@
                 <Setter Property="EndColor" Value="#FDBA74" />
             </Style>
 
+            <!-- Life index -->
+
             <Style x:Key="IndexGrid"
                    TargetType="cmc:StaggeredGrid">
                 <Setter Property="Columns" Value="3" />
@@ -684,6 +707,8 @@
                 <Setter Property="Margin" Value="4,4,4,0" />
                 <Setter Property="HeightRequest" Value="6" />
             </Style>
+
+            <!-- Detail -->
 
             <Style x:Key="DetailGrid"
                    TargetType="Grid">
@@ -846,6 +871,7 @@
             </DataTrigger>
         </Grid.Triggers>
 
+        <!-- Sky glow -->
         <Ellipse Style="{StaticResource SkyGlowEllipse}">
             <Ellipse.Triggers>
                 <DataTrigger TargetType="Ellipse"
@@ -863,6 +889,7 @@
                         behaviors:Scroll.CollapsedTarget="{x:Reference CompactHeader}">
                 <VerticalStackLayout Style="{StaticResource WeatherStack}">
 
+                    <!-- Current header -->
                     <VerticalStackLayout x:Name="CurrentHeader"
                                          Style="{StaticResource CurrentStack}">
                         <Label Style="{StaticResource LocationLabel}"
@@ -900,6 +927,7 @@
                         </Label>
                     </VerticalStackLayout>
 
+                    <!-- Alert -->
                     <Border Style="{StaticResource AlertBorder}"
                             IsVisible="{Binding Forecast.HasAlerts}">
                         <Border.Triggers>
@@ -976,6 +1004,7 @@
                         </VerticalStackLayout>
                     </Border>
 
+                    <!-- Hourly forecast -->
                     <Border Style="{StaticResource WeatherCardBorder}">
                         <VerticalStackLayout Style="{StaticResource CardStack}">
                             <Label Style="{StaticResource CardTitleLabel}"
@@ -1044,6 +1073,7 @@
                         </VerticalStackLayout>
                     </Border>
 
+                    <!-- Weekly forecast -->
                     <Border Style="{StaticResource WeatherCardBorder}">
                         <VerticalStackLayout Style="{StaticResource CardStack}">
                             <Label Style="{StaticResource CardTitleLabel}"
@@ -1107,6 +1137,7 @@
                         </VerticalStackLayout>
                     </Border>
 
+                    <!-- Life index -->
                     <ContentView behaviors:LazyViewOption.Deferred="True">
                         <behaviors:LazyViewOption.Template>
                             <DataTemplate x:DataType="module:UIWeatherViewModel">
@@ -1140,6 +1171,7 @@
                         </behaviors:LazyViewOption.Template>
                     </ContentView>
 
+                    <!-- Detail -->
                     <ContentView behaviors:LazyViewOption.Deferred="True">
                         <behaviors:LazyViewOption.Template>
                             <DataTemplate x:DataType="module:UIWeatherViewModel">
@@ -1275,6 +1307,7 @@
             </ScrollView>
         </RefreshView>
 
+        <!-- Compact header -->
         <Border x:Name="CompactHeader"
                 Style="{StaticResource CompactBorder}">
             <HorizontalStackLayout Style="{StaticResource CompactRow}">

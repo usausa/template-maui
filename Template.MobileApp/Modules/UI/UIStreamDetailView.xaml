@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:RuntimeTextConverter x:Key="RuntimeTextConverter" />
 
             <s:MapToTextConverter x:Key="GenreNameConverter">
@@ -49,10 +51,14 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
+            <!-- Page -->
+
             <Style x:Key="StreamDetailScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
+
+            <!-- Player -->
 
             <Style x:Key="PlayerGrid"
                    TargetType="Grid">
@@ -83,6 +89,8 @@
                 <Setter Property="ProgressColor" Value="{StaticResource RedAccent3}" />
             </Style>
 
+            <!-- Title -->
+
             <Style x:Key="StreamDetailTitleLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="16,16,16,4" />
@@ -109,6 +117,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten2}" />
             </Style>
+
+            <!-- Action -->
 
             <Style x:Key="ActionRow"
                    TargetType="HorizontalStackLayout">
@@ -139,6 +149,8 @@
                 <Setter Property="FontSize" Value="20" />
             </Style>
 
+            <!-- Synopsis -->
+
             <Style x:Key="SynopsisLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="16,4,16,6" />
@@ -152,6 +164,8 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
+
+            <!-- Friend -->
 
             <Style x:Key="FriendsRow"
                    TargetType="HorizontalStackLayout">
@@ -174,6 +188,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
+
+            <!-- Tab bar -->
 
             <Style x:Key="TabRow"
                    TargetType="Grid">
@@ -207,6 +223,8 @@
                    BasedOn="{StaticResource TabIndicator}">
                 <Setter Property="Color" Value="Transparent" />
             </Style>
+
+            <!-- Trailer -->
 
             <Style x:Key="TrailerStack"
                    TargetType="VerticalStackLayout">
@@ -270,6 +288,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
+            <!-- Related -->
+
             <Style x:Key="RelatedCollection"
                    TargetType="CollectionView">
                 <Setter Property="Margin" Value="12,0,12,16" />
@@ -322,6 +342,7 @@
                 behaviors:Scroll.TopTrigger="{Binding Context.Selected}">
         <VerticalStackLayout>
 
+            <!-- Player -->
             <Grid Style="{StaticResource PlayerGrid}">
                 <Image Style="{StaticResource PlayerImage}"
                        Source="{Binding Context.Selected.Work.Image}" />
@@ -332,6 +353,7 @@
                              Progress="{Binding Context.Selected.Progress}" />
             </Grid>
 
+            <!-- Title -->
             <Label Style="{StaticResource StreamDetailTitleLabel}"
                    Text="{Binding Context.Selected.Work.Title}" />
             <HorizontalStackLayout Style="{StaticResource MetaRow}">
@@ -351,6 +373,7 @@
                 </Label>
             </HorizontalStackLayout>
 
+            <!-- Action -->
             <HorizontalStackLayout Style="{StaticResource ActionRow}">
                 <Button Style="{StaticResource PrimaryPlayButton}"
                         behaviors:ButtonOption.PressEffect="True">
@@ -395,6 +418,7 @@
                 </Button>
             </HorizontalStackLayout>
 
+            <!-- Synopsis -->
             <Label Style="{StaticResource SynopsisLabel}"
                    Text="{Binding Context.Selected.Work.Synopsis}" />
             <Label Style="{StaticResource CastLabel}">
@@ -406,6 +430,7 @@
                 </Label.Text>
             </Label>
 
+            <!-- Friend -->
             <HorizontalStackLayout Style="{StaticResource FriendsRow}">
                 <cmc:AvatarGroup Style="{StaticResource FriendsAvatars}"
                                  ItemsSource="{Binding Friends}" />
@@ -413,6 +438,7 @@
                        Text="Friends are watching" />
             </HorizontalStackLayout>
 
+            <!-- Tab bar -->
             <Grid Style="{StaticResource TabRow}"
                   ColumnDefinitions="*,*">
                 <VerticalStackLayout Grid.Column="0">
@@ -449,6 +475,7 @@
                 </VerticalStackLayout>
             </Grid>
 
+            <!-- Trailer -->
             <VerticalStackLayout Style="{StaticResource TrailerStack}"
                                  behaviors:AnimationOption.FadeInTrigger="{Binding TrailersSelected}"
                                  BindableLayout.ItemsSource="{Binding Context.Selected.Work.Trailers}"
@@ -491,6 +518,7 @@
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
 
+            <!-- Related -->
             <CollectionView Style="{StaticResource RelatedCollection}"
                             behaviors:AnimationOption.FadeInTrigger="{Binding RelatedSelected}"
                             ItemsSource="{Binding Context.Related}"

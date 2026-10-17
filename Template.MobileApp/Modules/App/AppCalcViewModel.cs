@@ -4,7 +4,11 @@ using Template.MobileApp.Models.App;
 
 public sealed partial class AppCalcViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly CalcInput input = new();
+
+    // Property
 
     [ObservableProperty]
     public partial string Expression { get; set; } = string.Empty;
@@ -14,6 +18,8 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string ErrorMessage { get; set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand InputCommand { get; }
 

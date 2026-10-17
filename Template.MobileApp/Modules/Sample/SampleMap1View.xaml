@@ -22,6 +22,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Floating button -->
+
             <Style x:Key="MapFabStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Margin" Value="0,16,16,0" />
@@ -46,6 +48,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <!-- Layer sheet -->
 
             <Style x:Key="LayerSheet"
                    TargetType="cmc:BottomSheetView">
@@ -84,6 +88,7 @@
     <!-- Content -->
     <Grid Style="{StaticResource FillGrid}">
 
+        <!-- Map -->
         <maps:Map behaviors:MapBind.Controller="{Binding Controller}"
                   ItemsSource="{Binding Spots}"
                   MapType="{Binding CurrentMapType}">
@@ -96,12 +101,14 @@
             </maps:Map.ItemTemplate>
         </maps:Map>
 
+        <!-- Floating button -->
         <VerticalStackLayout Style="{StaticResource MapFabStack}">
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
 
+        <!-- Layer sheet -->
         <cmc:BottomSheetView Style="{StaticResource LayerSheet}"
                              IsOpen="{Binding IsLayerOpen}">
             <cmc:BottomSheetView.SheetTemplate>

@@ -26,12 +26,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Flash -->
+
             <Style x:Key="DetectFlashBoxView"
                    TargetType="BoxView">
                 <Setter Property="Color" Value="White" />
                 <Setter Property="Opacity" Value="0" />
                 <Setter Property="InputTransparent" Value="True" />
             </Style>
+
+            <!-- Scan frame -->
 
             <Style x:Key="ScanFrameOverlay"
                    TargetType="controls:CameraOverlayView">
@@ -41,6 +45,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="ShowGrid" Value="False" />
             </Style>
+
+            <!-- Status -->
 
             <Style x:Key="StateChipStack"
                    TargetType="HorizontalStackLayout">
@@ -65,6 +71,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Control -->
+
             <Style x:Key="OverlayButtonStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="0,0,0,20" />
@@ -85,6 +93,8 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="BackgroundColor" Value="#99000000" />
             </Style>
+
+            <!-- Result -->
 
             <Style x:Key="ResultBandBorder"
                    TargetType="Border">
@@ -131,20 +141,25 @@
     <Grid Style="{StaticResource DarkRootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Preview -->
         <scanner:CameraView Grid.Row="0"
                             behaviors:BarcodeBind.Controller="{Binding Controller}"
                             OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
+        <!-- Scan frame -->
         <controls:CameraOverlayView Grid.Row="0"
                                     Style="{StaticResource ScanFrameOverlay}" />
 
+        <!-- Detection -->
         <drawing:DrawingControl Grid.Row="0"
                                 Drawing="{Binding Drawing}" />
 
+        <!-- Flash -->
         <BoxView Grid.Row="0"
                  Style="{StaticResource DetectFlashBoxView}"
                  behaviors:AnimationOption.FlashTrigger="{Binding Barcode}" />
 
+        <!-- Status -->
         <HorizontalStackLayout Grid.Row="0"
                                Style="{StaticResource StateChipStack}">
             <Border Style="{StaticResource StateChipBorder}">
@@ -187,6 +202,7 @@
             </Border>
         </HorizontalStackLayout>
 
+        <!-- Control -->
         <HorizontalStackLayout Grid.Row="0"
                                Style="{StaticResource OverlayButtonStack}">
             <Button Style="{StaticResource OverlayIconButton}"
@@ -220,6 +236,7 @@
                     Text="{x:Static fonts:MaterialIcons.Zoom_in}" />
         </HorizontalStackLayout>
 
+        <!-- Result -->
         <Border Grid.Row="1"
                 Style="{StaticResource ResultBandBorder}">
             <Grid Style="{StaticResource ResultGrid}"

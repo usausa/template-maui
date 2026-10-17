@@ -5,9 +5,13 @@ using System.Text.Json;
 
 public sealed partial class SampleWebBasicViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IAppInfo appInfo;
 
     private readonly IDeviceInfo deviceInfo;
+
+    // Property
 
     public WebViewController<SampleWebBasicViewModel> Controller { get; }
 

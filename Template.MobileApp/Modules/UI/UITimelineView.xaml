@@ -17,10 +17,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="TimelineGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="TimelineHeaderGrid"
                    TargetType="Grid">
@@ -28,6 +32,8 @@
                 <Setter Property="ColumnSpacing" Value="12" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Filter -->
 
             <Style x:Key="FilterScroll"
                    TargetType="ScrollView">
@@ -60,6 +66,8 @@
                 <Setter Property="Spacing" Value="8" />
                 <Setter Property="ItemStyle" Value="{StaticResource FilterChipLabel}" />
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="TimelineHeaderDivider"
                    TargetType="BoxView">
@@ -110,6 +118,7 @@
             </Style>
 
             <!-- Timeline items -->
+
             <Style x:Key="TimelineCollection"
                    TargetType="CollectionView">
                 <Setter Property="VerticalScrollBarVisibility" Value="Never" />
@@ -298,6 +307,8 @@
                 <Setter Property="Color" Value="{StaticResource RedDefault}" />
             </Style>
 
+            <!-- Empty -->
+
             <Style x:Key="EmptyLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,48" />
@@ -313,6 +324,7 @@
     <Grid Style="{StaticResource TimelineGrid}"
           RowDefinitions="Auto,Auto,Auto,*">
 
+        <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource TimelineHeaderGrid}"
               ColumnDefinitions="Auto,*"
@@ -331,6 +343,7 @@
             </VerticalStackLayout>
         </Grid>
 
+        <!-- Filter -->
         <ScrollView Grid.Row="1"
                     Style="{StaticResource FilterScroll}">
             <cmc:ChipGroup Style="{StaticResource FilterChipGroup}"
@@ -347,6 +360,7 @@
         <BoxView Grid.Row="2"
                  Style="{StaticResource TimelineHeaderDivider}" />
 
+        <!-- Timeline items -->
         <CollectionView Grid.Row="3"
                         Style="{StaticResource TimelineCollection}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"

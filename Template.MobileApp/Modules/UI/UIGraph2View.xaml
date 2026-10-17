@@ -20,6 +20,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Timeline -->
+
             <Style x:Key="TimelineSurface"
                    TargetType="controls:GraphRowSurface">
                 <Setter Property="VerticalOptions" Value="Fill" />
@@ -29,6 +31,8 @@
                 <Setter Property="NodeCenterY" Value="28" />
                 <Setter Property="UseCurves" Value="True" />
             </Style>
+
+            <!-- Commit -->
 
             <Style x:Key="ShaLabel"
                    TargetType="Label">
@@ -63,6 +67,8 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="#FF999999" />
             </Style>
+
+            <!-- Detail -->
 
             <Style x:Key="DetailBorder"
                    TargetType="Border">
@@ -110,6 +116,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
+            <!-- Commit -->
+
             <Style x:Key="CommitInfoGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="2" />
@@ -122,6 +130,8 @@
 
     <!-- Content -->
     <Grid Style="{StaticResource FillGrid}">
+
+        <!-- Timeline -->
         <CollectionView behaviors:AnimationOption.EnterAnimation="FadeUp"
                         ItemsSource="{Binding Rows}"
                         VerticalScrollBarVisibility="Default">

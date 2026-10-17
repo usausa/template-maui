@@ -2,8 +2,12 @@ namespace Template.MobileApp.Modules.Navigation.Effect;
 
 public sealed partial class EffectDialogViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string AppliedEffect { get; private set; } = "(none)";
+
+    // Command
 
     public IObserveCommand CloseCommand { get; }
 

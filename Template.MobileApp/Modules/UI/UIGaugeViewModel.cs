@@ -35,6 +35,8 @@ public sealed class GaugeColorSwatch
 
 public sealed partial class UIGaugeViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly (Color Start, Color End)[] PressureBands =
     [
         (Color.FromArgb("#FFB0B0"), Color.FromArgb("#CC0000")),
@@ -102,10 +104,14 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
 
     private bool rpmSymmetric;
 
+    // Kind
+
     public IReadOnlyList<string> Kinds { get; } = ["Press", "Humid", "Temp", "Wind", "Speed", "RPM"];
 
     [ObservableProperty]
     public partial int KindIndex { get; set; }
+
+    // Pressure
 
     [ObservableProperty]
     public partial double Pressure { get; set; } = 1013;
@@ -124,6 +130,8 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
 
     public IReadOnlyList<GaugeColorSwatch> PressureBandSwatches { get; }
 
+    // Humidity
+
     [ObservableProperty]
     public partial double Humidity { get; set; } = 50;
 
@@ -140,6 +148,8 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
     public partial GaugeUnitPosition HumidityUnitPosition { get; set; } = GaugeUnitPosition.Right;
 
     public IReadOnlyList<GaugeColorSwatch> HumidityBackgroundSwatches { get; }
+
+    // Temperature
 
     [ObservableProperty]
     public partial double Temperature { get; set; } = 22;
@@ -161,6 +171,8 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
 
     public IReadOnlyList<GaugeColorSwatch> TemperatureArcSwatches { get; }
 
+    // Wind
+
     [ObservableProperty]
     public partial double WindDirection { get; set; } = 90;
 
@@ -176,6 +188,8 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool WindValueVisible { get; set; }
 
+    // Speed
+
     [ObservableProperty]
     public partial double SpeedKmh { get; set; } = 80;
 
@@ -188,6 +202,8 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
     [ObservableProperty]
     public partial GaugeUnitPosition SpeedUnitPosition { get; set; } = GaugeUnitPosition.Bottom;
 
+    // RPM
+
     [ObservableProperty]
     public partial double Rpm { get; set; } = 3.5;
 
@@ -199,6 +215,8 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool RpmWideNeedle { get; set; }
+
+    // Command
 
     public IObserveCommand RandomCommand { get; }
 

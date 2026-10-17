@@ -183,7 +183,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     private void Select(SudokuCell cell)
     {
         selected = cell;
-        Refresh(null, []);
+        UpdateBoard(null, []);
     }
 
     private void Input(int value)
@@ -202,7 +202,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     {
         if ((selected is { } cell) && game.Clear(cell))
         {
-            Refresh(null, []);
+            UpdateBoard(null, []);
             Save();
         }
     }
@@ -212,7 +212,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         if (game.Undo() is { } cell)
         {
             selected = cell;
-            Refresh(null, []);
+            UpdateBoard(null, []);
             Save();
         }
     }
@@ -239,7 +239,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         }
 
         UpdateClock();
-        Refresh(cell, flash);
+        UpdateBoard(cell, flash);
         Save();
     }
 
@@ -247,10 +247,10 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     {
         selected = null;
         IsNoteMode = false;
-        Refresh(null, []);
+        UpdateBoard(null, []);
     }
 
-    private void Refresh(SudokuCell? placed, SudokuCell[] flash)
+    private void UpdateBoard(SudokuCell? placed, SudokuCell[] flash)
     {
         Board = new SudokuFrame(game, selected, placed, flash);
         Level = game.Level;

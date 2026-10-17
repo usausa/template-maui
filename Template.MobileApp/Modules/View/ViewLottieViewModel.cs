@@ -3,6 +3,8 @@ namespace Template.MobileApp.Modules.View;
 // ref https://lottiefiles.com/
 public sealed partial class ViewLottieViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial bool IsAnimationEnabled { get; set; }
 
@@ -14,6 +16,8 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
     public double ProgressSeconds => Progress.TotalSeconds;
 
     public double DurationSeconds => Math.Max(0.1d, Duration.TotalSeconds);
+
+    // Command
 
     public IObserveCommand PlayPauseCommand { get; }
     public IObserveCommand ResetCommand { get; }

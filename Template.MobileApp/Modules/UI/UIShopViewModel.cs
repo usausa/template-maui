@@ -22,6 +22,8 @@ public sealed partial class UIShopPopularItem : ObservableObject
 
 public sealed partial class UIShopViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly UIShopCategoryOption[] CategoryOptions =
     [
         new(null, "すべて"),
@@ -48,19 +50,27 @@ public sealed partial class UIShopViewModel : AppViewModelBase
         new(100000, "〜 10 万円")
     ];
 
+    // Context
+
     [Scope]
     [ObservableProperty]
     public partial UIShopContext Context { get; set; } = default!;
 
+    // Header
+
     public string Greeting { get; } = "こんにちは、うさうささん";
 
     public string SubGreeting { get; } = "デスク周りをアップグレード";
+
+    // Option
 
     public IReadOnlyList<UIShopCategoryOption> Categories { get; } = CategoryOptions;
 
     public IReadOnlyList<UIShopSortOption> Sorts { get; } = SortOptions;
 
     public IReadOnlyList<UIShopPriceOption> Prices { get; } = PriceOptions;
+
+    // Filter
 
     [ObservableProperty]
     public partial UIShopCategoryOption SelectedCategory { get; set; } = CategoryOptions[0];
@@ -79,10 +89,14 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsFilterOpen { get; set; }
 
+    // Item
+
     [ObservableProperty]
     public partial IReadOnlyList<UIShopPopularItem> Popular { get; set; } = [];
 
     public ObservableCollection<ShopItem> Items { get; } = [];
+
+    // Command
 
     public IObserveCommand ItemCommand { get; }
 

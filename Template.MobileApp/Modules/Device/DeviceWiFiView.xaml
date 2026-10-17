@@ -22,6 +22,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Connection -->
+
             <Style x:Key="PermissionHintLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCaptionLabel}">
@@ -36,12 +38,16 @@
                 <Setter Property="Margin" Value="-12,8,-12,-10" />
             </Style>
 
+            <!-- List -->
+
             <Style x:Key="DetailDivider"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="Margin" Value="-8,0,0,0" />
             </Style>
+
+            <!-- Converter -->
 
             <converters:WiFiSignalIconConverter x:Key="SignalIconConverter"
                                                 Level0="{x:Static fonts:MaterialIcons.Signal_wifi_0_bar}"
@@ -83,6 +89,9 @@
                                       Value="🔒 WPA3" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
+
+            <!-- Connection -->
+
             <Style x:Key="ConnectionBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0" />
@@ -220,6 +229,8 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
+            <!-- List header -->
+
             <Style x:Key="ListHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12,8" />
@@ -266,6 +277,8 @@
                 <Setter Property="HorizontalTextAlignment" Value="End" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
             </Style>
+
+            <!-- List -->
 
             <Style x:Key="AccessPointCollection"
                    TargetType="CollectionView">
@@ -387,6 +400,7 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="Auto,Auto,*">
 
+        <!-- Connection -->
         <Border Grid.Row="0"
                 Style="{StaticResource ConnectionBorder}">
             <Border.GestureRecognizers>
@@ -460,6 +474,7 @@
             </Grid>
         </Border>
 
+        <!-- List header -->
         <Grid Grid.Row="1"
               Style="{StaticResource ListHeaderGrid}"
               ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto">
@@ -492,6 +507,7 @@
                    Text="{x:Static fonts:MaterialIcons.Sync}" />
         </Grid>
 
+        <!-- List -->
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
         <CollectionView Grid.Row="2"
                         Style="{StaticResource AccessPointCollection}"

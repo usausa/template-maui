@@ -17,10 +17,13 @@
         <ResourceDictionary>
 
             <!-- Hero -->
+
             <Style x:Key="HeroImage"
                    TargetType="Image">
                 <Setter Property="Aspect" Value="AspectFill" />
             </Style>
+
+            <!-- Detail -->
 
             <Style x:Key="DetailCardBorder"
                    TargetType="Border">
@@ -34,6 +37,8 @@
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="20,16,20,8" />
             </Style>
+
+            <!-- Name -->
 
             <Style x:Key="NameRowGrid"
                    TargetType="Grid">
@@ -73,6 +78,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Tag -->
+
             <Style x:Key="TagRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="6" />
@@ -91,6 +98,8 @@
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
+
+            <!-- Stat -->
 
             <Style x:Key="StatStack"
                    TargetType="VerticalStackLayout">
@@ -125,6 +134,7 @@
             </Style>
 
             <!-- Flavor text -->
+
             <Style x:Key="FlavorBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,12,0,0" />
@@ -155,7 +165,8 @@
                 <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
-            <!-- Actions -->
+            <!-- Action -->
+
             <Style x:Key="ButtonRow"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="0,12,0,8" />
@@ -200,15 +211,19 @@
 
     <!-- Content -->
     <Grid RowDefinitions="*,40,Auto">
+
+        <!-- Hero -->
         <Image Grid.Row="0" Grid.RowSpan="2"
                Style="{StaticResource HeroImage}"
                Source="monster01.jpg" />
 
+        <!-- Detail -->
         <Border Grid.Row="1" Grid.RowSpan="2"
                 Style="{StaticResource DetailCardBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource DetailStack}">
 
+                <!-- Name -->
                 <Grid Style="{StaticResource NameRowGrid}"
                       ColumnDefinitions="Auto,*,Auto">
                     <Label Grid.Column="0"
@@ -224,6 +239,7 @@
                     </Border>
                 </Grid>
 
+                <!-- Tag -->
                 <HorizontalStackLayout Style="{StaticResource TagRow}"
                                        BindableLayout.ItemsSource="{Binding Tags}">
                     <BindableLayout.ItemTemplate>
@@ -238,6 +254,7 @@
                     </BindableLayout.ItemTemplate>
                 </HorizontalStackLayout>
 
+                <!-- Stat -->
                 <VerticalStackLayout Style="{StaticResource StatStack}">
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
@@ -310,7 +327,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Actions -->
+                <!-- Action -->
                 <Grid Style="{StaticResource ButtonRow}"
                       ColumnDefinitions="Auto,*">
                     <Button Grid.Column="0"

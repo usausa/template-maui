@@ -6,6 +6,8 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class SampleCropViewModel : AppViewModelBase
 {
+    // Property
+
     public CropDrawing Crop { get; } = new();
 
     [ObservableProperty]
@@ -13,6 +15,8 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string ResultText { get; private set; } = string.Empty;
+
+    // Command
 
     public IObserveCommand ExportCommand { get; }
     public IObserveCommand ResetCommand { get; }

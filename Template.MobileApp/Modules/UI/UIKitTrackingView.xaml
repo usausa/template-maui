@@ -16,10 +16,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="KitTrackingScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Header -->
 
             <Style x:Key="HeaderBorder"
                    TargetType="Border">
@@ -83,6 +87,8 @@
                 <Setter Property="Margin" Value="0,12,0,0" />
                 <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
             </Style>
+
+            <!-- Courier -->
 
             <Style x:Key="CourierBorder"
                    TargetType="Border">
@@ -148,6 +154,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
+
+            <!-- Timeline -->
 
             <Style x:Key="StepRow"
                    TargetType="Grid">
@@ -231,6 +239,8 @@
     <!-- Content -->
     <ScrollView Style="{StaticResource KitTrackingScroll}">
         <VerticalStackLayout>
+
+            <!-- Header -->
             <Border Style="{StaticResource HeaderBorder}">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto">
@@ -263,6 +273,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Courier -->
             <Border Style="{StaticResource CourierBorder}">
                 <Grid Style="{StaticResource CourierGrid}"
                       ColumnDefinitions="Auto,*,Auto,Auto">
@@ -289,6 +300,7 @@
                 </Grid>
             </Border>
 
+            <!-- Timeline -->
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Steps}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="module:UIKitTrackingStep">

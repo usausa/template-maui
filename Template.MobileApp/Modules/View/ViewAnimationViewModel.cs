@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewAnimationViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial bool LoopEnabled { get; set; } = true;
 
@@ -10,6 +12,8 @@ public sealed partial class ViewAnimationViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial int BeatCount { get; set; }
+
+    // Command
 
     public IObserveCommand JumpCommand { get; }
 
