@@ -4,7 +4,15 @@ using Smart.Maui.Interactivity;
 
 public static partial class EntryOption
 {
+    //--------------------------------------------------------------------------------
+    // Mapper
+    //--------------------------------------------------------------------------------
+
     public static partial void UseCustomMapper(BehaviorOptions options);
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     // ReSharper disable InconsistentNaming
     public static readonly BindableProperty DisableShowSoftInputOnFocusProperty = BindableProperty.CreateAttached(
@@ -86,6 +94,10 @@ public static partial class EntryOption
     public static int GetTypingStoppedDelay(BindableObject bindable) => (int)bindable.GetValue(TypingStoppedDelayProperty);
 
     public static void SetTypingStoppedDelay(BindableObject bindable, int value) => bindable.SetValue(TypingStoppedDelayProperty, value);
+
+    //--------------------------------------------------------------------------------
+    // Handler
+    //--------------------------------------------------------------------------------
 
     private static void OnTypingStoppedCommandChanged(BindableObject bindable, object? oldValue, object? newValue)
     {

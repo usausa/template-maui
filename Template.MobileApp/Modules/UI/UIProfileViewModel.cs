@@ -12,9 +12,17 @@ public sealed class UIProfilePhoto
     public string Image { get; init; } = string.Empty;
 }
 
-public sealed record UIProfilePost(DateTime Posted, string Text, int Likes, int Comments);
+public sealed record UIProfilePost(
+    DateTime Posted,
+    string Text,
+    int Likes,
+    int Comments);
 
-public sealed record UIProfileLike(string Avatar, string Author, DateTime Posted, string Text);
+public sealed record UIProfileLike(
+    string Avatar,
+    string Author,
+    DateTime Posted,
+    string Text);
 
 public sealed partial class UIProfileViewModel : AppViewModelBase
 {

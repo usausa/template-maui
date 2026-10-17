@@ -6,6 +6,7 @@ public enum BiometricMethod
     DeviceCredential,
     BiometricOrDeviceCredential
 }
+
 public enum BiometricAvailability
 {
     Available,
@@ -13,6 +14,7 @@ public enum BiometricAvailability
     NoneEnrolled,
     Unavailable
 }
+
 public enum BiometricResult
 {
     Succeeded,
@@ -20,27 +22,40 @@ public enum BiometricResult
     Lockout,
     Failed
 }
+
 public enum BiometricAuthenticationType
 {
     Unknown,
     Biometric,
     DeviceCredential
 }
-public sealed record BiometricAuthenticationResult(BiometricResult Result, BiometricAuthenticationType Type);
-public sealed record BiometricPromptText(string Title, string CancelText)
+
+public sealed record BiometricAuthenticationResult(
+    BiometricResult Result,
+    BiometricAuthenticationType Type);
+
+public sealed record BiometricPromptText(
+    string Title,
+    string CancelText)
 {
     public string? Subtitle { get; init; }
 
     public string? Description { get; init; }
     public bool ConfirmationRequired { get; init; } = true;
 }
-public sealed record BiometricLabels(string? ButtonLabel, string? PromptMessage, string? SettingName);
+
+public sealed record BiometricLabels(
+    string? ButtonLabel,
+    string? PromptMessage,
+    string? SettingName);
+
 public enum BiometricKeyState
 {
     None,
     Available,
     Invalidated
 }
+
 public enum BiometricKeyLocation
 {
     Unknown,
@@ -49,6 +64,7 @@ public enum BiometricKeyLocation
     TrustedEnvironment,
     StrongBox
 }
+
 public enum BiometricSignStatus
 {
     Succeeded,
@@ -58,7 +74,10 @@ public enum BiometricSignStatus
     NoKey,
     KeyInvalidated
 }
-public sealed record BiometricSignResult(BiometricSignStatus Status, ReadOnlyMemory<byte> Signature);
+
+public sealed record BiometricSignResult(
+    BiometricSignStatus Status,
+    ReadOnlyMemory<byte> Signature);
 
 public interface IBiometricAuthenticator
 {
@@ -76,6 +95,7 @@ public interface IBiometricAuthenticator
 
     void DeleteSigningKey();
 }
+
 public sealed partial class BiometricAuthenticator : IBiometricAuthenticator
 {
     public BiometricAvailability CheckAvailability(BiometricMethod method) =>

@@ -17,10 +17,16 @@ public enum SudokuLevel
 // Data
 //--------------------------------------------------------------------------------
 
-public readonly record struct SudokuCell(int Row, int Column);
+public readonly record struct SudokuCell(
+    int Row,
+    int Column);
 
 #pragma warning disable CA1819
-public sealed record SudokuFrame(SudokuGame Game, SudokuCell? Selected, SudokuCell? Placed, SudokuCell[] Flash);
+public sealed record SudokuFrame(
+    SudokuGame Game,
+    SudokuCell? Selected,
+    SudokuCell? Placed,
+    SudokuCell[] Flash);
 #pragma warning restore CA1819
 
 public sealed class SudokuSnapshot
@@ -522,5 +528,8 @@ public sealed class SudokuGame
     private void Record(IEnumerable<int> changed) =>
         history.Push([.. changed.Select(x => new CellState(x, cells[x], notes[x]))]);
 
-    private readonly record struct CellState(int Index, int Value, int Notes);
+    private readonly record struct CellState(
+        int Index,
+        int Value,
+        int Notes);
 }

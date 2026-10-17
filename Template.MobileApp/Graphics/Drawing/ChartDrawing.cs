@@ -15,9 +15,16 @@ public enum ChartKind
     Heat
 }
 
-public readonly record struct CandlePoint(double Open, double High, double Low, double Close);
+public readonly record struct CandlePoint(
+    double Open,
+    double High,
+    double Low,
+    double Close);
 
-public readonly record struct ChartScale(double Min, double Max, double Step);
+public readonly record struct ChartScale(
+    double Min,
+    double Max,
+    double Step);
 
 public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 {

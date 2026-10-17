@@ -28,7 +28,10 @@ public enum TimerStopwatchState
     Paused
 }
 
-public sealed record TimerLap(int No, TimeSpan Lap, TimeSpan Split);
+public sealed record TimerLap(
+    int No,
+    TimeSpan Lap,
+    TimeSpan Split);
 
 public sealed partial class TimerLapItem : ObservableObject
 {

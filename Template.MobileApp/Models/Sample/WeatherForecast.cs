@@ -71,13 +71,27 @@ public enum WeatherAlertLevel
 // Data
 //--------------------------------------------------------------------------------
 
-public sealed record WeatherIndex(WeatherIndexKind Kind, int Level);
+public sealed record WeatherIndex(
+    WeatherIndexKind Kind,
+    int Level);
 
-public sealed record WeatherAlert(WeatherAlertKind Kind, WeatherAlertLevel Level);
+public sealed record WeatherAlert(
+    WeatherAlertKind Kind,
+    WeatherAlertLevel Level);
 
-public sealed record WeatherHour(DateTime Time, WeatherCondition Condition, bool IsNight, int Temperature, int PrecipitationChance);
+public sealed record WeatherHour(
+    DateTime Time,
+    WeatherCondition Condition,
+    bool IsNight,
+    int Temperature,
+    int PrecipitationChance);
 
-public sealed record WeatherDay(DateTime Date, WeatherCondition Condition, int Low, int High, int PrecipitationChance);
+public sealed record WeatherDay(
+    DateTime Date,
+    WeatherCondition Condition,
+    int Low,
+    int High,
+    int PrecipitationChance);
 
 public sealed class WeatherForecast
 {

@@ -174,7 +174,12 @@ public sealed class MechHudScene : SceneObject
 
     private static readonly SKPoint[] JointPoints = [new(-9f, 52f), new(9f, 52f)];
 
-    private readonly record struct TacticalLayout(SKRect Header, SKRect Comm, SKRect Mech, SKRect Map, SKRect Footer);
+    private readonly record struct TacticalLayout(
+        SKRect Header,
+        SKRect Comm,
+        SKRect Mech,
+        SKRect Map,
+        SKRect Footer);
 
     private readonly MechHudSim sim = new();
     private readonly SKPathBuilder pathBuilder = new();

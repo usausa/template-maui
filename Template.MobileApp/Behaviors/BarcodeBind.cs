@@ -6,6 +6,10 @@ using Smart.Maui.Interactivity;
 
 public static class BarcodeBind
 {
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
         typeof(BarcodeController),
@@ -40,6 +44,10 @@ public static class BarcodeBind
             view.Behaviors.Add(new BarcodeBindBehavior());
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Behavior
+    //--------------------------------------------------------------------------------
 
     private sealed class BarcodeBindBehavior : BehaviorBase<CameraView>
     {

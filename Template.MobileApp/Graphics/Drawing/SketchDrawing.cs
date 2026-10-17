@@ -11,7 +11,9 @@ public sealed class SketchDrawing : DrawingObject, IInteractiveDrawing
         Color.FromArgb("#E53935")
     ];
 
-    private sealed record Stroke(Color Color, List<PointF> Points);
+    private sealed record Stroke(
+        Color Color,
+        List<PointF> Points);
 
     private readonly List<Stroke> strokes = [];
 

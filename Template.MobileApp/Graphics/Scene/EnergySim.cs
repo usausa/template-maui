@@ -56,7 +56,12 @@ internal enum EnergyLevel
 //--------------------------------------------------------------------------------
 // Data
 //--------------------------------------------------------------------------------
-internal sealed record EnergyEvent(DateTime Time, float SceneTime, EnergyLevel Level, string Source, string Text);
+internal sealed record EnergyEvent(
+    DateTime Time,
+    float SceneTime,
+    EnergyLevel Level,
+    string Source,
+    string Text);
 
 internal readonly record struct EnergyProfile(
     float LineA,

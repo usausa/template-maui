@@ -4,6 +4,10 @@ using CommunityToolkit.Maui.Views;
 
 public static partial class LazyViewOption
 {
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty LoadProperty = BindableProperty.CreateAttached(
         "Load",
         typeof(bool),
@@ -36,6 +40,10 @@ public static partial class LazyViewOption
     public static bool GetDeferred(BindableObject bindable) => (bool)bindable.GetValue(DeferredProperty);
 
     public static void SetDeferred(BindableObject bindable, bool value) => bindable.SetValue(DeferredProperty, value);
+
+    //--------------------------------------------------------------------------------
+    // Handler
+    //--------------------------------------------------------------------------------
 
     private static void HandleLoadChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -73,6 +81,10 @@ public static partial class LazyViewOption
             RunAfterDraw(view, () => SetLoad(view, true));
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
 
     private static partial void RunAfterDraw(ContentView view, Action action);
 

@@ -3,7 +3,9 @@ namespace Template.MobileApp.Usecase;
 using Azure;
 using Azure.AI.Vision.ImageAnalysis;
 
-public sealed record TagResult(string Name, float Confidence);
+public sealed record TagResult(
+    string Name,
+    float Confidence);
 
 public sealed class AzureVisionUsecase
 {

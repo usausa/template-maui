@@ -41,7 +41,11 @@ public enum StreamShelf
 // Data
 //--------------------------------------------------------------------------------
 
-public sealed record StreamTrailer(string Image, string Title, StreamTrailerKind Kind, TimeSpan Length);
+public sealed record StreamTrailer(
+    string Image,
+    string Title,
+    StreamTrailerKind Kind,
+    TimeSpan Length);
 
 public sealed record StreamWork(
     int Id,

@@ -36,16 +36,22 @@ public enum MinesweeperMoveType
 // Data
 //--------------------------------------------------------------------------------
 
-public readonly record struct MinesweeperCell(int Row, int Column);
+public readonly record struct MinesweeperCell(
+    int Row,
+    int Column);
 
-public sealed record MinesweeperMove(MinesweeperMoveType Type, IReadOnlyList<MinesweeperCell> Revealed)
+public sealed record MinesweeperMove(
+    MinesweeperMoveType Type,
+    IReadOnlyList<MinesweeperCell> Revealed)
 {
     public static MinesweeperMove None { get; } = new(MinesweeperMoveType.None, []);
 
     public static MinesweeperMove Flagged { get; } = new(MinesweeperMoveType.Flagged, []);
 }
 
-public sealed record MinesweeperFrame(MinesweeperGame Game, IReadOnlyList<MinesweeperCell> Revealed);
+public sealed record MinesweeperFrame(
+    MinesweeperGame Game,
+    IReadOnlyList<MinesweeperCell> Revealed);
 
 public sealed class MinesweeperSnapshot
 {

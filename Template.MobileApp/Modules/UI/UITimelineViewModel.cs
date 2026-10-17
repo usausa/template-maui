@@ -7,7 +7,10 @@ public enum TimelineStatus
     Done
 }
 
-public sealed record UITimelineFilterOption(string? Tag, bool Bookmarked, string Name);
+public sealed record UITimelineFilterOption(
+    string? Tag,
+    bool Bookmarked,
+    string Name);
 
 public sealed partial class UITimelineEvent : ObservableObject
 {

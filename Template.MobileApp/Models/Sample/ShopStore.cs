@@ -25,7 +25,9 @@ public enum ShopSort
 // Data
 //--------------------------------------------------------------------------------
 
-public sealed record ShopSpec(string Name, string Value);
+public sealed record ShopSpec(
+    string Name,
+    string Value);
 
 public sealed record ShopProduct(
     int Id,
@@ -62,7 +64,11 @@ public sealed partial class ShopCartItem : ObservableObject
     public int Amount => Product.Price * Quantity;
 }
 
-public sealed record ShopOrder(string Number, DateTime DeliveryDate, int Count, int Total);
+public sealed record ShopOrder(
+    string Number,
+    DateTime DeliveryDate,
+    int Count,
+    int Total);
 
 //--------------------------------------------------------------------------------
 // Service

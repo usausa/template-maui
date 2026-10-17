@@ -46,7 +46,9 @@ public sealed class DeckButton
     public required string Parameter { get; init; }
 }
 
-public sealed record DeckFolder(string Name, IReadOnlyList<DeckButton> Buttons);
+public sealed record DeckFolder(
+    string Name,
+    IReadOnlyList<DeckButton> Buttons);
 
 #pragma warning disable CA1819
 public sealed partial class DeckButtonInfo : ObservableObject

@@ -2,9 +2,14 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Graphics.Drawing;
 
-public sealed record UIWheelEntry(int Index, WheelItem Item, Color Color);
+public sealed record UIWheelEntry(
+    int Index,
+    WheelItem Item,
+    Color Color);
 
-public sealed record UIWheelResult(string Label, bool IsJackpot);
+public sealed record UIWheelResult(
+    string Label,
+    bool IsJackpot);
 
 #pragma warning disable CA5394
 public sealed partial class UIWheelViewModel : AppViewModelBase

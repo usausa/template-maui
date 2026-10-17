@@ -10,6 +10,10 @@ using Microsoft.Maui.Controls.Handlers.Items;
 
 public static partial class CarouselOption
 {
+    //--------------------------------------------------------------------------------
+    // Mapper
+    //--------------------------------------------------------------------------------
+
     private static readonly ConditionalWeakTable<RecyclerView, PageSnapListener> Listeners = [];
 
     public static partial void UseCustomMapper(BehaviorOptions options)
@@ -48,6 +52,10 @@ public static partial class CarouselOption
             handler.PlatformView.SetItemViewCacheSize(size);
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Listener
+    //--------------------------------------------------------------------------------
 
     private sealed class PageSnapListener : RecyclerView.OnScrollListener
     {

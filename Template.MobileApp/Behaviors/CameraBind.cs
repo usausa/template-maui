@@ -7,6 +7,10 @@ using Smart.Maui.Interactivity;
 
 public static partial class CameraBind
 {
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     private static partial CameraInfo CorrectCameraInfo(CameraInfo camera);
 
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
@@ -43,6 +47,10 @@ public static partial class CameraBind
             view.Behaviors.Add(new CameraBindBehavior());
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Behavior
+    //--------------------------------------------------------------------------------
 
     private sealed class CameraBindBehavior : BehaviorBase<CameraView>
     {

@@ -135,7 +135,10 @@ public sealed partial class DeviceInformation
         WiFi = 0x08
     }
 
-    private readonly record struct NetworkEntry(Transport Transport, bool Validated, WiFiStatus? WiFi);
+    private readonly record struct NetworkEntry(
+        Transport Transport,
+        bool Validated,
+        WiFiStatus? WiFi);
 
     private partial void StartNetwork()
     {

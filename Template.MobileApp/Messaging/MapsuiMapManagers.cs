@@ -27,7 +27,11 @@ public interface IMapsuiMapManager
     void Detach(MapsuiMap map);
 }
 
-public sealed record MapsuiSpot(string Name, string Subtitle, double Longitude, double Latitude);
+public sealed record MapsuiSpot(
+    string Name,
+    string Subtitle,
+    double Longitude,
+    double Latitude);
 
 //--------------------------------------------------------------------------------
 // Widget (ScaleBar / ZoomInOut)

@@ -4,7 +4,9 @@ using ClamCalendar;
 
 using Template.MobileApp.Services;
 
-public sealed record UIScheduleAllDay(string Title, Color Color);
+public sealed record UIScheduleAllDay(
+    string Title,
+    Color Color);
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {

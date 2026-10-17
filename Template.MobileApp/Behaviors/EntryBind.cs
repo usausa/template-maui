@@ -7,6 +7,10 @@ using Template.MobileApp.Messaging;
 
 public static class EntryBind
 {
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
         typeof(EntryController),
@@ -41,6 +45,10 @@ public static class EntryBind
             entry.Behaviors.Add(new EntryBindBehavior());
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Behavior
+    //--------------------------------------------------------------------------------
 
     private sealed class EntryBindBehavior : BehaviorBase<Entry>
     {

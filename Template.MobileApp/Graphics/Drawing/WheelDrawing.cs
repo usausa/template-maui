@@ -7,7 +7,9 @@ public enum WheelEffect
     Confetti
 }
 
-public sealed record WheelItem(string Label, WheelEffect Effect = WheelEffect.Sparkle);
+public sealed record WheelItem(
+    string Label,
+    WheelEffect Effect = WheelEffect.Sparkle);
 
 public sealed class WheelDrawing : DrawingObject
 {

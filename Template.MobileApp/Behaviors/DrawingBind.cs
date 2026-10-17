@@ -6,6 +6,10 @@ using Smart.Maui.Interactivity;
 
 public static class DrawingBind
 {
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
         typeof(DrawingController),
@@ -40,6 +44,10 @@ public static class DrawingBind
             view.Behaviors.Add(new DrawingBindBehavior());
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Behavior
+    //--------------------------------------------------------------------------------
 
     private sealed class DrawingBindBehavior : BehaviorBase<DrawingView>
     {

@@ -153,7 +153,16 @@ public sealed class FlightHudScene : SceneObject
 
     private static readonly int[] RollMarks = [-60, -45, -30, -20, -10, 10, 20, 30, 45, 60];
 
-    private readonly record struct FlightLayout(SKRect Header, SKRect Pfd, SKRect Radar, SKRect Stores, SKRect Footer, float AttitudeY, float PxPerDeg, SKPoint RadarCenter, float RadarR);
+    private readonly record struct FlightLayout(
+        SKRect Header,
+        SKRect Pfd,
+        SKRect Radar,
+        SKRect Stores,
+        SKRect Footer,
+        float AttitudeY,
+        float PxPerDeg,
+        SKPoint RadarCenter,
+        float RadarR);
 
     private readonly FlightHudSim sim = new();
     private readonly SKPathBuilder pathBuilder = new();

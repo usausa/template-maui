@@ -14,7 +14,10 @@ public sealed class GameBoySnapshot
     public bool Muted { get; set; }
 }
 
-public sealed record GameBoyButtonChange(string Source, JoypadButton Button, bool Pressed);
+public sealed record GameBoyButtonChange(
+    string Source,
+    JoypadButton Button,
+    bool Pressed);
 
 //--------------------------------------------------------------------------------
 // Emulator

@@ -1,10 +1,16 @@
 namespace Template.MobileApp.Modules.UI;
 
-public sealed record UIShopCategoryOption(ShopCategory? Category, string Name);
+public sealed record UIShopCategoryOption(
+    ShopCategory? Category,
+    string Name);
 
-public sealed record UIShopSortOption(ShopSort Sort, string Name);
+public sealed record UIShopSortOption(
+    ShopSort Sort,
+    string Name);
 
-public sealed record UIShopPriceOption(int? MaxPrice, string Name);
+public sealed record UIShopPriceOption(
+    int? MaxPrice,
+    string Name);
 
 public sealed partial class UIShopPopularItem : ObservableObject
 {

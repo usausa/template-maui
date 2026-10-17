@@ -1,6 +1,8 @@
 namespace Template.MobileApp.Components;
 
-public sealed record NotificationAction(string Id, string Title);
+public sealed record NotificationAction(
+    string Id,
+    string Title);
 
 public sealed class NotificationTappedEventArgs : EventArgs
 {

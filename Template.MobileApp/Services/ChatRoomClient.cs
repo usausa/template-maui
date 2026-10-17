@@ -18,7 +18,10 @@ public enum ChatConnectionState
     Reconnecting
 }
 
-public sealed record ChatMessageEntry(string User, string Text, DateTime Timestamp);
+public sealed record ChatMessageEntry(
+    string User,
+    string Text,
+    DateTime Timestamp);
 
 public sealed class ChatMessageEventArgs : EventArgs
 {

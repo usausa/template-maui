@@ -48,7 +48,11 @@ public enum MoneyNoticeKind
 // Data
 //--------------------------------------------------------------------------------
 
-public sealed record MoneyTransaction(DateTime Date, string Shop, MoneyShopKind Kind, int Amount)
+public sealed record MoneyTransaction(
+    DateTime Date,
+    string Shop,
+    MoneyShopKind Kind,
+    int Amount)
 {
     public MoneyCategory Category => MoneyBook.CategoryOf(Kind);
 }
@@ -64,11 +68,18 @@ public sealed class MoneyDay : ReadOnlyCollection<MoneyTransaction>
     }
 }
 
-public sealed record MoneyMonth(DateTime Month, int Total);
+public sealed record MoneyMonth(
+    DateTime Month,
+    int Total);
 
-public sealed record MoneyCategoryTotal(MoneyCategory Category, int Amount, double Ratio);
+public sealed record MoneyCategoryTotal(
+    MoneyCategory Category,
+    int Amount,
+    double Ratio);
 
-public sealed record MoneyBalance(DateTime Date, int Amount);
+public sealed record MoneyBalance(
+    DateTime Date,
+    int Amount);
 
 public sealed partial class MoneyNotice : ObservableObject
 {

@@ -32,7 +32,10 @@ public interface ITelemetryControl
 // Status
 // ------------------------------------------------------------
 
-public sealed record TelemetrySendResult(DateTime Time, bool Succeeded, string? Reason);
+public sealed record TelemetrySendResult(
+    DateTime Time,
+    bool Succeeded,
+    string? Reason);
 
 public interface ITelemetryStatus
 {

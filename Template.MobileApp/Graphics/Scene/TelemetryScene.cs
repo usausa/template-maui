@@ -178,7 +178,14 @@ public sealed class TelemetryScene : SceneObject
 
     private readonly CarSim sim = new();
 
-    private readonly record struct DashLayout(float GaugeY, float GaugeR, float GearY, float GearH, float SideR, float MiniTop, float CellH);
+    private readonly record struct DashLayout(
+        float GaugeY,
+        float GaugeR,
+        float GearY,
+        float GearH,
+        float SideR,
+        float MiniTop,
+        float CellH);
 
     private SKShader? glow;
     private int glowWidth;

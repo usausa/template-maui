@@ -46,13 +46,27 @@ public sealed class SocialNotificationInfo
     public int Delay { get; init; }
 }
 
-public sealed record SocialPlayer(string Episode, double ExpPercent, int Parts, int Gem, int Money);
+public sealed record SocialPlayer(
+    string Episode,
+    double ExpPercent,
+    int Parts,
+    int Gem,
+    int Money);
 
-public sealed record SocialAlert(string Title, string Message);
+public sealed record SocialAlert(
+    string Title,
+    string Message);
 
-public sealed record SocialStatus(string Name, string Form, int Heal, int Buff, int Debuff);
+public sealed record SocialStatus(
+    string Name,
+    string Form,
+    int Heal,
+    int Buff,
+    int Debuff);
 
-public sealed record SocialInformation(string Title, IReadOnlyList<SocialUnit> Units);
+public sealed record SocialInformation(
+    string Title,
+    IReadOnlyList<SocialUnit> Units);
 
 //--------------------------------------------------------------------------------
 // Sample

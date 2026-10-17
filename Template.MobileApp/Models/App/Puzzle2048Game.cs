@@ -16,9 +16,18 @@ public enum Puzzle2048Direction
 // Data
 //--------------------------------------------------------------------------------
 
-public sealed record Puzzle2048Tile(int Id, int Value, int Row, int Column);
+public sealed record Puzzle2048Tile(
+    int Id,
+    int Value,
+    int Row,
+    int Column);
 
-public sealed record Puzzle2048Slide(int Value, int FromRow, int FromColumn, int ToRow, int ToColumn);
+public sealed record Puzzle2048Slide(
+    int Value,
+    int FromRow,
+    int FromColumn,
+    int ToRow,
+    int ToColumn);
 
 public sealed class Puzzle2048Move
 {
@@ -46,7 +55,9 @@ public sealed class Puzzle2048Move
 }
 
 #pragma warning disable CA1819
-public sealed record Puzzle2048Frame(Puzzle2048Tile[] Tiles, Puzzle2048Move? Move);
+public sealed record Puzzle2048Frame(
+    Puzzle2048Tile[] Tiles,
+    Puzzle2048Move? Move);
 #pragma warning restore CA1819
 
 public sealed class Puzzle2048Snapshot

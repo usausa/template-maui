@@ -23,11 +23,18 @@ public enum KitSleepStage
 // Data
 //--------------------------------------------------------------------------------
 
-public sealed record KitSeries(IReadOnlyList<double> Values, IReadOnlyList<string> Labels);
+public sealed record KitSeries(
+    IReadOnlyList<double> Values,
+    IReadOnlyList<string> Labels);
 
-public sealed record KitSleepSpan(DateTime Start, TimeSpan Length, KitSleepStage Stage);
+public sealed record KitSleepSpan(
+    DateTime Start,
+    TimeSpan Length,
+    KitSleepStage Stage);
 
-public sealed record KitSleepTotal(KitSleepStage Stage, TimeSpan Length);
+public sealed record KitSleepTotal(
+    KitSleepStage Stage,
+    TimeSpan Length);
 
 public sealed class KitActivity
 {

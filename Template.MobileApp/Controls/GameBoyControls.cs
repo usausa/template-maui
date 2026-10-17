@@ -238,7 +238,14 @@ public sealed class GameBoyPad : SKCanvasView
     // Layout
     //--------------------------------------------------------------------------------
 
-    private readonly record struct PadLayout(SKPoint Cross, float Arm, SKPoint A, SKPoint B, float Face, SKRect Select, SKRect Start);
+    private readonly record struct PadLayout(
+        SKPoint Cross,
+        float Arm,
+        SKPoint A,
+        SKPoint B,
+        float Face,
+        SKRect Select,
+        SKRect Start);
 
     private static PadLayout Measure(float width, float height)
     {

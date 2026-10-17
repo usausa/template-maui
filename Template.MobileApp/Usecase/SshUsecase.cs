@@ -8,11 +8,19 @@ using Renci.SshNet.Common;
 using Template.MobileApp.Components;
 using Template.MobileApp.Helpers;
 
-public sealed record SftpTransferResult(bool Success, string? Error);
+public sealed record SftpTransferResult(
+    bool Success,
+    string? Error);
 
-public sealed record SftpUploadResult(string FileName, long Size, SftpTransferResult Transfer);
+public sealed record SftpUploadResult(
+    string FileName,
+    long Size,
+    SftpTransferResult Transfer);
 
-public sealed record SftpDownloadResult(string Path, long Size, SftpTransferResult Transfer);
+public sealed record SftpDownloadResult(
+    string Path,
+    long Size,
+    SftpTransferResult Transfer);
 
 public sealed class SshUsecase
 {

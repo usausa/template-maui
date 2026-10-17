@@ -23,7 +23,9 @@ public enum CalcErrorType
     NotComputable   // NaN / Infinity
 }
 
-public sealed record CalcError(CalcErrorType Type, string? Text = null) : Error($"Calc error. type=[{Type}], text=[{Text}]");
+public sealed record CalcError(
+    CalcErrorType Type,
+    string? Text = null) : Error($"Calc error. type=[{Type}], text=[{Text}]");
 
 //--------------------------------------------------------------------------------
 // Engine
@@ -42,9 +44,15 @@ public static class CalcEngine
         RightParen
     }
 
-    private sealed record Token(TokenType Type, string Text, double Value = 0d);
+    private sealed record Token(
+        TokenType Type,
+        string Text,
+        double Value = 0d);
 
-    private sealed record OperatorInfo(int Precedence, bool RightAssociative, int ArgCount);
+    private sealed record OperatorInfo(
+        int Precedence,
+        bool RightAssociative,
+        int ArgCount);
 
     private static readonly Dictionary<string, OperatorInfo> Operators = new()
     {

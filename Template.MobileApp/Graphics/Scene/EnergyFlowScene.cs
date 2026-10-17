@@ -46,9 +46,19 @@ public sealed class EnergyFlowScene : SceneObject
         Area
     }
 
-    private readonly record struct HitTarget(SKRect Rect, HitKind Kind, EnergyNode Node, EnergyFlowMode Mode);
+    private readonly record struct HitTarget(
+        SKRect Rect,
+        HitKind Kind,
+        EnergyNode Node,
+        EnergyFlowMode Mode);
 
-    private readonly record struct SceneLayout(SKRect Header, SKRect Demand, SKRect Flow, SKRect Trend, SKRect Equipment, SKRect Events);
+    private readonly record struct SceneLayout(
+        SKRect Header,
+        SKRect Demand,
+        SKRect Flow,
+        SKRect Trend,
+        SKRect Equipment,
+        SKRect Events);
 
     private sealed class FlowNode
     {

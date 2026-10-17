@@ -7,6 +7,10 @@ using Microsoft.Maui.Platform;
 
 public static partial class Border
 {
+    //--------------------------------------------------------------------------------
+    // Mapper
+    //--------------------------------------------------------------------------------
+
     public static partial void UseCustomMapper(BehaviorOptions options)
     {
         if (options.Border)
@@ -30,6 +34,10 @@ public static partial class Border
             LabelHandler.Mapper.AppendToMapping(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Behavior
+    //--------------------------------------------------------------------------------
 
     private static void UpdateBehaviors(VisualElement element)
     {
