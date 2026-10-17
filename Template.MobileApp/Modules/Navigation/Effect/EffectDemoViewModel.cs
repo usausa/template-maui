@@ -35,7 +35,7 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
     public EffectDemoViewModel()
     {
         BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
-        ReplayCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.NavigationEffectDemo, CreateParameter(effect)));
+        ReplayCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.NavigationEffectDemo, MakeParameter(effect)));
     }
 
     //--------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
 
     protected override Task OnNotifyBackAsync()
     {
-        var parameter = CreateParameter(effect is null ? null : AppEffect.Reverse(effect));
+        var parameter = MakeParameter(effect is null ? null : AppEffect.Reverse(effect));
         return stacked
             ? Navigator.PopAsync(parameter)
             : Navigator.ForwardAsync(ViewId.NavigationEffectMenu, parameter);
@@ -71,7 +71,7 @@ public sealed partial class EffectDemoViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static NavigationParameter CreateParameter(string? effect)
+    private static NavigationParameter MakeParameter(string? effect)
     {
         var parameter = new NavigationParameter();
         return effect is null ? parameter : parameter.WithEffect(effect);

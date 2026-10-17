@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Navigation.Navigate;
 
 public sealed class NavigateCancelViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     //--------------------------------------------------------------------------------

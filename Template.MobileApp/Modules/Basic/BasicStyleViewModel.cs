@@ -7,7 +7,7 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
 
     private readonly IDialog dialog;
 
-    // Input button
+    // Input
 
     public List<SelectItem?> Items { get; }
 
@@ -18,7 +18,7 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int? Value3 { get; set; }
 
-    // Last action
+    // Last
 
     [ObservableProperty]
     public partial string LastAction { get; set; } = string.Empty;

@@ -234,14 +234,14 @@
     <Grid Style="{StaticResource ChatRootGrid}"
           RowDefinitions="*,Auto">
 
-        <!-- Message list -->
+        <!-- Message -->
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
                         ItemTemplate="{StaticResource MessageTemplateSelector}"
                         ItemsUpdatingScrollMode="KeepLastItemInView"
                         VerticalScrollBarVisibility="Default" />
 
-        <!-- Input bar -->
+        <!-- Input -->
         <Grid Grid.Row="1"
               Style="{StaticResource InputBarGrid}"
               ColumnDefinitions="*,Auto,Auto">

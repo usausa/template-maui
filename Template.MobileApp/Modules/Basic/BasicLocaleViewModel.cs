@@ -21,6 +21,8 @@ public sealed record CultureFormatEntry(
 
 public sealed class BasicLocaleViewModel : AppViewModelBase
 {
+    // Property
+
     public string CultureName { get; } = CultureInfo.CurrentCulture.Name;
 
     public string UICultureName { get; } = CultureInfo.CurrentUICulture.Name;

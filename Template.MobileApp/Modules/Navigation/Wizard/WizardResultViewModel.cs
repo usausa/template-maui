@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Navigation.Wizard;
 
 public sealed partial class WizardResultViewModel : AppViewModelBase
 {
+    // Property
+
     [Scope]
     [ObservableProperty]
     public partial WizardContext Context { get; set; } = default!;

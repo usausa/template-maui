@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Navigation.Shared;
 
 public sealed partial class SharedInputViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty(NotifyAlso = [nameof(NextName)])]
     public partial ViewId NextViewId { get; set; }
 

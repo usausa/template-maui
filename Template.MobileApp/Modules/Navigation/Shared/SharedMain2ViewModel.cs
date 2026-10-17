@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Navigation.Shared;
 
 public sealed partial class SharedMain2ViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string No { get; set; } = default!;
 
