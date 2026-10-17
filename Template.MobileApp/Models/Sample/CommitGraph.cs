@@ -414,7 +414,7 @@ public static class GraphBuilder
 // Sample
 //--------------------------------------------------------------------------------
 
-spublic static class GraphSample
+public static class GraphSample
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
