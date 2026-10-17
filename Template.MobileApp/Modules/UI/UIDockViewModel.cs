@@ -10,9 +10,7 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private readonly IScreen screen;
 
-    private readonly IFileSystem fileSystem;
-
-    private readonly DeviceInformation deviceInformation;
+    private readonly DeckButtonLoader loader;
 
     private readonly IDispatcherTimer timer;
 
@@ -39,8 +37,7 @@ public sealed class UIDockViewModel : AppViewModelBase
     {
         this.dialog = dialog;
         this.screen = screen;
-        this.fileSystem = fileSystem;
-        this.deviceInformation = deviceInformation;
+        loader = new DeckButtonLoader(fileSystem, dialog, deviceInformation);
 
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(1);
@@ -112,28 +109,9 @@ public sealed class UIDockViewModel : AppViewModelBase
 
     private async ValueTask<DeckButtonInfo> CreateButtonAsync(DeckButton button)
     {
-        var image = await LoadImageAsync(button.Image);
-        var info = button switch
-        {
-            { Action: DeckAction.ToggleMute } => new MuteDeckButtonInfo(button, image, await LoadImageAsync(DeckSample.MutedImage)),
-            { Action: DeckAction.ToggleTimer } => new TimerDeckButtonInfo(button, image, dialog),
-            { Parameter: DeckSample.Cpu } => new CpuDeckButtonInfo(button, image, deviceInformation),
-            { Parameter: DeckSample.Memory } => new MemoryDeckButtonInfo(button, image, deviceInformation),
-            _ => new DeckButtonInfo(button, image)
-        };
+        var info = await loader.LoadAsync(button);
         info.Command = CreateCommand(button.Action, info);
         return info;
-    }
-
-    private async ValueTask<byte[]> LoadImageAsync(string image)
-    {
-        if (!String.IsNullOrEmpty(image))
-        {
-            await using var stream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("DeckButtons", image));
-            return await stream.ReadAllBytesAsync();
-        }
-
-        return [];
     }
 
     private async Task ExecuteAsync(string parameter)
@@ -184,8 +162,8 @@ public sealed class UIDockViewModel : AppViewModelBase
         {
             (DeckAction.OpenFolder, _) => MakeDelegateCommand<string>(OpenFolder),
             (DeckAction.CloseFolder, _) => MakeDelegateCommand(CloseFolder),
-            (DeckAction.ToggleMute, MuteDeckButtonInfo mute) => MakeDelegateCommand(mute.Toggle),
-            (DeckAction.ToggleTimer, TimerDeckButtonInfo timer) => MakeDelegateCommand(timer.Toggle),
+            (DeckAction.ToggleMute, MuteDeckButtonInfo info) => MakeDelegateCommand(info.Toggle),
+            (DeckAction.ToggleTimer, TimerDeckButtonInfo info) => MakeDelegateCommand(info.Toggle),
             _ => MakeAsyncCommand<string>(ExecuteAsync)
         };
 

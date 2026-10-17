@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+using System.Diagnostics;
+
+using Template.MobileApp.Components;
+
 //--------------------------------------------------------------------------------
 // Enum
 //--------------------------------------------------------------------------------
@@ -60,22 +64,22 @@ public partial class DeckButtonInfo : ObservableObject
     public DeckButtonType ButtonType { get; }
 
     [ObservableProperty]
-    public partial string Label { get; set; } = default!;
+    public partial string Label { get; set; }
 
     [ObservableProperty]
-    public partial string Text { get; set; } = default!;
+    public partial string Text { get; set; }
 
     [ObservableProperty]
     public partial Color TextColor { get; set; } = Colors.White;
 
     [ObservableProperty]
-    public partial Color BackColor1 { get; set; } = Colors.Black;
+    public partial Color BackColor1 { get; set; }
 
     [ObservableProperty]
-    public partial Color BackColor2 { get; set; } = Colors.Black;
+    public partial Color BackColor2 { get; set; }
 
     [ObservableProperty]
-    public partial byte[] ImageBytes { get; set; } = default!;
+    public partial byte[] ImageBytes { get; set; }
 
     public ICommand Command { get; set; } = default!;
 
@@ -99,6 +103,158 @@ public partial class DeckButtonInfo : ObservableObject
     }
 }
 #pragma warning restore CA1819
+
+public sealed class CpuDeckButtonInfo : DeckButtonInfo
+{
+    private readonly DeviceInformation deviceInformation;
+
+    private readonly int processorCount = Environment.ProcessorCount;
+
+    private ProcessStatistics previous;
+
+    public CpuDeckButtonInfo(DeckButton button, byte[] image, DeviceInformation deviceInformation)
+        : base(button, image)
+    {
+        this.deviceInformation = deviceInformation;
+        previous = deviceInformation.ReadProcessStatistics();
+    }
+
+    public override void Update()
+    {
+        var statistics = deviceInformation.ReadProcessStatistics();
+        var elapsed = Stopwatch.GetElapsedTime(previous.Timestamp, statistics.Timestamp).TotalSeconds;
+        if (elapsed > 0)
+        {
+            var usage = (statistics.CpuTime - previous.CpuTime).TotalSeconds / elapsed * 100 / processorCount;
+            previous = statistics;
+            Text = String.Join(Environment.NewLine, "CPU", $"{usage:F1}%");
+        }
+    }
+}
+
+public sealed class MemoryDeckButtonInfo : DeckButtonInfo
+{
+    private const double MegaByte = 1024 * 1024;
+
+    private readonly DeviceInformation deviceInformation;
+
+    public MemoryDeckButtonInfo(DeckButton button, byte[] image, DeviceInformation deviceInformation)
+        : base(button, image)
+    {
+        this.deviceInformation = deviceInformation;
+    }
+
+    public override void Update()
+    {
+        var statistics = deviceInformation.ReadProcessStatistics();
+        Text = String.Join(Environment.NewLine, "MEM", $"{statistics.WorkingSet / MegaByte:F0} MB");
+    }
+}
+
+public sealed class TimerDeckButtonInfo : DeckButtonInfo
+{
+    private readonly IDialog dialog;
+
+    private int remainSeconds;
+
+    public TimerDeckButtonInfo(DeckButton button, byte[] image, IDialog dialog)
+        : base(button, image)
+    {
+        this.dialog = dialog;
+        UpdateLabel();
+    }
+
+    public void Toggle()
+    {
+        remainSeconds = remainSeconds > 0 ? 0 : DeckSample.TimerSeconds;
+        UpdateLabel();
+    }
+
+    public override void Update()
+    {
+        if (remainSeconds > 0)
+        {
+            remainSeconds--;
+            UpdateLabel();
+            if (remainSeconds == 0)
+            {
+                _ = NotifyTimeUpAsync();
+            }
+        }
+    }
+
+    private void UpdateLabel() =>
+        Label = TimeSpan.FromSeconds(remainSeconds > 0 ? remainSeconds : DeckSample.TimerSeconds).ToString(@"mm\:ss", CultureInfo.InvariantCulture);
+
+    private async Task NotifyTimeUpAsync() => await dialog.InformationAsync("Time's up");
+}
+
+public sealed class MuteDeckButtonInfo : DeckButtonInfo
+{
+    private readonly byte[] muteImage;
+
+    private readonly byte[] mutedImage;
+
+    private bool muted;
+
+    public MuteDeckButtonInfo(DeckButton button, byte[] image, byte[] mutedImage)
+        : base(button, image)
+    {
+        muteImage = image;
+        this.mutedImage = mutedImage;
+    }
+
+    public void Toggle()
+    {
+        muted = !muted;
+        ImageBytes = muted ? mutedImage : muteImage;
+        Label = muted ? "Muted" : "Mute";
+    }
+}
+
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
+
+public sealed class DeckButtonLoader
+{
+    private readonly IFileSystem fileSystem;
+
+    private readonly IDialog dialog;
+
+    private readonly DeviceInformation deviceInformation;
+
+    public DeckButtonLoader(IFileSystem fileSystem, IDialog dialog, DeviceInformation deviceInformation)
+    {
+        this.fileSystem = fileSystem;
+        this.dialog = dialog;
+        this.deviceInformation = deviceInformation;
+    }
+
+    public async ValueTask<DeckButtonInfo> LoadAsync(DeckButton button)
+    {
+        var image = await LoadImageAsync(button.Image);
+        return button switch
+        {
+            { Action: DeckAction.ToggleMute } => new MuteDeckButtonInfo(button, image, await LoadImageAsync(DeckSample.MutedImage)),
+            { Action: DeckAction.ToggleTimer } => new TimerDeckButtonInfo(button, image, dialog),
+            { Parameter: DeckSample.Cpu } => new CpuDeckButtonInfo(button, image, deviceInformation),
+            { Parameter: DeckSample.Memory } => new MemoryDeckButtonInfo(button, image, deviceInformation),
+            _ => new DeckButtonInfo(button, image)
+        };
+    }
+
+    private async ValueTask<byte[]> LoadImageAsync(string image)
+    {
+        if (!String.IsNullOrEmpty(image))
+        {
+            await using var stream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("DeckButtons", image));
+            return await stream.ReadAllBytesAsync();
+        }
+
+        return [];
+    }
+}
 
 //--------------------------------------------------------------------------------
 // Sample
