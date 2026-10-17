@@ -14,6 +14,8 @@ public sealed partial class ViewLayoutHex : ObservableObject
 
 public sealed class ViewLayoutViewModel : AppViewModelBase
 {
+    // Property
+
     public IReadOnlyList<ViewLayoutHex> Hexes { get; } =
     [
         new() { Label = "Calm", Icon = Fonts.MaterialIcons.Self_improvement, Fill = Color.FromArgb("#B2DFDB"), Accent = Color.FromArgb("#00695C"), Delay = 80 },
@@ -24,6 +26,8 @@ public sealed class ViewLayoutViewModel : AppViewModelBase
         new() { Label = "Angry", Icon = Fonts.MaterialIcons.Sentiment_very_dissatisfied, Fill = Color.FromArgb("#FFCDD2"), Accent = Color.FromArgb("#D32F2F"), Delay = 200 },
         new() { Label = "Sad", Icon = Fonts.MaterialIcons.Sentiment_dissatisfied, Fill = Color.FromArgb("#EEEEEE"), Accent = Color.FromArgb("#616161"), Delay = 260 }
     ];
+
+    // Command
 
     public IObserveCommand SelectHexCommand { get; }
 

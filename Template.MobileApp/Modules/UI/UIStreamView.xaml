@@ -71,15 +71,6 @@
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
-            <!-- Top bar -->
-
-            <Style x:Key="TopIconButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource HeaderIconButton}">
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontFamily" Value="MaterialIcons" />
-            </Style>
-
             <!-- Page -->
 
             <Style x:Key="StreamScroll"
@@ -87,7 +78,14 @@
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
 
-            <!-- Top bar -->
+            <!-- Top -->
+
+            <Style x:Key="TopIconButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource HeaderIconButton}">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+            </Style>
 
             <Style x:Key="TopBar"
                    TargetType="Grid">
@@ -239,7 +237,7 @@
                 </Setter>
             </Style>
 
-            <!-- Section header -->
+            <!-- Section -->
 
             <Style x:Key="SectionHeaderGrid"
                    TargetType="Grid">
@@ -267,7 +265,7 @@
                 <Setter Property="HeightRequest" Value="170" />
             </Style>
 
-            <!-- Continue watching -->
+            <!-- Continue -->
 
             <Style x:Key="ContinueCollection"
                    TargetType="CollectionView">
@@ -378,7 +376,7 @@
     <ScrollView Style="{StaticResource StreamScroll}">
         <VerticalStackLayout>
 
-            <!-- Top bar -->
+            <!-- Top -->
             <Grid Style="{StaticResource TopBar}"
                   ColumnDefinitions="*,Auto,Auto"
                   behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -473,7 +471,7 @@
                 </IndicatorView.IndicatorTemplate>
             </IndicatorView>
 
-            <!-- Continue watching -->
+            <!-- Continue -->
             <VerticalStackLayout behaviors:AnimationOption.EnterAnimation="FadeUp"
                                  behaviors:AnimationOption.EnterDelay="160">
                 <Grid Style="{StaticResource SectionHeaderGrid}">

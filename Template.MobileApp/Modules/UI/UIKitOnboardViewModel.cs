@@ -10,6 +10,8 @@ public sealed class UIKitOnboardPage
 
 public sealed partial class UIKitOnboardViewModel : AppViewModelBase
 {
+    // Property
+
     public IReadOnlyList<UIKitOnboardPage> Pages { get; } =
     [
         new() { Image = "onboard01.jpg", Title = "ようこそ", Description = "モバイルアプリのための美しいデザインキットを体験しましょう。", Background = Color.FromArgb("#C9E8FC") },

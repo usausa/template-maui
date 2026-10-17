@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewToolkitViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string OtpValue { get; set; } = string.Empty;
 

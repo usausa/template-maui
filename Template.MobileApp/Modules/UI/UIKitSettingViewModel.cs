@@ -44,6 +44,8 @@ public sealed partial class UIKitSettingViewModel : AppViewModelBase
 
     public Version Version { get; }
 
+    // Command
+
     public IObserveCommand ColorCommand { get; }
 
     public IObserveCommand LogoutCommand { get; }

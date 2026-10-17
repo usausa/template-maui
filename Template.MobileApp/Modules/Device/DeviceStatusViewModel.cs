@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed class DeviceStatusViewModel : AppViewModelBase
 {
+    // Property
+
     public DeviceState DeviceState { get; }
 
     //--------------------------------------------------------------------------------

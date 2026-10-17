@@ -541,7 +541,7 @@
                 <Setter Property="Color" Value="{StaticResource WeatherLineColor}" />
             </Style>
 
-            <!-- Hourly forecast -->
+            <!-- Hourly -->
 
             <Style x:Key="HourCollection"
                    TargetType="CollectionView">
@@ -592,7 +592,7 @@
                 <Setter Property="TextColor" Value="{StaticResource WeatherRainColor}" />
             </Style>
 
-            <!-- Weekly forecast -->
+            <!-- Weekly -->
 
             <Style x:Key="DayGrid"
                    TargetType="Grid">
@@ -658,7 +658,7 @@
                 <Setter Property="EndColor" Value="#FDBA74" />
             </Style>
 
-            <!-- Life index -->
+            <!-- Life -->
 
             <Style x:Key="IndexGrid"
                    TargetType="cmc:StaggeredGrid">
@@ -871,7 +871,7 @@
             </DataTrigger>
         </Grid.Triggers>
 
-        <!-- Sky glow -->
+        <!-- Sky -->
         <Ellipse Style="{StaticResource SkyGlowEllipse}">
             <Ellipse.Triggers>
                 <DataTrigger TargetType="Ellipse"
@@ -889,7 +889,7 @@
                         behaviors:Scroll.CollapsedTarget="{x:Reference CompactHeader}">
                 <VerticalStackLayout Style="{StaticResource WeatherStack}">
 
-                    <!-- Current header -->
+                    <!-- Current -->
                     <VerticalStackLayout x:Name="CurrentHeader"
                                          Style="{StaticResource CurrentStack}">
                         <Label Style="{StaticResource LocationLabel}"
@@ -1004,7 +1004,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Hourly forecast -->
+                    <!-- Hourly -->
                     <Border Style="{StaticResource WeatherCardBorder}">
                         <VerticalStackLayout Style="{StaticResource CardStack}">
                             <Label Style="{StaticResource CardTitleLabel}"
@@ -1073,7 +1073,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Weekly forecast -->
+                    <!-- Weekly -->
                     <Border Style="{StaticResource WeatherCardBorder}">
                         <VerticalStackLayout Style="{StaticResource CardStack}">
                             <Label Style="{StaticResource CardTitleLabel}"
@@ -1137,7 +1137,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Life index -->
+                    <!-- Life -->
                     <ContentView behaviors:LazyViewOption.Deferred="True">
                         <behaviors:LazyViewOption.Template>
                             <DataTemplate x:DataType="module:UIWeatherViewModel">
@@ -1307,7 +1307,7 @@
             </ScrollView>
         </RefreshView>
 
-        <!-- Compact header -->
+        <!-- Compact -->
         <Border x:Name="CompactHeader"
                 Style="{StaticResource CompactBorder}">
             <HorizontalStackLayout Style="{StaticResource CompactRow}">

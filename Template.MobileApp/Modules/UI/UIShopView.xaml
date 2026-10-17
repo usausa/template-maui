@@ -375,7 +375,7 @@
                 <Setter Property="SelectedIndicatorColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <!-- All items: 2-column grid -->
+            <!-- Item -->
 
             <Style x:Key="ItemCardBorder"
                    TargetType="Border">
@@ -476,7 +476,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
-            <!-- Filter sheet -->
+            <!-- Filter -->
 
             <Style x:Key="FilterSheet"
                    TargetType="cmc:BottomSheetView">
@@ -538,7 +538,7 @@
     <!-- Content -->
     <Grid Style="{StaticResource ShopGrid}">
 
-        <!-- Item list -->
+        <!-- Item -->
         <CollectionView Style="{StaticResource ItemsCollection}"
                         ItemsSource="{Binding Items}">
             <CollectionView.ItemsLayout>
@@ -670,7 +670,7 @@
                         </Grid>
                     </Grid>
 
-                    <!-- Category chips -->
+                    <!-- Category -->
                     <ScrollView Style="{StaticResource ChipScroll}"
                                 behaviors:AnimationOption.EnterAnimation="FadeUp"
                                 behaviors:AnimationOption.EnterDelay="200">
@@ -685,7 +685,7 @@
                         </cmc:ChipGroup>
                     </ScrollView>
 
-                    <!-- All items -->
+                    <!-- All -->
                     <Grid Style="{StaticResource SectionTitleGrid}"
                           ColumnDefinitions="Auto,*,Auto"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -763,7 +763,7 @@
             </CollectionView.EmptyView>
         </CollectionView>
 
-        <!-- Filter sheet -->
+        <!-- Filter -->
         <cmc:BottomSheetView Style="{StaticResource FilterSheet}"
                              IsOpen="{Binding IsFilterOpen}">
             <cmc:BottomSheetView.SheetContent>

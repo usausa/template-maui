@@ -4,6 +4,8 @@ using Template.MobileApp.Graphics.Scene;
 
 public sealed class UIFlightViewModel : AppViewModelBase
 {
+    // Property
+
     public FlightHudScene Scene { get; } = new();
 
     //--------------------------------------------------------------------------------

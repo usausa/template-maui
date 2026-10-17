@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewShadowViewModel : AppViewModelBase
 {
+    // Property
+
     public ObservableCollection<ColorItem> BorderColors { get; }
 
     public ObservableCollection<ColorItem> ShadowColors { get; }

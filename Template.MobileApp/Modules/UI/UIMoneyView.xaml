@@ -477,7 +477,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 10" />
             </Style>
 
-            <!-- Center button -->
+            <!-- Center -->
 
             <Style x:Key="CenterButton"
                    TargetType="Button">
@@ -974,7 +974,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
-            <!-- Payment sheet -->
+            <!-- Payment -->
 
             <Style x:Key="PaymentCodeBorder"
                    TargetType="Border">
@@ -1036,7 +1036,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
-            <!-- Balance sheet -->
+            <!-- Balance -->
 
             <Style x:Key="BalanceChartControl"
                    TargetType="drawing:DrawingControl">
@@ -1044,7 +1044,7 @@
                 <Setter Property="HeightRequest" Value="260" />
             </Style>
 
-            <!-- Month sheet -->
+            <!-- Month -->
 
             <Style x:Key="MonthRowGrid"
                    TargetType="Grid">
@@ -1075,7 +1075,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <!-- Category sheet -->
+            <!-- Category -->
 
             <Style x:Key="CategoryRowGrid"
                    TargetType="Grid">
@@ -1822,14 +1822,14 @@
 
         </Grid>
 
-        <!-- Center button -->
+        <!-- Center -->
         <Button Grid.RowSpan="3"
                 Style="{StaticResource CenterButton}"
                 Command="{Binding PayCommand}"
                 Text="支払い"
                 ImageSource="{x:Static markup:AppIcons.LargeQrCode}" />
 
-        <!-- Payment sheet -->
+        <!-- Payment -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource PaymentSheet}"
                              IsOpen="{Binding IsPaymentOpen}">
@@ -1865,7 +1865,7 @@
             </cmc:BottomSheetView.SheetTemplate>
         </cmc:BottomSheetView>
 
-        <!-- Balance sheet -->
+        <!-- Balance -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsBalanceOpen}">
@@ -1883,7 +1883,7 @@
             </cmc:BottomSheetView.SheetTemplate>
         </cmc:BottomSheetView>
 
-        <!-- Month sheet -->
+        <!-- Month -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsMonthOpen}">
@@ -1932,7 +1932,7 @@
             </cmc:BottomSheetView.SheetTemplate>
         </cmc:BottomSheetView>
 
-        <!-- Category sheet -->
+        <!-- Category -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource MoneySheet}"
                              IsOpen="{Binding IsCategoryOpen}">

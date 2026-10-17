@@ -43,7 +43,7 @@
                                    FalseValue="↑" />
             <converters:InitialConverter x:Key="InitialConverter" />
 
-            <!-- 状態の文言と色 (バッジ / 左端の帯 / 行の背景) -->
+            <!-- Status -->
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:VisitStatus.Planned}"
@@ -90,7 +90,7 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <!-- 区分の文言と色 (バッジの背景 / 文字) -->
+            <!-- Category -->
             <s:MapToTextConverter x:Key="CategoryTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:VisitCategory.Regular}"
@@ -126,7 +126,7 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <!-- 担当者のアバターの色 -->
+            <!-- Staff -->
             <s:MapToColorConverter x:Key="StaffColorConverter"
                                    DefaultValue="{StaticResource BlueGrayDefault}">
                 <s:MapToColorConverter.Entries>
@@ -164,7 +164,7 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
             </Style>
 
-            <!-- 件数のバッジ (状態ごとの色) -->
+            <!-- Count -->
             <Style x:Key="CountChip"
                    TargetType="Border">
                 <Setter Property="Padding" Value="6,1" />
@@ -232,7 +232,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <!-- Sort sheet -->
+            <!-- Sort -->
 
             <Style x:Key="SortSheet"
                    TargetType="cmc:BottomSheetView">
@@ -326,7 +326,6 @@
 
             <!-- List -->
 
-            <!-- 行 (角丸のカードにせず、区切り線で並べる。状態で背景色、選択でブルー) -->
             <Style x:Key="CardCollection"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
@@ -374,7 +373,6 @@
                 <Setter Property="AlignItems" Value="Center" />
             </Style>
 
-            <!-- 担当者のアバター (担当ごとの色) -->
             <Style x:Key="StaffAvatar"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="22" />
@@ -408,7 +406,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- 絵文字付きの情報 (📍 住所 / 👤 担当 / 🕒 予定 など) -->
             <Style x:Key="DetailLabel"
                    TargetType="Label">
                 <Setter Property="FlexLayout.Shrink" Value="0" />
@@ -424,7 +421,6 @@
                 <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
-            <!-- バッジ (状態は色、種別は絵文字で示す) -->
             <Style x:Key="Chip"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,6,4" />
@@ -519,7 +515,6 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,Auto,*">
 
-        <!-- 件数: 状態ごとのバッジ (⏳ 未訪問 / ✅ 訪問済 / 🔁 再訪問 / 🚫 不在) -->
         <Grid Grid.Row="0"
               Style="{StaticResource SummaryGrid}"
               ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto">
@@ -646,7 +641,7 @@
                                        TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
                             </FlexLayout>
 
-                            <!-- 展開部分 -->
+                            <!-- Expand -->
                             <ContentView behaviors:LazyViewOption.Load="{Binding IsExpanded}"
                                          IsVisible="{Binding IsExpanded}">
                                 <behaviors:LazyViewOption.Template>
@@ -684,7 +679,7 @@
         </CollectionView>
         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
-        <!-- 並替シート: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
+        <!-- Sort -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
                              Style="{StaticResource SortSheet}"
                              IsOpen="{Binding IsSortPanelOpen}">

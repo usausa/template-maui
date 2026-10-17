@@ -19,7 +19,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Day selector -->
+            <!-- Selector -->
 
             <Style x:Key="DayChipCollection"
                    TargetType="CollectionView">
@@ -101,7 +101,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
-            <!-- All day -->
+            <!-- All -->
 
             <Style x:Key="AllDayScroll"
                    TargetType="ScrollView">
@@ -138,7 +138,7 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <!-- Detail sheet -->
+            <!-- Detail -->
 
             <Style x:Key="DetailSheet"
                    TargetType="cmc:BottomSheetView">
@@ -254,7 +254,7 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,Auto,Auto,*">
 
-        <!-- Day selector -->
+        <!-- Selector -->
         <CollectionView Grid.Row="0"
                         Style="{StaticResource DayChipCollection}"
                         ItemsSource="{Binding Days}"
@@ -330,7 +330,7 @@
             </Grid>
         </Border>
 
-        <!-- All day -->
+        <!-- All -->
         <ScrollView Grid.Row="2"
                     Style="{StaticResource AllDayScroll}"
                     IsVisible="{Binding AllDayEvents.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
@@ -360,7 +360,7 @@
                                        ShowCurrentTime="{Binding ShowCurrentTime}" />
         </ScrollView>
 
-        <!-- Detail sheet -->
+        <!-- Detail -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
                              Style="{StaticResource DetailSheet}"
                              IsOpen="{Binding IsDetailOpen}">

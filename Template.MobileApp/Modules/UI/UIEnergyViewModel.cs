@@ -4,6 +4,8 @@ using Template.MobileApp.Graphics.Scene;
 
 public sealed class UIEnergyViewModel : AppViewModelBase
 {
+    // Property
+
     public EnergyFlowScene Scene { get; } = new();
 
     //--------------------------------------------------------------------------------

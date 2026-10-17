@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Device;
 
 public sealed class DeviceCommunicationViewModel : AppViewModelBase
 {
+    // Command
+
     public IObserveCommand DialCommand { get; }
 
     public IObserveCommand SmsCommand { get; }
@@ -43,14 +45,14 @@ public sealed class DeviceCommunicationViewModel : AppViewModelBase
         SmsCommand = MakeAsyncCommand(SendSms, () => sms.IsComposeSupported);
         EmailCommand = MakeAsyncCommand(SendEmail, () => email.IsComposeSupported);
 
-        Task SendSms()
+        static Task SendSms()
         {
             var text = "Hello world.";
             var recipients = new List<string> { "000-0000-0000" };
             var message = new SmsMessage(text, recipients);
             return Sms.Default.ComposeAsync(message);
         }
-        Task SendEmail()
+        static Task SendEmail()
         {
             var message = new EmailMessage
             {

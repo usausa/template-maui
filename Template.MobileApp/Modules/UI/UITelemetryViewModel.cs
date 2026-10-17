@@ -4,6 +4,8 @@ using Template.MobileApp.Graphics.Scene;
 
 public sealed class UITelemetryViewModel : AppViewModelBase
 {
+    // Property
+
     public TelemetryScene Scene { get; } = new();
 
     //--------------------------------------------------------------------------------

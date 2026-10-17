@@ -4,6 +4,8 @@ using System.Text.Json;
 
 public sealed partial class UIGraphViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial string HeaderText { get; private set; } = string.Empty;
 

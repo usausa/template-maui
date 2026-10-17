@@ -4,6 +4,8 @@ using Template.MobileApp.Graphics.Scene;
 
 public sealed class UITacticalViewModel : AppViewModelBase
 {
+    // Property
+
     public MechHudScene Scene { get; } = new();
 
     //--------------------------------------------------------------------------------

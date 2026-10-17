@@ -68,7 +68,7 @@
                 <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
-            <!-- Name / meta -->
+            <!-- Name -->
 
             <Style x:Key="ProfileNameLabel"
                    TargetType="Label">
@@ -108,7 +108,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- Stats row -->
+            <!-- Stats -->
 
             <Style x:Key="StatRow"
                    TargetType="Grid">
@@ -138,7 +138,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <!-- SNS action buttons -->
+            <!-- Action -->
 
             <Style x:Key="ActionRow"
                    TargetType="HorizontalStackLayout">
@@ -397,7 +397,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
             </Style>
 
-            <!-- Photo viewer -->
+            <!-- Photo -->
 
             <Style x:Key="PhotoViewerGrid"
                    TargetType="Grid">
@@ -458,13 +458,13 @@
 
                 <VerticalStackLayout Style="{StaticResource ProfileBodyStack}">
 
-                    <!-- Avatar (overlaps cover) -->
+                    <!-- Avatar -->
                     <Border Style="{StaticResource AvatarBorder}">
                         <Image Style="{StaticResource AvatarImage}"
                                Source="profile.jpg" />
                     </Border>
 
-                    <!-- Name / meta -->
+                    <!-- Name -->
                     <Label Style="{StaticResource ProfileNameLabel}"
                            Text="{Binding UserName}" />
                     <Label Style="{StaticResource OccupationLabel}"
@@ -476,7 +476,7 @@
                                Text="{Binding Location}" />
                     </HorizontalStackLayout>
 
-                    <!-- Stats: Posts / Followers / Following -->
+                    <!-- Stats -->
                     <Grid Style="{StaticResource StatRow}"
                           ColumnDefinitions="*,Auto,*,Auto,*">
                         <VerticalStackLayout Grid.Column="0">
@@ -503,7 +503,7 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <!-- SNS action buttons: follow, like, favorite -->
+                    <!-- Action -->
                     <HorizontalStackLayout Style="{StaticResource ActionRow}">
                         <Button Style="{StaticResource FollowButton}"
                                 behaviors:ButtonOption.PressEffect="True"
@@ -551,7 +551,7 @@
                         </Button>
                     </HorizontalStackLayout>
 
-                    <!-- Bio card -->
+                    <!-- Card -->
                     <Border Style="{StaticResource CardBorder}">
                         <VerticalStackLayout>
                             <HorizontalStackLayout Style="{StaticResource SectionTitleRow}">
@@ -564,7 +564,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Interests with colored tags -->
+                    <!-- Tags -->
                     <Border Style="{StaticResource CardBorder}">
                         <VerticalStackLayout>
                             <HorizontalStackLayout Style="{StaticResource SectionTitleRow}">
@@ -711,7 +711,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Photo viewer -->
+        <!-- Photo -->
         <ContentView behaviors:AnimationOption.FadeInTrigger="{Binding IsPhotoViewerVisible}"
                      behaviors:LazyViewOption.Load="{Binding IsPhotoViewerVisible}"
                      IsVisible="{Binding IsPhotoViewerVisible}">

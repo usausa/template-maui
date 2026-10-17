@@ -29,7 +29,6 @@
 
             <!-- Header -->
 
-            <!-- Extra bottom padding keeps the header content clear of the overlapping steps card (-30 margin) -->
             <Style x:Key="KitDashHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="20,24,20,62" />
@@ -50,8 +49,6 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
-
-            <!-- Header hub buttons -->
 
             <Style x:Key="KitIconButton"
                    TargetType="Button">
@@ -94,10 +91,6 @@
 
             <!-- Tile -->
 
-            <!--
-                Tiles: steps card (ColumnSpan=2) + metrics are laid out by VariableSizeWrapPanel via BindableLayout.
-                The -30 top margin overlaps the header (moved here from the steps card)
-            -->
             <Style x:Key="TileLayout"
                    TargetType="cmc:VariableSizeWrapPanel">
                 <Setter Property="Margin" Value="16,-30,16,16" />
@@ -402,9 +395,8 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <!-- Quick links -->
+            <!-- Link -->
 
-            <!-- Quick link cards to other kit screens -->
             <Style x:Key="LinkCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16,0,16,12" />
@@ -505,7 +497,7 @@
                                ItemsSource="{Binding Periods}"
                                SelectedIndex="{Binding PeriodIndex, Mode=TwoWay}" />
 
-            <!-- Step chart -->
+            <!-- Step -->
             <Border Style="{StaticResource ChartCardBorder}">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto">
@@ -521,7 +513,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Heart chart -->
+            <!-- Heart -->
             <Border Style="{StaticResource ChartCardBorder}">
                 <VerticalStackLayout>
                     <Grid ColumnDefinitions="*,Auto">
@@ -587,7 +579,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Quick links -->
+            <!-- Link -->
             <Border Style="{StaticResource LinkCardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="320">

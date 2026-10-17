@@ -7,6 +7,7 @@ public sealed record SunburstEntry(string Category, string Item, double Value);
 public sealed class ViewSfChartViewModel : AppViewModelBase
 {
     // Cartesian ColumnSeries
+
     public IReadOnlyList<ChartEntry> Monthly { get; } =
     [
         new("4月", 42),
@@ -18,6 +19,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
     ];
 
     // Circular DoughnutSeries
+
     public IReadOnlyList<ChartEntry> Share { get; } =
     [
         new("食品", 38),
@@ -28,6 +30,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
     ];
 
     // PolarAreaSeries
+
     public IReadOnlyList<ChartEntry> Skills { get; } =
     [
         new("攻撃", 82),
@@ -39,6 +42,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
     ];
 
     // SfFunnelChart / SfPyramidChart
+
     public IReadOnlyList<ChartEntry> Funnel { get; } =
     [
         new("訪問", 1000),
@@ -49,11 +53,13 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
     ];
 
     // SparkCharts
+
     public IReadOnlyList<double> Trend { get; } = [3, 6, 4, 8, 5, 9, 7, 11, 8, 12, 10, 14];
 
     public IReadOnlyList<double> WinLoss { get; } = [1, 1, -1, 1, -1, 1, 1, -1, 1, 1];
 
     // SfSunburstChart
+
     public IReadOnlyList<SunburstEntry> Regions { get; } =
     [
         new("東日本", "東京", 48),

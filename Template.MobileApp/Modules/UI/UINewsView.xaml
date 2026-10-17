@@ -88,7 +88,7 @@
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
-            <!-- Tab bar -->
+            <!-- Tab -->
 
             <Style x:Key="NewsTabStrip"
                    TargetType="cmc:TabStrip">
@@ -111,7 +111,7 @@
                 <Setter Property="Color" Value="{StaticResource NewsLineColor}" />
             </Style>
 
-            <!-- Breaking news -->
+            <!-- Breaking -->
 
             <Style x:Key="BreakingGrid"
                    TargetType="Grid">
@@ -616,7 +616,7 @@
     <!-- Content -->
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
-        <!-- Tab bar -->
+        <!-- Tab -->
         <cmc:TabStrip Grid.Row="0"
                       Style="{StaticResource NewsTabStrip}"
                       ItemsSource="{Binding Context.Pages}"
@@ -646,7 +646,7 @@
         <BoxView Grid.Row="1"
                  Style="{StaticResource TabLine}" />
 
-        <!-- Breaking news -->
+        <!-- Breaking -->
         <Grid Grid.Row="2"
               Style="{StaticResource BreakingGrid}"
               ColumnDefinitions="Auto,*">
@@ -663,7 +663,7 @@
                               Text="{Binding Context.Breaking.Title}" />
         </Grid>
 
-        <!-- Article list -->
+        <!-- Article -->
         <CarouselView Grid.Row="3"
                       Style="{StaticResource NewsCarousel}"
                       behaviors:CarouselOption.PagePosition="{Binding PagePosition}"

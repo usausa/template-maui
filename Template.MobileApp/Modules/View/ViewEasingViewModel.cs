@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewEasingViewModel : AppViewModelBase
 {
+    // Property
+
     public EventRequest AnimationRequest { get; } = new();
 
     [ObservableProperty]
