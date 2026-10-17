@@ -211,8 +211,6 @@ public sealed partial class BiometricAuthenticator
 
         return await completion.Task.ConfigureAwait(true);
     }
-
-    // 定数は列挙 ([Flags] なし)、API の引数は int
     private static int ToAuthenticators(BiometricMethod method) => method switch
     {
         BiometricMethod.Biometric => (int)BiometricManagerAuthenticators.BiometricStrong,

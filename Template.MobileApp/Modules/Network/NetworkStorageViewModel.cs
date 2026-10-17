@@ -207,8 +207,6 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
             await ReloadAsync();
         }
     }
-
-    // 選択したファイルを公開フォルダへ
     private async Task DownloadAsync()
     {
         var entry = SelectedEntry;

@@ -1303,7 +1303,6 @@ public sealed class EnergyFlowScene : SceneObject
 
         if (running)
         {
-            // 排熱のゆらぎ
             Stroke.StrokeCap = SKStrokeCap.Round;
             Stroke.StrokeWidth = 1.2f;
             for (var i = 0; i < 3; i++)

@@ -22,8 +22,6 @@ public static partial class StepperOption
     {
         StepperHandler.Mapper.AppendToMapping(OutlinedProperty.PropertyName, static (handler, _) => UpdateOutlined(handler.PlatformView, (Stepper)handler.VirtualView));
     }
-
-    // -/+ のボタンを幅 48・高さ 32 の白地・灰の枠・角丸 8 にして、間を 8 空ける
     private static void UpdateOutlined(LinearLayout stepper, BindableObject element)
     {
         if (!GetOutlined(element))

@@ -374,8 +374,6 @@ internal sealed class EnergySim
 
         Load = LineA + LineB + Hvac + Utility;
         var gridWithoutBattery = Load - Solar - Cgs;
-
-        // 夜は蓄電池を充電し、昼は買う電力が目標に近づいたら放電して削る
         var charge = 0f;
         var discharge = 0f;
         if ((hour >= 23f) || (hour < 6f))

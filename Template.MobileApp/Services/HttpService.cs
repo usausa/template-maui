@@ -95,8 +95,6 @@ public sealed class StorageListEntry
     public string Name { get; set; } = default!;
 
     public bool Directory { get; set; }
-
-    // ディレクトリは null
     public long? Size { get; set; }
 
     public DateTime LastModified { get; set; }

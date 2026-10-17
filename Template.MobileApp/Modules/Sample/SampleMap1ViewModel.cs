@@ -4,11 +4,8 @@ using Microsoft.Maui.Maps;
 
 public sealed partial class SampleMap1ViewModel : AppViewModelBase
 {
-    // 東京駅
     private const double InitialLatitude = 35.681167;
     private const double InitialLongitude = 139.767052;
-
-    // 皇居周辺の範囲 (Polygon)
     private static readonly Location[] AreaPoints =
     [
         new(35.693040, 139.746205),

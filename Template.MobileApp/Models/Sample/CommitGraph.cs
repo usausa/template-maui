@@ -89,8 +89,6 @@ public sealed class GraphRow
 
     public int LaneCount { get; init; }
 }
-
-// コミットの履歴 (アプリの中の Graph/repository.json の形)
 public sealed class GraphRepository
 {
     public IReadOnlyList<GraphCommit> Commits { get; init; } = [];

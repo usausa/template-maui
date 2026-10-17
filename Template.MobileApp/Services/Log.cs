@@ -1,8 +1,6 @@
 namespace Template.MobileApp.Services;
 
 using Rester;
-
-// 通信系 (HTTP / SignalR / gRPC) のログ
 internal static partial class Log
 {
     // Network

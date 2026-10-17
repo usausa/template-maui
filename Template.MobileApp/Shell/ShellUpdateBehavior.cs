@@ -18,7 +18,6 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
         get => (INavigator)GetValue(NavigatorProperty);
         set => SetValue(NavigatorProperty, value);
     }
-    // ステータスバーの変更を購読している IShellControl
     private IShellControl? shell;
 
     private StatusBarBehavior? statusBar;

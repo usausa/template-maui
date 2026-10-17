@@ -164,7 +164,6 @@ public static class ShellProperty
 
     private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        // 現在のビュー以外 (退場中のビュー等) からの変更は反映しない
         if ((currentView is null) || !currentView.TryGetTarget(out var current) || !ReferenceEquals(current, bindable))
         {
             return;
