@@ -32,9 +32,9 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     {
         this.dialog = dialog;
 
-        Select1Command = MakeAsyncCommand(async () => Value1 = await SelectItem(Value1));
-        Select2Command = MakeAsyncCommand(async () => Value2 = await SelectItem(Value2));
-        Select3Command = MakeAsyncCommand(async () => Value3 = await SelectItem(Value3));
+        Select1Command = MakeAsyncCommand(async () => Value1 = await SelectItemAsync(Value1));
+        Select2Command = MakeAsyncCommand(async () => Value2 = await SelectItemAsync(Value2));
+        Select3Command = MakeAsyncCommand(async () => Value3 = await SelectItemAsync(Value3));
 
         ActionCommand = MakeDelegateCommand<string>(x => LastAction = x);
 
@@ -59,7 +59,7 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private async ValueTask<int?> SelectItem(int? current)
+    private async ValueTask<int?> SelectItemAsync(int? current)
     {
         var selected = await dialog.SelectAsync(Items, static x => x?.Name ?? string.Empty, Items.FindIndex(x => Equals(x?.Key, current)));
         return (int?)selected?.Key;

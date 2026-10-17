@@ -59,7 +59,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         DisplayDateChangedCommand = MakeDelegateCommand<CalendarDisplayDateChangedEventArgs>(CommandMode.Simple, Load);
         DayTappedCommand = MakeAsyncCommand<CalendarDayEventArgs>(x => dialog.Toast($"{x.Date:yyyy/MM/dd}").AsTask());
         EventTappedCommand = MakeAsyncCommand<CalendarEventEventArgs>(x => dialog.Toast(x.Event.Title).AsTask());
-        SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(OnSelectMode);
+        SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(SelectMode);
     }
 
     //--------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         Holidays = calendarService.GetHolidays(e.FirstDate, e.LastDate);
     }
 
-    private void OnSelectMode(CalendarSelectionMode mode)
+    private void SelectMode(CalendarSelectionMode mode)
     {
         SelectionMode = mode;
 

@@ -17,6 +17,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Segment -->
+
             <Style x:Key="SegmentButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -37,6 +39,8 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
+            <!-- Chart -->
+
             <Style x:Key="ChartFrameBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="16,0,16,16" />
@@ -55,6 +59,7 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="Auto,*">
 
+        <!-- Segment -->
         <Grid Grid.Row="0"
               Style="{StaticResource SegmentGrid}"
               RowDefinitions="Auto,Auto"
@@ -173,6 +178,7 @@
             </Button>
         </Grid>
 
+        <!-- Chart -->
         <Border Grid.Row="1"
                 Style="{StaticResource ChartFrameBorder}">
             <drawing:DrawingControl Drawing="{Binding Drawing}" />

@@ -238,6 +238,7 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
             Notices = MoneySample.LoadNotices(book, now);
         }
     }
+
     private void TickPayment()
     {
         if (IsPaymentOpen)

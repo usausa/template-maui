@@ -22,9 +22,13 @@ public enum VisionFeature
 
 public sealed partial class SampleCvNetViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IDialog dialog;
 
     private readonly AzureVisionUsecase visionUsecase;
+
+    // Property
 
     [ObservableProperty]
     public partial CaptureState State { get; set; }
@@ -43,6 +47,8 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
     public CameraController Controller { get; } = new();
 
     public DetectDrawing Drawing { get; } = new();
+
+    // Command
 
     public IObserveCommand SelectFeatureCommand { get; }
 

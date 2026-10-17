@@ -22,6 +22,8 @@ public sealed partial class SudokuDigit : ObservableObject
 
 public sealed partial class AppSudokuViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan TickInterval = TimeSpan.FromMilliseconds(250);
 
     private readonly IDialog dialog;
@@ -39,6 +41,8 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     private SudokuCell? selected;
 
     private bool visible;
+
+    // Property
 
     [ObservableProperty]
     public partial SudokuLevel Level { get; set; }
@@ -74,6 +78,8 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
     public partial bool IsNewBest { get; set; }
 
     public IReadOnlyList<SudokuDigit> Digits { get; } = [.. Enumerable.Range(1, SudokuGame.Size).Select(static x => new SudokuDigit(x))];
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand NewGameCommand { get; }

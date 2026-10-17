@@ -47,7 +47,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
             var access = await hostingManager.RequestAccess();
             if (access == AccessState.Available)
             {
-                await SwitchAdvertising(!Running);
+                await SwitchAdvertisingAsync(!Running);
             }
             else
             {
@@ -61,7 +61,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
     {
         if (Running)
         {
-            await SwitchAdvertising(false);
+            await SwitchAdvertisingAsync(false);
         }
     }
 
@@ -71,14 +71,14 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        await SwitchAdvertising(!Running);
+        await SwitchAdvertisingAsync(!Running);
     }
 
     //--------------------------------------------------------------------------------
     // Operation
     //--------------------------------------------------------------------------------
 
-    private async ValueTask SwitchAdvertising(bool enable)
+    private async ValueTask SwitchAdvertisingAsync(bool enable)
     {
         if (hostingManager.IsAdvertising == enable)
         {

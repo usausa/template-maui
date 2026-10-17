@@ -16,10 +16,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="MarkdownScroll"
                    TargetType="ScrollView">
                 <Setter Property="Padding" Value="16,12" />
             </Style>
+
+            <!-- Markdown -->
 
             <Style x:Key="DefaultMarkdownView"
                    TargetType="markdown:MarkdownView">
@@ -64,10 +68,13 @@
 
     <!-- Content -->
     <ScrollView Style="{StaticResource MarkdownScroll}">
+
+        <!-- Markdown -->
         <markdown:MarkdownView Style="{StaticResource DefaultMarkdownView}"
                                EMailCommand="{Binding EmailCommand}"
                                LinkCommand="{Binding LinkCommand}"
                                MarkdownText="{Binding Text}" />
+
     </ScrollView>
 
 </ContentView>

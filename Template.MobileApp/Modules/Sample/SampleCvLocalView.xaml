@@ -25,6 +25,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Result -->
+
             <Style x:Key="CaptureImage"
                    TargetType="Image">
                 <Setter Property="BackgroundColor" Value="Black" />
@@ -38,9 +40,12 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
 
+        <!-- Camera -->
         <mct:CameraView Grid.Row="0"
                         behaviors:CameraBind.Controller="{Binding Controller}"
                         IsVisible="{Binding IsPreview}" />
+
+        <!-- Result -->
         <Image Grid.Row="0"
                Style="{StaticResource CaptureImage}"
                Source="{Binding Image}"
@@ -49,9 +54,11 @@
                                 IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                                 Drawing="{Binding Drawing}" />
 
+        <!-- Overlay -->
         <controls:CameraOverlayView Grid.Row="0"
                                     IsVisible="{Binding IsPreview}" />
 
+        <!-- Loading -->
         <ActivityIndicator Grid.Row="0"
                            Style="{StaticResource BasicLightLoadingIndicator}"
                            IsRunning="{Binding IsProcessing}"

@@ -13,6 +13,8 @@ using AiMessage = Microsoft.Extensions.AI.ChatMessage;
 
 public sealed partial class SampleChatViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly ISpeechService speech;
 
     private readonly IDispatcher dispatcher;
@@ -22,6 +24,8 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
     private readonly List<AiMessage> history = [];
 
     private Action? cancelResponse;
+
+    // Property
 
     [ObservableProperty]
     public partial string InputText { get; set; } = string.Empty;
@@ -35,6 +39,8 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
     public ObservableCollection<AiChatMessage> Messages { get; } = [];
 
     private IChatClient ChatClient { get; }
+
+    // Command
 
     public IObserveCommand VoiceCommand { get; }
 

@@ -10,6 +10,8 @@ public sealed record UIScheduleAllDay(
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly TimeSpan StartTime = TimeSpan.FromHours(8);
 
     private static readonly TimeSpan EndTime = TimeSpan.FromHours(20);
@@ -18,11 +20,15 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     private readonly ICalendarService calendarService;
 
+    // Day selector
+
     [ObservableProperty]
     public partial IReadOnlyList<TimetableDay> Days { get; private set; } = [];
 
     [ObservableProperty]
     public partial TimetableDay? SelectedDay { get; set; }
+
+    // Timetable
 
     [ObservableProperty]
     public partial IReadOnlyList<UIScheduleAllDay> AllDayEvents { get; private set; } = [];
@@ -36,6 +42,8 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool ShowCurrentTime { get; set; }
 
+    // Summary
+
     [ObservableProperty]
     public partial int EventCount { get; private set; }
 
@@ -44,6 +52,8 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string FreeTimeText { get; private set; } = string.Empty;
+
+    // Detail sheet
 
     [ObservableProperty]
     public partial TimetableEvent SelectedEvent { get; private set; } = default!;
@@ -56,6 +66,8 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsDetailOpen { get; set; }
+
+    // Command
 
     public IObserveCommand EventTappedCommand { get; }
 

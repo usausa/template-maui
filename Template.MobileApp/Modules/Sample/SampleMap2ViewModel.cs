@@ -4,6 +4,8 @@ using Template.MobileApp.Services;
 
 public sealed partial class SampleMap2ViewModel : AppViewModelBase
 {
+    // Field
+
     private const double InitialLongitude = 139.767052;
     private const double InitialLatitude = 35.681167;
 
@@ -31,6 +33,8 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         (139.742630, 35.679670)
     ];
 
+    // Map
+
     private MapsuiSpotManager SpotManager { get; } = new(Spots);
 
     private MapsuiShapeManager ShapeManager { get; } = new(RoutePoints, AreaPoints);
@@ -40,6 +44,8 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
     private MapsuiClusterManager ClusterManager { get; } = new(139.75, 35.68, 240);
 
     public MapsuiController Controller { get; }
+
+    // Layer
 
     [ObservableProperty]
     public partial bool WidgetsEnabled { get; set; }
@@ -61,6 +67,8 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsLayerOpen { get; set; }
+
+    // Command
 
     public ICommand LayerCommand { get; }
 

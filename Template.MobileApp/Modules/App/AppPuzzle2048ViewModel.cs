@@ -7,9 +7,13 @@ using Template.MobileApp.Services;
 
 public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly JsonStore store;
 
     private readonly Puzzle2048Game game = new(static x => RandomNumberGenerator.GetInt32(x));
+
+    // Property
 
     [ObservableProperty]
     public partial Puzzle2048Frame? Board { get; set; }
@@ -25,6 +29,8 @@ public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsOver { get; set; }
+
+    // Command
 
     public IObserveCommand BackCommand { get; }
     public IObserveCommand NewGameCommand { get; }

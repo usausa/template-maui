@@ -1,6 +1,7 @@
 namespace Template.MobileApp.Services;
 
 using Rester;
+
 internal static partial class Log
 {
     // Network

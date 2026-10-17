@@ -37,7 +37,7 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
 
         Detail = "Sends a test line to \"DummyPrinter\"";
 
-        PrintCommand = MakeAsyncCommand(ExecutePrint, () => !IsBusy);
+        PrintCommand = MakeAsyncCommand(PrintAsync, () => !IsBusy);
     }
 
     //--------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private async Task ExecutePrint()
+    private async Task PrintAsync()
     {
         if (!bluetoothSerialFactory.IsSupported)
         {

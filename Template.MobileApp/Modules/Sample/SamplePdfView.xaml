@@ -20,6 +20,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page edge -->
+
             <Style x:Key="PageEdgeButton"
                    TargetType="Button">
                 <Setter Property="WidthRequest" Value="56" />
@@ -41,6 +43,8 @@
                    BasedOn="{StaticResource PageEdgeButton}">
                 <Setter Property="HorizontalOptions" Value="End" />
             </Style>
+
+            <!-- Page bar -->
 
             <Style x:Key="PageBarGrid"
                    TargetType="Grid">
@@ -69,12 +73,14 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- PDF -->
         <pdf:PdfView Grid.Row="0"
                      PageIndex="{Binding PageIndex, Mode=TwoWay}"
                      MaxZoom="4"
                      PageChangedCommand="{Binding PageChangedCommand}"
                      Uri="{Binding PdfSource}" />
 
+        <!-- Page edge -->
         <Button Grid.Row="0"
                 Style="{StaticResource PrevPageEdgeButton}"
                 Command="{Binding PrevPageCommand}"
@@ -84,6 +90,7 @@
                 Command="{Binding NextPageCommand}"
                 IsEnabled="{Binding CanMoveNext}" />
 
+        <!-- Page bar -->
         <Grid Grid.Row="1"
               Style="{StaticResource PageBarGrid}"
               ColumnDefinitions="*,Auto">

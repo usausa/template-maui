@@ -24,10 +24,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Result -->
+
             <Style x:Key="CaptureImage"
                    TargetType="Image">
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
+
+            <!-- Flash -->
 
             <Style x:Key="ShutterFlashBoxView"
                    TargetType="BoxView">
@@ -44,10 +48,12 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,*">
 
+        <!-- Camera -->
         <mct:CameraView Grid.Row="0" Grid.RowSpan="2"
                         behaviors:CameraBind.Controller="{Binding Controller}"
                         IsVisible="{Binding IsPreview}" />
 
+        <!-- Result -->
         <Image Grid.Row="0"
                Style="{StaticResource CaptureImage}"
                Source="{Binding Image}"
@@ -56,6 +62,7 @@
                                 IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
                                 Drawing="{Binding Drawing}" />
 
+        <!-- Flash -->
         <BoxView Grid.Row="0" Grid.RowSpan="2"
                  Style="{StaticResource ShutterFlashBoxView}"
                  behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />

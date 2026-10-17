@@ -40,8 +40,8 @@ public sealed partial class UIChatViewModel : AppViewModelBase
     {
         this.dispatcher = dispatcher;
 
-        SendCommand = MakeDelegateCommand(ExecuteSend, () => !String.IsNullOrWhiteSpace(InputText));
-        SendStampCommand = MakeDelegateCommand<string>(ExecuteSendStamp);
+        SendCommand = MakeDelegateCommand(Send, () => !String.IsNullOrWhiteSpace(InputText));
+        SendStampCommand = MakeDelegateCommand<string>(SendStamp);
         PickImageCommand = MakeAsyncCommand(PickImageAsync);
         PickStickerCommand = MakeDelegateCommand(() =>
         {
@@ -103,7 +103,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         dispatcher.Dispatch(() => Controller.ScrollRequest(Messages.Count - 1, position: ScrollToPosition.End, animate: animate));
     }
 
-    private void ExecuteSend()
+    private void Send()
     {
         Add(ChatTalk.Send(DateTime.Now, InputText.Trim()));
         InputText = string.Empty;
@@ -150,7 +150,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         IsStampTrayVisible = false;
     }
 
-    private void ExecuteSendStamp(string stamp)
+    private void SendStamp(string stamp)
     {
         Add(ChatTalk.SendStamp(DateTime.Now, stamp));
         CloseTrays();

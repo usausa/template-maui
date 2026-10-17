@@ -21,6 +21,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="WheelRootGrid"
                    TargetType="Grid">
                 <Setter Property="Background">
@@ -32,10 +34,14 @@
                 </Setter>
             </Style>
 
+            <!-- Wheel -->
+
             <Style x:Key="WheelDrawing"
                    TargetType="drawing:DrawingControl">
                 <Setter Property="Margin" Value="8" />
             </Style>
+
+            <!-- Result -->
 
             <Style x:Key="ResultBorder"
                    TargetType="Border">
@@ -73,6 +79,8 @@
                 <Setter Property="TextColor" Value="#66FFFFFF" />
             </Style>
 
+            <!-- Common -->
+
             <Style x:Key="SectionStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="16,0,16,12" />
@@ -93,6 +101,8 @@
                 <Setter Property="AlignItems" Value="Start" />
                 <Setter Property="AlignContent" Value="Start" />
             </Style>
+
+            <!-- History -->
 
             <Style x:Key="HistoryBorder"
                    TargetType="Border">
@@ -115,6 +125,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="#80FFFFFF" />
             </Style>
+
+            <!-- Item -->
 
             <Style x:Key="ItemChipBorder"
                    TargetType="Border">
@@ -167,6 +179,7 @@
     <Grid Style="{StaticResource WheelRootGrid}"
           RowDefinitions="*,Auto,Auto,Auto">
 
+        <!-- Wheel -->
         <drawing:DrawingControl Grid.Row="0"
                                 Style="{StaticResource WheelDrawing}"
                                 Drawing="{Binding Drawing}">
@@ -175,6 +188,7 @@
             </drawing:DrawingControl.GestureRecognizers>
         </drawing:DrawingControl>
 
+        <!-- Result -->
         <Border Grid.Row="1"
                 Style="{StaticResource ResultBorder}">
             <Border.Triggers>
@@ -224,6 +238,7 @@
             </VerticalStackLayout>
         </Border>
 
+        <!-- History -->
         <VerticalStackLayout Grid.Row="2"
                              Style="{StaticResource SectionStack}">
             <Label Style="{StaticResource SectionCaptionLabel}"
@@ -261,6 +276,7 @@
             </FlexLayout>
         </VerticalStackLayout>
 
+        <!-- Item -->
         <VerticalStackLayout Grid.Row="3"
                              Style="{StaticResource SectionStack}">
             <Label Style="{StaticResource SectionCaptionLabel}"

@@ -19,7 +19,7 @@ public sealed partial class UILoginViewModel : AppViewModelBase
     public UILoginViewModel()
     {
         TogglePasswordCommand = MakeDelegateCommand(() => PasswordVisible = !PasswordVisible);
-        LoginCommand = MakeAsyncCommand(ExecuteLoginAsync);
+        LoginCommand = MakeAsyncCommand(LoginAsync);
     }
 
     //--------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ public sealed partial class UILoginViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private async Task ExecuteLoginAsync()
+    private async Task LoginAsync()
     {
         LoggingIn = true;
         try

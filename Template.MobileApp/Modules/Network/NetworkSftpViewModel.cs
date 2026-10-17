@@ -41,8 +41,8 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
         this.settings = settings;
         this.sshUsecase = sshUsecase;
 
-        UploadCommand = MakeDelegateCommand(() => _ = ExecuteUploadAsync(), () => !Busy);
-        DownloadCommand = MakeDelegateCommand(() => _ = ExecuteDownloadAsync(), () => !Busy && !String.IsNullOrEmpty(RemoteFileName));
+        UploadCommand = MakeDelegateCommand(() => _ = UploadAsync(), () => !Busy);
+        DownloadCommand = MakeDelegateCommand(() => _ = DownloadAsync(), () => !Busy && !String.IsNullOrEmpty(RemoteFileName));
         CancelCommand = MakeDelegateCommand(() => cancel?.Invoke(), () => Busy);
     }
 
@@ -70,8 +70,8 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private Task ExecuteUploadAsync() =>
-        ExecuteTransferAsync(async token =>
+    private Task UploadAsync() =>
+        TransferAsync(async token =>
         {
             var result = await sshUsecase.UploadAsync(new Progress<double>(x => Progress = x), token);
             if (result is null)
@@ -86,8 +86,8 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
             }
         });
 
-    private Task ExecuteDownloadAsync() =>
-        ExecuteTransferAsync(async token =>
+    private Task DownloadAsync() =>
+        TransferAsync(async token =>
         {
             var result = await sshUsecase.DownloadAsync(RemoteFileName, new Progress<double>(x => Progress = x), token);
             ApplyResult($"Download: {RemoteFileName} ({result.Size:N0} bytes)", result.Transfer, token);
@@ -97,7 +97,7 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
             }
         });
 
-    private async Task ExecuteTransferAsync(Func<CancellationToken, Task> transfer)
+    private async Task TransferAsync(Func<CancellationToken, Task> transfer)
     {
         Busy = true;
         Progress = 0d;

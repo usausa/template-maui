@@ -18,6 +18,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Header -->
+
             <Style x:Key="ColumnCaptionLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="12,10" />
@@ -26,6 +28,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Message -->
 
             <Style x:Key="ColumnMessageLabel"
                    TargetType="Label">
@@ -43,10 +47,12 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,*,Auto">
 
+        <!-- Header -->
         <Label Grid.Row="0"
                Style="{StaticResource ColumnCaptionLabel}"
                Text="一覧の表示項目" />
 
+        <!-- Column list -->
         <clam:ClamGridView Grid.Row="1"
                            ItemsSource="{Binding Rows}"
                            AllowColumnConfiguration="False" AllowColumnResizing="False" AllowRowDragging="True"
@@ -66,6 +72,7 @@
                              AllowSorting="False" />
         </clam:ClamGridView>
 
+        <!-- Message -->
         <Label Grid.Row="2"
                Style="{StaticResource ColumnMessageLabel}"
                Text="{Binding Message}" />

@@ -22,6 +22,7 @@
         <ResourceDictionary>
 
             <!-- Color -->
+
             <Color x:Key="Puzzle2048TopColor">#FBF6EC</Color>
             <Color x:Key="Puzzle2048BottomColor">#F3E3C3</Color>
             <Color x:Key="Puzzle2048TextColor">#776E65</Color>
@@ -36,6 +37,7 @@
             <Color x:Key="Puzzle2048OverOverlayColor">#D9EEE4DA</Color>
 
             <!-- Page -->
+
             <Style x:Key="Puzzle2048RootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource RootGrid}">
@@ -48,6 +50,8 @@
                     </LinearGradientBrush>
                 </Setter>
             </Style>
+
+            <!-- Top bar -->
 
             <Style x:Key="TopBarGrid"
                    TargetType="Grid">
@@ -76,6 +80,7 @@
             </Style>
 
             <!-- Header -->
+
             <Style x:Key="HeaderGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
@@ -138,6 +143,8 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
+            <!-- Action -->
+
             <Style x:Key="GuideGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -156,6 +163,7 @@
             </Style>
 
             <!-- Board -->
+
             <Style x:Key="SwipeAreaGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="Transparent" />
@@ -223,6 +231,7 @@
             </Style>
 
             <!-- Pad -->
+
             <Style x:Key="PadGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="4" />
@@ -268,6 +277,7 @@
     <Grid Style="{StaticResource Puzzle2048RootGrid}"
           RowDefinitions="Auto,Auto,Auto,*,Auto">
 
+        <!-- Top -->
         <Grid Grid.Row="0"
               Style="{StaticResource TopBarGrid}"
               ColumnDefinitions="Auto,*">
@@ -280,6 +290,7 @@
                    Text="2048" />
         </Grid>
 
+        <!-- Header -->
         <Grid Grid.Row="1"
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="Auto,*,Auto,Auto">
@@ -309,6 +320,7 @@
             </Border>
         </Grid>
 
+        <!-- Action -->
         <Grid Grid.Row="2"
               Style="{StaticResource GuideGrid}"
               ColumnDefinitions="*,Auto">
@@ -318,6 +330,7 @@
                     Text="↻ 新しいゲーム" />
         </Grid>
 
+        <!-- Board -->
         <Grid Grid.Row="3"
               Style="{StaticResource SwipeAreaGrid}">
             <Grid.GestureRecognizers>
@@ -371,6 +384,7 @@
             </Grid>
         </Grid>
 
+        <!-- Pad -->
         <Grid Grid.Row="4"
               Style="{StaticResource PadGrid}"
               RowDefinitions="Auto,Auto,Auto"

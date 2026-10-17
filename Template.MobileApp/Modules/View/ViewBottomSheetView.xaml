@@ -25,6 +25,7 @@
         <ResourceDictionary>
 
             <!-- Bottom sheet -->
+
             <Style x:Key="SfSheet"
                    TargetType="sf:SfBottomSheet">
                 <Setter Property="CornerRadius" Value="16" />
@@ -79,6 +80,7 @@
             </Style>
 
             <!-- Action converters -->
+
             <s:MapToTextConverter x:Key="ActionIconConverter"
                                   DefaultValue="{x:Static fonts:MaterialIcons.Chevron_right}">
                 <s:MapToTextConverter.Entries>
@@ -114,6 +116,7 @@
             </s:MapToColorConverter>
 
             <!-- Result -->
+
             <Style x:Key="ResultRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -143,6 +146,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Bottom sheet -->
+
             <Style x:Key="SheetSeparator"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
@@ -160,6 +165,7 @@
                           IsOpen="{Binding IsSfSheetOpen}"
                           IsModal="True">
 
+            <!-- Sf action sheet -->
             <sf:SfBottomSheet.BottomSheetContent>
                 <ContentView behaviors:LazyViewOption.Load="{Binding IsSfSheetOpen}">
                     <behaviors:LazyViewOption.Template>
@@ -259,6 +265,7 @@
 
         </sf:SfBottomSheet>
 
+        <!-- Custom action sheet -->
         <cmc:BottomSheetView Style="{StaticResource CustomSheet}"
                              IsOpen="{Binding IsCustomSheetOpen}">
             <cmc:BottomSheetView.SheetTemplate>

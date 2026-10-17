@@ -19,11 +19,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Color -->
+
             <Color x:Key="NewsTextColor">#212121</Color>
             <Color x:Key="NewsBodyColor">#424242</Color>
             <Color x:Key="NewsSubTextColor">#9E9E9E</Color>
             <Color x:Key="NewsLineColor">#EEEEEE</Color>
             <Color x:Key="NewsButtonColor">#F1F3F5</Color>
+
+            <!-- Converter -->
 
             <s:MapToTextConverter x:Key="CategoryTextConverter">
                 <s:MapToTextConverter.Entries>
@@ -76,6 +80,8 @@
 
             <converters:ElapsedTimeConverter x:Key="ElapsedTimeConverter" />
 
+            <!-- Read progress -->
+
             <Style x:Key="ReadProgressBar"
                    TargetType="ProgressBar">
                 <Setter Property="VerticalOptions" Value="Start" />
@@ -83,10 +89,14 @@
                 <Setter Property="ZIndex" Value="1" />
             </Style>
 
+            <!-- Page -->
+
             <Style x:Key="DetailScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
+
+            <!-- Hero -->
 
             <Style x:Key="HeroGrid"
                    TargetType="Grid">
@@ -168,6 +178,8 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Article -->
+
             <Style x:Key="ArticleStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="16,20,16,32" />
@@ -187,6 +199,8 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
             </Style>
+
+            <!-- Action -->
 
             <Style x:Key="ActionGrid"
                    TargetType="Grid">
@@ -214,6 +228,8 @@
                 <Setter Property="FontSize" Value="22" />
             </Style>
 
+            <!-- Body -->
+
             <Style x:Key="ArticleLine"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
@@ -225,6 +241,8 @@
                 <Setter Property="LineHeight" Value="1.6" />
                 <Setter Property="TextColor" Value="{StaticResource NewsBodyColor}" />
             </Style>
+
+            <!-- Related -->
 
             <Style x:Key="RelatedTitleLabel"
                    TargetType="Label">
@@ -278,6 +296,7 @@
                     behaviors:Scroll.TopTrigger="{Binding Context.Article}">
             <VerticalStackLayout>
 
+                <!-- Hero -->
                 <Grid x:Name="Hero"
                       Style="{StaticResource HeroGrid}"
                       BackgroundColor="{Binding Context.Article.Category, Converter={StaticResource CategoryColorConverter}}">
@@ -300,7 +319,10 @@
                     </HorizontalStackLayout>
                 </Grid>
 
+                <!-- Article -->
                 <VerticalStackLayout Style="{StaticResource ArticleStack}">
+
+                    <!-- Title -->
                     <Label Style="{StaticResource TitleLabel}"
                            Text="{Binding Context.Article.Title}" />
                     <Label Style="{StaticResource MetaLabel}">
@@ -317,6 +339,7 @@
                         </Label.FormattedText>
                     </Label>
 
+                    <!-- Action -->
                     <Grid Style="{StaticResource ActionGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto">
                         <Button Grid.Column="0"
@@ -366,11 +389,13 @@
                                 Text="{x:Static fonts:MaterialIcons.Text_increase}" />
                     </Grid>
 
+                    <!-- Body -->
                     <BoxView Style="{StaticResource ArticleLine}" />
                     <Label Style="{StaticResource BodyLabel}"
                            Text="{Binding Context.Article.Body}"
                            FontSize="{Binding BodyFontSize}" />
 
+                    <!-- Related -->
                     <Label Style="{StaticResource RelatedTitleLabel}"
                            Text="関連記事" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Context.Related}">
@@ -403,6 +428,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
+        <!-- Read progress -->
         <ProgressBar Style="{StaticResource ReadProgressBar}"
                      Progress="{Binding ReadProgress}"
                      ProgressColor="{Binding Context.Article.Category, Converter={StaticResource CategoryColorConverter}}" />

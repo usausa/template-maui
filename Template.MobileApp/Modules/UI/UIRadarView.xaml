@@ -16,11 +16,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="RadarRootGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource FillGrid}">
                 <Setter Property="BackgroundColor" Value="#061206" />
             </Style>
+
+            <!-- Status -->
 
             <Style x:Key="StatusRowStack"
                    TargetType="HorizontalStackLayout">
@@ -44,9 +48,11 @@
     <Grid Style="{StaticResource RadarRootGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Radar -->
         <controls:RadarScreen Grid.Row="0"
                               Targets="{Binding Targets}" />
 
+        <!-- Status -->
         <HorizontalStackLayout Grid.Row="1"
                                Style="{StaticResource StatusRowStack}">
             <Label Style="{StaticResource StatusLabel}"

@@ -27,6 +27,8 @@ public sealed partial class DragTask : ObservableObject
 
 public sealed partial class ViewDragDropViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly Color Blue = Color.FromArgb("#42A5F5");
 
     private static readonly Color Green = Color.FromArgb("#66BB6A");
@@ -38,6 +40,8 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
     private static readonly Color Cyan = Color.FromArgb("#26C6DA");
 
     private DragTask? dragging;
+
+    // List
 
     public ObservableCollection<DragTask> ReorderList { get; } =
     [
@@ -60,6 +64,8 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
         new("朝会", Purple)
     ];
 
+    // Drag state
+
     [ObservableProperty]
     public partial bool IsDragging { get; set; }
 
@@ -71,6 +77,8 @@ public sealed partial class ViewDragDropViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool TrashActive { get; set; }
+
+    // Command
 
     public IObserveCommand DragStartingCommand { get; }
 

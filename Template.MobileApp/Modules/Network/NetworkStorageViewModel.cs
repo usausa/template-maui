@@ -207,6 +207,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
             await ReloadAsync();
         }
     }
+
     private async Task DownloadAsync()
     {
         var entry = SelectedEntry;

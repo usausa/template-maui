@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UINewsDetailViewModel : AppViewModelBase
 {
+    // Field
+
     private static readonly double[] FontSizes = [14, 16, 18, 20, 22];
 
     private readonly IShare share;
+
+    // Property
 
     [Scope]
     [ObservableProperty]
@@ -17,6 +21,8 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial double ReadProgress { get; set; }
+
+    // Command
 
     public IObserveCommand SaveCommand { get; }
 

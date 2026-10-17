@@ -17,10 +17,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Page -->
+
             <Style x:Key="BackgroundGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
             </Style>
+
+            <!-- Row -->
 
             <Style x:Key="ValueRowGrid"
                    TargetType="Grid">
@@ -131,6 +135,8 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
+            <!-- Option -->
+
             <Style x:Key="OptionButtonBase"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -164,11 +170,15 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
+            <!-- Checkout -->
+
             <FontImageSource x:Key="CheckIcon"
                              Glyph="{x:Static fonts:MaterialIcons.Check_circle_outline}"
                              Size="24"
                              FontFamily="MaterialIcons"
                              Color="White" />
+
+            <!-- Order -->
 
             <Style x:Key="QuantityButton"
                    TargetType="Button">
@@ -182,6 +192,8 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="18" />
             </Style>
+
+            <!-- Checkout -->
 
             <Style x:Key="ExecuteButton"
                    TargetType="Button">
@@ -210,6 +222,7 @@
     <Grid Style="{StaticResource BackgroundGrid}"
           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,16,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,16,Auto,Auto,Auto,*,Auto,Auto,Auto">
 
+        <!-- Order -->
         <Grid Grid.Row="0"
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,Auto,Auto,24">
@@ -322,6 +335,7 @@
         <BoxView Grid.Row="11"
                  Style="{StaticResource SeparatorBoxView}" />
 
+        <!-- Payment -->
         <Grid Grid.Row="13"
               Style="{StaticResource GroupRowGrid}"
               ColumnDefinitions="*">
@@ -397,6 +411,7 @@
         <BoxView Grid.Row="20"
                  Style="{StaticResource SeparatorBoxView}" />
 
+        <!-- Staff -->
         <BoxView Grid.Row="22"
                  Style="{StaticResource SeparatorBoxView}" />
 
@@ -418,6 +433,7 @@
         <BoxView Grid.Row="24"
                  Style="{StaticResource SeparatorBoxView}" />
 
+        <!-- Option -->
         <Grid Grid.Row="26"
               ColumnDefinitions="*,*,*,*">
             <Button Grid.Column="0"
@@ -434,6 +450,7 @@
                     Text="メルマガ割引" />
         </Grid>
 
+        <!-- Checkout -->
         <Button Grid.Row="28"
                 Style="{StaticResource ExecuteButton}"
                 Text="チェックアウト"

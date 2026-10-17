@@ -17,6 +17,7 @@
         <ResourceDictionary>
 
             <!-- Background -->
+
             <Style x:Key="TitlePath"
                    TargetType="Path">
                 <Setter Property="Aspect" Value="Fill" />
@@ -36,6 +37,8 @@
                 <Setter Property="TranslationY" Value="10" />
             </Style>
 
+            <!-- Avatar -->
+
             <Style x:Key="TitleBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="96" />
@@ -51,12 +54,14 @@
             </Style>
 
             <!-- Layout -->
+
             <Style x:Key="LayoutGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="20" />
             </Style>
 
             <!-- Message -->
+
             <Style x:Key="WelcomeLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -71,6 +76,7 @@
             </Style>
 
             <!-- Input -->
+
             <Style x:Key="InputBorder"
                    TargetType="Border">
                 <Setter Property="HorizontalOptions" Value="Fill" />
@@ -102,6 +108,7 @@
             </Style>
 
             <!-- Keep login -->
+
             <Style x:Key="KeepLoginLayout"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -121,6 +128,7 @@
             </Style>
 
             <!-- Login -->
+
             <Style x:Key="LoginButton"
                    TargetType="Button">
                 <Setter Property="WidthRequest" Value="240" />
@@ -149,6 +157,7 @@
             </Style>
 
             <!-- Password toggle -->
+
             <Style x:Key="PasswordToggleButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="40" />
@@ -159,6 +168,7 @@
             </Style>
 
             <!-- Forget password -->
+
             <Style x:Key="ForgetPasswordLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
@@ -176,6 +186,7 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="160,*">
 
+        <!-- Background -->
         <Path Grid.Row="0"
               Style="{StaticResource TitleShadowPath}"
               Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" />
@@ -184,6 +195,7 @@
               Style="{StaticResource TitlePath}"
               Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" />
 
+        <!-- Avatar -->
         <Border Grid.Row="0"
                 Style="{StaticResource TitleBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -191,10 +203,12 @@
                    Source="profile.jpg" />
         </Border>
 
+        <!-- Form -->
         <Grid Grid.Row="1"
               Style="{StaticResource LayoutGrid}"
               RowDefinitions="2*,Auto,8,Auto,40,Auto,16,Auto,40,Auto,40,Auto,40,Auto,3*">
 
+            <!-- Message -->
             <Label Grid.Row="1"
                    Style="{StaticResource WelcomeLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -207,6 +221,7 @@
                    behaviors:AnimationOption.EnterDelay="160"
                    Text="ログインして続けてください" />
 
+            <!-- User ID -->
             <Border Grid.Row="5"
                     Style="{StaticResource InputBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -224,6 +239,7 @@
                 </Grid>
             </Border>
 
+            <!-- Password -->
             <Border Grid.Row="7"
                     Style="{StaticResource InputBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"

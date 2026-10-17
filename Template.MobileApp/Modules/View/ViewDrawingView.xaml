@@ -22,6 +22,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Preview -->
+
             <Style x:Key="PreviewEmptyStack"
                    TargetType="VerticalStackLayout"
                    BasedOn="{StaticResource BasicEmptyStack}">
@@ -41,10 +43,14 @@
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
+            <!-- Canvas -->
+
             <Style x:Key="CanvasView"
                    TargetType="mct:DrawingView">
                 <Setter Property="Background" Value="White" />
             </Style>
+
+            <!-- Palette -->
 
             <Style x:Key="PaletteBorder"
                    TargetType="Border">
@@ -175,6 +181,8 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <!-- Preview -->
+
             <Style x:Key="PreviewGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="12" />
@@ -198,11 +206,13 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="2*,Auto,*">
 
+        <!-- Canvas -->
         <mct:DrawingView Grid.Row="0"
                          Style="{StaticResource CanvasView}"
                          behaviors:DrawingBind.Controller="{Binding Controller}"
                          IsMultiLineModeEnabled="True" />
 
+        <!-- Palette -->
         <Border Grid.Row="1"
                 Style="{StaticResource PaletteBorder}">
             <VerticalStackLayout Style="{StaticResource PaletteStack}">
@@ -262,6 +272,7 @@
             </VerticalStackLayout>
         </Border>
 
+        <!-- Preview -->
         <Grid Grid.Row="2"
               Style="{StaticResource PreviewGrid}"
               RowDefinitions="Auto,*">

@@ -4,7 +4,11 @@ using Maui.PDFView.Events;
 
 public sealed partial class SamplePdfViewModel : AppViewModelBase
 {
+    // Field
+
     private readonly IFileSystem fileSystem;
+
+    // Property
 
     [ObservableProperty]
     public partial string PdfSource { get; set; } = default!;
@@ -26,6 +30,8 @@ public sealed partial class SamplePdfViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool CanMoveNext { get; set; }
+
+    // Command
 
     public ICommand PageChangedCommand { get; }
 

@@ -20,6 +20,8 @@ public sealed partial class DrawerMenuItem : ObservableObject
 
 public sealed partial class ViewDrawerViewModel : AppViewModelBase
 {
+    // Property
+
     [ObservableProperty]
     public partial int ModeIndex { get; set; }
 
@@ -48,6 +50,8 @@ public sealed partial class ViewDrawerViewModel : AppViewModelBase
         new(MaterialIcons.History, "履歴"),
         new(MaterialIcons.Settings, "設定")
     ];
+
+    // Command
 
     public IObserveCommand OpenCommand { get; }
 

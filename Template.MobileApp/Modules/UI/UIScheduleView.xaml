@@ -19,6 +19,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Day selector -->
+
             <Style x:Key="DayChipCollection"
                    TargetType="CollectionView">
                 <Setter Property="HeightRequest" Value="84" />
@@ -62,6 +64,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
+            <!-- Summary -->
+
             <Style x:Key="SummaryBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12,0,12,8" />
@@ -97,6 +101,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
+            <!-- All day -->
+
             <Style x:Key="AllDayScroll"
                    TargetType="ScrollView">
                 <Setter Property="Margin" Value="12,0,12,8" />
@@ -131,6 +137,8 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
+
+            <!-- Detail sheet -->
 
             <Style x:Key="DetailSheet"
                    TargetType="cmc:BottomSheetView">
@@ -246,6 +254,7 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,Auto,Auto,*">
 
+        <!-- Day selector -->
         <CollectionView Grid.Row="0"
                         Style="{StaticResource DayChipCollection}"
                         ItemsSource="{Binding Days}"
@@ -293,6 +302,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <!-- Summary -->
         <Border Grid.Row="1"
                 Style="{StaticResource SummaryBorder}">
             <Grid ColumnDefinitions="*,*,*">
@@ -319,6 +329,8 @@
                 </VerticalStackLayout>
             </Grid>
         </Border>
+
+        <!-- All day -->
         <ScrollView Grid.Row="2"
                     Style="{StaticResource AllDayScroll}"
                     IsVisible="{Binding AllDayEvents.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
@@ -340,6 +352,7 @@
             </HorizontalStackLayout>
         </ScrollView>
 
+        <!-- Timetable -->
         <ScrollView Grid.Row="3">
             <controls:DayTimetableView CurrentTime="{Binding CurrentTime}"
                                        EventTappedCommand="{Binding EventTappedCommand}"
@@ -347,6 +360,7 @@
                                        ShowCurrentTime="{Binding ShowCurrentTime}" />
         </ScrollView>
 
+        <!-- Detail sheet -->
         <cmc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
                              Style="{StaticResource DetailSheet}"
                              IsOpen="{Binding IsDetailOpen}">

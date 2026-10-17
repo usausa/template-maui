@@ -25,6 +25,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <s:MapToBoolConverter x:Key="PreviewVisibleConverter">
                 <s:MapToBoolConverter.Entries>
                     <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}"
@@ -60,10 +62,14 @@
                                        TrueValue="White"
                                        FalseValue="{StaticResource BlueGrayDarken2}" />
 
+            <!-- Result -->
+
             <Style x:Key="CaptureImage"
                    TargetType="Image">
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
+
+            <!-- Tag -->
 
             <Style x:Key="TagPanelBorder"
                    TargetType="Border">
@@ -83,12 +89,16 @@
                 <Setter Property="LineHeight" Value="1.3" />
             </Style>
 
+            <!-- Flash -->
+
             <Style x:Key="ShutterFlashBoxView"
                    TargetType="BoxView">
                 <Setter Property="Color" Value="White" />
                 <Setter Property="Opacity" Value="0" />
                 <Setter Property="InputTransparent" Value="True" />
             </Style>
+
+            <!-- Feature -->
 
             <Style x:Key="FeatureGrid"
                    TargetType="Grid">
@@ -116,9 +126,12 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Camera -->
         <mct:CameraView Grid.Row="0"
                         behaviors:CameraBind.Controller="{Binding Controller}"
                         IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
+
+        <!-- Result -->
         <Image Grid.Row="0"
                Style="{StaticResource CaptureImage}"
                Source="{Binding Image}"
@@ -127,6 +140,7 @@
                                 IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
                                 Drawing="{Binding Drawing}" />
 
+        <!-- Tag -->
         <Border Grid.Row="0"
                 Style="{StaticResource TagPanelBorder}"
                 IsVisible="{Binding TagsText, Converter={StaticResource NotEmptyConverter}}">
@@ -134,13 +148,16 @@
                    Text="{Binding TagsText}" />
         </Border>
 
+        <!-- Overlay -->
         <controls:CameraOverlayView Grid.Row="0"
                                     IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
 
+        <!-- Flash -->
         <BoxView Grid.Row="0"
                  Style="{StaticResource ShutterFlashBoxView}"
                  behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
 
+        <!-- Feature -->
         <Grid Grid.Row="1"
               Style="{StaticResource FeatureGrid}"
               ColumnDefinitions="*,*,*,*"

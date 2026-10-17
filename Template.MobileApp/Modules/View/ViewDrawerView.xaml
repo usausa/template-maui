@@ -24,6 +24,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Implementation -->
+
             <Style x:Key="SegmentedControl"
                    TargetType="sf:SfSegmentedControl">
                 <Setter Property="SelectionIndicatorSettings">
@@ -34,12 +36,16 @@
                 </Setter>
             </Style>
 
+            <!-- Drawer -->
+
             <Style x:Key="DrawerFooterLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCaptionLabel}">
                 <Setter Property="Padding" Value="16,12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
+
+            <!-- Selected -->
 
             <Style x:Key="SelectedRowGrid"
                    TargetType="Grid">
@@ -71,6 +77,8 @@
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
+
+            <!-- Drawer -->
 
             <Style x:Key="DrawerGrid"
                    TargetType="Grid">
@@ -188,7 +196,10 @@
     <!-- Content -->
     <Grid>
 
+        <!-- Sf navigation drawer -->
         <drawer:SfNavigationDrawer IsOpen="{Binding IsSfDrawerOpen}">
+
+            <!-- Drawer -->
             <drawer:SfNavigationDrawer.DrawerSettings>
                 <drawer:DrawerSettings Position="Left"
                                        DrawerFooterHeight="44" DrawerHeaderHeight="96" DrawerWidth="280"
@@ -281,8 +292,10 @@
                     </VerticalStackLayout>
                 </ScrollView>
             </drawer:SfNavigationDrawer.ContentView>
+
         </drawer:SfNavigationDrawer>
 
+        <!-- Custom drawer -->
         <cmc:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
                         DrawerWidth="280"
                         EdgeSwipeEnabled="{Binding IsCustomMode}">

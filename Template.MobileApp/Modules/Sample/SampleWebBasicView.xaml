@@ -23,6 +23,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Status bar -->
+
             <Style x:Key="StatusBarBorder"
                    TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
@@ -60,10 +62,12 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Web view -->
         <HybridWebView Grid.Row="0"
                        behaviors:WebViewBind.Controller="{Binding Controller}"
                        DefaultFile="index.html" HybridRoot="web-basic" />
 
+        <!-- Status bar -->
         <Border Grid.Row="1"
                 Style="{StaticResource StatusBarBorder}"
                 behaviors:AnimationOption.HighlightColor="{StaticResource SelectFocusColor}"

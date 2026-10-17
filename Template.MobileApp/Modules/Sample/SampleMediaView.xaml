@@ -20,7 +20,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Converter -->
+
             <converters:DurationToSecondsConverter x:Key="DurationToSecondsConverter" />
+
+            <!-- Error -->
 
             <Style x:Key="FailedStack"
                    TargetType="VerticalStackLayout">
@@ -43,6 +47,8 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
+
+            <!-- Control bar -->
 
             <Style x:Key="ControlBarBorder"
                    TargetType="Border">
@@ -89,12 +95,14 @@
     <!-- Content -->
     <Grid Style="{StaticResource DarkRootGrid}">
 
+        <!-- Player -->
         <mct:MediaElement x:Name="Player"
                           behaviors:MediaBind.Controller="{Binding Controller}"
                           Source="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4"
                           Aspect="AspectFit"
                           ShouldAutoPlay="True" ShouldShowPlaybackControls="False" />
 
+        <!-- Error -->
         <VerticalStackLayout Style="{StaticResource FailedStack}"
                              IsVisible="{Binding IsFailed}">
             <Label Style="{StaticResource FailedIconLabel}"
@@ -103,16 +111,19 @@
                    Text="Cannot play" />
         </VerticalStackLayout>
 
+        <!-- Tap area -->
         <BoxView Color="#01000000">
             <BoxView.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding ToggleControlBarCommand}" />
             </BoxView.GestureRecognizers>
         </BoxView>
 
+        <!-- Loading -->
         <ActivityIndicator Style="{StaticResource BasicLightLoadingIndicator}"
                            IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}" />
 
+        <!-- Control bar -->
         <Border Style="{StaticResource ControlBarBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
                 IsVisible="{Binding IsControlBarVisible}">

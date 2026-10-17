@@ -18,6 +18,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Result -->
+
             <Style x:Key="PanelBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="16,12" />
@@ -86,9 +88,11 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto">
 
+        <!-- Crop -->
         <drawing:DrawingControl Grid.Row="0"
                                 Drawing="{Binding Crop}" />
 
+        <!-- Result -->
         <Border Grid.Row="1"
                 Style="{StaticResource PanelBorder}">
             <Grid Style="{StaticResource ExportResultGrid}"

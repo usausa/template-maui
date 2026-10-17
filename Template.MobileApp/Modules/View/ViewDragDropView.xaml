@@ -18,6 +18,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Task -->
+
             <Style x:Key="TaskLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource CardRowLabel}">
@@ -33,6 +35,8 @@
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Margin" Value="0,3" />
             </Style>
+
+            <!-- Reorder -->
 
             <Style x:Key="ReorderListBorder"
                    TargetType="Border">
@@ -67,6 +71,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
+            <!-- Move between lists -->
+
             <Style x:Key="ColumnBadgeBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="8,2" />
@@ -94,12 +100,16 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <!-- Task -->
+
             <Style x:Key="InsertLine"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="3" />
                 <Setter Property="Color" Value="{StaticResource BlueDefault}" />
                 <Setter Property="IsVisible" Value="False" />
             </Style>
+
+            <!-- Move between lists -->
 
             <Style x:Key="ColumnBorder"
                    TargetType="Border">
@@ -110,6 +120,8 @@
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="MinimumHeightRequest" Value="200" />
             </Style>
+
+            <!-- Trash -->
 
             <Style x:Key="TrashBorder"
                    TargetType="Border">
@@ -128,6 +140,8 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
+
+            <!-- Template -->
 
             <DataTemplate x:Key="TaskTemplate"
                           x:DataType="{x:Type module:DragTask}">
@@ -244,6 +258,8 @@
                     </Grid>
                 </Border>
             </DataTemplate>
+
+            <!-- Move between lists -->
 
             <Style x:Key="BoardGrid"
                    TargetType="Grid">

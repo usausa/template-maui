@@ -35,14 +35,14 @@ public sealed partial class DataViewModel : AppViewModelBase
         this.dialog = dialog;
         this.dataService = dataService;
 
-        InsertCommand = MakeAsyncCommand(Insert);
-        UpdateCommand = MakeAsyncCommand(Update);
-        DeleteCommand = MakeAsyncCommand(Delete);
-        QueryCommand = MakeAsyncCommand(Query);
+        InsertCommand = MakeAsyncCommand(InsertAsync);
+        UpdateCommand = MakeAsyncCommand(UpdateAsync);
+        DeleteCommand = MakeAsyncCommand(DeleteAsync);
+        QueryCommand = MakeAsyncCommand(QueryAsync);
 
-        BulkInsertCommand = MakeAsyncCommand(BulkInsert, () => BulkDataCount == 0);
-        DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => BulkDataCount > 0);
-        QueryAllCommand = MakeAsyncCommand(QueryAll);
+        BulkInsertCommand = MakeAsyncCommand(BulkInsertAsync, () => BulkDataCount == 0);
+        DeleteAllCommand = MakeAsyncCommand(DeleteAllAsync, () => BulkDataCount > 0);
+        QueryAllCommand = MakeAsyncCommand(QueryAllAsync);
     }
 
     //--------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ public sealed partial class DataViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private async Task Insert()
+    private async Task InsertAsync()
     {
         var ret = await dataService.InsertDataAsync(new DataEntity { Id = 1L, Name = "Data-1", CreateAt = DateTime.UtcNow });
 
@@ -76,21 +76,21 @@ public sealed partial class DataViewModel : AppViewModelBase
         }
     }
 
-    private async Task Update()
+    private async Task UpdateAsync()
     {
         var effect = await dataService.UpdateDataAsync(1L, "Updated");
 
         await dialog.InformationAsync($"Effect={effect}");
     }
 
-    private async Task Delete()
+    private async Task DeleteAsync()
     {
         var effect = await dataService.DeleteDataAsync(1L);
 
         await dialog.InformationAsync($"Effect={effect}");
     }
 
-    private async Task Query()
+    private async Task QueryAsync()
     {
         var entity = await dataService.QueryDataAsync(1L);
 
@@ -104,7 +104,7 @@ public sealed partial class DataViewModel : AppViewModelBase
         }
     }
 
-    private async Task BulkInsert()
+    private async Task BulkInsertAsync()
     {
         var list = Enumerable.Range(1, 10000)
             .Select(static x => new BulkDataEntity
@@ -136,14 +136,14 @@ public sealed partial class DataViewModel : AppViewModelBase
         await dialog.InformationAsync($"Inserted\r\nElapsed={watch.ElapsedMilliseconds}");
     }
 
-    private async Task DeleteAll()
+    private async Task DeleteAllAsync()
     {
         await dataService.DeleteAllBulkDataAsync();
 
         BulkDataCount = await dataService.CountBulkDataAsync();
     }
 
-    private async Task QueryAll()
+    private async Task QueryAllAsync()
     {
         var watch = new Stopwatch();
 

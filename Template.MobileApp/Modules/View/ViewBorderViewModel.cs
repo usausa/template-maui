@@ -10,6 +10,8 @@ public enum BorderShape
 
 public sealed partial class ViewBorderViewModel : AppViewModelBase
 {
+    // Option
+
     public ObservableCollection<BorderShape> Shapes { get; } = [BorderShape.RoundRectangle, BorderShape.Ellipse, BorderShape.Rectangle, BorderShape.Polygon];
 
     public ObservableCollection<ColorItem> BorderColors { get; }
@@ -20,6 +22,8 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
 
     public ObservableCollection<LineCap> LineCaps { get; } = [LineCap.Butt, LineCap.Round, LineCap.Square];
 
+    // Shape and color
+
     [ObservableProperty]
     public partial BorderShape BorderShape { get; set; } = BorderShape.RoundRectangle;
 
@@ -28,6 +32,8 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial ColorItem StrokeColor { get; set; }
+
+    // Stroke
 
     [ObservableProperty]
     public partial double StrokeThickness { get; set; } = 1;
@@ -48,6 +54,8 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial LineCap StrokeLineCap { get; set; } = LineCap.Butt;
+
+    // Corner radius
 
     [ObservableProperty(NotifyAlso = [nameof(CornerRadius)])]
     public partial double CornerRadiusTopLeft { get; set; } = 20;

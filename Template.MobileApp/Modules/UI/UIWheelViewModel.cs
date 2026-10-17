@@ -14,6 +14,8 @@ public sealed record UIWheelResult(
 #pragma warning disable CA5394
 public sealed partial class UIWheelViewModel : AppViewModelBase
 {
+    // Field
+
     private const int MinItems = 2;
 
     private const int MaxItems = 12;
@@ -40,6 +42,8 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
 
     private readonly List<WheelItem> items = [.. MenuItems];
 
+    // Result
+
     [ObservableProperty]
     public partial string Winner { get; set; } = string.Empty;
 
@@ -48,6 +52,8 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsJackpot { get; set; }
+
+    // Item
 
     [ObservableProperty]
     public partial IReadOnlyList<UIWheelEntry> Entries { get; private set; } = [];
@@ -58,9 +64,15 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool CanRemove { get; private set; }
 
+    // History
+
     public ObservableCollection<UIWheelResult> History { get; } = [];
 
+    // Wheel
+
     public WheelDrawing Drawing { get; } = new();
+
+    // Command
 
     public IObserveCommand SpinCommand { get; }
 
@@ -74,7 +86,7 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     {
         this.dialog = dialog;
 
-        SpinCommand = MakeDelegateCommand(ExecuteSpin);
+        SpinCommand = MakeDelegateCommand(Spin);
         RemoveCommand = MakeDelegateCommand<UIWheelEntry>(Remove);
 
         UpdateItems();
@@ -110,7 +122,7 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction4()
     {
-        ExecuteSpin();
+        Spin();
         return Task.CompletedTask;
     }
 
@@ -118,7 +130,7 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private void ExecuteSpin()
+    private void Spin()
     {
         var extra = 1080f + (random.Next(360 * 4) / 4f);
         var started = Drawing.Spin(extra, 4200, ShowResult);

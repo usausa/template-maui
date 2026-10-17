@@ -4,6 +4,8 @@ using Microsoft.Maui.Maps;
 
 public sealed partial class SampleMap1ViewModel : AppViewModelBase
 {
+    // Field
+
     private const double InitialLatitude = 35.681167;
     private const double InitialLongitude = 139.767052;
     private static readonly Location[] AreaPoints =
@@ -15,12 +17,16 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
         new(35.687168, 139.740683)
     ];
 
+    // Map
+
     public MapController Controller { get; } = new(InitialLatitude, InitialLongitude, 3);
 
     [ObservableProperty]
     public partial MapType CurrentMapType { get; set; } = MapType.Street;
 
     public IReadOnlyList<MapSpot> Spots { get; } = MapSample.LoadSpots();
+
+    // Layer
 
     [ObservableProperty]
     public partial bool HybridEnabled { get; set; }
@@ -36,6 +42,8 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsLayerOpen { get; set; }
+
+    // Command
 
     public ICommand HomeCommand { get; }
 

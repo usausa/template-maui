@@ -2,7 +2,11 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UIPosViewModel : AppViewModelBase
 {
+    // Field
+
     private const int UnitPrice = 296;
+
+    // Order
 
     [ObservableProperty(NotifyAlso = [nameof(Subtotal), nameof(Total), nameof(InnerTax), nameof(Change), nameof(HasChange)])]
     public partial int Quantity { get; set; }
@@ -13,11 +17,15 @@ public sealed partial class UIPosViewModel : AppViewModelBase
 
     public int InnerTax => (int)(Total * 8d / 108d);
 
+    // Payment
+
     public int Deposit { get; } = 888;
 
     public int Change => Math.Max(0, Deposit - Total);
 
     public bool HasChange => Change > 0;
+
+    // Command
 
     public ICommand QuantityUpCommand { get; }
     public ICommand QuantityDownCommand { get; }
