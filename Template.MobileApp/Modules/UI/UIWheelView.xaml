@@ -21,16 +21,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Common -->
-
-            <Style x:Key="SectionCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="#B3FFFFFF" />
-            </Style>
-
-            <!-- Page -->
+            <!-- Layout -->
 
             <Style x:Key="WheelRootGrid"
                    TargetType="Grid">
@@ -41,6 +32,21 @@
                         <GradientStop Offset="1" Color="{StaticResource PurpleDarken4}" />
                     </LinearGradientBrush>
                 </Setter>
+            </Style>
+
+            <Style x:Key="SectionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,0,16,12" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <!-- Common -->
+
+            <Style x:Key="SectionCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#B3FFFFFF" />
             </Style>
 
             <!-- Wheel -->
@@ -159,12 +165,6 @@
             </Style>
 
             <!-- Component -->
-
-            <Style x:Key="SectionStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="16,0,16,12" />
-                <Setter Property="Spacing" Value="6" />
-            </Style>
 
             <Style x:Key="ChipLayout"
                    TargetType="FlexLayout">

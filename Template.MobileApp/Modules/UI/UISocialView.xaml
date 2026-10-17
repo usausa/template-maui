@@ -19,6 +19,21 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Layout -->
+
+            <Style x:Key="LayoutGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="ColumnSpacing" Value="2" />
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="LayoutVerticalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <!-- Background -->
 
             <Style x:Key="BackgroundImage"
@@ -104,24 +119,11 @@
 
             <!-- Component -->
 
-            <Style x:Key="LayoutGrid"
-                   TargetType="Grid">
-                <Setter Property="Padding" Value="2" />
-                <Setter Property="ColumnSpacing" Value="2" />
-                <Setter Property="RowSpacing" Value="2" />
-            </Style>
-
             <Style x:Key="NotificationBadge"
                    TargetType="controls:SocialNotificationBadge">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="VerticalOptions" Value="Start" />
                 <Setter Property="behaviors:AnimationOption.Pulse" Value="True" />
-            </Style>
-
-            <Style x:Key="LayoutVerticalStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="VerticalOptions" Value="End" />
-                <Setter Property="Spacing" Value="2" />
             </Style>
 
         </ResourceDictionary>

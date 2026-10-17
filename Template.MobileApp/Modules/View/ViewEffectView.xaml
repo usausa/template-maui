@@ -18,6 +18,19 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Layout -->
+
+            <Style x:Key="EffectPageScroll"
+                   TargetType="ScrollView"
+                   BasedOn="{StaticResource RootScroll}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="EffectPageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,0,16,24" />
+            </Style>
+
             <!-- Common -->
 
             <Style x:Key="SectionLabel"
@@ -64,19 +77,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
-            </Style>
-
-            <!-- Page -->
-
-            <Style x:Key="EffectPageScroll"
-                   TargetType="ScrollView"
-                   BasedOn="{StaticResource RootScroll}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-            </Style>
-
-            <Style x:Key="EffectPageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="16,0,16,24" />
             </Style>
 
             <!-- Entrance -->
