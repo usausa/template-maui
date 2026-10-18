@@ -8,8 +8,11 @@ public static partial class ElementHelper
 {
     public static VisualElement? FindFocused(IVisualTreeElement parent)
     {
-        foreach (var child in parent.GetVisualChildren())
+        var children = parent.GetVisualChildren();
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < children.Count; i++)
         {
+            var child = children[i];
             if ((child is VisualElement visual) && visual.IsFocused)
             {
                 return visual;
@@ -25,48 +28,35 @@ public static partial class ElementHelper
         return null;
     }
 
-    public static IEnumerable<VisualElement> EnumerateFocusable(IVisualTreeElement parent)
-    {
-        foreach (var child in parent.GetVisualChildren())
-        {
-            if (child is not VisualElement { IsEnabled: true, IsVisible: true } visual)
-            {
-                continue;
-            }
-
-            if (IsPlatformFocusable(visual))
-            {
-                yield return visual;
-            }
-
-            foreach (var descendant in EnumerateFocusable(child))
-            {
-                yield return descendant;
-            }
-        }
-    }
+    public static VisualElement? FindFocusable(IVisualTreeElement parent, Func<VisualElement, bool> predicate) =>
+        FindActive(parent, predicate, static (x, p) => IsPlatformFocusable(x) && p(x));
 
     private static partial bool IsPlatformFocusable(VisualElement visual);
 
-    public static IEnumerable<T> EnumerateActive<T>(IVisualTreeElement parent)
+    public static VisualElement? FindActive<TState>(IVisualTreeElement parent, TState state, Func<VisualElement, TState, bool> predicate)
     {
-        foreach (var child in parent.GetVisualChildren())
+        var children = parent.GetVisualChildren();
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < children.Count; i++)
         {
-            if (child is not VisualElement { IsEnabled: true, IsVisible: true })
+            if (children[i] is not VisualElement { IsEnabled: true, IsVisible: true } visual)
             {
                 continue;
             }
 
-            if (child is T element)
+            if (predicate(visual, state))
             {
-                yield return element;
+                return visual;
             }
 
-            foreach (var descendant in EnumerateActive<T>(child))
+            var found = FindActive(visual, state, predicate);
+            if (found is not null)
             {
-                yield return descendant;
+                return found;
             }
         }
+
+        return null;
     }
 
     public static bool MoveFocus(VisualElement parent, bool forward) =>

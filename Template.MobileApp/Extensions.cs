@@ -56,19 +56,9 @@ public static class Extensions
 
     public static void SetDefaultFocus(this IVisualTreeElement parent)
     {
-        var first = default(VisualElement);
-        foreach (var visualElement in ElementHelper.EnumerateFocusable(parent))
-        {
-            if (Focus.GetDefault(visualElement))
-            {
-                visualElement.Focus();
-                return;
-            }
-
-            first ??= visualElement;
-        }
-
-        first?.Focus();
+        var element = ElementHelper.FindFocusable(parent, Focus.GetDefault) ??
+                      ElementHelper.FindFocusable(parent, static _ => true);
+        element?.Focus();
     }
 
     //--------------------------------------------------------------------------------
