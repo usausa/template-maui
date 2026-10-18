@@ -339,7 +339,7 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         PointF GetPoint(int i) =>
             new(area.Left + (area.Width * i / (values.Length - 1)), ToY(area, current, ValueAt(i, eased)));
 
-        Color ColorOf(double value) => Lerp(LineColor, LineHighColor, (float)((value - min) / range));
+        Color ColorOf(double value) => GraphicsHelper.Lerp(LineColor, LineHighColor, (float)((value - min) / range));
 
         canvas.SaveState();
         if (!morph)
@@ -746,8 +746,8 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             {
                 var ratio = (float)((heatCells[r][c] - min) / range);
                 var color = ratio < 0.5f
-                    ? Lerp(HeatLowColor, HeatMidColor, ratio * 2f)
-                    : Lerp(HeatMidColor, HeatHighColor, (ratio - 0.5f) * 2f);
+                    ? GraphicsHelper.Lerp(HeatLowColor, HeatMidColor, ratio * 2f)
+                    : GraphicsHelper.Lerp(HeatMidColor, HeatHighColor, (ratio - 0.5f) * 2f);
                 var selected = (SelectedIndex < 0) || (SelectedIndex == (r * cols) + c);
                 canvas.FillColor = color.WithAlpha(alpha * (selected ? 1f : 0.55f));
                 canvas.FillRoundedRectangle(
@@ -972,7 +972,7 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             return -1;
         }
 
-        var angle = ((MathF.Atan2(dx, -dy) * 180f / MathF.PI) + 360f) % 360f;
+        var angle = GraphicsHelper.NormalizeDegrees(MathF.Atan2(dx, -dy) * 180f / MathF.PI);
         var end = 0d;
         for (var i = 0; i < values.Length; i++)
         {
@@ -1060,11 +1060,4 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     // CubicOut
     private static float Ease(float t) => 1f - ((1f - t) * (1f - t) * (1f - t));
-
-    private static Color Lerp(Color from, Color to, float t) =>
-        Color.FromRgba(
-            from.Red + ((to.Red - from.Red) * t),
-            from.Green + ((to.Green - from.Green) * t),
-            from.Blue + ((to.Blue - from.Blue) * t),
-            1f);
 }

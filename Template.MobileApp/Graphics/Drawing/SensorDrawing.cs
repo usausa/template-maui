@@ -27,15 +27,11 @@ public sealed class CompassDrawing : DrawingObject
         canvas.StrokeSize = 1.5f;
         for (var deg = 0; deg < 360; deg += 30)
         {
-            var rad = (float)(deg * Math.PI / 180d);
-            var sin = (float)Math.Sin(rad);
-            var cos = (float)Math.Cos(rad);
             var len = deg % 90 == 0 ? 8f : 4f;
-            canvas.DrawLine(
-                cx + ((radius - len) * sin),
-                cy - ((radius - len) * cos),
-                cx + (radius * sin),
-                cy - (radius * cos));
+            var angle = deg - 90f;
+            var (x1, y1) = GraphicsHelper.GetPoint(new PointF(cx, cy), radius - len, angle);
+            var (x2, y2) = GraphicsHelper.GetPoint(new PointF(cx, cy), radius, angle);
+            canvas.DrawLine(x1, y1, x2, y2);
         }
 
         // Center circle

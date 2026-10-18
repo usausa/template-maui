@@ -755,7 +755,7 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
             {
                 var y = dirtyRect.Height - ((j + 1) * cellHeight) - (j * verticalSpacing);
 
-                canvas.FillColor = j < value ? InterpolateColor(StartColor, EndColor, (float)j / (Level - 1)) : InactiveColor;
+                canvas.FillColor = j < value ? LerpColor(StartColor, EndColor, (float)j / (Level - 1)) : InactiveColor;
                 canvas.FillRectangle(x, y, cellWidth, cellHeight);
             }
 
@@ -765,19 +765,20 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
                 var j = peak - 1;
                 var y = dirtyRect.Height - ((j + 1) * cellHeight) - (j * verticalSpacing);
 
-                canvas.FillColor = InterpolateColor(StartColor, EndColor, (float)j / (Level - 1));
+                canvas.FillColor = LerpColor(StartColor, EndColor, (float)j / (Level - 1));
                 canvas.FillRectangle(x, y, cellWidth, cellHeight);
             }
         }
     }
 
-    private static Color InterpolateColor(Color c1, Color c2, float factor)
+    private static Color LerpColor(Color color, Color to, float amount)
     {
+        var t = Math.Clamp(amount, 0f, 1f);
         return new Color(
-            c1.Red + ((c2.Red - c1.Red) * factor),
-            c1.Green + ((c2.Green - c1.Green) * factor),
-            c1.Blue + ((c2.Blue - c1.Blue) * factor),
-            c1.Alpha + ((c2.Alpha - c1.Alpha) * factor));
+            Single.Lerp(color.Red, to.Red, t),
+            Single.Lerp(color.Green, to.Green, t),
+            Single.Lerp(color.Blue, to.Blue, t),
+            Single.Lerp(color.Alpha, to.Alpha, t));
     }
 
     //--------------------------------------------------------------------------------

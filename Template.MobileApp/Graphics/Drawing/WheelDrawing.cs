@@ -118,7 +118,7 @@ public sealed class WheelDrawing : DrawingObject
             () =>
             {
                 IsSpinning = false;
-                rotation = Normalize(rotation);
+                rotation = GraphicsHelper.NormalizeDegrees(rotation);
                 winnerIndex = GetWinnerIndex();
                 StartEffect();
                 completed?.Invoke(items[winnerIndex]);
@@ -134,7 +134,7 @@ public sealed class WheelDrawing : DrawingObject
         {
             AbortAnimation(SpinAnimationName);
             IsSpinning = false;
-            rotation = Normalize(rotation);
+            rotation = GraphicsHelper.NormalizeDegrees(rotation);
         }
     }
 
@@ -208,9 +208,8 @@ public sealed class WheelDrawing : DrawingObject
                 ? ((i + chase) % 3) == 0
                 : (effectProgress <= 0f) || (((i % 2) == blink) && (winnerIndex >= 0));
 
-            var angle = (i * 360f / BulbCount) * MathF.PI / 180f;
-            var x = cx + (bulbRadius * MathF.Cos(angle));
-            var y = cy + (bulbRadius * MathF.Sin(angle));
+            var angle = i * 360f / BulbCount;
+            var (x, y) = GraphicsHelper.GetPoint(new PointF(cx, cy), bulbRadius, angle);
 
             if (lit)
             {
@@ -280,7 +279,7 @@ public sealed class WheelDrawing : DrawingObject
         {
             var screenMid = rotation - 90f + ((i + 0.5f) * sweep);
 
-            var flip = Normalize(screenMid) is > 90f and < 270f;
+            var flip = GraphicsHelper.NormalizeDegrees(screenMid) is > 90f and < 270f;
             canvas.SaveState();
             canvas.Rotate(flip ? screenMid + 180f : screenMid, cx, cy);
             if (flip)
@@ -370,10 +369,9 @@ public sealed class WheelDrawing : DrawingObject
                 continue;
             }
 
-            var angle = (-90f + ((Frac(seed * 7.13f) - 0.5f) * 80f)) * MathF.PI / 180f;
+            var angle = -90f + ((Frac(seed * 7.13f) - 0.5f) * 80f);
             var distance = radius + 20f + (Frac(seed * 3.71f) * 60f);
-            var x = cx + (distance * MathF.Cos(angle));
-            var y = cy + (distance * MathF.Sin(angle));
+            var (x, y) = GraphicsHelper.GetPoint(new PointF(cx, cy), distance, angle);
             var size = 4f + (Frac(seed * 5.29f) * 6f);
 
             DrawStar(canvas, x, y, size * twinkle, SparkleColor.WithAlpha(twinkle));
@@ -428,11 +426,9 @@ public sealed class WheelDrawing : DrawingObject
     private int GetWinnerIndex()
     {
         var sweep = 360f / items.Count;
-        var local = Normalize(360f - rotation);
+        var local = GraphicsHelper.NormalizeDegrees(360f - rotation);
         return (int)(local / sweep) % items.Count;
     }
-
-    private static float Normalize(float value) => ((value % 360f) + 360f) % 360f;
 
     private static float Hash(int seed)
     {

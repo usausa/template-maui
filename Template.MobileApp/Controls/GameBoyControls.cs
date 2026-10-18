@@ -389,7 +389,7 @@ public sealed class GameBoyPad : SKCanvasView
         if ((distance <= layout.Arm * CrossReachRate) && (distance >= layout.Arm * CrossDeadZoneRate))
         {
             var angle = Math.Atan2(-dy, dx) * 180 / Math.PI;
-            var sector = (int)Math.Round(((angle + 360) % 360) / SectorAngle) % 8;
+            var sector = (int)Math.Round(NormalizeDegrees(angle) / SectorAngle) % 8;
             JoypadButton? horizontal = sector is 0 or 1 or 7 ? JoypadButton.Right : sector is 3 or 4 or 5 ? JoypadButton.Left : null;
             JoypadButton? vertical = sector is 1 or 2 or 3 ? JoypadButton.Up : sector is 5 or 6 or 7 ? JoypadButton.Down : null;
             return (horizontal, vertical, null);
@@ -417,4 +417,6 @@ public sealed class GameBoyPad : SKCanvasView
         start.Inflate(layout.Face * PillReachWidthRate, layout.Face * PillReachHeightRate);
         return start.Contains(point) ? (null, null, JoypadButton.Start) : default;
     }
+
+    private static double NormalizeDegrees(double degrees) => ((degrees % 360d) + 360d) % 360d;
 }

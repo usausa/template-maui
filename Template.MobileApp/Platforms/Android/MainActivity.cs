@@ -14,8 +14,11 @@ using AndroidX.Activity;
     Theme = "@style/Maui.SplashTheme",
     MainLauncher = true,
     AlwaysRetainTaskState = true,
-    LaunchMode = LaunchMode.SingleInstance,
-    ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density,
+    LaunchMode = LaunchMode.SingleTask,
+    LockTaskMode = "if_whitelisted",
+    ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density |
+                           ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation | ConfigChanges.Touchscreen |
+                           ConfigChanges.Locale | ConfigChanges.LayoutDirection | ConfigChanges.FontScale | ConfigChanges.Mcc | ConfigChanges.Mnc,
     ScreenOrientation = ScreenOrientation.Portrait)]
 public sealed class MainActivity : MauiAppCompatActivity
 {

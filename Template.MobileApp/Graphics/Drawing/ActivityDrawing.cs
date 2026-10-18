@@ -61,11 +61,8 @@ public sealed class ActivityDrawing : DrawingObject
         {
             var from = StartAngle - (sweep * i / count);
             var to = StartAngle - (sweep * (i + 1) / count);
-            canvas.StrokeColor = Blend(StartColor, EndColor, (i + 0.5f) / count);
+            canvas.StrokeColor = GraphicsHelper.Lerp(StartColor, EndColor, (i + 0.5f) / count);
             canvas.DrawArc(arcRect, from, to, true, false);
         }
     }
-
-    private static Color Blend(Color from, Color to, float amount) =>
-        new(from.Red + ((to.Red - from.Red) * amount), from.Green + ((to.Green - from.Green) * amount), from.Blue + ((to.Blue - from.Blue) * amount));
 }

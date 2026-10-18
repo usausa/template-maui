@@ -211,14 +211,14 @@
                                   IsVisible="{Binding Selected, Converter={StaticResource NotEmptyConverter}}">
                                 <Border Grid.Column="0"
                                         Style="{StaticResource ResultIconBorder}"
-                                        BackgroundColor="{Binding Selected.BackgroundColor}">
+                                        BackgroundColor="{Binding Selected.BackgroundColor, FallbackValue={StaticResource BlueGrayLighten4}}">
                                     <Label Style="{StaticResource ResultIconLabel}"
-                                           Text="{Binding Selected.Icon}"
-                                           TextColor="{Binding Selected.Color}" />
+                                           Text="{Binding Selected.Icon, FallbackValue=''}"
+                                           TextColor="{Binding Selected.Color, FallbackValue={StaticResource BlueGrayDarken1}}" />
                                 </Border>
                                 <Label Grid.Column="1"
                                        Style="{StaticResource ResultNameLabel}"
-                                       Text="{Binding Selected.Text}" />
+                                       Text="{Binding Selected.Text, FallbackValue=''}" />
                             </Grid>
                         </Grid>
                     </controls:InfoCard>

@@ -72,7 +72,7 @@ internal sealed class MechHudSim
 
     public void Update(float t, float dt)
     {
-        HeadingDeg = FlightHudSim.Wrap360(HeadingDeg + (6f * MathF.Sin(t * 0.11f) * dt));
+        HeadingDeg = GraphicsHelper.NormalizeDegrees(HeadingDeg + (6f * MathF.Sin(t * 0.11f) * dt));
 
         channelTimer += dt;
         if (channelTimer >= 13f)
@@ -741,8 +741,8 @@ public sealed class MechHudScene : SceneObject
             canvas.DrawCircle(p, 120f * scale, Stroke);
             Stroke.PathEffect = null;
 
-            var angle = FlightHudSim.Wrap360(MathF.Atan2(p.Y - own.Y, p.X - own.X) * 180f / MathF.PI);
-            var since = FlightHudSim.Wrap360(sweep - angle);
+            var angle = GraphicsHelper.NormalizeDegrees(MathF.Atan2(p.Y - own.Y, p.X - own.X) * 180f / MathF.PI);
+            var since = GraphicsHelper.NormalizeDegrees(sweep - angle);
             var alpha = (byte)Math.Clamp(255f - (since * 0.6f), 140f, 255f);
             pathBuilder.MoveTo(p.X, p.Y - 6.5f);
             pathBuilder.LineTo(p.X + 6.5f, p.Y);
@@ -859,7 +859,7 @@ public sealed class MechHudScene : SceneObject
 
     private static float Distance(float x, float y) => MathF.Sqrt((x * x) + (y * y));
 
-    private static float Bearing(float x, float y) => FlightHudSim.Wrap360(MathF.Atan2(x, y) * 180f / MathF.PI);
+    private static float Bearing(float x, float y) => GraphicsHelper.NormalizeDegrees(MathF.Atan2(x, y) * 180f / MathF.PI);
 
     private static float Phase(float t, float period) => (t % period) / period;
 

@@ -193,7 +193,7 @@ public static class Focus
                 AnimationName,
                 v =>
                 {
-                    UpdateStroke(border, brush, LerpColor(fromColor, toColor, v));
+                    UpdateStroke(border, brush, LerpColor(fromColor, toColor, (float)v));
                     if (changeThickness)
                     {
                         UpdateThickness(border, fromThickness + ((toThickness - fromThickness) * v));
@@ -239,7 +239,14 @@ public static class Focus
             return null;
         }
 
-        private static Color LerpColor(Color from, Color to, double t) =>
-            new((float)(from.Red + ((to.Red - from.Red) * t)), (float)(from.Green + ((to.Green - from.Green) * t)), (float)(from.Blue + ((to.Blue - from.Blue) * t)), (float)(from.Alpha + ((to.Alpha - from.Alpha) * t)));
+        private static Color LerpColor(Color color, Color to, float amount)
+        {
+            var t = Math.Clamp(amount, 0f, 1f);
+            return new Color(
+                Single.Lerp(color.Red, to.Red, t),
+                Single.Lerp(color.Green, to.Green, t),
+                Single.Lerp(color.Blue, to.Blue, t),
+                Single.Lerp(color.Alpha, to.Alpha, t));
+        }
     }
 }

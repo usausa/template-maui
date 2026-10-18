@@ -444,6 +444,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
 
         var cx = dirtyRect.Center.X;
         var cy = rect.Center.Y;
+        var center = new PointF(cx, cy);
 
         canvas.Font = font;
         canvas.FontSize = fontSize;
@@ -475,9 +476,7 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
             if (isMajor)
             {
                 var offset = radius - textOffset;
-                var textRadian = (float)((StartAngle - (RangeAngle * i / range)) * MathF.PI / 180);
-                var textX = cx + (offset * MathF.Cos(textRadian));
-                var textY = cy - (offset * MathF.Sin(textRadian));
+                var (textX, textY) = GetArcPoint(center, offset, (float)(StartAngle - (RangeAngle * i / range)));
 
                 var text = $"{(int)(i + min)}";
                 var textSize = canvas.GetStringSize(text, font, fontSize);
@@ -498,28 +497,25 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         var peak = PeakValue;
         if (peak > min)
         {
-            var peakRadian = (float)((StartAngle - (RangeAngle * (Math.Clamp(peak, min, max) - min) / range)) * MathF.PI / 180);
+            var (peakX, peakY) = GetArcPoint(center, needleLengthBase, (float)(StartAngle - (RangeAngle * (Math.Clamp(peak, min, max) - min) / range)));
             canvas.StrokeLineCap = LineCap.Round;
             canvas.StrokeColor = PeakNeedleColor;
             canvas.StrokeSize = PeakNeedleWidth;
-            canvas.DrawLine(cx, cy, cx + (needleLengthBase * MathF.Cos(peakRadian)), cy - (needleLengthBase * MathF.Sin(peakRadian)));
+            canvas.DrawLine(cx, cy, peakX, peakY);
         }
 
         var value = Math.Clamp(Value, min, max);
-        var needleRadian = (float)((StartAngle - (RangeAngle * (value - Min) / range)) * MathF.PI / 180);
+        var needleAngle = (float)(StartAngle - (RangeAngle * (value - Min) / range));
 
         var needleLength = needleLengthBase;
         var needleBackLength = (radius - MajorTickLength) * NeedleBackLengthPercentage;
-        var baseCenterX = cx - (needleBackLength * MathF.Cos(needleRadian));
-        var baseCenterY = cy + (needleBackLength * MathF.Sin(needleRadian));
-        var baseAngle1 = needleRadian + (MathF.PI / 2);
-        var baseAngle2 = needleRadian - (MathF.PI / 2);
+        var baseCenter = GetArcPoint(center, needleBackLength, needleAngle + 180f);
         var baseRadius = NeedleWidth / 2;
 
         var path = new PathF();
-        path.MoveTo(cx + (needleLength * MathF.Cos(needleRadian)), cy - (needleLength * MathF.Sin(needleRadian)));
-        path.LineTo(baseCenterX + (baseRadius * MathF.Cos(baseAngle1)), baseCenterY - (baseRadius * MathF.Sin(baseAngle1)));
-        path.LineTo(baseCenterX + (baseRadius * MathF.Cos(baseAngle2)), baseCenterY - (baseRadius * MathF.Sin(baseAngle2)));
+        path.MoveTo(GetArcPoint(center, needleLength, needleAngle));
+        path.LineTo(GetArcPoint(baseCenter, baseRadius, needleAngle + 90f));
+        path.LineTo(GetArcPoint(baseCenter, baseRadius, needleAngle - 90f));
         path.Close();
 
         canvas.FillColor = NeedleColor;
@@ -528,6 +524,12 @@ public sealed class NoiseGauge : GraphicsView, IDrawable, IDisposable
         var centerCircleRadius = CenterCircleRadius;
         canvas.FillColor = NeedleCenterColor;
         canvas.FillCircle(cx, cy, centerCircleRadius);
+    }
+
+    private static PointF GetArcPoint(PointF center, float radius, float degrees)
+    {
+        var radians = Single.DegreesToRadians(degrees);
+        return new PointF(center.X + (radius * MathF.Cos(radians)), center.Y - (radius * MathF.Sin(radians)));
     }
 
     //--------------------------------------------------------------------------------

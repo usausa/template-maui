@@ -17,7 +17,9 @@ public sealed class CompassPointConverter : IValueConverter
 
     private static string ToPoint(double degree)
     {
-        var index = (int)Math.Round((((degree % 360) + 360) % 360) / 45) % Points.Length;
+        var index = (int)Math.Round(NormalizeDegrees(degree) / 45) % Points.Length;
         return Points[index];
     }
+
+    private static double NormalizeDegrees(double degrees) => ((degrees % 360d) + 360d) % 360d;
 }

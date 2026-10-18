@@ -180,6 +180,13 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
         return HighColor;
     }
 
-    private static Color LerpColor(Color from, Color to, float t) =>
-        new(from.Red + ((to.Red - from.Red) * t), from.Green + ((to.Green - from.Green) * t), from.Blue + ((to.Blue - from.Blue) * t), from.Alpha + ((to.Alpha - from.Alpha) * t));
+    private static Color LerpColor(Color color, Color to, float amount)
+    {
+        var t = Math.Clamp(amount, 0f, 1f);
+        return new Color(
+            Single.Lerp(color.Red, to.Red, t),
+            Single.Lerp(color.Green, to.Green, t),
+            Single.Lerp(color.Blue, to.Blue, t),
+            Single.Lerp(color.Alpha, to.Alpha, t));
+    }
 }

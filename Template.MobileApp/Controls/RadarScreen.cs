@@ -216,6 +216,7 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         var height = dirtyRect.Height;
         var cx = width / 2f;
         var cy = height / 2f;
+        var center = new PointF(cx, cy);
         var radius = (Math.Min(dirtyRect.Width, dirtyRect.Height) / 2) - BorderMargin;
 
         canvas.Antialias = true;
@@ -250,21 +251,16 @@ public sealed class RadarScreen : GraphicsView, IDrawable
 
         for (var a = 0; a < 360; a += CrossStep)
         {
-            var rad = DegreesToRadians(a);
-            var x = cx + (radius * (float)Math.Cos(rad));
-            var y = cy + (radius * (float)Math.Sin(rad));
+            var (x, y) = GetPoint(center, radius, a);
             canvas.DrawLine(cx, cy, x, y);
         }
 
         for (var a = 0; a < 360; a += MemoryStep)
         {
-            var rad = DegreesToRadians(a);
             var outer = radius;
             var inner = radius - ((a % MemoryLongStep) == 0 ? MemoryLengthLong : MemoryLengthShort);
-            var x1 = cx + (outer * (float)Math.Cos(rad));
-            var y1 = cy + (outer * (float)Math.Sin(rad));
-            var x2 = cx + (inner * (float)Math.Cos(rad));
-            var y2 = cy + (inner * (float)Math.Sin(rad));
+            var (x1, y1) = GetPoint(center, outer, a);
+            var (x2, y2) = GetPoint(center, inner, a);
             canvas.DrawLine(x1, y1, x2, y2);
         }
 
@@ -295,10 +291,8 @@ public sealed class RadarScreen : GraphicsView, IDrawable
                     continue;
                 }
 
-                var rad = DegreesToRadians(target.Angle);
                 var r = radius * Math.Clamp(target.Distance, 0f, 1f);
-                var tx = cx + (r * (float)Math.Cos(rad));
-                var ty = cy + (r * (float)Math.Sin(rad));
+                var (tx, ty) = GetPoint(center, r, target.Angle);
 
                 canvas.FillColor = new Color(sweepColor.Red, sweepColor.Green, sweepColor.Blue, alpha * TargetHaloAlpha);
                 canvas.FillCircle(tx, ty, TargetHaloRadius);
@@ -326,9 +320,7 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         canvas.StrokeSize = SweepLineWidth;
         canvas.StrokeLineCap = LineCap.Round;
 
-        var radCurrent = DegreesToRadians(currentAngle);
-        var ex = cx + (radius * (float)Math.Cos(radCurrent));
-        var ey = cy + (radius * (float)Math.Sin(radCurrent));
+        var (ex, ey) = GetPoint(center, radius, currentAngle);
 
         canvas.DrawLine(cx, cy, ex, ey);
 
@@ -354,8 +346,11 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         canvas.RestoreState();
     }
 
-    private static float DegreesToRadians(float degrees) =>
-        degrees * ((float)Math.PI / 180f);
+    private static PointF GetPoint(PointF center, float radius, float degrees)
+    {
+        var radians = Single.DegreesToRadians(degrees);
+        return new PointF(center.X + (radius * MathF.Cos(radians)), center.Y + (radius * MathF.Sin(radians)));
+    }
 
     //--------------------------------------------------------------------------------
     // Animation
@@ -488,13 +483,15 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         for (var i = 0; i < targets.Count; i++)
         {
             var target = targets[i];
-            var angle = ((target.Angle % 360f) + 360f) % 360f;
+            var angle = NormalizeDegrees(target.Angle);
             if (IsAnglePassed(fromAngle, toAngle, angle))
             {
                 targetPassTimes[target] = now;
             }
         }
     }
+
+    private static float NormalizeDegrees(float degrees) => ((degrees % 360f) + 360f) % 360f;
 
     private static bool IsAnglePassed(float from, float to, float angle)
     {

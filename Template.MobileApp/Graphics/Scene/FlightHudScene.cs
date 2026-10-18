@@ -63,7 +63,7 @@ internal sealed class FlightHudSim
     {
         RollDeg = (16f * MathF.Sin(t * 0.23f)) + (5f * MathF.Sin(t * 0.71f));
         PitchDeg = (5.5f * MathF.Sin(t * 0.19f)) + (2.2f * MathF.Sin(t * 0.47f));
-        HeadingDeg = Wrap360(HeadingDeg + (4.5f * MathF.Sin(t * 0.09f) * dt));
+        HeadingDeg = GraphicsHelper.NormalizeDegrees(HeadingDeg + (4.5f * MathF.Sin(t * 0.09f) * dt));
         SpeedKt = 470f + (55f * MathF.Sin(t * 0.13f)) + (12f * MathF.Sin(t * 0.43f));
         Mach = SpeedKt * 0.00157f;
         ClimbFpm = PitchDeg * 210f;
@@ -114,7 +114,7 @@ internal sealed class FlightHudSim
 
         foreach (var contact in Contacts)
         {
-            contact.BearingDeg = Wrap360(contact.BearingDeg + (contact.BearingDrift * dt));
+            contact.BearingDeg = GraphicsHelper.NormalizeDegrees(contact.BearingDeg + (contact.BearingDrift * dt));
             contact.RangeNm += contact.RangeRate * dt;
             if (contact.RangeNm is < 2.5f or > 38f)
             {
@@ -123,8 +123,6 @@ internal sealed class FlightHudSim
             }
         }
     }
-
-    public static float Wrap360(float value) => ((value % 360f) + 360f) % 360f;
 }
 
 //--------------------------------------------------------------------------------
@@ -513,7 +511,7 @@ public sealed class FlightHudScene : SceneObject
         for (var a = start; a <= start + 80f; a += 5f)
         {
             var x = tape.MidX + ((a - heading) * pxPerDeg);
-            var value = (int)FlightHudSim.Wrap360(a);
+            var value = (int)GraphicsHelper.NormalizeDegrees(a);
             var major = (value % 10) == 0;
             Stroke.StrokeCap = SKStrokeCap.Butt;
             Stroke.Color = Main.WithAlpha(major ? (byte)220 : (byte)140);
@@ -727,7 +725,7 @@ public sealed class FlightHudScene : SceneObject
     {
         var bearing = contact.BearingDeg + (contact.BearingDrift * ahead);
         var range = Math.Clamp(contact.RangeNm + (contact.RangeRate * ahead), 0f, 40f);
-        return AngleHelper.GetPoint(center, range / 40f * r, AngleHelper.ToSkiaAngle(FlightHudSim.Wrap360(bearing - sim.HeadingDeg)));
+        return AngleHelper.GetPoint(center, range / 40f * r, AngleHelper.ToSkiaAngle(GraphicsHelper.NormalizeDegrees(bearing - sim.HeadingDeg)));
     }
 
     private void DrawRadar(SKCanvas canvas, FlightLayout layout)
@@ -773,8 +771,8 @@ public sealed class FlightHudScene : SceneObject
 
             var p = ContactPoint(contact, center, r, 0f);
             var ahead = ContactPoint(contact, center, r, 10f);
-            var screenDeg = FlightHudSim.Wrap360(FlightHudSim.Wrap360(contact.BearingDeg - sim.HeadingDeg) - 90f);
-            var since = FlightHudSim.Wrap360(sim.SweepDeg - screenDeg);
+            var screenDeg = GraphicsHelper.NormalizeDegrees(GraphicsHelper.NormalizeDegrees(contact.BearingDeg - sim.HeadingDeg) - 90f);
+            var since = GraphicsHelper.NormalizeDegrees(sim.SweepDeg - screenDeg);
             var alpha = (byte)Math.Clamp(240f - (since * 0.5f), 70f, 240f);
             var color = contact.Iff switch
             {
@@ -830,7 +828,7 @@ public sealed class FlightHudScene : SceneObject
         }
 
         // North marker (heading-up)
-        var north = AngleHelper.GetPoint(center, r - 14f, AngleHelper.ToSkiaAngle(FlightHudSim.Wrap360(-sim.HeadingDeg)));
+        var north = AngleHelper.GetPoint(center, r - 14f, AngleHelper.ToSkiaAngle(GraphicsHelper.NormalizeDegrees(-sim.HeadingDeg)));
         DrawText(canvas, "N", north.X, north.Y + 3.5f, 10f, Amber, bold: true, align: SKTextAlign.Center);
 
         DrawText(canvas, $"CONTACTS {sim.Contacts.Length}  IFF ON", center.X, center.Y + r + 19f, 9.5f, Main.WithAlpha(180), align: SKTextAlign.Center);

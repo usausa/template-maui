@@ -518,7 +518,7 @@ public sealed class HomeThermostatDial : HomeControl
         {
             var center = new SKPoint(CanvasSize.Width / 2f, CanvasSize.Height / 2f);
             var angle = MathF.Atan2(location.Y - center.Y, location.X - center.X) * 180f / MathF.PI;
-            var relative = (((angle - StartAngle) % 360f) + 360f) % 360f;
+            var relative = NormalizeDegrees(angle - StartAngle);
             if (relative > SweepAngle)
             {
                 relative = relative < SweepAngle + ((360f - SweepAngle) / 2f) ? SweepAngle : 0f;
@@ -533,6 +533,8 @@ public sealed class HomeThermostatDial : HomeControl
             Value = Math.Clamp(value, Minimum, Maximum);
         }
     }
+
+    private static float NormalizeDegrees(float degrees) => ((degrees % 360f) + 360f) % 360f;
 }
 
 //--------------------------------------------------------------------------------

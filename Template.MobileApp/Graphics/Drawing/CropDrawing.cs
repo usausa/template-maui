@@ -148,27 +148,24 @@ public sealed class CropDrawing : DrawingObject, IInteractiveDrawing, IDisposabl
 
     private DragMode HitTest(PointF point)
     {
-        if (Distance(point, new PointF(cropRect.Left, cropRect.Top)) <= HandleHitRadius)
+        if (GraphicsHelper.Distance(point, new PointF(cropRect.Left, cropRect.Top)) <= HandleHitRadius)
         {
             return DragMode.TopLeft;
         }
-        if (Distance(point, new PointF(cropRect.Right, cropRect.Top)) <= HandleHitRadius)
+        if (GraphicsHelper.Distance(point, new PointF(cropRect.Right, cropRect.Top)) <= HandleHitRadius)
         {
             return DragMode.TopRight;
         }
-        if (Distance(point, new PointF(cropRect.Left, cropRect.Bottom)) <= HandleHitRadius)
+        if (GraphicsHelper.Distance(point, new PointF(cropRect.Left, cropRect.Bottom)) <= HandleHitRadius)
         {
             return DragMode.BottomLeft;
         }
-        if (Distance(point, new PointF(cropRect.Right, cropRect.Bottom)) <= HandleHitRadius)
+        if (GraphicsHelper.Distance(point, new PointF(cropRect.Right, cropRect.Bottom)) <= HandleHitRadius)
         {
             return DragMode.BottomRight;
         }
         return cropRect.Contains(point) ? DragMode.Move : DragMode.None;
     }
-
-    private static float Distance(PointF a, PointF b) =>
-        MathF.Sqrt(((a.X - b.X) * (a.X - b.X)) + ((a.Y - b.Y) * (a.Y - b.Y)));
 
     //--------------------------------------------------------------------------------
     // Draw
