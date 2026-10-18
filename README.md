@@ -105,8 +105,14 @@ Template project for MAUI.
 | Device | Push (FCM) |
 | Device | Background task |
 | Network | Tanking send |
-| Other | Physical keyboard support |
 | Other | iOS support |
+
+# Related Projects
+
+| Project | Description |
+| --- | --- |
+| [template-maui-server](https://github.com/usausa/template-maui-server) | Server application |
+| [template-maui-keyboard](https://github.com/usausa/template-maui-keyboard) | Physical keyboard control |
 
 # My Libraries
 
