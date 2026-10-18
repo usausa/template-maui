@@ -2,7 +2,7 @@
 
 Template project for MAUI.
 
-# Image
+# 📸 Image
 
 <p>
 <img width="25%" src="Document/Images/UI_Login.png" />
@@ -70,7 +70,7 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Social.png" />
 </p>
 
-# Example
+# 📚 Example
 
 | Category | Page |
 | --- | --- |
@@ -83,7 +83,7 @@ Template project for MAUI.
 | Sample | [Example07_Sample](Document/Example07_Sample.md) |
 | App | [Example08_App](Document/Example08_App.md) |
 
-# Implement
+# ✅ Implement
 
 | Category | Feature |
 | --- | --- |
@@ -97,7 +97,7 @@ Template project for MAUI.
 | Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / Object, Tag, People, OCR(Azure AI Vision) / ONNX / Chat(Ollama) / Crop |
 | App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper / Game Boy |
 
-# Pending
+# 🚧 Pending
 
 | Category | Feature |
 | --- | --- |
@@ -107,7 +107,7 @@ Template project for MAUI.
 | Network | Tanking send |
 | Other | iOS support |
 
-# Related Projects
+# 🔗 Related Projects
 
 | Project | Description |
 | --- | --- |
@@ -115,7 +115,7 @@ Template project for MAUI.
 | [template-maui-keyboard](https://github.com/usausa/template-maui-keyboard) | Physical keyboard control example |
 | [template-maui-blazor](https://github.com/usausa/template-maui-blazor) | Blazor based application template |
 
-# My Libraries
+# 📦 My Libraries
 
 | Library | Description |
 | --- | --- |
