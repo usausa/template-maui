@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="common.css">
+<style>
+.body { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg-l5); }
+
+/* Board bar */
+.bbar { flex: 0 0 auto; display: flex; align-items: center; gap: 10rem; padding: 9rem 12rem;
+  background: #FFFFFF; border-bottom: 1rem solid var(--gray-l2); }
+.bbar .n { flex: 1; min-width: 0; }
+.bbar .n .t { font-size: 16rem; font-weight: 600; letter-spacing: -.02em; }
+.bbar .n .s { font-size: 11rem; color: var(--gray-d1); margin-top: 2rem; }
+.bbar .mem { display: flex; }
+.bbar .mem div { width: 24rem; height: 24rem; border-radius: 50%; margin-left: -7rem;
+  border: 2rem solid #FFFFFF; display: flex; align-items: center; justify-content: center;
+  font-size: 10rem; font-weight: 600; color: #FFFFFF; }
+.bbar .ic { width: 30rem; height: 30rem; border-radius: 6rem; background: var(--gray-l3);
+  display: flex; align-items: center; justify-content: center; font-size: 17rem; color: var(--gray-d2); }
+
+/* Lanes */
+.lanes { flex: 1 1 auto; display: flex; gap: 9rem; padding: 10rem; overflow: hidden; }
+.lane { flex: 0 0 176rem; display: flex; flex-direction: column; border-radius: 10rem;
+  background: var(--gray-l3); padding: 8rem; gap: 7rem; }
+.lane.over { background: var(--blue-l5); outline: 2rem dashed var(--blue); outline-offset: -2rem; }
+.lane .lh { display: flex; align-items: center; gap: 6rem; }
+.lane .lh .dot { width: 8rem; height: 8rem; border-radius: 50%; }
+.lane .lh .tt { font-size: 13rem; font-weight: 600; }
+.lane .lh .ct { margin-left: auto; padding: 1rem 7rem; border-radius: 999rem;
+  background: rgba(0,0,0,.09); font-size: 11rem; font-weight: 600; color: var(--gray-d2); }
+.lane .lh .ct.warn { background: var(--red-d2); color: #FFFFFF; }
+.lane .wip { font-size: 10rem; color: var(--gray-d1); margin-top: -3rem; }
+.lane .wip.warn { color: var(--red-d2); font-weight: 600; }
+
+.kcard { background: #FFFFFF; border-radius: 8rem; padding: 8rem 9rem; box-shadow: 0 1rem 3rem rgba(0,0,0,.14);
+  border-left: 4rem solid var(--pc, var(--gray-l1)); }
+.kcard .tags { display: flex; gap: 4rem; margin-bottom: 5rem; }
+.kcard .tags span { padding: 1rem 6rem; border-radius: 3rem; font-size: 9rem; font-weight: 600; color: #FFFFFF; }
+.kcard .ti { font-size: 12rem; line-height: 1.35; }
+.kcard .ft { display: flex; align-items: center; gap: 6rem; margin-top: 7rem; }
+.kcard .ft .av { width: 19rem; height: 19rem; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 9rem; font-weight: 600; color: #FFFFFF; }
+.kcard .ft .mt { display: flex; align-items: center; gap: 2rem; font-size: 10rem; color: var(--gray-d1); }
+.kcard .ft .mt .mi { font-size: 12rem; }
+.kcard .ft .due { margin-left: auto; padding: 1rem 5rem; border-radius: 3rem; font-size: 10rem; font-weight: 600;
+  background: var(--gray-l3); color: var(--gray-d2); }
+.kcard .ft .due.red { background: var(--red-l5); color: var(--red-d2); }
+
+/* Drop placeholder + dragging card */
+.ph { height: 62rem; border-radius: 8rem; border: 2rem dashed var(--blue); background: rgba(33,150,243,.10); }
+.drag { position: absolute; left: 190rem; top: 122rem; width: 176rem; transform: rotate(-4deg) scale(1.04);
+  box-shadow: 0 10rem 24rem rgba(0,0,0,.38); z-index: 10; }
+.finger { position: absolute; left: 272rem; top: 168rem; width: 54rem; height: 54rem; border-radius: 50%;
+  background: rgba(33,150,243,.22); border: 2rem solid rgba(33,150,243,.55); z-index: 11; }
+
+/* Footer */
+.foot { flex: 0 0 auto; display: flex; align-items: center; gap: 10rem; padding: 9rem 14rem;
+  background: #FFFFFF; border-top: 1rem solid var(--gray-l2); }
+.foot .b { flex: 1; }
+.foot .b .t { display: flex; justify-content: space-between; font-size: 11rem; color: var(--gray-d1); }
+.foot .b .track { display: flex; height: 8rem; border-radius: 4rem; overflow: hidden; margin-top: 4rem; gap: 1rem; }
+.foot .add { width: 36rem; height: 36rem; border-radius: 50%; background: var(--blue-d2); color: #FFFFFF;
+  display: flex; align-items: center; justify-content: center; font-size: 22rem;
+  box-shadow: 0 2rem 6rem rgba(21,101,192,.45); }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="statusbar">
+    <div class="time">14:07</div>
+    <div class="tray"><i class="mi">&#xe202;</i><i class="mi">&#xe63e;</i><div class="bat">58</div></div>
+  </div>
+
+  <div class="header">
+    <div class="title">Kanban</div>
+    <div class="hicon"><i class="mi">&#xe152;</i></div>
+    <div class="hicon"><i class="mi">&#xe5d4;</i></div>
+  </div>
+
+  <div class="content">
+    <div class="body">
+
+      <div class="bbar">
+        <div class="n">
+          <div class="t">Sprint 24</div>
+          <div class="s">10/13 &ndash; 10/26 ・ 残り 7 日</div>
+        </div>
+        <div class="mem">
+          <div style="background:#43A047">佐</div>
+          <div style="background:#1E88E5">鈴</div>
+          <div style="background:#FB8C00">高</div>
+          <div style="background:#8E24AA">田</div>
+          <div style="background:#546E7A">+3</div>
+        </div>
+        <div class="ic"><i class="mi">&#xe8b6;</i></div>
+      </div>
+
+      <div class="lanes">
+
+        <div class="lane">
+          <div class="lh"><div class="dot" style="background:var(--gray-d1)"></div>
+            <div class="tt">未着手</div><div class="ct">5</div></div>
+          <div class="wip">WIP 制限なし</div>
+
+          <div class="kcard" style="--pc:var(--red-d2)">
+            <div class="tags"><span style="background:var(--red-d2)">bug</span><span style="background:var(--blue-gray)">ios</span></div>
+            <div class="ti">起動直後にスプラッシュが残る</div>
+            <div class="ft"><div class="av" style="background:#1E88E5">鈴</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>0/3</div>
+              <div class="due red">10/20</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--blue)">
+            <div class="tags"><span style="background:var(--blue)">feat</span></div>
+            <div class="ti">時刻表の種別フィルタを追加</div>
+            <div class="ft"><div class="av" style="background:#FB8C00">高</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>0/5</div>
+              <div class="due">10/24</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--gray-l1)">
+            <div class="tags"><span style="background:var(--gray-d1)">chore</span></div>
+            <div class="ti">依存パッケージの更新</div>
+            <div class="ft"><div class="av" style="background:#546E7A">中</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>0/2</div>
+              <div class="due">10/26</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--blue)">
+            <div class="tags"><span style="background:var(--blue)">feat</span><span style="background:var(--blue-gray)">ui</span></div>
+            <div class="ti">カンバンの並び替えを保存</div>
+            <div class="ft"><div class="av" style="background:#8E24AA">田</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>0/4</div>
+              <div class="due">10/25</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--gray-l1)">
+            <div class="tags"><span style="background:var(--gray-d1)">docs</span></div>
+            <div class="ti">UI サンプルの手順書を更新</div>
+            <div class="ft"><div class="av" style="background:#1E88E5">鈴</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>0/1</div>
+              <div class="due">10/26</div></div>
+          </div>
+        </div>
+
+        <div class="lane over">
+          <div class="lh"><div class="dot" style="background:var(--blue-d2)"></div>
+            <div class="tt">進行中</div><div class="ct warn">4</div></div>
+          <div class="wip warn">WIP 上限 3 を超過</div>
+
+          <div class="ph"></div>
+
+          <div class="kcard" style="--pc:var(--orange)">
+            <div class="tags"><span style="background:var(--orange-d2)">feat</span><span style="background:var(--blue-gray)">ui</span></div>
+            <div class="ti">座席図のピンチズーム実装</div>
+            <div class="ft"><div class="av" style="background:#8E24AA">田</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>4/7</div>
+              <div class="due">10/22</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--blue)">
+            <div class="tags"><span style="background:var(--blue)">feat</span></div>
+            <div class="ti">経路候補タブの切替</div>
+            <div class="ft"><div class="av" style="background:#43A047">佐</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>2/4</div>
+              <div class="due">10/21</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--orange)">
+            <div class="tags"><span style="background:var(--orange-d2)">feat</span></div>
+            <div class="ti">チケットのミシン目クリップ</div>
+            <div class="ft"><div class="av" style="background:#546E7A">中</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>1/3</div>
+              <div class="due">10/23</div></div>
+          </div>
+        </div>
+
+        <div class="lane">
+          <div class="lh"><div class="dot" style="background:var(--purple-d2)"></div>
+            <div class="tt">レビュー</div><div class="ct">2</div></div>
+          <div class="wip">WIP 上限 3</div>
+
+          <div class="kcard" style="--pc:var(--purple-d2)">
+            <div class="tags"><span style="background:var(--purple-d2)">review</span></div>
+            <div class="ti">ガント左列の固定スクロール</div>
+            <div class="ft"><div class="av" style="background:#1E88E5">鈴</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>6/6</div>
+              <div class="due">10/19</div></div>
+          </div>
+
+          <div class="kcard" style="--pc:var(--purple-d2)">
+            <div class="tags"><span style="background:var(--purple-d2)">review</span></div>
+            <div class="ti">時刻表セルの再利用</div>
+            <div class="ft"><div class="av" style="background:#FB8C00">高</div>
+              <div class="mt"><i class="mi">&#xe5ca;</i>4/4</div>
+              <div class="due">10/20</div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="kcard drag" style="--pc:var(--red-d2)">
+        <div class="tags"><span style="background:var(--red-d2)">bug</span><span style="background:var(--blue-gray)">android</span></div>
+        <div class="ti">乗換時刻の表示がずれる</div>
+        <div class="ft"><div class="av" style="background:#43A047">佐</div>
+          <div class="mt"><i class="mi">&#xe5ca;</i>1/3</div>
+          <div class="due red">10/19</div></div>
+      </div>
+      <div class="finger"></div>
+
+      <div class="foot">
+        <div class="b">
+          <div class="t"><span>バーンダウン</span><span>13 / 28 完了</span></div>
+          <div class="track">
+            <div style="flex:13;background:var(--green)"></div>
+            <div style="flex:4;background:var(--blue)"></div>
+            <div style="flex:2;background:var(--purple)"></div>
+            <div style="flex:9;background:var(--gray-l2)"></div>
+          </div>
+        </div>
+        <div class="add"><i class="mi">&#xe145;</i></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="functionbar">
+    <div class="f1">Back</div>
+    <div class="f2">絞込</div>
+    <div class="f3">追加</div>
+    <div class="f4">一覧</div>
+  </div>
+
+  <div class="gesturebar"></div>
+
+</div>
+</body>
+</html>

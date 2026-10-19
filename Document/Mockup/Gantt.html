@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="common.css">
+<style>
+.body { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--gray-l4); }
+
+/* Toolbar */
+.bar { flex: 0 0 auto; display: flex; align-items: center; gap: 10rem; padding: 9rem 12rem;
+  background: #FFFFFF; border-bottom: 1rem solid var(--gray-l2); }
+.bar .pj { flex: 1; min-width: 0; }
+.bar .pj .n { font-size: 16rem; font-weight: 600; letter-spacing: -.02em; }
+.bar .pj .d { font-size: 11rem; color: var(--gray-d1); margin-top: 2rem; }
+.bar .zoom { display: flex; border: 1rem solid var(--gray-l2); border-radius: 6rem; overflow: hidden; }
+.bar .zoom div { padding: 5rem 11rem; font-size: 12rem; color: var(--gray-d1); background: #FFFFFF; }
+.bar .zoom div.on { background: var(--blue-d2); color: #FFFFFF; font-weight: 600; }
+.bar .today { display: flex; align-items: center; gap: 3rem; padding: 5rem 10rem; border-radius: 6rem;
+  background: var(--red-l5); color: var(--red-d2); font-size: 12rem; font-weight: 600; }
+.bar .today .mi { font-size: 14rem; }
+
+/* Gantt */
+.gantt { flex: 1 1 auto; display: grid; grid-template-columns: 132rem 1fr; overflow: hidden; background: #FFFFFF; }
+.left { border-right: 2rem solid var(--gray-l2); box-shadow: 2rem 0 5rem rgba(0,0,0,.07); z-index: 2; }
+.right { position: relative; overflow: hidden; }
+
+.hd { height: 40rem; border-bottom: 1rem solid var(--gray-l2); background: var(--bg-l5); }
+.left .hd { display: flex; align-items: center; padding: 0 10rem; font-size: 12rem; font-weight: 600; color: var(--gray-d2); }
+
+.trow { height: 38rem; display: flex; align-items: center; gap: 7rem; padding: 0 8rem 0 10rem;
+  border-bottom: 1rem solid var(--gray-l3); }
+.trow .av { width: 20rem; height: 20rem; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 10rem; font-weight: 600; color: #FFFFFF; flex: 0 0 auto; }
+.trow .nm { font-size: 13rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trow .nm em { display: block; font-style: normal; font-size: 10rem; color: var(--gray-l1); }
+.trow.ms .nm { color: var(--purple-d2); font-weight: 600; }
+
+/* Date header */
+.dates { display: flex; height: 40rem; }
+.dates .d { width: 20rem; flex: 0 0 20rem; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; border-left: 1rem solid var(--gray-l3); font-size: 11rem; color: var(--gray-d2); }
+.dates .d em { font-style: normal; font-size: 9rem; color: var(--gray-l1); }
+.dates .d.we { background: var(--bg-l5); }
+.dates .d.we em, .dates .d.sun { color: var(--red); }
+.dates .d.sat em { color: var(--blue); }
+.dates .mon { position: absolute; top: 2rem; left: 6rem; font-size: 10rem; font-weight: 600; color: var(--gray-d1); }
+
+.chart { position: relative; }
+.chart .col { position: absolute; top: 0; bottom: 0; width: 20rem; border-left: 1rem solid var(--gray-l3); }
+.chart .col.we { background: var(--bg-l5); }
+.chart .rowline { position: absolute; left: 0; right: 0; height: 38rem; border-bottom: 1rem solid var(--gray-l3); }
+.chart .now { position: absolute; top: 0; bottom: 0; width: 2rem; background: var(--red-a3); z-index: 3; }
+.chart .now::before { content: ''; position: absolute; top: 0; left: -4rem; border: 5rem solid transparent;
+  border-top: 7rem solid var(--red-a3); }
+
+.gbar { position: absolute; height: 18rem; border-radius: 4rem; overflow: hidden; z-index: 2;
+  box-shadow: 0 1rem 2rem rgba(0,0,0,.18); }
+.gbar .fill { position: absolute; inset: 0; width: var(--p); }
+.gbar .pct { position: absolute; right: 4rem; top: 0; bottom: 0; display: flex; align-items: center;
+  font-size: 9rem; font-weight: 600; color: rgba(0,0,0,.52); }
+.gbar.full .pct { color: #FFFFFF; }
+.gdot { position: absolute; width: 14rem; height: 14rem; transform: rotate(45deg); z-index: 3;
+  background: var(--purple-d2); border: 2rem solid #FFFFFF; box-shadow: 0 1rem 3rem rgba(0,0,0,.3); }
+svg.links { position: absolute; inset: 0; z-index: 1; overflow: visible; }
+
+/* Footer */
+.foot { flex: 0 0 auto; display: flex; align-items: center; gap: 14rem; padding: 9rem 14rem;
+  background: var(--bg-d3); color: #FFFFFF; }
+.foot .s { font-size: 11rem; color: var(--bg-l3); }
+.foot .s b { display: block; font-size: 17rem; color: #FFFFFF; font-weight: 600; }
+.foot .s b.warn { color: var(--amber); }
+.foot .prog { flex: 1; }
+.foot .prog .t { display: flex; justify-content: space-between; font-size: 11rem; color: var(--bg-l3); }
+.foot .prog .track { height: 7rem; border-radius: 4rem; background: rgba(255,255,255,.18); margin-top: 4rem; }
+.foot .prog .track div { height: 100%; width: 46%; border-radius: 4rem; background: var(--green-a3); }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="statusbar">
+    <div class="time">10:38</div>
+    <div class="tray"><i class="mi">&#xe202;</i><i class="mi">&#xe63e;</i><div class="bat">77</div></div>
+  </div>
+
+  <div class="header">
+    <div class="title">Gantt</div>
+    <div class="hicon"><i class="mi">&#xe8f3;</i></div>
+    <div class="hicon"><i class="mi">&#xe5d4;</i></div>
+  </div>
+
+  <div class="content">
+    <div class="body">
+
+      <div class="bar">
+        <div class="pj">
+          <div class="n">モバイル刷新 PJ</div>
+          <div class="d">2026/09/01 &ndash; 2026/11/30 ・ 全 24 工程</div>
+        </div>
+        <div class="zoom"><div>日</div><div class="on">週</div><div>月</div></div>
+        <div class="today"><i class="mi">&#xe8df;</i>今日</div>
+      </div>
+
+      <div class="gantt">
+        <div class="left" id="left">
+          <div class="hd">工程 / 担当</div>
+        </div>
+        <div class="right">
+          <div class="hd" style="position:relative"><div class="dates" id="dates"></div></div>
+          <div class="chart" id="chart"></div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="s">進捗<b>46%</b></div>
+        <div class="s">遅延<b class="warn">2件</b></div>
+        <div class="prog">
+          <div class="t"><span>全体進捗</span><span>11 / 24 完了</span></div>
+          <div class="track"><div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="functionbar">
+    <div class="f1">Back</div>
+    <div class="f2">絞込</div>
+    <div class="f3">追加</div>
+    <div class="f4">今日</div>
+  </div>
+
+  <div class="gesturebar"></div>
+
+</div>
+
+<script>
+const DAY = 20;        // dp
+const ROW = 38;        // dp
+const START = new Date(2026, 9, 12);
+const DAYS = 14;
+const TODAY = 7;       // index of 2026/10/19
+
+const tasks = [
+  { n: '要件定義',         w: '佐藤', c: '#43A047', s: -3, l: 5, p: 100 },
+  { n: '画面設計',         w: '鈴木', c: '#43A047', s: 0,  l: 5, p: 100 },
+  { n: '設計レビュー',     w: '中村', c: '#43A047', s: 4,  l: 2, p: 100 },
+  { n: 'API 設計',         w: '高橋', c: '#1E88E5', s: 2,  l: 5, p: 85 },
+  { n: '基盤実装',         w: '田中', c: '#1E88E5', s: 3,  l: 6, p: 70 },
+  { n: 'DB 移行',          w: '山本', c: '#1E88E5', s: 6,  l: 4, p: 40 },
+  { n: 'UI 実装',          w: '伊藤', c: '#FB8C00', s: 5,  l: 7, p: 45 },
+  { n: 'API 実装',         w: '高橋', c: '#FB8C00', s: 6,  l: 6, p: 30 },
+  { n: '通知基盤',         w: '渡辺', c: '#FB8C00', s: 8,  l: 4, p: 15 },
+  { n: '結合テスト',       w: '渡辺', c: '#8E24AA', s: 9,  l: 5, p: 0 },
+  { n: '性能試験',         w: '山本', c: '#8E24AA', s: 11, l: 4, p: 0 },
+  { n: '受入テスト',       w: '中村', c: '#546E7A', s: 12, l: 4, p: 0 },
+  { n: 'ドキュメント整備', w: '鈴木', c: '#546E7A', s: 10, l: 4, p: 0 },
+  { n: '教育資料',         w: '伊藤', c: '#546E7A', s: 11, l: 3, p: 0 },
+  { n: 'リリース判定',     w: '佐藤', c: '#7B1FA2', s: 13, l: 0, p: 0, ms: true },
+  { n: 'ストア申請',       w: '鈴木', c: '#546E7A', s: 13, l: 3, p: 0 }
+];
+const links = [[0, 1], [1, 2], [1, 6], [3, 7], [4, 5], [6, 9], [7, 9], [9, 10], [10, 11], [11, 14], [14, 15]];
+
+// Left column
+const left = document.getElementById('left');
+left.innerHTML += tasks.map((t) =>
+  '<div class="trow' + (t.ms ? ' ms' : '') + '">' +
+  '<div class="av" style="background:' + t.c + '">' + t.w.charAt(0) + '</div>' +
+  '<div class="nm">' + t.n + '<em>' + t.w + '</em></div></div>').join('');
+
+// Date header
+const dow = ['日', '月', '火', '水', '木', '金', '土'];
+const dates = document.getElementById('dates');
+let dh = '';
+for (let i = 0; i < DAYS; i++) {
+  const d = new Date(START.getTime() + i * 86400000);
+  const w = d.getDay();
+  const cls = 'd' + (w === 0 || w === 6 ? ' we' : '') + (w === 0 ? ' sun' : '') + (w === 6 ? ' sat' : '');
+  dh += '<div class="' + cls + '">' + d.getDate() + '<em>' + dow[w] + '</em></div>';
+}
+dates.innerHTML = dh;
+
+// Chart
+const chart = document.getElementById('chart');
+let ch = '';
+for (let i = 0; i < DAYS; i++) {
+  const w = new Date(START.getTime() + i * 86400000).getDay();
+  ch += '<div class="col' + (w === 0 || w === 6 ? ' we' : '') + '" style="left:' + (i * DAY) + 'rem"></div>';
+}
+for (let i = 0; i < tasks.length; i++) {
+  ch += '<div class="rowline" style="top:' + (i * ROW) + 'rem"></div>';
+}
+tasks.forEach((t, i) => {
+  const y = i * ROW + (ROW - 18) / 2;
+  if (t.ms) {
+    ch += '<div class="gdot" style="left:' + (t.s * DAY - 7) + 'rem;top:' + (i * ROW + 12) + 'rem"></div>';
+  } else {
+    const shade = t.p === 100 ? '.35' : '.30';
+    ch += '<div class="gbar' + (t.p === 100 ? ' full' : '') + '" style="left:' + (t.s * DAY) + 'rem;top:' + y + 'rem;width:' + (t.l * DAY) +
+      'rem;background:' + t.c + Math.round(255 * shade).toString(16).padStart(2, '0') + ';--p:' + t.p + '%">' +
+      '<div class="fill" style="background:' + t.c + '"></div>' +
+      (t.l >= 4 ? '<div class="pct">' + t.p + '%</div>' : '') + '</div>';
+  }
+});
+ch += '<div class="now" style="left:' + (TODAY * DAY) + 'rem"></div>';
+
+// Dependency links
+let sv = '<svg class="links"><g transform="scale(2.625)">';
+for (const [a, b] of links) {
+  const ta = tasks[a], tb = tasks[b];
+  const x1 = (ta.s + ta.l) * DAY, y1 = a * ROW + ROW / 2;
+  const x2 = tb.s * DAY, y2 = b * ROW + ROW / 2;
+  const mx = Math.max(x1 + 5, x2 - 6);
+  sv += '<path d="M' + x1 + ' ' + y1 + ' H' + mx + ' V' + y2 + ' H' + x2 + '" fill="none" ' +
+    'stroke="#90A4AE" stroke-width="1.2" />' +
+    '<path d="M' + x2 + ' ' + y2 + ' l-4 -3 v6 z" fill="#90A4AE" />';
+}
+sv += '</g></svg>';
+chart.innerHTML = ch + sv;
+chart.style.height = (tasks.length * ROW) + 'rem';
+</script>
+</body>
+</html>

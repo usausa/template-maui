@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="common.css">
+<style>
+.body { position: absolute; inset: 0; display: flex; flex-direction: column; background: #FFFFFF; }
+
+/* Selection toolbar */
+.sel { flex: 0 0 auto; display: flex; align-items: center; gap: 12rem; padding: 10rem 14rem;
+  background: var(--blue-d3); color: #FFFFFF; }
+.sel .mi { font-size: 22rem; }
+.sel .c { flex: 1; font-size: 17rem; font-weight: 600; }
+.sel .c em { font-style: normal; font-size: 11rem; font-weight: 400; display: block;
+  color: rgba(255,255,255,.75); margin-top: 1rem; }
+
+/* Density */
+.dens { flex: 0 0 auto; display: flex; align-items: center; gap: 8rem; padding: 7rem 14rem;
+  background: var(--gray-l4); border-bottom: 1rem solid var(--gray-l2); }
+.dens .h { flex: 1; font-size: 11rem; color: var(--gray-d1); }
+.dens .sw { display: flex; border: 1rem solid var(--gray-l2); border-radius: 6rem; overflow: hidden; background: #FFFFFF; }
+.dens .sw div { display: flex; align-items: center; justify-content: center; width: 32rem; height: 24rem;
+  font-size: 15rem; color: var(--gray-d1); }
+.dens .sw div.on { background: var(--blue-d2); color: #FFFFFF; }
+
+/* Grid */
+.scroll { flex: 1 1 auto; position: relative; overflow: hidden; }
+.dh { display: flex; align-items: center; gap: 8rem; padding: 11rem 14rem 7rem; background: #FFFFFF; }
+.dh .d { font-size: 15rem; font-weight: 600; }
+.dh .p { display: flex; align-items: center; gap: 3rem; font-size: 11rem; color: var(--gray-d1); }
+.dh .p .mi { font-size: 13rem; }
+.dh .a { margin-left: auto; font-size: 11rem; color: var(--blue-d2); font-weight: 600; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.ph { position: relative; aspect-ratio: 1; overflow: hidden; }
+.ph .sh { position: absolute; }
+.ph .chk { position: absolute; right: 5rem; top: 5rem; width: 20rem; height: 20rem; border-radius: 50%;
+  border: 2rem solid rgba(255,255,255,.9); }
+.ph.on .chk { background: var(--blue-d2); border-color: #FFFFFF;
+  display: flex; align-items: center; justify-content: center; }
+.ph.on .chk::after { content: '\e5ca'; font-family: 'MaterialIcons'; font-size: 13rem; color: #FFFFFF; }
+.ph.on::after { content: ''; position: absolute; inset: 0; background: rgba(21,101,192,.34);
+  border: 3rem solid var(--blue-d2); }
+.ph .dur { position: absolute; right: 5rem; bottom: 5rem; padding: 1rem 5rem; border-radius: 3rem;
+  background: rgba(0,0,0,.55); color: #FFFFFF; font-size: 9rem; font-weight: 600; }
+.ph .live { position: absolute; left: 5rem; top: 5rem; display: flex; align-items: center; gap: 2rem;
+  padding: 1rem 5rem; border-radius: 3rem; background: rgba(0,0,0,.45); color: #FFFFFF; font-size: 9rem; }
+.ph .live .mi { font-size: 10rem; }
+
+/* Bottom actions */
+.acts { flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8rem 0 10rem;
+  background: #FFFFFF; border-top: 1rem solid var(--gray-l2); }
+.acts div { display: flex; flex-direction: column; align-items: center; gap: 3rem;
+  font-size: 10rem; color: var(--gray-d2); }
+.acts div .mi { font-size: 21rem; }
+.acts div.del { color: var(--red-d2); }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="statusbar">
+    <div class="time">11:52</div>
+    <div class="tray"><i class="mi">&#xe202;</i><i class="mi">&#xe63e;</i><div class="bat">73</div></div>
+  </div>
+
+  <div class="header">
+    <div class="title">Gallery</div>
+    <div class="hicon"><i class="mi">&#xe8b6;</i></div>
+    <div class="hicon"><i class="mi">&#xe5d4;</i></div>
+  </div>
+
+  <div class="content">
+    <div class="body">
+
+      <div class="sel">
+        <i class="mi">&#xe5cd;</i>
+        <div class="c">7 件を選択<em>合計 48.2 MB</em></div>
+        <i class="mi">&#xe8d5;</i>
+      </div>
+
+      <div class="dens">
+        <div class="h">ピンチで列数を変更 ・ 長押しで範囲選択</div>
+        <div class="sw">
+          <div><i class="mi">&#xe8f3;</i></div>
+          <div class="on"><i class="mi">&#xe413;</i></div>
+          <div><i class="mi">&#xe3f4;</i></div>
+        </div>
+      </div>
+
+      <div class="scroll" id="scroll"></div>
+      <div class="scroll-cut"></div>
+
+      <div class="acts">
+        <div><i class="mi">&#xe8d5;</i>共有</div>
+        <div><i class="mi">&#xe2c3;</i>バックアップ</div>
+        <div><i class="mi">&#xe2c7;</i>アルバム</div>
+        <div class="del"><i class="mi">&#xe5cd;</i>削除</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="functionbar">
+    <div class="f1">Back</div>
+    <div class="f2">全選択</div>
+    <div class="f3">解除</div>
+    <div class="f4">共有</div>
+  </div>
+
+  <div class="gesturebar"></div>
+
+</div>
+
+<script>
+let s = 4242;
+const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+
+const palettes = [
+  ['#FF8A65', '#BF360C'], ['#4FC3F7', '#01579B'], ['#AED581', '#33691E'],
+  ['#FFD54F', '#E65100'], ['#9575CD', '#311B92'], ['#4DB6AC', '#004D40'],
+  ['#F06292', '#880E4F'], ['#90A4AE', '#263238'], ['#FFB74D', '#4E342E'],
+  ['#64B5F6', '#1A237E'], ['#A1887F', '#3E2723'], ['#4DD0E1', '#006064']
+];
+
+function tile(i, on, kind) {
+  const p = palettes[Math.floor(rnd() * palettes.length)];
+  const ang = Math.floor(rnd() * 150) + 110;
+  let inner = '';
+  const k = rnd();
+  if (k < 0.34) {
+    // sun / circle subject
+    inner = '<div class="sh" style="width:38%;height:38%;border-radius:50%;left:' +
+      (12 + rnd() * 48).toFixed(0) + '%;top:' + (10 + rnd() * 30).toFixed(0) +
+      '%;background:rgba(255,255,255,.45)"></div>';
+  } else if (k < 0.68) {
+    // horizon / mountain
+    inner = '<div class="sh" style="left:-12%;right:-12%;bottom:-26%;height:56%;border-radius:50% 50% 0 0;' +
+      'background:rgba(0,0,0,.26)"></div>' +
+      '<div class="sh" style="left:28%;right:-24%;bottom:-32%;height:62%;border-radius:50% 50% 0 0;' +
+      'background:rgba(0,0,0,.18)"></div>';
+  } else {
+    // diagonal band
+    inner = '<div class="sh" style="left:-20%;right:-20%;top:46%;height:26%;transform:rotate(-18deg);' +
+      'background:rgba(255,255,255,.26)"></div>';
+  }
+  let badge = '';
+  if (kind === 'v') badge = '<div class="dur">0:' + (10 + Math.floor(rnd() * 49)) + '</div>';
+  if (kind === 'l') badge = '<div class="live"><i class="mi">&#xe040;</i>LIVE</div>';
+  return '<div class="ph' + (on ? ' on' : '') + '" style="background:linear-gradient(' + ang + 'deg,' +
+    p[0] + ',' + p[1] + ')">' + inner + badge + '<div class="chk"></div></div>';
+}
+
+const sections = [
+  { d: '今日', p: '名古屋市 ・ 東山動植物園', n: 9, on: [0, 1, 2, 4] },
+  { d: '昨日', p: '高蔵寺 ・ 自宅', n: 9, on: [1, 5, 7] },
+  { d: '10月16日 (金)', p: '名古屋駅', n: 6, on: [] }
+];
+
+let html = '';
+for (const sec of sections) {
+  html += '<div class="dh"><div class="d">' + sec.d + '</div>' +
+    '<div class="p"><i class="mi">&#xe55f;</i>' + sec.p + '</div>' +
+    '<div class="a">選択</div></div><div class="grid">';
+  for (let i = 0; i < sec.n; i++) {
+    const r = rnd();
+    const kind = r < 0.12 ? 'v' : (r < 0.2 ? 'l' : '');
+    html += tile(i, sec.on.includes(i), kind);
+  }
+  html += '</div>';
+}
+document.getElementById('scroll').innerHTML = html;
+</script>
+</body>
+</html>
