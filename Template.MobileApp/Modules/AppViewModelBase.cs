@@ -30,6 +30,9 @@ public abstract class AppViewModelBase :
         ValidationHelper.Validate(this, name, Errors);
     }
 
+    protected ValueTask<bool> ValidateInputsAsync(IDialog dialog, params string[] names) =>
+        ValidationHelper.ValidateInputsAsync(this, Errors, dialog, names);
+
     public virtual Task OnNavigatingFromAsync(INavigationContext context) => Task.CompletedTask;
 
     public virtual Task OnNavigatingToAsync(INavigationContext context) => Task.CompletedTask;
