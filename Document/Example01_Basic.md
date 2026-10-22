@@ -82,7 +82,7 @@
 <img width="25%" src="./Images/Basic_Validation-2.png" />
 </p>
 
-- DataAnnotations (Required / Compare)
+- DataAnnotations (Required / EqualTo)
 - Validation on focus lost
 - Error label / flash / red border
 - Manual errors (AddError)
