@@ -1,7 +1,5 @@
 namespace Template.MobileApp;
 
-using System.Reflection;
-
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components;
 using Template.MobileApp.Helpers;
@@ -42,12 +40,6 @@ public static class Extensions
                 }
             }
         }
-    }
-
-    public static IEnumerable<Type> UnderNamespaceTypes(this Assembly assembly, Type baseNamespaceType)
-    {
-        var ns = baseNamespaceType.Namespace!;
-        return assembly.ExportedTypes.Where(x => x.Namespace?.StartsWith(ns, StringComparison.Ordinal) ?? false);
     }
 
     //--------------------------------------------------------------------------------

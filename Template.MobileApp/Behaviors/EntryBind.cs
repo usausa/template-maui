@@ -68,10 +68,12 @@ public static class EntryBind
 
             bindable.SetBinding(
                 Entry.TextProperty,
-                new Binding(nameof(EntryController.Text), source: controller));
+                static (EntryController controller) => controller.Text,
+                source: controller);
             bindable.SetBinding(
                 VisualElement.IsEnabledProperty,
-                new Binding(nameof(EntryController.Enable), source: controller));
+                static (EntryController controller) => controller.Enable,
+                source: controller);
         }
 
         protected override void OnDetachingFrom(Entry bindable)

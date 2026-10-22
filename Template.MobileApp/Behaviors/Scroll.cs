@@ -298,6 +298,70 @@ public static partial class Scroll
     }
 
     //--------------------------------------------------------------------------------
+    // SyncTarget
+    //--------------------------------------------------------------------------------
+
+    private const double SyncTolerance = 0.5;
+
+    public static readonly BindableProperty SyncTargetProperty = BindableProperty.CreateAttached(
+        "SyncTarget",
+        typeof(ScrollView),
+        typeof(Scroll),
+        null,
+        propertyChanged: OnSyncTargetChanged);
+
+    public static ScrollView? GetSyncTarget(BindableObject bindable) => (ScrollView?)bindable.GetValue(SyncTargetProperty);
+
+    public static void SetSyncTarget(BindableObject bindable, ScrollView? value) => bindable.SetValue(SyncTargetProperty, value);
+
+    public static readonly BindableProperty SyncOrientationProperty = BindableProperty.CreateAttached(
+        "SyncOrientation",
+        typeof(ScrollOrientation),
+        typeof(Scroll),
+        ScrollOrientation.Both);
+
+    public static ScrollOrientation GetSyncOrientation(BindableObject bindable) => (ScrollOrientation)bindable.GetValue(SyncOrientationProperty);
+
+    public static void SetSyncOrientation(BindableObject bindable, ScrollOrientation value) => bindable.SetValue(SyncOrientationProperty, value);
+
+    private static void OnSyncTargetChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            scrollView.Scrolled -= OnSyncScrolled;
+        }
+        if (newValue is not null)
+        {
+            scrollView.Scrolled += OnSyncScrolled;
+        }
+    }
+
+    private static void OnSyncScrolled(object? sender, ScrolledEventArgs e)
+    {
+        if ((sender is not ScrollView scrollView) || (GetSyncTarget(scrollView) is not { } target))
+        {
+            return;
+        }
+
+        var orientation = GetSyncOrientation(scrollView);
+        var x = orientation is ScrollOrientation.Horizontal or ScrollOrientation.Both ? e.ScrollX : target.ScrollX;
+        var y = orientation is ScrollOrientation.Vertical or ScrollOrientation.Both ? e.ScrollY : target.ScrollY;
+
+        // The target raises Scrolled in turn, so stop when it is already in place
+        if ((Math.Abs(target.ScrollX - x) < SyncTolerance) && (Math.Abs(target.ScrollY - y) < SyncTolerance))
+        {
+            return;
+        }
+
+        _ = target.ScrollToAsync(x, y, false);
+    }
+
+    //--------------------------------------------------------------------------------
     // TopTrigger
     //--------------------------------------------------------------------------------
 

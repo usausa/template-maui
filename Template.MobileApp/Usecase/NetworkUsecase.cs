@@ -24,7 +24,6 @@ public class NetworkResult
 {
     public NetworkResultType Type { get; }
 
-    // 0 when no response was received
     public HttpStatusCode StatusCode { get; }
 
     public bool IsSuccess => Type == NetworkResultType.Success;
