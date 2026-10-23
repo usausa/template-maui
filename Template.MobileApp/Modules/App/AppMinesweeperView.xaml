@@ -14,26 +14,27 @@
              shell:ShellProperty.Title="Minesweeper"
              shell:ShellProperty.HeaderVisible="False"
              shell:ShellProperty.FunctionVisible="False"
-             shell:ShellProperty.StatusBarColor="#F1F8E9"
-             shell:ShellProperty.StatusBarStyle="DarkContent">
+             shell:ShellProperty.StatusBarColor="#123A5A"
+             shell:ShellProperty.StatusBarStyle="LightContent">
 
     <ContentView.Resources>
         <ResourceDictionary>
 
             <!-- Color -->
 
-            <Color x:Key="MineTopColor">#F1F8E9</Color>
-            <Color x:Key="MineBottomColor">#DCEDC8</Color>
-            <Color x:Key="MineTextColor">#33691E</Color>
-            <Color x:Key="MineSubTextColor">#689F38</Color>
-            <Color x:Key="MineIconBackColor">#1F33691E</Color>
-            <Color x:Key="MineBarColor">#4A752C</Color>
+            <Color x:Key="MineTopColor">#123A5A</Color>
+            <Color x:Key="MineBottomColor">#1D1B4A</Color>
+            <Color x:Key="MineTextColor">#D8F2F2</Color>
+            <Color x:Key="MineSubTextColor">#8FB8CE</Color>
+            <Color x:Key="MineIconBackColor">#33FFFFFF</Color>
+            <Color x:Key="MineBarColor">#17406B</Color>
             <Color x:Key="MineBarButtonColor">#33FFFFFF</Color>
-            <Color x:Key="MinePillColor">#FFFFFF</Color>
-            <Color x:Key="MineLineColor">#C5E1A5</Color>
-            <Color x:Key="MineAccentColor">#558B2F</Color>
-            <Color x:Key="MineGoldColor">#F9A825</Color>
-            <Color x:Key="MineRedColor">#D32F2F</Color>
+            <Color x:Key="MineCardColor">#17345C</Color>
+            <Color x:Key="MinePillColor">#14294B</Color>
+            <Color x:Key="MineLineColor">#2E5C84</Color>
+            <Color x:Key="MineAccentColor">#2E9BD6</Color>
+            <Color x:Key="MineGoldColor">#FFC947</Color>
+            <Color x:Key="MineRedColor">#ED5575</Color>
 
             <!-- Converter -->
 
@@ -55,7 +56,7 @@
                 <Setter Property="Padding" Value="16,8,16,24" />
                 <Setter Property="RowSpacing" Value="14" />
                 <Setter Property="Background">
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                         <GradientStop Offset="0" Color="{StaticResource MineTopColor}" />
                         <GradientStop Offset="1" Color="{StaticResource MineBottomColor}" />
                     </LinearGradientBrush>
@@ -171,7 +172,7 @@
                 <Setter Property="Padding" Value="16,12" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MineCardColor}" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="Shadow">
                     <Setter.Value>

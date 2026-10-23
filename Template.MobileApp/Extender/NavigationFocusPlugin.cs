@@ -6,7 +6,7 @@ using Smart.Navigation.Plugins;
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Helpers;
 
-public sealed class NavigationFocusPlugin : PluginBase
+public sealed partial class NavigationFocusPlugin : PluginBase
 {
     private readonly Dictionary<object, VisualElement> focusBackup = [];
 
@@ -33,6 +33,8 @@ public sealed class NavigationFocusPlugin : PluginBase
 
     public override void OnNavigatedTo(IPluginContext pluginContext, INavigationContext navigationContext, object view, object? target)
     {
+        HideSoftInput();
+
         if (navigationContext.Attribute.IsRestore())
         {
             if (focusBackup.TryGetValue(view, out var focused))
@@ -53,4 +55,6 @@ public sealed class NavigationFocusPlugin : PluginBase
             }
         }
     }
+
+    private static partial void HideSoftInput();
 }

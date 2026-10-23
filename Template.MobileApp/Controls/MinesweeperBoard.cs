@@ -28,11 +28,11 @@ public sealed class MinesweeperBoard : SKCanvasView
 
     private const float MineCoreDarken = 0.45f;
 
-    private const float EdgeMinimumWidth = 2f;
+    private const float CellGapRate = 0.045f;
 
-    private const float EdgeWidthRate = 0.08f;
+    private const float CellRadiusRate = 0.24f;
 
-    private const float CoverRadiusRate = 0.15f;
+    private const float CoverRadiusRate = 0.24f;
 
     private const float FlagBaseRadius = 0.03f;
 
@@ -42,35 +42,25 @@ public sealed class MinesweeperBoard : SKCanvasView
 
     private const float CrossMarginRate = 0.22f;
 
-    private const float ShadowBlur = 3f;
-
-    private const float ShadowOffset = 2f;
-
-    private const byte ShadowAlpha = 60;
-
     private const float BoardInset = 8f;
-
-    private const float BoardRadius = 12f;
 
     private static readonly TimeSpan LongPressDelay = TimeSpan.FromMilliseconds(350);
 
     private static readonly SKTypeface BoldTypeface = SKTypeface.FromFamilyName("sans-serif", SKFontStyle.Bold);
 
-    private static readonly SKColor HiddenLightColor = SKColor.Parse("#AAD751");
+    private static readonly SKColor HiddenStartColor = SKColor.Parse("#6ADFF8");
 
-    private static readonly SKColor HiddenDarkColor = SKColor.Parse("#A2D149");
+    private static readonly SKColor HiddenEndColor = SKColor.Parse("#43A6DB");
 
-    private static readonly SKColor HiddenPressedColor = SKColor.Parse("#C6E48B");
+    private static readonly SKColor HiddenPressedStartColor = SKColor.Parse("#A4EDFF");
 
-    private static readonly SKColor OpenedLightColor = SKColor.Parse("#E5C29F");
+    private static readonly SKColor HiddenPressedEndColor = SKColor.Parse("#74C9EC");
 
-    private static readonly SKColor OpenedDarkColor = SKColor.Parse("#D7B899");
-
-    private static readonly SKColor EdgeColor = SKColor.Parse("#87AF3A");
+    private static readonly SKColor OpenedColor = SKColor.Parse("#D8F2F2");
 
     private static readonly SKColor FlagColor = SKColor.Parse("#F23607");
 
-    private static readonly SKColor FlagPoleColor = SKColor.Parse("#4E342E");
+    private static readonly SKColor FlagPoleColor = SKColor.Parse("#16305A");
 
     private static readonly SKColor CrossColor = SKColor.Parse("#B71C1C");
 
@@ -78,14 +68,14 @@ public sealed class MinesweeperBoard : SKCanvasView
 
     private static readonly SKColor[] NumberColors =
     [
-        SKColor.Parse("#1976D2"),
-        SKColor.Parse("#388E3C"),
-        SKColor.Parse("#D32F2F"),
-        SKColor.Parse("#7B1FA2"),
-        SKColor.Parse("#FF8F00"),
-        SKColor.Parse("#0097A7"),
-        SKColor.Parse("#424242"),
-        SKColor.Parse("#9E9E9E")
+        SKColor.Parse("#187DCC"),
+        SKColor.Parse("#25A16E"),
+        SKColor.Parse("#ED5575"),
+        SKColor.Parse("#8657D2"),
+        SKColor.Parse("#E8893C"),
+        SKColor.Parse("#10A5BD"),
+        SKColor.Parse("#334A5C"),
+        SKColor.Parse("#7A8C99")
     ];
 
     private static readonly SKColor[] MineColors =
@@ -192,28 +182,9 @@ public sealed class MinesweeperBoard : SKCanvasView
             var game = board.Game;
             var layout = new BoardLayout(Math.Min(info.Width, info.Height), density, game);
 
-            DrawShadow(canvas, layout, density);
-
-            canvas.Save();
-            using var clip = new SKRoundRect(layout.Board, layout.Radius);
-            canvas.ClipRoundRect(clip, antialias: true);
             DrawCells(canvas, layout, game, density);
-            DrawEdges(canvas, layout, game, density);
             DrawCovers(canvas, layout, board);
-            canvas.Restore();
         }
-    }
-
-    private static void DrawShadow(SKCanvas canvas, BoardLayout layout, float density)
-    {
-        using var blur = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, ShadowBlur * density);
-        using var paint = new SKPaint();
-        paint.IsAntialias = true;
-        paint.Color = SKColors.Black.WithAlpha(ShadowAlpha);
-        paint.MaskFilter = blur;
-        var rect = layout.Board;
-        rect.Offset(0, ShadowOffset * density);
-        canvas.DrawRoundRect(rect, layout.Radius, layout.Radius, paint);
     }
 
     private void DrawCells(SKCanvas canvas, BoardLayout layout, MinesweeperGame game, float density)
@@ -227,8 +198,7 @@ public sealed class MinesweeperBoard : SKCanvasView
             for (var column = 0; column < game.Columns; column++)
             {
                 var cell = new MinesweeperCell(row, column);
-                var rect = layout.GetCell(cell);
-                var even = ((row + column) % 2) == 0;
+                var rect = layout.GetTile(cell);
                 if (IsOpenLook(game, cell))
                 {
                     if (game.IsMine(cell))
@@ -236,14 +206,14 @@ public sealed class MinesweeperBoard : SKCanvasView
                         var exploded = game.Exploded == cell;
                         var color = exploded ? ExplodedColor : MineColors[((row * MineColorRowStep) + (column * MineColorColumnStep)) % MineColors.Length];
                         paint.Color = color;
-                        canvas.DrawRect(rect, paint);
+                        canvas.DrawRoundRect(rect, layout.CellRadius, layout.CellRadius, paint);
                         paint.Color = color.Lerp(SKColors.Black.WithAlpha(color.Alpha), MineCoreDarken);
                         canvas.DrawCircle(rect.MidX, rect.MidY, rect.Width * (exploded ? ExplodedCoreRate : MineCoreRate), paint);
                     }
                     else
                     {
-                        paint.Color = even ? OpenedLightColor : OpenedDarkColor;
-                        canvas.DrawRect(rect, paint);
+                        paint.Color = OpenedColor;
+                        canvas.DrawRoundRect(rect, layout.CellRadius, layout.CellRadius, paint);
                         var number = game.GetNumber(cell);
                         if (number > 0)
                         {
@@ -255,10 +225,8 @@ public sealed class MinesweeperBoard : SKCanvasView
                 else
                 {
                     var state = game.GetState(cell);
-                    paint.Color = (pressedCell == cell) && (state == MinesweeperCellState.Hidden)
-                        ? HiddenPressedColor
-                        : even ? HiddenLightColor : HiddenDarkColor;
-                    canvas.DrawRect(rect, paint);
+                    var pressed = (pressedCell == cell) && (state == MinesweeperCellState.Hidden);
+                    DrawTile(canvas, paint, rect, layout.CellRadius, pressed ? HiddenPressedStartColor : HiddenStartColor, pressed ? HiddenPressedEndColor : HiddenEndColor);
                     if (state == MinesweeperCellState.Flagged)
                     {
                         DrawFlag(canvas, rect, paint);
@@ -272,41 +240,17 @@ public sealed class MinesweeperBoard : SKCanvasView
         }
     }
 
-    private static void DrawEdges(SKCanvas canvas, BoardLayout layout, MinesweeperGame game, float density)
+    private static void DrawTile(SKCanvas canvas, SKPaint paint, SKRect rect, float radius, SKColor start, SKColor end)
     {
-        using var paint = new SKPaint();
-        paint.Color = EdgeColor;
-        var width = Math.Max(EdgeMinimumWidth * density, layout.CellSize * EdgeWidthRate);
-
-        for (var row = 0; row < game.Rows; row++)
-        {
-            for (var column = 0; column < game.Columns; column++)
-            {
-                if (IsOpenLook(game, new MinesweeperCell(row, column)))
-                {
-                    var rect = layout.GetCell(new MinesweeperCell(row, column));
-                    if ((row > 0) && !IsOpenLook(game, new MinesweeperCell(row - 1, column)))
-                    {
-                        canvas.DrawRect(SKRect.Create(rect.Left, rect.Top, rect.Width, width), paint);
-                    }
-
-                    if ((row < game.Rows - 1) && !IsOpenLook(game, new MinesweeperCell(row + 1, column)))
-                    {
-                        canvas.DrawRect(SKRect.Create(rect.Left, rect.Bottom - width, rect.Width, width), paint);
-                    }
-
-                    if ((column > 0) && !IsOpenLook(game, new MinesweeperCell(row, column - 1)))
-                    {
-                        canvas.DrawRect(SKRect.Create(rect.Left, rect.Top, width, rect.Height), paint);
-                    }
-
-                    if ((column < game.Columns - 1) && !IsOpenLook(game, new MinesweeperCell(row, column + 1)))
-                    {
-                        canvas.DrawRect(SKRect.Create(rect.Right - width, rect.Top, width, rect.Height), paint);
-                    }
-                }
-            }
-        }
+        paint.Color = SKColors.White;
+        using var shader = SKShader.CreateLinearGradient(
+            new SKPoint(rect.Left, rect.Top),
+            new SKPoint(rect.Right, rect.Bottom),
+            [start, end],
+            SKShaderTileMode.Clamp);
+        paint.Shader = shader;
+        canvas.DrawRoundRect(rect, radius, radius, paint);
+        paint.Shader = null;
     }
 
     private void DrawCovers(SKCanvas canvas, BoardLayout layout, MinesweeperFrame board)
@@ -325,12 +269,11 @@ public sealed class MinesweeperBoard : SKCanvasView
                 if (local < 1)
                 {
                     var cell = board.Revealed[i];
-                    var rect = layout.GetCell(cell);
+                    var rect = layout.GetTile(cell);
                     var size = rect.Width * (1f - (float)(local * local));
-                    var even = ((cell.Row + cell.Column) % 2) == 0;
-                    paint.Color = (even ? HiddenLightColor : HiddenDarkColor).WithOpacity((float)(1 - local));
+                    var opacity = (float)(1 - local);
                     var cover = SKRect.Create(rect.MidX - (size / 2), rect.MidY - (size / 2), size, size);
-                    canvas.DrawRoundRect(cover, size * CoverRadiusRate, size * CoverRadiusRate, paint);
+                    DrawTile(canvas, paint, cover, size * CoverRadiusRate, HiddenStartColor.WithOpacity(opacity), HiddenEndColor.WithOpacity(opacity));
                 }
             }
         }
@@ -378,9 +321,9 @@ public sealed class MinesweeperBoard : SKCanvasView
 
         public SKRect Board { get; }
 
-        public float Radius { get; }
-
         public float CellSize { get; }
+
+        public float CellRadius { get; }
 
         public BoardLayout(float size, float density, MinesweeperGame game)
         {
@@ -394,11 +337,19 @@ public sealed class MinesweeperBoard : SKCanvasView
                 inset + ((available - (CellSize * rows)) / 2),
                 CellSize * columns,
                 CellSize * rows);
-            Radius = BoardRadius * density;
+            CellRadius = CellSize * CellRadiusRate;
         }
 
         public SKRect GetCell(MinesweeperCell cell) =>
             SKRect.Create(Board.Left + (cell.Column * CellSize), Board.Top + (cell.Row * CellSize), CellSize, CellSize);
+
+        public SKRect GetTile(MinesweeperCell cell)
+        {
+            var gap = CellSize * CellGapRate / 2;
+            var rect = GetCell(cell);
+            rect.Inflate(-gap, -gap);
+            return rect;
+        }
 
         public MinesweeperCell? Find(SKPoint point) =>
             Board.Contains(point)
