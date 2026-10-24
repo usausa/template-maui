@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
+using Template.MobileApp.Behaviors;
+
 public sealed partial class DrawingControl : GraphicsView
 {
     private const float TapSlop = 10f;
@@ -80,6 +82,33 @@ public sealed partial class DrawingControl : GraphicsView
         {
             newValue.Attach(this);
             Drawable = newValue;
+            NotifyZoom();
         }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Zoom
+    //--------------------------------------------------------------------------------
+
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+
+        if ((propertyName == GestureOption.ZoomScaleProperty.PropertyName) ||
+            (propertyName == GestureOption.ZoomOffsetProperty.PropertyName))
+        {
+            NotifyZoom();
+        }
+    }
+
+    private void NotifyZoom()
+    {
+        if (Drawing is not IZoomDrawing zoom)
+        {
+            return;
+        }
+
+        var offset = GestureOption.GetZoomOffset(this);
+        zoom.OnZoom((float)GestureOption.GetZoomScale(this), new PointF((float)offset.X, (float)offset.Y));
     }
 }

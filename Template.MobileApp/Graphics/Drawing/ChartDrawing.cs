@@ -167,9 +167,44 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
     public void ShowCandle(IReadOnlyList<CandlePoint> data, IReadOnlyList<string>? names = null)
     {
         candles = [.. data];
-        scale = candles.Length > 0 ? NiceScale(candles.Min(static x => x.Low), candles.Max(static x => x.High), false) : DefaultScale;
+        UpdateCandleScale();
         Start(ChartKind.Candle, names, false);
     }
+
+    public void UpdateCandle(CandlePoint value)
+    {
+        if (kind != ChartKind.Candle)
+        {
+            return;
+        }
+
+        if (candles.Length > 0)
+        {
+            candles[^1] = value;
+        }
+        else
+        {
+            candles = [value];
+        }
+
+        UpdateCandleScale();
+        SafeInvalidate();
+    }
+
+    public void AddCandle(CandlePoint value)
+    {
+        if (kind != ChartKind.Candle)
+        {
+            return;
+        }
+
+        candles = [.. candles, value];
+        UpdateCandleScale();
+        SafeInvalidate();
+    }
+
+    private void UpdateCandleScale() =>
+        scale = candles.Length > 0 ? NiceScale(candles.Min(static x => x.Low), candles.Max(static x => x.High), false) : DefaultScale;
 
     public void ShowStacked(IReadOnlyList<double[]> data, IReadOnlyList<string>? names = null)
     {

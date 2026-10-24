@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="common.css">
+<style>
+.body { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg-l5); }
+
+/* Live header */
+.live { flex: 0 0 auto; display: flex; align-items: center; gap: 12rem; padding: 11rem 14rem;
+  background: var(--bg-d4); color: #FFFFFF; }
+.live .tm { flex: 1; display: flex; align-items: center; gap: 8rem; }
+.live .tm.r { justify-content: flex-end; }
+.live .tm .lg { width: 34rem; height: 34rem; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 14rem; font-weight: 600; }
+.live .tm .nm { font-size: 13rem; }
+.live .tm .nm em { display: block; font-style: normal; font-size: 9rem; color: rgba(255,255,255,.55); margin-top: 1rem; }
+.live .sc { display: flex; align-items: center; gap: 10rem; }
+.live .sc b { font-size: 34rem; font-weight: 600; line-height: 1; letter-spacing: -.03em; }
+.live .sc .st { text-align: center; }
+.live .sc .st .i { display: flex; align-items: center; gap: 3rem; padding: 2rem 7rem; border-radius: 4rem;
+  background: var(--red-a3); font-size: 10rem; font-weight: 600; }
+.live .sc .st .i i { width: 5rem; height: 5rem; border-radius: 50%; background: #FFFFFF; }
+.live .sc .st .n { font-size: 10rem; color: rgba(255,255,255,.65); margin-top: 3rem; }
+
+/* Scoreboard */
+.sb { flex: 0 0 auto; background: #FFFFFF; border-bottom: 1rem solid var(--gray-l2); overflow: hidden; }
+.sb table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+.sb th, .sb td { font-size: 12rem; text-align: center; padding: 5rem 0; border-left: 1rem solid var(--gray-l3); }
+.sb th:first-child, .sb td:first-child { width: 62rem; text-align: left; padding-left: 10rem;
+  border-left: 0; font-weight: 600; }
+.sb thead th { background: var(--bg-l5); color: var(--gray-d1); font-weight: 600; font-size: 11rem; }
+.sb thead th.cur { background: var(--red-d2); color: #FFFFFF; }
+.sb td { font-size: 14rem; }
+.sb td.tot { font-weight: 600; background: var(--gray-l4); }
+.sb td.cur { background: var(--red-l5); font-weight: 600; color: var(--red-d2); }
+.sb tbody tr + tr td { border-top: 1rem solid var(--gray-l3); }
+
+/* Field */
+.field { flex: 0 0 auto; display: flex; align-items: center; gap: 14rem; padding: 12rem 14rem;
+  background: #FFFFFF; border-bottom: 1rem solid var(--gray-l2); }
+.dia { width: 108rem; height: 108rem; position: relative; flex: 0 0 auto; }
+.dia .b { position: absolute; width: 26rem; height: 26rem; transform: rotate(45deg);
+  border: 2rem solid var(--gray-l1); background: #FFFFFF; }
+.dia .b.on { background: var(--amber); border-color: var(--amber-d2); }
+.dia .b1 { right: 2rem; top: 41rem; }
+.dia .b2 { left: 41rem; top: 2rem; }
+.dia .b3 { left: 2rem; top: 41rem; }
+.dia .hp { position: absolute; left: 41rem; bottom: 2rem; width: 26rem; height: 26rem;
+  transform: rotate(45deg); background: var(--gray-l3); }
+.dia .gr { position: absolute; left: 14rem; top: 14rem; right: 14rem; bottom: 14rem;
+  background: var(--green-l5); border-radius: 4rem; transform: rotate(45deg); }
+
+.count { flex: 1; min-width: 0; }
+.count .row { display: flex; align-items: center; gap: 8rem; margin-bottom: 7rem; }
+.count .row .k { width: 14rem; font-size: 12rem; font-weight: 600; color: var(--gray-d1); }
+.count .row .dots { display: flex; gap: 5rem; }
+.count .row .dots i { width: 14rem; height: 14rem; border-radius: 50%; background: var(--gray-l2); }
+.count .row.b .dots i.on { background: var(--green-d2); }
+.count .row.s .dots i.on { background: var(--amber-d2); }
+.count .row.o .dots i.on { background: var(--red-d2); }
+.count .play { margin-top: 2rem; padding: 7rem 9rem; border-radius: 7rem; background: var(--blue-l5);
+  font-size: 11rem; color: var(--blue-d4); line-height: 1.4; }
+
+/* Matchup */
+.mu { flex: 0 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: var(--gray-l2); }
+.mu > div { padding: 10rem 12rem; background: #FFFFFF; }
+.mu > div > .k { font-size: 10rem; color: var(--gray-d1); }
+.mu > div > .n { font-size: 16rem; font-weight: 600; margin-top: 3rem; letter-spacing: -.02em; }
+.mu > div > .s { font-size: 11rem; color: var(--gray-d1); margin-top: 3rem; }
+.mu > div > .s b { color: var(--gray-d4); }
+
+/* Lineup */
+.lu { flex: 1 1 auto; position: relative; overflow: hidden; background: #FFFFFF; }
+.lu .h { display: flex; align-items: center; padding: 9rem 14rem 6rem; font-size: 12rem; font-weight: 600; }
+.lu .h em { margin-left: auto; font-style: normal; font-size: 10rem; color: var(--gray-d1); font-weight: 400; }
+.lu .r { display: grid; grid-template-columns: 24rem 34rem 1fr 48rem 44rem; align-items: center;
+  gap: 8rem; padding: 7rem 14rem; border-top: 1rem solid var(--gray-l3); font-size: 12rem; }
+.lu .r.cur { background: var(--amber-l5); }
+.lu .r .no { font-weight: 600; color: var(--gray-d1); }
+.lu .r .po { font-size: 10rem; color: var(--gray-d1); }
+.lu .r .nm { font-weight: 600; }
+.lu .r .av { text-align: right; color: var(--gray-d2); }
+.lu .r .rs { text-align: right; font-size: 11rem; color: var(--gray-d1); }
+.lu .r.cur .rs { color: var(--orange-d2); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="statusbar">
+    <div class="time">19:34</div>
+    <div class="tray"><i class="mi">&#xe202;</i><i class="mi">&#xe63e;</i><div class="bat">61</div></div>
+  </div>
+
+  <div class="header">
+    <div class="title">Score</div>
+    <div class="hicon"><i class="mi">&#xe566;</i></div>
+    <div class="hicon"><i class="mi">&#xe5d4;</i></div>
+  </div>
+
+  <div class="content">
+    <div class="body">
+
+      <div class="live">
+        <div class="tm">
+          <div class="lg" style="background:#1565C0">中</div>
+          <div class="nm">中日<em>62勝 58敗</em></div>
+        </div>
+        <div class="sc">
+          <b>3</b>
+          <div class="st">
+            <div class="i"><i></i>LIVE</div>
+            <div class="n">7回裏</div>
+          </div>
+          <b>4</b>
+        </div>
+        <div class="tm r">
+          <div class="nm" style="text-align:right">阪神<em>66勝 54敗</em></div>
+          <div class="lg" style="background:#F9A825;color:#212121">神</div>
+        </div>
+      </div>
+
+      <div class="sb">
+        <table>
+          <thead>
+            <tr>
+              <th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
+              <th class="cur">7</th><th>8</th><th>9</th><th>R</th><th>H</th><th>E</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>中日</td><td>0</td><td>1</td><td>0</td><td>0</td><td>2</td><td>0</td>
+              <td class="cur">0</td><td>-</td><td>-</td><td class="tot">3</td><td class="tot">7</td><td class="tot">0</td>
+            </tr>
+            <tr>
+              <td>阪神</td><td>1</td><td>0</td><td>0</td><td>2</td><td>0</td><td>0</td>
+              <td class="cur">1</td><td>-</td><td>-</td><td class="tot">4</td><td class="tot">9</td><td class="tot">1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="field">
+        <div class="dia">
+          <div class="gr"></div>
+          <div class="b b2 on"></div>
+          <div class="b b1 on"></div>
+          <div class="b b3"></div>
+          <div class="hp"></div>
+        </div>
+        <div class="count">
+          <div class="row b"><div class="k">B</div><div class="dots"><i class="on"></i><i class="on"></i><i></i></div></div>
+          <div class="row s"><div class="k">S</div><div class="dots"><i class="on"></i><i></i></div></div>
+          <div class="row o"><div class="k">O</div><div class="dots"><i class="on"></i><i></i><i></i></div></div>
+          <div class="play">前の打席: 右中間を破る二塁打、二塁走者が生還して 1 点追加</div>
+        </div>
+      </div>
+
+      <div class="mu">
+        <div>
+          <div class="k">打者 ・ 5 番</div>
+          <div class="n">大山 悠輔</div>
+          <div class="s">打率 <b>.284</b> ・ 本 <b>23</b> ・ 打点 <b>71</b></div>
+        </div>
+        <div>
+          <div class="k">投手 ・ 3 人目</div>
+          <div class="n">清水 達也</div>
+          <div class="s">防御率 <b>2.41</b> ・ 球数 <b>18</b></div>
+        </div>
+      </div>
+
+      <div class="lu">
+        <div class="h">阪神 打順<em>7回裏 ・ 2 死 一二塁</em></div>
+        <div class="r"><div class="no">3</div><div class="po">中</div><div class="nm">近本 光司</div><div class="av">.312</div><div class="rs">三ゴロ</div></div>
+        <div class="r"><div class="no">4</div><div class="po">右</div><div class="nm">森下 翔太</div><div class="av">.267</div><div class="rs">二塁打</div></div>
+        <div class="r cur"><div class="no">5</div><div class="po">一</div><div class="nm">大山 悠輔</div><div class="av">.284</div><div class="rs">打席中</div></div>
+        <div class="r"><div class="no">6</div><div class="po">左</div><div class="nm">佐藤 輝明</div><div class="av">.251</div><div class="rs">—</div></div>
+        <div class="r"><div class="no">7</div><div class="po">捕</div><div class="nm">坂本 誠志郎</div><div class="av">.233</div><div class="rs">—</div></div>
+        <div class="r"><div class="no">8</div><div class="po">遊</div><div class="nm">木浪 聖也</div><div class="av">.274</div><div class="rs">—</div></div>
+        <div class="r"><div class="no">9</div><div class="po">投</div><div class="nm">村上 頌樹</div><div class="av">.105</div><div class="rs">—</div></div>
+        <div class="r"><div class="no">1</div><div class="po">二</div><div class="nm">中野 拓夢</div><div class="av">.289</div><div class="rs">四球</div></div>
+        <div class="r"><div class="no">2</div><div class="po">三</div><div class="nm">小幡 竜平</div><div class="av">.241</div><div class="rs">空振三振</div></div>
+        <div class="scroll-cut"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="functionbar">
+    <div class="f1">Back</div>
+    <div class="f2">速報</div>
+    <div class="f3">成績</div>
+    <div class="f4">順位</div>
+  </div>
+
+  <div class="gesturebar"></div>
+
+</div>
+</body>
+</html>

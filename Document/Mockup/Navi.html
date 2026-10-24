@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="common.css">
+<style>
+.body { position: absolute; inset: 0; display: flex; flex-direction: column; background: #10161C; color: #FFFFFF; }
+
+/* Turn panel */
+.turn { flex: 0 0 auto; display: flex; align-items: center; gap: 14rem; padding: 12rem 14rem;
+  background: var(--green-d2); }
+.turn .ar { width: 62rem; height: 62rem; flex: 0 0 auto; display: flex; align-items: center;
+  justify-content: center; border-radius: 12rem; background: rgba(255,255,255,.16); }
+.turn .ar .mi { font-size: 46rem; }
+.turn .r { flex: 1; min-width: 0; }
+.turn .r .d { font-size: 34rem; font-weight: 600; line-height: 1; letter-spacing: -.03em; }
+.turn .r .d em { font-style: normal; font-size: 16rem; margin-left: 3rem; }
+.turn .r .n { font-size: 15rem; margin-top: 5rem; color: rgba(255,255,255,.92); }
+.turn .bar { height: 5rem; border-radius: 3rem; background: rgba(255,255,255,.25); margin-top: 8rem; }
+.turn .bar div { height: 100%; width: 62%; border-radius: 3rem; background: #FFFFFF; }
+
+.then { flex: 0 0 auto; display: flex; align-items: center; gap: 8rem; padding: 7rem 16rem;
+  background: #1B5E20; font-size: 12rem; color: rgba(255,255,255,.85); }
+.then .mi { font-size: 17rem; }
+.then b { font-weight: 600; color: #FFFFFF; }
+
+/* Map */
+.map { flex: 1 1 auto; position: relative; overflow: hidden; background: #0E1A24; }
+.map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map .poi { position: absolute; display: flex; align-items: center; gap: 4rem; padding: 3rem 7rem;
+  border-radius: 5rem; background: rgba(0,0,0,.55); font-size: 10rem; color: rgba(255,255,255,.85); }
+.map .poi .mi { font-size: 12rem; }
+.map .car { position: absolute; left: 50%; bottom: 112rem; width: 34rem; height: 34rem; margin-left: -17rem;
+  border-radius: 50%; background: var(--blue); border: 3rem solid #FFFFFF;
+  box-shadow: 0 0 0 8rem rgba(33,150,243,.22), 0 3rem 10rem rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center; }
+.map .car .mi { font-size: 19rem; color: #FFFFFF; }
+.map .road { position: absolute; font-size: 10rem; color: rgba(255,255,255,.45); }
+
+/* Lane guidance */
+.lanes { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center;
+  gap: 2rem; padding: 8rem 0; background: linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.25)); }
+.lanes div { width: 38rem; height: 40rem; display: flex; align-items: center; justify-content: center;
+  border-radius: 5rem; background: rgba(255,255,255,.10); }
+.lanes div .mi { font-size: 25rem; color: rgba(255,255,255,.38); }
+.lanes div.on { background: rgba(67,160,71,.35); }
+.lanes div.on .mi { color: var(--green-a3); }
+
+/* Speed */
+.spd { position: absolute; left: 12rem; bottom: 70rem; display: flex; align-items: flex-end; gap: 8rem; }
+.spd .now { width: 62rem; height: 62rem; border-radius: 50%; background: rgba(0,0,0,.6);
+  border: 2rem solid rgba(255,255,255,.2); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; }
+.spd .now b { font-size: 24rem; font-weight: 600; line-height: 1; }
+.spd .now em { font-style: normal; font-size: 9rem; color: rgba(255,255,255,.6); margin-top: 2rem; }
+.spd .lim { width: 46rem; height: 46rem; border-radius: 50%; background: #FFFFFF;
+  border: 5rem solid var(--red-d2); display: flex; align-items: center; justify-content: center;
+  font-size: 19rem; font-weight: 600; color: var(--gray-d4); }
+
+/* ETA */
+.eta { flex: 0 0 auto; display: flex; align-items: center; gap: 12rem; padding: 10rem 14rem;
+  background: #16212B; border-top: 1rem solid rgba(255,255,255,.08); }
+.eta .m { flex: 1; display: flex; align-items: baseline; gap: 10rem; }
+.eta .m .t { font-size: 24rem; font-weight: 600; letter-spacing: -.02em; }
+.eta .m .t em { font-style: normal; font-size: 13rem; color: rgba(255,255,255,.6); margin-left: 2rem; }
+.eta .m .s { font-size: 12rem; color: rgba(255,255,255,.62); }
+.eta .m .s b { color: var(--green-a3); font-weight: 600; }
+.eta .stop { padding: 9rem 18rem; border-radius: 8rem; background: var(--red-d2); font-size: 14rem; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="statusbar">
+    <div class="time">9:18</div>
+    <div class="tray"><i class="mi">&#xe202;</i><i class="mi">&#xe63e;</i><div class="bat">52</div></div>
+  </div>
+
+  <div class="header">
+    <div class="title">Navi</div>
+    <div class="hicon"><i class="mi">&#xe55d;</i></div>
+    <div class="hicon"><i class="mi">&#xe5d4;</i></div>
+  </div>
+
+  <div class="content">
+    <div class="body">
+
+      <div class="turn">
+        <div class="ar"><i class="mi">&#xebab;</i></div>
+        <div class="r">
+          <div class="d">300<em>m</em></div>
+          <div class="n">県道 15 号 ・ 勝川橋 西 交差点を右折</div>
+          <div class="bar"><div></div></div>
+        </div>
+      </div>
+
+      <div class="then">
+        <i class="mi">&#xeb95;</i>その先 <b>1.2km</b> 直進 ・ 国道 19 号 へ合流
+      </div>
+
+      <div class="map">
+        <svg viewBox="0 0 411 470" preserveAspectRatio="none">
+          <g stroke="#1E2C38" fill="none">
+            <path d="M-20 120 H431" stroke-width="18"/>
+            <path d="M-20 330 H431" stroke-width="14"/>
+            <path d="M90 -20 V490" stroke-width="14"/>
+            <path d="M318 -20 V490" stroke-width="18"/>
+            <path d="M-20 232 H431" stroke-width="10"/>
+            <path d="M205 -20 V490" stroke-width="10"/>
+          </g>
+          <g stroke="#223243" fill="none" stroke-width="1">
+            <path d="M-20 60 H431"/><path d="M-20 400 H431"/>
+            <path d="M150 -20 V490"/><path d="M260 -20 V490"/><path d="M380 -20 V490"/>
+          </g>
+          <path d="M205 470 V232 H318 V-20" fill="none" stroke="#0D47A1" stroke-width="17"
+                stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M205 470 V232 H318 V-20" fill="none" stroke="#2979FF" stroke-width="11"
+                stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="318" cy="232" r="9" fill="#FFFFFF"/>
+          <circle cx="318" cy="232" r="5" fill="#2979FF"/>
+        </svg>
+
+        <div class="road" style="left:14rem;top:108rem">東 名 高 速</div>
+        <div class="road" style="left:14rem;top:320rem">庄 内 川 通</div>
+        <div class="poi" style="left:220rem;top:60rem"><i class="mi">&#xe546;</i>ENEOS 勝川</div>
+        <div class="poi" style="left:96rem;top:270rem"><i class="mi">&#xe55f;</i>勝川駅</div>
+
+        <div class="car"><i class="mi">&#xe55d;</i></div>
+
+        <div class="spd">
+          <div class="now"><b>48</b><em>km/h</em></div>
+          <div class="lim">50</div>
+        </div>
+
+        <div class="lanes">
+          <div><i class="mi">&#xeba6;</i></div>
+          <div><i class="mi">&#xeb95;</i></div>
+          <div><i class="mi">&#xeb95;</i></div>
+          <div class="on"><i class="mi">&#xebab;</i></div>
+          <div class="on"><i class="mi">&#xebab;</i></div>
+        </div>
+      </div>
+
+      <div class="eta">
+        <div class="m">
+          <div class="t">09:41<em>着</em></div>
+          <div class="s">残り <b>23 分</b> ・ 14.6 km</div>
+        </div>
+        <div class="stop">終了</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="functionbar">
+    <div class="f1">Back</div>
+    <div class="f2">全体</div>
+    <div class="f3">音声</div>
+    <div class="f4">周辺</div>
+  </div>
+
+  <div class="gesturebar"></div>
+
+</div>
+</body>
+</html>

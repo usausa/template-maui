@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIMenu3View"
+             x:DataType="{x:Type module:UIMenu3ViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMenu3ViewModel}"
+             shell:ShellProperty.Title="UI 3"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function4Text="UI 1"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!-- Content -->
+    <Grid Style="{StaticResource MenuGrid}"
+          RowDefinitions="*,*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*">
+
+        <Button Grid.Row="0" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITransit}"
+                IsEnabled="False"
+                Text="Transit"
+                ImageSource="{x:Static markup:AppIcons.DirectionsTransit}" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISeat}"
+                IsEnabled="False"
+                Text="Seat"
+                ImageSource="{x:Static markup:AppIcons.EventSeat}" />
+
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGantt}"
+                IsEnabled="False"
+                Text="Gantt"
+                ImageSource="{x:Static markup:AppIcons.ViewTimeline}" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIKanban}"
+                IsEnabled="False"
+                Text="Kanban"
+                ImageSource="{x:Static markup:AppIcons.ViewKanban}" />
+
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITicket}"
+                IsEnabled="False"
+                Text="Ticket"
+                ImageSource="{x:Static markup:AppIcons.ConfirmationNumber}" />
+        <Button Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIMusic}"
+                IsEnabled="False"
+                Text="Music"
+                ImageSource="{x:Static markup:AppIcons.MusicNote}" />
+
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGallery}"
+                IsEnabled="False"
+                Text="Gallery"
+                ImageSource="{x:Static markup:AppIcons.PhotoLibrary}" />
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIHealth}"
+                IsEnabled="False"
+                Text="Health"
+                ImageSource="{x:Static markup:AppIcons.Bedtime}" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UINavi}"
+                IsEnabled="False"
+                Text="Navi"
+                ImageSource="{x:Static markup:AppIcons.Navigation}" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIScore}"
+                IsEnabled="False"
+                Text="Score"
+                ImageSource="{x:Static markup:AppIcons.SportsBaseball}" />
+
+        <Button Grid.Row="5" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIFiler}"
+                IsEnabled="False"
+                Text="Filer"
+                ImageSource="{x:Static markup:AppIcons.Folder}" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITrade}"
+                IsEnabled="False"
+                Text="Trade"
+                ImageSource="{x:Static markup:AppIcons.CandlestickChart}" />
+
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+
+        <Button Grid.Row="8" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+        <Button Grid.Row="8" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False" />
+
+    </Grid>
+
+</ContentView>

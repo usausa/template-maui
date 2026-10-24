@@ -21,5 +21,5 @@ public sealed class UIMenu2ViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-    protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyFunction4() => Navigator.ForwardAsync(ViewId.UIMenu3);
 }

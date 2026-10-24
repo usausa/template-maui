@@ -117,6 +117,7 @@ public enum ViewId
     // UI
     UIMenu1,
     UIMenu2,
+    UIMenu3,
 
     UIProfile,
     UILogin,
@@ -183,6 +184,26 @@ public enum ViewId
     UITactical,
     UITelemetry,
     UIEnergy,
+
+    UITransit,
+    UITransitTimetable,
+
+    UISeat,
+
+    UIGantt,
+    UIKanban,
+
+    UITicket,
+
+    UIMusic,
+    UIGallery,
+
+    UIHealth,
+    UINavi,
+
+    UIScore,
+    UIFiler,
+    UITrade,
 
     // Sample
     SampleMenu,

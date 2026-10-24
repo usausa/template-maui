@@ -21,6 +21,11 @@ public interface ITapDrawing
     void OnTap(PointF point);
 }
 
+public interface IZoomDrawing
+{
+    void OnZoom(float scale, PointF offset);
+}
+
 #pragma warning disable CA1033
 public abstract class DrawingObject : IDrawingObject
 {

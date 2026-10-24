@@ -146,6 +146,7 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(1);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => TickPayment()));
+        Disposables.Add(new DelegateDisposable(timer.Stop));
 
         Selected = MoneyPage.Home;
         NotificationCount = 128;
@@ -176,12 +177,6 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
         ShowMonth(Month);
-        return Task.CompletedTask;
-    }
-
-    public override Task OnNavigatingFromAsync(INavigationContext context)
-    {
-        timer.Stop();
         return Task.CompletedTask;
     }
 
