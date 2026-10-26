@@ -14,6 +14,8 @@ public sealed partial class DrawingControl : GraphicsView
 
     private PointF touchStart;
 
+    private TapGestureRecognizer? tapGesture;
+
     public IDrawingObject Drawing
     {
         get => (IDrawingObject)GetValue(DrawingProperty);
@@ -46,7 +48,7 @@ public sealed partial class DrawingControl : GraphicsView
             {
                 interactive.OnInteractionEnd(e.Touches[0]);
             }
-            if ((Drawing is ITapDrawing tap) && e.IsInsideBounds && (e.Touches.Length > 0) && (e.Touches[0].Distance(touchStart) <= TapSlop))
+            if ((tapGesture is null) && (Drawing is ITapDrawing tap) && e.IsInsideBounds && (e.Touches.Length > 0) && (e.Touches[0].Distance(touchStart) <= TapSlop))
             {
                 tap.OnTap(e.Touches[0]);
             }
@@ -83,6 +85,59 @@ public sealed partial class DrawingControl : GraphicsView
             newValue.Attach(this);
             Drawable = newValue;
             NotifyZoom();
+            UpdateContentHeight();
+        }
+
+        UpdateTapGesture();
+    }
+
+    //--------------------------------------------------------------------------------
+    // Size
+    //--------------------------------------------------------------------------------
+
+    internal void InvalidateContent()
+    {
+        UpdateContentHeight();
+        Invalidate();
+    }
+
+    private void UpdateContentHeight()
+    {
+        if (Drawing is ISizedDrawing sized)
+        {
+            HeightRequest = sized.ContentHeight;
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Tap
+    //--------------------------------------------------------------------------------
+
+    private void UpdateTapGesture()
+    {
+        var required = Drawing is IZoomDrawing and ITapDrawing;
+        if (required)
+        {
+            if (tapGesture is null)
+            {
+                tapGesture = new TapGestureRecognizer();
+                tapGesture.Tapped += HandleTapped;
+                GestureRecognizers.Add(tapGesture);
+            }
+        }
+        else if (tapGesture is not null)
+        {
+            tapGesture.Tapped -= HandleTapped;
+            GestureRecognizers.Remove(tapGesture);
+            tapGesture = null;
+        }
+    }
+
+    private void HandleTapped(object? sender, TappedEventArgs e)
+    {
+        if ((Drawing is ITapDrawing tap) && (e.GetPosition(this) is { } point))
+        {
+            tap.OnTap(new PointF((float)point.X, (float)point.Y));
         }
     }
 

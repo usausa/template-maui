@@ -98,7 +98,12 @@ public sealed class PerforatedBorder : MauiBorder
             var limit = (float)(Math.Min(bounds.Width, bounds.Height) / 2);
             var radius = Math.Clamp((float)Radius, 0f, limit);
             var notch = Math.Clamp((float)NotchRadius, 0f, limit);
-            var center = NotchOffset > 0 ? top + (float)NotchOffset : top + ((float)bounds.Height / 2);
+            var center = NotchOffset switch
+            {
+                > 0 => top + (float)NotchOffset,
+                < 0 => (float)bounds.Bottom + (float)NotchOffset,
+                _ => top + ((float)bounds.Height / 2)
+            };
             var notchTop = Math.Clamp(center - notch, top + radius, bottom - radius);
             var notchBottom = Math.Clamp(center + notch, notchTop, bottom - radius);
 

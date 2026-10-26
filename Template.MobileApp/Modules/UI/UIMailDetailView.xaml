@@ -191,7 +191,7 @@
 
             <!-- Attachment -->
             <Border Style="{StaticResource AttachmentBorder}"
-                    IsVisible="{Binding Context.Selected.HasAttachment}">
+                    IsVisible="{Binding Context.Selected.Attachment, Converter={StaticResource NotEmptyConverter}}">
                 <HorizontalStackLayout Style="{StaticResource AttachmentStack}">
                     <Label Style="{StaticResource AttachmentIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Attach_file}" />

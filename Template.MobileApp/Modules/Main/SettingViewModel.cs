@@ -168,77 +168,70 @@ public sealed partial class SettingViewModel : AppViewModelBase
             Controller.PauseScanning = true;
 
             var barcode = barcodes.First().DisplayValue;
-            try
+            var parser = new SettingParser(barcode);
+            if (parser.TryGetString(nameof(ApiEndPoint), out var apiEndPoint) && Uri.TryCreate(apiEndPoint, UriKind.Absolute, out var apiUri))
             {
-                var parser = new SettingParser(barcode);
-                if (parser.TryGetString(nameof(ApiEndPoint), out var apiEndPoint))
-                {
-                    settings.ApiEndPoint = apiEndPoint;
-                    apiContext.BaseAddress = new Uri(apiEndPoint);
-                    ApiEndPoint = apiEndPoint;
+                settings.ApiEndPoint = apiEndPoint;
+                apiContext.BaseAddress = apiUri;
+                ApiEndPoint = apiEndPoint;
 
-                    if (settings.PushEnabled)
-                    {
-                        pushService.Connect();
-                    }
-                }
-                if (parser.TryGetString(nameof(GrpcEndPoint), out var grpcEndPoint))
+                if (settings.PushEnabled)
                 {
-                    settings.GrpcEndPoint = grpcEndPoint;
-                    GrpcEndPoint = grpcEndPoint;
+                    pushService.Connect();
                 }
-                if (parser.TryGetString(nameof(OtelEndPoint), out var otelEndPoint))
-                {
-                    settings.OtelEndPoint = otelEndPoint;
-                    OtelEndPoint = otelEndPoint;
-                    telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
-                }
-                if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
-                {
-                    settings.AIServiceEndPoint = aiServiceEndPoint;
-                    AIServiceEndPoint = aiServiceEndPoint;
-                }
-                if (parser.TryGetString(nameof(AIServiceKey), out var aiServiceKey))
-                {
-                    await settings.SetAIServiceKeyAsync(aiServiceKey);
-                    AIServiceKey = aiServiceKey;
-                }
-                if (parser.TryGetString(nameof(OllamaEndPoint), out var ollamaEndPoint))
-                {
-                    settings.OllamaEndPoint = ollamaEndPoint;
-                    OllamaEndPoint = ollamaEndPoint;
-                }
-                if (parser.TryGetString(nameof(OllamaModel), out var ollamaModel))
-                {
-                    settings.OllamaModel = ollamaModel;
-                    OllamaModel = ollamaModel;
-                }
-
-                if (parser.TryGetString(nameof(SshHost), out var sshHost))
-                {
-                    settings.SshHost = sshHost;
-                }
-                if (parser.TryGetInt(nameof(Settings.SshPort), out var sshPort))
-                {
-                    settings.SshPort = sshPort;
-                }
-                if (parser.TryGetString(nameof(SshUser), out var sshUser))
-                {
-                    settings.SshUser = sshUser;
-                    SshUser = sshUser;
-                }
-                if (parser.TryGetString(nameof(SshPassword), out var sshPassword))
-                {
-                    await settings.SetSshPasswordAsync(sshPassword);
-                    SshPassword = sshPassword;
-                }
-
-                SshHost = FormatSshHost(settings);
             }
-            catch (UriFormatException)
+            if (parser.TryGetString(nameof(GrpcEndPoint), out var grpcEndPoint))
             {
-                // Do nothing
+                settings.GrpcEndPoint = grpcEndPoint;
+                GrpcEndPoint = grpcEndPoint;
             }
+            if (parser.TryGetString(nameof(OtelEndPoint), out var otelEndPoint))
+            {
+                settings.OtelEndPoint = otelEndPoint;
+                OtelEndPoint = otelEndPoint;
+                telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
+            }
+            if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
+            {
+                settings.AIServiceEndPoint = aiServiceEndPoint;
+                AIServiceEndPoint = aiServiceEndPoint;
+            }
+            if (parser.TryGetString(nameof(AIServiceKey), out var aiServiceKey))
+            {
+                await settings.SetAIServiceKeyAsync(aiServiceKey);
+                AIServiceKey = aiServiceKey;
+            }
+            if (parser.TryGetString(nameof(OllamaEndPoint), out var ollamaEndPoint))
+            {
+                settings.OllamaEndPoint = ollamaEndPoint;
+                OllamaEndPoint = ollamaEndPoint;
+            }
+            if (parser.TryGetString(nameof(OllamaModel), out var ollamaModel))
+            {
+                settings.OllamaModel = ollamaModel;
+                OllamaModel = ollamaModel;
+            }
+
+            if (parser.TryGetString(nameof(SshHost), out var sshHost))
+            {
+                settings.SshHost = sshHost;
+            }
+            if (parser.TryGetInt(nameof(Settings.SshPort), out var sshPort))
+            {
+                settings.SshPort = sshPort;
+            }
+            if (parser.TryGetString(nameof(SshUser), out var sshUser))
+            {
+                settings.SshUser = sshUser;
+                SshUser = sshUser;
+            }
+            if (parser.TryGetString(nameof(SshPassword), out var sshPassword))
+            {
+                await settings.SetSshPasswordAsync(sshPassword);
+                SshPassword = sshPassword;
+            }
+
+            SshHost = FormatSshHost(settings);
 
             await Task.Delay(DetectInterval);
             Controller.PauseScanning = false;

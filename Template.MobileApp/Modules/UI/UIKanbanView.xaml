@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIKanbanView"
+             x:DataType="{x:Type module:UIKanbanViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIKanbanViewModel}"
+             shell:ShellProperty.Title="Kanban"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="絞込"
+             shell:ShellProperty.Function3Text="再読込"
+             shell:ShellProperty.Function4Text="追加"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <converters:WipTextConverter x:Key="WipTextConverter" />
+
+            <s:MapToColorConverter x:Key="LabelColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Bug}"
+                                       Value="#E53935" />
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Feat}"
+                                       Value="#1E88E5" />
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Chore}"
+                                       Value="#757575" />
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Docs}"
+                                       Value="#546E7A" />
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Ios}"
+                                       Value="#455A64" />
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Android}"
+                                       Value="#43A047" />
+                    <s:MapToColorEntry Key="{x:Static sample:CardLabel.Ui}"
+                                       Value="#8E24AA" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToTextConverter x:Key="LabelTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Bug}"
+                                      Value="bug" />
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Feat}"
+                                      Value="feat" />
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Chore}"
+                                      Value="chore" />
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Docs}"
+                                      Value="docs" />
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Ios}"
+                                      Value="ios" />
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Android}"
+                                      Value="android" />
+                    <s:MapToTextEntry Key="{x:Static sample:CardLabel.Ui}"
+                                      Value="ui" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="LaneColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static sample:LaneKind.Todo}"
+                                       Value="#9E9E9E" />
+                    <s:MapToColorEntry Key="{x:Static sample:LaneKind.Doing}"
+                                       Value="#1E88E5" />
+                    <s:MapToColorEntry Key="{x:Static sample:LaneKind.Review}"
+                                       Value="#8E24AA" />
+                    <s:MapToColorEntry Key="{x:Static sample:LaneKind.Done}"
+                                       Value="#43A047" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <!-- Color -->
+
+            <Color x:Key="KanbanBackColor">#ECEFF1</Color>
+            <Color x:Key="KanbanTextColor">#212121</Color>
+            <Color x:Key="KanbanSubTextColor">#757575</Color>
+            <Color x:Key="KanbanOverColor">#E3F2FD</Color>
+            <Color x:Key="KanbanOverStroke">#2196F3</Color>
+
+            <!-- Layout -->
+
+            <Style x:Key="KanbanRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource KanbanBackColor}" />
+            </Style>
+
+            <!-- Sprint -->
+
+            <Style x:Key="SprintGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="ColumnSpacing" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SprintStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SprintNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanTextColor}" />
+            </Style>
+
+            <Style x:Key="SprintInfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanSubTextColor}" />
+            </Style>
+
+            <Style x:Key="AvatarStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="-8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AvatarBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="30" />
+                <Setter Property="HeightRequest" Value="30" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <Style x:Key="AvatarLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Lane -->
+
+            <Style x:Key="LaneStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Padding" Value="12,12,12,0" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="LaneBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="276" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeShape" Value="Rectangle" />
+                <Setter Property="BackgroundColor" Value="#F5F7F8" />
+            </Style>
+
+            <Style x:Key="LaneGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="LaneHeadStrip"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Color" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="LaneTailStrip"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="Color" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="EdgeStrip"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="Color" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="LaneHeadGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LaneDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="10" />
+                <Setter Property="HeightRequest" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LaneNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanTextColor}" />
+            </Style>
+
+            <Style x:Key="LaneCountBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="26" />
+                <Setter Property="HeightRequest" Value="26" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="LaneCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LaneWipLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="18,2,0,8" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanSubTextColor}" />
+            </Style>
+
+            <Style x:Key="LaneCardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="MinimumHeightRequest" Value="120" />
+            </Style>
+
+            <!-- Card -->
+
+            <Style x:Key="CardBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Rectangle" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,1"
+                                Brush="Black"
+                                Opacity="0.14"
+                                Radius="4" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CardGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="CardAccent"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="5" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="10,8" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="LabelStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="5" />
+            </Style>
+
+            <Style x:Key="LabelChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="7,2" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="LabelChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CardTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanTextColor}" />
+            </Style>
+
+            <Style x:Key="CardFootGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CardAvatarBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+            </Style>
+
+            <Style x:Key="CardAvatarLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CardCheckLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanSubTextColor}" />
+            </Style>
+
+            <Style x:Key="CardDueBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="7,2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="CardDueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanSubTextColor}" />
+            </Style>
+
+            <!-- Placeholder -->
+
+            <Style x:Key="DropIndicator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="4" />
+                <Setter Property="Color" Value="{StaticResource KanbanOverStroke}" />
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+
+            <!-- Footer -->
+
+            <Style x:Key="FooterGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="FooterStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FooterHeadGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="FooterCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanSubTextColor}" />
+            </Style>
+
+            <Style x:Key="FooterCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource KanbanSubTextColor}" />
+            </Style>
+
+            <Style x:Key="BurndownLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Direction" Value="Row" />
+                <Setter Property="HeightRequest" Value="8" />
+            </Style>
+
+            <Style x:Key="BurndownSegment"
+                   TargetType="BoxView">
+                <Setter Property="FlexLayout.Basis" Value="0" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid Style="{StaticResource KanbanRootGrid}"
+          RowDefinitions="Auto,*,Auto">
+
+        <!-- Sprint -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource SprintGrid}"
+              ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Column="0"
+                                 Style="{StaticResource SprintStack}">
+                <HorizontalStackLayout Style="{StaticResource LabelStack}">
+                    <Label Style="{StaticResource SprintNameLabel}"
+                           Text="{Binding Board.Name}" />
+                    <Border Style="{StaticResource LabelChipBorder}"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding IsFiltered}"
+                            BackgroundColor="{StaticResource RedDarken2}">
+                        <Label Style="{StaticResource LabelChipLabel}"
+                               Text="期限超過のみ" />
+                    </Border>
+                </HorizontalStackLayout>
+                <Label Style="{StaticResource SprintInfoLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Board.Start, StringFormat='{0:M/d}'}" />
+                            <Span Text=" – " />
+                            <Span Text="{Binding Board.End, StringFormat='{0:M/d}'}" />
+                            <Span Text=" ・ 残り " />
+                            <Span Text="{Binding Board.RemainDays}" />
+                            <Span Text=" 日" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Grid.Column="1"
+                                   Style="{StaticResource AvatarStack}">
+                <HorizontalStackLayout Style="{StaticResource AvatarStack}"
+                                       BindableLayout.ItemsSource="{Binding Avatars}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Border Style="{StaticResource AvatarBorder}">
+                                <Label Style="{StaticResource AvatarLabel}"
+                                       Text="{Binding .}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+                <Border Style="{StaticResource AvatarBorder}"
+                        BackgroundColor="{StaticResource BlueGrayDarken2}">
+                    <Label Style="{StaticResource AvatarLabel}"
+                           Text="{Binding MoreMembers, StringFormat='+{0}'}" />
+                </Border>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- Lane -->
+        <ScrollView Grid.Row="1"
+                    behaviors:ScrollBind.Controller="{Binding Scroller}"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Style="{StaticResource LaneStack}"
+                                   BindableLayout.ItemsSource="{Binding Board.Lanes}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type sample:BoardLane}">
+                        <Border Style="{StaticResource LaneBorder}"
+                                VerticalOptions="Fill">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsOver}"
+                                             Value="True">
+                                    <Setter Property="Stroke" Value="{StaticResource KanbanOverStroke}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource KanbanOverColor}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                <DropGestureRecognizer AllowDrop="True"
+                                                       DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneOverCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                       DragOverCommandParameter="{Binding .}"
+                                                       DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneLeaveCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                       DragLeaveCommandParameter="{Binding .}"
+                                                       DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropOnLaneCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                       DropCommandParameter="{Binding .}" />
+                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                            </Border.GestureRecognizers>
+                            <Grid Style="{StaticResource LaneGrid}"
+                                  RowDefinitions="Auto,Auto,*">
+
+                                <!-- Head -->
+                                <Grid Grid.Row="0"
+                                      Style="{StaticResource LaneHeadGrid}"
+                                      ColumnDefinitions="Auto,*,Auto">
+                                    <Ellipse Grid.Column="0"
+                                             Style="{StaticResource LaneDot}"
+                                             Fill="{Binding Kind, Converter={StaticResource LaneColorConverter}}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource LaneNameLabel}"
+                                           Text="{Binding Name}" />
+                                    <Border Grid.Column="2"
+                                            Style="{StaticResource LaneCountBorder}">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsOverWip}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource RedDarken2}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Style="{StaticResource LaneCountLabel}"
+                                               Text="{Binding Count}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
+                                                             Binding="{Binding IsOverWip}"
+                                                             Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Border>
+                                </Grid>
+                                <Label Grid.Row="1"
+                                       Style="{StaticResource LaneWipLabel}">
+                                    <Label.Text>
+                                        <MultiBinding Converter="{StaticResource WipTextConverter}">
+                                            <Binding Path="WipLimit" />
+                                            <Binding Path="IsOverWip" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsOverWip}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+                                            <Setter Property="FontAttributes" Value="Bold" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+
+                                <!-- Card -->
+                                <ScrollView Grid.Row="2"
+                                            VerticalScrollBarVisibility="Never">
+                                    <VerticalStackLayout Style="{StaticResource LaneCardStack}">
+                                        <BoxView Style="{StaticResource DropIndicator}"
+                                                 IsVisible="{Binding IsHeadOver}" />
+                                        <VerticalStackLayout Style="{StaticResource LaneCardStack}"
+                                                             BindableLayout.ItemsSource="{Binding Cards}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="{x:Type sample:BoardCard}">
+                                                    <VerticalStackLayout IsVisible="{Binding IsShown}">
+                                                        <BoxView Style="{StaticResource DropIndicator}"
+                                                                 IsVisible="{Binding IsOverBefore}" />
+                                                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                        <Border Style="{StaticResource CardBorder}"
+                                                                behaviors:DropOption.SideCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=CardSideCommand, x:DataType={x:Type module:UIKanbanViewModel}}">
+                                                            <Border.Triggers>
+                                                                <DataTrigger TargetType="Border"
+                                                                             Binding="{Binding IsSource}"
+                                                                             Value="True">
+                                                                    <Setter Property="Opacity" Value="0.4" />
+                                                                </DataTrigger>
+                                                            </Border.Triggers>
+                                                            <Border.GestureRecognizers>
+                                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                                                <DragGestureRecognizer CanDrag="True"
+                                                                                       DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                                                       DragStartingCommandParameter="{Binding .}"
+                                                                                       DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:UIKanbanViewModel}}" />
+                                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                                                <DropGestureRecognizer AllowDrop="True"
+                                                                                       DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=CardOverCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                                                       DragOverCommandParameter="{Binding .}"
+                                                                                       DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=CardLeaveCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                                                       DragLeaveCommandParameter="{Binding .}"
+                                                                                       DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropOnCardCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                                                       DropCommandParameter="{Binding .}" />
+                                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                                            </Border.GestureRecognizers>
+                                                            <Grid Style="{StaticResource CardGrid}"
+                                                                  ColumnDefinitions="Auto,*">
+                                                                <BoxView Grid.Column="0"
+                                                                         Style="{StaticResource CardAccent}"
+                                                                         Color="{Binding Labels[0], Converter={StaticResource LabelColorConverter}}" />
+                                                                <VerticalStackLayout Grid.Column="1"
+                                                                                     Style="{StaticResource CardStack}">
+                                                                    <HorizontalStackLayout Style="{StaticResource LabelStack}"
+                                                                                           BindableLayout.ItemsSource="{Binding Labels}">
+                                                                        <BindableLayout.ItemTemplate>
+                                                                            <DataTemplate x:DataType="{x:Type sample:CardLabel}">
+                                                                                <Border Style="{StaticResource LabelChipBorder}"
+                                                                                        BackgroundColor="{Binding ., Converter={StaticResource LabelColorConverter}}">
+                                                                                    <Label Style="{StaticResource LabelChipLabel}"
+                                                                                           Text="{Binding ., Converter={StaticResource LabelTextConverter}}" />
+                                                                                </Border>
+                                                                            </DataTemplate>
+                                                                        </BindableLayout.ItemTemplate>
+                                                                    </HorizontalStackLayout>
+                                                                    <Label Style="{StaticResource CardTitleLabel}"
+                                                                           Text="{Binding Title}" />
+                                                                    <Grid Style="{StaticResource CardFootGrid}"
+                                                                          ColumnDefinitions="Auto,Auto,*">
+                                                                        <Border Grid.Column="0"
+                                                                                Style="{StaticResource CardAvatarBorder}"
+                                                                                BackgroundColor="{Binding Labels[0], Converter={StaticResource LabelColorConverter}}">
+                                                                            <Label Style="{StaticResource CardAvatarLabel}"
+                                                                                   Text="{Binding Assignee, Converter={StaticResource InitialConverter}}" />
+                                                                        </Border>
+                                                                        <Label Grid.Column="1"
+                                                                               Style="{StaticResource CardCheckLabel}">
+                                                                            <Label.FormattedText>
+                                                                                <FormattedString>
+                                                                                    <Span Text="✓ " />
+                                                                                    <Span Text="{Binding Checked}" />
+                                                                                    <Span Text="/" />
+                                                                                    <Span Text="{Binding Total}" />
+                                                                                </FormattedString>
+                                                                            </Label.FormattedText>
+                                                                        </Label>
+                                                                        <Border Grid.Column="2"
+                                                                                Style="{StaticResource CardDueBorder}"
+                                                                                HorizontalOptions="End">
+                                                                            <Border.Triggers>
+                                                                                <DataTrigger TargetType="Border"
+                                                                                             Binding="{Binding IsOverdue}"
+                                                                                             Value="True">
+                                                                                    <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+                                                                                </DataTrigger>
+                                                                            </Border.Triggers>
+                                                                            <Label Style="{StaticResource CardDueLabel}"
+                                                                                   Text="{Binding Due, StringFormat='{0:M/d}'}">
+                                                                                <Label.Triggers>
+                                                                                    <DataTrigger TargetType="Label"
+                                                                                                 Binding="{Binding IsOverdue}"
+                                                                                                 Value="True">
+                                                                                        <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+                                                                                        <Setter Property="FontAttributes" Value="Bold" />
+                                                                                    </DataTrigger>
+                                                                                </Label.Triggers>
+                                                                            </Label>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </VerticalStackLayout>
+                                                            </Grid>
+                                                        </Border>
+                                                        <BoxView Style="{StaticResource DropIndicator}"
+                                                                 IsVisible="{Binding IsOverAfter}" />
+                                                    </VerticalStackLayout>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                        <BoxView Style="{StaticResource DropIndicator}"
+                                                 IsVisible="{Binding IsOver}" />
+                                    </VerticalStackLayout>
+                                </ScrollView>
+
+                                <!-- Edge -->
+                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                <BoxView Grid.Row="2"
+                                         Style="{StaticResource LaneHeadStrip}"
+                                         behaviors:Scroll.DragScrollStep="-120"
+                                         VerticalOptions="Start"
+                                         IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=IsDragging, x:DataType={x:Type module:UIKanbanViewModel}}">
+                                    <BoxView.GestureRecognizers>
+                                        <DropGestureRecognizer AllowDrop="True"
+                                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneHeadOverCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                               DragOverCommandParameter="{Binding .}"
+                                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneHeadLeaveCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                               DragLeaveCommandParameter="{Binding .}"
+                                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropOnLaneHeadCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                               DropCommandParameter="{Binding .}" />
+                                    </BoxView.GestureRecognizers>
+                                </BoxView>
+                                <BoxView Grid.Row="2"
+                                         Style="{StaticResource LaneTailStrip}"
+                                         behaviors:Scroll.DragScrollStep="120"
+                                         VerticalOptions="End"
+                                         IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=IsDragging, x:DataType={x:Type module:UIKanbanViewModel}}">
+                                    <BoxView.GestureRecognizers>
+                                        <DropGestureRecognizer AllowDrop="True"
+                                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneOverCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                               DragOverCommandParameter="{Binding .}"
+                                                               DragLeaveCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneLeaveCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                               DragLeaveCommandParameter="{Binding .}"
+                                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropOnLaneCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
+                                                               DropCommandParameter="{Binding .}" />
+                                    </BoxView.GestureRecognizers>
+                                </BoxView>
+                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Edge -->
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource EdgeStrip}"
+                 HorizontalOptions="Start"
+                 IsVisible="{Binding IsDragging}">
+            <BoxView.GestureRecognizers>
+                <DropGestureRecognizer AllowDrop="True"
+                                       DragOverCommand="{Binding EdgeOverCommand}"
+                                       DragOverCommandParameter="-" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource EdgeStrip}"
+                 HorizontalOptions="End"
+                 IsVisible="{Binding IsDragging}">
+            <BoxView.GestureRecognizers>
+                <DropGestureRecognizer AllowDrop="True"
+                                       DragOverCommand="{Binding EdgeOverCommand}"
+                                       DragOverCommandParameter="+" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <!-- Footer -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource FooterGrid}">
+            <VerticalStackLayout Style="{StaticResource FooterStack}">
+                <Grid Style="{StaticResource FooterHeadGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource FooterCaptionLabel}"
+                           Text="バーンダウン" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource FooterCountLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding DoneCount}" />
+                                <Span Text=" / " />
+                                <Span Text="{Binding TotalCount}" />
+                                <Span Text=" 完了" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Grid>
+                <FlexLayout Style="{StaticResource BurndownLayout}"
+                            BindableLayout.ItemsSource="{Binding Board.Lanes}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type sample:BoardLane}">
+                            <BoxView Style="{StaticResource BurndownSegment}"
+                                     Color="{Binding Kind, Converter={StaticResource LaneColorConverter}}"
+                                     FlexLayout.Grow="{Binding Count}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+
+</ContentView>

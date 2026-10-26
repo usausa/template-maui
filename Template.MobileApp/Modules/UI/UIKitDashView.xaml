@@ -8,7 +8,6 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
-             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitDashView"
              x:DataType="{x:Type module:UIKitDashViewModel}"
@@ -19,34 +18,6 @@
 
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <!-- Converter -->
-
-            <s:MapToTextConverter x:Key="SleepStageNameConverter">
-                <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Deep}"
-                                      Value="深い" />
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Light}"
-                                      Value="浅い" />
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Rem}"
-                                      Value="レム" />
-                    <s:MapToTextEntry Key="{x:Static sample:KitSleepStage.Awake}"
-                                      Value="覚醒" />
-                </s:MapToTextConverter.Entries>
-            </s:MapToTextConverter>
-
-            <s:MapToColorConverter x:Key="SleepStageColorConverter">
-                <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Deep}"
-                                       Value="{StaticResource BlueDarken4}" />
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Light}"
-                                       Value="{StaticResource BlueDarken2}" />
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Rem}"
-                                       Value="{StaticResource BlueLighten1}" />
-                    <s:MapToColorEntry Key="{x:Static sample:KitSleepStage.Awake}"
-                                       Value="{StaticResource BlueLighten3}" />
-                </s:MapToColorConverter.Entries>
-            </s:MapToColorConverter>
 
             <!-- Layout -->
 
@@ -280,62 +251,6 @@
                 <Setter Property="HeightRequest" Value="170" />
             </Style>
 
-            <!-- Sleep -->
-
-            <Style x:Key="SleepTimeLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="0,2,0,8" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
-            <Style x:Key="SleepBand"
-                   TargetType="controls:KitSleepBand">
-                <Setter Property="HeightRequest" Value="120" />
-                <Setter Property="AwakeColor" Value="{StaticResource BlueLighten3}" />
-                <Setter Property="RemColor" Value="{StaticResource BlueLighten1}" />
-                <Setter Property="LightColor" Value="{StaticResource BlueDarken2}" />
-                <Setter Property="DeepColor" Value="{StaticResource BlueDarken4}" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-                <Setter Property="GridColor" Value="{StaticResource GrayLighten3}" />
-            </Style>
-
-            <Style x:Key="SleepLegendFlex"
-                   TargetType="FlexLayout">
-                <Setter Property="Margin" Value="0,12,0,0" />
-                <Setter Property="JustifyContent" Value="SpaceBetween" />
-            </Style>
-
-            <Style x:Key="SleepLegendStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="SleepLegendNameStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-            </Style>
-
-            <Style x:Key="SleepLegendDot"
-                   TargetType="Ellipse">
-                <Setter Property="WidthRequest" Value="8" />
-                <Setter Property="HeightRequest" Value="8" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="SleepLegendNameLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
-            <Style x:Key="SleepLegendValueLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
-            </Style>
-
             <!-- Link -->
 
             <Style x:Key="LinkCardBorder"
@@ -461,14 +376,13 @@
                                         <VerticalStackLayout Grid.Column="1"
                                                              Style="{StaticResource StepTextStack}">
                                             <Label Style="{StaticResource CardCaption}"
-                                                   Text="今日の歩数" />
+                                                   Text="配達中の注文" />
                                             <Label Style="{StaticResource CardValue}"
-                                                   behaviors:LabelOption.CountUpFormat="{}{0:N0} 歩"
-                                                   behaviors:LabelOption.CountUpValue="{Binding Steps}" />
+                                                   Text="{Binding Number}" />
                                             <Label Style="{StaticResource StepGoalLabel}"
-                                                   Text="{Binding Goal, StringFormat='目標 {0:N0} 歩'}" />
+                                                   Text="{Binding Eta, StringFormat='{0:H:mm} 到着予定'}" />
                                             <Label Style="{StaticResource StepRemainLabel}"
-                                                   Text="{Binding Remain, StringFormat='あと {0:N0} 歩'}" />
+                                                   Text="あと 1 区間" />
                                         </VerticalStackLayout>
                                     </Grid>
                                 </Border>
@@ -507,13 +421,13 @@
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource ChartTitleLabel}"
-                               Text="歩数" />
+                               Text="利用金額" />
                         <Label Grid.Column="1"
                                Style="{StaticResource ChartSummaryLabel}"
-                               Text="{Binding StepTotal, StringFormat='合計 {0:N0} 歩'}" />
+                               Text="{Binding SpendTotal, StringFormat='合計 {0:N0} 円'}" />
                     </Grid>
                     <drawing:DrawingControl Style="{StaticResource StepChartControl}"
-                                            Drawing="{Binding StepChart}" />
+                                            Drawing="{Binding SpendChart}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -523,63 +437,13 @@
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource ChartTitleLabel}"
-                               Text="心拍数" />
+                               Text="注文件数" />
                         <Label Grid.Column="1"
                                Style="{StaticResource ChartSummaryLabel}"
-                               Text="{Binding HeartAverage, StringFormat='平均 {0} bpm'}" />
+                               Text="{Binding OrderTotal, StringFormat='合計 {0:N0} 件'}" />
                     </Grid>
                     <drawing:DrawingControl Style="{StaticResource HeartChartControl}"
-                                            Drawing="{Binding HeartChart}" />
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Sleep -->
-            <Border Style="{StaticResource ChartCardBorder}">
-                <VerticalStackLayout>
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource ChartTitleLabel}"
-                               Text="昨夜の睡眠" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource ChartSummaryLabel}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="{Binding SleepLength.Hours}" />
-                                    <Span Text="時間" />
-                                    <Span Text="{Binding SleepLength.Minutes}" />
-                                    <Span Text="分" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                    </Grid>
-                    <Label Style="{StaticResource SleepTimeLabel}">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{Binding BedTime, StringFormat='{0:H:mm}'}" />
-                                <Span Text=" 〜 " />
-                                <Span Text="{Binding WakeTime, StringFormat='{0:H:mm}'}" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <controls:KitSleepBand Style="{StaticResource SleepBand}"
-                                           Spans="{Binding Sleep}" />
-                    <FlexLayout Style="{StaticResource SleepLegendFlex}"
-                                BindableLayout.ItemsSource="{Binding SleepTotals}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="sample:KitSleepTotal">
-                                <VerticalStackLayout Style="{StaticResource SleepLegendStack}">
-                                    <HorizontalStackLayout Style="{StaticResource SleepLegendNameStack}">
-                                        <Ellipse Style="{StaticResource SleepLegendDot}"
-                                                 Fill="{Binding Stage, Converter={StaticResource SleepStageColorConverter}}" />
-                                        <Label Style="{StaticResource SleepLegendNameLabel}"
-                                               Text="{Binding Stage, Converter={StaticResource SleepStageNameConverter}}" />
-                                    </HorizontalStackLayout>
-                                    <Label Style="{StaticResource SleepLegendValueLabel}"
-                                           Text="{Binding Length, StringFormat='{0:h\\:mm}'}" />
-                                </VerticalStackLayout>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
+                                            Drawing="{Binding OrderChart}" />
                 </VerticalStackLayout>
             </Border>
 

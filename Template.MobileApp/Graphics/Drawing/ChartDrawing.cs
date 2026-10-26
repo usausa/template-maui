@@ -19,7 +19,8 @@ public readonly record struct CandlePoint(
     double Open,
     double High,
     double Low,
-    double Close);
+    double Close,
+    double Volume = 0);
 
 public readonly record struct ChartScale(
     double Min,
@@ -54,14 +55,12 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     private const float DonutThickness = 32f;
 
+    private const float MarkerGap = 16f;
+
     private static readonly ChartScale DefaultScale = new(0, 1, 0.25);
 
-    private static readonly Color GridColor = Color.FromArgb("#E0E0E0");
-    private static readonly Color TextColor = Color.FromArgb("#757575");
-    private static readonly Color StrongTextColor = Color.FromArgb("#424242");
     private static readonly Color TooltipColor = Color.FromArgb("#37474F");
-    private static readonly Color UpColor = Color.FromArgb("#43A047");
-    private static readonly Color DownColor = Color.FromArgb("#E53935");
+    private static readonly Color MarkerTextColor = Color.FromArgb("#212121");
     private static readonly Color HeatLowColor = Color.FromArgb("#42A5F5");
     private static readonly Color HeatMidColor = Color.FromArgb("#FFEE58");
     private static readonly Color HeatHighColor = Color.FromArgb("#E53935");
@@ -119,6 +118,12 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     public Color Background { get; set; } = Colors.White;
 
+    public Color GridColor { get; set; } = Color.FromArgb("#E0E0E0");
+
+    public Color TextColor { get; set; } = Color.FromArgb("#757575");
+
+    public Color StrongTextColor { get; set; } = Color.FromArgb("#424242");
+
     public Color LineColor { get; set; } = Color.FromArgb("#2196F3");
 
     public Color LineHighColor { get; set; } = Color.FromArgb("#E53935");
@@ -127,11 +132,23 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
     public Color BarEndColor { get; set; } = Color.FromArgb("#1E88E5");
 
+    public Color UpColor { get; set; } = Color.FromArgb("#43A047");
+
+    public Color DownColor { get; set; } = Color.FromArgb("#E53935");
+
+    public Color MarkerColor { get; set; } = Color.FromArgb("#FFC107");
+
     public Color TrackColor { get; set; } = Color.FromArgb("#EEF1F5");
 
     public bool ShowTrack { get; set; } = true;
 
     public bool ShowAxis { get; set; } = true;
+
+    // Ratio of the plot taken by the volume bars below the candles, 0 hides them
+    public float VolumeRatio { get; set; }
+
+    // Horizontal guide drawn over the candles, used for the last traded price
+    public double? MarkerValue { get; set; }
 
     public string AxisFormat { get; set; } = "{0:N0}";
 
@@ -578,7 +595,7 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         }
     }
 
-    private static void DrawCenterText(ICanvas canvas, float cx, float cy, float inner, string caption, string value, string footer)
+    private void DrawCenterText(ICanvas canvas, float cx, float cy, float inner, string caption, string value, string footer)
     {
         var width = inner * 2f;
         canvas.Font = Font.Default;
@@ -602,9 +619,11 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
     private void DrawCandleChart(ICanvas canvas, RectF rect, float eased)
     {
         var area = PlotArea(rect, ShowAxis ? AxisWidth : 0f, labels.Length > 0, false);
+        var volumeHeight = area.Height * Math.Clamp(VolumeRatio, 0f, 0.5f);
+        var priceArea = new RectF(area.X, area.Y, area.Width, area.Height - volumeHeight);
         if (ShowAxis)
         {
-            DrawValueAxis(canvas, area, scale);
+            DrawValueAxis(canvas, priceArea, scale);
         }
         DrawLabels(canvas, area, candles.Length, true);
 
@@ -615,6 +634,7 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
         var step = area.Width / candles.Length;
         var bodyWidth = step * 0.55f;
+        var volumeMax = volumeHeight > 0f ? candles.Max(static x => x.Volume) : 0d;
 
         var visible = (int)Math.Ceiling(candles.Length * eased);
         for (var i = 0; i < visible; i++)
@@ -626,12 +646,24 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
 
             canvas.StrokeColor = color;
             canvas.StrokeSize = 1.5f;
-            canvas.DrawLine(cx, ToY(area, scale, candle.High), cx, ToY(area, scale, candle.Low));
+            canvas.DrawLine(cx, ToY(priceArea, scale, candle.High), cx, ToY(priceArea, scale, candle.Low));
 
-            var top = ToY(area, scale, Math.Max(candle.Open, candle.Close));
-            var bottom = ToY(area, scale, Math.Min(candle.Open, candle.Close));
+            var top = ToY(priceArea, scale, Math.Max(candle.Open, candle.Close));
+            var bottom = ToY(priceArea, scale, Math.Min(candle.Open, candle.Close));
             canvas.FillColor = color;
             canvas.FillRoundedRectangle(cx - (bodyWidth / 2f), top, bodyWidth, Math.Max(2f, bottom - top), 2f);
+
+            if (volumeMax > 0)
+            {
+                var height = (float)(candle.Volume / volumeMax) * (volumeHeight - 4f);
+                canvas.FillColor = color.WithAlpha(alpha * 0.6f);
+                canvas.FillRectangle(cx - (bodyWidth / 2f), area.Bottom - height, bodyWidth, height);
+            }
+        }
+
+        if (MarkerValue.HasValue)
+        {
+            DrawMarker(canvas, priceArea, MarkerValue.Value);
         }
 
         if (IsSelected(candles.Length))
@@ -640,13 +672,36 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             var x = area.Left + (step * (SelectedIndex + 0.5f));
             DrawTooltip(
                 canvas,
-                new PointF(x, ToY(area, scale, candle.High) - 2f),
+                new PointF(x, ToY(priceArea, scale, candle.High) - 2f),
                 [
                     LabelOf(SelectedIndex),
                     $"始 {Format(ValueFormat, candle.Open)}  終 {Format(ValueFormat, candle.Close)}",
                     $"高 {Format(ValueFormat, candle.High)}  安 {Format(ValueFormat, candle.Low)}"
                 ]);
         }
+    }
+
+    private void DrawMarker(ICanvas canvas, RectF area, double value)
+    {
+        var y = ToY(area, scale, value);
+
+        canvas.StrokeColor = MarkerColor;
+        canvas.StrokeSize = 1f;
+        canvas.StrokeDashPattern = [4f, 3f];
+        canvas.DrawLine(area.Left, y, area.Right, y);
+        canvas.StrokeDashPattern = null;
+
+        if (!ShowAxis)
+        {
+            return;
+        }
+
+        canvas.FillColor = MarkerColor;
+        canvas.FillRoundedRectangle(area.Left - AxisWidth - 6f, y - 8f, AxisWidth, 16f, 3f);
+        canvas.Font = Font.Default;
+        canvas.FontSize = FontSize;
+        canvas.FontColor = MarkerTextColor;
+        canvas.DrawString(Format(AxisFormat, value), area.Left - AxisWidth - 6f, y - 8f, AxisWidth, 16f, HorizontalAlignment.Center, VerticalAlignment.Center);
     }
 
     //--------------------------------------------------------------------------------
@@ -851,6 +906,9 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
         canvas.FontSize = FontSize;
         canvas.FontColor = TextColor;
 
+        // The marker badge takes the place of the axis label it would sit on
+        var markerY = MarkerValue.HasValue ? ToY(area, current, MarkerValue.Value) : float.MinValue;
+
         var first = Math.Ceiling((current.Min / current.Step) - 1e-6) * current.Step;
         var count = (int)Math.Floor(((current.Max - first) / current.Step) + 1e-6);
         for (var i = 0; i <= count; i++)
@@ -858,7 +916,10 @@ public sealed class ChartDrawing : DrawingObject, ITapDrawing, IDisposable
             var value = first + (i * current.Step);
             var y = ToY(area, current, value);
             canvas.DrawLine(area.Left, y, area.Right, y);
-            canvas.DrawString(Format(AxisFormat, value), area.Left - AxisWidth - 6f, y - 8f, AxisWidth, 16f, HorizontalAlignment.Right, VerticalAlignment.Center);
+            if (Math.Abs(y - markerY) >= MarkerGap)
+            {
+                canvas.DrawString(Format(AxisFormat, value), area.Left - AxisWidth - 6f, y - 8f, AxisWidth, 16f, HorizontalAlignment.Right, VerticalAlignment.Center);
+            }
         }
     }
 

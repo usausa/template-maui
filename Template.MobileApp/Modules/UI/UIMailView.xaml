@@ -535,10 +535,10 @@
                                    Text="{Binding Title}" />
                             <Label Grid.Row="1" Grid.Column="2"
                                    Style="{StaticResource MessageAttachmentLabel}"
-                                   IsVisible="{Binding HasAttachment}" />
+                                   IsVisible="{Binding Attachment, Converter={StaticResource NotEmptyConverter}}" />
                             <Label Grid.Row="2" Grid.Column="1"
                                    Style="{StaticResource MessageBodyLabel}"
-                                   Text="{Binding Preview}" />
+                                   Text="{Binding Body, Converter={StaticResource SingleLineConverter}}" />
                             <Button Grid.Row="2" Grid.Column="2"
                                     Style="{StaticResource MessageStarButton}"
                                     behaviors:AnimationOption.BounceTrigger="{Binding IsStarred}"

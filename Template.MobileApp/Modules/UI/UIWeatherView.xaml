@@ -933,7 +933,7 @@
 
                     <!-- Alert -->
                     <Border Style="{StaticResource AlertBorder}"
-                            IsVisible="{Binding Forecast.HasAlerts}">
+                            IsVisible="{Binding Forecast.Alerts, Converter={StaticResource CollectionNotEmptyConverter}}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
                                          Binding="{Binding Forecast.HasWarning}"

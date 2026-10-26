@@ -2,5 +2,5 @@ namespace Template.MobileApp.Domain;
 
 public static class Length
 {
-    // TODO
+    public const int Name = 50;
 }

@@ -339,7 +339,7 @@
 
     <!-- Content -->
     <ScrollView Style="{StaticResource StreamDetailScroll}"
-                behaviors:Scroll.TopTrigger="{Binding Context.Selected}">
+                behaviors:ScrollBind.Controller="{Binding Scroller}">
         <VerticalStackLayout>
 
             <!-- Player -->
@@ -349,7 +349,7 @@
                 <Button Style="{StaticResource PlayButtonOverlay}"
                         behaviors:ButtonOption.PressEffect="True" />
                 <ProgressBar Style="{StaticResource PlayerProgressBar}"
-                             IsVisible="{Binding Context.Selected.HasProgress}"
+                             IsVisible="{Binding Context.Selected.Progress, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Double 0}}"
                              Progress="{Binding Context.Selected.Progress}" />
             </Grid>
 
@@ -379,7 +379,7 @@
                         behaviors:ButtonOption.PressEffect="True">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
-                                     Binding="{Binding Context.Selected.HasProgress}"
+                                     Binding="{Binding Context.Selected.Progress, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Double 0}}"
                                      Value="False">
                             <Setter Property="Text" Value="▶ Play" />
                         </DataTrigger>

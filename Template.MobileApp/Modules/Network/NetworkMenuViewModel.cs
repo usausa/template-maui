@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Modules.Network;
 
-using Template.MobileApp.Components;
 using Template.MobileApp.Usecase;
 
 public sealed class NetworkMenuViewModel : AppViewModelBase
@@ -22,7 +21,6 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
     public NetworkMenuViewModel(
         IDialog dialog,
         IDeviceInfo deviceInfo,
-        DeviceInformation deviceInformation,
         Settings settings,
         NetworkUsecase networkUsecase)
     {
@@ -31,7 +29,7 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
 
         ForwardCommand = MakeAsyncCommand<ViewId>(ForwardAsync);
         ServerTimeCommand = MakeAsyncCommand(() => ExecuteApiAsync(async () => await networkUsecase.GetServerTimeAsync()));
-        RegisterDeviceCommand = MakeAsyncCommand(() => ExecuteApiAsync(async () => await networkUsecase.RegisterDeviceAsync(deviceInformation.DeviceId, deviceInfo.Name)));
+        RegisterDeviceCommand = MakeAsyncCommand(() => ExecuteApiAsync(async () => await networkUsecase.RegisterDeviceAsync(settings.TerminalId, deviceInfo.Name)));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);

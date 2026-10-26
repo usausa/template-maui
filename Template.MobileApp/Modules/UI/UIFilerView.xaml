@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIFilerView"
+             x:DataType="{x:Type module:UIFilerViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIFilerViewModel}"
+             shell:ShellProperty.Title="Filer"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="選択"
+             shell:ShellProperty.Function3Text="移動"
+             shell:ShellProperty.Function4Text="削除"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <converters:DriveSizeConverter x:Key="DriveSizeConverter" />
+
+            <s:MapToColorConverter x:Key="DriveKindColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Folder}"
+                                       Value="#FFB300" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Image}"
+                                       Value="#43A047" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Document}"
+                                       Value="#1E88E5" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Sheet}"
+                                       Value="#2E7D32" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Slide}"
+                                       Value="#EF6C00" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Pdf}"
+                                       Value="#E53935" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Video}"
+                                       Value="#8E24AA" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Archive}"
+                                       Value="#6D4C41" />
+                    <s:MapToColorEntry Key="{x:Static sample:DriveItemKind.Code}"
+                                       Value="#546E7A" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToTextConverter x:Key="DriveKindGlyphConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Folder}"
+                                      Value="{x:Static fonts:MaterialIcons.Folder}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Image}"
+                                      Value="{x:Static fonts:MaterialIcons.Image}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Document}"
+                                      Value="{x:Static fonts:MaterialIcons.Description}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Sheet}"
+                                      Value="{x:Static fonts:MaterialIcons.Table_chart}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Slide}"
+                                      Value="{x:Static fonts:MaterialIcons.Slideshow}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Pdf}"
+                                      Value="{x:Static fonts:MaterialIcons.Picture_as_pdf}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Video}"
+                                      Value="{x:Static fonts:MaterialIcons.Movie}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Archive}"
+                                      Value="{x:Static fonts:MaterialIcons.Folder_zip}" />
+                    <s:MapToTextEntry Key="{x:Static sample:DriveItemKind.Code}"
+                                      Value="{x:Static fonts:MaterialIcons.Code}" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- Color -->
+
+            <Color x:Key="FilerBackColor">#F5F6F7</Color>
+            <Color x:Key="FilerTextColor">#212121</Color>
+            <Color x:Key="FilerSubTextColor">#757575</Color>
+            <Color x:Key="FilerLineColor">#E0E0E0</Color>
+            <Color x:Key="FilerSelectColor">#E3F2FD</Color>
+            <Color x:Key="FilerAccentColor">#1E88E5</Color>
+
+            <!-- Crumb -->
+
+            <Style x:Key="CrumbScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CrumbStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="CrumbLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+            </Style>
+
+            <Style x:Key="CrumbSeparator"
+                   TargetType="Label"
+                   BasedOn="{StaticResource CrumbLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <!-- Tool -->
+
+            <Style x:Key="ToolGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SelectionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+            </Style>
+
+            <Style x:Key="ToolButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="34" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Transfer -->
+
+            <Style x:Key="TransferBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="10,6" />
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="BackgroundColor" Value="{StaticResource FilerSelectColor}" />
+            </Style>
+
+            <Style x:Key="TransferGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="TransferIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource FilerAccentColor}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Cloud_upload}" />
+            </Style>
+
+            <Style x:Key="TransferStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="3" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TransferTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource FilerTextColor}" />
+            </Style>
+
+            <Style x:Key="TransferBar"
+                   TargetType="ProgressBar">
+                <Setter Property="ProgressColor" Value="{StaticResource FilerAccentColor}" />
+                <Setter Property="BackgroundColor" Value="#80FFFFFF" />
+            </Style>
+
+            <Style x:Key="TransferCloseButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="34" />
+                <Setter Property="HeightRequest" Value="34" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="17" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Entry -->
+
+            <Style x:Key="EntryGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,9" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="IconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+            </Style>
+
+            <Style x:Key="IconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="EntryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EntryNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="MiddleTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource FilerTextColor}" />
+            </Style>
+
+            <Style x:Key="EntryInfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+            </Style>
+
+            <Style x:Key="SyncLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CheckLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource FilerAccentColor}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
+            </Style>
+
+            <Style x:Key="EntrySeparator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Margin" Value="64,0,0,0" />
+                <Setter Property="Color" Value="{StaticResource FilerLineColor}" />
+            </Style>
+
+            <!-- Tile -->
+
+            <Style x:Key="TileCollection"
+                   TargetType="CollectionView">
+                <Setter Property="Margin" Value="8,4" />
+            </Style>
+
+            <Style x:Key="TileBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,12" />
+                <Setter Property="HeightRequest" Value="112" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Stroke" Value="{StaticResource FilerLineColor}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TileStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="TileNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="MiddleTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource FilerTextColor}" />
+            </Style>
+
+            <!-- Message -->
+
+            <Style x:Key="MessageBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="10,4" />
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="MessageLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Usage -->
+
+            <Style x:Key="UsageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="Spacing" Value="7" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="UsageHeadLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+            </Style>
+
+            <Style x:Key="UsageValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource FilerTextColor}" />
+            </Style>
+
+            <Style x:Key="UsageBarLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Direction" Value="Row" />
+                <Setter Property="HeightRequest" Value="9" />
+            </Style>
+
+            <Style x:Key="UsageSegment"
+                   TargetType="BoxView">
+                <Setter Property="FlexLayout.Basis" Value="0" />
+            </Style>
+
+            <Style x:Key="LegendStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="LegendItemStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="LegendMark"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="9" />
+                <Setter Property="HeightRequest" Value="9" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LegendLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource FilerSubTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto"
+          BackgroundColor="{StaticResource FilerBackColor}">
+
+        <!-- Crumb -->
+        <ScrollView Grid.Row="0"
+                    Style="{StaticResource CrumbScroll}"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Style="{StaticResource CrumbStack}"
+                                   BindableLayout.ItemsSource="{Binding Drive.Crumbs}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type sample:DriveCrumb}">
+                        <HorizontalStackLayout Style="{StaticResource CrumbStack}">
+                            <Label Style="{StaticResource CrumbLabel}"
+                                   Text="{Binding Name}" />
+                            <Label Style="{StaticResource CrumbSeparator}"
+                                   Text="/" />
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Tool -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource ToolGrid}"
+              ColumnDefinitions="*,Auto,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource SelectionLabel}"
+                   IsVisible="{Binding SelectedCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0} 件を選択 ・ {1}">
+                        <Binding Path="SelectedCount" />
+                        <Binding Path="SelectedSize"
+                                 Converter="{StaticResource ByteSizeConverter}" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+            <Label Grid.Column="0"
+                   Style="{StaticResource SelectionLabel}"
+                   IsVisible="{Binding SelectedCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}"
+                   Text="項目を選択してください" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource ToolButton}"
+                    Text="{x:Static fonts:MaterialIcons.Swap_vert}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource ToolButton}"
+                    Command="{Binding ViewCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Grid_view}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding IsGrid}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource FilerAccentColor}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- Transfer -->
+        <Border Grid.Row="2"
+                Style="{StaticResource TransferBorder}"
+                IsVisible="{Binding Drive.Transfer.IsActive}">
+            <Grid Style="{StaticResource TransferGrid}"
+                  ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource TransferIconLabel}" />
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource TransferStack}">
+                    <Label Style="{StaticResource TransferTitleLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="アップロード中 " />
+                                <Span Text="{Binding Drive.Transfer.Current}" />
+                                <Span Text=" / " />
+                                <Span Text="{Binding Drive.Transfer.Total}" />
+                                <Span Text="　" />
+                                <Span Text="{Binding Drive.Transfer.Name}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <ProgressBar Style="{StaticResource TransferBar}"
+                                 Progress="{Binding Drive.Transfer.Progress}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="2"
+                        Style="{StaticResource TransferCloseButton}"
+                        Command="{Binding CancelCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Close}" />
+            </Grid>
+        </Border>
+
+        <!-- List -->
+        <CollectionView Grid.Row="3"
+                        IsVisible="{Binding IsGrid, Converter={StaticResource ReverseConverter}}"
+                        ItemsSource="{Binding Drive.Entries}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type sample:DriveEntry}">
+                    <VerticalStackLayout>
+                        <Grid Style="{StaticResource EntryGrid}"
+                              ColumnDefinitions="Auto,*,Auto,Auto">
+                            <Grid.Triggers>
+                                <DataTrigger TargetType="Grid"
+                                             Binding="{Binding IsSelected}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource FilerSelectColor}" />
+                                </DataTrigger>
+                            </Grid.Triggers>
+                            <Grid.GestureRecognizers>
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIFilerViewModel}}, Path=TapCommand, x:DataType={x:Type module:UIFilerViewModel}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource IconBorder}"
+                                    BackgroundColor="{Binding Kind, Converter={StaticResource DriveKindColorConverter}}">
+                                <Label Style="{StaticResource IconLabel}"
+                                       Text="{Binding Kind, Converter={StaticResource DriveKindGlyphConverter}}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Style="{StaticResource EntryStack}">
+                                <Label Style="{StaticResource EntryNameLabel}"
+                                       Text="{Binding Name}" />
+                                <Label Style="{StaticResource EntryInfoLabel}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span>
+                                                <Span.Text>
+                                                    <MultiBinding Converter="{StaticResource DriveSizeConverter}">
+                                                        <Binding Path="Kind" />
+                                                        <Binding Path="Count" />
+                                                        <Binding Path="Size" />
+                                                    </MultiBinding>
+                                                </Span.Text>
+                                            </Span>
+                                            <Span Text=" ・ " />
+                                            <Span Text="{Binding Updated, StringFormat='{0:M/d HH:mm}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2"
+                                   Style="{StaticResource SyncLabel}"
+                                   TextColor="{StaticResource GrayLighten1}"
+                                   Text="{x:Static fonts:MaterialIcons.Cloud}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Sync}"
+                                                 Value="{x:Static sample:DriveSyncState.Synced}">
+                                        <Setter Property="TextColor" Value="{StaticResource GreenDarken1}" />
+                                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Cloud_done}" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Sync}"
+                                                 Value="{x:Static sample:DriveSyncState.Pending}">
+                                        <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Cloud_upload}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Grid.Column="3"
+                                   Style="{StaticResource CheckLabel}"
+                                   IsVisible="{Binding IsSelected}" />
+                        </Grid>
+                        <BoxView Style="{StaticResource EntrySeparator}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Tile -->
+        <CollectionView Grid.Row="3"
+                        Style="{StaticResource TileCollection}"
+                        IsVisible="{Binding IsGrid}"
+                        ItemsSource="{Binding Drive.Entries}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="3"
+                                 HorizontalItemSpacing="8"
+                                 VerticalItemSpacing="8" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                <DataTemplate x:DataType="{x:Type sample:DriveEntry}">
+                    <Border Style="{StaticResource TileBorder}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding IsSelected}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource FilerSelectColor}" />
+                                <Setter Property="Stroke" Value="{StaticResource FilerAccentColor}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIFilerViewModel}}, Path=TapCommand, x:DataType={x:Type module:UIFilerViewModel}}"
+                                                  CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Style="{StaticResource TileStack}">
+                            <Border Style="{StaticResource IconBorder}"
+                                    HorizontalOptions="Center"
+                                    BackgroundColor="{Binding Kind, Converter={StaticResource DriveKindColorConverter}}">
+                                <Label Style="{StaticResource IconLabel}"
+                                       Text="{Binding Kind, Converter={StaticResource DriveKindGlyphConverter}}" />
+                            </Border>
+                            <Label Style="{StaticResource TileNameLabel}"
+                                   Text="{Binding Name}" />
+                            <Label Style="{StaticResource TileNameLabel}"
+                                   TextColor="{StaticResource FilerSubTextColor}"
+                                   >
+                                <Label.Text>
+                                    <MultiBinding Converter="{StaticResource DriveSizeConverter}">
+                                        <Binding Path="Kind" />
+                                        <Binding Path="Count" />
+                                        <Binding Path="Size" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Message -->
+        <Border Grid.Row="4"
+                Style="{StaticResource MessageBorder}"
+                IsVisible="{Binding Message, Converter={StaticResource NotEmptyConverter}}">
+            <Label Style="{StaticResource MessageLabel}"
+                   Text="{Binding Message}" />
+        </Border>
+
+        <!-- Usage -->
+        <VerticalStackLayout Grid.Row="5"
+                             Style="{StaticResource UsageStack}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource UsageHeadLabel}"
+                       Text="ストレージ" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource UsageHeadLabel}"
+                       HorizontalTextAlignment="End">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource UsageValueSpan}"
+                                  Text="{Binding Drive.Usage.Used, Converter={StaticResource ByteSizeConverter}}" />
+                            <Span Text=" / " />
+                            <Span Text="{Binding Drive.Usage.Capacity, Converter={StaticResource ByteSizeConverter}}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Grid>
+            <FlexLayout Style="{StaticResource UsageBarLayout}">
+                <BoxView Style="{StaticResource UsageSegment}"
+                         FlexLayout.Grow="{Binding Drive.Usage.Images}"
+                         Color="#43A047" />
+                <BoxView Style="{StaticResource UsageSegment}"
+                         FlexLayout.Grow="{Binding Drive.Usage.Documents}"
+                         Color="#1E88E5" />
+                <BoxView Style="{StaticResource UsageSegment}"
+                         FlexLayout.Grow="{Binding Drive.Usage.Videos}"
+                         Color="#8E24AA" />
+                <BoxView Style="{StaticResource UsageSegment}"
+                         FlexLayout.Grow="{Binding Drive.Usage.Others}"
+                         Color="#B0BEC5" />
+            </FlexLayout>
+            <HorizontalStackLayout Style="{StaticResource LegendStack}">
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#43A047" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="画像" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#1E88E5" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="文書" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#8E24AA" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="動画" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#B0BEC5" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="その他" />
+                </HorizontalStackLayout>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentView>

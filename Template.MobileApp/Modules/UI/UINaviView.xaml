@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:scene="clr-namespace:Template.MobileApp.Graphics.Scene"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UINaviView"
+             x:DataType="{x:Type module:UINaviViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UINaviViewModel}"
+             shell:ShellProperty.Title="Navi"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="{Binding IsFast, Converter={s:BoolToText True='標準', False='高速'}}"
+             shell:ShellProperty.Function3Text="リセット"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <s:MapToTextConverter x:Key="TurnIconConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Straight}"
+                                      Value="{x:Static fonts:MaterialIcons.Straight}" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Left}"
+                                      Value="{x:Static fonts:MaterialIcons.Turn_left}" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Right}"
+                                      Value="{x:Static fonts:MaterialIcons.Turn_right}" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.SlightLeft}"
+                                      Value="{x:Static fonts:MaterialIcons.Turn_slight_left}" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.SlightRight}"
+                                      Value="{x:Static fonts:MaterialIcons.Turn_slight_right}" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Merge}"
+                                      Value="{x:Static fonts:MaterialIcons.Merge}" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Arrive}"
+                                      Value="{x:Static fonts:MaterialIcons.Place}" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToTextConverter x:Key="TurnTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Left}"
+                                      Value="左折" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Right}"
+                                      Value="右折" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.SlightLeft}"
+                                      Value="斜め左" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.SlightRight}"
+                                      Value="斜め右" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Merge}"
+                                      Value="合流" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Arrive}"
+                                      Value="到着" />
+                    <s:MapToTextEntry Key="{x:Static sample:TurnKind.Straight}"
+                                      Value="直進" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- Color -->
+
+            <Color x:Key="NaviGuideColor">#1B5E20</Color>
+            <Color x:Key="NaviGuideSubColor">#2E7D32</Color>
+            <Color x:Key="NaviTextColor">#FFFFFF</Color>
+            <Color x:Key="NaviSubTextColor">#A5D6A7</Color>
+            <Color x:Key="NaviPanelColor">#F2182430</Color>
+            <Color x:Key="NaviLaneColor">#263238</Color>
+            <Color x:Key="NaviLaneOnColor">#2E7D32</Color>
+            <Color x:Key="NaviEtaColor">#152028</Color>
+
+            <!-- Guide -->
+
+            <Style x:Key="GuideGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="ColumnSpacing" Value="14" />
+                <Setter Property="BackgroundColor" Value="{StaticResource NaviGuideColor}" />
+            </Style>
+
+            <Style x:Key="TurnIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="54" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource NaviTextColor}" />
+            </Style>
+
+            <Style x:Key="GuideStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DistanceLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource NaviTextColor}" />
+            </Style>
+
+            <Style x:Key="DistanceSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="GuideRoadLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource NaviTextColor}" />
+            </Style>
+
+            <Style x:Key="GuideProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="Margin" Value="0,6,0,0" />
+                <Setter Property="ProgressColor" Value="{StaticResource GreenAccent3}" />
+                <Setter Property="BackgroundColor" Value="#3DFFFFFF" />
+            </Style>
+
+            <!-- Next -->
+
+            <Style x:Key="NextGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,7" />
+                <Setter Property="ColumnSpacing" Value="10" />
+                <Setter Property="BackgroundColor" Value="{StaticResource NaviGuideSubColor}" />
+            </Style>
+
+            <Style x:Key="NextIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource NaviSubTextColor}" />
+            </Style>
+
+            <Style x:Key="NextLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource NaviSubTextColor}" />
+            </Style>
+
+            <!-- Speed -->
+
+            <!-- The lane strip owns the bottom edge, so the badges sit above it -->
+            <Style x:Key="SpeedStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="14,14,14,80" />
+                <Setter Property="Spacing" Value="10" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="SpeedBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="68" />
+                <Setter Property="HeightRequest" Value="68" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="{StaticResource NaviPanelColor}" />
+            </Style>
+
+            <Style x:Key="SpeedStackInner"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="-4" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SpeedValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SpeedUnitLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="#90A4AE" />
+            </Style>
+
+            <Style x:Key="LimitBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="56" />
+                <Setter Property="HeightRequest" Value="56" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="StrokeThickness" Value="5" />
+                <Setter Property="Stroke" Value="{StaticResource RedDarken2}" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LimitLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <!-- Lane -->
+
+            <Style x:Key="LaneStrip"
+                   TargetType="FlexLayout">
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="BackgroundColor" Value="#E6101822" />
+            </Style>
+
+            <Style x:Key="LaneBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="2,0" />
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource NaviLaneColor}" />
+            </Style>
+
+            <Style x:Key="LaneStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="1" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LaneIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="#546E7A" />
+            </Style>
+
+            <!-- Eta -->
+
+            <Style x:Key="EtaGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource NaviEtaColor}" />
+            </Style>
+
+            <Style x:Key="EtaStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="1" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EtaValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GreenAccent3}" />
+            </Style>
+
+            <Style x:Key="EtaInfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="#90A4AE" />
+            </Style>
+
+            <Style x:Key="DestinationLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="#607D8B" />
+            </Style>
+
+            <Style x:Key="FinishButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="18,0" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDarken2}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- Guide -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource GuideGrid}"
+              ColumnDefinitions="Auto,*">
+            <Label Grid.Column="0"
+                   Style="{StaticResource TurnIconLabel}"
+                   Text="{Binding Guidance.Step.Turn, Converter={StaticResource TurnIconConverter}}" />
+            <VerticalStackLayout Grid.Column="1"
+                                 Style="{StaticResource GuideStack}">
+                <Label Style="{StaticResource DistanceLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource DistanceSpan}"
+                                  Text="{Binding Guidance.RoundedStepRemain}" />
+                            <Span Text=" m" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Style="{StaticResource GuideRoadLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Guidance.Step.Road}" />
+                            <Span Text=" ・ " />
+                            <Span Text="{Binding Guidance.Step.Spot}" />
+                            <Span Text="を" />
+                            <Span Text="{Binding Guidance.Step.Turn, Converter={StaticResource TurnTextConverter}}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <ProgressBar Style="{StaticResource GuideProgressBar}"
+                             Progress="{Binding Guidance.TurnProgress}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Next -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource NextGrid}"
+              ColumnDefinitions="Auto,*">
+            <Label Grid.Column="0"
+                   Style="{StaticResource NextIconLabel}"
+                   Text="{x:Static fonts:MaterialIcons.Subdirectory_arrow_right}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource NextLabel}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="その先 " />
+                        <Span Text="{Binding Guidance.NextStep.Distance, Converter={StaticResource DistanceTextConverter}, FallbackValue=''}" />
+                        <Span Text=" ・ " />
+                        <Span Text="{Binding Guidance.NextStep.Turn, Converter={StaticResource TurnTextConverter}, FallbackValue=''}" />
+                        <Span Text=" ・ " />
+                        <Span Text="{Binding Guidance.NextStep.Road, FallbackValue=''}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </Grid>
+
+        <!-- Map -->
+        <Grid Grid.Row="2">
+            <scene:SceneControl Scene="{Binding Scene}" />
+
+            <HorizontalStackLayout Style="{StaticResource SpeedStack}">
+                <Border Style="{StaticResource SpeedBorder}">
+                    <VerticalStackLayout Style="{StaticResource SpeedStackInner}">
+                        <Label Style="{StaticResource SpeedValueLabel}"
+                               Text="{Binding Guidance.Speed}" />
+                        <Label Style="{StaticResource SpeedUnitLabel}"
+                               Text="km/h" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Style="{StaticResource LimitBorder}">
+                    <Label Style="{StaticResource LimitLabel}"
+                           Text="{Binding Guidance.SpeedLimit}" />
+                </Border>
+            </HorizontalStackLayout>
+
+            <!-- Lane -->
+            <FlexLayout Style="{StaticResource LaneStrip}"
+                        Direction="Row"
+                        Wrap="NoWrap"
+                        VerticalOptions="End"
+                        BindableLayout.ItemsSource="{Binding Lanes}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type module:UINaviLane}">
+                        <Border Style="{StaticResource LaneBorder}"
+                                FlexLayout.Basis="20%">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsRecommended}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource NaviLaneOnColor}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <HorizontalStackLayout Style="{StaticResource LaneStack}">
+                                <Label Style="{StaticResource LaneIconLabel}"
+                                       IsVisible="{Binding HasLeft}"
+                                       Text="{x:Static fonts:MaterialIcons.Turn_left}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsRecommended}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Style="{StaticResource LaneIconLabel}"
+                                       IsVisible="{Binding HasStraight}"
+                                       Text="{x:Static fonts:MaterialIcons.Straight}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsRecommended}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Style="{StaticResource LaneIconLabel}"
+                                       IsVisible="{Binding HasRight}"
+                                       Text="{x:Static fonts:MaterialIcons.Turn_right}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsRecommended}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+
+        <!-- Eta -->
+        <Grid Grid.Row="3"
+              Style="{StaticResource EtaGrid}"
+              ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Column="0"
+                                 Style="{StaticResource EtaStack}">
+                <Label Style="{StaticResource EtaValueLabel}"
+                       Text="{Binding Guidance.Eta, StringFormat='{0:HH:mm} 着'}" />
+                <Label Style="{StaticResource EtaInfoLabel}"
+                       >
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Guidance.RemainMinutes, StringFormat='残り {0} 分 ・ '}" />
+                            <Span Text="{Binding Guidance.TotalRemain, Converter={StaticResource DistanceTextConverter}}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Style="{StaticResource DestinationLabel}"
+                       Text="{Binding Guidance.Destination}" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1"
+                    Style="{StaticResource FinishButton}"
+                    Command="{Binding FinishCommand}"
+                    Text="終了" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UISeatView"
+             x:DataType="{x:Type module:UISeatViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UISeatViewModel}"
+             shell:ShellProperty.Title="Seat"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="回次"
+             shell:ShellProperty.Function3Text="全体"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+
+            <Color x:Key="SeatBackColor">#1C2733</Color>
+            <Color x:Key="SeatHeaderColor">#263238</Color>
+            <Color x:Key="SeatTextColor">#ECEFF1</Color>
+            <Color x:Key="SeatSubTextColor">#90A4AE</Color>
+            <Color x:Key="SeatAvailableColor">#CFD8DC</Color>
+            <Color x:Key="SeatSoldColor">#46596B</Color>
+            <Color x:Key="SeatSelectedColor">#2196F3</Color>
+            <Color x:Key="SeatPremiumColor">#FFC107</Color>
+            <Color x:Key="SeatWheelchairColor">#009688</Color>
+
+            <!-- Layout -->
+
+            <Style x:Key="SeatRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource SeatBackColor}" />
+            </Style>
+
+            <!-- Header -->
+
+            <Style x:Key="HeaderStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SeatHeaderColor}" />
+            </Style>
+
+            <Style x:Key="TitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SeatTextColor}" />
+            </Style>
+
+            <Style x:Key="InfoStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ScreenBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource IndigoDefault}" />
+            </Style>
+
+            <Style x:Key="ScreenLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="InfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource SeatSubTextColor}" />
+            </Style>
+
+            <!-- Board -->
+
+            <Style x:Key="BoardGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="4" />
+            </Style>
+
+            <Style x:Key="ZoomStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="Spacing" Value="8" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="ZoomButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource SeatTextColor}" />
+                <Setter Property="BackgroundColor" Value="#99455A64" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Legend -->
+
+            <Style x:Key="LegendLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="JustifyContent" Value="SpaceBetween" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SeatHeaderColor}" />
+            </Style>
+
+            <Style x:Key="LegendStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="5" />
+            </Style>
+
+            <Style x:Key="LegendMark"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="16" />
+                <Setter Property="HeightRequest" Value="16" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 3" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LegendOutlineMark"
+                   TargetType="Border"
+                   BasedOn="{StaticResource LegendMark}">
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="LegendLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource SeatSubTextColor}" />
+            </Style>
+
+            <!-- Footer -->
+
+            <Style x:Key="FooterGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="100" />
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="FooterStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="FooterCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="FooterCountSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SeatSelectedColor}" />
+            </Style>
+
+            <Style x:Key="FooterSeatLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource FooterCaptionLabel}">
+                <Setter Property="HeightRequest" Value="18" />
+            </Style>
+
+            <Style x:Key="FooterPriceLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <Style x:Key="FooterPriceSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="FooterUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="PurchaseButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="Padding" Value="20,0" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SeatSelectedColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid Style="{StaticResource SeatRootGrid}"
+          RowDefinitions="Auto,*,Auto,Auto">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0"
+                             Style="{StaticResource HeaderStack}">
+            <Label Style="{StaticResource TitleLabel}"
+                   Text="{Binding Screening.Title}" />
+            <HorizontalStackLayout Style="{StaticResource InfoStack}">
+                <Border Style="{StaticResource ScreenBorder}">
+                    <Label Style="{StaticResource ScreenLabel}"
+                           Text="{Binding Screening.Screen}" />
+                </Border>
+                <Label Style="{StaticResource InfoLabel}"
+                       >
+                    <Label.Text>
+                        <MultiBinding StringFormat="{}{0:M/d (ddd)} {1:HH:mm} – {2:HH:mm}">
+                            <Binding Path="Screening.Start" />
+                            <Binding Path="Screening.Start" />
+                            <Binding Path="Screening.End" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+                <Label Style="{StaticResource InfoLabel}"
+                       IsVisible="{Binding Screening.Subtitled}"
+                       Text="字幕" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Board -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource BoardGrid}">
+            <drawing:DrawingControl Drawing="{Binding Drawing}"
+                                    behaviors:GestureOption.PinchEnabled="True"
+                                    behaviors:GestureOption.PanEnabled="True"
+                                    behaviors:GestureOption.MinScale="1"
+                                    behaviors:GestureOption.MaxScale="4"
+                                    behaviors:GestureOption.ZoomScale="{Binding ZoomScale}"
+                                    behaviors:GestureOption.ZoomOffset="{Binding ZoomOffset}" />
+            <HorizontalStackLayout Style="{StaticResource ZoomStack}">
+                <Button Style="{StaticResource ZoomButton}"
+                        Command="{Binding ZoomInCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Add}" />
+                <Button Style="{StaticResource ZoomButton}"
+                        Command="{Binding ZoomOutCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Remove}" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- Legend -->
+        <FlexLayout Grid.Row="2"
+                    Style="{StaticResource LegendLayout}">
+            <HorizontalStackLayout Style="{StaticResource LegendStack}">
+                <Border Style="{StaticResource LegendOutlineMark}"
+                        Stroke="{StaticResource SeatAvailableColor}" />
+                <Label Style="{StaticResource LegendLabel}"
+                       Text="空席" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Style="{StaticResource LegendStack}">
+                <Border Style="{StaticResource LegendMark}"
+                        BackgroundColor="{StaticResource SeatSoldColor}" />
+                <Label Style="{StaticResource LegendLabel}"
+                       Text="販売済" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Style="{StaticResource LegendStack}">
+                <Border Style="{StaticResource LegendMark}"
+                        BackgroundColor="{StaticResource SeatSelectedColor}" />
+                <Label Style="{StaticResource LegendLabel}"
+                       Text="選択中" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Style="{StaticResource LegendStack}">
+                <Border Style="{StaticResource LegendOutlineMark}"
+                        Stroke="{StaticResource SeatPremiumColor}" />
+                <Label Style="{StaticResource LegendLabel}"
+                       Text="プレミア" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Style="{StaticResource LegendStack}">
+                <Border Style="{StaticResource LegendMark}"
+                        BackgroundColor="{StaticResource SeatWheelchairColor}" />
+                <Label Style="{StaticResource LegendLabel}"
+                       Text="車椅子" />
+            </HorizontalStackLayout>
+        </FlexLayout>
+
+        <!-- Footer -->
+        <Grid Grid.Row="3"
+              Style="{StaticResource FooterGrid}"
+              ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Column="0"
+                                 Style="{StaticResource FooterStack}">
+                <Label Style="{StaticResource FooterCaptionLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="選択 " />
+                            <Span Style="{StaticResource FooterCountSpan}"
+                                  Text="{Binding SelectedCount}" />
+                            <Span Text=" 席" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Style="{StaticResource FooterSeatLabel}"
+                       LineBreakMode="TailTruncation"
+                       Text="{Binding SelectedText}" />
+                <Label Style="{StaticResource FooterPriceLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource FooterPriceSpan}"
+                                  Text="{Binding TotalPrice, StringFormat='¥{0:N0}'}" />
+                            <Span Style="{StaticResource FooterUnitSpan}"
+                                  Text="{Binding SelectedCount, StringFormat='  一般 {0} 枚'}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+            <Button Grid.Column="1"
+                    Style="{StaticResource PurchaseButton}"
+                    Command="{Binding PurchaseCommand}"
+                    Text="購入へ進む" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

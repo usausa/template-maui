@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:cmc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UITransitView"
+             x:DataType="{x:Type module:UITransitViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UITransitViewModel}"
+             shell:ShellProperty.Title="Transit"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="逆方向"
+             shell:ShellProperty.Function3Text="時刻表"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <s:MapToColorConverter x:Key="BadgeColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static sample:TransitBadge.Fast}"
+                                       Value="#00ACC1" />
+                    <s:MapToColorEntry Key="{x:Static sample:TransitBadge.Cheap}"
+                                       Value="#FB8C00" />
+                    <s:MapToColorEntry Key="{x:Static sample:TransitBadge.Easy}"
+                                       Value="#7CB342" />
+                    <s:MapToColorEntry Key="{x:Static sample:TransitBadge.Eco}"
+                                       Value="#2E7D32" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToTextConverter x:Key="BadgeTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:TransitBadge.Fast}"
+                                      Value="早" />
+                    <s:MapToTextEntry Key="{x:Static sample:TransitBadge.Cheap}"
+                                      Value="安" />
+                    <s:MapToTextEntry Key="{x:Static sample:TransitBadge.Easy}"
+                                      Value="楽" />
+                    <s:MapToTextEntry Key="{x:Static sample:TransitBadge.Eco}"
+                                      Value="歩" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- Color -->
+
+            <Color x:Key="TransitTextColor">#212121</Color>
+            <Color x:Key="TransitSubTextColor">#757575</Color>
+            <Color x:Key="TransitLineColor">#E0E0E0</Color>
+            <Color x:Key="TransitStationColor">#FFF3E0</Color>
+            <Color x:Key="TransitTransferColor">#E3F2FD</Color>
+            <Color x:Key="TransitAccentColor">#F57C00</Color>
+            <Color x:Key="TransitChipColor">#FFC107</Color>
+
+            <!-- Tab -->
+
+            <converters:TileSizeConverter x:Key="TabWidthConverter" />
+
+            <Style x:Key="RouteTabStrip"
+                   TargetType="cmc:TabStrip">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="IndicatorHeight" Value="3" />
+                <Setter Property="IndicatorInset" Value="10" />
+                <Setter Property="IndicatorColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="TabStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="4,8" />
+                <Setter Property="Spacing" Value="1" />
+            </Style>
+
+            <Style x:Key="TabNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Color x:Key="TransitTabSelectedColor">#E3F2FD</Color>
+
+            <Style x:Key="TabDurationLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <!-- Shift -->
+
+            <Style x:Key="ShiftGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ShiftButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TransitChipColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="ShiftDateLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Style x:Key="SeparatorLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource TransitLineColor}" />
+            </Style>
+
+            <!-- Summary -->
+
+            <Style x:Key="SummaryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="Spacing" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SummaryTimeLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+            </Style>
+
+            <Style x:Key="SummaryTimeSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SummaryArrivalSpan"
+                   TargetType="Span"
+                   BasedOn="{StaticResource SummaryTimeSpan}">
+                <Setter Property="TextColor" Value="{StaticResource TransitAccentColor}" />
+            </Style>
+
+            <Style x:Key="SummaryArrowSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="SummaryDurationLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Style x:Key="SummaryDurationSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TransitAccentColor}" />
+            </Style>
+
+            <Style x:Key="SummaryCaptionSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Style x:Key="BadgeStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="BadgeBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="30" />
+                <Setter Property="HeightRequest" Value="30" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+            </Style>
+
+            <Style x:Key="BadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SummaryInfoLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Style x:Key="SummaryInfoStrongSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+            </Style>
+
+            <!-- Station -->
+
+            <Style x:Key="StationGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TransitStationColor}" />
+            </Style>
+
+            <Style x:Key="StationDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="14" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="StrokeThickness" Value="3" />
+                <Setter Property="Fill" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StationNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+            </Style>
+
+            <Style x:Key="MapChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TransitChipColor}" />
+            </Style>
+
+            <Style x:Key="MapChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+            </Style>
+
+            <Style x:Key="StationTimeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ArrivalTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="DepartureTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="TextColor" Value="{StaticResource TransitAccentColor}" />
+            </Style>
+
+            <Style x:Key="PlatformBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,1" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="PlatformLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <!-- Transfer -->
+
+            <Style x:Key="TransferGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TransferRail"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="Opacity" Value="0.4" />
+            </Style>
+
+            <Style x:Key="TransferLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="0,8" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Style x:Key="TransferStrongSpan"
+                   TargetType="Span">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
+            <!-- Segment -->
+
+            <Style x:Key="SegmentGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SegmentRail"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SegmentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,10,12,10" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="SegmentLineStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SegmentIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Directions_transit}" />
+            </Style>
+
+            <Style x:Key="SegmentLineLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+            </Style>
+
+            <Style x:Key="SegmentActionStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SegmentMinuteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+            <Style x:Key="ExpandButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource TransitLineColor}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="DiagramBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,5" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TransitChipColor}" />
+            </Style>
+
+            <Style x:Key="DiagramLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TransitTextColor}" />
+            </Style>
+
+            <!-- Stop -->
+
+            <Style x:Key="StopStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="StopGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="StopDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="8" />
+                <Setter Property="HeightRequest" Value="8" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Fill" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StopTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="StopNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+        <!-- Tab -->
+        <cmc:TabStrip Grid.Row="0"
+                      Style="{StaticResource RouteTabStrip}"
+                      ItemsSource="{Binding Context.Routes}"
+                      SelectedIndex="{Binding SelectedIndex}"
+                      PagePosition="{Binding PagePosition}">
+            <cmc:TabStrip.ItemTemplate>
+                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                <DataTemplate x:DataType="{x:Type sample:TransitRoute}">
+                    <VerticalStackLayout Style="{StaticResource TabStack}"
+                                         WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UITransitViewModel}}, Path=Context.Routes.Count, Converter={StaticResource TabWidthConverter}, x:DataType={x:Type module:UITransitViewModel}}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="TabStates">
+                                    <VisualState x:Name="Unselected" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="{StaticResource TransitTabSelectedColor}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                        <Label Style="{StaticResource TabNameLabel}"
+                               Text="{Binding Number, StringFormat='経路{0}'}" />
+                        <Label Style="{StaticResource TabDurationLabel}"
+                               Text="{Binding Minutes, Converter={StaticResource MinuteTextConverter}}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </cmc:TabStrip.ItemTemplate>
+        </cmc:TabStrip>
+
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource SeparatorLine}" />
+
+        <!-- Shift -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource ShiftGrid}"
+              ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0"
+                    Style="{StaticResource ShiftButton}"
+                    Command="{Binding PreviousCommand}"
+                    Text="&#x3c; 1本前" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource ShiftDateLabel}"
+                   Text="{Binding Context.Date, StringFormat='{0:M/d (ddd)}'}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource ShiftButton}"
+                    Command="{Binding NextCommand}"
+                    Text="1本後 &#x3e;" />
+        </Grid>
+
+        <!-- Summary -->
+        <VerticalStackLayout Grid.Row="3"
+                             Style="{StaticResource SummaryStack}">
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SummaryTimeLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource SummaryTimeSpan}"
+                                  Text="{Binding Route.Departure, StringFormat='{0:HH:mm}'}" />
+                            <Span Style="{StaticResource SummaryArrowSpan}"
+                                  Text="  &#x21d2;  " />
+                            <Span Style="{StaticResource SummaryArrivalSpan}"
+                                  Text="{Binding Route.Arrival, StringFormat='{0:HH:mm}'}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Grid.Column="1"
+                       Style="{StaticResource SummaryDurationLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource SummaryCaptionSpan}"
+                                  Text="所要 " />
+                            <Span Style="{StaticResource SummaryDurationSpan}"
+                                  Text="{Binding Route.Minutes, Converter={StaticResource MinuteTextConverter}}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Grid>
+            <Grid ColumnDefinitions="Auto,*">
+                <HorizontalStackLayout Grid.Column="0"
+                                       Style="{StaticResource BadgeStack}"
+                                       BindableLayout.ItemsSource="{Binding Route.Badges}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type sample:TransitBadge}">
+                            <Border Style="{StaticResource BadgeBorder}"
+                                    BackgroundColor="{Binding ., Converter={StaticResource BadgeColorConverter}}">
+                                <Label Style="{StaticResource BadgeLabel}"
+                                       Text="{Binding ., Converter={StaticResource BadgeTextConverter}}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+                <Label Grid.Column="1"
+                       Style="{StaticResource SummaryInfoLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="乗換 " />
+                            <Span Style="{StaticResource SummaryInfoStrongSpan}"
+                                  Text="{Binding Route.TransferCount}" />
+                            <Span Text="回 ・ " />
+                            <Span Style="{StaticResource SummaryInfoStrongSpan}"
+                                  Text="{Binding Route.Distance, StringFormat='{0:F1}'}" />
+                            <Span Text="km ・ 片道 " />
+                            <Span Style="{StaticResource SummaryInfoStrongSpan}"
+                                  Text="{Binding Route.Fare, StringFormat='{0:N0}'}" />
+                            <Span Text="円" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- Route -->
+        <ScrollView Grid.Row="4">
+            <VerticalStackLayout>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Route.Legs}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type sample:TransitLeg}">
+                            <VerticalStackLayout>
+
+                                <!-- Station -->
+                                <Grid Style="{StaticResource StationGrid}"
+                                      ColumnDefinitions="28,Auto,Auto,*,Auto">
+                                    <Grid.Triggers>
+                                        <DataTrigger TargetType="Grid"
+                                                     Binding="{Binding Transfer, Converter={StaticResource NotEmptyConverter}}"
+                                                     Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource TransitTransferColor}" />
+                                        </DataTrigger>
+                                    </Grid.Triggers>
+                                    <Ellipse Grid.Column="0"
+                                             Style="{StaticResource StationDot}"
+                                             Stroke="{Binding Segment.Color}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource StationNameLabel}"
+                                           Text="{Binding Station.Name}" />
+                                    <Border Grid.Column="2"
+                                            Style="{StaticResource MapChipBorder}">
+                                        <Label Style="{StaticResource MapChipLabel}"
+                                               Text="地図" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="4"
+                                                         Style="{StaticResource StationTimeStack}">
+                                        <Label Style="{StaticResource ArrivalTimeLabel}"
+                                               IsVisible="{Binding Station.Arrival, Converter={StaticResource NotEmptyConverter}}"
+                                               Text="{Binding Station.Arrival, StringFormat='着 {0:HH:mm}'}" />
+                                        <Label Style="{StaticResource DepartureTimeLabel}"
+                                               Text="{Binding Station.Departure, StringFormat='{0:HH:mm}'}" />
+                                        <Border Style="{StaticResource PlatformBorder}">
+                                            <Label Style="{StaticResource PlatformLabel}"
+                                                   Text="{Binding Station.Platform}" />
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!-- Transfer -->
+                                <Grid Style="{StaticResource TransferGrid}"
+                                      ColumnDefinitions="28,*"
+                                      IsVisible="{Binding Transfer, Converter={StaticResource NotEmptyConverter}}">
+                                    <BoxView Grid.Column="0"
+                                             Style="{StaticResource TransferRail}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource TransferLabel}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="乗換 " />
+                                                <Span Style="{StaticResource TransferStrongSpan}"
+                                                      Text="{Binding Transfer.Minutes, FallbackValue=''}" />
+                                                <Span Text="分 ・ " />
+                                                <Span Text="{Binding Transfer.FromPlatform, FallbackValue=''}" />
+                                                <Span Text=" &#x2192; " />
+                                                <Span Text="{Binding Transfer.ToPlatform, FallbackValue=''}" />
+                                                <Span Text=" ・ 徒歩 約" />
+                                                <Span Text="{Binding Transfer.WalkMeters, FallbackValue=''}" />
+                                                <Span Text="m" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+
+                                <!-- Segment -->
+                                <Grid Style="{StaticResource SegmentGrid}"
+                                      ColumnDefinitions="28,*">
+                                    <BoxView Grid.Column="0"
+                                             Style="{StaticResource SegmentRail}"
+                                             Color="{Binding Segment.Color}" />
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Style="{StaticResource SegmentStack}">
+                                        <HorizontalStackLayout Style="{StaticResource SegmentLineStack}">
+                                            <Label Style="{StaticResource SegmentIconLabel}"
+                                                   TextColor="{Binding Segment.Color}" />
+                                            <Label Style="{StaticResource SegmentLineLabel}"
+                                                   Text="{Binding Segment.Line}" />
+                                            <Label Style="{StaticResource SegmentLineLabel}"
+                                                   Text="{Binding Segment.Destination, StringFormat='・ {0}'}" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Style="{StaticResource SegmentActionStack}">
+                                            <Label Style="{StaticResource SegmentMinuteLabel}"
+                                                   Text="{Binding Segment.Minutes, StringFormat='{0} 分'}" />
+                                            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                            <Button Style="{StaticResource ExpandButton}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:UITransitViewModel}}, Path=ExpandCommand, x:DataType={x:Type module:UITransitViewModel}}"
+                                                    CommandParameter="{Binding Segment}"
+                                                    IsVisible="{Binding Segment.Stops, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                                    Text="{Binding Segment.Stops.Count, StringFormat='途中 {0} 駅'}" />
+                                            <Border Style="{StaticResource DiagramBorder}">
+                                                <Label Style="{StaticResource DiagramLabel}"
+                                                       Text="前後のダイヤ" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                        <VerticalStackLayout Style="{StaticResource StopStack}"
+                                                             behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                                             behaviors:AnimationOption.EnterTrigger="{Binding Segment.IsExpanded}"
+                                                             BindableLayout.ItemsSource="{Binding Segment.Stops}"
+                                                             IsVisible="{Binding Segment.IsExpanded}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="{x:Type sample:TransitStop}">
+                                                    <Grid Style="{StaticResource StopGrid}"
+                                                          ColumnDefinitions="16,Auto,*">
+                                                        <Ellipse Grid.Column="0"
+                                                                 Style="{StaticResource StopDot}"
+                                                                 Stroke="{StaticResource GrayLighten1}" />
+                                                        <Label Grid.Column="1"
+                                                               Style="{StaticResource StopTimeLabel}"
+                                                               Text="{Binding Time, StringFormat='{0:HH:mm}'}" />
+                                                        <Label Grid.Column="2"
+                                                               Style="{StaticResource StopNameLabel}"
+                                                               Text="{Binding Name}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Terminal -->
+                <Grid Style="{StaticResource StationGrid}"
+                      ColumnDefinitions="28,Auto,Auto,*,Auto">
+                    <Ellipse Grid.Column="0"
+                             Style="{StaticResource StationDot}"
+                             Stroke="{StaticResource BlueDarken1}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource StationNameLabel}"
+                           Text="{Binding Route.Terminal.Name}" />
+                    <Border Grid.Column="2"
+                            Style="{StaticResource MapChipBorder}">
+                        <Label Style="{StaticResource MapChipLabel}"
+                               Text="地図" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="4"
+                                         Style="{StaticResource StationTimeStack}">
+                        <Label Style="{StaticResource DepartureTimeLabel}"
+                               TextColor="{StaticResource BlueDarken1}"
+                               Text="{Binding Route.Terminal.Arrival, StringFormat='{0:HH:mm}'}" />
+                        <Border Style="{StaticResource PlatformBorder}">
+                            <Label Style="{StaticResource PlatformLabel}"
+                                   Text="{Binding Route.Terminal.Platform}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentView>

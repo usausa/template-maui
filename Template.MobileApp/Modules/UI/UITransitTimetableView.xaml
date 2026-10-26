@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UITransitTimetableView"
+             x:DataType="{x:Type module:UITransitTimetableViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UITransitTimetableViewModel}"
+             shell:ShellProperty.Title="Timetable"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="現在"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+
+            <Color x:Key="TimetableTextColor">#212121</Color>
+            <Color x:Key="TimetableSubTextColor">#757575</Color>
+            <Color x:Key="TimetableLineColor">#E0E0E0</Color>
+            <Color x:Key="TimetableCurrentColor">#D32F2F</Color>
+
+            <!-- Header -->
+
+            <Style x:Key="StationStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="Spacing" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="StationIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Directions_transit}" />
+            </Style>
+
+            <Style x:Key="StationNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TimetableTextColor}" />
+            </Style>
+
+            <Style x:Key="LineBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,3" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="LineLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Direction -->
+
+            <Style x:Key="DirectionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,0,12,12" />
+                <Setter Property="ColumnSpacing" Value="10" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DirectionButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="42" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource TimetableLineColor}" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="{StaticResource TimetableSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- DayType -->
+
+            <Style x:Key="DayTypeGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DayTypeButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource TimetableSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="DayTypeIndicator"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="3" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="10,0" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="SeparatorLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource TimetableLineColor}" />
+            </Style>
+
+            <!-- Legend -->
+
+            <Style x:Key="LegendGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="LegendStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LegendItemStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="LegendMark"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="9" />
+                <Setter Property="HeightRequest" Value="9" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LegendLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TimetableSubTextColor}" />
+            </Style>
+
+            <Style x:Key="NowLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TimetableCurrentColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+
+        <!-- Station -->
+        <HorizontalStackLayout Grid.Row="0"
+                               Style="{StaticResource StationStack}">
+            <Label Style="{StaticResource StationIconLabel}" />
+            <Label Style="{StaticResource StationNameLabel}"
+                   Text="{Binding Timetable.Station}" />
+            <Border Style="{StaticResource LineBorder}">
+                <Label Style="{StaticResource LineLabel}"
+                       Text="{Binding Timetable.Line}" />
+            </Border>
+        </HorizontalStackLayout>
+
+        <!-- Direction -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource DirectionGrid}"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource DirectionButton}"
+                    Command="{Binding DirectionCommand}"
+                    CommandParameter="{x:Static sample:StationDirection.Up}"
+                    Text="名古屋方面">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Direction}"
+                                 Value="{x:Static sample:StationDirection.Up}">
+                        <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource DirectionButton}"
+                    Command="{Binding DirectionCommand}"
+                    CommandParameter="{x:Static sample:StationDirection.Down}"
+                    Text="多治見・中津川方面">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Direction}"
+                                 Value="{x:Static sample:StationDirection.Down}">
+                        <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- DayType -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource DayTypeGrid}"
+              ColumnDefinitions="*,*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource DayTypeButton}"
+                    Command="{Binding DayTypeCommand}"
+                    CommandParameter="{x:Static sample:StationDayType.Weekday}"
+                    Text="平日">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding DayType}"
+                                 Value="{x:Static sample:StationDayType.Weekday}">
+                        <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource DayTypeButton}"
+                    Command="{Binding DayTypeCommand}"
+                    CommandParameter="{x:Static sample:StationDayType.Saturday}"
+                    Text="土曜">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding DayType}"
+                                 Value="{x:Static sample:StationDayType.Saturday}">
+                        <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="2"
+                    Style="{StaticResource DayTypeButton}"
+                    Command="{Binding DayTypeCommand}"
+                    CommandParameter="{x:Static sample:StationDayType.Holiday}"
+                    Text="休日">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding DayType}"
+                                 Value="{x:Static sample:StationDayType.Holiday}">
+                        <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <BoxView Grid.Column="0"
+                     Style="{StaticResource DayTypeIndicator}"
+                     IsVisible="{Binding DayType, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:StationDayType.Weekday}}" />
+            <BoxView Grid.Column="1"
+                     Style="{StaticResource DayTypeIndicator}"
+                     IsVisible="{Binding DayType, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:StationDayType.Saturday}}" />
+            <BoxView Grid.Column="2"
+                     Style="{StaticResource DayTypeIndicator}"
+                     IsVisible="{Binding DayType, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:StationDayType.Holiday}}" />
+        </Grid>
+
+        <BoxView Grid.Row="3"
+                 Style="{StaticResource SeparatorLine}" />
+
+        <!-- Legend -->
+        <Grid Grid.Row="4"
+              Style="{StaticResource LegendGrid}"
+              ColumnDefinitions="*,Auto">
+            <HorizontalStackLayout Grid.Column="0"
+                                   Style="{StaticResource LegendStack}">
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#212121" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="普通" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#1E88E5" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="快速" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#F57C00" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="新快速" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource LegendItemStack}">
+                    <BoxView Style="{StaticResource LegendMark}"
+                             Color="#E53935" />
+                    <Label Style="{StaticResource LegendLabel}"
+                           Text="特急" />
+                </HorizontalStackLayout>
+            </HorizontalStackLayout>
+            <Label Grid.Column="1"
+                   Style="{StaticResource NowLabel}"
+                   Text="{Binding Now, StringFormat='現在 {0:HH:mm}'}" />
+        </Grid>
+
+        <!-- Hour -->
+        <ScrollView Grid.Row="5"
+                    behaviors:Scroll.DisableOverScroll="True"
+                    behaviors:ScrollBind.Controller="{Binding Scroller}">
+            <drawing:DrawingControl Drawing="{Binding Drawing}" />
+        </ScrollView>
+
+    </Grid>
+
+</ContentView>

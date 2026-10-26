@@ -11,8 +11,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using Template.MobileApp.Components;
-
 // ------------------------------------------------------------
 // Control
 // ------------------------------------------------------------
@@ -21,7 +19,7 @@ public interface ITelemetryControl
 {
     bool Suspend { get; set; }
 
-    string InstallationId { get; set; }
+    string TerminalId { get; set; }
 
     Uri? EndPoint { get; set; }
 
@@ -41,7 +39,7 @@ public interface ITelemetryStatus
 {
     bool IsActive { get; }
 
-    string InstallationId { get; }
+    string TerminalId { get; }
 
     Uri? EndPoint { get; }
 
@@ -124,8 +122,6 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
 
     private readonly TelemetryOptions options;
 
-    private readonly DeviceInformation deviceInformation;
-
     private readonly SdkEventListener sdkListener = new();
 
     private readonly string sentCrashPath;
@@ -148,7 +144,6 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
         IDeviceInfo deviceInfo,
         IFileSystem fileSystem,
         TelemetryOptions options,
-        DeviceInformation deviceInformation,
         TelemetryLoggerProvider loggerProvider)
     {
         log = loggerFactory.CreateLogger<TelemetryService>();
@@ -156,7 +151,6 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
         this.appInfo = appInfo;
         this.deviceInfo = deviceInfo;
         this.options = options;
-        this.deviceInformation = deviceInformation;
         sentCrashPath = Path.Combine(fileSystem.AppDataDirectory, "telemetry-crash-sent.txt");
 
         sdkListener.Written += OnSdkEventWritten;
@@ -209,7 +203,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
         }
     }
 
-    public string InstallationId { get; set; } = string.Empty;
+    public string TerminalId { get; set; } = string.Empty;
 
     public Uri? EndPoint
     {
@@ -391,8 +385,7 @@ public sealed partial class TelemetryService : ITelemetryControl, ITelemetryStat
             .AddTelemetrySdk()
             .AddAttributes(new Dictionary<string, object>(StringComparer.Ordinal)
             {
-                ["device.id"] = deviceInformation.DeviceId,
-                ["app.installation.id"] = InstallationId,
+                ["app.installation.id"] = TerminalId,
                 ["device.manufacturer"] = deviceInfo.Manufacturer,
                 ["device.model.identifier"] = deviceInfo.Model,
                 ["os.type"] = "linux",

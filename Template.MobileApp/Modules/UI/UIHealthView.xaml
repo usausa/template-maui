@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIHealthView"
+             x:DataType="{x:Type module:UIHealthViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIHealthViewModel}"
+             shell:ShellProperty.Title="Health"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <converters:MinuteTextConverter x:Key="SleepTimeConverter"
+                                            HourFormat="{}{0} 時間 {1:D2} 分" MinuteFormat="{}{0} 分" />
+
+            <!-- Color -->
+
+            <Color x:Key="HealthBackColor">#ECEFF1</Color>
+            <Color x:Key="HealthTextColor">#1A237E</Color>
+            <Color x:Key="HealthSubTextColor">#78909C</Color>
+            <Color x:Key="HealthAccentColor">#283593</Color>
+            <Color x:Key="HealthTrackColor">#E3E7EA</Color>
+
+            <!-- Layout -->
+
+            <Style x:Key="HealthScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource HealthBackColor}" />
+            </Style>
+
+            <Style x:Key="CardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,6" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CardTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
+            </Style>
+
+            <!-- Day -->
+
+            <Style x:Key="DayStrip"
+                   TargetType="FlexLayout">
+                <Setter Property="Padding" Value="8,10" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DayBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0,6" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="DayStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="DowLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
+            </Style>
+
+            <Style x:Key="DayLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
+            </Style>
+
+            <!-- Score -->
+
+            <Style x:Key="ScoreGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
+            <Style x:Key="RingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="128" />
+                <Setter Property="HeightRequest" Value="128" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RingBase"
+                   TargetType="controls:ArcMeter">
+                <Setter Property="StartAngle" Value="-90" />
+                <Setter Property="SweepAngle" Value="360" />
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="1" />
+                <Setter Property="TrackColor" Value="{StaticResource HealthTrackColor}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="OuterRing"
+                   TargetType="controls:ArcMeter"
+                   BasedOn="{StaticResource RingBase}">
+                <Setter Property="WidthRequest" Value="128" />
+                <Setter Property="HeightRequest" Value="128" />
+                <Setter Property="Thickness" Value="11" />
+                <Setter Property="Brush" Value="#1565C0" />
+            </Style>
+
+            <Style x:Key="MiddleRing"
+                   TargetType="controls:ArcMeter"
+                   BasedOn="{StaticResource RingBase}">
+                <Setter Property="WidthRequest" Value="100" />
+                <Setter Property="HeightRequest" Value="100" />
+                <Setter Property="Thickness" Value="10" />
+                <Setter Property="Brush" Value="#4FC3F7" />
+            </Style>
+
+            <Style x:Key="InnerRing"
+                   TargetType="controls:ArcMeter"
+                   BasedOn="{StaticResource RingBase}">
+                <Setter Property="WidthRequest" Value="74" />
+                <Setter Property="HeightRequest" Value="74" />
+                <Setter Property="Thickness" Value="9" />
+                <Setter Property="Brush" Value="#AB47BC" />
+            </Style>
+
+            <Style x:Key="ScoreStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="-4" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ScoreValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="34" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
+            </Style>
+
+            <Style x:Key="ScoreCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
+            </Style>
+
+            <Style x:Key="SummaryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="DurationLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
+            </Style>
+
+            <Style x:Key="DurationSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
+            </Style>
+
+            <!-- Stage -->
+
+            <Style x:Key="StageControl"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="Margin" Value="0,10,0,4" />
+                <Setter Property="HeightRequest" Value="150" />
+            </Style>
+
+            <Style x:Key="LegendLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="7" />
+            </Style>
+
+            <Style x:Key="LegendRow"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="LegendMark"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="10" />
+                <Setter Property="HeightRequest" Value="10" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LegendNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
+            </Style>
+
+            <Style x:Key="LegendValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
+            </Style>
+
+            <!-- Week -->
+
+            <Style x:Key="WeekGrid"
+                   TargetType="FlexLayout">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="HeightRequest" Value="120" />
+            </Style>
+
+            <Style x:Key="WeekStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="WeekBarLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Direction" Value="Column" />
+                <Setter Property="WidthRequest" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="WeekSegment"
+                   TargetType="BoxView">
+                <Setter Property="FlexLayout.Basis" Value="0" />
+            </Style>
+
+            <!-- Advice -->
+
+            <Style x:Key="AdviceGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="AdviceIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="{StaticResource IndigoLighten5}" />
+            </Style>
+
+            <Style x:Key="AdviceIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthAccentColor}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Bedtime}" />
+            </Style>
+
+            <Style x:Key="AdviceLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <!-- Vital -->
+
+            <Style x:Key="VitalGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="12,6,12,12" />
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="VitalBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,12" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="VitalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="VitalCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
+            </Style>
+
+            <Style x:Key="VitalValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
+            </Style>
+
+            <Style x:Key="VitalValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="VitalUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <ScrollView Style="{StaticResource HealthScroll}">
+        <VerticalStackLayout>
+
+            <!-- Day -->
+            <FlexLayout Style="{StaticResource DayStrip}"
+                        BindableLayout.ItemsSource="{Binding Days}"
+                        Direction="Row"
+                        Wrap="NoWrap">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type module:UIHealthDay}">
+                        <Border Style="{StaticResource DayBorder}"
+                                FlexLayout.Basis="14.28%">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsSelected}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource HealthAccentColor}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIHealthViewModel}}, Path=SelectCommand, x:DataType={x:Type module:UIHealthViewModel}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Style="{StaticResource DayStack}">
+                                <Label Style="{StaticResource DowLabel}"
+                                       Text="{Binding Source.Date, StringFormat='{0:ddd}'}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="#B0BEC5" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Style="{StaticResource DayLabel}"
+                                       Text="{Binding Day}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <!-- Score -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource CardTitleLabel}"
+                           Text="睡眠スコア" />
+                    <Grid Style="{StaticResource ScoreGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Grid Grid.Column="0"
+                              Style="{StaticResource RingGrid}">
+                            <controls:ArcMeter Style="{StaticResource OuterRing}"
+                                               Value="{Binding ScoreRatio}" />
+                            <controls:ArcMeter Style="{StaticResource MiddleRing}"
+                                               Value="{Binding DurationRatio}" />
+                            <controls:ArcMeter Style="{StaticResource InnerRing}"
+                                               Value="{Binding DeepRatio}" />
+                            <VerticalStackLayout Style="{StaticResource ScoreStack}">
+                                <Label Style="{StaticResource ScoreValueLabel}"
+                                       Text="{Binding Score}" />
+                                <Label Style="{StaticResource ScoreCaptionLabel}"
+                                       Text="SCORE" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource SummaryStack}">
+                            <Label Style="{StaticResource DurationLabel}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Style="{StaticResource DurationSpan}"
+                                              Text="{Binding Night.TotalMinutes, Converter={StaticResource SleepTimeConverter}}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Style="{StaticResource SummaryLabel}"
+                                   Text="{Binding Log.GoalMinutes, Converter={StaticResource SleepTimeConverter}, StringFormat='目標 {0}'}" />
+                            <Label Style="{StaticResource SummaryLabel}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="就寝 " />
+                                        <Span Text="{Binding Night.BedTime, StringFormat='{0:HH:mm}'}" />
+                                        <Span Text="　起床 " />
+                                        <Span Text="{Binding Night.WakeTime, StringFormat='{0:HH:mm}'}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Style="{StaticResource SummaryLabel}"
+                                   Text="{Binding Night.AwakeCount, StringFormat='中途覚醒 {0} 回'}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Stage -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource CardTitleLabel}"
+                           Text="睡眠ステージ" />
+                    <drawing:DrawingControl Style="{StaticResource StageControl}"
+                                            Drawing="{Binding Stage}" />
+                    <VerticalStackLayout Style="{StaticResource LegendLayout}"
+                                         BindableLayout.ItemsSource="{Binding Stages}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type module:UIHealthStage}">
+                                <Grid Style="{StaticResource LegendRow}"
+                                      ColumnDefinitions="Auto,Auto,*,Auto">
+                                    <BoxView Grid.Column="0"
+                                             Style="{StaticResource LegendMark}"
+                                             Color="{Binding Color}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource LegendNameLabel}"
+                                           Text="{Binding Name}" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource LegendNameLabel}"
+                                           HorizontalTextAlignment="End"
+                                           Text="{Binding Ratio, StringFormat='{0:P0}'}" />
+                                    <Label Grid.Column="3"
+                                           Style="{StaticResource LegendValueLabel}"
+                                           WidthRequest="112"
+                                           HorizontalTextAlignment="End"
+                                           Text="{Binding Minutes, Converter={StaticResource SleepTimeConverter}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Week -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource CardTitleLabel}"
+                               Text="今週の睡眠" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource SummaryLabel}"
+                               Text="{Binding Log.AverageMinutes, Converter={StaticResource SleepTimeConverter}, StringFormat='平均 {0}'}" />
+                    </Grid>
+                    <FlexLayout Style="{StaticResource WeekGrid}"
+                                BindableLayout.ItemsSource="{Binding Days}"
+                                Direction="Row"
+                                Wrap="NoWrap">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type module:UIHealthDay}">
+                                <VerticalStackLayout Style="{StaticResource WeekStack}"
+                                                     FlexLayout.Basis="14.28%">
+                                    <FlexLayout Style="{StaticResource WeekBarLayout}"
+                                                HeightRequest="{Binding BarHeight}">
+                                        <BoxView Style="{StaticResource WeekSegment}"
+                                                 Color="#FB8C00"
+                                                 FlexLayout.Grow="{Binding Awake}" />
+                                        <BoxView Style="{StaticResource WeekSegment}"
+                                                 Color="#AB47BC"
+                                                 FlexLayout.Grow="{Binding Rem}" />
+                                        <BoxView Style="{StaticResource WeekSegment}"
+                                                 Color="#4FC3F7"
+                                                 FlexLayout.Grow="{Binding Light}" />
+                                        <BoxView Style="{StaticResource WeekSegment}"
+                                                 Color="#1565C0"
+                                                 FlexLayout.Grow="{Binding Deep}" />
+                                    </FlexLayout>
+                                    <Label Style="{StaticResource DowLabel}"
+                                           Text="{Binding Source.Date, StringFormat='{0:ddd}'}" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Advice -->
+            <Border Style="{StaticResource CardBorder}">
+                <Grid Style="{StaticResource AdviceGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource AdviceIconBorder}">
+                        <Label Style="{StaticResource AdviceIconLabel}" />
+                    </Border>
+                    <Label Grid.Column="1"
+                           Style="{StaticResource AdviceLabel}"
+                           Text="{Binding Advice}" />
+                </Grid>
+            </Border>
+
+            <!-- Vital -->
+            <Grid Style="{StaticResource VitalGrid}"
+                  ColumnDefinitions="*,*,*">
+                <Border Grid.Column="0"
+                        Style="{StaticResource VitalBorder}">
+                    <VerticalStackLayout Style="{StaticResource VitalStack}">
+                        <Label Style="{StaticResource VitalCaptionLabel}"
+                               Text="安静時心拍" />
+                        <Label Style="{StaticResource VitalValueLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Style="{StaticResource VitalValueSpan}"
+                                          Text="{Binding Night.RestingHeartRate}" />
+                                    <Span Style="{StaticResource VitalUnitSpan}"
+                                          Text=" bpm" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1"
+                        Style="{StaticResource VitalBorder}">
+                    <VerticalStackLayout Style="{StaticResource VitalStack}">
+                        <Label Style="{StaticResource VitalCaptionLabel}"
+                               Text="呼吸数" />
+                        <Label Style="{StaticResource VitalValueLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Style="{StaticResource VitalValueSpan}"
+                                          Text="{Binding Night.Respiration, StringFormat='{0:F1}'}" />
+                                    <Span Style="{StaticResource VitalUnitSpan}"
+                                          Text=" 回/分" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2"
+                        Style="{StaticResource VitalBorder}">
+                    <VerticalStackLayout Style="{StaticResource VitalStack}">
+                        <Label Style="{StaticResource VitalCaptionLabel}"
+                               Text="歩数" />
+                        <Label Style="{StaticResource VitalValueLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Style="{StaticResource VitalValueSpan}"
+                                          Text="{Binding Night.Steps, StringFormat='{0:N0}'}" />
+                                    <Span Style="{StaticResource VitalUnitSpan}"
+                                          Text=" 歩" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

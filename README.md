@@ -25,6 +25,14 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Chat.png" />
 <img width="25%" src="Document/Images/UI_Timeline.png" />
 
+<img width="25%" src="Document/Images/UI_Gantt.png" />
+<img width="25%" src="Document/Images/UI_Kanban.png" />
+<img width="25%" src="Document/Images/UI_Filer.png" />
+
+<img width="25%" src="Document/Images/UI_Health.png" />
+<img width="25%" src="Document/Images/UI_Transit.png" />
+<img width="25%" src="Document/Images/UI_TransitTimetable.png" />
+
 <img width="25%" src="Document/Images/UI_Grid.png" />
 <img width="25%" src="Document/Images/UI_Visit.png" />
 <img width="25%" src="Document/Images/Device_WiFi.png" />
@@ -34,16 +42,26 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/Device_Activity.png" />
 
 <img width="25%" src="Document/Images/UI_Stream.png" />
-<img width="25%" src="Document/Images/UI_Dock.png" />
+<img width="25%" src="Document/Images/UI_Music.png" />
 <img width="25%" src="Document/Images/UI_Mixer.png" />
 
 <img width="25%" src="Document/Images/UI_Meter.png" />
 <img width="25%" src="Document/Images/UI_Load.png" />
 <img width="25%" src="Document/Images/UI_Gauge.png" />
 
+
+<img width="25%" src="Document/Images/UI_Dock.png" />
+<img width="25%" src="Document/Images/UI_Navi.png" />
+<img width="25%" src="Document/Images/UI_Trade.png" />
+
+
 <img width="25%" src="Document/Images/Sample_CvLocal.png" />
 <img width="25%" src="Document/Images/UI_TreeMap.png" />
 <img width="25%" src="Document/Images/View_Chart.png" />
+
+<img width="25%" src="Document/Images/UI_Seat.png" />
+<img width="25%" src="Document/Images/UI_Ticket.png" />
+<img width="25%" src="Document/Images/UI_Gallery.png" />
 
 <img width="25%" src="Document/Images/UI_News.png" />
 <img width="25%" src="Document/Images/App_Todo.png" />
@@ -93,7 +111,7 @@ Template project for MAUI.
 | Data | SQLite |
 | Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC / SFTP / OpenTelemetry |
 | View | Layout / State / Border / Shadow / Animation / Easing / Effect / Drag & Drop / Graphics / Drawing / Lottie / SVG / Bottom sheet / Drawer / Toolkit / Custom / Chart |
-| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Game like / Flight / Tactical / Telemetry / Energy |
+| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Game like / Flight / Tactical / Telemetry / Energy / Transit / Timetable / Seat / Gantt / Kanban / Ticket / Music / Gallery / Health / Navi / Filer / Trade |
 | Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / Object, Tag, People, OCR(Azure AI Vision) / ONNX / Chat(Ollama) / Crop |
 | App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper / Game Boy |
 

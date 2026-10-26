@@ -83,6 +83,63 @@
 <img width="25%" src="./Images/UI_Chat.png" />
 </p>
 
+## Gantt
+
+<p>
+<img width="25%" src="./Images/UI_Gantt.png" />
+</p>
+
+- Drawing / synchronized scroll
+
+## Kanban
+
+<p>
+<img width="25%" src="./Images/UI_Kanban.png" />
+</p>
+
+- Drag & drop between lanes
+
+## Filer
+
+<p>
+<img width="25%" src="./Images/UI_Filer.png" />
+</p>
+
+- List and tile switch / multi select / transfer banner
+
+## Trade
+
+<p>
+<img width="25%" src="./Images/UI_Trade.png" />
+</p>
+
+- Chart(candle, volume) / order book / live update
+
+## Dock
+
+<p>
+<img width="25%" src="./Images/UI_Dock.png" />
+</p>
+
+## Stream
+
+<p>
+<img width="25%" src="./Images/UI_Stream.png" />
+<img width="25%" src="./Images/UI_StreamDetail.png" />
+</p>
+
+## Home
+
+<p>
+<img width="25%" src="./Images/UI_Home.png" />
+</p>
+
+## Habit
+
+<p>
+<img width="25%" src="./Images/UI_Habit.png" />
+</p>
+
 ## Weather
 
 <p>
@@ -115,30 +172,62 @@
 <img width="25%" src="./Images/UI_KitTracking.png" />
 </p>
 
-## Stream
+## Transit
 
 <p>
-<img width="25%" src="./Images/UI_Stream.png" />
-<img width="25%" src="./Images/UI_StreamDetail.png" />
+<img width="25%" src="./Images/UI_Transit.png" />
+<img width="25%" src="./Images/UI_TransitTimetable.png" />
 </p>
 
-## Dock
+- Route candidate tabs / timetable with a current time marker
+
+## Seat
 
 <p>
-<img width="25%" src="./Images/UI_Dock.png" />
+<img width="25%" src="./Images/UI_Seat.png" />
 </p>
 
-## Home
+- Drawing / pinch zoom / mini map
+
+## Ticket
 
 <p>
-<img width="25%" src="./Images/UI_Home.png" />
+<img width="25%" src="./Images/UI_Ticket.png" />
 </p>
 
-## Habit
+- PerforatedBorder / QR / barcode
+
+## Music
 
 <p>
-<img width="25%" src="./Images/UI_Habit.png" />
+<img width="25%" src="./Images/UI_Music.png" />
 </p>
+
+- Drawing / synchronized lyrics
+
+## Gallery
+
+<p>
+<img width="25%" src="./Images/UI_Gallery.png" />
+</p>
+
+- Pinch to change the column count / multi select
+
+## Health
+
+<p>
+<img width="25%" src="./Images/UI_Health.png" />
+</p>
+
+- Drawing / ArcMeter
+
+## Navi
+
+<p>
+<img width="25%" src="./Images/UI_Navi.png" />
+</p>
+
+- Scene / lane guidance
 
 ## Graph
 

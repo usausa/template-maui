@@ -71,8 +71,6 @@ public sealed partial class StreamItem : ObservableObject
 
     public double Progress { get; init; }
 
-    public bool HasProgress => Progress > 0;
-
     public int RemainMinutes => (int)Math.Ceiling(Work.Minutes * (1 - Progress));
 
     [ObservableProperty]
@@ -102,7 +100,7 @@ public sealed class StreamLibrary
 
     public IReadOnlyList<StreamItem> Featured() => Items.Where(static x => x.Work.IsFeatured).ToArray();
 
-    public IReadOnlyList<StreamItem> Continue() => Items.Where(static x => x.HasProgress).ToArray();
+    public IReadOnlyList<StreamItem> Continue() => Items.Where(static x => x.Progress > 0).ToArray();
 
     public IReadOnlyList<StreamItem> Shelf(StreamShelf shelf) => shelf switch
     {

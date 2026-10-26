@@ -13,6 +13,11 @@ public sealed class DivideConverter : IValueConverter
             return intValue / intParameter;
         }
 
+        if ((value is long longValue) && (parameter is int longParameter))
+        {
+            return longValue / longParameter;
+        }
+
         return value;
     }
 

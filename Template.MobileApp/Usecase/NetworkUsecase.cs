@@ -145,10 +145,16 @@ public sealed class NetworkUsecase
     // Device
     //--------------------------------------------------------------------------------
 
-    public async ValueTask RegisterDeviceAsync(string deviceId, string name, CancellationToken cancellationToken = default)
+    public async ValueTask RegisterDeviceAsync(string terminalId, string name, CancellationToken cancellationToken = default)
     {
+        if (name.Length > Length.Name)
+        {
+            await dialog.InformationAsync($"Device name is longer than {Length.Name} characters.");
+            return;
+        }
+
         var request = new DeviceRegisterRequest { Name = name };
-        var result = await ExecuteVerboseAsync((h, t) => h.PutDeviceAsync(deviceId, request, t), cancellationToken: cancellationToken);
+        var result = await ExecuteVerboseAsync((h, t) => h.PutDeviceAsync(terminalId, request, t), cancellationToken: cancellationToken);
         if (result.IsSuccess)
         {
             var device = result.Value;
@@ -346,14 +352,14 @@ public sealed class NetworkUsecase
                 return result;
             }
 
-            // Unknown errors
-            if ((type == NetworkResultType.Unknown) || (attempt == MaxAttempts))
+            // Retry only on transport failures, 408, 429, and 5xx
+            if (!IsRetryable(response) || (attempt == MaxAttempts))
             {
-                await NotifyErrorAsync(type, response.StatusCode);
+                await NotifyErrorAsync(response);
                 return result;
             }
 
-            if (!await ConfirmRetryAsync(type, response.StatusCode))
+            if (!await ConfirmRetryAsync(response))
             {
                 return result;
             }
@@ -371,28 +377,36 @@ public sealed class NetworkUsecase
             _ => NetworkResultType.Unknown
         };
 
+    private static bool IsRetryable(IRestResponse response) =>
+        response.RestResult switch
+        {
+            RestResult.Cancel or RestResult.Timeout or RestResult.RequestError => true,
+            RestResult.HttpError => response.StatusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests or >= HttpStatusCode.InternalServerError,
+            _ => false
+        };
+
     //--------------------------------------------------------------------------------
     // Dialog
     //--------------------------------------------------------------------------------
 
-    private ValueTask NotifyErrorAsync(NetworkResultType type, HttpStatusCode statusCode) =>
-        dialog.InformationAsync(type switch
-        {
-            NetworkResultType.Canceled => "Canceled.",
-            NetworkResultType.HttpError => MakeErrorMessage(statusCode, withRetry: false),
-            _ => "Unknown error."
-        });
+    private ValueTask NotifyErrorAsync(IRestResponse response) =>
+        dialog.InformationAsync(MakeErrorMessage(response, withRetry: false));
 
-    private ValueTask<bool> ConfirmRetryAsync(NetworkResultType type, HttpStatusCode statusCode) =>
-        dialog.ConfirmAsync(type == NetworkResultType.Canceled ? "Canceled.\r\nRetry ?" : MakeErrorMessage(statusCode, withRetry: true));
+    private ValueTask<bool> ConfirmRetryAsync(IRestResponse response) =>
+        dialog.ConfirmAsync(MakeErrorMessage(response, withRetry: true));
 
-    private static string MakeErrorMessage(HttpStatusCode statusCode, bool withRetry)
+    private static string MakeErrorMessage(IRestResponse response, bool withRetry)
     {
         var message = new StringBuilder();
-        message.AppendLine("Network error.");
-        if (statusCode > 0)
+        message.AppendLine(response.RestResult switch
         {
-            message.AppendLine($"StatusCode={(int)statusCode}");
+            RestResult.Cancel => "Canceled.",
+            RestResult.Timeout or RestResult.RequestError or RestResult.HttpError => "Network error.",
+            _ => "Unknown error."
+        });
+        if (response.RestResult == RestResult.HttpError)
+        {
+            message.AppendLine($"StatusCode={(int)response.StatusCode}");
         }
 
         if (withRetry)

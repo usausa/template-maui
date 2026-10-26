@@ -23,6 +23,8 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool RelatedSelected { get; set; }
 
+    public ScrollController Scroller { get; } = new();
+
     // Command
 
     public IObserveCommand SelectTabCommand { get; }
@@ -53,6 +55,16 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        if (!context.Attribute.IsRestore())
+        {
+            Scroller.ScrollTo(0, 0);
+        }
+
+        return Task.CompletedTask;
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
@@ -65,5 +77,9 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
 
     private void ToggleDownload() => Context.Selected.IsDownloaded = !Context.Selected.IsDownloaded;
 
-    private void ShowRelated(StreamItem item) => Context.Open(item);
+    private void ShowRelated(StreamItem item)
+    {
+        Context.Open(item);
+        Scroller.ScrollTo(0, 0);
+    }
 }

@@ -37,7 +37,7 @@ public sealed partial class DeviceBleHostViewModel : AppViewModelBase
         this.hostingManager = hostingManager;
         this.userCharacteristic = userCharacteristic;
 
-        UserId = settings.UniqueId;
+        UserId = settings.TerminalId;
     }
 
     //--------------------------------------------------------------------------------

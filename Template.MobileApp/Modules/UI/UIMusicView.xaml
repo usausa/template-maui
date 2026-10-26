@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIMusicView"
+             x:DataType="{x:Type module:UIMusicViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMusicViewModel}"
+             shell:ShellProperty.Title="Music"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="歌詞"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Converter -->
+
+            <converters:ShadeConverter x:Key="ToneTopConverter"
+                                       Rate="0.55" />
+
+            <converters:ShadeConverter x:Key="ToneBottomConverter"
+                                       Rate="0.22" />
+
+            <!-- Color -->
+
+            <Color x:Key="MusicTextColor">#FFFFFF</Color>
+            <Color x:Key="MusicSubTextColor">#B3FFFFFF</Color>
+            <Color x:Key="MusicDimTextColor">#59FFFFFF</Color>
+            <Color x:Key="MusicAccentColor">#FF1744</Color>
+
+            <!-- Head -->
+
+            <Style x:Key="HeadGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,8" />
+            </Style>
+
+            <Style x:Key="HeadIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+            </Style>
+
+            <Style x:Key="HeadStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="1" />
+            </Style>
+
+            <Style x:Key="HeadCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource MusicDimTextColor}" />
+            </Style>
+
+            <Style x:Key="HeadValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource MusicTextColor}" />
+            </Style>
+
+            <!-- Artwork -->
+
+            <Style x:Key="ArtworkBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,8" />
+                <Setter Property="WidthRequest" Value="230" />
+                <Setter Property="HeightRequest" Value="230" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Offset="0,8"
+                                Brush="Black"
+                                Opacity="0.4"
+                                Radius="16" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ArtworkImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <!-- Track -->
+
+            <Style x:Key="TrackGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="20,10,20,0" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="TrackStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TrackTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource MusicTextColor}" />
+            </Style>
+
+            <Style x:Key="TrackArtistLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+            </Style>
+
+            <Style x:Key="FavoriteButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource MusicDimTextColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Lyrics -->
+
+            <Style x:Key="SyncBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="20,8,20,0" />
+                <Setter Property="Padding" Value="10,3" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+            </Style>
+
+            <Style x:Key="SyncStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="5" />
+            </Style>
+
+            <Style x:Key="SyncIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Schedule}" />
+            </Style>
+
+            <Style x:Key="SyncLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+            </Style>
+
+            <Style x:Key="LyricsList"
+                   TargetType="CollectionView">
+                <Setter Property="Margin" Value="20,4" />
+            </Style>
+
+            <Style x:Key="LyricLabel"
+                   TargetType="Label">
+                <Setter Property="HeightRequest" Value="46" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource MusicDimTextColor}" />
+            </Style>
+
+            <!-- Seek -->
+
+            <Style x:Key="SeekStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,0" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="WaveformControl"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="HeightRequest" Value="54" />
+            </Style>
+
+            <Style x:Key="TimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+            </Style>
+
+            <Style x:Key="RemainLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource TimeLabel}">
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <!-- Transport -->
+
+            <Style x:Key="TransportGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="20,8" />
+            </Style>
+
+            <Style x:Key="TransportButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource MusicTextColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="SmallTransportButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource TransportButton}">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+            </Style>
+
+            <Style x:Key="PlayButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="34" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Output -->
+
+            <Style x:Key="OutputGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="20,0,20,12" />
+            </Style>
+
+            <Style x:Key="OutputLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource MusicSubTextColor}" />
+            </Style>
+
+            <Style x:Key="NextLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource OutputLabel}">
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto">
+
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0"
+                                 EndPoint="0,1">
+                <GradientStop Offset="0"
+                              Color="{Binding Tone, Converter={StaticResource ToneTopConverter}}" />
+                <GradientStop Offset="1"
+                              Color="{Binding Tone, Converter={StaticResource ToneBottomConverter}}" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Head -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource HeadGrid}"
+              ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource HeadIconLabel}"
+                   behaviors:TouchOption.Ripple="True"
+                   Text="{x:Static fonts:MaterialIcons.Expand_more}" />
+            <VerticalStackLayout Grid.Column="1"
+                                 Style="{StaticResource HeadStack}">
+                <Label Style="{StaticResource HeadCaptionLabel}"
+                       Text="PLAYING FROM" />
+                <Label Style="{StaticResource HeadValueLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Player.Playlist}" />
+                            <Span Text=" ・ " />
+                            <Span Text="{Binding Player.PlaylistCount}" />
+                            <Span Text=" 曲" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+            <Label Grid.Column="2"
+                   Style="{StaticResource HeadIconLabel}"
+                   behaviors:TouchOption.Ripple="True"
+                   Text="{x:Static fonts:MaterialIcons.More_vert}" />
+        </Grid>
+
+        <!-- Artwork -->
+        <Border Grid.Row="1"
+                Style="{StaticResource ArtworkBorder}">
+            <Image Style="{StaticResource ArtworkImage}"
+                   Source="{Binding Artwork}" />
+        </Border>
+
+        <!-- Track -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource TrackGrid}"
+              ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Column="0"
+                                 Style="{StaticResource TrackStack}">
+                <Label Style="{StaticResource TrackTitleLabel}"
+                       Text="{Binding Player.Track.Title}" />
+                <Label Style="{StaticResource TrackArtistLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Player.Track.Artist}" />
+                            <Span Text=" ・ " />
+                            <Span Text="{Binding Player.Track.Album}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+            <Button Grid.Column="1"
+                    Style="{StaticResource FavoriteButton}"
+                    Command="{Binding FavoriteCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Favorite}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Player.IsFavorite}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="{StaticResource MusicAccentColor}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- Sync -->
+        <Border Grid.Row="3"
+                Style="{StaticResource SyncBorder}"
+                IsVisible="{Binding ShowLyrics}">
+            <HorizontalStackLayout Style="{StaticResource SyncStack}">
+                <Label Style="{StaticResource SyncIconLabel}" />
+                <Label Style="{StaticResource SyncLabel}"
+                       Text="歌詞を同期中" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- Lyrics -->
+        <CollectionView Grid.Row="4"
+                        Style="{StaticResource LyricsList}"
+                        IsVisible="{Binding ShowLyrics}"
+                        VerticalScrollBarVisibility="Never"
+                        ItemsSource="{Binding Lines}"
+                        behaviors:ScrollBind.Controller="{Binding Scroller}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type module:UIMusicLine}">
+                    <Label Style="{StaticResource LyricLabel}"
+                           Text="{Binding Text}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding IsCurrent}"
+                                         Value="True">
+                                <Setter Property="FontSize" Value="23" />
+                                <Setter Property="FontAttributes" Value="Bold" />
+                                <Setter Property="TextColor" Value="{StaticResource MusicTextColor}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Seek -->
+        <VerticalStackLayout Grid.Row="5"
+                             Style="{StaticResource SeekStack}">
+            <drawing:DrawingControl Style="{StaticResource WaveformControl}"
+                                    Drawing="{Binding Waveform}" />
+            <Grid ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource TimeLabel}"
+                       Text="{Binding Player.Position, Converter={StaticResource MinuteSecondConverter}}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource RemainLabel}"
+                       Text="{Binding Player.Remain, Converter={StaticResource MinuteSecondConverter}, StringFormat='-{0}'}" />
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- Transport -->
+        <Grid Grid.Row="6"
+              Style="{StaticResource TransportGrid}"
+              ColumnDefinitions="*,*,Auto,*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource SmallTransportButton}"
+                    Command="{Binding ShuffleCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Shuffle}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Player.IsShuffle}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="{StaticResource MusicAccentColor}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource TransportButton}"
+                    Command="{Binding PreviousCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Skip_previous}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource PlayButton}"
+                    Command="{Binding PlayCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Play_arrow}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Player.IsPlaying}"
+                                 Value="True">
+                        <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Pause}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="3"
+                    Style="{StaticResource TransportButton}"
+                    Command="{Binding NextCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Skip_next}" />
+            <Button Grid.Column="4"
+                    Style="{StaticResource SmallTransportButton}"
+                    Command="{Binding RepeatCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Repeat}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Player.IsRepeat}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="{StaticResource MusicAccentColor}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- Output -->
+        <Grid Grid.Row="7"
+              Style="{StaticResource OutputGrid}">
+            <Label Style="{StaticResource NextLabel}"
+                   behaviors:TouchOption.Ripple="True"
+                   behaviors:TouchOption.ClickCommand="{Binding NextCommand}"
+                   Text="次の曲へ" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

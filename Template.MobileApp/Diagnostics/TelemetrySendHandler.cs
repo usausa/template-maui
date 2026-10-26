@@ -2,10 +2,20 @@ namespace Template.MobileApp.Diagnostics;
 
 using System.Net;
 
+using Google.Protobuf;
+
 using Template.MobileApp.Helpers;
 
 internal sealed class TelemetrySendHandler : DelegatingHandler
 {
+    private const string ProtobufMediaType = "application/x-protobuf";
+
+    private static readonly uint PartialSuccessTag = WireFormat.MakeTag(1, WireFormat.WireType.LengthDelimited);
+
+    private static readonly uint RejectedTag = WireFormat.MakeTag(1, WireFormat.WireType.Varint);
+
+    private static readonly uint ErrorMessageTag = WireFormat.MakeTag(2, WireFormat.WireType.LengthDelimited);
+
     private readonly Lock sync = new();
 
     private readonly Store[] stores;
@@ -69,7 +79,12 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
         if (response.IsSuccessStatusCode)
         {
             Interlocked.Increment(ref succeededCount);
-            sent?.Invoke(true, null);
+            if (sent is not null)
+            {
+                var rejected = await ReadRejectedAsync(response.Content, cancellationToken).ConfigureAwait(false);
+                sent(rejected is null, rejected);
+            }
+
             StartResend();
         }
         else
@@ -187,6 +202,60 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
 
     private static bool IsRetryable(HttpStatusCode code) =>
         code is HttpStatusCode.TooManyRequests or HttpStatusCode.BadGateway or HttpStatusCode.ServiceUnavailable or HttpStatusCode.GatewayTimeout;
+
+    private static async Task<string?> ReadRejectedAsync(HttpContent content, CancellationToken cancellationToken)
+    {
+        if (content.Headers.ContentType?.MediaType != ProtobufMediaType)
+        {
+            return null;
+        }
+
+        try
+        {
+            using var input = new CodedInputStream(await content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false));
+            uint tag;
+            while ((tag = input.ReadTag()) != 0)
+            {
+                if (tag == PartialSuccessTag)
+                {
+                    return FormatRejected(input.ReadBytes());
+                }
+
+                input.SkipLastField();
+            }
+
+            return null;
+        }
+        catch (Exception ex) when (ex is InvalidProtocolBufferException or HttpRequestException or IOException)
+        {
+            return null;
+        }
+    }
+
+    private static string? FormatRejected(ByteString partialSuccess)
+    {
+        using var input = partialSuccess.CreateCodedInput();
+        var rejected = 0L;
+        var message = string.Empty;
+        uint tag;
+        while ((tag = input.ReadTag()) != 0)
+        {
+            if (tag == RejectedTag)
+            {
+                rejected = input.ReadInt64();
+            }
+            else if (tag == ErrorMessageTag)
+            {
+                message = input.ReadString();
+            }
+            else
+            {
+                input.SkipLastField();
+            }
+        }
+
+        return rejected > 0 ? $"Rejected {rejected}. {message}".TrimEnd() : null;
+    }
 
     private sealed record Store(string Path, RingBuffer<Payload> Payloads);
 

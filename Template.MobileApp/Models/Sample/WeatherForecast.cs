@@ -152,8 +152,6 @@ public sealed class WeatherForecast
 
     public required IReadOnlyList<WeatherAlert> Alerts { get; init; }
 
-    public bool HasAlerts => Alerts.Count > 0;
-
     public bool HasWarning => Alerts.Any(static x => x.Level == WeatherAlertLevel.Warning);
 
     public required DateTime AlertIssuedAt { get; init; }

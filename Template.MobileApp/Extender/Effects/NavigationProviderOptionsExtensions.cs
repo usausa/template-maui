@@ -4,12 +4,12 @@ public static class NavigationProviderOptionsExtensions
 {
     public static MauiNavigationProviderOptions RegisterAppEffects(this MauiNavigationProviderOptions options)
     {
-        options.RegisterEffect(AppEffect.Zoom, new ZoomEffect());
-        options.RegisterEffect(AppEffect.Drop, new DropEffect());
-        options.RegisterEffect(AppEffect.Flip, new FlipEffect());
-        options.RegisterEffect(AppEffect.Rotate, new RotateEffect());
-        options.RegisterEffect(AppEffect.DialogOpen, new DialogEffect(open: true));
-        options.RegisterEffect(AppEffect.DialogClose, new DialogEffect(open: false));
+        options.RegisterEffect<ZoomEffect>(AppEffect.Zoom);
+        options.RegisterEffect<DropEffect>(AppEffect.Drop);
+        options.RegisterEffect<FlipEffect>(AppEffect.Flip);
+        options.RegisterEffect<RotateEffect>(AppEffect.Rotate);
+        options.RegisterEffect<DialogOpenEffect>(AppEffect.DialogOpen);
+        options.RegisterEffect<DialogCloseEffect>(AppEffect.DialogClose);
         return options;
     }
 }

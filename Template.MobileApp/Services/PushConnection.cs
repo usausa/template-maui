@@ -58,6 +58,8 @@ public sealed class PushConnection : IDisposable
 
     public IObservable<PushMessage> Messages => hub.On<PushMessage>("Receive").Do(x => log.InfoPushReceived(x.Id, x.Title));
 
+    public string TerminalId { get; set; } = string.Empty;
+
     public PushConnection(
         ILogger<PushConnection> log,
         DeviceInformation deviceInformation)
@@ -77,7 +79,7 @@ public sealed class PushConnection : IDisposable
             .Where(_ => deviceInformation.Network?.Access == NetworkAccess.Internet)
             .Select(static _ => Unit.Default);
 
-        return hub.Connect(new Uri(baseAddress, $"{HubPath}?deviceId={Uri.EscapeDataString(deviceInformation.DeviceId)}"), resume: resume)
+        return hub.Connect(new Uri(baseAddress, $"{HubPath}?terminalId={Uri.EscapeDataString(TerminalId)}"), resume: resume)
             .Finally(log.InfoPushStopped)
             .Subscribe(LogStatus, log.WarnPushConnectionError);
     }

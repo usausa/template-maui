@@ -26,6 +26,11 @@ public interface IZoomDrawing
     void OnZoom(float scale, PointF offset);
 }
 
+public interface ISizedDrawing
+{
+    double ContentHeight { get; }
+}
+
 #pragma warning disable CA1033
 public abstract class DrawingObject : IDrawingObject
 {
@@ -43,7 +48,7 @@ public abstract class DrawingObject : IDrawingObject
 
     public void Invalidate()
     {
-        control?.Invalidate();
+        control?.InvalidateContent();
     }
 
     public void SafeInvalidate()
@@ -52,11 +57,11 @@ public abstract class DrawingObject : IDrawingObject
         {
             if (control.Dispatcher.IsDispatchRequired)
             {
-                control.Dispatcher.Dispatch(control.Invalidate);
+                control.Dispatcher.Dispatch(control.InvalidateContent);
             }
             else
             {
-                control.Invalidate();
+                control.InvalidateContent();
             }
         }
     }

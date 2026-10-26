@@ -1,51 +1,51 @@
 namespace Template.MobileApp.Extender.Effects;
 
-public sealed class DialogEffect : IMauiNavigationEffect
+public abstract class DialogEffect : IMauiNavigationEffect
 {
-    private readonly bool open;
-
     private readonly double minScale;
 
     private readonly uint duration;
 
-    public DialogEffect(bool open, double minScale = 0.7d, uint durationMilliseconds = 220)
+    protected DialogEffect(double minScale, uint durationMilliseconds)
     {
-        this.open = open;
         this.minScale = minScale;
         duration = durationMilliseconds;
     }
 
-    public async Task EffectAsync(MauiNavigationEffectContext context)
+    public Task EffectAsync(MauiNavigationEffectContext context) =>
+        context.Phase switch
+        {
+            MauiNavigationEffectPhase.Open or MauiNavigationEffectPhase.Activate => EnterAsync(context),
+            MauiNavigationEffectPhase.Close or MauiNavigationEffectPhase.Deactivate => LeaveAsync(context),
+            _ => Task.CompletedTask
+        };
+
+    protected abstract Task EnterAsync(MauiNavigationEffectContext context);
+
+    protected abstract Task LeaveAsync(MauiNavigationEffectContext context);
+
+    protected async Task ShowAsync(View view)
     {
-        var view = context.View;
+        view.Scale = minScale;
+        view.Opacity = 0;
+        await Task.WhenAll(
+            view.ScaleToAsync(1, duration, Easing.CubicOut),
+            view.FadeToAsync(1, duration)).ConfigureAwait(true);
+        Reset(view);
+    }
 
-        if (open)
-        {
-            if (context.Phase is not (MauiNavigationEffectPhase.Open or MauiNavigationEffectPhase.Activate))
-            {
-                return;
-            }
+    protected async Task HideAsync(View view)
+    {
+        view.ZIndex = 1;
+        await Task.WhenAll(
+            view.ScaleToAsync(minScale, duration, Easing.CubicOut),
+            view.FadeToAsync(0, duration)).ConfigureAwait(true);
+        view.ZIndex = 0;
+        Reset(view);
+    }
 
-            view.Scale = minScale;
-            view.Opacity = 0;
-            await Task.WhenAll(
-                view.ScaleToAsync(1, duration, Easing.CubicOut),
-                view.FadeToAsync(1, duration)).ConfigureAwait(true);
-        }
-        else
-        {
-            if (context.Phase is not (MauiNavigationEffectPhase.Close or MauiNavigationEffectPhase.Deactivate))
-            {
-                return;
-            }
-
-            view.ZIndex = 1;
-            await Task.WhenAll(
-                view.ScaleToAsync(minScale, duration, Easing.CubicOut),
-                view.FadeToAsync(0, duration)).ConfigureAwait(true);
-            view.ZIndex = 0;
-        }
-
+    private static void Reset(View view)
+    {
         view.Scale = 1;
         view.Opacity = 1;
     }

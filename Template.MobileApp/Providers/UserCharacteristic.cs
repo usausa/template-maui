@@ -8,7 +8,7 @@ public sealed class UserCharacteristic
 
     public UserCharacteristic(Settings settings)
     {
-        guid = Guid.Parse(settings.UniqueId);
+        guid = Guid.Parse(settings.TerminalId);
     }
 
     public Task Register(IBleHostingManager manager) =>

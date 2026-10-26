@@ -17,10 +17,10 @@ public sealed class Settings
 
     // Id
 
-    public string UniqueId
+    public string TerminalId
     {
-        get => preferences.Get<string>(nameof(UniqueId), default!);
-        set => preferences.Set(nameof(UniqueId), value);
+        get => preferences.Get<string>(nameof(TerminalId), default!);
+        set => preferences.Set(nameof(TerminalId), value);
     }
 
     // API

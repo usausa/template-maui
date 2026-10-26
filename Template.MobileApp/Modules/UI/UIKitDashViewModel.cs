@@ -4,9 +4,8 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed class UIKitDashHero
 {
-    public int Steps { get; init; }
-    public int Goal { get; init; }
-    public int Remain { get; init; }
+    public string Number { get; init; } = string.Empty;
+    public DateTime Eta { get; init; }
     public double Rate { get; init; }
 }
 
@@ -55,17 +54,17 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
     // Chart
 
     [ObservableProperty]
-    public partial int StepTotal { get; set; }
+    public partial int SpendTotal { get; set; }
 
     [ObservableProperty]
-    public partial int HeartAverage { get; set; }
+    public partial int OrderTotal { get; set; }
 
-    public ChartDrawing StepChart { get; } = new()
+    public ChartDrawing SpendChart { get; } = new()
     {
         ValueFormat = "{0:N0} 歩"
     };
 
-    public ChartDrawing HeartChart { get; } = new()
+    public ChartDrawing OrderChart { get; } = new()
     {
         LineColor = Color.FromArgb("#1E88E5"),
         LineHighColor = Color.FromArgb("#1E88E5"),
@@ -73,16 +72,6 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
     };
 
     // Sleep
-
-    public IReadOnlyList<KitSleepSpan> Sleep => activity.Sleep;
-
-    public IReadOnlyList<KitSleepTotal> SleepTotals { get; }
-
-    public DateTime BedTime => activity.BedTime;
-
-    public DateTime WakeTime => activity.WakeTime;
-
-    public TimeSpan SleepLength => activity.SleepLength;
 
     // Quick links
 
@@ -106,18 +95,17 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
 
     public UIKitDashViewModel()
     {
-        Disposables.Add(StepChart);
-        Disposables.Add(HeartChart);
+        Disposables.Add(SpendChart);
+        Disposables.Add(OrderChart);
 
         Tiles =
         [
-            new UIKitDashHero { Steps = activity.Steps, Goal = activity.StepGoal, Remain = activity.StepRemain, Rate = activity.StepRate },
-            new UIKitDashMetric { Title = "心拍数", Value = "72", Unit = "bpm", Icon = Fonts.MaterialIcons.Favorite, EnterDelay = 80 },
-            new UIKitDashMetric { Title = "消費カロリー", Value = "412", Unit = "kcal", Icon = Fonts.MaterialIcons.Local_fire_department, EnterDelay = 140 },
-            new UIKitDashMetric { Title = "睡眠", Value = "7.4", Unit = "時間", Icon = Fonts.MaterialIcons.Bedtime, EnterDelay = 200 },
-            new UIKitDashMetric { Title = "距離", Value = "5.7", Unit = "km", Icon = Fonts.MaterialIcons.Directions_walk, EnterDelay = 260 }
+            new UIKitDashHero { Number = activity.OrderNumber, Eta = activity.OrderEta, Rate = activity.OrderRate },
+            new UIKitDashMetric { Title = "今月の注文", Value = activity.OrderCount.ToString(CultureInfo.CurrentCulture), Unit = "件", Icon = Fonts.MaterialIcons.Receipt_long, EnterDelay = 80 },
+            new UIKitDashMetric { Title = "今月の利用", Value = activity.Spend.ToString("N0", CultureInfo.CurrentCulture), Unit = "円", Icon = Fonts.MaterialIcons.Payments, EnterDelay = 140 },
+            new UIKitDashMetric { Title = "クーポン", Value = activity.CouponCount.ToString(CultureInfo.CurrentCulture), Unit = "枚", Icon = Fonts.MaterialIcons.Local_offer, EnterDelay = 200 },
+            new UIKitDashMetric { Title = "ポイント", Value = activity.Points.ToString("N0", CultureInfo.CurrentCulture), Unit = "pt", Icon = Fonts.MaterialIcons.Stars, EnterDelay = 260 }
         ];
-        SleepTotals = activity.SleepTotals();
 
         NotifyCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitNotify));
         SettingCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitSetting));
@@ -137,7 +125,7 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -149,12 +137,12 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
     {
         var period = (KitPeriod)PeriodIndex;
 
-        var steps = KitSample.LoadStepSeries(activity, period);
-        StepChart.ShowBar(steps.Values, steps.Labels);
-        StepTotal = (int)steps.Values.Sum();
+        var spend = KitSample.LoadSpendSeries(activity, period);
+        SpendChart.ShowBar(spend.Values, spend.Labels);
+        SpendTotal = (int)spend.Values.Sum();
 
-        var heart = KitSample.LoadHeartSeries(activity, period);
-        HeartChart.ShowLine(heart.Values, heart.Labels);
-        HeartAverage = (int)Math.Round(heart.Values.Average());
+        var orders = KitSample.LoadOrderSeries(activity, period);
+        OrderChart.ShowLine(orders.Values, orders.Labels);
+        OrderTotal = (int)orders.Values.Sum();
     }
 }

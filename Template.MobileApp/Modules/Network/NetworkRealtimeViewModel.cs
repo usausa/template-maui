@@ -36,7 +36,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
     private readonly INotificationService notification;
 
-    private readonly DeviceInformation deviceInformation;
+    private readonly Settings settings;
 
     private readonly DeviceState deviceState;
 
@@ -91,7 +91,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         MonitorConnection connection,
         ApiContext apiContext,
         INotificationService notification,
-        DeviceInformation deviceInformation,
+        Settings settings,
         DeviceState deviceState)
     {
         this.log = log;
@@ -99,7 +99,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
         this.connection = connection;
         this.apiContext = apiContext;
         this.notification = notification;
-        this.deviceInformation = deviceInformation;
+        this.settings = settings;
         this.deviceState = deviceState;
 
         ReconnectCommand = MakeDelegateCommand(Connect);
@@ -228,7 +228,7 @@ public sealed partial class NetworkRealtimeViewModel : AppViewModelBase
 
         await connection.ReportDeviceStatusAsync(new DeviceStatusMessage
         {
-            DeviceId = deviceInformation.DeviceId,
+            TerminalId = settings.TerminalId,
             Model = $"{deviceInfo.Manufacturer} {deviceInfo.Model}",
             Platform = $"{deviceInfo.Platform} {deviceInfo.VersionString}",
             Battery = deviceState.BatteryChargeLevel,

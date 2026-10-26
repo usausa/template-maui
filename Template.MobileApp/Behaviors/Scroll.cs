@@ -1,6 +1,7 @@
 namespace Template.MobileApp.Behaviors;
 
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 public static partial class Scroll
 {
@@ -178,6 +179,62 @@ public static partial class Scroll
     }
 
     //--------------------------------------------------------------------------------
+    // IndexCommand
+    //--------------------------------------------------------------------------------
+
+    public static readonly BindableProperty IndexCommandProperty = BindableProperty.CreateAttached(
+        "IndexCommand",
+        typeof(ICommand),
+        typeof(Scroll),
+        null,
+        propertyChanged: OnIndexCommandChanged);
+
+    public static ICommand? GetIndexCommand(BindableObject bindable) => (ICommand?)bindable.GetValue(IndexCommandProperty);
+
+    public static void SetIndexCommand(BindableObject bindable, ICommand? value) => bindable.SetValue(IndexCommandProperty, value);
+
+    private static void OnIndexCommandChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            scrollView.Scrolled -= OnIndexScrolled;
+        }
+        if (newValue is not null)
+        {
+            scrollView.Scrolled += OnIndexScrolled;
+        }
+    }
+
+    private static void OnIndexScrolled(object? sender, ScrolledEventArgs e)
+    {
+        if ((sender is not ScrollView { Content: Layout { Count: > 0 } layout } scrollView) ||
+            (GetIndexCommand(scrollView) is not { } command))
+        {
+            return;
+        }
+
+        var index = layout.Count - 1;
+        for (var i = 0; i < layout.Count; i++)
+        {
+            if ((layout[i] is VisualElement child) && ((child.Y + child.Height) > e.ScrollY))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        if (command.CanExecute(index))
+        {
+            command.Execute(index);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
     // ShowOnAwayFromLastTarget
     //--------------------------------------------------------------------------------
 
@@ -298,6 +355,128 @@ public static partial class Scroll
     }
 
     //--------------------------------------------------------------------------------
+    // DragScrollSpeed
+    //--------------------------------------------------------------------------------
+
+    private static readonly ConditionalWeakTable<View, DragScrollWatcher> DragScrollWatchers = [];
+
+    public static readonly BindableProperty DragScrollSpeedProperty = BindableProperty.CreateAttached(
+        "DragScrollSpeed",
+        typeof(double),
+        typeof(Scroll),
+        0d,
+        propertyChanged: OnDragScrollSpeedChanged);
+
+    public static double GetDragScrollSpeed(BindableObject bindable) => (double)bindable.GetValue(DragScrollSpeedProperty);
+
+    public static void SetDragScrollSpeed(BindableObject bindable, double value) => bindable.SetValue(DragScrollSpeedProperty, value);
+
+    private static void OnDragScrollSpeedChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not View view)
+        {
+            return;
+        }
+
+        if (DragScrollWatchers.TryGetValue(view, out var watcher))
+        {
+            watcher.Detach();
+            DragScrollWatchers.Remove(view);
+        }
+
+        if (newValue is double speed && (speed != 0))
+        {
+            DragScrollWatchers.Add(view, new DragScrollWatcher(view));
+        }
+    }
+
+    private sealed class DragScrollWatcher
+    {
+        private const long MaximumElapsed = 100;
+
+        private readonly View owner;
+
+        private DropGestureRecognizer? recognizer;
+
+        private long moved;
+
+        public DragScrollWatcher(View owner)
+        {
+            this.owner = owner;
+            owner.Loaded += HandleLoaded;
+            owner.Unloaded += HandleUnloaded;
+
+            if (owner.IsLoaded)
+            {
+                Attach();
+            }
+        }
+
+        public void Detach()
+        {
+            owner.Loaded -= HandleLoaded;
+            owner.Unloaded -= HandleUnloaded;
+            Release();
+        }
+
+        private void HandleLoaded(object? sender, EventArgs e) => Attach();
+
+        private void HandleUnloaded(object? sender, EventArgs e) => Release();
+
+        private void Attach()
+        {
+            if (recognizer is not null)
+            {
+                return;
+            }
+
+            recognizer = owner.GestureRecognizers.FirstOrDefault(static x => x is DropGestureRecognizer) as DropGestureRecognizer;
+            if (recognizer is null)
+            {
+                recognizer = new DropGestureRecognizer { AllowDrop = true };
+                owner.GestureRecognizers.Add(recognizer);
+            }
+
+            recognizer.DragOver += HandleDragOver;
+            recognizer.DragLeave += HandleDragLeave;
+        }
+
+        private void Release()
+        {
+            if (recognizer is not null)
+            {
+                recognizer.DragOver -= HandleDragOver;
+                recognizer.DragLeave -= HandleDragLeave;
+                recognizer = null;
+            }
+        }
+
+        private void HandleDragLeave(object? sender, DragEventArgs e) => moved = 0;
+
+        private void HandleDragOver(object? sender, DragEventArgs e)
+        {
+            var now = Environment.TickCount64;
+            var last = moved;
+            moved = now;
+
+            if (last == 0)
+            {
+                return;
+            }
+
+            if ((owner.Parent is not Layout layout) ||
+                (layout.FirstOrDefault(static x => x is ScrollView) is not ScrollView target))
+            {
+                return;
+            }
+
+            var elapsed = Math.Min(now - last, MaximumElapsed);
+            var y = Math.Max(0, target.ScrollY + (GetDragScrollSpeed(owner) * elapsed / 1000d));
+            _ = target.ScrollToAsync(target.ScrollX, y, false);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
     // SyncTarget
     //--------------------------------------------------------------------------------
 
@@ -359,28 +538,5 @@ public static partial class Scroll
         }
 
         _ = target.ScrollToAsync(x, y, false);
-    }
-
-    //--------------------------------------------------------------------------------
-    // TopTrigger
-    //--------------------------------------------------------------------------------
-
-    public static readonly BindableProperty TopTriggerProperty = BindableProperty.CreateAttached(
-        "TopTrigger",
-        typeof(object),
-        typeof(Scroll),
-        null,
-        propertyChanged: OnTopTriggerChanged);
-
-    public static object? GetTopTrigger(BindableObject bindable) => bindable.GetValue(TopTriggerProperty);
-
-    public static void SetTopTrigger(BindableObject bindable, object? value) => bindable.SetValue(TopTriggerProperty, value);
-
-    private static void OnTopTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
-    {
-        if ((bindable is ScrollView scrollView) && (oldValue is not null) && (newValue is not null))
-        {
-            _ = scrollView.ScrollToAsync(0, 0, false);
-        }
     }
 }

@@ -48,7 +48,7 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     // Application
 
-    public string InstallationId { get; }
+    public string TerminalId { get; }
 
     // Startup
 
@@ -144,7 +144,7 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
         DeviceName = deviceInfo.Name;
         DeviceVersion = deviceInfo.Version;
         DeviceId = deviceInformation.DeviceId;
-        InstallationId = telemetryStatus.InstallationId;
+        TerminalId = telemetryStatus.TerminalId;
         StartedAt = deviceInformation.StartTime;
         DeviceState = deviceState;
 

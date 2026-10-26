@@ -123,7 +123,6 @@ public static class AppIcons
     public static readonly FontImageSource ShowChart = Create(MaterialIcons.Show_chart, MenuSize, Colors.White);
     public static readonly FontImageSource SmartToy = Create(MaterialIcons.Smart_toy, MenuSize, Colors.White);
     public static readonly FontImageSource Speed = Create(MaterialIcons.Speed, MenuSize, Colors.White);
-    public static readonly FontImageSource SportsBaseball = Create(MaterialIcons.Sports_baseball, MenuSize, Colors.White);
     public static readonly FontImageSource SportsEsports = Create(MaterialIcons.Sports_esports, MenuSize, Colors.White);
     public static readonly FontImageSource Storage = Create(MaterialIcons.Storage, MenuSize, Colors.White);
     public static readonly FontImageSource Storefront = Create(MaterialIcons.Storefront, MenuSize, Colors.White);

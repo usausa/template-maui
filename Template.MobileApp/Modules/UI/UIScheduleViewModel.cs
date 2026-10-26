@@ -153,7 +153,7 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
             .Select(static x => new UIScheduleAllDay(x.Title, x.Style == CalendarEventStyle.Filled ? x.BackgroundColor : x.TextColor))
             .ToArray();
         Events = calendarService.GetSchedule(day.Date);
-        ShowCurrentTime = day.IsToday;
+        ShowCurrentTime = day.Date == DateOnly.FromDateTime(DateTime.Today);
         UpdateSummary();
     }
 

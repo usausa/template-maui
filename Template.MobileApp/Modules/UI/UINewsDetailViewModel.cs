@@ -22,6 +22,8 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double ReadProgress { get; set; }
 
+    public ScrollController Scroller { get; } = new();
+
     // Command
 
     public IObserveCommand SaveCommand { get; }
@@ -58,6 +60,17 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
+    // A detail opened from the list starts at the top, a return keeps where it was
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        if (!context.Attribute.IsRestore())
+        {
+            Scroller.ScrollTo(0, 0);
+        }
+
+        return Task.CompletedTask;
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
@@ -70,6 +83,7 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
     {
         Context.ShowRelated(article);
         ReadProgress = 0;
+        Scroller.ScrollTo(0, 0);
     }
 
     private Task ShareAsync() =>

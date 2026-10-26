@@ -201,7 +201,6 @@ public enum ViewId
     UIHealth,
     UINavi,
 
-    UIScore,
     UIFiler,
     UITrade,
 

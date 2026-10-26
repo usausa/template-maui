@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UITradeView"
+             x:DataType="{x:Type module:UITradeViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UITradeViewModel}"
+             shell:ShellProperty.Title="Trade"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="歩み値"
+             shell:ShellProperty.Function3Text="チャート"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+
+            <Color x:Key="TradeBackColor">#10151B</Color>
+            <Color x:Key="TradePanelColor">#0DFFFFFF</Color>
+            <Color x:Key="TradeTextColor">#FFFFFF</Color>
+            <Color x:Key="TradeSubTextColor">#8CFFFFFF</Color>
+            <Color x:Key="TradeDimTextColor">#73FFFFFF</Color>
+            <Color x:Key="TradeUpColor">#26A69A</Color>
+            <Color x:Key="TradeDownColor">#EF5350</Color>
+            <Color x:Key="TradeAmberColor">#FFC107</Color>
+            <Color x:Key="TradeAskBarColor">#42EF5350</Color>
+            <Color x:Key="TradeBidBarColor">#4226A69A</Color>
+            <Color x:Key="TradeMidColor">#1FFFC107</Color>
+
+            <!-- Converter -->
+
+            <converters:DivideConverter x:Key="DivideConverter" />
+
+            <converters:BasisConverter x:Key="BasisConverter" />
+
+            <s:BoolToColorConverter x:Key="PriceColorConverter"
+                                    TrueValue="{StaticResource TradeUpColor}"
+                                    FalseValue="{StaticResource TradeDownColor}" />
+
+            <s:MapToColorConverter x:Key="SideColorConverter">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{x:Static sample:StockSide.Buy}"
+                                       Value="{StaticResource TradeUpColor}" />
+                    <s:MapToColorEntry Key="{x:Static sample:StockSide.Sell}"
+                                       Value="{StaticResource TradeDownColor}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToTextConverter x:Key="SideTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:StockSide.Buy}"
+                                      Value="買" />
+                    <s:MapToTextEntry Key="{x:Static sample:StockSide.Sell}"
+                                      Value="売" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <!-- Symbol -->
+
+            <Style x:Key="SymbolStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="14,10,14,9" />
+                <Setter Property="Spacing" Value="7" />
+            </Style>
+
+            <Style x:Key="SymbolNameGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CodeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="7,2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="#1FFFFFFF" />
+            </Style>
+
+            <Style x:Key="CodeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+            </Style>
+
+            <Style x:Key="SymbolNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+            </Style>
+
+            <Style x:Key="MarketStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="5" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="MarketDot"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="6" />
+                <Setter Property="HeightRequest" Value="6" />
+                <Setter Property="CornerRadius" Value="3" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Color" Value="{StaticResource TradeUpColor}" />
+            </Style>
+
+            <Style x:Key="MarketLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeUpColor}" />
+            </Style>
+
+            <Style x:Key="PriceGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="PriceLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="ChangeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,4" />
+            </Style>
+
+            <Style x:Key="UpdatedLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,5" />
+                <Setter Property="TextColor" Value="{StaticResource TradeDimTextColor}" />
+            </Style>
+
+            <Style x:Key="StatGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="StatStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="StatHeadLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="{StaticResource TradeDimTextColor}" />
+            </Style>
+
+            <Style x:Key="StatValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+            </Style>
+
+            <!-- Timeframe -->
+
+            <Style x:Key="TimeframeStack"
+                   TargetType="FlexLayout">
+                <Setter Property="Padding" Value="12,8" />
+            </Style>
+
+            <Style x:Key="TimeframeButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="1.5,0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="30" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource TradeSubTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TradePanelColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Chart -->
+
+            <Style x:Key="ChartControl"
+                   TargetType="drawing:DrawingControl">
+                <Setter Property="Margin" Value="4,0,8,0" />
+            </Style>
+
+            <!-- Tick -->
+
+            <Style x:Key="TickHeadGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="14,5" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TradePanelColor}" />
+            </Style>
+
+            <Style x:Key="TickHeadLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="{StaticResource TradeDimTextColor}" />
+            </Style>
+
+            <Style x:Key="TickGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="HeightRequest" Value="24" />
+            </Style>
+
+            <Style x:Key="TickTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeDimTextColor}" />
+            </Style>
+
+            <Style x:Key="TickPriceLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TickQuantityLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="TickSideLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Board -->
+
+            <Style x:Key="BoardHeadGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,5" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TradePanelColor}" />
+            </Style>
+
+            <Style x:Key="BoardHeadLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="{StaticResource TradeDimTextColor}" />
+            </Style>
+
+            <Style x:Key="BoardGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="25" />
+            </Style>
+
+            <Style x:Key="BoardBar"
+                   TargetType="BoxView">
+                <Setter Property="Margin" Value="0,3" />
+                <Setter Property="CornerRadius" Value="2" />
+            </Style>
+
+            <Style x:Key="BoardQuantityLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+            </Style>
+
+            <Style x:Key="BoardPriceLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="MidGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="30" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TradeMidColor}" />
+            </Style>
+
+            <Style x:Key="MidTotalLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeSubTextColor}" />
+            </Style>
+
+            <Style x:Key="MidPriceLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource TradeAmberColor}" />
+            </Style>
+
+            <!-- Message -->
+
+            <Style x:Key="MessageBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,4" />
+                <Setter Property="Padding" Value="12,5" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="BackgroundColor" Value="#1FFFFFFF" />
+            </Style>
+
+            <Style x:Key="MessageLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+            </Style>
+
+            <!-- Action -->
+
+            <Style x:Key="ActionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,6,12,10" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid BackgroundColor="{StaticResource TradeBackColor}"
+          RowDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+
+        <!-- Symbol -->
+        <VerticalStackLayout Grid.Row="0"
+                             Style="{StaticResource SymbolStack}">
+            <Grid Style="{StaticResource SymbolNameGrid}"
+                  ColumnDefinitions="Auto,Auto,*">
+                <Border Grid.Column="0"
+                        Style="{StaticResource CodeBorder}">
+                    <Label Style="{StaticResource CodeLabel}"
+                           Text="{Binding Board.Quote.Code}" />
+                </Border>
+                <Label Grid.Column="1"
+                       Style="{StaticResource SymbolNameLabel}"
+                       Text="{Binding Board.Quote.Name}" />
+                <HorizontalStackLayout Grid.Column="2"
+                                       Style="{StaticResource MarketStack}"
+                                       HorizontalOptions="End">
+                    <BoxView Style="{StaticResource MarketDot}" />
+                    <Label Style="{StaticResource MarketLabel}"
+                           Text="{Binding Board.Quote.Market}" />
+                    <Label Style="{StaticResource MarketLabel}"
+                           Text="・" />
+                    <Label Style="{StaticResource MarketLabel}"
+                           Text="{Binding Board.Quote.Session}" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <Grid Style="{StaticResource PriceGrid}"
+                  ColumnDefinitions="Auto,Auto,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource PriceLabel}"
+                       TextColor="{Binding Board.Quote.IsUp, Converter={StaticResource PriceColorConverter}}"
+                       Text="{Binding Board.Quote.Price, StringFormat='{0:N1}'}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource ChangeLabel}"
+                       TextColor="{Binding Board.Quote.IsUp, Converter={StaticResource PriceColorConverter}}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Board.Quote.Change, StringFormat='{0:+#,##0.0;-#,##0.0;0.0}'}" />
+                            <Span Text=" " />
+                            <Span Text="{Binding Board.Quote.ChangeRate, StringFormat='({0:+0.00%;-0.00%;0.00%})'}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Grid.Column="2"
+                       Style="{StaticResource UpdatedLabel}"
+                       HorizontalTextAlignment="End"
+                       Text="{Binding Board.Quote.Updated, StringFormat='{0:HH:mm:ss} 更新'}" />
+            </Grid>
+
+            <Grid Style="{StaticResource StatGrid}"
+                  ColumnDefinitions="Auto,Auto,Auto,Auto">
+                <VerticalStackLayout Grid.Column="0"
+                                     Style="{StaticResource StatStack}">
+                    <Label Style="{StaticResource StatHeadLabel}"
+                           Text="始値" />
+                    <Label Style="{StaticResource StatValueLabel}"
+                           Text="{Binding Board.Quote.Open, StringFormat='{0:N1}'}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Style="{StaticResource StatStack}">
+                    <Label Style="{StaticResource StatHeadLabel}"
+                           Text="高値" />
+                    <Label Style="{StaticResource StatValueLabel}"
+                           Text="{Binding Board.Quote.High, StringFormat='{0:N1}'}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2"
+                                     Style="{StaticResource StatStack}">
+                    <Label Style="{StaticResource StatHeadLabel}"
+                           Text="安値" />
+                    <Label Style="{StaticResource StatValueLabel}"
+                           Text="{Binding Board.Quote.Low, StringFormat='{0:N1}'}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3"
+                                     Style="{StaticResource StatStack}">
+                    <Label Style="{StaticResource StatHeadLabel}"
+                           Text="出来高" />
+                    <Label Style="{StaticResource StatValueLabel}"
+                           Text="{Binding Board.Quote.Volume, Converter={StaticResource DivideConverter}, ConverterParameter={s:Int32 1000}, StringFormat='{0:N0}千'}" />
+                </VerticalStackLayout>
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- Timeframe -->
+        <FlexLayout Grid.Row="1"
+                    Style="{StaticResource TimeframeStack}"
+                    Direction="Row"
+                    Wrap="NoWrap"
+                    BindableLayout.ItemsSource="{Binding Timeframes}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type module:UITradeTimeframe}">
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <Button Style="{StaticResource TimeframeButton}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UITradeViewModel}}, Path=SelectCommand, x:DataType={x:Type module:UITradeViewModel}}"
+                            CommandParameter="{Binding .}"
+                            Text="{Binding Name}"
+                            FlexLayout.Basis="20%">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsSelected}"
+                                         Value="True">
+                                <Setter Property="FontAttributes" Value="Bold" />
+                                <Setter Property="TextColor" Value="{StaticResource TradeTextColor}" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+
+        <!-- Chart -->
+        <drawing:DrawingControl Grid.Row="2"
+                                Style="{StaticResource ChartControl}"
+                                IsVisible="{Binding IsTicks, Converter={StaticResource ReverseConverter}}"
+                                Drawing="{Binding Drawing}" />
+
+        <!-- Tick -->
+        <Grid Grid.Row="2"
+              IsVisible="{Binding IsTicks}"
+              RowDefinitions="Auto,*">
+            <Grid Grid.Row="0"
+                  Style="{StaticResource TickHeadGrid}"
+                  ColumnDefinitions="Auto,*,*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource TickHeadLabel}"
+                       Text="時刻" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource TickHeadLabel}"
+                       HorizontalTextAlignment="End"
+                       Text="約定値" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource TickHeadLabel}"
+                       HorizontalTextAlignment="End"
+                       Text="出来高" />
+                <Label Grid.Column="3"
+                       Style="{StaticResource TickHeadLabel}"
+                       WidthRequest="32"
+                       HorizontalTextAlignment="Center"
+                       Text="区分" />
+            </Grid>
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Board.Ticks}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type sample:StockTick}">
+                            <Grid Style="{StaticResource TickGrid}"
+                                  ColumnDefinitions="Auto,*,*,Auto">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource TickTimeLabel}"
+                                       Text="{Binding Time, StringFormat='{0:HH:mm:ss}'}" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource TickPriceLabel}"
+                                       TextColor="{Binding Side, Converter={StaticResource SideColorConverter}}"
+                                       Text="{Binding Price, StringFormat='{0:N1}'}" />
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource TickQuantityLabel}"
+                                       Text="{Binding Quantity, StringFormat='{0:N0}'}" />
+                                <Label Grid.Column="3"
+                                       Style="{StaticResource TickSideLabel}"
+                                       WidthRequest="32"
+                                       TextColor="{Binding Side, Converter={StaticResource SideColorConverter}}"
+                                       Text="{Binding Side, Converter={StaticResource SideTextConverter}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <!-- Board -->
+        <VerticalStackLayout Grid.Row="3">
+            <Grid Style="{StaticResource BoardHeadGrid}"
+                  ColumnDefinitions="*,88,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource BoardHeadLabel}"
+                       HorizontalTextAlignment="End"
+                       Text="売数量" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource BoardHeadLabel}"
+                       HorizontalTextAlignment="Center"
+                       Text="気配値" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource BoardHeadLabel}"
+                       Text="買数量" />
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Board.Asks}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type sample:StockDepth}">
+                        <Grid Style="{StaticResource BoardGrid}"
+                              ColumnDefinitions="*,88,*">
+                            <FlexLayout Grid.Column="0"
+                                        Direction="RowReverse">
+                                <BoxView Style="{StaticResource BoardBar}"
+                                         FlexLayout.Basis="{Binding Rate, Converter={StaticResource BasisConverter}}"
+                                         Color="{StaticResource TradeAskBarColor}" />
+                            </FlexLayout>
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource BoardQuantityLabel}"
+                                   HorizontalTextAlignment="End"
+                                   Text="{Binding Quantity, StringFormat='{0:N0}'}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource BoardPriceLabel}"
+                                   TextColor="{StaticResource TradeDownColor}"
+                                   Text="{Binding Price, StringFormat='{0:N1}'}" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource MidGrid}"
+                  ColumnDefinitions="*,88,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource MidTotalLabel}"
+                       HorizontalTextAlignment="End"
+                       Text="{Binding Board.AskTotal, StringFormat='売 {0:N0}'}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource MidPriceLabel}"
+                       Text="{Binding Board.Quote.Price, StringFormat='{0:N1}'}" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource MidTotalLabel}"
+                       Text="{Binding Board.BidTotal, StringFormat='買 {0:N0}'}" />
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Board.Bids}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type sample:StockDepth}">
+                        <Grid Style="{StaticResource BoardGrid}"
+                              ColumnDefinitions="*,88,*">
+                            <FlexLayout Grid.Column="2"
+                                        Direction="Row">
+                                <BoxView Style="{StaticResource BoardBar}"
+                                         FlexLayout.Basis="{Binding Rate, Converter={StaticResource BasisConverter}}"
+                                         Color="{StaticResource TradeBidBarColor}" />
+                            </FlexLayout>
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource BoardPriceLabel}"
+                                   TextColor="{StaticResource TradeUpColor}"
+                                   Text="{Binding Price, StringFormat='{0:N1}'}" />
+                            <Label Grid.Column="2"
+                                   Style="{StaticResource BoardQuantityLabel}"
+                                   Text="{Binding Quantity, StringFormat='{0:N0}'}" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Message -->
+        <Border Grid.Row="4"
+                Style="{StaticResource MessageBorder}"
+                IsVisible="{Binding Message, Converter={StaticResource NotEmptyConverter}}">
+            <Label Style="{StaticResource MessageLabel}"
+                   Text="{Binding Message}" />
+        </Border>
+
+        <!-- Action -->
+        <Grid Grid.Row="5"
+              Style="{StaticResource ActionGrid}"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding OrderCommand}"
+                    CommandParameter="{x:Static sample:StockSide.Sell}"
+                    Text="売　注文"
+                    BackgroundColor="#D32F2F" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding OrderCommand}"
+                    CommandParameter="{x:Static sample:StockSide.Buy}"
+                    Text="買　注文"
+                    BackgroundColor="#00897B" />
+        </Grid>
+
+    </Grid>
+
+</ContentView>

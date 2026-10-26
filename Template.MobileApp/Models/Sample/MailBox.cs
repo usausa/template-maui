@@ -47,10 +47,6 @@ public sealed partial class MailMessage : ObservableObject
 
     public string? Attachment { get; set; }
 
-    public bool HasAttachment => Attachment is not null;
-
-    public string Preview => string.Join(' ', Body.Split('\n', StringSplitOptions.RemoveEmptyEntries));
-
     [ObservableProperty]
     public partial MailFolder Folder { get; set; }
 

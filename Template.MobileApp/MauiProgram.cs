@@ -428,6 +428,7 @@ public static partial class MauiProgram
         services.AddSingleton<OnnxVisionUsecase>();
         services.AddSingleton<AzureVisionUsecase>();
         services.AddSingleton<SshUsecase>();
+        services.AddSingleton<ChatUsecase>();
 
         // Models
         services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));
@@ -535,10 +536,10 @@ public static partial class MauiProgram
             settings.ApiEndPoint = EmbeddedProperty.ApiEndPoint;
         }
 
-        if (String.IsNullOrEmpty(settings.UniqueId))
+        if (String.IsNullOrEmpty(settings.TerminalId))
         {
-            var uniqueId = Guid.NewGuid();
-            settings.UniqueId = uniqueId.ToString();
+            var terminalId = Guid.NewGuid();
+            settings.TerminalId = terminalId.ToString();
         }
 
         var apiContext = services.GetRequiredService<ApiContext>();
@@ -556,8 +557,11 @@ public static partial class MauiProgram
 
         // Prepare telemetry
         var telemetryControl = services.GetRequiredService<ITelemetryControl>();
-        telemetryControl.InstallationId = settings.UniqueId;
+        telemetryControl.TerminalId = settings.TerminalId;
         telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
+
+        // Prepare push
+        services.GetRequiredService<PushConnection>().TerminalId = settings.TerminalId;
 
         return app;
     }

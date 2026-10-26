@@ -15,7 +15,7 @@ using Template.MobileApp.Components;
 // Client -> Server
 public sealed class DeviceStatusMessage
 {
-    public string DeviceId { get; set; } = default!;
+    public string TerminalId { get; set; } = default!;
 
     public string Model { get; set; } = default!;
 

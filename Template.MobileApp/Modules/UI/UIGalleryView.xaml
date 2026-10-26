@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIGalleryView"
+             x:DataType="{x:Type module:UIGalleryViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGalleryViewModel}"
+             shell:ShellProperty.Title="Gallery"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+
+            <Color x:Key="GalleryTextColor">#212121</Color>
+            <Color x:Key="GallerySubTextColor">#757575</Color>
+            <Color x:Key="GalleryLineColor">#E0E0E0</Color>
+            <Color x:Key="GallerySelectColor">#1E88E5</Color>
+
+            <!-- Select -->
+
+            <Style x:Key="SelectGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
+            </Style>
+
+            <Style x:Key="SelectIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SelectStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="1" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SelectCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SelectSizeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#CCFFFFFF" />
+            </Style>
+
+            <!-- Hint -->
+
+            <Style x:Key="HintGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="HintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GallerySubTextColor}" />
+            </Style>
+
+            <Style x:Key="ColumnBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Stroke" Value="{StaticResource GalleryLineColor}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 7" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ColumnButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="30" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="TextColor" Value="{StaticResource GallerySubTextColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <!-- Sticky -->
+
+            <Style x:Key="StickyGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="ColumnSpacing" Value="6" />
+                <Setter Property="BackgroundColor" Value="#F2FFFFFF" />
+            </Style>
+
+            <Style x:Key="SectionTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GalleryTextColor}" />
+            </Style>
+
+            <Style x:Key="PlaceIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GallerySubTextColor}" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Location_on}" />
+            </Style>
+
+            <Style x:Key="PlaceLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GallerySubTextColor}" />
+            </Style>
+
+            <Style x:Key="SectionSelectButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="10,0" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GallerySelectColor}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Grid -->
+
+            <converters:TileSizeConverter x:Key="TileSizeConverter"
+                                          Padding="2"
+                                          Spacing="2" />
+
+            <converters:TileAreaConverter x:Key="TileAreaConverter"
+                                          Padding="2" />
+
+            <Style x:Key="GalleryScroll"
+                   TargetType="ScrollView">
+                <Setter Property="Padding" Value="2,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TileLayout"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="Direction" Value="Row" />
+                <!-- Lines are stretched apart by default, which opens a gap between rows -->
+                <Setter Property="AlignContent" Value="Start" />
+            </Style>
+
+            <Style x:Key="TileBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,0,2,2" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Rectangle" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+            <Style x:Key="TileImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <Style x:Key="CheckBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="#33000000" />
+            </Style>
+
+            <Style x:Key="CheckLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="IsVisible" Value="False" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
+            </Style>
+
+            <!-- Action -->
+
+            <Style x:Key="ActionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,6" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ActionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="ActionIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <Style x:Key="ActionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <Style x:Key="DeleteIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
+            <Style x:Key="DeleteLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
+            <Style x:Key="SeparatorLine"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GalleryLineColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
+
+        <!-- Select -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource SelectGrid}"
+              ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource SelectIconLabel}"
+                   behaviors:TouchOption.Ripple="True"
+                   behaviors:TouchOption.ClickCommand="{Binding ClearCommand}"
+                   IsEnabled="{Binding SelectedCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                   Text="{x:Static fonts:MaterialIcons.Close}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding SelectedCount}"
+                                 Value="{s:Int32 0}">
+                        <Setter Property="Opacity" Value="0.35" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+            <VerticalStackLayout Grid.Column="1"
+                                 Style="{StaticResource SelectStack}">
+                <Label Style="{StaticResource SelectCountLabel}"
+                       Text="{Binding SelectedCount, StringFormat='{0} 件を選択'}" />
+                <Label Style="{StaticResource SelectSizeLabel}"
+                       Text="{Binding SelectedSize, Converter={StaticResource ByteSizeConverter}, StringFormat='合計 {0}'}" />
+            </VerticalStackLayout>
+            <Label Grid.Column="2"
+                   Style="{StaticResource SelectIconLabel}"
+                   behaviors:TouchOption.Ripple="True"
+                   Text="{x:Static fonts:MaterialIcons.Swap_vert}" />
+        </Grid>
+
+        <!-- Hint -->
+        <Grid Grid.Row="1"
+              Style="{StaticResource HintGrid}"
+              ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource HintLabel}"
+                   Text="ピンチで列数を変更" />
+            <Border Grid.Column="1"
+                    Style="{StaticResource ColumnBorder}">
+                <HorizontalStackLayout>
+                    <Button Style="{StaticResource ColumnButton}"
+                            Command="{Binding ColumnCommand}"
+                            CommandParameter="{s:Int32 Value=5}"
+                            Text="{x:Static fonts:MaterialIcons.Apps}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding Columns}"
+                                         Value="5">
+                                <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource ColumnButton}"
+                            Command="{Binding ColumnCommand}"
+                            CommandParameter="{s:Int32 Value=3}"
+                            Text="{x:Static fonts:MaterialIcons.Grid_view}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding Columns}"
+                                         Value="3">
+                                <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource ColumnButton}"
+                            Command="{Binding ColumnCommand}"
+                            CommandParameter="{s:Int32 Value=2}"
+                            Text="{x:Static fonts:MaterialIcons.Image}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding Columns}"
+                                         Value="2">
+                                <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
+
+        <!-- Grid -->
+        <Grid Grid.Row="2">
+            <ScrollView Style="{StaticResource GalleryScroll}"
+                        VerticalScrollBarVisibility="Never"
+                        behaviors:Scroll.IndexCommand="{Binding ScrolledCommand}">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Album.Sections}"
+                                     behaviors:GestureOption.PinchEnabled="True"
+                                     behaviors:GestureOption.MinScale="0.5"
+                                     behaviors:GestureOption.MaxScale="2"
+                                     behaviors:GestureOption.ZoomScale="{Binding ZoomScale}">
+                    <BindableLayout.ItemTemplate>
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <DataTemplate x:DataType="{x:Type sample:PhotoSection}">
+                            <VerticalStackLayout>
+                                <Grid Style="{StaticResource StickyGrid}"
+                                      ColumnDefinitions="Auto,Auto,*,Auto">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource SectionTitleLabel}"
+                                           Text="{Binding Title}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource PlaceIconLabel}" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource PlaceLabel}"
+                                           Text="{Binding Place}" />
+                                    <Button Grid.Column="3"
+                                            Style="{StaticResource SectionSelectButton}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=SectionCommand, x:DataType={x:Type module:UIGalleryViewModel}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="選択" />
+                                </Grid>
+                                <FlexLayout Style="{StaticResource TileLayout}"
+                                            BindableLayout.ItemsSource="{Binding Items}">
+                                    <FlexLayout.HeightRequest>
+                                        <MultiBinding Converter="{StaticResource TileAreaConverter}">
+                                            <Binding Source="{RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}"
+                                                     Path="Columns"
+                                                     x:DataType="{x:Type module:UIGalleryViewModel}" />
+                                            <Binding Path="Items.Count" />
+                                        </MultiBinding>
+                                    </FlexLayout.HeightRequest>
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="{x:Type sample:PhotoItem}">
+                                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                            <Border Style="{StaticResource TileBorder}"
+                                                    WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=Columns, Converter={StaticResource TileSizeConverter}, x:DataType={x:Type module:UIGalleryViewModel}}"
+                                                    HeightRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=Columns, Converter={StaticResource TileSizeConverter}, x:DataType={x:Type module:UIGalleryViewModel}}">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=TapCommand, x:DataType={x:Type module:UIGalleryViewModel}}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                                <Grid>
+                                                    <Image Style="{StaticResource TileImage}"
+                                                           Source="{Binding Source}" />
+                                                    <BoxView Color="{StaticResource GallerySelectColor}"
+                                                             Opacity="0.35"
+                                                             IsVisible="{Binding IsSelected}" />
+                                                    <Border Style="{StaticResource CheckBorder}">
+                                                        <Border.Triggers>
+                                                            <DataTrigger TargetType="Border"
+                                                                         Binding="{Binding IsSelected}"
+                                                                         Value="True">
+                                                                <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
+                                                            </DataTrigger>
+                                                        </Border.Triggers>
+                                                        <Label Style="{StaticResource CheckLabel}"
+                                                               IsVisible="{Binding IsSelected}" />
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Sticky -->
+            <Grid Style="{StaticResource StickyGrid}"
+                  ColumnDefinitions="Auto,Auto,*,Auto"
+                  VerticalOptions="Start">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SectionTitleLabel}"
+                       Text="{Binding StickySection.Title}" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource PlaceIconLabel}" />
+                <Label Grid.Column="2"
+                       Style="{StaticResource PlaceLabel}"
+                       Text="{Binding StickySection.Place}" />
+                <Button Grid.Column="3"
+                        Style="{StaticResource SectionSelectButton}"
+                        Command="{Binding SectionCommand}"
+                        CommandParameter="{Binding StickySection}"
+                        Text="選択" />
+            </Grid>
+        </Grid>
+
+        <BoxView Grid.Row="3"
+                 Style="{StaticResource SeparatorLine}" />
+
+        <!-- Action -->
+        <Grid Grid.Row="4"
+              Style="{StaticResource ActionGrid}"
+              ColumnDefinitions="*,*,*,*"
+              IsVisible="{Binding SelectedCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+            <VerticalStackLayout Grid.Column="0"
+                                 Style="{StaticResource ActionStack}"
+                                 behaviors:TouchOption.ClickCommand="{Binding ShareCommand}">
+                <Label Style="{StaticResource ActionIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Swap_vert}" />
+                <Label Style="{StaticResource ActionLabel}"
+                       Text="共有" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1"
+                                 Style="{StaticResource ActionStack}">
+                <Label Style="{StaticResource ActionIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Cloud_upload}" />
+                <Label Style="{StaticResource ActionLabel}"
+                       Text="バックアップ" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="2"
+                                 Style="{StaticResource ActionStack}">
+                <Label Style="{StaticResource ActionIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Folder}" />
+                <Label Style="{StaticResource ActionLabel}"
+                       Text="アルバム" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="3"
+                                 Style="{StaticResource ActionStack}">
+                <Label Style="{StaticResource DeleteIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Close}" />
+                <Label Style="{StaticResource DeleteLabel}"
+                       Text="削除" />
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+
+</ContentView>

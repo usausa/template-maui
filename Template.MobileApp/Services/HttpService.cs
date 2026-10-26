@@ -79,7 +79,7 @@ public sealed class DeviceRegisterRequest
 
 public sealed class DeviceRegisterResponse
 {
-    public string DeviceId { get; set; } = default!;
+    public string TerminalId { get; set; } = default!;
 
     public string Name { get; set; } = default!;
 
@@ -184,10 +184,10 @@ public sealed class HttpService
     // Device
     //--------------------------------------------------------------------------------
 
-    public ValueTask<IRestResponse<DeviceRegisterResponse>> PutDeviceAsync(string deviceId, DeviceRegisterRequest request, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse<DeviceRegisterResponse>> PutDeviceAsync(string terminalId, DeviceRegisterRequest request, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.PutAsync<DeviceRegisterResponse>($"api/device/{deviceId}", request, cancel: cancellationToken);
+        return client.PutAsync<DeviceRegisterResponse>($"api/device/{terminalId}", request, cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------
@@ -207,20 +207,20 @@ public sealed class HttpService
     public ValueTask<IRestResponse<StorageListResponse>> GetStorageListAsync(string path, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.GetAsync<StorageListResponse>($"api/storage/{path}", cancel: cancellationToken);
+        return client.GetAsync<StorageListResponse>(MakeStoragePath(path), cancel: cancellationToken);
     }
 
     public ValueTask<IRestResponse> DeleteStorageAsync(string path, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.SendAsync(HttpMethod.Delete, $"api/storage/{path}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Delete, MakeStoragePath(path), cancel: cancellationToken);
     }
 
     public ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
         return client.DownloadAsync(
-            $"api/storage/{path}",
+            MakeStoragePath(path),
             filename,
             progress: CreateProgressCallback(action),
             cancel: cancellationToken);
@@ -230,7 +230,7 @@ public sealed class HttpService
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
         return client.DownloadAsync(
-            $"api/storage/{path}",
+            MakeStoragePath(path),
             stream,
             progress: CreateProgressCallback(action),
             cancel: cancellationToken);
@@ -240,7 +240,7 @@ public sealed class HttpService
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
         return client.UploadAsync(
-            $"api/storage/{path}",
+            MakeStoragePath(path),
             filename,
             compress: CompressOption.Gzip,
             progress: CreateProgressCallback(action),
@@ -251,12 +251,15 @@ public sealed class HttpService
     {
         var client = httpClientFactory.CreateClient(ApiNames.Transfer);
         return client.UploadAsync(
-            $"api/storage/{path}",
+            MakeStoragePath(path),
             stream,
             compress: compress ? CompressOption.Gzip : CompressOption.None,
             progress: CreateProgressCallback(action),
             cancel: cancellationToken);
     }
+
+    private static string MakeStoragePath(string path) =>
+        $"api/storage/{String.Join('/', path.Split('/').Select(Uri.EscapeDataString))}";
 
     private static Action<long, long> CreateProgressCallback(Action<double> action)
     {

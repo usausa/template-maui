@@ -1,27 +1,14 @@
 namespace Template.MobileApp.Modules.Sample;
 
 using System.Collections.ObjectModel;
-using System.Net;
-using System.Text;
 
-using Microsoft.Extensions.AI;
-
-using OllamaSharp;
-using OllamaSharp.Models.Exceptions;
-
-using AiMessage = Microsoft.Extensions.AI.ChatMessage;
+using Template.MobileApp.Usecase;
 
 public sealed partial class SampleChatViewModel : AppViewModelBase
 {
     // Field
 
     private readonly ISpeechService speech;
-
-    private readonly IDispatcher dispatcher;
-
-    private readonly string model;
-
-    private readonly List<AiMessage> history = [];
 
     private Action? cancelResponse;
 
@@ -38,7 +25,8 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
     public ObservableCollection<AiChatMessage> Messages { get; } = [];
 
-    private IChatClient ChatClient { get; }
+    // A field would be reported by CA2213, the session is disposed through Disposables
+    private ChatSession Session { get; }
 
     // Command
 
@@ -54,15 +42,12 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
     public SampleChatViewModel(
         ISpeechService speech,
-        IDispatcher dispatcher,
-        Settings settings)
+        ChatUsecase chatUsecase)
     {
         this.speech = speech;
-        this.dispatcher = dispatcher;
 
-        ChatClient = new OllamaApiClient(new Uri(settings.OllamaEndPoint), settings.OllamaModel);
-        Disposables.Add(ChatClient);
-        model = settings.OllamaModel;
+        Session = chatUsecase.CreateSession();
+        Disposables.Add(Session);
 
         VoiceCommand = MakeAsyncCommand(ToggleVoiceAsync);
         SendCommand = MakeDelegateCommand(() => _ = SendAsync(), () => !IsResponding && !String.IsNullOrWhiteSpace(InputText));
@@ -98,7 +83,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
             Messages.Add(new AiChatMessage
             {
                 Role = AiChatRole.Assistant,
-                Text = $"こんにちは!AIアシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {model})"
+                Text = $"こんにちは!AIアシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {Session.Model})"
             });
         }
         return Task.CompletedTask;
@@ -171,60 +156,31 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         var message = new AiChatMessage { Role = AiChatRole.Assistant, IsTyping = true };
         Messages.Add(message);
 
-        history.Add(new AiMessage(ChatRole.User, text));
-        var builder = new StringBuilder();
         using var cts = new CancellationTokenSource();
-        var token = cts.Token;
         cancelResponse = cts.Cancel;
         try
         {
-            await Task.Run(async () =>
-            {
-                await foreach (var update in ChatClient.GetStreamingResponseAsync(history, cancellationToken: token).ConfigureAwait(false))
+            var answer = await Session.SendAsync(
+                text,
+                new Progress<string>(x =>
                 {
-                    builder.Append(update.Text);
-                    var current = builder.ToString();
-                    await dispatcher.DispatchAsync(() =>
-                    {
-                        message.IsTyping = false;
-                        message.Text = current;
-                    }).ConfigureAwait(false);
-                }
-            }, token).ConfigureAwait(true);
-        }
-        catch (OperationCanceledException)
-        {
-            // Ignore
-        }
-        catch (Exception ex) when (ex is HttpRequestException or OllamaException or WebException or IOException)
-        {
-            if (!cts.IsCancellationRequested)
+                    message.IsTyping = false;
+                    message.Text = x;
+                }),
+                cts.Token);
+
+            message.IsTyping = false;
+            message.Text = answer switch
             {
-                history.RemoveAt(history.Count - 1);
-                message.IsTyping = false;
-                message.Text = $"応答を取得できませんでした。\n{ex.Message}";
-                return;
-            }
+                { Error: { } error } => $"応答を取得できませんでした。\n{error}",
+                { Canceled: true, Text.Length: 0 } => "中断しました。",
+                { Canceled: true } => $"{answer.Text}\n(中断)",
+                _ => answer.Text
+            };
         }
         finally
         {
             cancelResponse = null;
-        }
-
-        message.IsTyping = false;
-        if (!cts.IsCancellationRequested)
-        {
-            history.Add(new AiMessage(ChatRole.Assistant, builder.ToString()));
-        }
-        else if (builder.Length > 0)
-        {
-            message.Text = $"{builder}\n(中断)";
-            history.Add(new AiMessage(ChatRole.Assistant, builder.ToString()));
-        }
-        else
-        {
-            history.RemoveAt(history.Count - 1);
-            message.Text = "中断しました。";
         }
     }
 }

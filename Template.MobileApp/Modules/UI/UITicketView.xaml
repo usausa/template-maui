@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UITicketView"
+             x:DataType="{x:Type module:UITicketViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UITicketViewModel}"
+             shell:ShellProperty.Title="Ticket"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="分配"
+             shell:ShellProperty.Function3Text="追加"
+             shell:ShellProperty.Function4Text="使用済"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:MapToBoolConverter x:Key="TicketConsumedConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static sample:TicketState.Valid}"
+                                      Value="False" />
+                    <s:MapToBoolEntry Key="{x:Static sample:TicketState.Used}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static sample:TicketState.Transferred}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToTextConverter x:Key="TicketStateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static sample:TicketState.Used}"
+                                      Value="使用済" />
+                    <s:MapToTextEntry Key="{x:Static sample:TicketState.Transferred}"
+                                      Value="分配済" />
+                    <s:MapToTextEntry Key="{x:Static sample:TicketState.Valid}"
+                                      Value="" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:QrImageSourceConverter x:Key="QrImageSourceConverter" />
+
+            <!-- Color -->
+
+            <Color x:Key="TicketTopColor">#4527A0</Color>
+            <Color x:Key="TicketBottomColor">#311B92</Color>
+            <Color x:Key="TicketTextColor">#212121</Color>
+            <Color x:Key="TicketSubTextColor">#9E9E9E</Color>
+            <Color x:Key="TicketSeatColor">#3949AB</Color>
+            <Color x:Key="TicketLineColor">#D6D6D6</Color>
+
+            <!-- Layout -->
+
+            <Style x:Key="TicketRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource TicketTopColor}" />
+                        <GradientStop Offset="1" Color="{StaticResource TicketBottomColor}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <!-- Head -->
+
+            <Style x:Key="HeadGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,10" />
+            </Style>
+
+            <Style x:Key="PageLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="BrightButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="38" />
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="CornerRadius" Value="19" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#33FFFFFF" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <!-- Card -->
+
+            <Style x:Key="TicketCarousel"
+                   TargetType="CarouselView">
+                <Setter Property="PeekAreaInsets" Value="28" />
+                <Setter Property="IsBounceEnabled" Value="False" />
+            </Style>
+
+            <Style x:Key="PassBorder"
+                   TargetType="controls:PerforatedBorder">
+                <Setter Property="Margin" Value="8,4,8,16" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Radius" Value="18" />
+                <Setter Property="NotchRadius" Value="13" />
+                <Setter Property="NotchOffset" Value="-210" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <!-- Artwork -->
+
+            <Style x:Key="ArtworkStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="18,16" />
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="HeightRequest" Value="150" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="TourBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="10,3" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="#55000000" />
+            </Style>
+
+            <Style x:Key="TourLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Info -->
+
+            <Style x:Key="InfoStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="18,14,18,14" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SubtitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="InfoGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource TicketSubTextColor}" />
+            </Style>
+
+            <Style x:Key="ValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TicketTextColor}" />
+            </Style>
+
+            <Style x:Key="ValueUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource TicketSubTextColor}" />
+            </Style>
+
+            <!-- Seat -->
+
+            <Style x:Key="SeatBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="18,0" />
+                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="BackgroundColor" Value="{StaticResource TicketSeatColor}" />
+            </Style>
+
+            <Style x:Key="SeatGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="SeatIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="#BBDEFB" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Event_seat}" />
+            </Style>
+
+            <Style x:Key="SeatCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="#BBDEFB" />
+            </Style>
+
+            <Style x:Key="SeatValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- Tear -->
+
+            <Style x:Key="TearLine"
+                   TargetType="Rectangle">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Margin" Value="22,0" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Stroke" Value="{StaticResource TicketLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeDashArray" Value="6,5" />
+            </Style>
+
+            <!-- Holder -->
+
+            <Style x:Key="BottomStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="18,16" />
+                <Setter Property="Spacing" Value="14" />
+            </Style>
+
+            <Style x:Key="HolderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
+            </Style>
+
+            <Style x:Key="HolderAvatarBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+            </Style>
+
+            <Style x:Key="HolderAvatarLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HolderTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="1" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HolderNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="{StaticResource TicketTextColor}" />
+            </Style>
+
+            <Style x:Key="HolderInfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource TicketSubTextColor}" />
+            </Style>
+
+            <Style x:Key="NoticeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="9,3" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+            </Style>
+
+            <Style x:Key="NoticeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
+            <!-- Code -->
+
+            <Style x:Key="CodeGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="14" />
+            </Style>
+
+            <Style x:Key="QrImage"
+                   TargetType="Image">
+                <Setter Property="WidthRequest" Value="100" />
+                <Setter Property="HeightRequest" Value="100" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CodeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="NumberLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="TextColor" Value="{StaticResource TicketTextColor}" />
+            </Style>
+
+            <Style x:Key="PassBarcode"
+                   TargetType="controls:BarcodeView">
+                <Setter Property="HeightRequest" Value="48" />
+            </Style>
+
+            <Style x:Key="GuideLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource TicketSubTextColor}" />
+            </Style>
+
+            <!-- State -->
+
+            <Style x:Key="StateBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Rotation" Value="-12" />
+                <Setter Property="StrokeThickness" Value="3" />
+                <Setter Property="Stroke" Value="{StaticResource RedDarken2}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
+            </Style>
+
+            <Style x:Key="StateLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
+            <!-- Foot -->
+
+            <Style x:Key="FootStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Padding" Value="0,0,0,10" />
+                <Setter Property="Spacing" Value="10" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="PageIndicator"
+                   TargetType="IndicatorView">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="IndicatorColor" Value="#55FFFFFF" />
+                <Setter Property="SelectedIndicatorColor" Value="White" />
+                <Setter Property="IndicatorSize" Value="7" />
+            </Style>
+
+            <Style x:Key="SwipeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="#AAFFFFFF" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <Grid Style="{StaticResource TicketRootGrid}"
+          RowDefinitions="Auto,*,Auto">
+
+        <!-- Head -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource HeadGrid}"
+              ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource PageLabel}"
+                   >
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0} / {1} 枚">
+                        <Binding Path="Position"
+                                 Converter="{StaticResource AddConverter}"
+                                 ConverterParameter="{s:Int32 1}" />
+                        <Binding Path="Wallet.Passes.Count" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+            <Button Grid.Column="1"
+                    Style="{StaticResource BrightButton}"
+                    Command="{Binding BrightCommand}"
+                    Text="画面を明るく">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding IsBright}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
+                        <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                        <Setter Property="Text" Value="明るさ解除" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+
+        <!-- Pass -->
+        <CarouselView Grid.Row="1"
+                      x:Name="PassCarousel"
+                      Style="{StaticResource TicketCarousel}"
+                      ItemsSource="{Binding Wallet.Passes}"
+                      Position="{Binding Position}">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type sample:TicketPass}">
+                    <ScrollView>
+                        <controls:PerforatedBorder Style="{StaticResource PassBorder}">
+                            <Grid RowDefinitions="Auto,210">
+
+                                <!-- Upper -->
+                                <VerticalStackLayout Grid.Row="0">
+                                    <VerticalStackLayout Style="{StaticResource ArtworkStack}"
+                                                         Background="{Binding Artwork}">
+                                        <Border Style="{StaticResource TourBorder}">
+                                            <Label Style="{StaticResource TourLabel}"
+                                                   Text="{Binding Tour}" />
+                                        </Border>
+                                        <Label Style="{StaticResource TitleLabel}"
+                                               Text="{Binding Title}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Style="{StaticResource InfoStack}">
+                                        <Label Style="{StaticResource SubtitleLabel}"
+                                               Text="{Binding Subtitle}" />
+                                        <Grid Style="{StaticResource InfoGrid}"
+                                              ColumnDefinitions="*,*"
+                                              RowDefinitions="Auto,Auto,Auto,Auto">
+                                            <Label Grid.Row="0" Grid.Column="0"
+                                                   Style="{StaticResource CaptionLabel}"
+                                                   Text="DATE" />
+                                            <Label Grid.Row="1" Grid.Column="0"
+                                                   Style="{StaticResource ValueLabel}"
+                                                   Text="{Binding Date, StringFormat='{0:M/d (ddd)}'}" />
+                                            <Label Grid.Row="0" Grid.Column="1"
+                                                   Style="{StaticResource CaptionLabel}"
+                                                   Text="OPEN / START" />
+                                            <Label Grid.Row="1" Grid.Column="1"
+                                                   Style="{StaticResource ValueLabel}">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding Open, StringFormat='{0:HH:mm}'}" />
+                                                        <Span Style="{StaticResource ValueUnitSpan}"
+                                                              Text=" / " />
+                                                        <Span Style="{StaticResource ValueUnitSpan}"
+                                                              Text="{Binding Start, StringFormat='{0:HH:mm}'}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label Grid.Row="2" Grid.Column="0"
+                                                   Style="{StaticResource CaptionLabel}"
+                                                   Text="VENUE" />
+                                            <Label Grid.Row="3" Grid.Column="0"
+                                                   Style="{StaticResource ValueLabel}"
+                                                   Text="{Binding Venue}" />
+                                            <Label Grid.Row="2" Grid.Column="1"
+                                                   Style="{StaticResource CaptionLabel}"
+                                                   Text="GATE" />
+                                            <Label Grid.Row="3" Grid.Column="1"
+                                                   Style="{StaticResource ValueLabel}"
+                                                   Text="{Binding Gate}" />
+                                        </Grid>
+                                        <Border Style="{StaticResource SeatBorder}"
+                                                Margin="0">
+                                            <Grid Style="{StaticResource SeatGrid}"
+                                                  ColumnDefinitions="Auto,*">
+                                                <Label Grid.Column="0"
+                                                       Style="{StaticResource SeatIconLabel}" />
+                                                <VerticalStackLayout Grid.Column="1">
+                                                    <Label Style="{StaticResource SeatCaptionLabel}"
+                                                           Text="SEAT" />
+                                                    <Label Style="{StaticResource SeatValueLabel}"
+                                                           Text="{Binding Seat}" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+
+                                <!-- Lower -->
+                                <VerticalStackLayout Grid.Row="1"
+                                                     Style="{StaticResource BottomStack}">
+                                    <Grid Style="{StaticResource HolderGrid}"
+                                          ColumnDefinitions="Auto,*,Auto">
+                                        <Border Grid.Column="0"
+                                                Style="{StaticResource HolderAvatarBorder}">
+                                            <Label Style="{StaticResource HolderAvatarLabel}"
+                                                   Text="{Binding Holder, Converter={StaticResource InitialConverter}}" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Style="{StaticResource HolderTextStack}">
+                                            <Label Style="{StaticResource HolderNameLabel}"
+                                                   Text="{Binding Holder}" />
+                                            <Label Style="{StaticResource HolderInfoLabel}">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="同行者 " />
+                                                        <Span Text="{Binding Companions}" />
+                                                        <Span Text=" 名 ・ " />
+                                                        <Span Text="{Binding Payment}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </VerticalStackLayout>
+                                        <Border Grid.Column="2"
+                                                Style="{StaticResource NoticeBorder}">
+                                            <Label Style="{StaticResource NoticeLabel}"
+                                                   Text="転売禁止" />
+                                        </Border>
+                                    </Grid>
+                                    <Grid Style="{StaticResource CodeGrid}"
+                                          ColumnDefinitions="Auto,*">
+                                        <Image Grid.Column="0"
+                                               Style="{StaticResource QrImage}"
+                                               Source="{Binding Code, Converter={StaticResource QrImageSourceConverter}}" />
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Style="{StaticResource CodeStack}">
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="TICKET NO." />
+                                            <Label Style="{StaticResource NumberLabel}"
+                                                   Text="{Binding Number}" />
+                                            <controls:BarcodeView Style="{StaticResource PassBarcode}"
+                                                                  Value="{Binding Code}" />
+                                            <Label Style="{StaticResource GuideLabel}"
+                                                   Text="入場時にスタッフへ提示してください" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+
+                                <!-- Tear -->
+                                <Rectangle Grid.Row="1"
+                                           Style="{StaticResource TearLine}" />
+
+                                <!-- State -->
+                                <Border Grid.RowSpan="2"
+                                        Style="{StaticResource StateBorder}"
+                                        IsVisible="{Binding State, Converter={StaticResource TicketConsumedConverter}}">
+                                    <Label Style="{StaticResource StateLabel}"
+                                           Text="{Binding State, Converter={StaticResource TicketStateTextConverter}}" />
+                                </Border>
+
+                            </Grid>
+                        </controls:PerforatedBorder>
+                    </ScrollView>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- Foot -->
+        <HorizontalStackLayout Grid.Row="2"
+                               Style="{StaticResource FootStack}">
+            <IndicatorView Style="{StaticResource PageIndicator}"
+                           ItemsSource="{Binding Wallet.Passes}"
+                           Position="{Binding Position}" />
+            <Label Style="{StaticResource SwipeLabel}"
+                   Text="左右スワイプで他のチケット" />
+        </HorizontalStackLayout>
+
+    </Grid>
+
+</ContentView>

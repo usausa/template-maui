@@ -236,7 +236,7 @@ public sealed partial class UIGaugeViewModel : AppViewModelBase
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu3);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
