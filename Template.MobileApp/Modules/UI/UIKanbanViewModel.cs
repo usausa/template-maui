@@ -4,15 +4,9 @@ public sealed partial class UIKanbanViewModel : AppViewModelBase
 {
     // Field
 
-    private static readonly TimeSpan EdgeInterval = TimeSpan.FromMilliseconds(350);
-
     private readonly TimeProvider timeProvider;
 
     private BoardCard? dragging;
-
-    private DateTimeOffset edgeTime;
-
-    private int laneIndex;
 
     private bool dropAfter;
 
@@ -37,8 +31,6 @@ public sealed partial class UIKanbanViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool IsFiltered { get; set; }
-
-    public ScrollController Scroller { get; } = new();
 
     // Command
 
@@ -66,8 +58,6 @@ public sealed partial class UIKanbanViewModel : AppViewModelBase
 
     public IObserveCommand DropOnLaneHeadCommand { get; }
 
-    public IObserveCommand EdgeOverCommand { get; }
-
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
@@ -76,7 +66,6 @@ public sealed partial class UIKanbanViewModel : AppViewModelBase
     {
         this.timeProvider = timeProvider;
 
-        EdgeOverCommand = MakeDelegateCommand<string>(CommandMode.Simple, ScrollEdge);
         DragStartingCommand = MakeDelegateCommand<BoardCard>(CommandMode.Simple, BeginDrag);
         DropCompletedCommand = MakeDelegateCommand(CommandMode.Simple, EndDrag);
         CardSideCommand = MakeDelegateCommand<bool>(CommandMode.Simple, x => dropAfter = x);
@@ -158,25 +147,6 @@ public sealed partial class UIKanbanViewModel : AppViewModelBase
         Avatars = [.. Board.Members.Take(4).Select(static x => x[..1])];
         MoreMembers = Board.Members.Count - Avatars.Count;
         UpdateCount();
-    }
-
-    private void ScrollEdge(string direction)
-    {
-        var now = timeProvider.GetLocalNow();
-        if (now - edgeTime < EdgeInterval)
-        {
-            return;
-        }
-
-        var next = Math.Clamp(laneIndex + (direction == "-" ? -1 : 1), 0, Board.Lanes.Count - 1);
-        if (next == laneIndex)
-        {
-            return;
-        }
-
-        edgeTime = now;
-        laneIndex = next;
-        Scroller.ScrollTo(laneIndex);
     }
 
     private void BeginDrag(BoardCard card)

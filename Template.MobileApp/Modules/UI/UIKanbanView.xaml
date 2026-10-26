@@ -236,6 +236,7 @@
 
             <Style x:Key="LaneCardStack"
                    TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="0,6" />
                 <Setter Property="Spacing" Value="8" />
                 <Setter Property="MinimumHeightRequest" Value="120" />
             </Style>
@@ -353,6 +354,20 @@
                 <Setter Property="IsVisible" Value="False" />
             </Style>
 
+            <Style x:Key="DropIndicatorBefore"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource DropIndicator}">
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="TranslationY" Value="-6" />
+            </Style>
+
+            <Style x:Key="DropIndicatorAfter"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource DropIndicator}">
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="TranslationY" Value="6" />
+            </Style>
+
             <!-- Footer -->
 
             <Style x:Key="FooterGrid"
@@ -457,12 +472,12 @@
 
         <!-- Lane -->
         <ScrollView Grid.Row="1"
-                    behaviors:ScrollBind.Controller="{Binding Scroller}"
                     Orientation="Horizontal"
                     HorizontalScrollBarVisibility="Never">
             <HorizontalStackLayout Style="{StaticResource LaneStack}"
                                    BindableLayout.ItemsSource="{Binding Board.Lanes}">
                 <BindableLayout.ItemTemplate>
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                     <DataTemplate x:DataType="{x:Type sample:BoardLane}">
                         <Border Style="{StaticResource LaneBorder}"
                                 VerticalOptions="Fill">
@@ -475,7 +490,6 @@
                                 </DataTrigger>
                             </Border.Triggers>
                             <Border.GestureRecognizers>
-                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <DropGestureRecognizer AllowDrop="True"
                                                        DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=LaneOverCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
                                                        DragOverCommandParameter="{Binding .}"
@@ -483,7 +497,6 @@
                                                        DragLeaveCommandParameter="{Binding .}"
                                                        DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropOnLaneCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
                                                        DropCommandParameter="{Binding .}" />
-                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                             </Border.GestureRecognizers>
                             <Grid Style="{StaticResource LaneGrid}"
                                   RowDefinitions="Auto,Auto,*">
@@ -540,17 +553,12 @@
                                 <!-- Card -->
                                 <ScrollView Grid.Row="2"
                                             VerticalScrollBarVisibility="Never">
-                                    <VerticalStackLayout Style="{StaticResource LaneCardStack}">
-                                        <BoxView Style="{StaticResource DropIndicator}"
-                                                 IsVisible="{Binding IsHeadOver}" />
+                                    <Grid>
                                         <VerticalStackLayout Style="{StaticResource LaneCardStack}"
                                                              BindableLayout.ItemsSource="{Binding Cards}">
                                             <BindableLayout.ItemTemplate>
                                                 <DataTemplate x:DataType="{x:Type sample:BoardCard}">
-                                                    <VerticalStackLayout IsVisible="{Binding IsShown}">
-                                                        <BoxView Style="{StaticResource DropIndicator}"
-                                                                 IsVisible="{Binding IsOverBefore}" />
-                                                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                    <Grid IsVisible="{Binding IsShown}">
                                                         <Border Style="{StaticResource CardBorder}"
                                                                 behaviors:DropOption.SideCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=CardSideCommand, x:DataType={x:Type module:UIKanbanViewModel}}">
                                                             <Border.Triggers>
@@ -561,13 +569,10 @@
                                                                 </DataTrigger>
                                                             </Border.Triggers>
                                                             <Border.GestureRecognizers>
-                                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                                                 <DragGestureRecognizer CanDrag="True"
                                                                                        DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DragStartingCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
                                                                                        DragStartingCommandParameter="{Binding .}"
                                                                                        DropCompletedCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropCompletedCommand, x:DataType={x:Type module:UIKanbanViewModel}}" />
-                                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                                                 <DropGestureRecognizer AllowDrop="True"
                                                                                        DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=CardOverCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
                                                                                        DragOverCommandParameter="{Binding .}"
@@ -575,7 +580,6 @@
                                                                                        DragLeaveCommandParameter="{Binding .}"
                                                                                        DropCommand="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=DropOnCardCommand, x:DataType={x:Type module:UIKanbanViewModel}}"
                                                                                        DropCommandParameter="{Binding .}" />
-                                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                                             </Border.GestureRecognizers>
                                                             <Grid Style="{StaticResource CardGrid}"
                                                                   ColumnDefinitions="Auto,*">
@@ -643,22 +647,27 @@
                                                                 </VerticalStackLayout>
                                                             </Grid>
                                                         </Border>
-                                                        <BoxView Style="{StaticResource DropIndicator}"
-                                                                 IsVisible="{Binding IsOverAfter}" />
-                                                    </VerticalStackLayout>
+                                                        <BoxView Style="{StaticResource DropIndicatorBefore}"
+                                                                 IsVisible="{Binding DropSide, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:BoardDropSide.Before}}" />
+                                                        <BoxView Style="{StaticResource DropIndicatorAfter}"
+                                                                 IsVisible="{Binding DropSide, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:BoardDropSide.After}}" />
+                                                    </Grid>
                                                 </DataTemplate>
                                             </BindableLayout.ItemTemplate>
                                         </VerticalStackLayout>
                                         <BoxView Style="{StaticResource DropIndicator}"
-                                                 IsVisible="{Binding IsOver}" />
-                                    </VerticalStackLayout>
+                                                 VerticalOptions="Start"
+                                                 IsVisible="{Binding DropSide, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:BoardDropSide.Before}}" />
+                                        <BoxView Style="{StaticResource DropIndicator}"
+                                                 VerticalOptions="End"
+                                                 IsVisible="{Binding DropSide, Converter={s:CompareToBool}, ConverterParameter={x:Static sample:BoardDropSide.After}}" />
+                                    </Grid>
                                 </ScrollView>
 
                                 <!-- Edge -->
-                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                 <BoxView Grid.Row="2"
                                          Style="{StaticResource LaneHeadStrip}"
-                                         behaviors:Scroll.DragScrollStep="-120"
+                                         behaviors:Scroll.DragScrollSpeed="-1500"
                                          VerticalOptions="Start"
                                          IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=IsDragging, x:DataType={x:Type module:UIKanbanViewModel}}">
                                     <BoxView.GestureRecognizers>
@@ -673,7 +682,7 @@
                                 </BoxView>
                                 <BoxView Grid.Row="2"
                                          Style="{StaticResource LaneTailStrip}"
-                                         behaviors:Scroll.DragScrollStep="120"
+                                         behaviors:Scroll.DragScrollSpeed="1500"
                                          VerticalOptions="End"
                                          IsVisible="{Binding Source={RelativeSource AncestorType={x:Type module:UIKanbanViewModel}}, Path=IsDragging, x:DataType={x:Type module:UIKanbanViewModel}}">
                                     <BoxView.GestureRecognizers>
@@ -686,11 +695,11 @@
                                                                DropCommandParameter="{Binding .}" />
                                     </BoxView.GestureRecognizers>
                                 </BoxView>
-                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
                             </Grid>
                         </Border>
                     </DataTemplate>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                 </BindableLayout.ItemTemplate>
             </HorizontalStackLayout>
         </ScrollView>
@@ -698,24 +707,14 @@
         <!-- Edge -->
         <BoxView Grid.Row="1"
                  Style="{StaticResource EdgeStrip}"
+                 behaviors:Scroll.DragScrollSpeed="-800"
                  HorizontalOptions="Start"
-                 IsVisible="{Binding IsDragging}">
-            <BoxView.GestureRecognizers>
-                <DropGestureRecognizer AllowDrop="True"
-                                       DragOverCommand="{Binding EdgeOverCommand}"
-                                       DragOverCommandParameter="-" />
-            </BoxView.GestureRecognizers>
-        </BoxView>
+                 IsVisible="{Binding IsDragging}" />
         <BoxView Grid.Row="1"
                  Style="{StaticResource EdgeStrip}"
+                 behaviors:Scroll.DragScrollSpeed="800"
                  HorizontalOptions="End"
-                 IsVisible="{Binding IsDragging}">
-            <BoxView.GestureRecognizers>
-                <DropGestureRecognizer AllowDrop="True"
-                                       DragOverCommand="{Binding EdgeOverCommand}"
-                                       DragOverCommandParameter="+" />
-            </BoxView.GestureRecognizers>
-        </BoxView>
+                 IsVisible="{Binding IsDragging}" />
 
         <!-- Footer -->
         <Grid Grid.Row="2"

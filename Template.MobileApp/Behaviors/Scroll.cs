@@ -471,8 +471,12 @@ public static partial class Scroll
             }
 
             var elapsed = Math.Min(now - last, MaximumElapsed);
-            var y = Math.Max(0, target.ScrollY + (GetDragScrollSpeed(owner) * elapsed / 1000d));
-            _ = target.ScrollToAsync(target.ScrollX, y, false);
+            var delta = GetDragScrollSpeed(owner) * elapsed / 1000d;
+
+            var horizontal = target.Orientation == ScrollOrientation.Horizontal;
+            var x = horizontal ? Math.Max(0, target.ScrollX + delta) : target.ScrollX;
+            var y = horizontal ? target.ScrollY : Math.Max(0, target.ScrollY + delta);
+            _ = target.ScrollToAsync(x, y, false);
         }
     }
 
