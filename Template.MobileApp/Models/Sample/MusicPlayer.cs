@@ -146,8 +146,8 @@ public static class MusicSample
     private static readonly (string Title, string Artist, string Album, string Artwork, int Seconds)[] Plan =
     [
         ("麦の海を渡る風", "WILLOW CHORUS", "FIELD OF HARPS", "music01.jpg", 242),
-        ("鋼鉄の咆哮", "STARBLAZE", "GALAXY ROAR", "music02.png", 198),
-        ("星降る森の祭り", "WILLOW CHORUS", "FIELD OF HARPS", "music03.png", 274),
+        ("鋼鉄の咆哮", "STARBLAZE", "GALAXY ROAR", "music02.jpg", 198),
+        ("星降る森の祭り", "WILLOW CHORUS", "FIELD OF HARPS", "music03.jpg", 274),
         ("銀河を貫け", "STARBLAZE", "GALAXY ROAR", "music04.jpg", 221)
     ];
 

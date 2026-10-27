@@ -414,7 +414,7 @@
                                 </Grid.Triggers>
                                 <Border Grid.Column="0"
                                         Style="{StaticResource AvatarBorder}">
-                                    <Image Source="{Binding Item.AvatarSource}"
+                                    <Image Source="{Binding Item.AvatarSource, Converter={StaticResource AssetImageConverter}, ConverterParameter=Avatar}"
                                            Aspect="AspectFill" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1"
