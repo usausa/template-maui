@@ -173,7 +173,6 @@ public enum ViewId
 
     UITreeMap,
 
-    UIRadar,
     UIWheel,
 
     UIMonster,
@@ -184,6 +183,7 @@ public enum ViewId
     UITactical,
     UITelemetry,
     UIEnergy,
+    UIMonitor,
 
     UITransit,
     UITransitTimetable,

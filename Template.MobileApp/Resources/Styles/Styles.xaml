@@ -7,7 +7,8 @@
                     xmlns:shell="clr-namespace:Template.MobileApp.Shell"
                     xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
                     xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-                    xmlns:converters="clr-namespace:Template.MobileApp.Converters">
+                    xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+                    xmlns:clamgrid="clr-namespace:ClamGrid;assembly=ClamGrid">
 
     <!-- ================================================================================ -->
     <!-- Value -->
@@ -1594,6 +1595,28 @@
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+    </Style>
+
+    <!-- ================================================================================ -->
+    <!-- Grid -->
+    <!-- ================================================================================ -->
+
+    <Style x:Key="ClamGridBase"
+           TargetType="clamgrid:ClamGridView">
+        <Setter Property="FontFamily" Value="sans-serif" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="RowHeight" Value="46" />
+        <Setter Property="HeaderHeight" Value="42" />
+        <Setter Property="HorizontalPadding" Value="10" />
+        <Setter Property="RowHeadersVisible" Value="False" />
+        <Setter Property="VerticalLinesVisible" Value="False" />
+        <Setter Property="TextColor" Value="#37474F" />
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="HeaderBackground" Value="#F5F7FA" />
+        <Setter Property="HeaderTextColor" Value="#607D8B" />
+        <Setter Property="GridLineColor" Value="#ECEFF1" />
+        <Setter Property="SelectedBackground" Value="#E3F2FD" />
+        <Setter Property="SelectedTextColor" Value="#0D47A1" />
     </Style>
 
 </ResourceDictionary>

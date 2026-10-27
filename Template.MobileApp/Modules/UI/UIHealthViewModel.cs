@@ -1,9 +1,20 @@
 namespace Template.MobileApp.Modules.UI;
 
+using ClamChart;
+
 using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class UIHealthDay : ObservableObject
 {
+    public static ChartAccessorCollection<UIHealthDay> Accessors { get; } = new()
+    {
+        { "day", static x => x.Source.Date.ToString("ddd", CultureInfo.CurrentCulture) },
+        { "deep", static x => x.Deep },
+        { "light", static x => x.Light },
+        { "rem", static x => x.Rem },
+        { "awake", static x => x.Awake }
+    };
+
     public required SleepNight Source { get; init; }
 
     public int Day => Source.Date.Day;
@@ -72,6 +83,9 @@ public sealed partial class UIHealthViewModel : AppViewModelBase
     public partial double DeepRatio { get; set; }
 
     [ObservableProperty]
+    public partial IReadOnlyList<ChartEntry> Rings { get; set; } = [];
+
+    [ObservableProperty]
     public partial IReadOnlyList<UIHealthStage> Stages { get; set; } = [];
 
     [ObservableProperty]
@@ -125,6 +139,12 @@ public sealed partial class UIHealthViewModel : AppViewModelBase
         ScoreRatio = Score / 100d;
         DurationRatio = Math.Min(1d, (double)Night.TotalMinutes / Log.GoalMinutes);
         DeepRatio = Night.RatioOf(SleepStage.Deep);
+        Rings =
+        [
+            new("スコア", ScoreRatio, Color.FromArgb("#1565C0"), 1),
+            new("睡眠時間", DurationRatio, Color.FromArgb("#4FC3F7"), 1),
+            new("深い睡眠", DeepRatio, Color.FromArgb("#AB47BC"), 1)
+        ];
         Stages =
         [
             .. StagePlan.Select(x => new UIHealthStage

@@ -19,7 +19,7 @@ public sealed partial class UIGridViewModel : AppViewModelBase
     public GridDataView<OrderInfo> Rows { get; }
 
     [ObservableProperty]
-    public partial IReadOnlyList<GridColumnOrder>? ColumnOrders { get; set; }
+    public partial IReadOnlyList<GridColumnState>? ColumnStates { get; set; }
 
     [ObservableProperty]
     public partial IReadOnlyList<GridSortOrder>? SortOrders { get; set; }
@@ -96,9 +96,9 @@ public sealed partial class UIGridViewModel : AppViewModelBase
         {
             Load();
         }
-        else if (context.Parameter.TryGetModel<GridColumnOrder[]>(out var orders))
+        else if (context.Parameter.TryGetModel<GridColumnState[]>(out var orders))
         {
-            ColumnOrders = orders;
+            ColumnStates = orders;
             Message = $"列設定を反映: 表示 {orders.Count(static x => x.IsVisible)} / {orders.Length} 列";
         }
 
@@ -117,7 +117,7 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction3()
     {
-        ColumnOrders = null;
+        ColumnStates = null;
         SortOrders = DefaultSortOrders;
         Message = "列設定とソートを既定に戻しました";
         return Task.CompletedTask;

@@ -54,6 +54,7 @@ public static class AppIcons
     public static readonly FontImageSource ConfirmationNumber = Create(MaterialIcons.Confirmation_number, MenuSize, Colors.White);
     public static readonly FontImageSource Crop = Create(MaterialIcons.Crop, MenuSize, Colors.White);
     public static readonly FontImageSource Dashboard = Create(MaterialIcons.Dashboard, MenuSize, Colors.White);
+    public static readonly FontImageSource QueryStats = Create(MaterialIcons.Query_stats, MenuSize, Colors.White);
     public static readonly FontImageSource Delete = Create(MaterialIcons.Delete, MenuSize, Colors.White);
     public static readonly FontImageSource Devices = Create(MaterialIcons.Devices, MenuSize, Colors.White);
     public static readonly FontImageSource DirectionsRun = Create(MaterialIcons.Directions_run, MenuSize, Colors.White);
@@ -243,6 +244,8 @@ public static class AppIcons
     public static readonly FontImageSource AnimationRotate = Create(MaterialIcons.Rotate_right, SmallSize, Colors.White);
     public static readonly FontImageSource AnimationScale = Create(MaterialIcons.Zoom_out_map, SmallSize, Colors.White);
     public static readonly FontImageSource AnimationShake = Create(MaterialIcons.Vibration, SmallSize, Colors.White);
+    public static readonly FontImageSource ChartArea = Create(MaterialIcons.Area_chart, SmallSize, ResourceColor("BlueDefault"));
+    public static readonly FontImageSource ChartAreaWhite = Create(MaterialIcons.Area_chart, SmallSize, Colors.White);
     public static readonly FontImageSource ChartBar = Create(MaterialIcons.Bar_chart, SmallSize, ResourceColor("BlueDefault"));
     public static readonly FontImageSource ChartBarWhite = Create(MaterialIcons.Bar_chart, SmallSize, Colors.White);
     public static readonly FontImageSource ChartCandle = Create(MaterialIcons.Candlestick_chart, SmallSize, ResourceColor("BlueDefault"));

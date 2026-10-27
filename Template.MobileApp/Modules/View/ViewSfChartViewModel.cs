@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.View;
 
-public sealed record ChartEntry(string Label, double Value);
+public sealed record SfChartEntry(string Label, double Value);
 
 public sealed record SunburstEntry(string Category, string Item, double Value);
 
@@ -8,7 +8,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
 {
     // Cartesian ColumnSeries
 
-    public IReadOnlyList<ChartEntry> Monthly { get; } =
+    public IReadOnlyList<SfChartEntry> Monthly { get; } =
     [
         new("4月", 42),
         new("5月", 58),
@@ -20,7 +20,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
 
     // Circular DoughnutSeries
 
-    public IReadOnlyList<ChartEntry> Share { get; } =
+    public IReadOnlyList<SfChartEntry> Share { get; } =
     [
         new("食品", 38),
         new("日用品", 24),
@@ -31,7 +31,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
 
     // PolarAreaSeries
 
-    public IReadOnlyList<ChartEntry> Skills { get; } =
+    public IReadOnlyList<SfChartEntry> Skills { get; } =
     [
         new("攻撃", 82),
         new("防御", 64),
@@ -43,7 +43,7 @@ public sealed class ViewSfChartViewModel : AppViewModelBase
 
     // SfFunnelChart / SfPyramidChart
 
-    public IReadOnlyList<ChartEntry> Funnel { get; } =
+    public IReadOnlyList<SfChartEntry> Funnel { get; } =
     [
         new("訪問", 1000),
         new("会員登録", 620),

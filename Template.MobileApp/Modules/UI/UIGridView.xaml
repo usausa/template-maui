@@ -23,6 +23,21 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Grid -->
+
+            <Style x:Key="ListGrid"
+                   TargetType="clam:ClamGridView"
+                   BasedOn="{StaticResource ClamGridBase}">
+                <Setter Property="FrozenLineColor" Value="#CFD8DC" />
+                <Setter Property="AscendingHeaderBackground" Value="#E3F2FD" />
+                <Setter Property="DescendingHeaderBackground" Value="#FFF3E0" />
+                <Setter Property="AscendingSortMark" Value="▲" />
+                <Setter Property="DescendingSortMark" Value="▼" />
+                <Setter Property="SortMarkPosition" Value="End" />
+                <Setter Property="SortPriorityVisible" Value="True" />
+                <Setter Property="CellColors" Value="{x:Static module:UIGridStyles.CellColors}" />
+            </Style>
+
             <!-- Converter -->
 
             <s:MapToTextConverter x:Key="StatusTextConverter">
@@ -148,9 +163,9 @@
                            SelectionMode="MultipleToggle"
                            CellValueChangedCommand="{Binding CellValueChangedCommand}"
                            ColumnConfigurationCommand="{Binding ColumnEditCommand}"
-                           ColumnOrders="{Binding ColumnOrders}"
+                           Style="{StaticResource ListGrid}"
+                           ColumnStates="{Binding ColumnStates}"
                            FrozenColumnCount="2"
-                           GridStyle="{x:Static module:UIGridStyles.ListStyle}"
                            SelectAllCommand="{Binding SelectAllCommand}"
                            SortCycle="AscendingDescendingNone"
                            SortOrders="{Binding SortOrders}"

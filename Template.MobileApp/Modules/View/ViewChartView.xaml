@@ -3,51 +3,85 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
-             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
              x:Class="Template.MobileApp.Modules.View.ViewChartView"
              x:DataType="{x:Type module:ViewChartViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewChartViewModel}"
-             shell:ShellProperty.Title="Chart"
+             shell:ShellProperty.Title="Clam Chart"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <!-- Segment -->
+            <!-- Tab -->
 
-            <Style x:Key="SegmentGrid"
+            <Style x:Key="TabGrid"
                    TargetType="Grid">
-                <Setter Property="Margin" Value="16,12" />
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="Margin" Value="12,8" />
+                <Setter Property="RowSpacing" Value="6" />
+                <Setter Property="ColumnSpacing" Value="6" />
             </Style>
 
-            <Style x:Key="SegmentButton"
+            <Style x:Key="TabButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="HeightRequest" Value="36" />
-                <Setter Property="CornerRadius" Value="18" />
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HeightRequest" Value="34" />
+                <Setter Property="CornerRadius" Value="17" />
+                <Setter Property="FontSize" Value="13" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="BorderColor" Value="{StaticResource BlueLighten3}" />
                 <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="ContentLayout" Value="Left,4" />
             </Style>
 
-            <!-- Chart -->
+            <!-- Panel -->
 
-            <Style x:Key="ChartFrameBorder"
+            <Style x:Key="PanelBorder"
                    TargetType="Border">
-                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="Margin" Value="12,0,12,12" />
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="PanelGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="4" />
+            </Style>
+
+            <Style x:Key="PanelTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
+            <Style x:Key="PanelNoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <!-- Chart -->
+
+            <Style x:Key="SampleChart"
+                   TargetType="clam:ClamChartView">
+                <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="Palette" Value="{StaticResource ChartPalette}" />
+                <Setter Property="TrackballMode" Value="Touch" />
+                <Setter Property="ValueAccessors" Value="{x:Static sample:MonthlySales.Accessors}" />
+                <Setter Property="XKey" Value="month" />
+            </Style>
+
+            <Style x:Key="StatView"
+                   TargetType="clam:ClamStatView">
+                <Setter Property="HeightRequest" Value="84" />
+                <Setter Property="ColorMode" Value="Value" />
             </Style>
 
         </ResourceDictionary>
@@ -57,130 +91,286 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="Auto,*">
 
-        <!-- Segment -->
+        <!-- Tab -->
         <Grid Grid.Row="0"
-              Style="{StaticResource SegmentGrid}"
+              Style="{StaticResource TabGrid}"
               RowDefinitions="Auto,Auto"
-              ColumnDefinitions="*,*,*,*,*,*,*,*">
-            <Button Grid.Column="0" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+              ColumnDefinitions="*,*,*,*">
+            <Button Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Line}"
-                    Text="Line"
-                    ImageSource="{x:Static markup:AppIcons.ChartLine}">
+                    CommandParameter="{x:Static module:ViewChartKind.Line}"
+                    Text="Line">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Line}">
+                                 Value="{x:Static module:ViewChartKind.Line}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartLineWhite}" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Grid.Column="2" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+            <Button Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Bar}"
-                    Text="Bar"
-                    ImageSource="{x:Static markup:AppIcons.ChartBar}">
+                    CommandParameter="{x:Static module:ViewChartKind.Area}"
+                    Text="Area">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Bar}">
+                                 Value="{x:Static module:ViewChartKind.Area}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartBarWhite}" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Grid.Column="4" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+            <Button Grid.Row="0" Grid.Column="2"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Donut}"
-                    Text="Donut"
-                    ImageSource="{x:Static markup:AppIcons.ChartDonut}">
+                    CommandParameter="{x:Static module:ViewChartKind.Bar}"
+                    Text="Bar">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Donut}">
+                                 Value="{x:Static module:ViewChartKind.Bar}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartDonutWhite}" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Grid.Column="6" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+            <Button Grid.Row="0" Grid.Column="3"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Candle}"
-                    Text="Candle"
-                    ImageSource="{x:Static markup:AppIcons.ChartCandle}">
+                    CommandParameter="{x:Static module:ViewChartKind.Stacked}"
+                    Text="Stack">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Candle}">
+                                 Value="{x:Static module:ViewChartKind.Stacked}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartCandleWhite}" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+            <Button Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Stacked}"
-                    Text="Stacked"
-                    ImageSource="{x:Static markup:AppIcons.ChartStacked}">
+                    CommandParameter="{x:Static module:ViewChartKind.Scatter}"
+                    Text="Scatter">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Stacked}">
+                                 Value="{x:Static module:ViewChartKind.Scatter}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartStackedWhite}" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+            <Button Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Scatter}"
-                    Text="Scatter"
-                    ImageSource="{x:Static markup:AppIcons.ChartScatter}">
+                    CommandParameter="{x:Static module:ViewChartKind.Pie}"
+                    Text="Pie">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Scatter}">
+                                 Value="{x:Static module:ViewChartKind.Pie}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartScatterWhite}" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2"
-                    Style="{StaticResource SegmentButton}"
+            <Button Grid.Row="1" Grid.Column="2"
+                    Style="{StaticResource TabButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static drawing:ChartKind.Heat}"
-                    Text="Heat"
-                    ImageSource="{x:Static markup:AppIcons.ChartHeat}">
+                    CommandParameter="{x:Static module:ViewChartKind.Heatmap}"
+                    Text="Heat">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static drawing:ChartKind.Heat}">
+                                 Value="{x:Static module:ViewChartKind.Heatmap}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
-                        <Setter Property="ImageSource" Value="{x:Static markup:AppIcons.ChartHeatWhite}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="3"
+                    Style="{StaticResource TabButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static module:ViewChartKind.Climate}"
+                    Text="Climate">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static module:ViewChartKind.Climate}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
         </Grid>
 
         <!-- Chart -->
-        <Border Grid.Row="1"
-                Style="{StaticResource ChartFrameBorder}">
-            <drawing:DrawingControl Drawing="{Binding Drawing}" />
-        </Border>
+        <Grid Grid.Row="1">
+
+            <Border Style="{StaticResource PanelBorder}"
+                    IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Line}}">
+                <clam:ClamChartView Style="{StaticResource SampleChart}">
+                    <clam:LineSeries ItemsSource="{Binding Sales}"
+                                     Title="製品 A" YKey="productA" />
+                    <clam:LineSeries ItemsSource="{Binding Sales}"
+                                     Title="製品 B" YKey="productB" />
+                    <clam:LineSeries ItemsSource="{Binding Sales}"
+                                     Title="製品 C" YKey="productC" />
+                </clam:ClamChartView>
+            </Border>
+
+            <Border Style="{StaticResource PanelBorder}"
+                    IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Area}}">
+                <clam:ClamChartView Style="{StaticResource SampleChart}">
+                    <clam:AreaSeries ItemsSource="{Binding Sales}"
+                                     FillOpacity="0.25" Title="製品 A" YKey="productA" />
+                    <clam:AreaSeries ItemsSource="{Binding Sales}"
+                                     FillOpacity="0.25" Title="製品 B" YKey="productB" />
+                </clam:ClamChartView>
+            </Border>
+
+            <Border Style="{StaticResource PanelBorder}"
+                    IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Bar}}">
+                <clam:ClamChartView Style="{StaticResource SampleChart}">
+                    <clam:BarSeries ItemsSource="{Binding Sales}"
+                                    CornerRadius="3" Title="製品 A" YKey="productA" />
+                    <clam:BarSeries ItemsSource="{Binding Sales}"
+                                    CornerRadius="3" Title="製品 B" YKey="productB" />
+                </clam:ClamChartView>
+            </Border>
+
+            <Border Style="{StaticResource PanelBorder}"
+                    IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Stacked}}">
+                <clam:ClamChartView Style="{StaticResource SampleChart}">
+                    <clam:BarSeries ItemsSource="{Binding Sales}"
+                                    StackGroup="sales" Title="製品 A" YKey="productA" />
+                    <clam:BarSeries ItemsSource="{Binding Sales}"
+                                    StackGroup="sales" Title="製品 B" YKey="productB" />
+                    <clam:BarSeries ItemsSource="{Binding Sales}"
+                                    CornerRadius="3" StackGroup="sales" Title="製品 C" YKey="productC" />
+                </clam:ClamChartView>
+            </Border>
+
+            <Border Style="{StaticResource PanelBorder}"
+                    IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Scatter}}">
+                <clam:ClamChartView ContentPadding="0"
+                                    Palette="{StaticResource ChartPalette}"
+                                    TrackballMode="Touch">
+                    <clam:ScatterSeries ItemsSource="{Binding Scatter}"
+                                        Title="計測値" />
+                </clam:ClamChartView>
+            </Border>
+
+            <Border Style="{StaticResource PanelBorder}"
+                    IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Pie}}">
+                <clam:ClamPieChartView ItemsSource="{Binding Shares}"
+                                       ContentPadding="0" LabelsMode="Outside"
+                                       Palette="{StaticResource ChartPalette}"
+                                       ValueFormat="{}{0:N0}%" />
+            </Border>
+
+            <!-- Heatmap -->
+            <ScrollView IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Heatmap}}">
+                <VerticalStackLayout>
+                    <Border Style="{StaticResource PanelBorder}">
+                        <Grid Style="{StaticResource PanelGrid}"
+                              RowDefinitions="Auto,Auto,170">
+                            <Label Grid.Row="0"
+                                   Style="{StaticResource PanelTitleLabel}"
+                                   Text="日ごとの活動量" />
+                            <Label Grid.Row="1"
+                                   Style="{StaticResource PanelNoteLabel}"
+                                   Text="1 週 1 列、1 年分。GitHub の草と同じ形" />
+                            <clam:ClamHeatmapView Grid.Row="2"
+                                                  ItemsSource="{Binding Contributions}"
+                                                  ColorScale="{StaticResource ChartGreenScale}"
+                                                  ContentPadding="0" LayoutMode="Calendar" SelectionMode="Item" TrackballMode="Touch"
+                                                  ValueFormat="{}{0:N0} 件" />
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource PanelBorder}">
+                        <Grid Style="{StaticResource PanelGrid}"
+                              RowDefinitions="Auto,Auto,260">
+                            <Label Grid.Row="0"
+                                   Style="{StaticResource PanelTitleLabel}"
+                                   Text="曜日と時間帯のアクセス数" />
+                            <Label Grid.Row="1"
+                                   Style="{StaticResource PanelNoteLabel}"
+                                   Text="行と列を指定した行列の形" />
+                            <clam:ClamHeatmapView Grid.Row="2"
+                                                  ItemsSource="{Binding Accesses}"
+                                                  ColorScale="{StaticResource ChartBlueScale}"
+                                                  ColumnKey="hour" ContentPadding="0" RowKey="day" SelectionMode="Item" TrackballMode="Touch"
+                                                  ValueAccessors="{x:Static sample:AccessCount.Accessors}"
+                                                  ValueFormat="{}{0:N0}" ValueKey="count" />
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Climate -->
+            <Grid IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Climate}}"
+                  RowDefinitions="Auto,*">
+                <Grid Grid.Row="0"
+                      ColumnDefinitions="*,*">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource PanelBorder}"
+                            Margin="12,0,6,12">
+                        <clam:ClamStatView Style="{StaticResource StatView}"
+                                           Value="{Binding Temperature}"
+                                           Fill="#EF5350" Title="室温" Unit="°C" ValueFormat="N1" />
+                    </Border>
+                    <Border Grid.Column="1"
+                            Style="{StaticResource PanelBorder}"
+                            Margin="6,0,12,12">
+                        <clam:ClamStatView Style="{StaticResource StatView}"
+                                           Value="{Binding Humidity}"
+                                           Fill="#42A5F5" Title="湿度" Unit="%" ValueFormat="N0" />
+                    </Border>
+                </Grid>
+                <Border Grid.Row="1"
+                        Style="{StaticResource PanelBorder}">
+                    <Grid Style="{StaticResource PanelGrid}"
+                          RowDefinitions="Auto,*">
+                        <Label Grid.Row="0"
+                               Style="{StaticResource PanelTitleLabel}"
+                               Text="48 時間の温度と湿度" />
+                        <clam:ClamChartView Grid.Row="1"
+                                            ContentPadding="0" LegendMode="Table" LegendPosition="Bottom" LegendValues="Last,Min,Max"
+                                            Palette="{StaticResource ChartPalette}"
+                                            TrackballMode="Touch"
+                                            ValueAccessors="{x:Static sample:ClimateRecord.Accessors}"
+                                            XKey="time">
+                            <clam:ClamChartView.XAxis>
+                                <clam:DateTimeAxis LabelFormat="HH:mm" />
+                            </clam:ClamChartView.XAxis>
+                            <clam:ClamChartView.YAxis>
+                                <clam:NumericAxis Title="°C" IncludeZero="False" LabelFormat="N0" />
+                            </clam:ClamChartView.YAxis>
+                            <clam:ClamChartView.SecondaryYAxis>
+                                <clam:NumericAxis Title="%" Minimum="0" Maximum="100" LabelFormat="N0" />
+                            </clam:ClamChartView.SecondaryYAxis>
+                            <clam:AreaSeries ItemsSource="{Binding Records}"
+                                             Color="#EF5350" FillOpacity="0.18" MarkerMode="None" Title="室温"
+                                             ValueFormat="{}{0:N1} °C" YKey="temperature" />
+                            <clam:LineSeries ItemsSource="{Binding Records}"
+                                             Color="#FFA726" DashPattern="4,3" MarkerMode="None" Title="外気温"
+                                             ValueFormat="{}{0:N1} °C" YKey="outside" />
+                            <clam:LineSeries ItemsSource="{Binding Records}"
+                                             Color="#42A5F5" MarkerMode="None" Title="湿度"
+                                             ValueFormat="{}{0:N0} %" YAxis="Secondary" YKey="humidity" />
+                        </clam:ClamChartView>
+                    </Grid>
+                </Border>
+            </Grid>
+
+        </Grid>
 
     </Grid>
 

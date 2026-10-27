@@ -17,6 +17,17 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Grid -->
+
+            <Style x:Key="SettingsGrid"
+                   TargetType="clam:ClamGridView"
+                   BasedOn="{StaticResource ClamGridBase}">
+                <Setter Property="RowHeadersVisible" Value="True" />
+                <Setter Property="RowHeaderWidth" Value="56" />
+                <Setter Property="RowHeaderBackground" Value="#F5F7FA" />
+                <Setter Property="CornerText" Value="" />
+            </Style>
+
             <!-- Header -->
 
             <Style x:Key="ColumnCaptionLabel"
@@ -55,7 +66,7 @@
                            ItemsSource="{Binding Rows}"
                            AllowColumnConfiguration="False" AllowColumnResizing="False" AllowRowDragging="True"
                            CellValueChangedCommand="{Binding CellValueChangedCommand}"
-                           GridStyle="{x:Static module:UIGridStyles.SettingsStyle}"
+                           Style="{StaticResource SettingsGrid}"
                            IsReadOnly="False"
                            RowMovedCommand="{Binding RowMovedCommand}"
                            RowMover="{Binding RowMover}"

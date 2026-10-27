@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
              x:Class="Template.MobileApp.Modules.UI.UIHealthView"
              x:DataType="{x:Type module:UIHealthViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIHealthViewModel}"
@@ -97,13 +98,6 @@
                 <Setter Property="ColumnSpacing" Value="16" />
             </Style>
 
-            <Style x:Key="RingGrid"
-                   TargetType="Grid">
-                <Setter Property="WidthRequest" Value="128" />
-                <Setter Property="HeightRequest" Value="128" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
             <Style x:Key="RingBase"
                    TargetType="controls:ArcMeter">
                 <Setter Property="StartAngle" Value="-90" />
@@ -113,55 +107,6 @@
                 <Setter Property="TrackColor" Value="{StaticResource HealthTrackColor}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="OuterRing"
-                   TargetType="controls:ArcMeter"
-                   BasedOn="{StaticResource RingBase}">
-                <Setter Property="WidthRequest" Value="128" />
-                <Setter Property="HeightRequest" Value="128" />
-                <Setter Property="Thickness" Value="11" />
-                <Setter Property="Brush" Value="#1565C0" />
-            </Style>
-
-            <Style x:Key="MiddleRing"
-                   TargetType="controls:ArcMeter"
-                   BasedOn="{StaticResource RingBase}">
-                <Setter Property="WidthRequest" Value="100" />
-                <Setter Property="HeightRequest" Value="100" />
-                <Setter Property="Thickness" Value="10" />
-                <Setter Property="Brush" Value="#4FC3F7" />
-            </Style>
-
-            <Style x:Key="InnerRing"
-                   TargetType="controls:ArcMeter"
-                   BasedOn="{StaticResource RingBase}">
-                <Setter Property="WidthRequest" Value="74" />
-                <Setter Property="HeightRequest" Value="74" />
-                <Setter Property="Thickness" Value="9" />
-                <Setter Property="Brush" Value="#AB47BC" />
-            </Style>
-
-            <Style x:Key="ScoreStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="-4" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="ScoreValueLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="34" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource HealthTextColor}" />
-            </Style>
-
-            <Style x:Key="ScoreCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="11" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource HealthSubTextColor}" />
             </Style>
 
             <Style x:Key="SummaryStack"
@@ -227,30 +172,6 @@
             </Style>
 
             <!-- Week -->
-
-            <Style x:Key="WeekGrid"
-                   TargetType="FlexLayout">
-                <Setter Property="Margin" Value="0,12,0,0" />
-                <Setter Property="HeightRequest" Value="120" />
-            </Style>
-
-            <Style x:Key="WeekStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="4" />
-                <Setter Property="VerticalOptions" Value="End" />
-            </Style>
-
-            <Style x:Key="WeekBarLayout"
-                   TargetType="FlexLayout">
-                <Setter Property="Direction" Value="Column" />
-                <Setter Property="WidthRequest" Value="22" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="WeekSegment"
-                   TargetType="BoxView">
-                <Setter Property="FlexLayout.Basis" Value="0" />
-            </Style>
 
             <!-- Advice -->
 
@@ -394,21 +315,13 @@
                            Text="睡眠スコア" />
                     <Grid Style="{StaticResource ScoreGrid}"
                           ColumnDefinitions="Auto,*">
-                        <Grid Grid.Column="0"
-                              Style="{StaticResource RingGrid}">
-                            <controls:ArcMeter Style="{StaticResource OuterRing}"
-                                               Value="{Binding ScoreRatio}" />
-                            <controls:ArcMeter Style="{StaticResource MiddleRing}"
-                                               Value="{Binding DurationRatio}" />
-                            <controls:ArcMeter Style="{StaticResource InnerRing}"
-                                               Value="{Binding DeepRatio}" />
-                            <VerticalStackLayout Style="{StaticResource ScoreStack}">
-                                <Label Style="{StaticResource ScoreValueLabel}"
-                                       Text="{Binding Score}" />
-                                <Label Style="{StaticResource ScoreCaptionLabel}"
-                                       Text="SCORE" />
-                            </VerticalStackLayout>
-                        </Grid>
+                        <clam:ClamRadialBarView Grid.Column="0"
+                                                ItemsSource="{Binding Rings}"
+                                                CenterLabel="SCORE"
+                                                CenterText="{Binding Score}"
+                                                ContentPadding="0" HeightRequest="128" InnerRadius="0.42" LegendVisible="False"
+                                                Maximum="1" RingSpacing="3" RingThickness="10"
+                                                TrackColor="{StaticResource HealthTrackColor}" WidthRequest="128" />
                         <VerticalStackLayout Grid.Column="1"
                                              Style="{StaticResource SummaryStack}">
                             <Label Style="{StaticResource DurationLabel}">
@@ -484,35 +397,29 @@
                                Style="{StaticResource SummaryLabel}"
                                Text="{Binding Log.AverageMinutes, Converter={StaticResource SleepTimeConverter}, StringFormat='平均 {0}'}" />
                     </Grid>
-                    <FlexLayout Style="{StaticResource WeekGrid}"
-                                BindableLayout.ItemsSource="{Binding Days}"
-                                Direction="Row"
-                                Wrap="NoWrap">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type module:UIHealthDay}">
-                                <VerticalStackLayout Style="{StaticResource WeekStack}"
-                                                     FlexLayout.Basis="14.28%">
-                                    <FlexLayout Style="{StaticResource WeekBarLayout}"
-                                                HeightRequest="{Binding BarHeight}">
-                                        <BoxView Style="{StaticResource WeekSegment}"
-                                                 Color="#FB8C00"
-                                                 FlexLayout.Grow="{Binding Awake}" />
-                                        <BoxView Style="{StaticResource WeekSegment}"
-                                                 Color="#AB47BC"
-                                                 FlexLayout.Grow="{Binding Rem}" />
-                                        <BoxView Style="{StaticResource WeekSegment}"
-                                                 Color="#4FC3F7"
-                                                 FlexLayout.Grow="{Binding Light}" />
-                                        <BoxView Style="{StaticResource WeekSegment}"
-                                                 Color="#1565C0"
-                                                 FlexLayout.Grow="{Binding Deep}" />
-                                    </FlexLayout>
-                                    <Label Style="{StaticResource DowLabel}"
-                                           Text="{Binding Source.Date, StringFormat='{0:ddd}'}" />
-                                </VerticalStackLayout>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
+                    <clam:ClamChartView ContentPadding="0" HeightRequest="150"
+                                        LegendVisible="False" TrackballMode="Touch"
+                                        ValueAccessors="{x:Static module:UIHealthDay.Accessors}"
+                                        XKey="day">
+                        <clam:ClamChartView.XAxis>
+                            <clam:CategoryAxis MaxLabelCount="7" />
+                        </clam:ClamChartView.XAxis>
+                        <clam:ClamChartView.YAxis>
+                            <clam:NumericAxis IsVisible="False" />
+                        </clam:ClamChartView.YAxis>
+                        <clam:BarSeries ItemsSource="{Binding Days}"
+                                        Color="#1565C0" StackGroup="sleep" Title="深い"
+                                        ValueFormat="{}{0:N0} 分" YKey="deep" />
+                        <clam:BarSeries ItemsSource="{Binding Days}"
+                                        Color="#4FC3F7" StackGroup="sleep" Title="浅い"
+                                        ValueFormat="{}{0:N0} 分" YKey="light" />
+                        <clam:BarSeries ItemsSource="{Binding Days}"
+                                        Color="#AB47BC" StackGroup="sleep" Title="REM"
+                                        ValueFormat="{}{0:N0} 分" YKey="rem" />
+                        <clam:BarSeries ItemsSource="{Binding Days}"
+                                        Color="#FB8C00" CornerRadius="3" StackGroup="sleep" Title="覚醒"
+                                        ValueFormat="{}{0:N0} 分" YKey="awake" />
+                    </clam:ClamChartView>
                 </VerticalStackLayout>
             </Border>
 

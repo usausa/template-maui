@@ -6,10 +6,6 @@ using Template.MobileApp.Models.Sample;
 
 internal static class UIGridStyles
 {
-    private static readonly Color HeaderText = Color.FromArgb("#607D8B");
-
-    private static readonly Color Line = Color.FromArgb("#ECEFF1");
-
     private static readonly GridColors OpenColors = new(Color.FromArgb("#616161"), Color.FromArgb("#F5F5F5"));
 
     private static readonly GridColors ProcessingColors = new(Color.FromArgb("#1565C0"), Color.FromArgb("#E3F2FD"));
@@ -40,47 +36,7 @@ internal static class UIGridStyles
 
     private static readonly Color FaxText = Color.FromArgb("#6D4C41");
 
-    public static GridStyle ListStyle { get; } = CreateList();
-
-    public static GridStyle SettingsStyle { get; } = CreateSettings();
-
-    private static GridStyle CreateList() => CreateBase() with
-    {
-        FrozenLineColor = Color.FromArgb("#CFD8DC"),
-        AscendingHeaderBackground = Color.FromArgb("#E3F2FD"),
-        DescendingHeaderBackground = Color.FromArgb("#FFF3E0"),
-        AscendingSortMark = "▲",
-        DescendingSortMark = "▼",
-        SortMarkPosition = GridSortMarkPosition.End,
-        SortPriorityVisible = true,
-        CellColors = SelectCellColors
-    };
-
-    private static GridStyle CreateSettings() => CreateBase() with
-    {
-        RowHeadersVisible = true,
-        RowHeaderWidth = 56,
-        RowHeaderBackground = Color.FromArgb("#F5F7FA"),
-        CornerText = string.Empty
-    };
-
-    private static GridStyle CreateBase() => new()
-    {
-        FontFamily = "sans-serif",
-        FontSize = 15,
-        RowHeight = 46,
-        HeaderHeight = 42,
-        HorizontalPadding = 10,
-        RowHeadersVisible = false,
-        VerticalLinesVisible = false,
-        TextColor = Color.FromArgb("#37474F"),
-        Background = Colors.White,
-        HeaderBackground = Color.FromArgb("#F5F7FA"),
-        HeaderTextColor = HeaderText,
-        GridLineColor = Line,
-        SelectedBackground = Color.FromArgb("#E3F2FD"),
-        SelectedTextColor = Color.FromArgb("#0D47A1")
-    };
+    public static Func<GridCellColorContext, GridColors> CellColors { get; } = SelectCellColors;
 
     private static GridColors SelectCellColors(GridCellColorContext context)
     {

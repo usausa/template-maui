@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
+             x:Class="Template.MobileApp.Modules.UI.UIMonitorView"
+             x:DataType="{x:Type module:UIMonitorViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIMonitorViewModel}"
+             shell:ShellProperty.Title="Monitor"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="期間"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Color -->
+
+            <Color x:Key="BoardBackColor">#111318</Color>
+            <Color x:Key="PanelBackColor">#181B22</Color>
+            <Color x:Key="PanelLineColor">#2A2F3A</Color>
+            <Color x:Key="PanelTitleColor">#9AA4B2</Color>
+
+            <!-- Panel -->
+
+            <Style x:Key="BoardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="4" />
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BoardBackColor}" />
+            </Style>
+
+            <Style x:Key="PanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="6,4" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PanelBackColor}" />
+                <Setter Property="Stroke" Value="{StaticResource PanelLineColor}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+            </Style>
+
+            <Style x:Key="PanelGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="PanelTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource PanelTitleColor}" />
+            </Style>
+
+            <Style x:Key="TileGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="4" />
+            </Style>
+
+            <!-- Chart -->
+
+            <Style x:Key="StatTile"
+                   TargetType="clam:ClamStatView">
+                <Setter Property="HeightRequest" Value="86" />
+                <Setter Property="ColorMode" Value="Background" />
+                <Setter Property="FillMode" Value="Gradient" />
+                <Setter Property="TrendPlacement" Value="Background" />
+                <Setter Property="UpdateAnimationEnabled" Value="False" />
+                <Setter Property="ValueFontSize" Value="26" />
+            </Style>
+
+            <Style x:Key="BoardChart"
+                   TargetType="clam:ClamChartView">
+                <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="Palette" Value="{x:Static clam:ChartPalettes.GrafanaDark}" />
+                <Setter Property="TrackballMode" Value="LongPress" />
+                <Setter Property="TrackballSnapEnabled" Value="False" />
+                <Setter Property="TrackingGroup" Value="monitor" />
+                <Setter Property="TrackingGroupMode" Value="Tooltip" />
+                <Setter Property="UpdateAnimationEnabled" Value="False" />
+                <Setter Property="ValueAccessors" Value="{x:Static sample:MonitorSample.Accessors}" />
+                <Setter Property="XKey" Value="time" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Content -->
+    <ScrollView BackgroundColor="{StaticResource BoardBackColor}">
+        <VerticalStackLayout Style="{StaticResource BoardStack}">
+
+            <!-- Stat -->
+            <Grid Style="{StaticResource TileGrid}"
+                  ColumnDefinitions="*,*">
+                <clam:ClamStatView Grid.Column="0"
+                                   Style="{StaticResource StatTile}"
+                                   Value="{Binding Cpu}"
+                                   Fill="#5794F2" Title="CPU 使用率"
+                                   TrendValues="{Binding CpuTrend}"
+                                   Unit="%" ValueFormat="N1" />
+                <clam:ClamStatView Grid.Column="1"
+                                   Style="{StaticResource StatTile}"
+                                   Value="{Binding Memory}"
+                                   Fill="#B877D9" Title="メモリ使用率"
+                                   TrendValues="{Binding MemoryTrend}"
+                                   Unit="%" ValueFormat="N1" />
+            </Grid>
+            <Grid Style="{StaticResource TileGrid}"
+                  ColumnDefinitions="*,*">
+                <clam:ClamStatView Grid.Column="0"
+                                   Style="{StaticResource StatTile}"
+                                   Value="{Binding Temperature}"
+                                   Fill="#F2495C" Title="CPU 温度"
+                                   TrendValues="{Binding TemperatureTrend}"
+                                   Unit="°C" ValueFormat="N0" />
+                <clam:ClamStatView Grid.Column="1"
+                                   Style="{StaticResource StatTile}"
+                                   Value="{Binding Network}"
+                                   Fill="#73BF69" Title="ネットワーク"
+                                   TrendValues="{Binding NetworkTrend}"
+                                   Unit="KB/s" ValueFormat="N0" />
+            </Grid>
+
+            <!-- Load -->
+            <Border Style="{StaticResource PanelBorder}">
+                <Grid Style="{StaticResource PanelGrid}"
+                      RowDefinitions="Auto,300">
+                    <Label Grid.Row="0"
+                           Style="{StaticResource PanelTitleLabel}"
+                           Text="コアごとの負荷 (%)" />
+                    <clam:ClamChartView Grid.Row="1"
+                                        Style="{StaticResource BoardChart}"
+                                        LegendMode="Table" LegendToggleEnabled="True" LegendValues="Last,Max">
+                        <clam:ClamChartView.XAxis>
+                            <clam:DateTimeAxis WindowSize="{Binding Window}" />
+                        </clam:ClamChartView.XAxis>
+                        <clam:ClamChartView.YAxis>
+                            <clam:NumericAxis Minimum="0" Maximum="100" />
+                        </clam:ClamChartView.YAxis>
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         MarkerMode="None" Title="Core #1" ValueFormat="{}{0:N1}%" YKey="core1" />
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         MarkerMode="None" Title="Core #2" ValueFormat="{}{0:N1}%" YKey="core2" />
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         MarkerMode="None" Title="Core #3" ValueFormat="{}{0:N1}%" YKey="core3" />
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         MarkerMode="None" Title="Core #4" ValueFormat="{}{0:N1}%" YKey="core4" />
+                    </clam:ClamChartView>
+                </Grid>
+            </Border>
+
+            <!-- Temperature -->
+            <Border Style="{StaticResource PanelBorder}">
+                <Grid Style="{StaticResource PanelGrid}"
+                      RowDefinitions="Auto,180">
+                    <Label Grid.Row="0"
+                           Style="{StaticResource PanelTitleLabel}"
+                           Text="温度 (°C)" />
+                    <clam:ClamChartView Grid.Row="1"
+                                        Style="{StaticResource BoardChart}"
+                                        LegendVisible="True"
+                                        Palette="{x:Static clam:ChartPalettes.RedShadesDark}">
+                        <clam:ClamChartView.XAxis>
+                            <clam:DateTimeAxis WindowSize="{Binding Window}" />
+                        </clam:ClamChartView.XAxis>
+                        <clam:ClamChartView.YAxis>
+                            <clam:NumericAxis IncludeZero="False" />
+                        </clam:ClamChartView.YAxis>
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         MarkerMode="None" Title="CPU"
+                                         ValueFormat="{}{0:N0} °C" YKey="cpu" />
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         MarkerMode="None" Title="GPU"
+                                         ValueFormat="{}{0:N0} °C" YKey="gpu" />
+                    </clam:ClamChartView>
+                </Grid>
+            </Border>
+
+            <!-- Network -->
+            <Border Style="{StaticResource PanelBorder}">
+                <Grid Style="{StaticResource PanelGrid}"
+                      RowDefinitions="Auto,180">
+                    <Label Grid.Row="0"
+                           Style="{StaticResource PanelTitleLabel}"
+                           Text="ネットワーク (KB/s)" />
+                    <clam:ClamChartView Grid.Row="1"
+                                        Style="{StaticResource BoardChart}"
+                                        LegendVisible="True"
+                                        Palette="{x:Static clam:ChartPalettes.BlueShadesDark}">
+                        <clam:ClamChartView.XAxis>
+                            <clam:DateTimeAxis WindowSize="{Binding Window}" />
+                        </clam:ClamChartView.XAxis>
+                        <clam:ClamChartView.YAxis>
+                            <clam:NumericAxis Minimum="0" />
+                        </clam:ClamChartView.YAxis>
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         LiveIndicatorVisible="True" MarkerMode="None" Title="受信"
+                                         ValueFormat="{}{0:N0} KB/s" YKey="receive" />
+                        <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         LiveIndicatorVisible="True" MarkerMode="None" Title="送信"
+                                         ValueFormat="{}{0:N0} KB/s" YKey="send" />
+                    </clam:ClamChartView>
+                </Grid>
+            </Border>
+
+            <!-- Queue -->
+            <Border Style="{StaticResource PanelBorder}">
+                <Grid Style="{StaticResource PanelGrid}"
+                      RowDefinitions="Auto,140">
+                    <Label Grid.Row="0"
+                           Style="{StaticResource PanelTitleLabel}"
+                           Text="実行待ちキュー" />
+                    <clam:ClamChartView Grid.Row="1"
+                                        Style="{StaticResource BoardChart}">
+                        <clam:ClamChartView.XAxis>
+                            <clam:DateTimeAxis WindowSize="{Binding Window}" />
+                        </clam:ClamChartView.XAxis>
+                        <clam:BarSeries ItemsSource="{Binding Samples}"
+                                        Color="#FF9830" Title="キュー" ValueFormat="{}{0:N0}" YKey="queue" />
+                    </clam:ClamChartView>
+                </Grid>
+            </Border>
+
+            <!-- Disk -->
+            <Border Style="{StaticResource PanelBorder}">
+                <Grid Style="{StaticResource PanelGrid}"
+                      RowDefinitions="Auto,170">
+                    <Label Grid.Row="0"
+                           Style="{StaticResource PanelTitleLabel}"
+                           Text="ディスク使用率" />
+                    <clam:ClamBarGaugeView Grid.Row="1"
+                                           ItemsSource="{Binding Disks}"
+                                           BarThickness="12" ContentPadding="0" UpdateAnimationEnabled="False" ValueMode="Percent">
+                        <clam:ClamBarGaugeView.Thresholds>
+                            <clam:ChartThreshold Color="#73BF69" />
+                            <clam:ChartThreshold Value="70" Color="#F2CC0C" />
+                            <clam:ChartThreshold Value="85" Color="#F2495C" />
+                        </clam:ClamBarGaugeView.Thresholds>
+                    </clam:ClamBarGaugeView>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>
