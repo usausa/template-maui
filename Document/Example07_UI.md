@@ -45,6 +45,7 @@
 
 <p>
 <img width="25%" src="./Images/UI_Grid.png" />
+<img width="25%" src="./Images/UI_Grid-2.png" />
 <img width="25%" src="./Images/UI_GridColumn.png" />
 </p>
 

@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
              x:Class="Template.MobileApp.Modules.View.ViewChartView"
              x:DataType="{x:Type module:ViewChartViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewChartViewModel}"
@@ -69,13 +69,42 @@
 
             <!-- Chart -->
 
-            <Style x:Key="SampleChart"
+            <Style x:Key="SampleChartBase"
                    TargetType="clam:ClamChartView">
                 <Setter Property="ContentPadding" Value="0" />
                 <Setter Property="Palette" Value="{StaticResource ChartPalette}" />
                 <Setter Property="TrackballMode" Value="Touch" />
+            </Style>
+
+            <Style x:Key="SampleChart"
+                   TargetType="clam:ClamChartView"
+                   BasedOn="{StaticResource SampleChartBase}">
                 <Setter Property="ValueAccessors" Value="{x:Static sample:MonthlySales.Accessors}" />
                 <Setter Property="XKey" Value="month" />
+            </Style>
+
+            <Style x:Key="SampleClimateChart"
+                   TargetType="clam:ClamChartView"
+                   BasedOn="{StaticResource SampleChartBase}">
+                <Setter Property="ValueAccessors" Value="{x:Static sample:ClimateRecord.Accessors}" />
+                <Setter Property="XKey" Value="time" />
+                <Setter Property="LegendMode" Value="Table" />
+                <Setter Property="LegendPosition" Value="Bottom" />
+                <Setter Property="LegendValues" Value="Last,Min,Max" />
+            </Style>
+
+            <Style x:Key="SamplePieChart"
+                   TargetType="clam:ClamPieChartView">
+                <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="Palette" Value="{StaticResource ChartPalette}" />
+                <Setter Property="LabelsMode" Value="Outside" />
+            </Style>
+
+            <Style x:Key="SampleHeatmap"
+                   TargetType="clam:ClamHeatmapView">
+                <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="SelectionMode" Value="Item" />
+                <Setter Property="TrackballMode" Value="Touch" />
             </Style>
 
             <Style x:Key="StatView"
@@ -217,11 +246,14 @@
                     IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Line}}">
                 <clam:ClamChartView Style="{StaticResource SampleChart}">
                     <clam:LineSeries ItemsSource="{Binding Sales}"
-                                     Title="製品 A" YKey="productA" />
+                                     YKey="productA"
+                                     Title="製品 A" />
                     <clam:LineSeries ItemsSource="{Binding Sales}"
-                                     Title="製品 B" YKey="productB" />
+                                     YKey="productB"
+                                     Title="製品 B" />
                     <clam:LineSeries ItemsSource="{Binding Sales}"
-                                     Title="製品 C" YKey="productC" />
+                                     YKey="productC"
+                                     Title="製品 C" />
                 </clam:ClamChartView>
             </Border>
 
@@ -229,9 +261,13 @@
                     IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Area}}">
                 <clam:ClamChartView Style="{StaticResource SampleChart}">
                     <clam:AreaSeries ItemsSource="{Binding Sales}"
-                                     FillOpacity="0.25" Title="製品 A" YKey="productA" />
+                                     YKey="productA"
+                                     Title="製品 A"
+                                     FillOpacity="0.25" />
                     <clam:AreaSeries ItemsSource="{Binding Sales}"
-                                     FillOpacity="0.25" Title="製品 B" YKey="productB" />
+                                     YKey="productB"
+                                     Title="製品 B"
+                                     FillOpacity="0.25" />
                 </clam:ClamChartView>
             </Border>
 
@@ -239,9 +275,13 @@
                     IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Bar}}">
                 <clam:ClamChartView Style="{StaticResource SampleChart}">
                     <clam:BarSeries ItemsSource="{Binding Sales}"
-                                    CornerRadius="3" Title="製品 A" YKey="productA" />
+                                    YKey="productA"
+                                    Title="製品 A"
+                                    CornerRadius="3" />
                     <clam:BarSeries ItemsSource="{Binding Sales}"
-                                    CornerRadius="3" Title="製品 B" YKey="productB" />
+                                    YKey="productB"
+                                    Title="製品 B"
+                                    CornerRadius="3" />
                 </clam:ClamChartView>
             </Border>
 
@@ -249,19 +289,21 @@
                     IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Stacked}}">
                 <clam:ClamChartView Style="{StaticResource SampleChart}">
                     <clam:BarSeries ItemsSource="{Binding Sales}"
-                                    StackGroup="sales" Title="製品 A" YKey="productA" />
+                                    YKey="productA" StackGroup="sales"
+                                    Title="製品 A" />
                     <clam:BarSeries ItemsSource="{Binding Sales}"
-                                    StackGroup="sales" Title="製品 B" YKey="productB" />
+                                    YKey="productB" StackGroup="sales"
+                                    Title="製品 B" />
                     <clam:BarSeries ItemsSource="{Binding Sales}"
-                                    CornerRadius="3" StackGroup="sales" Title="製品 C" YKey="productC" />
+                                    YKey="productC" StackGroup="sales"
+                                    Title="製品 C"
+                                    CornerRadius="3" />
                 </clam:ClamChartView>
             </Border>
 
             <Border Style="{StaticResource PanelBorder}"
                     IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Scatter}}">
-                <clam:ClamChartView ContentPadding="0"
-                                    Palette="{StaticResource ChartPalette}"
-                                    TrackballMode="Touch">
+                <clam:ClamChartView Style="{StaticResource SampleChartBase}">
                     <clam:ScatterSeries ItemsSource="{Binding Scatter}"
                                         Title="計測値" />
                 </clam:ClamChartView>
@@ -269,9 +311,8 @@
 
             <Border Style="{StaticResource PanelBorder}"
                     IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Pie}}">
-                <clam:ClamPieChartView ItemsSource="{Binding Shares}"
-                                       ContentPadding="0" LabelsMode="Outside"
-                                       Palette="{StaticResource ChartPalette}"
+                <clam:ClamPieChartView Style="{StaticResource SamplePieChart}"
+                                       ItemsSource="{Binding Shares}"
                                        ValueFormat="{}{0:N0}%" />
             </Border>
 
@@ -288,10 +329,11 @@
                                    Style="{StaticResource PanelNoteLabel}"
                                    Text="1 週 1 列、1 年分。GitHub の草と同じ形" />
                             <clam:ClamHeatmapView Grid.Row="2"
+                                                  Style="{StaticResource SampleHeatmap}"
                                                   ItemsSource="{Binding Contributions}"
+                                                  ValueFormat="{}{0:N0} 件"
                                                   ColorScale="{StaticResource ChartGreenScale}"
-                                                  ContentPadding="0" LayoutMode="Calendar" SelectionMode="Item" TrackballMode="Touch"
-                                                  ValueFormat="{}{0:N0} 件" />
+                                                  LayoutMode="Calendar" />
                         </Grid>
                     </Border>
                     <Border Style="{StaticResource PanelBorder}">
@@ -304,19 +346,20 @@
                                    Style="{StaticResource PanelNoteLabel}"
                                    Text="行と列を指定した行列の形" />
                             <clam:ClamHeatmapView Grid.Row="2"
+                                                  Style="{StaticResource SampleHeatmap}"
                                                   ItemsSource="{Binding Accesses}"
-                                                  ColorScale="{StaticResource ChartBlueScale}"
-                                                  ColumnKey="hour" ContentPadding="0" RowKey="day" SelectionMode="Item" TrackballMode="Touch"
                                                   ValueAccessors="{x:Static sample:AccessCount.Accessors}"
-                                                  ValueFormat="{}{0:N0}" ValueKey="count" />
+                                                  RowKey="day" ColumnKey="hour" ValueKey="count"
+                                                  ValueFormat="{}{0:N0}"
+                                                  ColorScale="{StaticResource ChartBlueScale}" />
                         </Grid>
                     </Border>
                 </VerticalStackLayout>
             </ScrollView>
 
             <!-- Climate -->
-            <Grid IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Climate}}"
-                  RowDefinitions="Auto,*">
+            <Grid RowDefinitions="Auto,*"
+                  IsVisible="{Binding Kind, Converter={s:CompareToBool}, ConverterParameter={x:Static module:ViewChartKind.Climate}}">
                 <Grid Grid.Row="0"
                       ColumnDefinitions="*,*">
                     <Border Grid.Column="0"
@@ -324,14 +367,20 @@
                             Margin="12,0,6,12">
                         <clam:ClamStatView Style="{StaticResource StatView}"
                                            Value="{Binding Temperature}"
-                                           Fill="#EF5350" Title="室温" Unit="°C" ValueFormat="N1" />
+                                           Title="室温"
+                                           Fill="#EF5350"
+                                           Unit="°C"
+                                           ValueFormat="N1" />
                     </Border>
                     <Border Grid.Column="1"
                             Style="{StaticResource PanelBorder}"
                             Margin="6,0,12,12">
                         <clam:ClamStatView Style="{StaticResource StatView}"
                                            Value="{Binding Humidity}"
-                                           Fill="#42A5F5" Title="湿度" Unit="%" ValueFormat="N0" />
+                                           Title="湿度"
+                                           Fill="#42A5F5"
+                                           Unit="%"
+                                           ValueFormat="N0" />
                     </Border>
                 </Grid>
                 <Border Grid.Row="1"
@@ -342,11 +391,7 @@
                                Style="{StaticResource PanelTitleLabel}"
                                Text="48 時間の温度と湿度" />
                         <clam:ClamChartView Grid.Row="1"
-                                            ContentPadding="0" LegendMode="Table" LegendPosition="Bottom" LegendValues="Last,Min,Max"
-                                            Palette="{StaticResource ChartPalette}"
-                                            TrackballMode="Touch"
-                                            ValueAccessors="{x:Static sample:ClimateRecord.Accessors}"
-                                            XKey="time">
+                                            Style="{StaticResource SampleClimateChart}">
                             <clam:ClamChartView.XAxis>
                                 <clam:DateTimeAxis LabelFormat="HH:mm" />
                             </clam:ClamChartView.XAxis>
@@ -354,17 +399,28 @@
                                 <clam:NumericAxis Title="°C" IncludeZero="False" LabelFormat="N0" />
                             </clam:ClamChartView.YAxis>
                             <clam:ClamChartView.SecondaryYAxis>
-                                <clam:NumericAxis Title="%" Minimum="0" Maximum="100" LabelFormat="N0" />
+                                <clam:NumericAxis Minimum="0" Maximum="100" Title="%" LabelFormat="N0" />
                             </clam:ClamChartView.SecondaryYAxis>
                             <clam:AreaSeries ItemsSource="{Binding Records}"
-                                             Color="#EF5350" FillOpacity="0.18" MarkerMode="None" Title="室温"
-                                             ValueFormat="{}{0:N1} °C" YKey="temperature" />
+                                             YKey="temperature"
+                                             Title="室温"
+                                             Color="#EF5350"
+                                             FillOpacity="0.18"
+                                             ValueFormat="{}{0:N1} °C"
+                                             MarkerMode="None" />
                             <clam:LineSeries ItemsSource="{Binding Records}"
-                                             Color="#FFA726" DashPattern="4,3" MarkerMode="None" Title="外気温"
-                                             ValueFormat="{}{0:N1} °C" YKey="outside" />
+                                             YKey="outside"
+                                             Title="外気温"
+                                             Color="#FFA726"
+                                             ValueFormat="{}{0:N1} °C"
+                                             MarkerMode="None"
+                                             DashPattern="4,3" />
                             <clam:LineSeries ItemsSource="{Binding Records}"
-                                             Color="#42A5F5" MarkerMode="None" Title="湿度"
-                                             ValueFormat="{}{0:N0} %" YAxis="Secondary" YKey="humidity" />
+                                             YKey="humidity" YAxis="Secondary"
+                                             Title="湿度"
+                                             Color="#42A5F5"
+                                             ValueFormat="{}{0:N0} %"
+                                             MarkerMode="None" />
                         </clam:ClamChartView>
                     </Grid>
                 </Border>

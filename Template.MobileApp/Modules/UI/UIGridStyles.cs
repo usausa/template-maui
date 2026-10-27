@@ -1,11 +1,23 @@
 namespace Template.MobileApp.Modules.UI;
 
+using ClamChart;
+
 using ClamGrid;
+
+using SkiaSharp.Views.Maui;
 
 using Template.MobileApp.Models.Sample;
 
 internal static class UIGridStyles
 {
+    private const float TrendInsetX = 6;
+
+    private const float TrendInsetY = 10;
+
+    private const float TrendThickness = 1.5f;
+
+    private const float TrendAreaOpacity = 0.25f;
+
     private static readonly GridColors OpenColors = new(Color.FromArgb("#616161"), Color.FromArgb("#F5F5F5"));
 
     private static readonly GridColors ProcessingColors = new(Color.FromArgb("#1565C0"), Color.FromArgb("#E3F2FD"));
@@ -36,7 +48,13 @@ internal static class UIGridStyles
 
     private static readonly Color FaxText = Color.FromArgb("#6D4C41");
 
+    private static readonly SKColor TrendColor = new(0x15, 0x65, 0xC0);
+
+    private static readonly ChartDrawingCache TrendCache = new();
+
     public static Func<GridCellColorContext, GridColors> CellColors { get; } = SelectCellColors;
+
+    public static Action<SKCanvas, GridCellPaintContext> TrendPainter { get; } = PaintTrend;
 
     private static GridColors SelectCellColors(GridCellColorContext context)
     {
@@ -73,5 +91,22 @@ internal static class UIGridStyles
             },
             _ => context.DefaultColors
         };
+    }
+
+    private static void PaintTrend(SKCanvas canvas, GridCellPaintContext context)
+    {
+        if (context.Value is not double[] values)
+        {
+            return;
+        }
+
+        var options = new SparklineDrawOptions
+        {
+            Kind = ChartSparklineKind.Area,
+            Color = (context.IsSelected ? context.Colors.TextColor?.ToSKColor() : null) ?? TrendColor,
+            Thickness = TrendThickness,
+            AreaOpacity = TrendAreaOpacity
+        };
+        ChartDrawing.DrawSparkline(canvas, SKRect.Inflate(context.Bounds, -TrendInsetX, -TrendInsetY), values, options, TrendCache);
     }
 }

@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -358,8 +358,8 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid BackgroundColor="{StaticResource TradeBackColor}"
-          RowDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto"
+          BackgroundColor="{StaticResource TradeBackColor}">
 
         <!-- Symbol -->
         <VerticalStackLayout Grid.Row="0"
@@ -391,8 +391,8 @@
                   ColumnDefinitions="Auto,Auto,*">
                 <Label Grid.Column="0"
                        Style="{StaticResource PriceLabel}"
-                       TextColor="{Binding Board.Quote.IsUp, Converter={StaticResource PriceColorConverter}}"
-                       Text="{Binding Board.Quote.Price, StringFormat='{0:N1}'}" />
+                       Text="{Binding Board.Quote.Price, StringFormat='{0:N1}'}"
+                       TextColor="{Binding Board.Quote.IsUp, Converter={StaticResource PriceColorConverter}}" />
                 <Label Grid.Column="1"
                        Style="{StaticResource ChangeLabel}"
                        TextColor="{Binding Board.Quote.IsUp, Converter={StaticResource PriceColorConverter}}">
@@ -446,9 +446,9 @@
         <!-- Timeframe -->
         <FlexLayout Grid.Row="1"
                     Style="{StaticResource TimeframeStack}"
+                    BindableLayout.ItemsSource="{Binding Timeframes}"
                     Direction="Row"
-                    Wrap="NoWrap"
-                    BindableLayout.ItemsSource="{Binding Timeframes}">
+                    Wrap="NoWrap">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type module:UITradeTimeframe}">
                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -480,8 +480,8 @@
 
         <!-- Tick -->
         <Grid Grid.Row="2"
-              IsVisible="{Binding IsTicks}"
-              RowDefinitions="Auto,*">
+              RowDefinitions="Auto,*"
+              IsVisible="{Binding IsTicks}">
             <Grid Grid.Row="0"
                   Style="{StaticResource TickHeadGrid}"
                   ColumnDefinitions="Auto,*,*,Auto">
@@ -513,16 +513,16 @@
                                        Text="{Binding Time, StringFormat='{0:HH:mm:ss}'}" />
                                 <Label Grid.Column="1"
                                        Style="{StaticResource TickPriceLabel}"
-                                       TextColor="{Binding Side, Converter={StaticResource SideColorConverter}}"
-                                       Text="{Binding Price, StringFormat='{0:N1}'}" />
+                                       Text="{Binding Price, StringFormat='{0:N1}'}"
+                                       TextColor="{Binding Side, Converter={StaticResource SideColorConverter}}" />
                                 <Label Grid.Column="2"
                                        Style="{StaticResource TickQuantityLabel}"
                                        Text="{Binding Quantity, StringFormat='{0:N0}'}" />
                                 <Label Grid.Column="3"
                                        Style="{StaticResource TickSideLabel}"
                                        WidthRequest="32"
-                                       TextColor="{Binding Side, Converter={StaticResource SideColorConverter}}"
-                                       Text="{Binding Side, Converter={StaticResource SideTextConverter}}" />
+                                       Text="{Binding Side, Converter={StaticResource SideTextConverter}}"
+                                       TextColor="{Binding Side, Converter={StaticResource SideColorConverter}}" />
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -555,8 +555,8 @@
                             <FlexLayout Grid.Column="0"
                                         Direction="RowReverse">
                                 <BoxView Style="{StaticResource BoardBar}"
-                                         FlexLayout.Basis="{Binding Rate, Converter={StaticResource BasisConverter}}"
-                                         Color="{StaticResource TradeAskBarColor}" />
+                                         Color="{StaticResource TradeAskBarColor}"
+                                         FlexLayout.Basis="{Binding Rate, Converter={StaticResource BasisConverter}}" />
                             </FlexLayout>
                             <Label Grid.Column="0"
                                    Style="{StaticResource BoardQuantityLabel}"
@@ -564,8 +564,8 @@
                                    Text="{Binding Quantity, StringFormat='{0:N0}'}" />
                             <Label Grid.Column="1"
                                    Style="{StaticResource BoardPriceLabel}"
-                                   TextColor="{StaticResource TradeDownColor}"
-                                   Text="{Binding Price, StringFormat='{0:N1}'}" />
+                                   Text="{Binding Price, StringFormat='{0:N1}'}"
+                                   TextColor="{StaticResource TradeDownColor}" />
                         </Grid>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
@@ -593,13 +593,13 @@
                             <FlexLayout Grid.Column="2"
                                         Direction="Row">
                                 <BoxView Style="{StaticResource BoardBar}"
-                                         FlexLayout.Basis="{Binding Rate, Converter={StaticResource BasisConverter}}"
-                                         Color="{StaticResource TradeBidBarColor}" />
+                                         Color="{StaticResource TradeBidBarColor}"
+                                         FlexLayout.Basis="{Binding Rate, Converter={StaticResource BasisConverter}}" />
                             </FlexLayout>
                             <Label Grid.Column="1"
                                    Style="{StaticResource BoardPriceLabel}"
-                                   TextColor="{StaticResource TradeUpColor}"
-                                   Text="{Binding Price, StringFormat='{0:N1}'}" />
+                                   Text="{Binding Price, StringFormat='{0:N1}'}"
+                                   TextColor="{StaticResource TradeUpColor}" />
                             <Label Grid.Column="2"
                                    Style="{StaticResource BoardQuantityLabel}"
                                    Text="{Binding Quantity, StringFormat='{0:N0}'}" />

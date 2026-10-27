@@ -26,6 +26,11 @@
                 <Setter Property="RowHeaderWidth" Value="56" />
                 <Setter Property="RowHeaderBackground" Value="#F5F7FA" />
                 <Setter Property="CornerText" Value="" />
+                <Setter Property="AllowColumnConfiguration" Value="False" />
+                <Setter Property="AllowColumnResizing" Value="False" />
+                <Setter Property="AllowRowDragging" Value="True" />
+                <Setter Property="IsReadOnly" Value="False" />
+                <Setter Property="ValueAccessors" Value="{x:Static module:ColumnOptionAccessors.Option}" />
             </Style>
 
             <!-- Header -->
@@ -63,18 +68,17 @@
 
         <!-- Column list -->
         <clam:ClamGridView Grid.Row="1"
-                           ItemsSource="{Binding Rows}"
-                           AllowColumnConfiguration="False" AllowColumnResizing="False" AllowRowDragging="True"
-                           CellValueChangedCommand="{Binding CellValueChangedCommand}"
                            Style="{StaticResource SettingsGrid}"
-                           IsReadOnly="False"
+                           ItemsSource="{Binding Rows}"
+                           CellValueChangedCommand="{Binding CellValueChangedCommand}"
                            RowMovedCommand="{Binding RowMovedCommand}"
-                           RowMover="{Binding RowMover}"
-                           ValueAccessors="{x:Static module:ColumnOptionAccessors.Option}">
+                           RowMover="{Binding RowMover}">
             <clam:GridColumn Key="IsVisible"
                              Width="72"
+                             Alignment="Center"
                              Header="表示"
-                             Alignment="Center" AllowSorting="False" IsBoolean="True" />
+                             AllowSorting="False"
+                             IsBoolean="True" />
             <clam:GridColumn Key="Header"
                              Width="*" MinWidth="120"
                              Header="項目"

@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:clam="clr-namespace:ClamChart;assembly=ClamChart"
              x:Class="Template.MobileApp.Modules.UI.UIHealthView"
              x:DataType="{x:Type module:UIHealthViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIHealthViewModel}"
@@ -32,6 +32,28 @@
             <Color x:Key="HealthTrackColor">#E3E7EA</Color>
 
             <!-- Layout -->
+
+            <Style x:Key="HealthRingChart"
+                   TargetType="clam:ClamRadialBarView">
+                <Setter Property="WidthRequest" Value="128" />
+                <Setter Property="HeightRequest" Value="128" />
+                <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="LegendVisible" Value="False" />
+                <Setter Property="InnerRadius" Value="0.42" />
+                <Setter Property="RingThickness" Value="10" />
+                <Setter Property="RingSpacing" Value="3" />
+                <Setter Property="TrackColor" Value="{StaticResource HealthTrackColor}" />
+            </Style>
+
+            <Style x:Key="HealthSleepChart"
+                   TargetType="clam:ClamChartView">
+                <Setter Property="HeightRequest" Value="150" />
+                <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="LegendVisible" Value="False" />
+                <Setter Property="TrackballMode" Value="Touch" />
+                <Setter Property="ValueAccessors" Value="{x:Static module:UIHealthDay.Accessors}" />
+                <Setter Property="XKey" Value="day" />
+            </Style>
 
             <Style x:Key="HealthScroll"
                    TargetType="ScrollView">
@@ -304,12 +326,11 @@
                     <Grid Style="{StaticResource ScoreGrid}"
                           ColumnDefinitions="Auto,*">
                         <clam:ClamRadialBarView Grid.Column="0"
+                                                Style="{StaticResource HealthRingChart}"
                                                 ItemsSource="{Binding Rings}"
+                                                Maximum="1"
                                                 CenterLabel="SCORE"
-                                                CenterText="{Binding Score}"
-                                                ContentPadding="0" HeightRequest="128" InnerRadius="0.42" LegendVisible="False"
-                                                Maximum="1" RingSpacing="3" RingThickness="10"
-                                                TrackColor="{StaticResource HealthTrackColor}" WidthRequest="128" />
+                                                CenterText="{Binding Score}" />
                         <VerticalStackLayout Grid.Column="1"
                                              Style="{StaticResource SummaryStack}">
                             <Label Style="{StaticResource DurationLabel}">
@@ -385,10 +406,7 @@
                                Style="{StaticResource SummaryLabel}"
                                Text="{Binding Log.AverageMinutes, Converter={StaticResource SleepTimeConverter}, StringFormat='平均 {0}'}" />
                     </Grid>
-                    <clam:ClamChartView ContentPadding="0" HeightRequest="150"
-                                        LegendVisible="False" TrackballMode="Touch"
-                                        ValueAccessors="{x:Static module:UIHealthDay.Accessors}"
-                                        XKey="day">
+                    <clam:ClamChartView Style="{StaticResource HealthSleepChart}">
                         <clam:ClamChartView.XAxis>
                             <clam:CategoryAxis MaxLabelCount="7" />
                         </clam:ClamChartView.XAxis>
@@ -396,17 +414,26 @@
                             <clam:NumericAxis IsVisible="False" />
                         </clam:ClamChartView.YAxis>
                         <clam:BarSeries ItemsSource="{Binding Days}"
-                                        Color="#1565C0" StackGroup="sleep" Title="深い"
-                                        ValueFormat="{}{0:N0} 分" YKey="deep" />
+                                        YKey="deep" StackGroup="sleep"
+                                        Title="深い"
+                                        Color="#1565C0"
+                                        ValueFormat="{}{0:N0} 分" />
                         <clam:BarSeries ItemsSource="{Binding Days}"
-                                        Color="#4FC3F7" StackGroup="sleep" Title="浅い"
-                                        ValueFormat="{}{0:N0} 分" YKey="light" />
+                                        YKey="light" StackGroup="sleep"
+                                        Title="浅い"
+                                        Color="#4FC3F7"
+                                        ValueFormat="{}{0:N0} 分" />
                         <clam:BarSeries ItemsSource="{Binding Days}"
-                                        Color="#AB47BC" StackGroup="sleep" Title="REM"
-                                        ValueFormat="{}{0:N0} 分" YKey="rem" />
+                                        YKey="rem" StackGroup="sleep"
+                                        Title="REM"
+                                        Color="#AB47BC"
+                                        ValueFormat="{}{0:N0} 分" />
                         <clam:BarSeries ItemsSource="{Binding Days}"
-                                        Color="#FB8C00" CornerRadius="3" StackGroup="sleep" Title="覚醒"
-                                        ValueFormat="{}{0:N0} 分" YKey="awake" />
+                                        YKey="awake" StackGroup="sleep"
+                                        Title="覚醒"
+                                        Color="#FB8C00"
+                                        CornerRadius="3"
+                                        ValueFormat="{}{0:N0} 分" />
                     </clam:ClamChartView>
                 </VerticalStackLayout>
             </Border>

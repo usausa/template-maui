@@ -368,9 +368,12 @@
                 <Setter Property="Ranges">
                     <Setter.Value>
                         <x:Array Type="{x:Type clam:GaugeRange}">
-                            <clam:GaugeRange EndColor="#C8D020" EndValue="80" StartColor="#30CC30" StartValue="0" />
-                            <clam:GaugeRange EndColor="#FF8020" EndValue="140" StartColor="#C8D020" StartValue="80" />
-                            <clam:GaugeRange EndColor="#FF2020" EndValue="200" StartColor="#FF8020" StartValue="140" />
+                            <clam:GaugeRange StartValue="0" StartColor="#30CC30"
+                                             EndValue="80" EndColor="#C8D020" />
+                            <clam:GaugeRange StartValue="80" StartColor="#C8D020"
+                                             EndValue="140" EndColor="#FF8020" />
+                            <clam:GaugeRange StartValue="140" StartColor="#FF8020"
+                                             EndValue="200" EndColor="#FF2020" />
                         </x:Array>
                     </Setter.Value>
                 </Setter>
@@ -431,7 +434,8 @@
                 <Setter Property="Ranges">
                     <Setter.Value>
                         <x:Array Type="{x:Type clam:GaugeRange}">
-                            <clam:GaugeRange EndColor="#FF2020" EndValue="8" StartColor="#CC2020" StartValue="6" />
+                            <clam:GaugeRange StartValue="6" StartColor="#CC2020"
+                                             EndValue="8" EndColor="#FF2020" />
                         </x:Array>
                     </Setter.Value>
                 </Setter>
@@ -492,9 +496,9 @@
                         <clam:ClamGaugeView Grid.Row="0"
                                             Style="{StaticResource GaugePressure}"
                                             Value="{Binding Pressure}"
+                                            UnitPosition="{Binding PressureUnitPosition}"
                                             LabelInterval="{Binding PressureLabelInterval}"
-                                            Ranges="{Binding PressureRanges}"
-                                            UnitPosition="{Binding PressureUnitPosition}">
+                                            Ranges="{Binding PressureRanges}">
                             <clam:ClamGaugeView.Triggers>
                                 <DataTrigger TargetType="clam:ClamGaugeView"
                                              Binding="{Binding PressureValueDecimal}"
@@ -545,9 +549,9 @@
                         <clam:ClamGaugeView Grid.Row="0"
                                             Style="{StaticResource GaugeHumidity}"
                                             Value="{Binding Humidity}"
+                                            UnitPosition="{Binding HumidityUnitPosition}"
                                             GaugeBackgroundStartColor="{Binding HumidityBackgroundColor}"
-                                            Ranges="{Binding HumidityRanges}"
-                                            UnitPosition="{Binding HumidityUnitPosition}">
+                                            Ranges="{Binding HumidityRanges}">
                             <clam:ClamGaugeView.Triggers>
                                 <DataTrigger TargetType="clam:ClamGaugeView"
                                              Binding="{Binding HumidityLabelPercent}"
@@ -646,9 +650,9 @@
                         <clam:ClamGaugeView Grid.Row="0"
                                             Style="{StaticResource GaugeWind}"
                                             Value="{Binding WindDirection}"
+                                            ValueVisible="{Binding WindValueVisible}"
                                             AnimationDuration="{Binding WindAnimationDuration}"
-                                            LabelInterval="{Binding WindLabelInterval}"
-                                            ValueVisible="{Binding WindValueVisible}">
+                                            LabelInterval="{Binding WindLabelInterval}">
                             <clam:ClamGaugeView.Triggers>
                                 <DataTrigger TargetType="clam:ClamGaugeView"
                                              Binding="{Binding WindDegreeLabel}"
@@ -681,9 +685,9 @@
                         <clam:ClamGaugeView Grid.Row="0"
                                             Style="{StaticResource GaugeSpeed}"
                                             Value="{Binding SpeedKmh}"
+                                            UnitPosition="{Binding SpeedUnitPosition}"
                                             AnimationDuration="{Binding SpeedAnimationDuration}"
-                                            AnimationEasing="{Binding SpeedAnimationEasing}"
-                                            UnitPosition="{Binding SpeedUnitPosition}">
+                                            AnimationEasing="{Binding SpeedAnimationEasing}">
                             <clam:ClamGaugeView.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding RandomCommand}"
                                                       CommandParameter="{x:Static module:GaugeKind.Speed}" />
@@ -709,8 +713,8 @@
                         <clam:ClamGaugeView Grid.Row="0"
                                             Style="{StaticResource GaugeRpm}"
                                             Value="{Binding Rpm}"
-                                            StartAngle="{Binding RpmStartAngle}"
-                                            ValueVisible="{Binding RpmValueVisible}">
+                                            ValueVisible="{Binding RpmValueVisible}"
+                                            StartAngle="{Binding RpmStartAngle}">
                             <clam:ClamGaugeView.Triggers>
                                 <DataTrigger TargetType="clam:ClamGaugeView"
                                              Binding="{Binding RpmWideNeedle}"

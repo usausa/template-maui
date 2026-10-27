@@ -39,6 +39,8 @@ public enum OrderMarks
 
 public sealed partial class OrderInfo : ObservableObject
 {
+    public const string HistoryKey = "History";
+
     private const int DueSoonDays = 3;
 
     private const int LargeAmount = 300_000;
@@ -46,6 +48,8 @@ public sealed partial class OrderInfo : ObservableObject
     private const int BulkQuantity = 20;
 
     private const int RecentDays = 3;
+
+    private readonly double[] history;
 
     public static GridValueAccessorCollection<OrderInfo> Accessors { get; } = new()
     {
@@ -57,6 +61,7 @@ public sealed partial class OrderInfo : ObservableObject
         { nameof(Product), static x => x.Product },
         { nameof(Quantity), static x => x.Quantity },
         { nameof(Amount), static x => x.Amount },
+        { HistoryKey, static x => x.GetHistory() },
         { nameof(DueDate), static x => x.DueDate },
         { nameof(Channel), static x => x.Channel },
         { nameof(IsChecked), static x => x.IsChecked, static (x, value) => x.IsChecked = value },
@@ -109,7 +114,7 @@ public sealed partial class OrderInfo : ObservableObject
         (IsBulk ? OrderMarks.Bulk : OrderMarks.None) |
         (IsRecent ? OrderMarks.Recent : OrderMarks.None);
 
-    public OrderInfo(int id, string orderNo, string customer, int rank, string product, int quantity, int amount, DateTime dueDate, OrderChannel channel, string staff, DateTime updatedAt, OrderStatus status)
+    public OrderInfo(int id, string orderNo, string customer, int rank, string product, int quantity, int amount, double[] history, DateTime dueDate, OrderChannel channel, string staff, DateTime updatedAt, OrderStatus status)
     {
         Id = id;
         OrderNo = orderNo;
@@ -118,12 +123,15 @@ public sealed partial class OrderInfo : ObservableObject
         Product = product;
         Quantity = quantity;
         Amount = amount;
+        this.history = history;
         DueDate = dueDate;
         Channel = channel;
         Staff = staff;
         UpdatedAt = updatedAt;
         Status = status;
     }
+
+    public double[] GetHistory() => history;
 
     public void AdvanceStatus()
     {
@@ -145,6 +153,8 @@ public sealed partial class OrderInfo : ObservableObject
 #pragma warning disable CA5394
 public static class OrderSample
 {
+    private const int HistoryCount = 12;
+
     private static readonly string[] Customers =
     [
         "青葉商事", "白樺工業", "海風物産", "山吹電機", "紅葉フーズ", "若草システムズ", "朝日運輸", "銀河食品", "常磐建設", "みなと印刷",
@@ -180,12 +190,13 @@ public static class OrderSample
             };
             orders[i] = new OrderInfo(
                 i,
-                $"SO-{today.Year}-{i + 1:D6}",
+                $"SO-{i + 1:D4}",
                 Customers[customer],
                 (customer % 3) + 1,
                 name,
                 quantity,
                 price * quantity,
+                MakeHistory(random, quantity),
                 today.AddDays(random.Next(-5, 40)),
                 (OrderChannel)random.Next(4),
                 Staffs[random.Next(Staffs.Length)],
@@ -194,6 +205,19 @@ public static class OrderSample
         }
 
         return orders;
+    }
+
+    private static double[] MakeHistory(Random random, int quantity)
+    {
+        var history = new double[HistoryCount];
+        var level = (double)quantity;
+        for (var i = HistoryCount - 1; i >= 0; i--)
+        {
+            history[i] = Math.Max(1, level);
+            level += random.Next(-4, 5);
+        }
+
+        return history;
     }
 }
 #pragma warning restore CA5394

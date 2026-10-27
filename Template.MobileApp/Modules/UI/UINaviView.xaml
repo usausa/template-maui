@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:scene="clr-namespace:Template.MobileApp.Graphics.Scene"
+             xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UINaviView"
              x:DataType="{x:Type module:UINaviViewModel}"
@@ -374,10 +374,10 @@
 
             <!-- Lane -->
             <FlexLayout Style="{StaticResource LaneStrip}"
-                        Direction="Row"
-                        Wrap="NoWrap"
                         VerticalOptions="End"
-                        BindableLayout.ItemsSource="{Binding Lanes}">
+                        BindableLayout.ItemsSource="{Binding Lanes}"
+                        Direction="Row"
+                        Wrap="NoWrap">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type module:UINaviLane}">
                         <Border Style="{StaticResource LaneBorder}"
@@ -438,8 +438,7 @@
                                  Style="{StaticResource EtaStack}">
                 <Label Style="{StaticResource EtaValueLabel}"
                        Text="{Binding Guidance.Eta, StringFormat='{0:HH:mm} 着'}" />
-                <Label Style="{StaticResource EtaInfoLabel}"
-                       >
+                <Label Style="{StaticResource EtaInfoLabel}">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="{Binding Guidance.RemainMinutes, StringFormat='残り {0} 分 ・ '}" />

@@ -101,9 +101,9 @@
                         <charts:NumericalAxis />
                     </charts:SfCartesianChart.YAxes>
                     <charts:ColumnSeries ItemsSource="{Binding Monthly}"
+                                         XBindingPath="Label" YBindingPath="Value"
                                          Fill="{StaticResource BlueDefault}"
                                          CornerRadius="4,4,0,0"
-                                         XBindingPath="Label" YBindingPath="Value"
                                          EnableAnimation="True" />
                 </charts:SfCartesianChart>
             </controls:InfoCard>
@@ -146,9 +146,9 @@
                         <charts:NumericalAxis Maximum="100" />
                     </charts:SfPolarChart.SecondaryAxis>
                     <charts:PolarAreaSeries ItemsSource="{Binding Skills}"
+                                            XBindingPath="Label" YBindingPath="Value"
                                             Fill="#802196F3"
                                             Stroke="{StaticResource BlueDefault}"
-                                            XBindingPath="Label" YBindingPath="Value"
                                             StrokeWidth="2" />
                 </charts:SfPolarChart>
             </controls:InfoCard>

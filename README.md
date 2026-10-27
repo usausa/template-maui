@@ -25,15 +25,11 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Chat.png" />
 <img width="25%" src="Document/Images/UI_Timeline.png" />
 
-<img width="25%" src="Document/Images/UI_Gantt.png" />
-<img width="25%" src="Document/Images/UI_Kanban.png" />
-<img width="25%" src="Document/Images/UI_Filer.png" />
-
 <img width="25%" src="Document/Images/UI_Health.png" />
 <img width="25%" src="Document/Images/UI_Transit.png" />
 <img width="25%" src="Document/Images/UI_TransitTimetable.png" />
 
-<img width="25%" src="Document/Images/UI_Grid.png" />
+<img width="25%" src="Document/Images/UI_Grid-2.png" />
 <img width="25%" src="Document/Images/UI_Visit.png" />
 <img width="25%" src="Document/Images/Device_WiFi.png" />
 
@@ -52,6 +48,10 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Gauge.png" />
 <img width="25%" src="Document/Images/View_Chart-7.png" />
 <img width="25%" src="Document/Images/View_Chart-8.png" />
+
+<img width="25%" src="Document/Images/UI_Gantt.png" />
+<img width="25%" src="Document/Images/UI_Kanban.png" />
+<img width="25%" src="Document/Images/UI_Filer.png" />
 
 <img width="25%" src="Document/Images/Sample_CvLocal.png" />
 <img width="25%" src="Document/Images/UI_TreeMap.png" />

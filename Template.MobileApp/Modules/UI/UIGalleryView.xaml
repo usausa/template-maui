@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
@@ -267,8 +267,8 @@
               ColumnDefinitions="Auto,*,Auto">
             <Label Grid.Column="0"
                    Style="{StaticResource SelectIconLabel}"
-                   behaviors:TouchOption.Ripple="True"
                    behaviors:TouchOption.ClickCommand="{Binding ClearCommand}"
+                   behaviors:TouchOption.Ripple="True"
                    IsEnabled="{Binding SelectedCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
                    Text="{x:Static fonts:MaterialIcons.Close}">
                 <Label.Triggers>
@@ -348,13 +348,13 @@
         <!-- Grid -->
         <Grid Grid.Row="2">
             <ScrollView Style="{StaticResource GalleryScroll}"
-                        VerticalScrollBarVisibility="Never"
-                        behaviors:Scroll.IndexCommand="{Binding ScrolledCommand}">
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Album.Sections}"
-                                     behaviors:GestureOption.PinchEnabled="True"
+                        behaviors:Scroll.IndexCommand="{Binding ScrolledCommand}"
+                        VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout behaviors:GestureOption.PinchEnabled="True"
                                      behaviors:GestureOption.MinScale="0.5"
                                      behaviors:GestureOption.MaxScale="2"
-                                     behaviors:GestureOption.ZoomScale="{Binding ZoomScale}">
+                                     behaviors:GestureOption.ZoomScale="{Binding ZoomScale}"
+                                     BindableLayout.ItemsSource="{Binding Album.Sections}">
                     <BindableLayout.ItemTemplate>
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <DataTemplate x:DataType="{x:Type sample:PhotoSection}">
@@ -379,9 +379,9 @@
                                             BindableLayout.ItemsSource="{Binding Items}">
                                     <FlexLayout.HeightRequest>
                                         <MultiBinding Converter="{StaticResource TileAreaConverter}">
-                                            <Binding Source="{RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}"
-                                                     Path="Columns"
-                                                     x:DataType="{x:Type module:UIGalleryViewModel}" />
+                                            <Binding x:DataType="{x:Type module:UIGalleryViewModel}"
+                                                     Source="{RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}"
+                                                     Path="Columns" />
                                             <Binding Path="Items.Count" />
                                         </MultiBinding>
                                     </FlexLayout.HeightRequest>
@@ -398,9 +398,9 @@
                                                 <Grid>
                                                     <Image Style="{StaticResource TileImage}"
                                                            Source="{Binding Source, Converter={StaticResource AssetImageConverter}, ConverterParameter=Gallery}" />
-                                                    <BoxView Color="{StaticResource GallerySelectColor}"
-                                                             Opacity="0.35"
-                                                             IsVisible="{Binding IsSelected}" />
+                                                    <BoxView IsVisible="{Binding IsSelected}"
+                                                             Color="{StaticResource GallerySelectColor}"
+                                                             Opacity="0.35" />
                                                     <Border Style="{StaticResource CheckBorder}">
                                                         <Border.Triggers>
                                                             <DataTrigger TargetType="Border"

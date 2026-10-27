@@ -148,25 +148,30 @@
             <controls:StatControl Style="{StaticResource StatGraph}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="80"
+                                  Label="Server CPU"
                                   DataSet="{Binding CpuLoadSet}"
-                                  GraphColor="{StaticResource BlueDefault}"
-                                  Label="Server CPU" />
+                                  GraphColor="{StaticResource BlueDefault}" />
 
             <!-- Server memory -->
             <controls:StatControl Style="{StaticResource StatGraph}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="160"
+                                  Label="Server memory"
+                                  Unit="MB"
                                   DataSet="{Binding MemoryLoadSet}"
                                   GraphColor="{StaticResource GreenDefault}"
-                                  Label="Server memory" MaxValue="512" Unit="MB" />
+                                  MaxValue="512" />
 
             <!-- Connections -->
             <controls:StatControl Style="{StaticResource StatGraph}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
                                   behaviors:AnimationOption.EnterDelay="240"
+                                  Label="Connections"
+                                  Unit=""
+                                  ValueFormat="F0"
                                   DataSet="{Binding ConnectionSet}"
                                   GraphColor="{StaticResource OrangeDefault}"
-                                  Label="Connections" MaxValue="10" Unit="" ValueFormat="F0" />
+                                  MaxValue="10" />
 
             <!-- Notifications -->
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"

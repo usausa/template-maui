@@ -99,6 +99,28 @@
                 <Setter Property="XKey" Value="time" />
             </Style>
 
+            <Style x:Key="BoardTableChart"
+                   TargetType="clam:ClamChartView"
+                   BasedOn="{StaticResource BoardChart}">
+                <Setter Property="LegendMode" Value="Table" />
+                <Setter Property="LegendValues" Value="Last,Max" />
+                <Setter Property="LegendToggleEnabled" Value="True" />
+            </Style>
+
+            <Style x:Key="BoardLegendChart"
+                   TargetType="clam:ClamChartView"
+                   BasedOn="{StaticResource BoardChart}">
+                <Setter Property="LegendVisible" Value="True" />
+            </Style>
+
+            <Style x:Key="BoardGauge"
+                   TargetType="clam:ClamBarGaugeView"
+                   BasedOn="{StaticResource BoardChartBase}">
+                <Setter Property="BarThickness" Value="12" />
+                <Setter Property="DisplayMode" Value="Segmented" />
+                <Setter Property="ValueMode" Value="Percent" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -112,34 +134,38 @@
                 <clam:ClamStatView Grid.Column="0"
                                    Style="{StaticResource StatTile}"
                                    Value="{Binding Cpu}"
+                                   TrendValues="{Binding CpuTrend}"
                                    Title="CPU"
                                    Fill="#5794F2"
-                                   TrendValues="{Binding CpuTrend}"
-                                   Unit="%" ValueFormat="N1" />
+                                   Unit="%"
+                                   ValueFormat="N1" />
                 <clam:ClamStatView Grid.Column="1"
                                    Style="{StaticResource StatTile}"
                                    Value="{Binding Memory}"
+                                   TrendValues="{Binding MemoryTrend}"
                                    Title="Memory"
                                    Fill="#B877D9"
-                                   TrendValues="{Binding MemoryTrend}"
-                                   Unit="%" ValueFormat="N1" />
+                                   Unit="%"
+                                   ValueFormat="N1" />
             </Grid>
             <Grid Style="{StaticResource TileGrid}"
                   ColumnDefinitions="*,*">
                 <clam:ClamStatView Grid.Column="0"
                                    Style="{StaticResource StatTile}"
                                    Value="{Binding Temperature}"
+                                   TrendValues="{Binding TemperatureTrend}"
                                    Title="Temp"
                                    Fill="#F2495C"
-                                   TrendValues="{Binding TemperatureTrend}"
-                                   Unit="°C" ValueFormat="N0" />
+                                   Unit="°C"
+                                   ValueFormat="N0" />
                 <clam:ClamStatView Grid.Column="1"
                                    Style="{StaticResource StatTile}"
                                    Value="{Binding Network}"
+                                   TrendValues="{Binding NetworkTrend}"
                                    Title="Network"
                                    Fill="#73BF69"
-                                   TrendValues="{Binding NetworkTrend}"
-                                   Unit="KB/s" ValueFormat="N0" />
+                                   Unit="KB/s"
+                                   ValueFormat="N0" />
             </Grid>
 
             <!-- Load -->
@@ -150,29 +176,34 @@
                            Style="{StaticResource PanelTitleLabel}"
                            Text="CPU Load (%)" />
                     <clam:ClamChartView Grid.Row="1"
-                                        Style="{StaticResource BoardChart}"
-                                        LegendMode="Table" LegendToggleEnabled="True" LegendValues="Last,Max"
+                                        Style="{StaticResource BoardTableChart}"
                                         Palette="{StaticResource ChartBlueShades}">
                         <clam:ClamChartView.XAxis>
-                            <clam:DateTimeAxis GridLineColor="{StaticResource PanelLineColor}"
-                                               WindowSize="{Binding Window}" />
+                            <clam:DateTimeAxis GridLineColor="{StaticResource PanelLineColor}" WindowSize="{Binding Window}" />
                         </clam:ClamChartView.XAxis>
                         <clam:ClamChartView.YAxis>
-                            <clam:NumericAxis Minimum="0" Maximum="100"
-                                              GridLineColor="{StaticResource PanelLineColor}" />
+                            <clam:NumericAxis Minimum="0" Maximum="100" GridLineColor="{StaticResource PanelLineColor}" />
                         </clam:ClamChartView.YAxis>
                         <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         YKey="core1"
                                          Title="Core #1"
-                                         MarkerMode="None" ValueFormat="{}{0:N1}%" YKey="core1" />
+                                         ValueFormat="{}{0:N1}%"
+                                         MarkerMode="None" />
                         <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         YKey="core2"
                                          Title="Core #2"
-                                         MarkerMode="None" ValueFormat="{}{0:N1}%" YKey="core2" />
+                                         ValueFormat="{}{0:N1}%"
+                                         MarkerMode="None" />
                         <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         YKey="core3"
                                          Title="Core #3"
-                                         MarkerMode="None" ValueFormat="{}{0:N1}%" YKey="core3" />
+                                         ValueFormat="{}{0:N1}%"
+                                         MarkerMode="None" />
                         <clam:LineSeries ItemsSource="{Binding Samples}"
+                                         YKey="core4"
                                          Title="Core #4"
-                                         MarkerMode="None" ValueFormat="{}{0:N1}%" YKey="core4" />
+                                         ValueFormat="{}{0:N1}%"
+                                         MarkerMode="None" />
                     </clam:ClamChartView>
                 </Grid>
             </Border>
@@ -185,25 +216,28 @@
                            Style="{StaticResource PanelTitleLabel}"
                            Text="Network (KB/s)" />
                     <clam:ClamChartView Grid.Row="1"
-                                        Style="{StaticResource BoardChart}"
-                                        LegendVisible="True"
+                                        Style="{StaticResource BoardLegendChart}"
                                         Palette="{StaticResource ChartPurpleShades}">
                         <clam:ClamChartView.XAxis>
-                            <clam:DateTimeAxis GridLineColor="{StaticResource PanelLineColor}"
-                                               WindowSize="{Binding Window}" />
+                            <clam:DateTimeAxis GridLineColor="{StaticResource PanelLineColor}" WindowSize="{Binding Window}" />
                         </clam:ClamChartView.XAxis>
                         <clam:ClamChartView.YAxis>
-                            <clam:NumericAxis Minimum="0"
-                                              GridLineColor="{StaticResource PanelLineColor}" />
+                            <clam:NumericAxis Minimum="0" GridLineColor="{StaticResource PanelLineColor}" />
                         </clam:ClamChartView.YAxis>
                         <clam:AreaSeries ItemsSource="{Binding Samples}"
+                                         YKey="receive" StackGroup="network"
                                          Title="Receive"
-                                         FillOpacity="0.4" LiveIndicatorVisible="True" MarkerMode="None" StackGroup="network"
-                                         ValueFormat="{}{0:N0} KB/s" YKey="receive" />
+                                         FillOpacity="0.4"
+                                         ValueFormat="{}{0:N0} KB/s"
+                                         MarkerMode="None"
+                                         LiveIndicatorVisible="True" />
                         <clam:AreaSeries ItemsSource="{Binding Samples}"
+                                         YKey="send" StackGroup="network"
                                          Title="Send"
-                                         FillOpacity="0.4" LiveIndicatorVisible="True" MarkerMode="None" StackGroup="network"
-                                         ValueFormat="{}{0:N0} KB/s" YKey="send" />
+                                         FillOpacity="0.4"
+                                         ValueFormat="{}{0:N0} KB/s"
+                                         MarkerMode="None"
+                                         LiveIndicatorVisible="True" />
                     </clam:ClamChartView>
                 </Grid>
             </Border>
@@ -218,13 +252,13 @@
                     <clam:ClamChartView Grid.Row="1"
                                         Style="{StaticResource BoardChart}">
                         <clam:ClamChartView.XAxis>
-                            <clam:DateTimeAxis GridLineColor="{StaticResource PanelLineColor}"
-                                               WindowSize="{Binding Window}" />
+                            <clam:DateTimeAxis GridLineColor="{StaticResource PanelLineColor}" WindowSize="{Binding Window}" />
                         </clam:ClamChartView.XAxis>
                         <clam:BarSeries ItemsSource="{Binding Samples}"
+                                        YKey="queue"
                                         Title="Queue"
                                         Color="#FF9830"
-                                        ValueFormat="{}{0:N0}" YKey="queue" />
+                                        ValueFormat="{}{0:N0}" />
                     </clam:ClamChartView>
                 </Grid>
             </Border>
@@ -237,15 +271,12 @@
                            Style="{StaticResource PanelTitleLabel}"
                            Text="Disk Usage" />
                     <clam:ClamBarGaugeView Grid.Row="1"
-                                           Style="{StaticResource BoardChartBase}"
-                                           ItemsSource="{Binding Disks}"
-                                           BarThickness="12" DisplayMode="Segmented" ValueMode="Percent">
+                                           Style="{StaticResource BoardGauge}"
+                                           ItemsSource="{Binding Disks}">
                         <clam:ClamBarGaugeView.Thresholds>
                             <clam:ChartThreshold Color="#73BF69" />
-                            <clam:ChartThreshold Value="70"
-                                                 Color="#F2CC0C" />
-                            <clam:ChartThreshold Value="85"
-                                                 Color="#F2495C" />
+                            <clam:ChartThreshold Value="70" Color="#F2CC0C" />
+                            <clam:ChartThreshold Value="85" Color="#F2495C" />
                         </clam:ClamBarGaugeView.Thresholds>
                     </clam:ClamBarGaugeView>
                 </Grid>

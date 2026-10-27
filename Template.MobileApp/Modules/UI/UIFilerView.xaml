@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:sample="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIFilerView"
@@ -467,8 +467,8 @@
 
         <!-- List -->
         <CollectionView Grid.Row="3"
-                        IsVisible="{Binding IsGrid, Converter={StaticResource ReverseConverter}}"
-                        ItemsSource="{Binding Drive.Entries}">
+                        ItemsSource="{Binding Drive.Entries}"
+                        IsVisible="{Binding IsGrid, Converter={StaticResource ReverseConverter}}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type sample:DriveEntry}">
                     <VerticalStackLayout>
@@ -516,8 +516,8 @@
                             </VerticalStackLayout>
                             <Label Grid.Column="2"
                                    Style="{StaticResource SyncLabel}"
-                                   TextColor="{StaticResource GrayLighten1}"
-                                   Text="{x:Static fonts:MaterialIcons.Cloud}">
+                                   Text="{x:Static fonts:MaterialIcons.Cloud}"
+                                   TextColor="{StaticResource GrayLighten1}">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
                                                  Binding="{Binding Sync}"
@@ -546,13 +546,11 @@
         <!-- Tile -->
         <CollectionView Grid.Row="3"
                         Style="{StaticResource TileCollection}"
-                        IsVisible="{Binding IsGrid}"
-                        ItemsSource="{Binding Drive.Entries}">
+                        ItemsSource="{Binding Drive.Entries}"
+                        IsVisible="{Binding IsGrid}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
-                                 Span="3"
-                                 HorizontalItemSpacing="8"
-                                 VerticalItemSpacing="8" />
+                                 Span="3" HorizontalItemSpacing="8" VerticalItemSpacing="8" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
@@ -580,8 +578,7 @@
                             <Label Style="{StaticResource TileNameLabel}"
                                    Text="{Binding Name}" />
                             <Label Style="{StaticResource TileNameLabel}"
-                                   TextColor="{StaticResource FilerSubTextColor}"
-                                   >
+                                   TextColor="{StaticResource FilerSubTextColor}">
                                 <Label.Text>
                                     <MultiBinding Converter="{StaticResource DriveSizeConverter}">
                                         <Binding Path="Kind" />
@@ -627,17 +624,17 @@
             </Grid>
             <FlexLayout Style="{StaticResource UsageBarLayout}">
                 <BoxView Style="{StaticResource UsageSegment}"
-                         FlexLayout.Grow="{Binding Drive.Usage.Images}"
-                         Color="#43A047" />
+                         Color="#43A047"
+                         FlexLayout.Grow="{Binding Drive.Usage.Images}" />
                 <BoxView Style="{StaticResource UsageSegment}"
-                         FlexLayout.Grow="{Binding Drive.Usage.Documents}"
-                         Color="#1E88E5" />
+                         Color="#1E88E5"
+                         FlexLayout.Grow="{Binding Drive.Usage.Documents}" />
                 <BoxView Style="{StaticResource UsageSegment}"
-                         FlexLayout.Grow="{Binding Drive.Usage.Videos}"
-                         Color="#8E24AA" />
+                         Color="#8E24AA"
+                         FlexLayout.Grow="{Binding Drive.Usage.Videos}" />
                 <BoxView Style="{StaticResource UsageSegment}"
-                         FlexLayout.Grow="{Binding Drive.Usage.Others}"
-                         Color="#B0BEC5" />
+                         Color="#B0BEC5"
+                         FlexLayout.Grow="{Binding Drive.Usage.Others}" />
             </FlexLayout>
             <HorizontalStackLayout Style="{StaticResource LegendStack}">
                 <HorizontalStackLayout Style="{StaticResource LegendItemStack}">

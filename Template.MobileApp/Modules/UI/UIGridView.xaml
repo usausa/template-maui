@@ -36,6 +36,10 @@
                 <Setter Property="SortMarkPosition" Value="End" />
                 <Setter Property="SortPriorityVisible" Value="True" />
                 <Setter Property="CellColors" Value="{x:Static module:UIGridStyles.CellColors}" />
+                <Setter Property="SelectionMode" Value="MultipleToggle" />
+                <Setter Property="FrozenColumnCount" Value="2" />
+                <Setter Property="SortCycle" Value="AscendingDescendingNone" />
+                <Setter Property="ValueAccessors" Value="{x:Static sample:OrderInfo.Accessors}" />
             </Style>
 
             <!-- Converter -->
@@ -43,13 +47,13 @@
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Open}"
-                                      Value="⏳ 未処理" />
+                                      Value="⏳ 未" />
                     <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Processing}"
-                                      Value="🔄 処理中" />
+                                      Value="🔄 処" />
                     <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Hold}"
-                                      Value="✋ 保留" />
+                                      Value="✋ 保" />
                     <s:MapToTextEntry Key="{x:Static sample:OrderStatus.Completed}"
-                                      Value="✅ 完了" />
+                                      Value="✅ 完" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <converters:FlagsToTextConverter x:Key="MarksTextConverter">
@@ -159,24 +163,20 @@
 
         <!-- Data grid -->
         <clam:ClamGridView Grid.Row="1"
+                           Style="{StaticResource ListGrid}"
                            ItemsSource="{Binding Rows}"
-                           SelectionMode="MultipleToggle"
                            CellValueChangedCommand="{Binding CellValueChangedCommand}"
                            ColumnConfigurationCommand="{Binding ColumnEditCommand}"
-                           Style="{StaticResource ListGrid}"
                            ColumnStates="{Binding ColumnStates}"
-                           FrozenColumnCount="2"
                            SelectAllCommand="{Binding SelectAllCommand}"
-                           SortCycle="AscendingDescendingNone"
-                           SortOrders="{Binding SortOrders}"
-                           ValueAccessors="{x:Static sample:OrderInfo.Accessors}">
+                           SortOrders="{Binding SortOrders}">
             <clam:GridColumn Key="Status"
-                             Width="100"
+                             Width="62"
                              Converter="{StaticResource StatusTextConverter}"
                              Header="状態" />
             <clam:GridColumn Key="OrderNo"
-                             Width="150"
-                             Header="受注番号" />
+                             Width="86"
+                             Header="番号" />
             <clam:GridColumn Key="Marks"
                              Width="112"
                              Converter="{StaticResource MarksTextConverter}"
@@ -187,24 +187,32 @@
                              Header="顧客" />
             <clam:GridColumn Key="Rank"
                              Width="84"
+                             Alignment="Center"
                              Converter="{StaticResource RankTextConverter}"
-                             Header="ランク"
-                             Alignment="Center" />
+                             Header="ランク" />
             <clam:GridColumn Key="Product"
                              Width="220"
                              Header="商品" />
             <clam:GridColumn Key="Quantity"
                              Width="72"
+                             Alignment="End"
                              Header="数量"
-                             Alignment="End" Format="N0" />
+                             Format="N0" />
             <clam:GridColumn Key="Amount"
                              Width="120"
+                             Alignment="End"
                              Header="金額"
-                             Alignment="End" Format="N0" />
+                             Format="N0" />
+            <clam:GridColumn Key="History"
+                             Width="110"
+                             Header="推移"
+                             AllowSorting="False"
+                             CellPainter="{x:Static module:UIGridStyles.TrendPainter}" />
             <clam:GridColumn Key="DueDate"
                              Width="90"
+                             Alignment="End"
                              Header="納期"
-                             Alignment="End" Format="MM/dd" />
+                             Format="MM/dd" />
             <clam:GridColumn Key="Channel"
                              Width="88"
                              Converter="{StaticResource ChannelTextConverter}"
@@ -212,7 +220,8 @@
             <clam:GridColumn Key="IsChecked"
                              Width="64"
                              Header="確認"
-                             AllowSorting="False" IsBoolean="True" IsReadOnly="False" />
+                             AllowSorting="False"
+                             IsBoolean="True" IsReadOnly="False" />
             <clam:GridColumn Key="Staff"
                              Width="90"
                              Header="担当" />

@@ -3,12 +3,13 @@ namespace Template.MobileApp.Helpers;
 using System.Collections;
 using System.Collections.Specialized;
 
+internal static class RingBufferEvent
+{
+    public static readonly NotifyCollectionChangedEventArgs Reset = new(NotifyCollectionChangedAction.Reset);
+}
+
 public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionChanged
 {
-#pragma warning disable CA1000
-    private static readonly NotifyCollectionChangedEventArgs ResetArgs = new(NotifyCollectionChangedAction.Reset);
-#pragma warning restore CA1000
-
     private readonly T[] buffer;
 
     private int head;
@@ -44,7 +45,7 @@ public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionCh
             Count++;
         }
 
-        CollectionChanged?.Invoke(this, ResetArgs);
+        CollectionChanged?.Invoke(this, RingBufferEvent.Reset);
     }
 
     public void RemoveFirst()
@@ -57,7 +58,7 @@ public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionCh
         buffer[(head - Count + buffer.Length) % buffer.Length] = default!;
         Count--;
 
-        CollectionChanged?.Invoke(this, ResetArgs);
+        CollectionChanged?.Invoke(this, RingBufferEvent.Reset);
     }
 
     public void Clear()
@@ -66,7 +67,7 @@ public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionCh
         head = 0;
         Count = 0;
 
-        CollectionChanged?.Invoke(this, ResetArgs);
+        CollectionChanged?.Invoke(this, RingBufferEvent.Reset);
     }
 
     public IEnumerator<T> GetEnumerator()
