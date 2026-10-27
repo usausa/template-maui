@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Models.Sample;
+﻿namespace Template.MobileApp.Models.Sample;
 
 using ClamChart;
 
@@ -15,8 +15,6 @@ public sealed class MonitorSample
         { "core2", static x => x.Core2 },
         { "core3", static x => x.Core3 },
         { "core4", static x => x.Core4 },
-        { "cpu", static x => x.CpuTemperature },
-        { "gpu", static x => x.GpuTemperature },
         { "receive", static x => x.Receive },
         { "send", static x => x.Send },
         { "queue", static x => x.Queue }
@@ -31,10 +29,6 @@ public sealed class MonitorSample
     public required double Core3 { get; init; }
 
     public required double Core4 { get; init; }
-
-    public required double CpuTemperature { get; init; }
-
-    public required double GpuTemperature { get; init; }
 
     public required double Receive { get; init; }
 
@@ -53,8 +47,6 @@ public sealed class SystemMonitor
     private const int LoadCount = 4;
 
     private readonly double[] loads = [28, 21, 34, 17];
-
-    private double gpuTemperature = 46;
 
     private double receive = 220;
 
@@ -84,7 +76,6 @@ public sealed class SystemMonitor
         Cpu = loads.Average();
         Memory = Math.Clamp(Memory + ((((step * 5) % 7) - 3) * 0.15), 38, 72);
         Temperature = Math.Clamp(Temperature + ((Cpu - 35) * 0.04) + ((((step * 3) % 5) - 2) * 0.2), 40, 92);
-        gpuTemperature = Math.Clamp(gpuTemperature + ((((step * 11) % 7) - 3) * 0.25), 35, 80);
         receive = Math.Clamp((receive * 0.7) + (Math.Abs(Math.Sin(step * 0.17)) * 420) + (((step * 13) % 17) * 3), 5, 1200);
         send = Math.Clamp((send * 0.7) + (Math.Abs(Math.Cos(step * 0.23)) * 160) + (((step * 7) % 11) * 2), 2, 600);
 
@@ -95,8 +86,6 @@ public sealed class SystemMonitor
             Core2 = loads[1],
             Core3 = loads[2],
             Core4 = loads[3],
-            CpuTemperature = Temperature,
-            GpuTemperature = gpuTemperature,
             Receive = receive,
             Send = send,
             Queue = Math.Round(Math.Max(0, (Cpu / 18) + (((step * 5) % 7) - 2)))
@@ -105,9 +94,9 @@ public sealed class SystemMonitor
 
     public static IReadOnlyList<ChartEntry> LoadDisks() =>
     [
-        new("C: システム", 57, null, 100),
-        new("D: データ", 23, null, 100),
-        new("E: 作業", 67, null, 100),
-        new("F: 退避", 82, null, 100)
+        new("C: System", 57, null, 100),
+        new("D: Data", 23, null, 100),
+        new("E: Work", 67, null, 100),
+        new("F: Backup", 82, null, 100)
     ];
 }

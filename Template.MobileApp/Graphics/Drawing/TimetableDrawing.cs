@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics.Drawing;
+﻿namespace Template.MobileApp.Graphics.Drawing;
 
 using Font = Microsoft.Maui.Graphics.Font;
 
@@ -28,7 +28,7 @@ public sealed class TimetableDrawing : DrawingObject, ISizedDrawing
 
     private const float HourFontSize = 22f;
 
-    private const float MinuteFontSize = 19f;
+    private const float MinuteFontSize = 18f;
 
     private const float MarkFontSize = 11f;
 

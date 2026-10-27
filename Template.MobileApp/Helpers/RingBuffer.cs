@@ -1,10 +1,19 @@
 namespace Template.MobileApp.Helpers;
 
-public sealed class RingBuffer<T>
+using System.Collections;
+using System.Collections.Specialized;
+
+public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionChanged
 {
+#pragma warning disable CA1000
+    private static readonly NotifyCollectionChangedEventArgs ResetArgs = new(NotifyCollectionChangedAction.Reset);
+#pragma warning restore CA1000
+
     private readonly T[] buffer;
 
     private int head;
+
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     public int Capacity => buffer.Length;
 
@@ -26,7 +35,7 @@ public sealed class RingBuffer<T>
         buffer = new T[capacity];
     }
 
-    public void Add(T value)
+    public void Push(T value)
     {
         buffer[head] = value;
         head = (head + 1) % buffer.Length;
@@ -34,6 +43,8 @@ public sealed class RingBuffer<T>
         {
             Count++;
         }
+
+        CollectionChanged?.Invoke(this, ResetArgs);
     }
 
     public void RemoveFirst()
@@ -45,6 +56,8 @@ public sealed class RingBuffer<T>
 
         buffer[(head - Count + buffer.Length) % buffer.Length] = default!;
         Count--;
+
+        CollectionChanged?.Invoke(this, ResetArgs);
     }
 
     public void Clear()
@@ -52,5 +65,70 @@ public sealed class RingBuffer<T>
         Array.Clear(buffer);
         head = 0;
         Count = 0;
+
+        CollectionChanged?.Invoke(this, ResetArgs);
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        for (var i = 0; i < Count; i++)
+        {
+            yield return this[i];
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    //--------------------------------------------------------------------------------
+    // List
+    //--------------------------------------------------------------------------------
+
+    bool IList.IsFixedSize => true;
+
+    bool IList.IsReadOnly => true;
+
+    bool ICollection.IsSynchronized => false;
+
+    object ICollection.SyncRoot => this;
+
+    object? IList.this[int index]
+    {
+        get => this[index];
+        set => throw new NotSupportedException();
+    }
+
+    int IList.Add(object? value) => throw new NotSupportedException();
+
+    void IList.Clear() => throw new NotSupportedException();
+
+    bool IList.Contains(object? value) => FindIndex(value) >= 0;
+
+    int IList.IndexOf(object? value) => FindIndex(value);
+
+    void IList.Insert(int index, object? value) => throw new NotSupportedException();
+
+    void IList.Remove(object? value) => throw new NotSupportedException();
+
+    void IList.RemoveAt(int index) => throw new NotSupportedException();
+
+    void ICollection.CopyTo(Array array, int index)
+    {
+        for (var i = 0; i < Count; i++)
+        {
+            array.SetValue(this[i], index + i);
+        }
+    }
+
+    private int FindIndex(object? value)
+    {
+        for (var i = 0; i < Count; i++)
+        {
+            if (Equals(this[i], value))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

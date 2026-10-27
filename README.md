@@ -45,27 +45,29 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Music.png" />
 <img width="25%" src="Document/Images/UI_Mixer.png" />
 
-<img width="25%" src="Document/Images/UI_Meter.png" />
+<img width="25%" src="Document/Images/UI_Monitor.png" />
 <img width="25%" src="Document/Images/UI_Load.png" />
+<img width="25%" src="Document/Images/UI_Meter.png" />
+
 <img width="25%" src="Document/Images/UI_Gauge.png" />
-
-
-<img width="25%" src="Document/Images/UI_Dock.png" />
-<img width="25%" src="Document/Images/UI_Navi.png" />
-<img width="25%" src="Document/Images/UI_Trade.png" />
-
+<img width="25%" src="Document/Images/View_Chart-7.png" />
+<img width="25%" src="Document/Images/View_Chart-8.png" />
 
 <img width="25%" src="Document/Images/Sample_CvLocal.png" />
 <img width="25%" src="Document/Images/UI_TreeMap.png" />
-<img width="25%" src="Document/Images/View_Chart.png" />
-
-<img width="25%" src="Document/Images/UI_Seat.png" />
-<img width="25%" src="Document/Images/UI_Ticket.png" />
 <img width="25%" src="Document/Images/UI_Gallery.png" />
 
+<img width="25%" src="Document/Images/UI_Dock.png" />
+<img width="25%" src="Document/Images/UI_Trade.png" />
+<img width="25%" src="Document/Images/UI_Navi.png" />
+
+<img width="25%" src="Document/Images/App_Calc.png" />
+<img width="25%" src="Document/Images/UI_Seat.png" />
+<img width="25%" src="Document/Images/UI_Ticket.png" />
+
+<img width="25%" src="Document/Images/UI_Weather.png" />
 <img width="25%" src="Document/Images/UI_News.png" />
 <img width="25%" src="Document/Images/App_Todo.png" />
-<img width="25%" src="Document/Images/App_Calc.png" />
 
 <img width="25%" src="Document/Images/UI_Home.png" />
 <img width="25%" src="Document/Images/UI_Habit.png" />
@@ -97,8 +99,8 @@ Template project for MAUI.
 | Device | [Example03_Device](Document/Example03_Device.md) |
 | Network | [Example04_Network](Document/Example04_Network.md) |
 | View | [Example05_View](Document/Example05_View.md) |
-| UI | [Example06_UI](Document/Example06_UI.md) |
-| Sample | [Example07_Sample](Document/Example07_Sample.md) |
+| Sample | [Example06_Sample](Document/Example06_Sample.md) |
+| UI | [Example07_UI](Document/Example07_UI.md) |
 | App | [Example08_App](Document/Example08_App.md) |
 
 # ✅ Implement
@@ -110,8 +112,8 @@ Template project for MAUI.
 | Device | Info / Status / Sensor / Location / QR Display / QR Scan(Android AI) / Camera / OCR(Android AI) / WiFi / Bluetooth Serial / BLE / NFC / Audio / Activity / Biometric / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
 | Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC / SFTP / OpenTelemetry |
-| View | Layout / State / Border / Shadow / Animation / Easing / Effect / Drag & Drop / Graphics / Drawing / Lottie / SVG / Bottom sheet / Drawer / Toolkit / Custom / Chart |
-| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Game like / Flight / Tactical / Telemetry / Energy / Transit / Timetable / Seat / Gantt / Kanban / Ticket / Music / Gallery / Health / Navi / Filer / Trade |
+| View | Layout / State / Border / Shadow / Animation / Easing / Effect / Drag & Drop / Graphics / Drawing / Lottie / SVG / Bottom sheet / Drawer / Toolkit / Custom / Clam Chart / Sf Chart |
+| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Wheel / Game like / Flight / Tactical / Telemetry / Energy / Monitor / Transit / Timetable / Seat / Gantt / Kanban / Ticket / Music / Gallery / Health / Navi / Filer / Trade |
 | Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / Object, Tag, People, OCR(Azure AI Vision) / ONNX / Chat(Ollama) / Crop |
 | App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper / Game Boy |
 
@@ -146,6 +148,7 @@ Template project for MAUI.
 | [Usa.Smart.Mapper](https://github.com/usausa/Smart-Net-Mapper) | Object mapper |
 | [Components.Maui](https://github.com/usausa/MauiComponents) | MAUI components(dialog, popup, screen, etc.) |
 | [Rester](https://github.com/usausa/Rester) | HttpClient extensions |
+| [ClamChart](https://github.com/usausa/clam-chart) | SkiaSharp chart view |
 | [ClamGrid](https://github.com/usausa/clam-grid) | SkiaSharp grid view |
 | [ClamCalendar](https://github.com/usausa/clam-calendar) | SkiaSharp calendar view |
 | [ClamGauge](https://github.com/usausa/clam-gauge) | SkiaSharp gauge view |

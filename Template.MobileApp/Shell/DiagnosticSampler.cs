@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Shell;
+﻿namespace Template.MobileApp.Shell;
 
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -280,7 +280,7 @@ public sealed class DiagnosticSampler : IDisposable
         }
 
         // Memory
-        memoryHistory.Add(statistics.WorkingSet / MegaByte);
+        memoryHistory.Push(statistics.WorkingSet / MegaByte);
 
         if (!Visible)
         {

@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Diagnostics;
+﻿namespace Template.MobileApp.Diagnostics;
 
 using System.Net;
 
@@ -114,7 +114,7 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
         lock (sync)
         {
             sequence++;
-            store.Payloads.Add(new Payload(sequence, request.RequestUri, headers, body));
+            store.Payloads.Push(new Payload(sequence, request.RequestUri, headers, body));
         }
     }
 

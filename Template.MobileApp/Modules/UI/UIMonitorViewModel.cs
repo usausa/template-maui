@@ -1,6 +1,8 @@
-namespace Template.MobileApp.Modules.UI;
+﻿namespace Template.MobileApp.Modules.UI;
 
 using ClamChart;
+
+using Template.MobileApp.Helpers;
 
 public sealed partial class UIMonitorViewModel : AppViewModelBase
 {
@@ -24,15 +26,15 @@ public sealed partial class UIMonitorViewModel : AppViewModelBase
 
     // Property
 
-    public ObservableCollection<MonitorSample> Samples { get; } = [];
+    public RingBuffer<MonitorSample> Samples { get; } = new(HistoryCount);
 
-    public ObservableCollection<double> CpuTrend { get; } = [];
+    public RingBuffer<double> CpuTrend { get; } = new(TrendCount);
 
-    public ObservableCollection<double> MemoryTrend { get; } = [];
+    public RingBuffer<double> MemoryTrend { get; } = new(TrendCount);
 
-    public ObservableCollection<double> TemperatureTrend { get; } = [];
+    public RingBuffer<double> TemperatureTrend { get; } = new(TrendCount);
 
-    public ObservableCollection<double> NetworkTrend { get; } = [];
+    public RingBuffer<double> NetworkTrend { get; } = new(TrendCount);
 
     public IReadOnlyList<ChartEntry> Disks { get; } = SystemMonitor.LoadDisks();
 
@@ -109,29 +111,16 @@ public sealed partial class UIMonitorViewModel : AppViewModelBase
 
     private void Add(MonitorSample sample)
     {
-        Samples.Add(sample);
-        if (Samples.Count > HistoryCount)
-        {
-            Samples.RemoveAt(0);
-        }
+        Samples.Push(sample);
 
         Cpu = monitor.Cpu;
         Memory = monitor.Memory;
         Temperature = monitor.Temperature;
         Network = monitor.Network;
 
-        Push(CpuTrend, Cpu);
-        Push(MemoryTrend, Memory);
-        Push(TemperatureTrend, Temperature);
-        Push(NetworkTrend, Network);
-    }
-
-    private static void Push(ObservableCollection<double> values, double value)
-    {
-        values.Add(value);
-        if (values.Count > TrendCount)
-        {
-            values.RemoveAt(0);
-        }
+        CpuTrend.Push(Cpu);
+        MemoryTrend.Push(Memory);
+        TemperatureTrend.Push(Temperature);
+        NetworkTrend.Push(Network);
     }
 }

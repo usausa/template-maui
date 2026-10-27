@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics.Drawing;
+﻿namespace Template.MobileApp.Graphics.Drawing;
 
 public enum WheelEffect
 {
@@ -272,7 +272,7 @@ public sealed class WheelDrawing : DrawingObject
 
         canvas.SaveState();
         canvas.Font = Microsoft.Maui.Graphics.Font.DefaultBold;
-        canvas.FontSize = 15f;
+        canvas.FontSize = 14f;
         canvas.FontColor = Colors.White;
         canvas.SetShadow(new SizeF(1f, 1f), 3f, Colors.Black.WithAlpha(0.5f));
         for (var i = 0; i < items.Count; i++)

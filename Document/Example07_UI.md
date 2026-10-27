@@ -219,7 +219,7 @@
 <img width="25%" src="./Images/UI_Health.png" />
 </p>
 
-- Drawing / ArcMeter
+- ClamChart: radial bar / stacked bar, Drawing for the sleep stages
 
 ## Navi
 
@@ -229,15 +229,10 @@
 
 - Scene / lane guidance
 
-## Graph
+## Graph / Graph2
 
 <p>
 <img width="25%" src="./Images/UI_Graph.png" />
-</p>
-
-## Graph2
-
-<p>
 <img width="25%" src="./Images/UI_Graph2.png" />
 </p>
 
@@ -258,6 +253,14 @@
 <img width="25%" src="./Images/UI_Gauge-6.png" />
 </p>
 
+## Monitor
+
+<p>
+<img width="25%" src="./Images/UI_Monitor.png" />
+</p>
+
+- ClamChart: stat tiles / line, stacked area and bar series / bar gauge
+
 ## Meter
 
 <p>
@@ -274,12 +277,6 @@
 
 <p>
 <img width="25%" src="./Images/UI_TreeMap.png" />
-</p>
-
-## Radar
-
-<p>
-<img width="25%" src="./Images/UI_Radar.png" />
 </p>
 
 ## Wheel

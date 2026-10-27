@@ -80,24 +80,6 @@
 
 - Drag / Drop gesture recognizers
 
-## Bottom Sheet
-
-<p>
-<img width="25%" src="./Images/View_BottomSheet.png" />
-</p>
-
-- SfBottomSheet (Syncfusion)
-- BottomSheetView
-
-## Drawer
-
-<p>
-<img width="25%" src="./Images/View_Drawer.png" />
-</p>
-
-- SfNavigationDrawer (Syncfusion)
-- SideDrawer
-
 ## Graphics
 
 <p>
@@ -135,6 +117,24 @@
 
 - SvgView (Svg.Skia)
 
+## Bottom Sheet
+
+<p>
+<img width="25%" src="./Images/View_BottomSheet.png" />
+</p>
+
+- SfBottomSheet (Syncfusion)
+- BottomSheetView
+
+## Drawer
+
+<p>
+<img width="25%" src="./Images/View_Drawer.png" />
+</p>
+
+- SfNavigationDrawer (Syncfusion)
+- SideDrawer
+
 ## Toolkit
 
 <p>
@@ -158,7 +158,7 @@
 - ColorPicker / DurationPicker
 - AvatarGroup
 
-## Chart
+## Clam Chart
 
 <p>
 <img width="25%" src="./Images/View_Chart.png" />
@@ -168,9 +168,12 @@
 <img width="25%" src="./Images/View_Chart-5.png" />
 <img width="25%" src="./Images/View_Chart-6.png" />
 <img width="25%" src="./Images/View_Chart-7.png" />
+<img width="25%" src="./Images/View_Chart-8.png" />
 </p>
 
-- ChartDrawing: Line / Bar / Donut / Candle / Stacked / Scatter / Heat
+- ClamChart: Line / Area / Bar / Stacked / Scatter / Pie / Heatmap / Climate in tabs
+- Heatmap: calendar like GitHub / matrix
+- Climate: secondary axis / legend table
 
 ## Sf Chart
 
