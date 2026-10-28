@@ -78,6 +78,9 @@
                    TargetType="clam:ChartViewBase"
                    ApplyToDerivedTypes="True">
                 <Setter Property="ContentPadding" Value="0" />
+                <Setter Property="GoodColor" Value="#73BF69" />
+                <Setter Property="WarningColor" Value="#FADE2A" />
+                <Setter Property="CriticalColor" Value="#F2495C" />
                 <Setter Property="MutedTextColor" Value="#9CCCCCDC" />
                 <Setter Property="PrimaryTextColor" Value="{StaticResource PanelTextColor}" />
                 <Setter Property="SecondaryTextColor" Value="#A6CCCCDC" />
@@ -274,9 +277,9 @@
                                            Style="{StaticResource BoardGauge}"
                                            ItemsSource="{Binding Disks}">
                         <clam:ClamBarGaugeView.Thresholds>
-                            <clam:ChartThreshold Color="#73BF69" />
-                            <clam:ChartThreshold Value="70" Color="#F2CC0C" />
-                            <clam:ChartThreshold Value="85" Color="#F2495C" />
+                            <clam:ChartThreshold Level="Good" />
+                            <clam:ChartThreshold Value="70" Level="Warning" />
+                            <clam:ChartThreshold Value="85" Level="Critical" />
                         </clam:ClamBarGaugeView.Thresholds>
                     </clam:ClamBarGaugeView>
                 </Grid>
