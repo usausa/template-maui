@@ -167,11 +167,11 @@ public partial class DiagnosticPanel
     {
         private static readonly Color GridColor = Color.FromArgb("#E0E0E0");
 
-        private RingBuffer<double>? values;
+        private ObservableRingBuffer<double>? values;
 
         private Color lineColor = Colors.Green;
 
-        public void Update(RingBuffer<double> history, Color color)
+        public void Update(ObservableRingBuffer<double> history, Color color)
         {
             values = history;
             lineColor = color;

@@ -1,4 +1,4 @@
-﻿namespace Template.MobileApp.Shell;
+namespace Template.MobileApp.Shell;
 
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -37,7 +37,7 @@ public sealed class DiagnosticSnapshot
     public long WorkingSet { get; internal set; }
     public DiagnosticLevel MemoryLevel { get; internal set; }
     public long ManagedMemory { get; internal set; }
-    public RingBuffer<double> MemoryHistory { get; }
+    public ObservableRingBuffer<double> MemoryHistory { get; }
 
     // GC
 
@@ -71,7 +71,7 @@ public sealed class DiagnosticSnapshot
     public int? WiFiSignalStrength { get; internal set; }
     public DiagnosticLevel WiFiLevel { get; internal set; }
 
-    internal DiagnosticSnapshot(RingBuffer<double> memoryHistory)
+    internal DiagnosticSnapshot(ObservableRingBuffer<double> memoryHistory)
     {
         MemoryHistory = memoryHistory;
     }
@@ -108,7 +108,7 @@ public sealed class DiagnosticSampler : IDisposable
 
     private readonly int processorCount = Environment.ProcessorCount;
 
-    private readonly RingBuffer<double> memoryHistory = new(MemoryHistoryLength);
+    private readonly ObservableRingBuffer<double> memoryHistory = new(MemoryHistoryLength);
 
     private readonly HashSet<Guid> excludeElements = [];
 

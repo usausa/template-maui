@@ -1,4 +1,4 @@
-﻿namespace Template.MobileApp.Modules.UI;
+namespace Template.MobileApp.Modules.UI;
 
 using ClamChart;
 
@@ -26,15 +26,15 @@ public sealed partial class UIMonitorViewModel : AppViewModelBase
 
     // Property
 
-    public RingBuffer<MonitorSample> Samples { get; } = new(HistoryCount);
+    public ObservableRingBuffer<MonitorSample> Samples { get; } = new(HistoryCount);
 
-    public RingBuffer<double> CpuTrend { get; } = new(TrendCount);
+    public ObservableRingBuffer<double> CpuTrend { get; } = new(TrendCount);
 
-    public RingBuffer<double> MemoryTrend { get; } = new(TrendCount);
+    public ObservableRingBuffer<double> MemoryTrend { get; } = new(TrendCount);
 
-    public RingBuffer<double> TemperatureTrend { get; } = new(TrendCount);
+    public ObservableRingBuffer<double> TemperatureTrend { get; } = new(TrendCount);
 
-    public RingBuffer<double> NetworkTrend { get; } = new(TrendCount);
+    public ObservableRingBuffer<double> NetworkTrend { get; } = new(TrendCount);
 
     public IReadOnlyList<ChartEntry> Disks { get; } = SystemMonitor.LoadDisks();
 

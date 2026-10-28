@@ -8,7 +8,7 @@ internal static class RingBufferEvent
     public static readonly NotifyCollectionChangedEventArgs Reset = new(NotifyCollectionChangedAction.Reset);
 }
 
-public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionChanged
+public sealed class ObservableRingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionChanged
 {
     private readonly T[] buffer;
 
@@ -30,7 +30,7 @@ public sealed class RingBuffer<T> : IReadOnlyList<T>, IList, INotifyCollectionCh
         }
     }
 
-    public RingBuffer(int capacity)
+    public ObservableRingBuffer(int capacity)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(capacity);
         buffer = new T[capacity];

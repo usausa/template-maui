@@ -1,4 +1,4 @@
-﻿namespace Template.MobileApp.Diagnostics;
+namespace Template.MobileApp.Diagnostics;
 
 using System.Net;
 
@@ -50,7 +50,7 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
     {
         stores = capacities
             .Where(static x => x.Value > 0)
-            .Select(static x => new Store(x.Key, new RingBuffer<Payload>(x.Value)))
+            .Select(static x => new Store(x.Key, new ObservableRingBuffer<Payload>(x.Value)))
             .ToArray();
         this.resendTimeout = resendTimeout;
         this.sent = sent;
@@ -257,7 +257,7 @@ internal sealed class TelemetrySendHandler : DelegatingHandler
         return rejected > 0 ? $"Rejected {rejected}. {message}".TrimEnd() : null;
     }
 
-    private sealed record Store(string Path, RingBuffer<Payload> Payloads);
+    private sealed record Store(string Path, ObservableRingBuffer<Payload> Payloads);
 
     private sealed class Payload
     {
