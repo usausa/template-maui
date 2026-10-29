@@ -95,7 +95,11 @@ public static partial class CrashReport
                 Message = e.Message,
                 Detail = e.ToString()
             };
-            Save(info);
+
+            if (isTerminating)
+            {
+                Save(info);
+            }
 
             Crashed?.Invoke(null, new CrashEventArgs(info, isTerminating));
         }

@@ -29,6 +29,22 @@ public static partial class LabelOption
     public static void SetMaxSize(BindableObject bindable, double value) => bindable.SetValue(MaxSizeProperty, value);
 
     //--------------------------------------------------------------------------------
+    // LineHeight
+    //--------------------------------------------------------------------------------
+
+    // Line height in dp (0: not fixed). Keeps the same line height for CJK and Latin text to align other elements to the lines
+    // Named differently from Label.LineHeight (ratio), because the same name is mixed in the MAUI mapper and skipped for FormattedText
+    public static readonly BindableProperty FixedLineHeightProperty = BindableProperty.CreateAttached(
+        "FixedLineHeight",
+        typeof(double),
+        typeof(LabelOption),
+        0d);
+
+    public static double GetFixedLineHeight(BindableObject bindable) => (double)bindable.GetValue(FixedLineHeightProperty);
+
+    public static void SetFixedLineHeight(BindableObject bindable, double value) => bindable.SetValue(FixedLineHeightProperty, value);
+
+    //--------------------------------------------------------------------------------
     // CountUp
     //--------------------------------------------------------------------------------
 

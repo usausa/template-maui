@@ -1,3 +1,4 @@
+#if DEBUG
 namespace Template.MobileApp.Extender;
 
 using Smart.Mvvm.Resolver;
@@ -45,3 +46,4 @@ public sealed class LeakDetectionPlugin : PluginBase
         }
     }
 }
+#endif

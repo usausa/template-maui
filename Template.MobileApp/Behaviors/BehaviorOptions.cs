@@ -12,6 +12,8 @@ public sealed class BehaviorOptions
 
     public bool AutoSize { get; set; } = true;
 
+    public bool FixedLineHeight { get; set; } = true;
+
     // Button
 
     public bool RippleEffect { get; set; } = true;
