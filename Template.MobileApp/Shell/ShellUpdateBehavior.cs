@@ -18,6 +18,7 @@ public sealed class ShellUpdateBehavior : BehaviorBase<ContentPage>
         get => (INavigator)GetValue(NavigatorProperty);
         set => SetValue(NavigatorProperty, value);
     }
+
     private IShellControl? shell;
 
     private StatusBarBehavior? statusBar;
