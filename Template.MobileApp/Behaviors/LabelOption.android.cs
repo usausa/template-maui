@@ -43,13 +43,11 @@ public static partial class LabelOption
                 if (height > 0)
                 {
                     var textView = handler.PlatformView;
-                    // MAUI does not set the label font to the TextView for FormattedText
                     if (label.FormattedText is not null)
                     {
                         textView.UpdateFont(label, handler.MauiContext!.Services.GetRequiredService<IFontManager>());
                     }
 
-                    // CJK fallback fonts expand the line
                     textView.FallbackLineSpacing = false;
                     textView.SetIncludeFontPadding(false);
                     textView.LineHeight = (int)Math.Round(TypedValue.ApplyDimension(ComplexUnitType.Dip, (float)height, textView.Resources!.DisplayMetrics));

@@ -32,8 +32,6 @@ public static partial class LabelOption
     // LineHeight
     //--------------------------------------------------------------------------------
 
-    // Line height in dp (0: not fixed). Keeps the same line height for CJK and Latin text to align other elements to the lines
-    // Named differently from Label.LineHeight (ratio), because the same name is mixed in the MAUI mapper and skipped for FormattedText
     public static readonly BindableProperty FixedLineHeightProperty = BindableProperty.CreateAttached(
         "FixedLineHeight",
         typeof(double),
