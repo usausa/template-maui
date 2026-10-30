@@ -11,12 +11,10 @@ public sealed class DialogEffectPlugin : PluginBase
 
     public DialogEffectPlugin(IEnumerable<KeyValuePair<ViewId, Type>> views)
     {
-#pragma warning disable IDE0028
         dialogViews = views
             .Where(static x => x.Value.IsDefined(typeof(DialogViewAttribute), false))
             .Select(static x => x.Key)
             .ToHashSet();
-#pragma warning restore IDE0028
     }
 
     public override void OnPrepareParameter(IPluginContext pluginContext, INavigationContext navigationContext, INavigationParameterPrepare parameter)

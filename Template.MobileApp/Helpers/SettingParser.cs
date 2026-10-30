@@ -2,9 +2,7 @@ namespace Template.MobileApp.Helpers;
 
 public sealed class SettingParser
 {
-#pragma warning disable IDE0028
     private readonly Dictionary<string, string> values = new(StringComparer.OrdinalIgnoreCase);
-#pragma warning restore IDE0028
 
     public SettingParser(string data)
     {
