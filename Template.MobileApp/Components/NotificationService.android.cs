@@ -47,6 +47,15 @@ public sealed partial class NotificationService
         }
     }
 
+    public partial bool CanPostPromoted
+    {
+        get
+        {
+            using var compat = NotificationManagerCompat.From(Application.Context);
+            return compat?.CanPostPromotedNotifications() ?? false;
+        }
+    }
+
     public static void HandleIntent(Intent? intent)
     {
         if ((intent is null) || !intent.HasExtra(ExtraId))
@@ -89,6 +98,28 @@ public sealed partial class NotificationService
             }
         }
 
+        Notify(context, id, builder);
+    }
+
+    public partial void ShowProgress(int id, string title, string message, int progress, int max, string? shortText, string? payload)
+    {
+        var context = Application.Context;
+        using var style = new NotificationCompat.ProgressStyle();
+        for (var i = 0; i < max; i++)
+        {
+            using var segment = new NotificationCompat.ProgressStyle.Segment(1);
+            style.AddProgressSegment(segment);
+        }
+
+        style.SetProgress(progress);
+
+        using var builder = CreateBuilder(context, id, title, message, payload);
+        builder.SetStyle(style);
+        builder.SetAutoCancel(false);
+        builder.SetOngoing(true);
+        builder.SetOnlyAlertOnce(true);
+        builder.SetRequestPromotedOngoing(true);
+        builder.SetShortCriticalText(shortText);
         Notify(context, id, builder);
     }
 

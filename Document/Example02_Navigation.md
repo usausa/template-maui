@@ -10,6 +10,7 @@
 
 - NavigationParameter
 - Edit screen for New / Update
+- Confirm before leaving with unsaved changes
 
 ## Stack
 

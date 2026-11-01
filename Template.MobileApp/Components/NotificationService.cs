@@ -26,9 +26,13 @@ public interface INotificationService
 
     bool CanScheduleExact { get; }
 
+    bool CanPostPromoted { get; }
+
     NotificationTappedEventArgs? TakePendingTap();
 
     void Show(int id, string title, string message, string? payload = null, IReadOnlyList<NotificationAction>? actions = null);
+
+    void ShowProgress(int id, string title, string message, int progress, int max, string? shortText = null, string? payload = null);
 
     void Schedule(int id, string title, string message, TimeSpan delay, string? payload = null);
 
@@ -47,6 +51,8 @@ public sealed partial class NotificationService : INotificationService
 
     public partial bool CanScheduleExact { get; }
 
+    public partial bool CanPostPromoted { get; }
+
     public NotificationTappedEventArgs? TakePendingTap()
     {
         var tap = pendingTap;
@@ -55,6 +61,8 @@ public sealed partial class NotificationService : INotificationService
     }
 
     public partial void Show(int id, string title, string message, string? payload, IReadOnlyList<NotificationAction>? actions);
+
+    public partial void ShowProgress(int id, string title, string message, int progress, int max, string? shortText, string? payload);
 
     public partial void Schedule(int id, string title, string message, TimeSpan delay, string? payload);
 

@@ -351,6 +351,19 @@
                                 Text="Exact alarm"
                                 ImageSource="{x:Static markup:AppIcons.SmallAlarmOn}" />
                     </Grid>
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NotifyLiveUpdateCommand}"
+                                Text="Live update"
+                                ImageSource="{x:Static markup:AppIcons.SmallLocalShipping}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Command="{Binding NotifyLiveUpdateNextCommand}"
+                                Text="Next"
+                                ImageSource="{x:Static markup:AppIcons.SmallSkipNext}" />
+                    </Grid>
                     <Label Style="{StaticResource CardPrimaryValueLabel}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding NotificationText}"
                            IsVisible="{Binding NotificationText, Converter={StaticResource NotEmptyConverter}}"

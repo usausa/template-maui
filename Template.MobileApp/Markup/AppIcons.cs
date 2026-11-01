@@ -217,6 +217,8 @@ public static class AppIcons
     public static readonly FontImageSource SmallNotificationsOff = Create(MaterialIcons.Notifications_off, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallAlarm = Create(MaterialIcons.Alarm, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallAlarmOn = Create(MaterialIcons.Alarm_on, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallLocalShipping = Create(MaterialIcons.Local_shipping, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallSkipNext = Create(MaterialIcons.Skip_next, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallStayCurrentLandscape = Create(MaterialIcons.Stay_current_landscape, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallStayCurrentPortrait = Create(MaterialIcons.Stay_current_portrait, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallTextFormat = Create(MaterialIcons.Text_format, SmallSize, ResourceColor("BlueGrayDarken1"));

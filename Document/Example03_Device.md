@@ -155,4 +155,4 @@
 - Screen: keep awake / orientation / brightness / screenshot
 - Vibration / haptic feedback / flashlight
 - Text to speech / speech to text
-- Notifications: immediate / scheduled / action buttons
+- Notifications: immediate / scheduled / action buttons / live update (Android 16 QPR1+)

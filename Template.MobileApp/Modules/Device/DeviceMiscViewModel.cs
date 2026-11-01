@@ -8,11 +8,17 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
     private const int ScheduledNotificationId = 2;
 
+    private const int ProgressNotificationId = 3;
+
+    private static readonly string[] ShippingSteps = ["Picking", "Packing", "Shipping", "Delivered"];
+
     // Field
 
     private readonly IScreen screen;
 
     private readonly ISpeechService speech;
+
+    private readonly INotificationService notification;
 
     // Speech
 
@@ -29,6 +35,9 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string NotificationText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial int ShippingStep { get; set; }
 
     // Command
 
@@ -60,6 +69,8 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     public IObserveCommand NotifyScheduleCommand { get; }
     public IObserveCommand NotifyCancelCommand { get; }
     public IObserveCommand NotifyExactSettingCommand { get; }
+    public IObserveCommand NotifyLiveUpdateCommand { get; }
+    public IObserveCommand NotifyLiveUpdateNextCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -76,6 +87,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     {
         this.screen = screen;
         this.speech = speech;
+        this.notification = notification;
 
         KeepScreenOnCommand = MakeDelegateCommand(() => screen.KeepScreenOn(true));
         KeepScreenOffCommand = MakeDelegateCommand(() => screen.KeepScreenOn(false));
@@ -162,9 +174,22 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         {
             notification.Cancel(NotificationId);
             notification.Cancel(ScheduledNotificationId);
+            notification.Cancel(ProgressNotificationId);
+            ShippingStep = 0;
             NotificationText = "Notification canceled";
         });
         NotifyExactSettingCommand = MakeDelegateCommand(notification.OpenExactAlarmSettings);
+        NotifyLiveUpdateCommand = MakeAsyncCommand(async () =>
+        {
+            if (!await Permissions.RequestNotificationsAsync())
+            {
+                NotificationText = "Notification not permitted";
+                return;
+            }
+
+            ShowShipping(1);
+        });
+        NotifyLiveUpdateNextCommand = MakeDelegateCommand(() => ShowShipping(ShippingStep + 1), () => (ShippingStep > 0) && (ShippingStep < ShippingSteps.Length));
         Disposables.Add(notification.TappedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
             NotificationText = x.Action is null ? $"Tap: {x.Payload}" : $"Button [{x.Action}]: {x.Payload}"));
     }
@@ -184,4 +209,25 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    private void ShowShipping(int step)
+    {
+        ShippingStep = step;
+        var status = ShippingSteps[step - 1];
+        if (step < ShippingSteps.Length)
+        {
+            var progress = $"{status} ({step}/{ShippingSteps.Length})";
+            notification.ShowProgress(ProgressNotificationId, "Shipping SO-2026-000123", progress, step, ShippingSteps.Length, $"{step}/{ShippingSteps.Length}", "SO-2026-000123");
+            NotificationText = notification.CanPostPromoted ? $"Live update: {progress}" : $"Progress: {progress}";
+        }
+        else
+        {
+            notification.Show(ProgressNotificationId, "Shipping SO-2026-000123", status, "SO-2026-000123");
+            NotificationText = status;
+        }
+    }
 }
