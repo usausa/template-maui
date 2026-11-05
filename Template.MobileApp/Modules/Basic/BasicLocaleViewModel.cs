@@ -1,8 +1,5 @@
 namespace Template.MobileApp.Modules.Basic;
 
-using System.Collections;
-using System.Resources;
-
 using Template.MobileApp.Resources.Strings;
 
 public sealed record ResourceEntry(
@@ -39,8 +36,8 @@ public sealed class BasicLocaleViewModel : AppViewModelBase
     {
         ResourceEntries =
         [
-            .. EnumerateResources("Names", Names.ResourceManager),
-            .. EnumerateResources("Messages", Messages.ResourceManager)
+            .. EnumerateResources("Names", Names.Keys, Names.GetTextFor),
+            .. EnumerateResources("Messages", Messages.Keys, Messages.GetTextFor)
         ];
 
         FormatEntries = new[] { CultureInfo.CurrentCulture, new CultureInfo("en-US"), new CultureInfo("de-DE"), new CultureInfo("ja-JP") }
@@ -61,22 +58,16 @@ public sealed class BasicLocaleViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static IEnumerable<ResourceEntry> EnumerateResources(string source, ResourceManager manager)
+    private static IEnumerable<ResourceEntry> EnumerateResources(string source, IEnumerable<string> keys, Func<string, CultureInfo, string?> getText)
     {
-        var neutral = manager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
-        if (neutral is null)
-        {
-            yield break;
-        }
-
-        var japanese = manager.GetResourceSet(new CultureInfo("ja"), true, false);
-        foreach (var key in neutral.Cast<DictionaryEntry>().Select(static x => (string)x.Key).Order(StringComparer.Ordinal))
+        var japanese = new CultureInfo("ja");
+        foreach (var key in keys)
         {
             yield return new ResourceEntry(
                 $"{source}.{key}",
-                neutral.GetString(key) ?? string.Empty,
-                japanese?.GetString(key) ?? string.Empty,
-                manager.GetString(key, CultureInfo.CurrentUICulture) ?? string.Empty);
+                getText(key, CultureInfo.InvariantCulture) ?? string.Empty,
+                getText(key, japanese) ?? string.Empty,
+                getText(key, CultureInfo.CurrentUICulture) ?? string.Empty);
         }
     }
 

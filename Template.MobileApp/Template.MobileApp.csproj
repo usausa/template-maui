@@ -58,6 +58,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <TextResourceLanguages>en;ja</TextResourceLanguages>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <EmbeddedFlavor>Development</EmbeddedFlavor>
     <EmbeddedApiEndPoint></EmbeddedApiEndPoint>
     <EmbeddedMonitorEndPoint></EmbeddedMonitorEndPoint>
@@ -86,16 +90,6 @@
     <MauiFont Include="Resources\Fonts\*" />
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-    <!-- String resources -->
-    <Compile Update="Resources\Strings\*.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>$([System.String]::Copy('%(FileName)').Replace('.Designer','.resx'))</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="Resources\Strings\*.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>%(Filename).Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup Condition="$([System.String]::Copy('$(TargetFramework)').Contains('-android')) == 'true'">
@@ -130,6 +124,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.19.0" />
+    <PackageReference Include="BunnyTail.TextResource" Version="0.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="BunnyTail.XamlProperty.Maui" Version="1.5.0" />
     <PackageReference Include="ClamCalendar" Version="3.0.0" />
     <PackageReference Include="ClamChart" Version="3.1.0" />

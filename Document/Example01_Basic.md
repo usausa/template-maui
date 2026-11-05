@@ -60,7 +60,7 @@
 </p>
 
 - CurrentCulture / CurrentUICulture
-- .resx resources (neutral / ja)
+- Text resources (neutral / ja)
 - x:Static resource strings
 - Culture formats: number / currency / date / time
 
