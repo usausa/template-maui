@@ -94,7 +94,8 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<UIShopPopularItem> Popular { get; set; } = [];
 
-    public ObservableCollection<ShopItem> Items { get; } = [];
+    [ObservableProperty]
+    public partial ObservableView<ShopItem> Items { get; private set; } = new([]);
 
     // Command
 
@@ -118,10 +119,10 @@ public sealed partial class UIShopViewModel : AppViewModelBase
 
     public UIShopViewModel()
     {
-        SubscribeSelectedCategory(_ => Filter());
-        SubscribeSearchText(_ => Filter());
-        SubscribeSelectedSort(_ => Filter());
-        SubscribeSelectedPrice(_ => Filter());
+        SubscribeSelectedCategory(_ => Items.Refresh());
+        SubscribeSearchText(_ => Items.Refresh());
+        SubscribeSelectedSort(_ => Items.Refresh());
+        SubscribeSelectedPrice(_ => Items.Refresh());
 
         ItemCommand = MakeAsyncCommand<ShopItem>(OpenAsync);
         CurrentChangedCommand = MakeDelegateCommand<UIShopPopularItem>(x =>
@@ -156,7 +157,12 @@ public sealed partial class UIShopViewModel : AppViewModelBase
                 .Select(static x => new UIShopPopularItem { Item = x })
                 .ToArray();
             Popular[0].IsCurrent = true;
-            Filter();
+            Items = new ObservableView<ShopItem>(Context.Store.Items)
+            {
+                Filter = IsMatch,
+                Comparer = Comparer<ShopItem>.Create(CompareItems)
+            };
+            Disposables.Add(Items);
         }
 
         return Task.CompletedTask;
@@ -180,25 +186,16 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private void Filter()
-    {
-        var items = Context.Store.Find(SelectedCategory.Category, SearchText, SelectedSort.Sort, SelectedPrice.MaxPrice);
-        for (var i = 0; i < items.Count; i++)
-        {
-            var index = Items.IndexOf(items[i]);
-            if (index < 0)
-            {
-                Items.Insert(i, items[i]);
-            }
-            else if (index != i)
-            {
-                Items.Move(index, i);
-            }
-        }
+    private bool IsMatch(ShopItem item) =>
+        ((SelectedCategory.Category is null) || (item.Product.Category == SelectedCategory.Category)) &&
+        (String.IsNullOrWhiteSpace(SearchText) || item.Product.Name.Contains(SearchText.Trim(), StringComparison.OrdinalIgnoreCase)) &&
+        ((SelectedPrice.MaxPrice is null) || (item.Product.Price <= SelectedPrice.MaxPrice));
 
-        while (Items.Count > items.Count)
-        {
-            Items.RemoveAt(Items.Count - 1);
-        }
-    }
+    private int CompareItems(ShopItem x, ShopItem y) => SelectedSort.Sort switch
+    {
+        ShopSort.PriceLow => x.Product.Price.CompareTo(y.Product.Price),
+        ShopSort.PriceHigh => y.Product.Price.CompareTo(x.Product.Price),
+        ShopSort.Rating => y.Product.Rating.CompareTo(x.Product.Rating),
+        _ => 0
+    };
 }

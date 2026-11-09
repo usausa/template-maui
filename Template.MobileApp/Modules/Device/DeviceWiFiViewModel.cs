@@ -12,6 +12,8 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
     private readonly IWiFiManager wifiManager;
 
+    private readonly ObservableCollection<WiFiAccessPointItem> items = [];
+
     private IReadOnlyList<WiFiAccessPoint>? lastResults;
 
     private SerialDisposable ScanTimer { get; } = new();
@@ -43,7 +45,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
     // List
 
-    public ObservableCollection<WiFiAccessPointItem> AccessPoints { get; } = [];
+    public ObservableView<WiFiAccessPointItem> AccessPoints { get; }
 
     [ObservableProperty]
     public partial int Band24Count { get; set; }
@@ -78,6 +80,15 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     public DeviceWiFiViewModel(IWiFiManager wifiManager)
     {
         this.wifiManager = wifiManager;
+
+        AccessPoints = new ObservableView<WiFiAccessPointItem>(items)
+        {
+            Comparer = Comparer<WiFiAccessPointItem>.Create(CompareAccessPoints)
+        };
+        AccessPoints.ObserveProperty(nameof(WiFiAccessPointItem.IsConnected));
+        AccessPoints.ObserveProperty(nameof(WiFiAccessPointItem.IsStale));
+        AccessPoints.ObserveProperty(nameof(WiFiAccessPointItem.AccessPoint));
+        Disposables.Add(AccessPoints);
 
         ToggleDetailCommand = MakeDelegateCommand(() => IsDetailOpen = !IsDetailOpen);
         ToggleExpandCommand = MakeDelegateCommand<WiFiAccessPointItem>(x => x.IsExpanded = !x.IsExpanded);
@@ -171,6 +182,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
     private void UpdateAccessPoints(string? connectedBssid)
     {
+        using var defer = AccessPoints.DeferRefresh();
         var now = DateTime.Now;
         var results = wifiManager.AccessPoints;
         if (!ReferenceEquals(results, lastResults))
@@ -183,7 +195,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
                 var item = Find(result.Bssid);
                 if (item is null)
                 {
-                    AccessPoints.Add(new WiFiAccessPointItem(result));
+                    items.Add(new WiFiAccessPointItem(result));
                 }
                 else
                 {
@@ -191,7 +203,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
                 }
             }
 
-            foreach (var item in AccessPoints)
+            foreach (var item in items)
             {
                 if (!seen.Contains(item.AccessPoint.Bssid))
                 {
@@ -204,7 +216,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
             ScheduleScan();
         }
 
-        foreach (var item in AccessPoints)
+        foreach (var item in items)
         {
             item.IsConnected = String.Equals(item.AccessPoint.Bssid, connectedBssid, StringComparison.OrdinalIgnoreCase);
         }
@@ -213,36 +225,37 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     }
 
     private WiFiAccessPointItem? Find(string bssid) =>
-        AccessPoints.FirstOrDefault(x => String.Equals(x.AccessPoint.Bssid, bssid, StringComparison.OrdinalIgnoreCase));
+        items.FirstOrDefault(x => String.Equals(x.AccessPoint.Bssid, bssid, StringComparison.OrdinalIgnoreCase));
 
     private void Expire(DateTime now)
     {
-        for (var i = AccessPoints.Count - 1; i >= 0; i--)
+        for (var i = items.Count - 1; i >= 0; i--)
         {
-            if (AccessPoints[i].MissedSince is { } missed && (now - missed > RemoveAfter))
+            if (items[i].MissedSince is { } missed && (now - missed > RemoveAfter))
             {
-                AccessPoints.RemoveAt(i);
+                items.RemoveAt(i);
             }
         }
 
-        var ordered = AccessPoints
-            .OrderByDescending(static x => x.IsConnected)
-            .ThenBy(static x => x.IsStale)
-            .ThenByDescending(static x => x.AccessPoint.Rssi)
-            .ToList();
-        for (var i = 0; i < ordered.Count; i++)
-        {
-            var index = AccessPoints.IndexOf(ordered[i]);
-            if (index != i)
-            {
-                AccessPoints.Move(index, i);
-            }
-        }
-
-        Band24Count = AccessPoints.Count(static x => x.AccessPoint.Frequency < 4900);
-        Band5Count = AccessPoints.Count(static x => x.AccessPoint.Frequency is >= 4900 and < 5925);
-        Band6Count = AccessPoints.Count(static x => x.AccessPoint.Frequency >= 5925);
+        Band24Count = items.Count(static x => x.AccessPoint.Frequency < 4900);
+        Band5Count = items.Count(static x => x.AccessPoint.Frequency is >= 4900 and < 5925);
+        Band6Count = items.Count(static x => x.AccessPoint.Frequency >= 5925);
         HasBand6 = Band6Count > 0;
+    }
+
+    private static int CompareAccessPoints(WiFiAccessPointItem x, WiFiAccessPointItem y)
+    {
+        if (x.IsConnected != y.IsConnected)
+        {
+            return x.IsConnected ? -1 : 1;
+        }
+
+        if (x.IsStale != y.IsStale)
+        {
+            return x.IsStale ? 1 : -1;
+        }
+
+        return y.AccessPoint.Rssi.CompareTo(x.AccessPoint.Rssi);
     }
 }
 

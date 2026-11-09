@@ -109,21 +109,6 @@ public sealed partial class ShopStore : ObservableObject
         }
     }
 
-    public IReadOnlyList<ShopItem> Find(ShopCategory? category, string text, ShopSort sort, int? maxPrice)
-    {
-        var query = Items.Where(x =>
-            ((category is null) || (x.Product.Category == category)) &&
-            (String.IsNullOrWhiteSpace(text) || x.Product.Name.Contains(text.Trim(), StringComparison.OrdinalIgnoreCase)) &&
-            ((maxPrice is null) || (x.Product.Price <= maxPrice)));
-        return sort switch
-        {
-            ShopSort.PriceLow => query.OrderBy(static x => x.Product.Price).ToArray(),
-            ShopSort.PriceHigh => query.OrderByDescending(static x => x.Product.Price).ToArray(),
-            ShopSort.Rating => query.OrderByDescending(static x => x.Product.Rating).ToArray(),
-            _ => query.ToArray()
-        };
-    }
-
     public void AddToCart(ShopItem item, string variant, int quantity)
     {
         var line = Cart.FirstOrDefault(x => (x.Product.Id == item.Product.Id) && (x.Variant == variant));

@@ -40,6 +40,7 @@ global using Smart.Maui.Input;
 global using Smart.Maui.Messaging;
 global using Smart.Maui.ViewModels;
 global using Smart.Mvvm;
+global using Smart.Mvvm.Collections;
 global using Smart.Mvvm.Messaging;
 global using Smart.Mvvm.ViewModels;
 global using Smart.Navigation;
