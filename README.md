@@ -131,9 +131,10 @@ Template project for MAUI.
 
 | Project | Description |
 | --- | --- |
-| [template-maui-server](https://github.com/usausa/template-maui-server) | Server application template |
-| [template-maui-keyboard](https://github.com/usausa/template-maui-keyboard) | Physical keyboard control example |
 | [template-maui-blazor](https://github.com/usausa/template-maui-blazor) | Blazor based application template |
+| [template-maui-keyboard](https://github.com/usausa/template-maui-keyboard) | Physical keyboard control example |
+| [template-maui-kiosk](https://github.com/usausa/template-maui-kiosk) | Kiosk /MDM application example |
+| [template-maui-server](https://github.com/usausa/template-maui-server) | Server application template |
 
 # 📦 My Libraries
 
