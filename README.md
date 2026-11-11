@@ -1,8 +1,6 @@
-[Template Portal](https://usausa.github.io/template/)
-
 # Template project for MAUI
 
-Template project for MAUI.
+[Template](https://usausa.github.io/template/) project for MAUI.
 
 # 📸 Image
 
