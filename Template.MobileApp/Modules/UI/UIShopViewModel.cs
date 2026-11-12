@@ -138,6 +138,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
         FilterCommand = MakeDelegateCommand(() => IsFilterOpen = true);
         ResetFilterCommand = MakeDelegateCommand(() =>
         {
+            using var defer = Items.DeferRefresh();
             SelectedSort = SortOptions[0];
             SelectedPrice = PriceOptions[0];
         });

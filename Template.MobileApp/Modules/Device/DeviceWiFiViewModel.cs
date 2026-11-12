@@ -229,6 +229,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
     private void Expire(DateTime now)
     {
+        using var defer = AccessPoints.DeferRefresh();
         for (var i = items.Count - 1; i >= 0; i--)
         {
             if (items[i].MissedSince is { } missed && (now - missed > RemoveAfter))
