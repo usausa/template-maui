@@ -399,7 +399,7 @@ public sealed class EnergyFlowScene : SceneObject
         canvas.DrawCircle(header.Left + 5f, header.Top + 30f, 2.4f, Fill);
         DrawText(canvas, "EMS LIVE  6.6kV  CITY GAS 13A", header.Left + 12f, header.Top + 33f, 8.5f, TextSub);
 
-        DrawText(canvas, sim.Now.ToString("HH:mm:ss"), header.Right, y, 14.5f, TextMain, bold: true, align: SKTextAlign.Right);
+        DrawText(canvas, sim.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture), header.Right, y, 14.5f, TextMain, bold: true, align: SKTextAlign.Right);
 
         var (text, color, blink) = Status();
         var textWidth = MeasureText(text, 8.5f, true);
@@ -1453,7 +1453,7 @@ public sealed class EnergyFlowScene : SceneObject
             var y = panel.Top + 16f + (i * 15f) + ((1f - appear) * 6f);
             var alpha = (byte)((i == 0 ? 255f : 150f) * appear);
             var color = LevelColor(item.Level);
-            DrawText(canvas, item.Time.ToString("HH:mm:ss"), panel.Left + 10f, y, 8.5f, TextDim.WithAlpha(alpha));
+            DrawText(canvas, item.Time.ToString("HH:mm:ss", CultureInfo.InvariantCulture), panel.Left + 10f, y, 8.5f, TextDim.WithAlpha(alpha));
             Fill.Color = color.WithAlpha(alpha);
             canvas.DrawCircle(panel.Left + 63f, y - 3f, 2.4f, Fill);
             DrawText(canvas, item.Source, panel.Left + 70f, y, 8.5f, color.WithAlpha(alpha), bold: true);

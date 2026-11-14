@@ -360,7 +360,7 @@ public sealed class MechHudScene : SceneObject
     private void DrawHeader(SKCanvas canvas, SKRect header, float t)
     {
         DrawText(canvas, $"T+{(int)(t / 60f):00}:{(int)(t % 60f):00}", header.Left + 166f, header.Top + 38f, 10f, Main.WithAlpha(190));
-        DrawText(canvas, DateTime.Now.ToString("HH:mm:ss"), header.Right, header.Top + 18f, 13f, Main, bold: true, align: SKTextAlign.Right);
+        DrawText(canvas, DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture), header.Right, header.Top + 18f, 13f, Main, bold: true, align: SKTextAlign.Right);
 
         var worstHp = sim.PartHp[sim.WorstPart];
         var (text, color) = worstHp > 70f

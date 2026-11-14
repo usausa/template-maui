@@ -303,22 +303,22 @@ public static class DeckSample
 
     private static readonly (string Color1, string Color2)[] Palette =
     [
-        new("#F44336", "#FF8A80"),
-        new("#E91E63", "#FF80AB"),
-        new("#9C27B0", "#EA80FC"),
-        new("#673AB7", "#B388FF"),
-        new("#3F51B5", "#8C9EFF"),
-        new("#2196F3", "#82B1FF"),
-        new("#03A9F4", "#80D8FF"),
-        new("#00BCD4", "#84FFFF"),
-        new("#009688", "#A7FFEB"),
-        new("#4CAF50", "#B9F6CA"),
-        new("#8BC34A", "#CCFF90"),
-        new("#CDDC39", "#F4FF81"),
-        new("#FFEB3B", "#FFFF8D"),
-        new("#FFC107", "#FFE57F"),
-        new("#FF9800", "#FFD180"),
-        new("#FF5722", "#FF9E80")
+        ("#F44336", "#FF8A80"),
+        ("#E91E63", "#FF80AB"),
+        ("#9C27B0", "#EA80FC"),
+        ("#673AB7", "#B388FF"),
+        ("#3F51B5", "#8C9EFF"),
+        ("#2196F3", "#82B1FF"),
+        ("#03A9F4", "#80D8FF"),
+        ("#00BCD4", "#84FFFF"),
+        ("#009688", "#A7FFEB"),
+        ("#4CAF50", "#B9F6CA"),
+        ("#8BC34A", "#CCFF90"),
+        ("#CDDC39", "#F4FF81"),
+        ("#FFEB3B", "#FFFF8D"),
+        ("#FFC107", "#FFE57F"),
+        ("#FF9800", "#FFD180"),
+        ("#FF5722", "#FF9E80")
     ];
 
     public static IReadOnlyList<DeckFolder> LoadFolders() =>

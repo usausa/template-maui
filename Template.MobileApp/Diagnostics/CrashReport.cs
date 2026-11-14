@@ -24,7 +24,7 @@ public sealed record CrashInfo
     public string ToReport()
     {
         var report = new StringBuilder();
-        report.AppendLine($"Time: {Time.LocalDateTime:yyyy/MM/dd HH:mm:ss}");
+        report.AppendLine(CultureInfo.InvariantCulture, $"Time: {Time.LocalDateTime:yyyy/MM/dd HH:mm:ss}");
         report.AppendLine($"Version: {Version}");
         report.AppendLine($"Device: {Device}");
         report.AppendLine("Exception:");

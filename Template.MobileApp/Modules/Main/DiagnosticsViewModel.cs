@@ -220,7 +220,7 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
         }
 
         return new DirectoryInfo(logDirectory).EnumerateFiles()
-            .OrderByDescending(static x => x.Name)
+            .OrderByDescending(static x => x.Name, StringComparer.Ordinal)
             .Select(static x => new LogFileInfo(x.Name, x.Length, x.LastWriteTime))
             .ToList();
     }
