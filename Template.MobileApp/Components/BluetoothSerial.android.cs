@@ -166,9 +166,7 @@ public sealed partial class BluetoothSerialFactory
             switch (intent!.Action)
             {
                 case BluetoothDevice.ActionFound:
-#pragma warning disable CA1422
-                    var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
-#pragma warning restore CA1422
+                    var device = (BluetoothDevice)IntentCompat.GetParcelableExtra(intent, BluetoothDevice.ExtraDevice, Java.Lang.Class.FromType(typeof(BluetoothDevice)))!;
                     Log.Debug(nameof(BluetoothSerialFactory), $"[BluetoothDevice.ActionFound] {device.Name}");
                     if ((device.Name is not null) && device.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
                     {
@@ -201,15 +199,11 @@ public sealed partial class BluetoothSerialFactory
             switch (intent!.Action)
             {
                 case BluetoothDevice.ActionPairingRequest:
-#pragma warning disable CA1422
-                    var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
-#pragma warning restore CA1422
+                    var device = (BluetoothDevice)IntentCompat.GetParcelableExtra(intent, BluetoothDevice.ExtraDevice, Java.Lang.Class.FromType(typeof(BluetoothDevice)))!;
                     Log.Debug(nameof(BluetoothSerialFactory), $"[BluetoothDevice.ActionPairingRequest] {device.Name}");
-                    if (pin.Length > 0)
+                    if ((pin.Length > 0) && !OperatingSystem.IsAndroidVersionAtLeast(37))
                     {
-#pragma warning disable CA1422
                         device.SetPin(pin);
-#pragma warning restore CA1422
                     }
                     break;
 
