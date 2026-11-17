@@ -167,7 +167,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     private Task UpAsync()
     {
         var trimmed = CurrentPath.TrimEnd('/');
-        var index = trimmed.LastIndexOf('/');
+        var index = trimmed.LastIndexOf('/', StringComparison.Ordinal);
         CurrentPath = index < 0 ? string.Empty : trimmed[..(index + 1)];
         return ReloadAsync();
     }

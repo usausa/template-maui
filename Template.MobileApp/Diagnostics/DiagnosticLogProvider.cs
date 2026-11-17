@@ -70,7 +70,7 @@ public sealed class DiagnosticLogProvider : ILoggerProvider
         {
             this.provider = provider;
 
-            var index = categoryName.LastIndexOf('.');
+            var index = categoryName.LastIndexOf('.', StringComparison.Ordinal);
             category = index >= 0 ? categoryName[(index + 1)..] : categoryName;
         }
 

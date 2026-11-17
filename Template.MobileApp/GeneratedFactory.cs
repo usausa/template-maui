@@ -2,6 +2,7 @@
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::CommunityToolkit.Maui.Services.PopupService))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.AndroidPlatform))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.AndroidScreenInfo))]
+[assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.AndroidScreenPosture))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.ShinyMauiInitializationService))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.BluetoothLE.BleManager))]
 [assembly: global::BunnyTail.DependencyInjection.GenerateComponentFactory(typeof(global::Shiny.BluetoothLE.Hosting.BleHostingManager))]

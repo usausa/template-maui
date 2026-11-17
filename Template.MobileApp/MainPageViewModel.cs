@@ -29,7 +29,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     private bool foreground;
 
-    private IDisposable? navigatingBusy;
+    private BusyStateScope? navigatingBusy;
 
     // Shell
 

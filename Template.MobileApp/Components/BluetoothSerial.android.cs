@@ -207,7 +207,9 @@ public sealed partial class BluetoothSerialFactory
                     Log.Debug(nameof(BluetoothSerialFactory), $"[BluetoothDevice.ActionPairingRequest] {device.Name}");
                     if (pin.Length > 0)
                     {
+#pragma warning disable CA1422
                         device.SetPin(pin);
+#pragma warning restore CA1422
                     }
                     break;
 

@@ -4,6 +4,7 @@ using Smart.Maui.Interactivity;
 
 using MauiBorder = Microsoft.Maui.Controls.Border;
 
+#pragma warning disable CA1724
 public static class Focus
 {
     //--------------------------------------------------------------------------------
@@ -234,3 +235,4 @@ public static class Focus
         }
     }
 }
+#pragma warning restore CA1724

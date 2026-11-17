@@ -19,7 +19,7 @@ public sealed class NumberInputModel : NotificationObject
         set => SetProperty(ref text, String.IsNullOrEmpty(value) ? AllowEmpty ? string.Empty : "0" : value);
     }
 
-    public string NormalizeText => text.EndsWith('.') ? text[..^1] : text;
+    public string NormalizeText => text.EndsWith('.', StringComparison.Ordinal) ? text[..^1] : text;
 
     public void Clear()
     {
