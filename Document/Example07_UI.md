@@ -180,7 +180,7 @@
 <img width="25%" src="./Images/UI_TransitTimetable.png" />
 </p>
 
-- Route candidate tabs / timetable with a current time marker
+- Route candidate tabs / timeline with fare ranges / timetable with a current time marker
 
 ## Seat
 

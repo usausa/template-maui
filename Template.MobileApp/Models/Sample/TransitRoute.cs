@@ -25,10 +25,22 @@ public enum TransitBadge
 }
 
 //--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
+public enum DoorSide
+{
+    Left,
+    Right
+}
+
+//--------------------------------------------------------------------------------
 // Data
 //--------------------------------------------------------------------------------
 
 public sealed record TransitStop(TimeOnly Time, string Name);
+
+public sealed record TransitCar(int Number, bool IsBest);
 
 public sealed class TransitStation
 {
@@ -37,17 +49,11 @@ public sealed class TransitStation
     public TimeOnly? Arrival { get; init; }
 
     public TimeOnly? Departure { get; init; }
-
-    public required string Platform { get; init; }
 }
 
 public sealed class TransitTransfer
 {
     public required int Minutes { get; init; }
-
-    public required string FromPlatform { get; init; }
-
-    public required string ToPlatform { get; init; }
 
     public required int WalkMeters { get; init; }
 }
@@ -66,6 +72,22 @@ public sealed partial class TransitSegment : ObservableObject
 
     public required IReadOnlyList<TransitStop> Stops { get; init; }
 
+    public required bool IsFirst { get; init; }
+
+    public required int Cars { get; init; }
+
+    public required string DeparturePlatform { get; init; }
+
+    public required string ArrivalPlatform { get; init; }
+
+    public required DoorSide Door { get; init; }
+
+    public required IReadOnlyList<TransitCar> Boarding { get; init; }
+
+    public int? Fare { get; init; }
+
+    public bool IsFareEnd { get; init; }
+
     [ObservableProperty]
     public partial bool IsExpanded { get; set; }
 }
@@ -77,6 +99,10 @@ public sealed class TransitLeg
     public required TransitSegment Segment { get; init; }
 
     public TransitTransfer? Transfer { get; init; }
+
+    public Color? ArrivalColor { get; init; }
+
+    public bool IsFareThrough { get; init; }
 }
 
 public sealed class TransitRoute
@@ -102,6 +128,8 @@ public sealed class TransitRoute
     public string Origin => Legs[0].Station.Name;
 
     public string Line => Legs[^1].Segment.Line;
+
+    public Color TerminalColor => Legs[^1].Segment.Color;
 
     public int Minutes => (int)(Arrival - Departure).TotalMinutes;
 
@@ -132,7 +160,13 @@ public static class TransitSample
         Color Color,
         int Minutes,
         IReadOnlyList<int> Offsets,
-        IReadOnlyList<string> Stops);
+        IReadOnlyList<string> Stops,
+        bool IsFirst,
+        int Cars,
+        IReadOnlyList<int> BestCars,
+        DoorSide Door);
+
+    private sealed record FareSpine(int Amount, int First, int Last);
 
     private sealed record RouteSpine(
         int Number,
@@ -144,17 +178,20 @@ public static class TransitSample
         IReadOnlyList<StationSpine> Stations,
         IReadOnlyList<RideSpine> Rides,
         IReadOnlyList<int> Transfers,
-        IReadOnlyList<int> Walks);
+        IReadOnlyList<int> Walks,
+        IReadOnlyList<FareSpine> Fares);
 
-    private static readonly StationSpine Hozumi = new("穂積", "1番線", "2番線");
+    private static readonly StationSpine Hozumi = new("穂積", "1", "2");
 
-    private static readonly StationSpine Gifu = new("岐阜", "4番線", "5番線");
+    private static readonly StationSpine Gifu = new("岐阜", "4", "5");
 
-    private static readonly StationSpine Nagoya = new("名古屋", "2番線", "4番線");
+    private static readonly StationSpine Nagoya = new("名古屋", "2", "4");
 
-    private static readonly StationSpine Chikusa = new("千種", "1番線", "2番線");
+    private static readonly StationSpine NagoyaSubway = new("名古屋", "2", "2");
 
-    private static readonly StationSpine Kozoji = new("高蔵寺", "6番線", "6番線");
+    private static readonly StationSpine Chikusa = new("千種", "2", "2");
+
+    private static readonly StationSpine Kozoji = new("高蔵寺", "6", "6");
 
     private static readonly RouteSpine[] Spines =
     [
@@ -169,13 +206,16 @@ public static class TransitSample
             [
                 new("JR東海道本線", "豊橋行", "大垣行", TrainKind.Local, TokaidoColor, 32,
                     [3, 6, 12, 16, 21, 25, 28],
-                    ["西岐阜", "岐阜", "木曽川", "尾張一宮", "稲沢", "清洲", "枇杷島"]),
+                    ["西岐阜", "岐阜", "木曽川", "尾張一宮", "稲沢", "清洲", "枇杷島"],
+                    false, 6, [3, 4], DoorSide.Right),
                 new("JR中央本線", "多治見行", "名古屋行", TrainKind.Local, ChuoColor, 28,
                     [5, 8, 10, 14, 17, 21, 24, 26],
-                    ["金山", "鶴舞", "千種", "大曽根", "新守山", "勝川", "春日井", "神領"])
+                    ["金山", "鶴舞", "千種", "大曽根", "新守山", "勝川", "春日井", "神領"],
+                    true, 6, [], DoorSide.Left)
             ],
             [3],
-            [180]),
+            [180],
+            [new(1180, 0, 1)]),
         new(
             2,
             new TimeOnly(5, 12),
@@ -185,14 +225,18 @@ public static class TransitSample
             [TransitBadge.Cheap],
             [Hozumi, Gifu, Nagoya, Kozoji],
             [
-                new("JR東海道本線", "岐阜行", "大垣行", TrainKind.Local, TokaidoColor, 8, [], []),
+                new("JR東海道本線", "岐阜行", "大垣行", TrainKind.Local, TokaidoColor, 8, [], [],
+                    false, 4, [1], DoorSide.Left),
                 new("JR東海道本線", "豊橋行", "米原行", TrainKind.SpecialRapid, TokaidoColor, 21,
-                    [12], ["尾張一宮"]),
+                    [12], ["尾張一宮"],
+                    false, 8, [5, 6], DoorSide.Right),
                 new("JR中央本線", "中津川行", "名古屋行", TrainKind.Rapid, ChuoColor, 29,
-                    [6, 11, 17, 24], ["金山", "千種", "大曽根", "春日井"])
+                    [6, 11, 17, 24], ["金山", "千種", "大曽根", "春日井"],
+                    true, 8, [], DoorSide.Left)
             ],
             [6, 7],
-            [60, 240]),
+            [60, 240],
+            [new(1180, 0, 2)]),
         new(
             3,
             new TimeOnly(5, 20),
@@ -204,13 +248,16 @@ public static class TransitSample
             [
                 new("JR東海道本線", "名古屋行", "大垣行", TrainKind.Local, TokaidoColor, 39,
                     [4, 8, 15, 20, 26, 31, 35],
-                    ["西岐阜", "岐阜", "木曽川", "尾張一宮", "稲沢", "清洲", "枇杷島"]),
+                    ["西岐阜", "岐阜", "木曽川", "尾張一宮", "稲沢", "清洲", "枇杷島"],
+                    false, 4, [3, 4], DoorSide.Right),
                 new("JR中央本線", "多治見行", "名古屋行", TrainKind.Local, ChuoColor, 31,
                     [5, 9, 12, 16, 19, 23, 26, 29],
-                    ["金山", "鶴舞", "千種", "大曽根", "新守山", "勝川", "春日井", "神領"])
+                    ["金山", "鶴舞", "千種", "大曽根", "新守山", "勝川", "春日井", "神領"],
+                    true, 6, [], DoorSide.Left)
             ],
             [8],
-            [180]),
+            [180],
+            [new(1180, 0, 1)]),
         new(
             4,
             new TimeOnly(5, 30),
@@ -218,18 +265,22 @@ public static class TransitSample
             1510,
             58.9,
             [TransitBadge.Easy],
-            [Hozumi, Nagoya, Chikusa, Kozoji],
+            [Hozumi, NagoyaSubway, Chikusa, Kozoji],
             [
                 new("JR東海道本線", "豊橋行", "大垣行", TrainKind.Local, TokaidoColor, 32,
                     [3, 6, 12, 16, 21, 25, 28],
-                    ["西岐阜", "岐阜", "木曽川", "尾張一宮", "稲沢", "清洲", "枇杷島"]),
+                    ["西岐阜", "岐阜", "木曽川", "尾張一宮", "稲沢", "清洲", "枇杷島"],
+                    false, 6, [5, 6], DoorSide.Right),
                 new("地下鉄東山線", "藤が丘行", "高畑行", TrainKind.Local, SubwayColor, 8,
-                    [2, 4, 6], ["伏見", "栄", "新栄町"]),
+                    [2, 4, 6], ["伏見", "栄", "新栄町"],
+                    false, 6, [1, 2], DoorSide.Left),
                 new("JR中央本線", "中津川行", "名古屋行", TrainKind.Rapid, ChuoColor, 25,
-                    [6, 14, 20], ["大曽根", "春日井", "神領"])
+                    [6, 14, 20], ["大曽根", "春日井", "神領"],
+                    false, 8, [], DoorSide.Left)
             ],
             [10, 9],
-            [320, 150])
+            [320, 150],
+            [new(590, 0, 0), new(240, 1, 1), new(680, 2, 2)])
     ];
 
     public static IReadOnlyList<TransitRoute> LoadRoutes(bool reverse, int shift) =>
@@ -241,6 +292,9 @@ public static class TransitSample
         var rides = Order(spine.Rides, reverse);
         var transfers = Order(spine.Transfers, reverse);
         var walks = Order(spine.Walks, reverse);
+        var fares = reverse
+            ? [.. spine.Fares.Select(x => new FareSpine(x.Amount, rides.Count - 1 - x.Last, rides.Count - 1 - x.First))]
+            : spine.Fares;
 
         var legs = new List<TransitLeg>(rides.Count);
         var depart = (reverse ? spine.Backward : spine.Departure).AddMinutes(shift * ShiftMinutes);
@@ -249,14 +303,14 @@ public static class TransitSample
         for (var i = 0; i < rides.Count; i++)
         {
             var ride = rides[i];
+            var fare = fares.FirstOrDefault(x => x.First == i);
             legs.Add(new TransitLeg
             {
                 Station = new TransitStation
                 {
                     Name = stations[i].Name,
                     Arrival = i > 0 ? arrive : null,
-                    Departure = depart,
-                    Platform = stations[i].DepartPlatform
+                    Departure = depart
                 },
                 Segment = new TransitSegment
                 {
@@ -265,17 +319,25 @@ public static class TransitSample
                     Kind = ride.Kind,
                     Color = ride.Color,
                     Minutes = ride.Minutes,
-                    Stops = BuildStops(ride, depart, reverse)
+                    Stops = BuildStops(ride, depart, reverse),
+                    IsFirst = !reverse && ride.IsFirst,
+                    Cars = ride.Cars,
+                    DeparturePlatform = stations[i].DepartPlatform,
+                    ArrivalPlatform = stations[i + 1].ArrivePlatform,
+                    Door = ride.Door,
+                    Boarding = i < rides.Count - 1 ? BuildBoarding(ride) : [],
+                    Fare = fare?.Amount,
+                    IsFareEnd = fares.Any(x => x.Last == i)
                 },
                 Transfer = i > 0
                     ? new TransitTransfer
                     {
                         Minutes = transfers[i - 1],
-                        FromPlatform = stations[i].ArrivePlatform,
-                        ToPlatform = stations[i].DepartPlatform,
                         WalkMeters = walks[i - 1]
                     }
-                    : null
+                    : null,
+                ArrivalColor = i > 0 ? rides[i - 1].Color : null,
+                IsFareThrough = (i > 0) && fares.Any(x => (x.First < i) && (i <= x.Last))
             });
 
             arrive = depart.AddMinutes(ride.Minutes);
@@ -297,8 +359,7 @@ public static class TransitSample
             Terminal = new TransitStation
             {
                 Name = stations[^1].Name,
-                Arrival = arrive,
-                Platform = stations[^1].ArrivePlatform
+                Arrival = arrive
             },
             TerminalDirection = reverse ? StationDirection.Up : StationDirection.Down
         };
@@ -320,6 +381,9 @@ public static class TransitSample
         var count = ride.Stops.Count;
         return [.. ride.Stops.Reverse().Select((x, i) => new TransitStop(depart.AddMinutes(ride.Minutes - ride.Offsets[count - 1 - i]), x))];
     }
+
+    private static IReadOnlyList<TransitCar> BuildBoarding(RideSpine ride) =>
+        [.. Enumerable.Range(1, ride.Cars).Reverse().Select(x => new TransitCar(x, ride.BestCars.Contains(x)))];
 
     private static IReadOnlyList<T> Order<T>(IReadOnlyList<T> values, bool reverse) =>
         reverse ? [.. values.Reverse()] : values;
