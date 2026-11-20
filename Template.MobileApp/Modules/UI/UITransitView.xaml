@@ -287,13 +287,6 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="TransferRail"
-                   TargetType="BoxView"
-                   BasedOn="{StaticResource SegmentRail}">
-                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="Opacity" Value="0.4" />
-            </Style>
-
             <Style x:Key="StationDot"
                    TargetType="Ellipse">
                 <Setter Property="WidthRequest" Value="14" />
@@ -372,6 +365,11 @@
                 <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
             </Style>
 
+            <Style x:Key="StationNameBlock"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="StationNameStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="8,0,0,0" />
@@ -405,17 +403,10 @@
 
             <!-- Transfer -->
 
-            <Style x:Key="TransferGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
             <Style x:Key="TransferLabel"
                    TargetType="Label">
-                <Setter Property="Margin" Value="8,0,0,0" />
-                <Setter Property="Padding" Value="0,8" />
+                <Setter Property="Margin" Value="8,-8,0,10" />
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource TransitSubTextColor}" />
             </Style>
 
@@ -934,11 +925,7 @@
                                                  Color="{Binding ArrivalColor}" />
                                         <BoxView Grid.Row="1"
                                                  Style="{StaticResource SegmentRail}"
-                                                 IsVisible="{Binding Transfer, Converter={StaticResource EmptyConverter}}"
                                                  Color="{Binding Segment.Color}" />
-                                        <BoxView Grid.Row="1"
-                                                 Style="{StaticResource TransferRail}"
-                                                 IsVisible="{Binding Transfer, Converter={StaticResource NotEmptyConverter}}" />
                                         <Ellipse Grid.Row="0" Grid.RowSpan="2"
                                                  Style="{StaticResource StationDot}"
                                                  IsVisible="{Binding ArrivalColor, Converter={StaticResource NotEmptyConverter}}"
@@ -950,39 +937,30 @@
                                                    Text="発" />
                                         </Border>
                                     </Grid>
-                                    <HorizontalStackLayout Grid.Column="2"
-                                                           Style="{StaticResource StationNameStack}">
-                                        <Label Style="{StaticResource StationNameLabel}"
-                                               Text="{Binding Station.Name}" />
-                                        <Border Style="{StaticResource MapChipBorder}">
-                                            <Label Style="{StaticResource MapChipLabel}"
-                                                   Text="地図" />
-                                        </Border>
-                                    </HorizontalStackLayout>
-                                    <BoxView Grid.Column="3"
-                                             Style="{StaticResource FareLine}"
-                                             IsVisible="{Binding IsFareThrough}" />
-                                </Grid>
-
-                                <!-- Transfer -->
-                                <Grid Style="{StaticResource TransferGrid}"
-                                      ColumnDefinitions="72,28,*,72"
-                                      IsVisible="{Binding Transfer, Converter={StaticResource NotEmptyConverter}}">
-                                    <BoxView Grid.Column="1"
-                                             Style="{StaticResource TransferRail}" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource TransferLabel}">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="乗換 " />
-                                                <Span Style="{StaticResource TransferStrongSpan}"
-                                                      Text="{Binding Transfer.Minutes, FallbackValue=''}" />
-                                                <Span Text="分 ・ 徒歩 約" />
-                                                <Span Text="{Binding Transfer.WalkMeters, FallbackValue=''}" />
-                                                <Span Text="m" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                    <VerticalStackLayout Grid.Column="2"
+                                                         Style="{StaticResource StationNameBlock}">
+                                        <HorizontalStackLayout Style="{StaticResource StationNameStack}">
+                                            <Label Style="{StaticResource StationNameLabel}"
+                                                   Text="{Binding Station.Name}" />
+                                            <Border Style="{StaticResource MapChipBorder}">
+                                                <Label Style="{StaticResource MapChipLabel}"
+                                                       Text="地図" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                        <Label Style="{StaticResource TransferLabel}"
+                                               IsVisible="{Binding Transfer, Converter={StaticResource NotEmptyConverter}}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="乗換 " />
+                                                    <Span Style="{StaticResource TransferStrongSpan}"
+                                                          Text="{Binding Transfer.Minutes, FallbackValue=''}" />
+                                                    <Span Text="分 ・ 徒歩 約" />
+                                                    <Span Text="{Binding Transfer.WalkMeters, FallbackValue=''}" />
+                                                    <Span Text="m" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
                                     <BoxView Grid.Column="3"
                                              Style="{StaticResource FareLine}"
                                              IsVisible="{Binding IsFareThrough}" />
