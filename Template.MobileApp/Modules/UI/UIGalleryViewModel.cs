@@ -32,9 +32,6 @@ public sealed partial class UIGalleryViewModel : AppViewModelBase
     [ObservableProperty]
     public partial long SelectedSize { get; set; }
 
-    [ObservableProperty]
-    public partial PhotoSection StickySection { get; set; }
-
     // Command
 
     public IObserveCommand TapCommand { get; }
@@ -42,8 +39,6 @@ public sealed partial class UIGalleryViewModel : AppViewModelBase
     public IObserveCommand SectionCommand { get; }
 
     public IObserveCommand ColumnCommand { get; }
-
-    public IObserveCommand ScrolledCommand { get; }
 
     public IObserveCommand ShareCommand { get; }
 
@@ -56,8 +51,6 @@ public sealed partial class UIGalleryViewModel : AppViewModelBase
     public UIGalleryViewModel(IShare share)
     {
         this.share = share;
-
-        StickySection = Album.Sections[0];
 
         SubscribeZoomScale(UpdateColumns);
 
@@ -72,7 +65,6 @@ public sealed partial class UIGalleryViewModel : AppViewModelBase
             Columns = x;
             ZoomScale = x == WideColumns ? WideScale : x == DenseColumns ? DenseScale : 1;
         });
-        ScrolledCommand = MakeDelegateCommand<int>(CommandMode.Simple, x => StickySection = Album.Sections[x]);
         ShareCommand = MakeAsyncCommand(ShareAsync);
         ClearCommand = MakeDelegateCommand(() =>
         {

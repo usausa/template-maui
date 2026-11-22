@@ -235,6 +235,145 @@ public static partial class Scroll
     }
 
     //--------------------------------------------------------------------------------
+    // Sticky
+    //--------------------------------------------------------------------------------
+
+    private static readonly ConditionalWeakTable<VisualElement, StickyWatcher> StickyWatchers = [];
+
+    public static readonly BindableProperty StickyProperty = BindableProperty.CreateAttached(
+        "Sticky",
+        typeof(bool),
+        typeof(Scroll),
+        false,
+        propertyChanged: OnStickyChanged);
+
+    public static bool GetSticky(BindableObject bindable) => (bool)bindable.GetValue(StickyProperty);
+
+    public static void SetSticky(BindableObject bindable, bool value) => bindable.SetValue(StickyProperty, value);
+
+    private static void OnStickyChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if (StickyWatchers.TryGetValue(element, out var watcher))
+        {
+            watcher.Detach();
+            StickyWatchers.Remove(element);
+        }
+
+        if (newValue is true)
+        {
+            StickyWatchers.Add(element, new StickyWatcher(element));
+        }
+    }
+
+    private sealed class StickyWatcher
+    {
+        private readonly VisualElement owner;
+
+        private VisualElement? container;
+
+        private ScrollView? scrollView;
+
+        public StickyWatcher(VisualElement owner)
+        {
+            this.owner = owner;
+            owner.Loaded += HandleLoaded;
+            owner.Unloaded += HandleUnloaded;
+
+            if (owner.IsLoaded)
+            {
+                Attach();
+            }
+        }
+
+        public void Detach()
+        {
+            owner.Loaded -= HandleLoaded;
+            owner.Unloaded -= HandleUnloaded;
+            Release();
+            owner.TranslationY = 0;
+        }
+
+        private void HandleLoaded(object? sender, EventArgs e) => Attach();
+
+        private void HandleUnloaded(object? sender, EventArgs e) => Release();
+
+        private void Attach()
+        {
+            if ((scrollView is not null) || (owner.Parent is not VisualElement parent))
+            {
+                return;
+            }
+
+            var ancestor = parent.Parent;
+            while ((ancestor is not null) && (ancestor is not ScrollView))
+            {
+                ancestor = ancestor.Parent;
+            }
+
+            if (ancestor is not ScrollView target)
+            {
+                return;
+            }
+
+            container = parent;
+            scrollView = target;
+            container.PropertyChanged += HandleContainerPropertyChanged;
+            scrollView.Scrolled += HandleScrolled;
+            Update();
+        }
+
+        private void Release()
+        {
+            if (container is not null)
+            {
+                container.PropertyChanged -= HandleContainerPropertyChanged;
+                container = null;
+            }
+
+            if (scrollView is not null)
+            {
+                scrollView.Scrolled -= HandleScrolled;
+                scrollView = null;
+            }
+        }
+
+        private void HandleContainerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName == VisualElement.YProperty.PropertyName) || (e.PropertyName == VisualElement.HeightProperty.PropertyName))
+            {
+                Update();
+            }
+        }
+
+        private void HandleScrolled(object? sender, ScrolledEventArgs e) => Update();
+
+        private void Update()
+        {
+            if ((container is null) || (scrollView is null))
+            {
+                return;
+            }
+
+            var top = owner.Y;
+            for (Element? element = container; (element is not null) && !ReferenceEquals(element, scrollView); element = element.Parent)
+            {
+                if (element is VisualElement visual)
+                {
+                    top += visual.Y;
+                }
+            }
+
+            var limit = Math.Max(0, container.Height - owner.Y - owner.Height);
+            owner.TranslationY = Math.Clamp(scrollView.ScrollY - top, 0, limit);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
     // ShowOnAwayFromLastTarget
     //--------------------------------------------------------------------------------
 

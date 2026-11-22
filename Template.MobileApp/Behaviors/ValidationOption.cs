@@ -211,7 +211,7 @@ public static class ValidationOption
                 return;
             }
 
-            label.Text = value;
+            label.Text = value ?? string.Empty;
             label.IsVisible = value is not null;
 
             if (!initial && (value is not null))

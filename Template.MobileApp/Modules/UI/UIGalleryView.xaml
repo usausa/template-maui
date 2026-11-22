@@ -103,6 +103,8 @@
 
             <Style x:Key="StickyGrid"
                    TargetType="Grid">
+                <Setter Property="behaviors:Scroll.Sticky" Value="True" />
+                <Setter Property="ZIndex" Value="1" />
                 <Setter Property="Padding" Value="12,0" />
                 <Setter Property="HeightRequest" Value="44" />
                 <Setter Property="ColumnSpacing" Value="6" />
@@ -346,104 +348,83 @@
         </Grid>
 
         <!-- Grid -->
-        <Grid Grid.Row="2">
-            <ScrollView Style="{StaticResource GalleryScroll}"
-                        behaviors:Scroll.IndexCommand="{Binding ScrolledCommand}"
-                        VerticalScrollBarVisibility="Never">
-                <VerticalStackLayout behaviors:GestureOption.PinchEnabled="True"
-                                     behaviors:GestureOption.MinScale="0.5"
-                                     behaviors:GestureOption.MaxScale="2"
-                                     behaviors:GestureOption.ZoomScale="{Binding ZoomScale}"
-                                     BindableLayout.ItemsSource="{Binding Album.Sections}">
-                    <BindableLayout.ItemTemplate>
-                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                        <DataTemplate x:DataType="{x:Type sample:PhotoSection}">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource StickyGrid}"
-                                      ColumnDefinitions="Auto,Auto,*,Auto">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource SectionTitleLabel}"
-                                           Text="{Binding Title}" />
-                                    <Label Grid.Column="1"
-                                           Style="{StaticResource PlaceIconLabel}" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource PlaceLabel}"
-                                           Text="{Binding Place}" />
-                                    <Button Grid.Column="3"
-                                            Style="{StaticResource SectionSelectButton}"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=SectionCommand, x:DataType={x:Type module:UIGalleryViewModel}}"
-                                            CommandParameter="{Binding .}"
-                                            Text="選択" />
-                                </Grid>
-                                <FlexLayout Style="{StaticResource TileLayout}"
-                                            BindableLayout.ItemsSource="{Binding Items}">
-                                    <FlexLayout.HeightRequest>
-                                        <MultiBinding Converter="{StaticResource TileAreaConverter}">
-                                            <Binding x:DataType="{x:Type module:UIGalleryViewModel}"
-                                                     Source="{RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}"
-                                                     Path="Columns" />
-                                            <Binding Path="Items.Count" />
-                                        </MultiBinding>
-                                    </FlexLayout.HeightRequest>
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate x:DataType="{x:Type sample:PhotoItem}">
-                                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                            <Border Style="{StaticResource TileBorder}"
-                                                    WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=Columns, Converter={StaticResource TileSizeConverter}, x:DataType={x:Type module:UIGalleryViewModel}}"
-                                                    HeightRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=Columns, Converter={StaticResource TileSizeConverter}, x:DataType={x:Type module:UIGalleryViewModel}}">
-                                                <Border.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=TapCommand, x:DataType={x:Type module:UIGalleryViewModel}}"
-                                                                          CommandParameter="{Binding .}" />
-                                                </Border.GestureRecognizers>
-                                                <Grid>
-                                                    <Image Style="{StaticResource TileImage}"
-                                                           Source="{Binding Source, Converter={StaticResource AssetImageConverter}, ConverterParameter=Gallery}" />
-                                                    <BoxView IsVisible="{Binding IsSelected}"
-                                                             Color="{StaticResource GallerySelectColor}"
-                                                             Opacity="0.35" />
-                                                    <Border Style="{StaticResource CheckBorder}">
-                                                        <Border.Triggers>
-                                                            <DataTrigger TargetType="Border"
-                                                                         Binding="{Binding IsSelected}"
-                                                                         Value="True">
-                                                                <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
-                                                            </DataTrigger>
-                                                        </Border.Triggers>
-                                                        <Label Style="{StaticResource CheckLabel}"
-                                                               IsVisible="{Binding IsSelected}" />
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-                                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </FlexLayout>
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </ScrollView>
-
-            <!-- Sticky -->
-            <Grid Style="{StaticResource StickyGrid}"
-                  ColumnDefinitions="Auto,Auto,*,Auto"
-                  VerticalOptions="Start">
-                <Label Grid.Column="0"
-                       Style="{StaticResource SectionTitleLabel}"
-                       Text="{Binding StickySection.Title}" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource PlaceIconLabel}" />
-                <Label Grid.Column="2"
-                       Style="{StaticResource PlaceLabel}"
-                       Text="{Binding StickySection.Place}" />
-                <Button Grid.Column="3"
-                        Style="{StaticResource SectionSelectButton}"
-                        Command="{Binding SectionCommand}"
-                        CommandParameter="{Binding StickySection}"
-                        Text="選択" />
-            </Grid>
-        </Grid>
+        <ScrollView Grid.Row="2"
+                    Style="{StaticResource GalleryScroll}"
+                    VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout behaviors:GestureOption.PinchEnabled="True"
+                                 behaviors:GestureOption.MinScale="0.5"
+                                 behaviors:GestureOption.MaxScale="2"
+                                 behaviors:GestureOption.ZoomScale="{Binding ZoomScale}"
+                                 BindableLayout.ItemsSource="{Binding Album.Sections}">
+                <BindableLayout.ItemTemplate>
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <DataTemplate x:DataType="{x:Type sample:PhotoSection}">
+                        <VerticalStackLayout>
+                            <Grid Style="{StaticResource StickyGrid}"
+                                  ColumnDefinitions="Auto,Auto,*,Auto">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource SectionTitleLabel}"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource PlaceIconLabel}" />
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource PlaceLabel}"
+                                       Text="{Binding Place}" />
+                                <Button Grid.Column="3"
+                                        Style="{StaticResource SectionSelectButton}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=SectionCommand, x:DataType={x:Type module:UIGalleryViewModel}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="選択" />
+                            </Grid>
+                            <FlexLayout Style="{StaticResource TileLayout}"
+                                        BindableLayout.ItemsSource="{Binding Items}">
+                                <FlexLayout.HeightRequest>
+                                    <MultiBinding Converter="{StaticResource TileAreaConverter}">
+                                        <Binding x:DataType="{x:Type module:UIGalleryViewModel}"
+                                                 Source="{RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}"
+                                                 Path="Columns" />
+                                        <Binding Path="Items.Count" />
+                                    </MultiBinding>
+                                </FlexLayout.HeightRequest>
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type sample:PhotoItem}">
+                                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                        <Border Style="{StaticResource TileBorder}"
+                                                WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=Columns, Converter={StaticResource TileSizeConverter}, x:DataType={x:Type module:UIGalleryViewModel}}"
+                                                HeightRequest="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=Columns, Converter={StaticResource TileSizeConverter}, x:DataType={x:Type module:UIGalleryViewModel}}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGalleryViewModel}}, Path=TapCommand, x:DataType={x:Type module:UIGalleryViewModel}}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <Grid>
+                                                <Image Style="{StaticResource TileImage}"
+                                                       Source="{Binding Source, Converter={StaticResource AssetImageConverter}, ConverterParameter=Gallery}" />
+                                                <BoxView IsVisible="{Binding IsSelected}"
+                                                         Color="{StaticResource GallerySelectColor}"
+                                                         Opacity="0.35" />
+                                                <Border Style="{StaticResource CheckBorder}">
+                                                    <Border.Triggers>
+                                                        <DataTrigger TargetType="Border"
+                                                                     Binding="{Binding IsSelected}"
+                                                                     Value="True">
+                                                            <Setter Property="BackgroundColor" Value="{StaticResource GallerySelectColor}" />
+                                                        </DataTrigger>
+                                                    </Border.Triggers>
+                                                    <Label Style="{StaticResource CheckLabel}"
+                                                           IsVisible="{Binding IsSelected}" />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
 
         <BoxView Grid.Row="3"
                  Style="{StaticResource SeparatorLine}" />
