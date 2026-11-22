@@ -37,14 +37,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
             </Style>
 
-            <!-- Component -->
-
-            <Style x:Key="ValidationEntry"
-                   TargetType="Entry"
-                   BasedOn="{StaticResource BasicFieldEntry}">
-                <Setter Property="behaviors:Focus.ErrorStroke" Value="{StaticResource RedDefault}" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -57,21 +49,23 @@
                                Title="Validate on Unfocused"
                                Icon="{x:Static fonts:MaterialIcons.Fact_check}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Text1" />
+                    <Grid Style="{StaticResource CardFieldCaptionGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource BasicFieldCaptionLabel}"
+                               Text="Text1" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardFieldErrorLabel}"
+                               behaviors:ValidationOption.ErrorMessage="Text1" />
+                    </Grid>
                     <Border Style="{StaticResource CardFieldBorder}"
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
-                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text1]}">
-                        <Entry s:Behavior.Key="Text1"
-                               s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
-                               Style="{StaticResource ValidationEntry}"
-                               behaviors:Focus.HasError="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
+                            behaviors:ValidationOption.ErrorHighlight="Text1">
+                        <Entry s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
+                               Style="{StaticResource BasicValidationEntry}"
+                               behaviors:ValidationOption.ErrorField="Text1"
                                Text="{Binding Text1}" />
                     </Border>
-                    <Label Style="{StaticResource ErrorMessageLabel}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text1]}"
-                           IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Errors[Text1]}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -81,20 +75,22 @@
                                Title="Manual Validation"
                                Icon="{x:Static fonts:MaterialIcons.Rule}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Text2" />
+                    <Grid Style="{StaticResource CardFieldCaptionGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource BasicFieldCaptionLabel}"
+                               Text="Text2" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardFieldErrorLabel}"
+                               behaviors:ValidationOption.ErrorMessage="Text2" />
+                    </Grid>
                     <Border Style="{StaticResource CardFieldBorder}"
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
-                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text2]}">
-                        <Entry s:Behavior.Key="Text2"
-                               Style="{StaticResource ValidationEntry}"
-                               behaviors:Focus.HasError="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
+                            behaviors:ValidationOption.ErrorHighlight="Text2">
+                        <Entry Style="{StaticResource BasicValidationEntry}"
+                               behaviors:ValidationOption.ErrorField="Text2"
                                Text="{Binding Text2}" />
                     </Border>
-                    <Label Style="{StaticResource ErrorMessageLabel}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text2]}"
-                           IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Errors[Text2]}" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
@@ -139,21 +135,23 @@
                                IsPassword="True"
                                Text="{Binding Password}" />
                     </Border>
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Confirm" />
+                    <Grid Style="{StaticResource CardFieldCaptionGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource BasicFieldCaptionLabel}"
+                               Text="Confirm" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardFieldErrorLabel}"
+                               behaviors:ValidationOption.ErrorMessage="Confirm" />
+                    </Grid>
                     <Border Style="{StaticResource CardFieldBorder}"
                             behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
-                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Confirm]}">
-                        <Entry s:Behavior.Key="Confirm"
-                               Style="{StaticResource ValidationEntry}"
-                               behaviors:Focus.HasError="{Binding Errors[Confirm], Converter={StaticResource NotEmptyConverter}}"
+                            behaviors:ValidationOption.ErrorHighlight="Confirm">
+                        <Entry Style="{StaticResource BasicValidationEntry}"
+                               behaviors:ValidationOption.ErrorField="Confirm"
                                IsPassword="True"
                                Text="{Binding Confirm}" />
                     </Border>
-                    <Label Style="{StaticResource ErrorMessageLabel}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Confirm]}"
-                           IsVisible="{Binding Errors[Confirm], Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Errors[Confirm]}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

@@ -25,16 +25,22 @@
                                Title="Work item"
                                Icon="{x:Static fonts:MaterialIcons.Edit}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Name (required)" />
+                    <Grid Style="{StaticResource CardFieldCaptionGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource BasicFieldCaptionLabel}"
+                               Text="Name (required)" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource CardFieldErrorLabel}"
+                               IsVisible="{Binding Name, Converter={StaticResource EmptyConverter}}"
+                               Text="Name is required" />
+                    </Grid>
                     <Border Style="{StaticResource CardFieldBorder}">
-                        <Entry Style="{StaticResource BasicFieldEntry}"
+                        <Entry Style="{StaticResource BasicValidationEntry}"
+                               behaviors:Focus.HasError="{Binding Name, Converter={StaticResource EmptyConverter}}"
                                Text="{Binding Name}"
                                Placeholder="Name" />
                     </Border>
-                    <Label Style="{StaticResource ErrorMessageLabel}"
-                           IsVisible="{Binding Name, Converter={StaticResource EmptyConverter}}"
-                           Text="Name is required" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

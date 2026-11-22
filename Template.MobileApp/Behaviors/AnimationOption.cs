@@ -168,6 +168,11 @@ public static class AnimationOption
             return;
         }
 
+        PlayFadeIn(element);
+    }
+
+    public static void PlayFadeIn(VisualElement element)
+    {
         element.AbortAnimation(FadeInAnimationName);
         element.Opacity = 0;
 
@@ -865,7 +870,12 @@ public static class AnimationOption
             return;
         }
 
-        var highlight = GetHighlightColor(bindable);
+        PlayHighlight(element);
+    }
+
+    public static void PlayHighlight(VisualElement element)
+    {
+        var highlight = GetHighlightColor(element);
         if (highlight is null)
         {
             return;

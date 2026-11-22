@@ -47,7 +47,7 @@ public static class Focus
     public static void SetFocusedThickness(BindableObject bindable, double value) => bindable.SetValue(FocusedThicknessProperty, value);
 
     //--------------------------------------------------------------------------------
-    // ErrorStroke / HasError
+    // ErrorStroke / ErrorBackground / HasError
     //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ErrorStrokeProperty = BindableProperty.CreateAttached(
@@ -59,6 +59,16 @@ public static class Focus
     public static Color? GetErrorStroke(BindableObject bindable) => (Color?)bindable.GetValue(ErrorStrokeProperty);
 
     public static void SetErrorStroke(BindableObject bindable, Color? value) => bindable.SetValue(ErrorStrokeProperty, value);
+
+    public static readonly BindableProperty ErrorBackgroundProperty = BindableProperty.CreateAttached(
+        "ErrorBackground",
+        typeof(Color),
+        typeof(Focus),
+        null);
+
+    public static Color? GetErrorBackground(BindableObject bindable) => (Color?)bindable.GetValue(ErrorBackgroundProperty);
+
+    public static void SetErrorBackground(BindableObject bindable, Color? value) => bindable.SetValue(ErrorBackgroundProperty, value);
 
     public static readonly BindableProperty HasErrorProperty = BindableProperty.CreateAttached(
         "HasError",
@@ -105,6 +115,8 @@ public static class Focus
         private const string AnimationName = "FocusBorderAnimation";
 
         private Color normalStroke = Colors.Transparent;
+
+        private Color normalBackground = Colors.Transparent;
 
         private double normalThickness;
 
@@ -156,17 +168,23 @@ public static class Focus
             {
                 captured = true;
                 normalStroke = (border.Stroke as SolidColorBrush)?.Color ?? Colors.Transparent;
+                normalBackground = border.BackgroundColor ?? Colors.Transparent;
                 normalThickness = border.StrokeThickness;
                 normalMargin = border.Margin;
             }
 
+            var hasError = GetHasError(element);
             var focusedStroke = GetFocusedStroke(element) ?? Colors.Blue;
-            var errorStroke = GetHasError(element) ? GetErrorStroke(element) : null;
+            var errorStroke = hasError ? GetErrorStroke(element) : null;
+            var errorBackground = GetErrorBackground(element);
+            var changeBackground = errorBackground is not null;
             var focusedThickness = GetFocusedThickness(element);
             var changeThickness = !Double.IsNaN(focusedThickness);
 
             var fromColor = (border.Stroke as SolidColorBrush)?.Color ?? normalStroke;
             var toColor = errorStroke ?? (focused ? focusedStroke : normalStroke);
+            var fromBackground = border.BackgroundColor ?? normalBackground;
+            var toBackground = (hasError ? errorBackground : null) ?? normalBackground;
             var fromThickness = border.StrokeThickness;
             var toThickness = focused && changeThickness ? focusedThickness : normalThickness;
 
@@ -183,6 +201,10 @@ public static class Focus
                     {
                         UpdateThickness(border, fromThickness + ((toThickness - fromThickness) * v));
                     }
+                    if (changeBackground)
+                    {
+                        border.BackgroundColor = LerpColor(fromBackground, toBackground, (float)v);
+                    }
                 },
                 16,
                 150,
@@ -193,6 +215,10 @@ public static class Focus
                     if (changeThickness)
                     {
                         UpdateThickness(border, toThickness);
+                    }
+                    if (changeBackground)
+                    {
+                        border.BackgroundColor = toBackground;
                     }
                 });
         }
