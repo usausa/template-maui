@@ -147,7 +147,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
     {
         try
         {
-            var time = await ChatRoomClient.GetServerTimeAsync(address);
+            var time = await chatClient.GetServerTimeAsync(address);
             ServerTime = time.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
         catch (RpcException ex)

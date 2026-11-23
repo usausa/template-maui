@@ -171,6 +171,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
             var parser = new SettingParser(barcode);
             if (parser.TryGetString(nameof(ApiEndPoint), out var apiEndPoint) && Uri.TryCreate(apiEndPoint, UriKind.Absolute, out var apiUri))
             {
+                if (apiContext.BaseAddress != apiUri)
+                {
+                    apiContext.ClearToken();
+                }
+
                 settings.ApiEndPoint = apiEndPoint;
                 apiContext.BaseAddress = apiUri;
                 ApiEndPoint = apiEndPoint;

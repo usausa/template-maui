@@ -59,9 +59,15 @@ public sealed class ChatRoomClient : IAsyncDisposable
 
     private readonly SemaphoreSlim lifecycleLock = new(1, 1);
 
+    private readonly Lock unaryLock = new();
+
     private CancellationTokenSource? cancellation;
 
     private Task? runTask;
+
+    private GrpcChannel? unaryChannel;
+
+    private Uri? unaryAddress;
 
     public event EventHandler<ChatMessageEventArgs>? MessageReceived;
 
@@ -88,10 +94,9 @@ public sealed class ChatRoomClient : IAsyncDisposable
     // Operation
     //--------------------------------------------------------------------------------
 
-    public static async Task<DateTime> GetServerTimeAsync(Uri address, CancellationToken cancellationToken = default)
+    public async Task<DateTime> GetServerTimeAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        using var channel = GrpcChannel.ForAddress(address);
-        var client = new ServerInfo.ServerInfoClient(channel);
+        var client = new ServerInfo.ServerInfoClient(GetUnaryChannel(address));
         var reply = await client.GetServerTimeAsync(new ServerTimeRequest(), cancellationToken: cancellationToken).ConfigureAwait(false);
         return DateTimeOffset.FromUnixTimeMilliseconds(reply.Timestamp).LocalDateTime;
     }
@@ -123,6 +128,8 @@ public sealed class ChatRoomClient : IAsyncDisposable
         {
             lifecycleLock.Release();
         }
+
+        ReleaseUnaryChannel();
     }
 
     private async Task DisconnectCoreAsync()
@@ -142,6 +149,31 @@ public sealed class ChatRoomClient : IAsyncDisposable
             cancellation.Dispose();
             cancellation = null;
             runTask = null;
+        }
+    }
+
+    private GrpcChannel GetUnaryChannel(Uri address)
+    {
+        lock (unaryLock)
+        {
+            if ((unaryChannel is null) || (unaryAddress != address))
+            {
+                unaryChannel?.Dispose();
+                unaryChannel = GrpcChannel.ForAddress(address);
+                unaryAddress = address;
+            }
+
+            return unaryChannel;
+        }
+    }
+
+    private void ReleaseUnaryChannel()
+    {
+        lock (unaryLock)
+        {
+            unaryChannel?.Dispose();
+            unaryChannel = null;
+            unaryAddress = null;
         }
     }
 
